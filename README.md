@@ -1,1 +1,1 @@
-# CalendarSyncplus
+# CalendarSync+
