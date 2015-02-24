@@ -1,0 +1,46 @@
+﻿<UserControl x:Class="OutlookGoogleSyncRefresh.Presentation.Views.HelpView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="300">
+    <StackPanel VerticalAlignment="Top"
+                Orientation="Vertical"
+                Margin="20">
+        <TextBlock Text="1. Go to settings."
+                   TextWrapping="Wrap"
+                   Margin="0,10,0,0" />
+        <TextBlock Text="2. Setup your outlook calendar and google calendar."
+                   TextWrapping="Wrap"
+                   Margin="0,10,0,0" />
+        <TextBlock Text="3. Select the days in the past and days in future to sync calendar entries"
+                   TextWrapping="Wrap"
+                   Margin="0,10,0,0" />
+        <TextBlock Text="4. Setup periodic sync on Sync tab in settings."
+                   TextWrapping="Wrap"
+                   Margin="0,10,0,0" />
+        <TextBlock Text="- Hourly sync will take place every hour at the given minutes offset. "
+                   TextWrapping="Wrap"
+                   Margin="10,10,0,0" />
+        <TextBlock Text="- Daily sync will take place at selected time on a day, recurring with given days gap"
+                   TextWrapping="Wrap"
+                   Margin="10,10,0,0" />
+        <TextBlock Text="- Weekly sync will take place at selected time on the selected days, recurring with given weeks gap."
+                   TextWrapping="Wrap"
+                   Margin="10,10,0,0" />
+        <TextBlock Text="5. Select the data to be added in an entry"
+                   TextWrapping="Wrap"
+                   Margin="0,10,0,0" />
+        <TextBlock Text="6. Save settings"
+                   TextWrapping="Wrap"
+                   Margin="0,10,0,0" />
+        <TextBlock Text="7. Click 'START PERIODIC SYNC' on Main screen"
+                   TextWrapping="Wrap"
+                   Margin="0,10,0,0" />
+
+        <TextBlock Text="Note: Please keep a designated Google Calendar for sync"
+                   TextWrapping="Wrap"
+                   Margin="0,10,0,0" Foreground="{StaticResource AccentColorBrush}" FontWeight="800"/>
+    </StackPanel>
+</UserControl>

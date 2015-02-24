@@ -1,0 +1,1116 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>WpfApplicationFramework</name>
+    </assembly>
+    <members>
+        <member name="T:System.Waf.WafConfiguration">
+            <summary>
+            Configuration settings for the WPF Application Framework (WAF).
+            </summary>
+        </member>
+        <member name="P:System.Waf.WafConfiguration.IsInDesignMode">
+            <summary>
+            Gets a value indicating whether the code is running in design mode.
+            </summary>
+            <value><c>true</c> if the code is running in design mode; otherwise, <c>false</c>.</value>
+        </member>
+        <member name="P:System.Waf.WafConfiguration.Debug">
+            <summary>
+            Gets or sets a value indicating whether WAF should run in Debug mode.
+            </summary>
+            <remarks>
+            The Debug mode helps to find errors in the application but it might reduce the performance.
+            </remarks>
+        </member>
+        <member name="T:System.Waf.Applications.SynchronizingCollection`2">
+            <summary>
+            Represents a collection that synchronizes all of it's items with the items of the specified original collection.
+            When the original collection notifies a change via the <see cref="T:System.Collections.Specialized.INotifyCollectionChanged"/> interface then
+            this collection synchronizes it's own items with the original items.
+            </summary>
+            <typeparam name="T">The type of elements in the collection.</typeparam>
+            <typeparam name="TOriginal">The type of elements in the original collection.</typeparam>
+        </member>
+        <member name="M:System.Waf.Applications.SynchronizingCollection`2.#ctor(System.Collections.Generic.IEnumerable{`1},System.Func{`1,`0})">
+            <summary>
+            Initializes a new instance of the <see cref="T:System.Waf.Applications.SynchronizingCollection`2"/> class.
+            </summary>
+            <param name="originalCollection">The original collection.</param>
+            <param name="factory">The factory which is used to create new elements in this collection.</param>
+            <exception cref="T:System.ArgumentNullException">The argument originalCollection must not be null.</exception>
+            <exception cref="T:System.ArgumentNullException">The argument factory must not be null.</exception>
+        </member>
+        <member name="E:System.Waf.Applications.SynchronizingCollection`2.CollectionChanged">
+            <summary>
+            Occurs when the collection changes.
+            </summary>
+        </member>
+        <member name="E:System.Waf.Applications.SynchronizingCollection`2.PropertyChanged">
+            <summary>
+            Occurs when a property value changes.
+            </summary>
+        </member>
+        <member name="T:System.Waf.Applications.Services.FileType">
+            <summary>
+            Represents a file type.
+            </summary>
+        </member>
+        <member name="M:System.Waf.Applications.Services.FileType.#ctor(System.String,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:System.Waf.Applications.Services.FileType"/> class.
+            </summary>
+            <param name="description">The description of the file type.</param>
+            <param name="fileExtension">The file extension. This string has to start with a '.' point.</param>
+            <exception cref="T:System.ArgumentException">description is null or an empty string.</exception>
+            <exception cref="T:System.ArgumentException">fileExtension is null, an empty string or doesn't start with a '.' point character.</exception>
+        </member>
+        <member name="P:System.Waf.Applications.Services.FileType.Description">
+            <summary>
+            Gets the description of the file type.
+            </summary>
+        </member>
+        <member name="P:System.Waf.Applications.Services.FileType.FileExtension">
+            <summary>
+            Gets the file extension. This string starts with a '.' point.
+            </summary>
+        </member>
+        <member name="T:System.Waf.Applications.RecentFile">
+            <summary>
+            Represents a recent file.
+            </summary>
+        </member>
+        <member name="T:System.Waf.Foundation.Model">
+            <summary>
+            Defines the base class for a model.
+            </summary>
+        </member>
+        <member name="M:System.Waf.Foundation.Model.RaisePropertyChanged(System.String)">
+            <summary>
+            Raises the <see cref="E:PropertyChanged"/> event.
+            </summary>
+            <param name="propertyName">The property name of the property that has changed.</param>
+        </member>
+        <member name="M:System.Waf.Foundation.Model.OnPropertyChanged(System.ComponentModel.PropertyChangedEventArgs)">
+            <summary>
+            Raises the <see cref="E:PropertyChanged"/> event.
+            </summary>
+            <param name="e">The <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance containing the event data.</param>
+        </member>
+        <member name="E:System.Waf.Foundation.Model.PropertyChanged">
+            <summary>
+            Occurs when a property value changes.
+            </summary>
+        </member>
+        <member name="M:System.Waf.Applications.RecentFile.#ctor">
+            <summary>
+            This constructor overload is reserved and should not be used. It is used internally by the XmlSerializer.
+            </summary>
+        </member>
+        <member name="M:System.Waf.Applications.RecentFile.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:System.Waf.Applications.RecentFile"/> class.
+            </summary>
+            <param name="path">The file path.</param>
+            <exception cref="T:System.ArgumentException">The argument path must not be null or empty.</exception>
+        </member>
+        <member name="P:System.Waf.Applications.RecentFile.IsPinned">
+            <summary>
+            Gets or sets a value indicating whether this recent file is pinned.
+            </summary>
+        </member>
+        <member name="P:System.Waf.Applications.RecentFile.Path">
+            <summary>
+            Gets the file path.
+            </summary>
+        </member>
+        <member name="T:System.Waf.Applications.Services.FileDialogServiceExtensions">
+            <summary>
+            Provides method overloads for the <see cref="T:System.Waf.Applications.Services.IFileDialogService"/> to simplify its usage.
+            </summary>
+        </member>
+        <member name="M:System.Waf.Applications.Services.FileDialogServiceExtensions.ShowOpenFileDialog(System.Waf.Applications.Services.IFileDialogService,System.Waf.Applications.Services.FileType)">
+            <summary>
+            Shows the open file dialog box that allows a user to specify a file that should be opened.
+            </summary>
+            <param name="service">The file dialog service.</param>
+            <param name="fileType">The supported file type.</param>
+            <returns>A FileDialogResult object which contains the filename selected by the user.</returns>
+            <exception cref="T:System.ArgumentNullException">service must not be null.</exception>
+            <exception cref="T:System.ArgumentNullException">fileType must not be null.</exception>
+        </member>
+        <member name="M:System.Waf.Applications.Services.FileDialogServiceExtensions.ShowOpenFileDialog(System.Waf.Applications.Services.IFileDialogService,System.Object,System.Waf.Applications.Services.FileType)">
+            <summary>
+            Shows the open file dialog box that allows a user to specify a file that should be opened.
+            </summary>
+            <param name="service">The file dialog service.</param>
+            <param name="owner">The window that owns this OpenFileDialog.</param>
+            <param name="fileType">The supported file type.</param>
+            <returns>A FileDialogResult object which contains the filename selected by the user.</returns>
+            <exception cref="T:System.ArgumentNullException">service must not be null.</exception>
+            <exception cref="T:System.ArgumentNullException">fileType must not be null.</exception>
+        </member>
+        <member name="M:System.Waf.Applications.Services.FileDialogServiceExtensions.ShowOpenFileDialog(System.Waf.Applications.Services.IFileDialogService,System.Waf.Applications.Services.FileType,System.String)">
+            <summary>
+            Shows the open file dialog box that allows a user to specify a file that should be opened.
+            </summary>
+            <param name="service">The file dialog service.</param>
+            <param name="fileType">The supported file type.</param>
+            <param name="defaultFileName">Default filename. The directory name is used as initial directory when it is specified.</param>
+            <returns>A FileDialogResult object which contains the filename selected by the user.</returns>
+            <exception cref="T:System.ArgumentNullException">service must not be null.</exception>
+            <exception cref="T:System.ArgumentNullException">fileType must not be null.</exception>
+        </member>
+        <member name="M:System.Waf.Applications.Services.FileDialogServiceExtensions.ShowOpenFileDialog(System.Waf.Applications.Services.IFileDialogService,System.Object,System.Waf.Applications.Services.FileType,System.String)">
+            <summary>
+            Shows the open file dialog box that allows a user to specify a file that should be opened.
+            </summary>
+            <param name="service">The file dialog service.</param>
+            <param name="owner">The window that owns this OpenFileDialog.</param>
+            <param name="fileType">The supported file type.</param>
+            <param name="defaultFileName">Default filename. The directory name is used as initial directory when it is specified.</param>
+            <returns>A FileDialogResult object which contains the filename selected by the user.</returns>
+            <exception cref="T:System.ArgumentNullException">service must not be null.</exception>
+            <exception cref="T:System.ArgumentNullException">fileType must not be null.</exception>
+        </member>
+        <member name="M:System.Waf.Applications.Services.FileDialogServiceExtensions.ShowOpenFileDialog(System.Waf.Applications.Services.IFileDialogService,System.Collections.Generic.IEnumerable{System.Waf.Applications.Services.FileType})">
+            <summary>
+            Shows the open file dialog box that allows a user to specify a file that should be opened.
+            </summary>
+            <param name="service">The file dialog service.</param>
+            <param name="fileTypes">The supported file types.</param>
+            <returns>A FileDialogResult object which contains the filename selected by the user.</returns>
+            <exception cref="T:System.ArgumentNullException">service must not be null.</exception>
+            <exception cref="T:System.ArgumentNullException">fileTypes must not be null.</exception>
+            <exception cref="T:System.ArgumentException">fileTypes must contain at least one item.</exception>
+        </member>
+        <member name="M:System.Waf.Applications.Services.FileDialogServiceExtensions.ShowOpenFileDialog(System.Waf.Applications.Services.IFileDialogService,System.Object,System.Collections.Generic.IEnumerable{System.Waf.Applications.Services.FileType})">
+            <summary>
+            Shows the open file dialog box that allows a user to specify a file that should be opened.
+            </summary>
+            <param name="service">The file dialog service.</param>
+            <param name="owner">The window that owns this OpenFileDialog.</param>
+            <param name="fileTypes">The supported file types.</param>
+            <returns>A FileDialogResult object which contains the filename selected by the user.</returns>
+            <exception cref="T:System.ArgumentNullException">service must not be null.</exception>
+            <exception cref="T:System.ArgumentNullException">fileTypes must not be null.</exception>
+            <exception cref="T:System.ArgumentException">fileTypes must contain at least one item.</exception>
+        </member>
+        <member name="M:System.Waf.Applications.Services.FileDialogServiceExtensions.ShowOpenFileDialog(System.Waf.Applications.Services.IFileDialogService,System.Collections.Generic.IEnumerable{System.Waf.Applications.Services.FileType},System.Waf.Applications.Services.FileType,System.String)">
+            <summary>
+            Shows the open file dialog box that allows a user to specify a file that should be opened.
+            </summary>
+            <param name="service">The file dialog service.</param>
+            <param name="fileTypes">The supported file types.</param>
+            <param name="defaultFileType">Default file type.</param>
+            <param name="defaultFileName">Default filename. The directory name is used as initial directory when it is specified.</param>
+            <returns>A FileDialogResult object which contains the filename selected by the user.</returns>
+            <exception cref="T:System.ArgumentNullException">service must not be null.</exception>
+            <exception cref="T:System.ArgumentNullException">fileTypes must not be null.</exception>
+            <exception cref="T:System.ArgumentException">fileTypes must contain at least one item.</exception>
+        </member>
+        <member name="M:System.Waf.Applications.Services.FileDialogServiceExtensions.ShowSaveFileDialog(System.Waf.Applications.Services.IFileDialogService,System.Waf.Applications.Services.FileType)">
+            <summary>
+            Shows the save file dialog box that allows a user to specify a filename to save a file as.
+            </summary>
+            <param name="service">The file dialog service.</param>
+            <param name="fileType">The supported file type.</param>
+            <returns>A FileDialogResult object which contains the filename entered by the user.</returns>
+            <exception cref="T:System.ArgumentNullException">service must not be null.</exception>
+            <exception cref="T:System.ArgumentNullException">fileType must not be null.</exception>
+        </member>
+        <member name="M:System.Waf.Applications.Services.FileDialogServiceExtensions.ShowSaveFileDialog(System.Waf.Applications.Services.IFileDialogService,System.Object,System.Waf.Applications.Services.FileType)">
+            <summary>
+            Shows the save file dialog box that allows a user to specify a filename to save a file as.
+            </summary>
+            <param name="service">The file dialog service.</param>
+            <param name="owner">The window that owns this SaveFileDialog.</param>
+            <param name="fileType">The supported file type.</param>
+            <returns>A FileDialogResult object which contains the filename entered by the user.</returns>
+            <exception cref="T:System.ArgumentNullException">service must not be null.</exception>
+            <exception cref="T:System.ArgumentNullException">fileType must not be null.</exception>
+        </member>
+        <member name="M:System.Waf.Applications.Services.FileDialogServiceExtensions.ShowSaveFileDialog(System.Waf.Applications.Services.IFileDialogService,System.Waf.Applications.Services.FileType,System.String)">
+            <summary>
+            Shows the save file dialog box that allows a user to specify a filename to save a file as.
+            </summary>
+            <param name="service">The file dialog service.</param>
+            <param name="fileType">The supported file type.</param>
+            <param name="defaultFileName">Default filename. The directory name is used as initial directory when it is specified.</param>
+            <returns>A FileDialogResult object which contains the filename entered by the user.</returns>
+            <exception cref="T:System.ArgumentNullException">service must not be null.</exception>
+            <exception cref="T:System.ArgumentNullException">fileType must not be null.</exception>
+        </member>
+        <member name="M:System.Waf.Applications.Services.FileDialogServiceExtensions.ShowSaveFileDialog(System.Waf.Applications.Services.IFileDialogService,System.Object,System.Waf.Applications.Services.FileType,System.String)">
+            <summary>
+            Shows the save file dialog box that allows a user to specify a filename to save a file as.
+            </summary>
+            <param name="service">The file dialog service.</param>
+            <param name="owner">The window that owns this SaveFileDialog.</param>
+            <param name="fileType">The supported file type.</param>
+            <param name="defaultFileName">Default filename. The directory name is used as initial directory when it is specified.</param>
+            <returns>A FileDialogResult object which contains the filename entered by the user.</returns>
+            <exception cref="T:System.ArgumentNullException">service must not be null.</exception>
+            <exception cref="T:System.ArgumentNullException">fileType must not be null.</exception>
+        </member>
+        <member name="M:System.Waf.Applications.Services.FileDialogServiceExtensions.ShowSaveFileDialog(System.Waf.Applications.Services.IFileDialogService,System.Collections.Generic.IEnumerable{System.Waf.Applications.Services.FileType})">
+            <summary>
+            Shows the save file dialog box that allows a user to specify a filename to save a file as.
+            </summary>
+            <param name="service">The file dialog service.</param>
+            <param name="fileTypes">The supported file types.</param>
+            <returns>A FileDialogResult object which contains the filename entered by the user.</returns>
+            <exception cref="T:System.ArgumentNullException">service must not be null.</exception>
+            <exception cref="T:System.ArgumentNullException">fileTypes must not be null.</exception>
+            <exception cref="T:System.ArgumentException">fileTypes must contain at least one item.</exception>
+        </member>
+        <member name="M:System.Waf.Applications.Services.FileDialogServiceExtensions.ShowSaveFileDialog(System.Waf.Applications.Services.IFileDialogService,System.Object,System.Collections.Generic.IEnumerable{System.Waf.Applications.Services.FileType})">
+            <summary>
+            Shows the save file dialog box that allows a user to specify a filename to save a file as.
+            </summary>
+            <param name="service">The file dialog service.</param>
+            <param name="owner">The window that owns this SaveFileDialog.</param>
+            <param name="fileTypes">The supported file types.</param>
+            <returns>A FileDialogResult object which contains the filename entered by the user.</returns>
+            <exception cref="T:System.ArgumentNullException">service must not be null.</exception>
+            <exception cref="T:System.ArgumentNullException">fileTypes must not be null.</exception>
+            <exception cref="T:System.ArgumentException">fileTypes must contain at least one item.</exception>
+        </member>
+        <member name="M:System.Waf.Applications.Services.FileDialogServiceExtensions.ShowSaveFileDialog(System.Waf.Applications.Services.IFileDialogService,System.Collections.Generic.IEnumerable{System.Waf.Applications.Services.FileType},System.Waf.Applications.Services.FileType,System.String)">
+            <summary>
+            Shows the save file dialog box that allows a user to specify a filename to save a file as.
+            </summary>
+            <param name="service">The file dialog service.</param>
+            <param name="fileTypes">The supported file types.</param>
+            <param name="defaultFileType">Default file type.</param>
+            <param name="defaultFileName">Default filename. The directory name is used as initial directory when it is specified.</param>
+            <returns>A FileDialogResult object which contains the filename entered by the user.</returns>
+            <exception cref="T:System.ArgumentNullException">service must not be null.</exception>
+            <exception cref="T:System.ArgumentNullException">fileTypes must not be null.</exception>
+            <exception cref="T:System.ArgumentException">fileTypes must contain at least one item.</exception>
+        </member>
+        <member name="T:System.Waf.Applications.IView">
+            <summary>
+            Represents a view
+            </summary>
+        </member>
+        <member name="P:System.Waf.Applications.IView.DataContext">
+            <summary>
+            Gets or sets the data context of the view.
+            </summary>
+        </member>
+        <member name="T:System.Waf.Presentation.Services.FileDialogService">
+            <summary>
+            This is the default implementation of the <see cref="T:System.Waf.Applications.Services.IFileDialogService"/> interface. It shows an open or save file dialog box.
+            </summary>
+            <remarks>
+            If the default implementation of this service doesn't serve your need then you can provide your own implementation.
+            </remarks>
+        </member>
+        <member name="T:System.Waf.Applications.Services.IFileDialogService">
+            <summary>
+            This service allows a user to specify a filename to open or save a file.
+            </summary>
+            <remarks>
+            This interface is designed for simplicity. If you have to accomplish more advanced
+            scenarios then we recommend implementing your own specific file dialog service.
+            </remarks>
+        </member>
+        <member name="M:System.Waf.Applications.Services.IFileDialogService.ShowOpenFileDialog(System.Object,System.Collections.Generic.IEnumerable{System.Waf.Applications.Services.FileType},System.Waf.Applications.Services.FileType,System.String)">
+            <summary>
+            Shows the open file dialog box that allows a user to specify a file that should be opened.
+            </summary>
+            <param name="owner">The window that owns this OpenFileDialog.</param>
+            <param name="fileTypes">The supported file types.</param>
+            <param name="defaultFileType">Default file type.</param>
+            <param name="defaultFileName">Default filename. The directory name is used as initial directory when it is specified.</param>
+            <returns>A FileDialogResult object which contains the filename selected by the user.</returns>
+            <exception cref="T:System.ArgumentNullException">fileTypes must not be null.</exception>
+            <exception cref="T:System.ArgumentException">fileTypes must contain at least one item.</exception>
+        </member>
+        <member name="M:System.Waf.Applications.Services.IFileDialogService.ShowSaveFileDialog(System.Object,System.Collections.Generic.IEnumerable{System.Waf.Applications.Services.FileType},System.Waf.Applications.Services.FileType,System.String)">
+            <summary>
+            Shows the save file dialog box that allows a user to specify a filename to save a file as.
+            </summary>
+            <param name="owner">The window that owns this SaveFileDialog.</param>
+            <param name="fileTypes">The supported file types.</param>
+            <param name="defaultFileType">Default file type.</param>
+            <param name="defaultFileName">Default filename. The directory name is used as initial directory when it is specified.</param>
+            <returns>A FileDialogResult object which contains the filename entered by the user.</returns>
+            <exception cref="T:System.ArgumentNullException">fileTypes must not be null.</exception>
+            <exception cref="T:System.ArgumentException">fileTypes must contain at least one item.</exception>
+        </member>
+        <member name="M:System.Waf.Presentation.Services.FileDialogService.ShowOpenFileDialog(System.Object,System.Collections.Generic.IEnumerable{System.Waf.Applications.Services.FileType},System.Waf.Applications.Services.FileType,System.String)">
+            <summary>
+            Shows the open file dialog box that allows a user to specify a file that should be opened.
+            </summary>
+            <param name="owner">The window that owns this OpenFileDialog.</param>
+            <param name="fileTypes">The supported file types.</param>
+            <param name="defaultFileType">Default file type.</param>
+            <param name="defaultFileName">Default filename. The directory name is used as initial directory when it is specified.</param>
+            <returns>A FileDialogResult object which contains the filename selected by the user.</returns>
+            <exception cref="T:System.ArgumentNullException">fileTypes must not be null.</exception>
+            <exception cref="T:System.ArgumentException">fileTypes must contain at least one item.</exception>
+        </member>
+        <member name="M:System.Waf.Presentation.Services.FileDialogService.ShowSaveFileDialog(System.Object,System.Collections.Generic.IEnumerable{System.Waf.Applications.Services.FileType},System.Waf.Applications.Services.FileType,System.String)">
+            <summary>
+            Shows the save file dialog box that allows a user to specify a filename to save a file as.
+            </summary>
+            <param name="owner">The window that owns this SaveFileDialog.</param>
+            <param name="fileTypes">The supported file types.</param>
+            <param name="defaultFileType">Default file type.</param>
+            <param name="defaultFileName">Default filename. The directory name is used as initial directory when it is specified.</param>
+            <returns>A FileDialogResult object which contains the filename entered by the user.</returns>
+            <exception cref="T:System.ArgumentNullException">fileTypes must not be null.</exception>
+            <exception cref="T:System.ArgumentException">fileTypes must contain at least one item.</exception>
+        </member>
+        <member name="T:System.Waf.Presentation.Converters.InvertBooleanConverter">
+            <summary>
+            Value converter that inverts a boolean value.
+            </summary>
+        </member>
+        <member name="M:System.Waf.Presentation.Converters.InvertBooleanConverter.Convert(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            Converts a boolean value into the inverted value.
+            </summary>
+            <param name="value">The boolean value to invert.</param>
+            <param name="targetType">The type of the binding target property. This parameter will be ignored.</param>
+            <param name="parameter">The converter parameter to use. This parameter will be ignored.</param>
+            <param name="culture">The culture to use in the converter.</param>
+            <returns>The inverter boolean value.</returns>
+        </member>
+        <member name="M:System.Waf.Presentation.Converters.InvertBooleanConverter.ConvertBack(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            Converts a boolean value into the inverted value.
+            </summary>
+            <param name="value">The boolean value to invert.</param>
+            <param name="targetType">The type to convert to. This parameter will be ignored.</param>
+            <param name="parameter">The converter parameter to use. This parameter will be ignored.</param>
+            <param name="culture">The culture to use in the converter.</param>
+            <returns>The inverter boolean value.</returns>
+        </member>
+        <member name="P:System.Waf.Presentation.Converters.InvertBooleanConverter.Default">
+            <summary>
+            Gets the default instance of this converter.
+            </summary>
+        </member>
+        <member name="T:System.Waf.Applications.RecentFileList">
+            <summary>
+            This class encapsulates the logic for a recent file list.
+            </summary>
+            <remarks>
+            This class can be used in a Settings file to store and load the recent file list as user settings. In Visual Studio you might need
+            to enter the full class name "System.Waf.Applications.RecentFileList" in the "Select a type" dialog.
+            </remarks>
+        </member>
+        <member name="M:System.Waf.Applications.RecentFileList.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:System.Waf.Applications.RecentFileList"/> class.
+            </summary>
+        </member>
+        <member name="M:System.Waf.Applications.RecentFileList.Load(System.Collections.Generic.IEnumerable{System.Waf.Applications.RecentFile})">
+            <summary>
+            Loads the specified collection into the recent file list. Use this method when you need to initialize the RecentFileList 
+            manually. This can be useful when you are using an own persistence implementation.
+            </summary>
+            <remarks>Recent file items that exist before the Load method is called are removed.</remarks>
+            <param name="recentFiles">The recent files.</param>
+            <exception cref="T:System.ArgumentNullException">The argument recentFiles must not be null.</exception>
+        </member>
+        <member name="M:System.Waf.Applications.RecentFileList.AddFile(System.String)">
+            <summary>
+            Adds a file to the recent file list. If the file already exists in the list then it only changes the position in the list.
+            </summary>
+            <param name="fileName">The path of the recent file.</param>
+            <exception cref="T:System.ArgumentException">The argument fileName must not be null or empty.</exception>
+        </member>
+        <member name="M:System.Waf.Applications.RecentFileList.Remove(System.Waf.Applications.RecentFile)">
+            <summary>
+            Removes the specified recent file.
+            </summary>
+            <param name="recentFile">The recent file to remove.</param>
+            <exception cref="T:System.ArgumentNullException">The argument recentFile must not be null.</exception>
+            <exception cref="T:System.ArgumentException">The argument recentFile was not found in the recent files list.</exception>
+        </member>
+        <member name="P:System.Waf.Applications.RecentFileList.RecentFiles">
+            <summary>
+            Gets the list of recent files.
+            </summary>
+        </member>
+        <member name="P:System.Waf.Applications.RecentFileList.MaxFilesNumber">
+            <summary>
+            Gets or sets the maximum number of recent files in the list.
+            </summary>
+            <remarks>
+            If the set number is lower than the list count then the recent file list is truncated to the number.
+            </remarks>
+            <exception cref="T:System.ArgumentException">The value must be equal or larger than 1.</exception>
+        </member>
+        <member name="T:System.Waf.Foundation.CollectionHelper">
+            <summary>
+            Provides helper methods for collections.
+            </summary>
+        </member>
+        <member name="M:System.Waf.Foundation.CollectionHelper.GetNextElementOrDefault``1(System.Collections.Generic.IEnumerable{``0},``0)">
+            <summary>
+            Gets the next element in the collection or default when no next element can be found.
+            </summary>
+            <typeparam name="T">The type of the items.</typeparam>
+            <param name="collection">The collection.</param>
+            <param name="current">The current item.</param>
+            <returns>The next element in the collection or default when no next element can be found.</returns>
+            <exception cref="T:System.ArgumentNullException">collection must not be <c>null</c>.</exception>
+            <exception cref="T:System.ArgumentException">The collection does not contain the specified current item.</exception>
+        </member>
+        <member name="T:System.Waf.Applications.Services.FileDialogResult">
+            <summary>
+            Contains the result information about the work with the file dialog box.
+            </summary>
+        </member>
+        <member name="M:System.Waf.Applications.Services.FileDialogResult.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:System.Waf.Applications.Services.FileDialogResult"/> class with null values.
+            Use this constructor when the user canceled the file dialog box.
+            </summary>
+        </member>
+        <member name="M:System.Waf.Applications.Services.FileDialogResult.#ctor(System.String,System.Waf.Applications.Services.FileType)">
+            <summary>
+            Initializes a new instance of the <see cref="T:System.Waf.Applications.Services.FileDialogResult"/> class.
+            </summary>
+            <param name="fileName">The filename entered by the user.</param>
+            <param name="selectedFileType">The file type selected by the user.</param>
+        </member>
+        <member name="P:System.Waf.Applications.Services.FileDialogResult.IsValid">
+            <summary>
+            Gets a value indicating whether this instance contains valid data. This property returns <c>false</c>
+            when the user canceled the file dialog box.
+            </summary>
+        </member>
+        <member name="P:System.Waf.Applications.Services.FileDialogResult.FileName">
+            <summary>
+            Gets the filename entered by the user or <c>null</c> when the user canceled the dialog box.
+            </summary>
+        </member>
+        <member name="P:System.Waf.Applications.Services.FileDialogResult.SelectedFileType">
+            <summary>
+            Gets the file type selected by the user or <c>null</c> when the user canceled the dialog box.
+            </summary>
+        </member>
+        <member name="T:System.Waf.Applications.DataModel">
+            <summary>
+            Abstract base class for a DataModel implementation.
+            </summary>
+        </member>
+        <member name="M:System.Waf.Applications.DataModel.AddWeakEventListener(System.ComponentModel.INotifyPropertyChanged,System.ComponentModel.PropertyChangedEventHandler)">
+            <summary>
+            Adds a weak event listener for a PropertyChanged event.
+            </summary>
+            <param name="source">The source of the event.</param>
+            <param name="handler">The event handler.</param>
+            <exception cref="T:System.ArgumentNullException">source must not be <c>null</c>.</exception>
+            <exception cref="T:System.ArgumentNullException">handler must not be <c>null</c>.</exception>
+        </member>
+        <member name="M:System.Waf.Applications.DataModel.RemoveWeakEventListener(System.ComponentModel.INotifyPropertyChanged,System.ComponentModel.PropertyChangedEventHandler)">
+            <summary>
+            Removes the weak event listener for a PropertyChanged event.
+            </summary>
+            <param name="source">The source of the event.</param>
+            <param name="handler">The event handler.</param>
+            <exception cref="T:System.ArgumentNullException">source must not be <c>null</c>.</exception>
+            <exception cref="T:System.ArgumentNullException">handler must not be <c>null</c>.</exception>
+        </member>
+        <member name="M:System.Waf.Applications.DataModel.AddWeakEventListener(System.Collections.Specialized.INotifyCollectionChanged,System.Collections.Specialized.NotifyCollectionChangedEventHandler)">
+            <summary>
+            Adds a weak event listener for a CollectionChanged event.
+            </summary>
+            <param name="source">The source of the event.</param>
+            <param name="handler">The event handler.</param>
+            <exception cref="T:System.ArgumentNullException">source must not be <c>null</c>.</exception>
+            <exception cref="T:System.ArgumentNullException">handler must not be <c>null</c>.</exception>
+        </member>
+        <member name="M:System.Waf.Applications.DataModel.RemoveWeakEventListener(System.Collections.Specialized.INotifyCollectionChanged,System.Collections.Specialized.NotifyCollectionChangedEventHandler)">
+            <summary>
+            Removes the weak event listener for a CollectionChanged event.
+            </summary>
+            <param name="source">The source of the event.</param>
+            <param name="handler">The event handler.</param>
+            <exception cref="T:System.ArgumentNullException">source must not be <c>null</c>.</exception>
+            <exception cref="T:System.ArgumentNullException">handler must not be <c>null</c>.</exception>
+        </member>
+        <member name="T:System.Waf.Foundation.DataErrorInfoSupport">
+            <summary>
+            This class provides an implementation for the <see cref="T:System.ComponentModel.IDataErrorInfo"/> interface which uses the
+            validation classes found in the <see cref="N:System.ComponentModel.DataAnnotations"/> namespace.
+            </summary>
+        </member>
+        <member name="M:System.Waf.Foundation.DataErrorInfoSupport.#ctor(System.Object)">
+            <summary>
+            Initializes a new instance of the <see cref="T:System.Waf.Foundation.DataErrorInfoSupport"/> class.
+            </summary>
+            <param name="instance">The instance.</param>
+            <exception cref="T:System.ArgumentNullException">instance must not be <c>null</c>.</exception>
+        </member>
+        <member name="P:System.Waf.Foundation.DataErrorInfoSupport.Error">
+            <summary>
+            Gets an error message indicating what is wrong with this object.
+            </summary>
+            <returns>An error message indicating what is wrong with this object. The default is an empty string ("").</returns>
+        </member>
+        <member name="P:System.Waf.Foundation.DataErrorInfoSupport.Item(System.String)">
+            <summary>
+            Gets the error message for the property with the given name.
+            </summary>
+            <param name="memberName">The name of the property whose error message to get.</param>
+            <returns>The error message for the property. The default is an empty string ("").</returns>
+        </member>
+        <member name="T:System.Waf.Applications.ViewModel`1">
+            <summary>
+            Abstract base class for a ViewModel implementation.
+            </summary>
+            <typeparam name="TView">The type of the view. Do provide an interface as type and not the concrete type itself.</typeparam>
+        </member>
+        <member name="T:System.Waf.Applications.ViewModel">
+            <summary>
+            Abstract base class for a ViewModel implementation.
+            </summary>
+        </member>
+        <member name="M:System.Waf.Applications.ViewModel.#ctor(System.Waf.Applications.IView)">
+            <summary>
+            Initializes a new instance of the <see cref="T:System.Waf.Applications.ViewModel"/> class and attaches itself as <c>DataContext</c> to the view.
+            </summary>
+            <param name="view">The view.</param>
+        </member>
+        <member name="M:System.Waf.Applications.ViewModel.#ctor(System.Waf.Applications.IView,System.Boolean)">
+            <summary>
+            Obsolete: Initializes a new instance of the <see cref="T:System.Waf.Applications.ViewModel"/> class.
+            </summary>
+            <param name="view">The view.</param>
+            <param name="isChild">if set to <c>true</c> then this object is a child of another ViewModel.</param>
+        </member>
+        <member name="P:System.Waf.Applications.ViewModel.View">
+            <summary>
+            Gets the associated view.
+            </summary>
+        </member>
+        <member name="M:System.Waf.Applications.ViewModel`1.#ctor(`0)">
+            <summary>
+            Initializes a new instance of the <see cref="T:System.Waf.Applications.ViewModel`1"/> class and attaches itself as <c>DataContext</c> to the view.
+            </summary>
+            <param name="view">The view.</param>
+        </member>
+        <member name="M:System.Waf.Applications.ViewModel`1.#ctor(`0,System.Boolean)">
+            <summary>
+            Obsolete: Initializes a new instance of the <see cref="T:System.Waf.Applications.ViewModel`1"/> class.
+            </summary>
+            <param name="view">The view.</param>
+            <param name="isChild">if set to <c>true</c> then the ViewModel is a child of another ViewModel.</param>
+        </member>
+        <member name="P:System.Waf.Applications.ViewModel`1.ViewCore">
+            <summary>
+            Gets the associated view as specified view type.
+            </summary>
+            <remarks>
+            Use this property in a ViewModel class to avoid casting.
+            </remarks>
+        </member>
+        <member name="T:System.Waf.Applications.Services.IMessageService">
+            <summary>
+            This service shows messages to the user. It returns the answer when the message was a question.
+            </summary>
+            <remarks>
+            This interface is designed for simplicity. If you have to accomplish more advanced
+            scenarios then we recommend implementing your own specific message service.
+            </remarks>
+        </member>
+        <member name="M:System.Waf.Applications.Services.IMessageService.ShowMessage(System.Object,System.String)">
+            <summary>
+            Shows the message.
+            </summary>
+            <param name="owner">The window that owns this Message Window.</param>
+            <param name="message">The message.</param>
+        </member>
+        <member name="M:System.Waf.Applications.Services.IMessageService.ShowWarning(System.Object,System.String)">
+            <summary>
+            Shows the message as warning.
+            </summary>
+            <param name="owner">The window that owns this Message Window.</param>
+            <param name="message">The message.</param>
+        </member>
+        <member name="M:System.Waf.Applications.Services.IMessageService.ShowError(System.Object,System.String)">
+            <summary>
+            Shows the message as error.
+            </summary>
+            <param name="owner">The window that owns this Message Window.</param>
+            <param name="message">The message.</param>
+        </member>
+        <member name="M:System.Waf.Applications.Services.IMessageService.ShowQuestion(System.Object,System.String)">
+            <summary>
+            Shows the specified question.
+            </summary>
+            <param name="owner">The window that owns this Message Window.</param>
+            <param name="message">The question.</param>
+            <returns><c>true</c> for yes, <c>false</c> for no and <c>null</c> for cancel.</returns>
+        </member>
+        <member name="M:System.Waf.Applications.Services.IMessageService.ShowYesNoQuestion(System.Object,System.String)">
+            <summary>
+            Shows the specified yes/no question.
+            </summary>
+            <param name="owner">The window that owns this Message Window.</param>
+            <param name="message">The question.</param>
+            <returns><c>true</c> for yes and <c>false</c> for no.</returns>
+        </member>
+        <member name="T:System.Waf.Applications.ApplicationInfo">
+            <summary>
+            This class provides information about the running application.
+            </summary>
+        </member>
+        <member name="P:System.Waf.Applications.ApplicationInfo.ProductName">
+            <summary>
+            Gets the product name of the application.
+            </summary>
+        </member>
+        <member name="P:System.Waf.Applications.ApplicationInfo.Version">
+            <summary>
+            Gets the version number of the application.
+            </summary>
+        </member>
+        <member name="P:System.Waf.Applications.ApplicationInfo.Company">
+            <summary>
+            Gets the company of the application.
+            </summary>
+        </member>
+        <member name="P:System.Waf.Applications.ApplicationInfo.Copyright">
+            <summary>
+            Gets the copyright information of the application.
+            </summary>
+        </member>
+        <member name="P:System.Waf.Applications.ApplicationInfo.ApplicationPath">
+            <summary>
+            Gets the path for the executable file that started the application, not including the executable name.
+            </summary>
+        </member>
+        <member name="T:System.Waf.Presentation.Converters.ValidationErrorsConverter">
+            <summary>
+            Value converter that converts a <see cref="T:System.Windows.Controls.ValidationError"/> collection to a multi-line string error message.
+            </summary>
+        </member>
+        <member name="M:System.Waf.Presentation.Converters.ValidationErrorsConverter.Convert(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            Converts a collection of <see cref="T:System.Windows.Controls.ValidationError"/> objects into a multi-line string of error messages.
+            </summary>
+            <param name="value">The collection of <see cref="T:System.Windows.Controls.ValidationError"/> objects.</param>
+            <param name="targetType">The type of the binding target property. This parameter will be ignored.</param>
+            <param name="parameter">The converter parameter to use. This parameter will be ignored.</param>
+            <param name="culture">The culture to use in the converter.</param>
+            <returns>
+            A multi-line error message or an empty string when the collection contains no errors. If the value parameter is <c>null</c>
+            or not of the type IEnumerable&lt;ValidationError&gt; this method returns <see cref="F:System.Windows.DependencyProperty.UnsetValue"/>.
+            </returns>
+        </member>
+        <member name="M:System.Waf.Presentation.Converters.ValidationErrorsConverter.ConvertBack(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            This method is not supported and throws an exception when it is called.
+            </summary>
+            <param name="value">The value that is produced by the binding target.</param>
+            <param name="targetType">The type to convert to.</param>
+            <param name="parameter">The converter parameter to use.</param>
+            <param name="culture">The culture to use in the converter.</param>
+            <returns>Nothing because this method throws an exception.</returns>
+            <exception cref="T:System.NotSupportedException">Throws this exception when the method is called.</exception>
+        </member>
+        <member name="P:System.Waf.Presentation.Converters.ValidationErrorsConverter.Default">
+            <summary>
+            Gets the default instance of this converter.
+            </summary>
+        </member>
+        <member name="T:System.Waf.Applications.ViewHelper">
+            <summary>
+            Provides helper methods that perform common tasks involving a view.
+            </summary>
+        </member>
+        <member name="M:System.Waf.Applications.ViewHelper.GetViewModel(System.Waf.Applications.IView)">
+            <summary>
+            Gets the ViewModel which is associated with the specified view.
+            </summary>
+            <param name="view">The view.</param>
+            <returns>The associated ViewModel, or <c>null</c> when no ViewModel was found.</returns>
+            <exception cref="T:System.ArgumentNullException">view must not be <c>null</c>.</exception>
+        </member>
+        <member name="M:System.Waf.Applications.ViewHelper.GetViewModel``1(System.Waf.Applications.IView)">
+            <summary>
+            Gets the ViewModel which is associated with the specified view.
+            </summary>
+            <typeparam name="T">The type of the ViewModel</typeparam>
+            <param name="view">The view.</param>
+            <returns>The associated ViewModel, or <c>null</c> when no ViewModel was found.</returns>
+            <exception cref="T:System.ArgumentNullException">view must not be <c>null</c>.</exception>
+        </member>
+        <member name="T:System.Waf.Presentation.ValidationHelper">
+            <summary>
+            Provides methods and attached properties that support data validation tracking. This works only if 
+            NotifyOnValidationError=true is set by every Binding that participates in data validation.
+            </summary>
+        </member>
+        <member name="F:System.Waf.Presentation.ValidationHelper.IsEnabledProperty">
+            <summary>
+            Identifies the IsEnabled attached property. This property contains the value that indicates whether the
+            ValidationHelper is enabled.
+            </summary>
+        </member>
+        <member name="F:System.Waf.Presentation.ValidationHelper.IsValidProperty">
+            <summary>
+            Identifies the IsValid attached property. This property contains the value that indicates whether the
+            associated object is valid.
+            </summary>
+            <remarks>
+            This is a readonly property. However, it is allowed to define a Binding with the Mode=OneWayToSource
+            for this property.
+            </remarks>
+        </member>
+        <member name="M:System.Waf.Presentation.ValidationHelper.GetIsEnabled(System.Windows.DependencyObject)">
+            <summary>
+            Gets a value that indicates whether the ValidationHelper is enabled.
+            </summary>
+            <param name="obj">The object to read the value from.</param>
+            <returns>true, if the ValidationHelper is enabled.</returns>
+        </member>
+        <member name="M:System.Waf.Presentation.ValidationHelper.SetIsEnabled(System.Windows.DependencyObject,System.Boolean)">
+            <summary>
+            Sets the value that indicates whether the ValidationHelper is enabled.
+            The default value is 'false'. It is not allowed to call this method with 'false'.
+            </summary>
+            <param name="obj">The object to set the value to.</param>
+            <param name="value">if set to <c>true</c> then the ValidationHelper is enabled for the specified object.</param>
+            <exception cref="T:System.ArgumentException">The value must not be set to 'false'.</exception>
+        </member>
+        <member name="M:System.Waf.Presentation.ValidationHelper.GetIsValid(System.Windows.DependencyObject)">
+            <summary>
+            Gets a value that indicates whether the object is valid.
+            </summary>
+            <param name="obj">The object to read the value from.</param>
+            <returns>true, if the object is valid.</returns>
+        </member>
+        <member name="M:System.Waf.Presentation.ValidationHelper.SetIsValid(System.Windows.DependencyObject,System.Boolean)">
+            <summary>
+            Do not call this method. It is for internal use only.
+            </summary>
+            <param name="obj">The object to set the value to.</param>
+            <param name="value">if set to <c>true</c> then the object is valid.</param>
+            <exception cref="T:System.InvalidOperationException">Thrown when this method is called.</exception>
+        </member>
+        <member name="T:System.Waf.Foundation.StringBuilderExtensions">
+            <summary>
+            Extends the <see cref="T:System.Text.StringBuilder"/> class with new methods.
+            </summary>
+        </member>
+        <member name="M:System.Waf.Foundation.StringBuilderExtensions.AppendInNewLine(System.Text.StringBuilder,System.String)">
+            <summary>
+            Appends the specified string in a new line or the first line when the <see cref="T:System.Text.StringBuilder"/> was empty.
+            </summary>
+            <param name="stringBuilder">The string builder.</param>
+            <param name="value">The string to append.</param>
+            <returns>A reference to this instance after the append operation has completed.</returns>
+            <exception cref="T:System.ArgumentNullException">The argument stringBuilder must not be null.</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">Enlarging the value of this instance would exceed System.Text.StringBuilder.MaxCapacity.</exception>
+        </member>
+        <member name="T:System.Waf.Applications.IModuleController">
+            <summary>
+            Interface for a module controller which is responsible for the module lifecycle.
+            </summary>
+        </member>
+        <member name="M:System.Waf.Applications.IModuleController.Initialize">
+            <summary>
+            Initializes the module controller.
+            </summary>
+        </member>
+        <member name="M:System.Waf.Applications.IModuleController.Run">
+            <summary>
+            Run the module controller.
+            </summary>
+        </member>
+        <member name="M:System.Waf.Applications.IModuleController.Shutdown">
+            <summary>
+            Shutdown the module controller.
+            </summary>
+        </member>
+        <member name="T:System.Waf.Presentation.Converters.StringFormatConverter">
+            <summary>
+            Value converter that converts an object into a formatted string. The format specification is passed via the 
+            ConverterParameter property.
+            </summary>
+        </member>
+        <member name="M:System.Waf.Presentation.Converters.StringFormatConverter.Convert(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            Converts an object into a formatted string.
+            </summary>
+            <param name="value">The object to convert.</param>
+            <param name="targetType">The type of the binding target property. This parameter will be ignored.</param>
+            <param name="parameter">The format specification used to format the object.</param>
+            <param name="culture">The culture to use in the converter.</param>
+            <returns>The formatted string.</returns>
+        </member>
+        <member name="M:System.Waf.Presentation.Converters.StringFormatConverter.ConvertBack(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            This method is not supported and throws an exception when it is called.
+            </summary>
+            <param name="value">The value that is produced by the binding target.</param>
+            <param name="targetType">The type to convert to.</param>
+            <param name="parameter">The converter parameter to use.</param>
+            <param name="culture">The culture to use in the converter.</param>
+            <returns>Nothing because this method throws an exception.</returns>
+            <exception cref="T:System.NotSupportedException">Throws this exception when the method is called.</exception>
+        </member>
+        <member name="P:System.Waf.Presentation.Converters.StringFormatConverter.Default">
+            <summary>
+            Gets the default instance of this converter.
+            </summary>
+        </member>
+        <member name="T:System.Waf.Applications.DelegateCommand">
+            <summary>
+            Provides an <see cref="T:System.Windows.Input.ICommand"/> implementation which relays the <see cref="M:System.Waf.Applications.DelegateCommand.Execute(System.Object)"/> and <see cref="M:System.Waf.Applications.DelegateCommand.CanExecute(System.Object)"/> 
+            method to the specified delegates.
+            </summary>
+        </member>
+        <member name="M:System.Waf.Applications.DelegateCommand.#ctor(System.Action)">
+            <summary>
+            Initializes a new instance of the <see cref="T:System.Waf.Applications.DelegateCommand"/> class.
+            </summary>
+            <param name="execute">Delegate to execute when Execute is called on the command.</param>
+            <exception cref="T:System.ArgumentNullException">The execute argument must not be null.</exception>
+        </member>
+        <member name="M:System.Waf.Applications.DelegateCommand.#ctor(System.Action{System.Object})">
+            <summary>
+            Initializes a new instance of the <see cref="T:System.Waf.Applications.DelegateCommand"/> class.
+            </summary>
+            <param name="execute">Delegate to execute when Execute is called on the command.</param>
+            <exception cref="T:System.ArgumentNullException">The execute argument must not be null.</exception>
+        </member>
+        <member name="M:System.Waf.Applications.DelegateCommand.#ctor(System.Action,System.Func{System.Boolean})">
+            <summary>
+            Initializes a new instance of the <see cref="T:System.Waf.Applications.DelegateCommand"/> class.
+            </summary>
+            <param name="execute">Delegate to execute when Execute is called on the command.</param>
+            <param name="canExecute">Delegate to execute when CanExecute is called on the command.</param>
+            <exception cref="T:System.ArgumentNullException">The execute argument must not be null.</exception>
+        </member>
+        <member name="M:System.Waf.Applications.DelegateCommand.#ctor(System.Action{System.Object},System.Func{System.Object,System.Boolean})">
+            <summary>
+            Initializes a new instance of the <see cref="T:System.Waf.Applications.DelegateCommand"/> class.
+            </summary>
+            <param name="execute">Delegate to execute when Execute is called on the command.</param>
+            <param name="canExecute">Delegate to execute when CanExecute is called on the command.</param>
+            <exception cref="T:System.ArgumentNullException">The execute argument must not be null.</exception>
+        </member>
+        <member name="M:System.Waf.Applications.DelegateCommand.CanExecute(System.Object)">
+            <summary>
+            Defines the method that determines whether the command can execute in its current state.
+            </summary>
+            <param name="parameter">Data used by the command.  If the command does not require data to be passed, this object can be set to null.</param>
+            <returns>
+            true if this command can be executed; otherwise, false.
+            </returns>
+        </member>
+        <member name="M:System.Waf.Applications.DelegateCommand.Execute(System.Object)">
+            <summary>
+            Defines the method to be called when the command is invoked.
+            </summary>
+            <param name="parameter">Data used by the command.  If the command does not require data to be passed, this object can be set to null.</param>
+            <exception cref="T:System.InvalidOperationException">The <see cref="M:System.Waf.Applications.DelegateCommand.CanExecute(System.Object)"/> method returns <c>false.</c></exception>
+        </member>
+        <member name="M:System.Waf.Applications.DelegateCommand.RaiseCanExecuteChanged">
+            <summary>
+            Raises the <see cref="E:CanExecuteChanged"/> event.
+            </summary>
+        </member>
+        <member name="M:System.Waf.Applications.DelegateCommand.OnCanExecuteChanged(System.EventArgs)">
+            <summary>
+            Raises the <see cref="E:CanExecuteChanged"/> event.
+            </summary>
+            <param name="e">The <see cref="T:System.EventArgs"/> instance containing the event data.</param>
+        </member>
+        <member name="E:System.Waf.Applications.DelegateCommand.CanExecuteChanged">
+            <summary>
+            Occurs when changes occur that affect whether or not the command should execute.
+            </summary>
+        </member>
+        <member name="M:System.Waf.Applications.DispatcherHelper.DoEvents">
+            <summary>
+            Execute the event queue of the dispatcher.
+            </summary>
+        </member>
+        <member name="T:System.Waf.Applications.ConverterCollection`2">
+            <summary>
+            Obsolete: Represents a collection that converts all elements of an original collection into converted elements. 
+            When the original collection notifies a change via the <see cref="T:System.Collections.Specialized.INotifyCollectionChanged"/> interface then
+            this collection synchronizes it's converted elements with the original one.
+            </summary>
+            <typeparam name="TNew">The type of the converted elements in the collection.</typeparam>
+            <typeparam name="TOld">The type of elements in the original collection.</typeparam>
+        </member>
+        <member name="M:System.Waf.Applications.ConverterCollection`2.#ctor(System.Collections.Generic.IEnumerable{`1},System.Func{`1,`0})">
+            <summary>
+            Initializes a new instance of the <see cref="T:System.Waf.Applications.ConverterCollection`2"/> class.
+            </summary>
+            <param name="originalCollection">The original collection.</param>
+            <param name="converter">The converter used to create the elements in this collection.</param>
+            <exception cref="T:System.ArgumentNullException">The argument originalCollection must not be null.</exception>
+            <exception cref="T:System.ArgumentNullException">The argument converter must not be null.</exception>
+        </member>
+        <member name="T:System.Waf.Foundation.DataErrorInfoExtensions">
+            <summary>
+            Extends the <see cref="T:System.ComponentModel.IDataErrorInfo"/> interface with new Validation methods.
+            </summary>
+        </member>
+        <member name="M:System.Waf.Foundation.DataErrorInfoExtensions.Validate(System.ComponentModel.IDataErrorInfo)">
+            <summary>
+            Validates the specified object.
+            </summary>
+            <param name="instance">The object to validate.</param>
+            <returns>An error message indicating what is wrong with this object. The default is an empty string ("").</returns>
+            <exception cref="T:System.ArgumentNullException">The argument instance must not be null.</exception>
+        </member>
+        <member name="M:System.Waf.Foundation.DataErrorInfoExtensions.Validate(System.ComponentModel.IDataErrorInfo,System.String)">
+            <summary>
+            Validates the specified member of the object.
+            </summary>
+            <param name="instance">The object to validate.</param>
+            <param name="memberName">The name of the member to validate.</param>
+            <returns>The error message for the member. The default is an empty string ("").</returns>
+            <exception cref="T:System.ArgumentNullException">The argument instance must not be null.</exception>
+        </member>
+        <member name="T:System.Waf.Applications.Services.MessageServiceExtensions">
+            <summary>
+            Provides method overloads for the <see cref="T:System.Waf.Applications.Services.IMessageService"/> to simplify its usage.
+            </summary>
+        </member>
+        <member name="M:System.Waf.Applications.Services.MessageServiceExtensions.ShowMessage(System.Waf.Applications.Services.IMessageService,System.String)">
+            <summary>
+            Shows the message.
+            </summary>
+            <param name="service">The message service.</param>
+            <param name="message">The message.</param>
+            <exception cref="T:System.ArgumentNullException">The argument service must not be null.</exception>
+        </member>
+        <member name="M:System.Waf.Applications.Services.MessageServiceExtensions.ShowWarning(System.Waf.Applications.Services.IMessageService,System.String)">
+            <summary>
+            Shows the message as warning.
+            </summary>
+            <param name="service">The message service.</param>
+            <param name="message">The message.</param>
+            <exception cref="T:System.ArgumentNullException">The argument service must not be null.</exception>
+        </member>
+        <member name="M:System.Waf.Applications.Services.MessageServiceExtensions.ShowError(System.Waf.Applications.Services.IMessageService,System.String)">
+            <summary>
+            Shows the message as error.
+            </summary>
+            <param name="service">The message service.</param>
+            <param name="message">The message.</param>
+            <exception cref="T:System.ArgumentNullException">The argument service must not be null.</exception>
+        </member>
+        <member name="M:System.Waf.Applications.Services.MessageServiceExtensions.ShowQuestion(System.Waf.Applications.Services.IMessageService,System.String)">
+            <summary>
+            Shows the specified question.
+            </summary>
+            <param name="service">The message service.</param>
+            <param name="message">The question.</param>
+            <returns><c>true</c> for yes, <c>false</c> for no and <c>null</c> for cancel.</returns>
+            <exception cref="T:System.ArgumentNullException">The argument service must not be null.</exception>
+        </member>
+        <member name="M:System.Waf.Applications.Services.MessageServiceExtensions.ShowYesNoQuestion(System.Waf.Applications.Services.IMessageService,System.String)">
+            <summary>
+            Shows the specified yes/no question.
+            </summary>
+            <param name="service">The message service.</param>
+            <param name="message">The question.</param>
+            <returns><c>true</c> for yes and <c>false</c> for no.</returns>
+            <exception cref="T:System.ArgumentNullException">The argument service must not be null.</exception>
+        </member>
+        <member name="T:System.Waf.Presentation.Services.MessageService">
+            <summary>
+            This is the default implementation of the <see cref="T:System.Waf.Applications.Services.IMessageService"/> interface. It shows messages via the MessageBox 
+            to the user.
+            </summary>
+            <remarks>
+            If the default implementation of this service doesn't serve your need then you can provide your own implementation.
+            </remarks>
+        </member>
+        <member name="M:System.Waf.Presentation.Services.MessageService.ShowMessage(System.Object,System.String)">
+            <summary>
+            Shows the message.
+            </summary>
+            <param name="owner">The window that owns this Message Window.</param>
+            <param name="message">The message.</param>
+        </member>
+        <member name="M:System.Waf.Presentation.Services.MessageService.ShowWarning(System.Object,System.String)">
+            <summary>
+            Shows the message as warning.
+            </summary>
+            <param name="owner">The window that owns this Message Window.</param>
+            <param name="message">The message.</param>
+        </member>
+        <member name="M:System.Waf.Presentation.Services.MessageService.ShowError(System.Object,System.String)">
+            <summary>
+            Shows the message as error.
+            </summary>
+            <param name="owner">The window that owns this Message Window.</param>
+            <param name="message">The message.</param>
+        </member>
+        <member name="M:System.Waf.Presentation.Services.MessageService.ShowQuestion(System.Object,System.String)">
+            <summary>
+            Shows the specified question.
+            </summary>
+            <param name="owner">The window that owns this Message Window.</param>
+            <param name="message">The question.</param>
+            <returns><c>true</c> for yes, <c>false</c> for no and <c>null</c> for cancel.</returns>
+        </member>
+        <member name="M:System.Waf.Presentation.Services.MessageService.ShowYesNoQuestion(System.Object,System.String)">
+            <summary>
+            Shows the specified yes/no question.
+            </summary>
+            <param name="owner">The window that owns this Message Window.</param>
+            <param name="message">The question.</param>
+            <returns><c>true</c> for yes and <c>false</c> for no.</returns>
+        </member>
+        <member name="T:System.Waf.Applications.Controller">
+            <summary>
+            Abstract base class for a Controller implementation
+            </summary>
+        </member>
+        <member name="M:System.Waf.Applications.Controller.AddWeakEventListener(System.ComponentModel.INotifyPropertyChanged,System.ComponentModel.PropertyChangedEventHandler)">
+            <summary>
+            Adds a weak event listener for a PropertyChanged event.
+            </summary>
+            <param name="source">The source of the event.</param>
+            <param name="handler">The event handler.</param>
+            <exception cref="T:System.ArgumentNullException">source must not be <c>null</c>.</exception>
+            <exception cref="T:System.ArgumentNullException">handler must not be <c>null</c>.</exception>
+        </member>
+        <member name="M:System.Waf.Applications.Controller.RemoveWeakEventListener(System.ComponentModel.INotifyPropertyChanged,System.ComponentModel.PropertyChangedEventHandler)">
+            <summary>
+            Removes the weak event listener for a PropertyChanged event.
+            </summary>
+            <param name="source">The source of the event.</param>
+            <param name="handler">The event handler.</param>
+            <exception cref="T:System.ArgumentNullException">source must not be <c>null</c>.</exception>
+            <exception cref="T:System.ArgumentNullException">handler must not be <c>null</c>.</exception>
+        </member>
+        <member name="M:System.Waf.Applications.Controller.AddWeakEventListener(System.Collections.Specialized.INotifyCollectionChanged,System.Collections.Specialized.NotifyCollectionChangedEventHandler)">
+            <summary>
+            Adds a weak event listener for a CollectionChanged event.
+            </summary>
+            <param name="source">The source of the event.</param>
+            <param name="handler">The event handler.</param>
+            <exception cref="T:System.ArgumentNullException">source must not be <c>null</c>.</exception>
+            <exception cref="T:System.ArgumentNullException">handler must not be <c>null</c>.</exception>
+        </member>
+        <member name="M:System.Waf.Applications.Controller.RemoveWeakEventListener(System.Collections.Specialized.INotifyCollectionChanged,System.Collections.Specialized.NotifyCollectionChangedEventHandler)">
+            <summary>
+            Removes the weak event listener for a CollectionChanged event.
+            </summary>
+            <param name="source">The source of the event.</param>
+            <param name="handler">The event handler.</param>
+            <exception cref="T:System.ArgumentNullException">source must not be <c>null</c>.</exception>
+            <exception cref="T:System.ArgumentNullException">handler must not be <c>null</c>.</exception>
+        </member>
+    </members>
+</doc>

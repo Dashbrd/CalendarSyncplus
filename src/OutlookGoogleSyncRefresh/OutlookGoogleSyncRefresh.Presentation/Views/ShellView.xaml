@@ -1,0 +1,112 @@
+﻿<controls:MetroWindow x:Class="OutlookGoogleSyncRefresh.Presentation.Views.ShellView"
+                      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                      xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+                      xmlns:converters="clr-namespace:OutlookGoogleSyncRefresh.Presentation.Converters"
+                      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                      xmlns:viewModels="clr-namespace:OutlookGoogleSyncRefresh.Application.ViewModels;assembly=OutlookGoogleSyncRefresh.Application"
+                      xmlns:views="clr-namespace:OutlookGoogleSyncRefresh.Presentation.Views"
+                      Title="Calendar Sync+"
+                      Width="600"
+                      Height="700"
+                      BorderBrush="{DynamicResource AccentColorBrush}"
+                      AllowsTransparency="True"
+                      GlowBrush="{DynamicResource AccentColorBrush}"
+                      IconTemplate="{DynamicResource IconTemplate}"
+                      NonActiveGlowBrush="Red"
+                      ResizeMode="CanMinimize"
+                      ShowIconOnTitleBar="True"
+                      ShowTitleBar="True"
+                      SnapsToDevicePixels="True"
+                      TitleCaps="False"
+                      WindowStartupLocation="CenterScreen"
+                      d:DataContext="{d:DesignInstance viewModels:ShellViewModel}"
+                      mc:Ignorable="d" Icon="../Resources/icon.ico">
+    <controls:MetroWindow.Resources>
+        <converters:PercentageWidthConverter x:Key="PercentageWidthConverter" />
+        <DataTemplate x:Key="IconTemplate">
+            <Rectangle Fill="{DynamicResource AccentSelectedColorBrush}">
+                <Rectangle.OpacityMask>
+                    <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_refresh}" />
+                </Rectangle.OpacityMask>
+            </Rectangle>
+        </DataTemplate>
+    </controls:MetroWindow.Resources>
+    <controls:MetroWindow.Flyouts>
+        <controls:FlyoutsControl>
+            <controls:Flyout Width="{Binding Width,
+                                             RelativeSource={RelativeSource AncestorType={x:Type views:ShellView}},
+                                             Converter={StaticResource PercentageWidthConverter},
+                                             ConverterParameter=75}"
+                             AnimateOnPositionChange="True"
+                             Content="{Binding Path=ShellService.SettingsView}"
+                             Header="Settings"
+                             IsModal="True"
+                             IsOpen="{Binding IsSettingsVisible,
+                                              Mode=TwoWay}"
+                             Position="Right"
+                             Theme="Adapt" />
+            <controls:Flyout Width="{Binding Width,
+                                             RelativeSource={RelativeSource AncestorType={x:Type views:ShellView}},
+                                             Converter={StaticResource PercentageWidthConverter},
+                                             ConverterParameter=75}"
+                             AnimateOnPositionChange="True"
+                             Content="{Binding Path=ShellService.AboutView}"
+                             Header="About"
+                             IsModal="True"
+                             IsOpen="{Binding IsAboutVisible,
+                                              Mode=TwoWay}"
+                             Position="Right"
+                             Theme="Adapt" />
+            <controls:Flyout Width="{Binding Width,
+                                             RelativeSource={RelativeSource AncestorType={x:Type views:ShellView}},
+                                             Converter={StaticResource PercentageWidthConverter},
+                                             ConverterParameter=75}"
+                             AnimateOnPositionChange="True"
+                             Content="{Binding Path=ShellService.HelpView}"
+                             Header="Help"
+                             IsModal="True"
+                             IsOpen="{Binding IsHelpVisible,
+                                              Mode=TwoWay}"
+                             Position="Right"
+                             Theme="Adapt" />
+        </controls:FlyoutsControl>
+    </controls:MetroWindow.Flyouts>
+    <controls:MetroWindow.LeftWindowCommands>
+        <controls:WindowCommands>
+            <Button Command="{Binding ExitCommand}"
+                    Content="Exit"
+                    ToolTip="Exit Application" />
+        </controls:WindowCommands>
+    </controls:MetroWindow.LeftWindowCommands>
+    <controls:MetroWindow.RightWindowCommands>
+        <controls:WindowCommands>
+            <Button Command="{Binding Path=AuthenticateGoogleAccount}" Visibility="Collapsed">
+                <StackPanel Orientation="Horizontal">
+                    <Rectangle Width="20"
+                               Height="20"
+                               Fill="{Binding RelativeSource={RelativeSource AncestorType=Button},
+                                              Path=Foreground}">
+                        <Rectangle.OpacityMask>
+                            <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_google}" />
+                        </Rectangle.OpacityMask>
+                    </Rectangle>
+                    <TextBlock Margin="4 0 0 0"
+                               VerticalAlignment="Center"
+                               Text="Authenticate" />
+                </StackPanel>
+            </Button>
+            <Button Command="{Binding LaunchSettings}"
+                    Content="Settings"
+                    ToolTip="Configure Outlook =&gt; Google Sync" />
+            <Button Command="{Binding LaunchAbout}"
+                    Content="About"
+                    ToolTip="About Outlook=&gt; Google Sync" />
+            <Button Command="{Binding LaunchHelp}"
+                    Content="Help"
+                    ToolTip="Help" />
+        </controls:WindowCommands>
+    </controls:MetroWindow.RightWindowCommands>
+    <views:HomeView DataContext="{Binding}" />
+</controls:MetroWindow>
