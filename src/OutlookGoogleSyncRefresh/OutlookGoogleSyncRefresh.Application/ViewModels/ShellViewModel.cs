@@ -338,7 +338,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
 
         public async void SyncNow()
         {
-            await _syncStartService.SyncNowAsync();
+            await _syncStartService.SyncNowAsync(Settings);
         }
 
         void UpdateStatus(string text)

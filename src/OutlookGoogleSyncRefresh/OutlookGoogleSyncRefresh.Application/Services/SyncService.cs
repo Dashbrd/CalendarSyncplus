@@ -47,7 +47,6 @@ namespace OutlookGoogleSyncRefresh.Application.Services
         private readonly IMessageService _messageService;
         private readonly ApplicationLogger _applicationLogger;
         private readonly ISettingsProvider _settingsProvider;
-        private Settings _settings;
         private Timer _syncTimer;
         private bool _isSyncInProgress;
         private string _syncStatus;
@@ -73,10 +72,10 @@ namespace OutlookGoogleSyncRefresh.Application.Services
 
         private async void SyncStartTimerCallback(object state)
         {
-            _settings = _settingsProvider.GetSettings();
-            if (_settings != null && _settings.SyncFrequency.ValidateTimer(DateTime.Now))
+            var settings = _settingsProvider.GetSettings();
+            if (settings != null && settings.SyncFrequency.ValidateTimer(DateTime.Now))
             {
-                await SyncNowAsync();
+                await SyncNowAsync(settings);
             }
         }
 
@@ -99,8 +98,8 @@ namespace OutlookGoogleSyncRefresh.Application.Services
 
         public async Task<bool> Start()
         {
-            _settings = _settingsProvider.GetSettings();
-            if (_settings.SavedCalendar == null || (!_settings.IsDefaultMailBox && _settings.OutlookCalendar == null))
+            var settings = _settingsProvider.GetSettings();
+            if (settings.SavedCalendar == null || (!settings.IsDefaultMailBox && settings.OutlookCalendar == null))
             {
                 _messageService.ShowMessageAsync("Please configure Google and Outlook calendar in settings to continue.");
                 return false;
@@ -117,20 +116,16 @@ namespace OutlookGoogleSyncRefresh.Application.Services
 
 
 
-        public async Task<bool> SyncNowAsync()
+        public async Task<bool> SyncNowAsync(Settings settings)
         {
             try
             {
                 if (IsSyncInProgress)
                     return false;
                 IsSyncInProgress = true;
-                if (_settings == null)
-                {
-                    _settings = _settingsProvider.GetSettings();
-                }
 
-                if (_settings.SavedCalendar == null ||
-                    (!_settings.IsDefaultMailBox && _settings.OutlookCalendar == null))
+                if (settings.SavedCalendar == null ||
+                    (!settings.IsDefaultMailBox && settings.OutlookCalendar == null))
                 {
                     _messageService.ShowMessageAsync(
                         "Please configure Google and Outlook calendar in settings to continue.");
@@ -140,7 +135,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services
 
                 ResetSyncData();
                 SyncStatus = StatusHelper.GetMessage(SyncStateEnum.SyncStarted, DateTime.Now);
-                bool isSyncComplete = await _calendarUpdateService.SyncCalendarAsync(_settings);
+                bool isSyncComplete = await _calendarUpdateService.SyncCalendarAsync(settings);
                 SyncStatus =
                     StatusHelper.GetMessage(isSyncComplete ? SyncStateEnum.SyncSuccess : SyncStateEnum.SyncFailed);
 
