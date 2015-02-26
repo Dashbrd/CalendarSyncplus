@@ -26,7 +26,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
 
         public DelegateCommand UriCommand
         {
-            get { return _uriCommand ?? new DelegateCommand(RequestNavigation); }
+            get { return _uriCommand = _uriCommand ?? new DelegateCommand(RequestNavigation); }
         }
 
         private void RequestNavigation(object parameter)

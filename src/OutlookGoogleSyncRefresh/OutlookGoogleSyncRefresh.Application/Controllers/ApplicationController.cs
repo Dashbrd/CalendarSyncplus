@@ -92,6 +92,12 @@ namespace OutlookGoogleSyncRefresh.Application.Controllers
                         _shellViewModel.NextSyncTime = _settingsViewModel.Settings.SyncFrequency.GetNextSyncTime();
                     }
                     break;
+                case "SettingsSaved":
+                    if (_settingsViewModel.SettingsSaved)
+                    {
+                        _shellViewModel.IsSettingsVisible = false;
+                    }
+                    break;
             }
         }
 

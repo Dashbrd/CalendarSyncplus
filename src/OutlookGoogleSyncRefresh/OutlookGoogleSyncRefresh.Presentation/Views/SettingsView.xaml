@@ -6,13 +6,15 @@
              xmlns:viewModels="clr-namespace:OutlookGoogleSyncRefresh.Application.ViewModels;assembly=OutlookGoogleSyncRefresh.Application"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
-             xmlns:Converters="http://waf.codeplex.com/schemas"
+             xmlns:WafConverters="http://waf.codeplex.com/schemas"
+             xmlns:converters="clr-namespace:OutlookGoogleSyncRefresh.Presentation.Converters"
              mc:Ignorable="d"
              d:DesignHeight="600"
              d:DesignWidth="400"
              d:DataContext="{d:DesignInstance viewModels:SettingsViewModel}">
     <UserControl.Resources>
-        <Converters:InvertBooleanConverter x:Key="InvertBooleanConverter"></Converters:InvertBooleanConverter>
+        <WafConverters:InvertBooleanConverter x:Key="InvertBooleanConverter"/>
+        <converters:InvertBooleanToVisibilityConverter x:Key="InvertBooleanToVisibilityConverter"/>
         <DataTemplate DataType="{x:Type viewModels:HourlySyncViewModel}">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -202,8 +204,33 @@
                         <RowDefinition  Height="Auto" />
                         <RowDefinition  Height="Auto" />
                         <RowDefinition  Height="Auto" />
+                        <RowDefinition  Height="Auto" />
                     </Grid.RowDefinitions>
                     <GroupBox Header="Outlook Settings">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition />
+                                </Grid.RowDefinitions>
+                            <RadioButton Content="Outlook Application"
+                                         IsChecked="{Binding IsExchangeWebServices,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged,
+                                                    Converter={StaticResource ResourceKey=InvertBooleanConverter}}"
+                                         Margin="4"
+                                         GroupName="OutlookApplicationGroup"
+                                         Grid.ColumnSpan="2"
+                                         Grid.Row="0" />
+                            <RadioButton Content="Exchange Web Services"
+                                         IsChecked="{Binding IsExchangeWebServices}"
+                                         Margin="4"
+                                         GroupName="OutlookApplicationGroup"
+                                         Grid.Row="1"
+                                         Grid.Column="0"
+                                         Command="{Binding GetOutlookProfileListCommand}" />
+                            </Grid>
+                    </GroupBox>
+                    <GroupBox Header="Profile &amp; MailBox Settings"
+                              Grid.Row="1"
+                              Visibility="{Binding IsExchangeWebServices,Converter={StaticResource InvertBooleanToVisibilityConverter}}">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition />
@@ -291,7 +318,7 @@
                                       ItemsSource="{Binding Path=SelectedOutlookMailBox.Calendars}"/>
                         </Grid>
                     </GroupBox>
-                    <GroupBox Grid.Row="1"
+                    <GroupBox Grid.Row="2"
                               Grid.Column="0"
                               Header="Select Google Calendar">
                         <Grid>
@@ -312,34 +339,12 @@
                         </Grid>
 
                     </GroupBox>
-                    <GroupBox Grid.Row="2"
-                              Grid.Column="0"
-                              Header="Google Calendar Entry Options">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition />
-                                <RowDefinition />
-                                <RowDefinition />
-                            </Grid.RowDefinitions>
-                            <CheckBox Content="Add Description"
-                                      Margin="5"
-                                      IsChecked="{Binding AddDescription,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
-                            <CheckBox Content="Add Attendees"
-                                      Margin="5"
-                                      Grid.Row="1"
-                                      IsChecked="{Binding AddAttendees,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
-                            <CheckBox Content="Add Reminders"
-                                      Margin="5"
-                                      Grid.Row="2"
-                                      IsChecked="{Binding AddReminders,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
-                        </Grid>
-                    </GroupBox>
-
                 </Grid>
             </TabItem>
             <TabItem Header="Sync">
                 <Grid>
                     <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
@@ -389,6 +394,28 @@
                             <ContentControl Margin="5"
                                             Content="{Binding SyncFrequencyViewModel,UpdateSourceTrigger=PropertyChanged}" />
                         </StackPanel>
+                    </GroupBox>
+                    <GroupBox Grid.Row="2"
+                              Grid.Column="0"
+                              Header="Google Calendar Entry Options">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <CheckBox Content="Add Description"
+                                      Margin="5"
+                                      IsChecked="{Binding AddDescription,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
+                            <CheckBox Content="Add Attendees"
+                                      Margin="5"
+                                      Grid.Row="1"
+                                      IsChecked="{Binding AddAttendees,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
+                            <CheckBox Content="Add Reminders"
+                                      Margin="5"
+                                      Grid.Row="2"
+                                      IsChecked="{Binding AddReminders,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
+                        </Grid>
                     </GroupBox>
                 </Grid>
             </TabItem>

@@ -16,6 +16,8 @@
 #endregion
 
 using System.ComponentModel.Composition;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Waf.Applications;
 using MahApps.Metro.Controls.Dialogs;
 
@@ -37,13 +39,13 @@ namespace OutlookGoogleSyncRefresh.Presentation.Services
 
         public void ShowMessageAsync(string message, string title)
         {
-             
+
             var metroDialogSettings = new MetroDialogSettings()
             {
-                AffirmativeButtonText="Ok",
-                AnimateHide=true,
-                AnimateShow=true,
-                ColorScheme=MetroDialogColorScheme.Accented
+                AffirmativeButtonText = "Ok",
+                AnimateHide = true,
+                AnimateShow = true,
+                ColorScheme = MetroDialogColorScheme.Accented
             };
             View.ShowMessageAsync(title, message, MessageDialogStyle.Affirmative, metroDialogSettings);
         }
@@ -51,6 +53,26 @@ namespace OutlookGoogleSyncRefresh.Presentation.Services
         public void ShowMessageAsync(string message)
         {
             ShowMessageAsync(message, ApplicationInfo.ProductName);
+        }
+
+        public async Task<MessageDialogResult> ShowMessage(string message, string title)
+        {
+
+            var metroDialogSettings = new MetroDialogSettings()
+            {
+                AffirmativeButtonText = "Ok",
+                AnimateHide = true,
+                AnimateShow = true,
+                ColorScheme = MetroDialogColorScheme.Accented
+            };
+            var result = await View.ShowMessageAsync(title, message, MessageDialogStyle.Affirmative, metroDialogSettings);
+            return result;
+
+        }
+
+        public Task<MessageDialogResult> ShowMessage(string message)
+        {
+            return ShowMessage(message, ApplicationInfo.ProductName);
         }
     }
 }

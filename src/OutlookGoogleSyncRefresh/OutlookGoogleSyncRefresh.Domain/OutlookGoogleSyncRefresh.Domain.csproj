@@ -70,6 +70,7 @@
     <Compile Include="Models\Model.cs" />
     <Compile Include="Models\OutlookCalendar.cs" />
     <Compile Include="Models\OutlookMailBox.cs" />
+    <Compile Include="Models\Enumerations.cs" />
     <Compile Include="Models\Settings.cs" />
     <Compile Include="Models\SyncFrequency.cs" />
     <Compile Include="Models\WeeklySyncFrequency.cs" />

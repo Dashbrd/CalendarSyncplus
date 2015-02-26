@@ -280,9 +280,9 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
 
         #endregion
 
-        #region Public Methods
+        #region IOutlookCalendarService Members
 
-        public List<OutlookMailBox> GetAllMailBoxes(string profileName="")
+        public List<OutlookMailBox> GetAllMailBoxes(string profileName = "")
         {
             bool disposeOutlookInstances;
             Microsoft.Office.Interop.Outlook.Application application;
@@ -321,10 +321,6 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
 
             return mailBoxes;
         }
-
-        #endregion
-
-        #region IOutlookCalendarService Members
 
         public async Task<List<string>> GetOutLookProfieListAsync()
         {

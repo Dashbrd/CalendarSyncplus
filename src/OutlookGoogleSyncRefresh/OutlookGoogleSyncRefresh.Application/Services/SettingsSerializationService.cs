@@ -119,9 +119,8 @@ namespace OutlookGoogleSyncRefresh.Application.Services
                 {
                     DaysInFuture = 7,
                     DaysInPast = 1,
-                    IsDefaultProfile = true,
+                    OutlookOptions = OutlookOptionsEnum.DefaultProfile & OutlookOptionsEnum.DefaultCalendar,
                     IsFirstSave = true,
-                    IsDefaultMailBox = true,
                     MinimizeToSystemTray = true
                 };
             }

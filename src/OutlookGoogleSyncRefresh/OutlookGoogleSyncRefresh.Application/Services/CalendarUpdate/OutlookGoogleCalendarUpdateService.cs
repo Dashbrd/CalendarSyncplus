@@ -93,7 +93,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
 
         #region Private Methods
 
-        private async Task<bool> GetAppointments(int daysInPast, int daysInFuture, string calenderId,string profileName, OutlookCalendar outlookCalendar)
+        private async Task<bool> GetAppointments(int daysInPast, int daysInFuture, string calenderId, string profileName, OutlookCalendar outlookCalendar)
         {
             GoogleAppointments = await GoogleCalendarService.GetCalendarEventsInRangeAsync(daysInPast, daysInFuture, calenderId);
             OutlookAppointments =
@@ -137,7 +137,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
             if (settings != null && settings.SavedCalendar != null)
             {
                 _applicationLogger.LogInfo("Reading appointments...");
-                isSuccess = await GetAppointments(settings.DaysInPast, settings.DaysInFuture, settings.SavedCalendar.Id,settings.OutlookProfileName,settings.OutlookCalendar);
+                isSuccess = await GetAppointments(settings.DaysInPast, settings.DaysInFuture, settings.SavedCalendar.Id, settings.OutlookProfileName, settings.OutlookCalendar);
                 SyncStatus = StatusHelper.GetMessage(SyncStateEnum.SourceAppointmentRead, OutlookAppointments.Count);
                 SyncStatus = StatusHelper.GetMessage(SyncStateEnum.DestinationAppointmentRead, GoogleAppointments.Count);
                 if (isSuccess)
@@ -154,7 +154,9 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
                         SyncStatus = StatusHelper.GetMessage(SyncStateEnum.EntriesToAdd, calendarAppointments.Count);
                         _applicationLogger.LogInfo("Adding appointments...");
                         isSuccess = await GoogleCalendarService.AddCalendarEvent(calendarAppointments, settings.SavedCalendar.Id,
-                            settings.AddDescription, settings.AddReminders, settings.AddAttendees);
+                            settings.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Description),
+                            settings.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Reminders),
+                            settings.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Attendees));
                         _applicationLogger.LogInfo("Update complete.");
                     }
                 }

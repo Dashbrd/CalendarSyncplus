@@ -15,11 +15,7 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
 
         public int DaysInFuture { get; set; }
 
-        public bool AddDescription { get; set; }
-
-        public bool AddAttendees { get; set; }
-
-        public bool AddReminders { get; set; }
+        public CalendarEntryOptionsEnum CalendarEntryOptions { get; set; }
 
         public bool LogSyncInfo { get; set; }
 
@@ -27,8 +23,7 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
 
         public DateTime LastSuccessfulSync { get; set; }
 
-        public bool IsDefaultMailBox { get; set; }
-        public bool IsDefaultProfile { get; set; }
+        public OutlookOptionsEnum OutlookOptions { get; set; }
 
         public string OutlookProfileName { get; set; }
 

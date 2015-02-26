@@ -30,6 +30,7 @@ using OutlookGoogleSyncRefresh.Application.Services.Google;
 using OutlookGoogleSyncRefresh.Application.Services.Outlook;
 using OutlookGoogleSyncRefresh.Application.Views;
 using OutlookGoogleSyncRefresh.Common.Log;
+using OutlookGoogleSyncRefresh.Domain.Helpers;
 using OutlookGoogleSyncRefresh.Domain.Models;
 
 #endregion
@@ -86,11 +87,13 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
         private OutlookMailBox _outlookMailBox;
         private bool _isDefaultMailBox = true;
         private bool _isDefaultProfile;
+        private bool _isExchangeWebServices;
         private string _selectedOutlookProfileName;
         private List<string> _outlookProfileList;
         private DelegateCommand _getOutlookProfileLIstCommand;
         private bool _minimizeToSystemTray;
         private bool _hideSystemTrayTooltip;
+        private bool _settingsSaved;
 
         #endregion
 
@@ -276,6 +279,12 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             set { SetProperty(ref _isDefaultProfile, value); }
         }
 
+        public bool IsExchangeWebServices
+        {
+            get { return _isExchangeWebServices; }
+            set { SetProperty(ref _isExchangeWebServices, value); }
+        }
+
         public string SelectedOutlookProfileName
         {
             get { return _selectedOutlookProfileName; }
@@ -295,6 +304,12 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
                 return _getOutlookProfileLIstCommand ??
                        (_getOutlookProfileLIstCommand = new DelegateCommand(GetOutlookProfileList));
             }
+        }
+
+        public bool SettingsSaved
+        {
+            get { return _settingsSaved; }
+            set { SetProperty(ref _settingsSaved, value); }
         }
 
         public bool MinimizeToSystemTray
@@ -385,13 +400,14 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
 
                     DaysInPast = Settings.DaysInPast;
                     DaysInFuture = Settings.DaysInFuture;
-                    AddAttendees = Settings.AddAttendees;
-                    AddDescription = Settings.AddDescription;
-                    AddReminders = Settings.AddReminders;
+                    AddAttendees = Settings.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Attendees);
+                    AddDescription = Settings.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Description);
+                    AddReminders = Settings.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Reminders);
                     LogSyncInfo = Settings.LogSyncInfo;
                     CreateNewFileForEverySync = CreateNewFileForEverySync;
-                    IsDefaultMailBox = Settings.IsDefaultMailBox;
-                    IsDefaultProfile = Settings.IsDefaultProfile;
+                    IsDefaultMailBox = Settings.OutlookOptions.HasFlag(OutlookOptionsEnum.DefaultCalendar);
+                    IsDefaultProfile = Settings.OutlookOptions.HasFlag(OutlookOptionsEnum.DefaultProfile);
+                    IsExchangeWebServices = Settings.OutlookOptions.HasFlag(OutlookOptionsEnum.ExchangeWebServices);
                     SelectedOutlookProfileName = Settings.OutlookProfileName;
                     MinimizeToSystemTray = Settings.MinimizeToSystemTray;
                     HideSystemTrayTooltip = Settings.HideSystemTrayTooltip;
@@ -439,39 +455,37 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
         private async void SaveSettings()
         {
             IsLoading = true;
-            Settings = new Settings
-            {
-                IsFirstSave = false,
-                SavedCalendar = SelectedCalendar,
-                DaysInFuture = DaysInFuture,
-                DaysInPast = DaysInPast,
-                SyncFrequency = SyncFrequencyViewModel.GetFrequency(),
-                AddAttendees = AddAttendees,
-                AddDescription = AddDescription,
-                AddReminders = AddReminders,
-                LogSyncInfo = LogSyncInfo,
-                CreateNewFileForEverySync = CreateNewFileForEverySync,
-                IsDefaultMailBox = IsDefaultMailBox,
-                OutlookMailBox = SelectedOutlookMailBox,
-                OutlookCalendar = SelectedOutlookCalendar,
-                IsDefaultProfile = IsDefaultProfile,
-                OutlookProfileName = SelectedOutlookProfileName,
-                MinimizeToSystemTray = MinimizeToSystemTray,
-                HideSystemTrayTooltip = HideSystemTrayTooltip
-            };
+            SettingsSaved = false;
+            Settings.IsFirstSave = false;
+            Settings.SavedCalendar = SelectedCalendar;
+            Settings.DaysInFuture = DaysInFuture;
+            Settings.DaysInPast = DaysInPast;
+            Settings.SyncFrequency = SyncFrequencyViewModel.GetFrequency();
+            Settings.UpdateEntryOptions(AddDescription, AddReminders, AddAttendees);
+            Settings.LogSyncInfo = LogSyncInfo;
+            Settings.CreateNewFileForEverySync = CreateNewFileForEverySync;
+            Settings.OutlookMailBox = SelectedOutlookMailBox;
+            Settings.OutlookCalendar = SelectedOutlookCalendar;
+            Settings.OutlookProfileName = SelectedOutlookProfileName;
+            Settings.MinimizeToSystemTray = MinimizeToSystemTray;
+            Settings.HideSystemTrayTooltip = HideSystemTrayTooltip;
+            Settings.UpdateOutlookOptions(IsDefaultProfile, IsDefaultMailBox, IsExchangeWebServices);
             bool result;
             try
             {
                 result = await SettingsSerializationService.SerializeSettingsAsync(Settings);
-                MessageService.ShowMessageAsync(result ? "Settings Saved Successfully" : "Error Saving Settings", "Settings");
+                await MessageService.ShowMessage(result ? "Settings Saved Successfully" : "Error Saving Settings", "Settings");
+                SettingsSaved = true;
             }
             catch (AggregateException exception)
             {
+                SettingsSaved = false;
                 var flattenException = exception.Flatten();
                 MessageService.ShowMessageAsync(flattenException.Message);
             }
             catch (Exception exception)
             {
+                SettingsSaved = false;
                 MessageService.ShowMessageAsync(exception.Message);
             }
             finally

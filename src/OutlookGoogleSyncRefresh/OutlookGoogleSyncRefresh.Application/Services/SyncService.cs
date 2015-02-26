@@ -30,6 +30,7 @@ using System.Waf.Applications;
 using OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate;
 using OutlookGoogleSyncRefresh.Application.Utilities;
 using OutlookGoogleSyncRefresh.Common.Log;
+using OutlookGoogleSyncRefresh.Domain.Helpers;
 using OutlookGoogleSyncRefresh.Domain.Models;
 
 using DataModel = OutlookGoogleSyncRefresh.Application.Utilities.DataModel;
@@ -99,7 +100,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services
         public async Task<bool> Start()
         {
             var settings = _settingsProvider.GetSettings();
-            if (settings.SavedCalendar == null || (!settings.IsDefaultMailBox && settings.OutlookCalendar == null))
+            if (settings.SavedCalendar == null || !settings.ValidateOutlookOptions())
             {
                 _messageService.ShowMessageAsync("Please configure Google and Outlook calendar in settings to continue.");
                 return false;
@@ -107,6 +108,8 @@ namespace OutlookGoogleSyncRefresh.Application.Services
             _syncTimer = new Timer(SyncStartTimerCallback, null, (60 - DateTime.Now.Second), 60000);
             return true;
         }
+
+
 
         public void Stop()
         {
@@ -122,10 +125,8 @@ namespace OutlookGoogleSyncRefresh.Application.Services
             {
                 if (IsSyncInProgress)
                     return false;
-                IsSyncInProgress = true;
 
-                if (settings.SavedCalendar == null ||
-                    (!settings.IsDefaultMailBox && settings.OutlookCalendar == null))
+                if (settings.SavedCalendar == null || !settings.ValidateOutlookOptions())
                 {
                     _messageService.ShowMessageAsync(
                         "Please configure Google and Outlook calendar in settings to continue.");
@@ -133,6 +134,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services
                     return false;
                 }
 
+                IsSyncInProgress = true;
                 ResetSyncData();
                 SyncStatus = StatusHelper.GetMessage(SyncStateEnum.SyncStarted, DateTime.Now);
                 bool isSyncComplete = await _calendarUpdateService.SyncCalendarAsync(settings);

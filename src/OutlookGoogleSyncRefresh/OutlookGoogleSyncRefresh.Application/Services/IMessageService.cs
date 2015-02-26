@@ -14,6 +14,10 @@
 //  * 
 //  *****************************************************************************/
 #endregion
+
+using System.Threading.Tasks;
+using MahApps.Metro.Controls.Dialogs;
+
 namespace OutlookGoogleSyncRefresh.Application.Services
 {
     public interface IMessageService
@@ -21,6 +25,10 @@ namespace OutlookGoogleSyncRefresh.Application.Services
         void ShowMessageAsync(string message, string title);
 
         void ShowMessageAsync(string message);
+
+        Task<MessageDialogResult> ShowMessage(string message, string title);
+
+        Task<MessageDialogResult> ShowMessage(string message);
 
     }
 }
