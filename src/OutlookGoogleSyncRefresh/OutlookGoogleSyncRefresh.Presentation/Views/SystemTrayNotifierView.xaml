@@ -35,6 +35,6 @@
         </ContextMenu>
     </tb:TaskbarIcon.ContextMenu>
     <tb:TaskbarIcon.Resources>
-        <Views:SyncBalloon x:Key="_syncBalloon" DataContext="{Binding Path=DataContext, ElementName=SystemTrayTaskbarIcon}" />
+        <Views:SyncBalloon x:Key="_syncBalloon" x:Shared="False" DataContext="{Binding Path=DataContext, ElementName=SystemTrayTaskbarIcon}" />
     </tb:TaskbarIcon.Resources>
 </tb:TaskbarIcon>

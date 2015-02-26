@@ -12,7 +12,7 @@ namespace OutlookGoogleSyncRefresh.Presentation.Views
     /// Interaction logic for SystemTrayNotifierView.xaml
     /// </summary>
     [Export, Export(typeof(ISystemTrayNotifierView))]
-    public partial class SystemTrayNotifierView : ISystemTrayNotifierView
+    public partial class SystemTrayNotifierView : TaskbarIcon, ISystemTrayNotifierView
     {
         public SystemTrayNotifierView()
         {

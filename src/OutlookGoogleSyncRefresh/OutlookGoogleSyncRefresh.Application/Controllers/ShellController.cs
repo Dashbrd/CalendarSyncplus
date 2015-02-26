@@ -20,7 +20,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.ComponentModel.Composition;
 using System.Waf.Applications;
-
+using System.Windows.Threading;
 using OutlookGoogleSyncRefresh.Application.Services;
 using OutlookGoogleSyncRefresh.Application.ViewModels;
 using OutlookGoogleSyncRefresh.Domain.Models;
@@ -33,16 +33,17 @@ namespace OutlookGoogleSyncRefresh.Application.Controllers
     {
         private readonly ShellViewModel _shellViewModel;
         private readonly ISyncService _syncService;
-        private readonly ISettingsProvider _settingsProvider;
+        private readonly ISettingsSerializationService _settingsSerializationService;
         private readonly SystemTrayNotifierViewModel _systemTrayNotifierViewModel;
 
         [ImportingConstructor]
-        public ShellController(ShellViewModel shellViewModel, ISyncService syncService, 
-            ISettingsProvider settingsProvider, SystemTrayNotifierViewModel systemTrayNotifierViewModel)
+        public ShellController(ShellViewModel shellViewModel, ISyncService syncService,
+            ISettingsSerializationService settingsSerializationService, SystemTrayNotifierViewModel systemTrayNotifierViewModel)
         {
             _shellViewModel = shellViewModel;
             _syncService = syncService;
-            _settingsProvider = settingsProvider;
+            _settingsSerializationService = settingsSerializationService;
+
             _systemTrayNotifierViewModel = systemTrayNotifierViewModel;
         }
 
@@ -91,17 +92,29 @@ namespace OutlookGoogleSyncRefresh.Application.Controllers
                     ShellViewModel.LastSyncTime = DateTime.Now;
                 }
 
-                var settings = _settingsProvider.GetSettings();
-                if (settings != null && settings.SyncFrequency != null)
+                if (ShellViewModel.Settings.SyncFrequency != null)
                 {
-                    ShellViewModel.NextSyncTime = settings.SyncFrequency.GetNextSyncTime();
+                    ShellViewModel.NextSyncTime = ShellViewModel.Settings.SyncFrequency.GetNextSyncTime();
                 }
             }
             else
             {
-                if (!ShellViewModel.Settings.HideSystemTrayTooltip)
+                ShowNotification();
+            }
+        }
+
+        private void ShowNotification()
+        {
+            if (!ShellViewModel.Settings.HideSystemTrayTooltip)
+            {
+                try
                 {
-                    //_systemTrayNotifierViewModel.ShowBalloon();
+                    Dispatcher.CurrentDispatcher.Invoke((Action)(() =>
+                        _systemTrayNotifierViewModel.ShowBalloon()), DispatcherPriority.Normal);
+                }
+                catch (Exception)
+                {
+
                 }
             }
         }
@@ -117,6 +130,9 @@ namespace OutlookGoogleSyncRefresh.Application.Controllers
             SyncService.Shutdown();
 
             RemoveWeakEventListener(SyncService, SyncServiceNotificationHandler);
+
+            ShellViewModel.Settings.LastSuccessfulSync = ShellViewModel.LastSyncTime.GetValueOrDefault();
+            _settingsSerializationService.SerializeSettings(ShellViewModel.Settings);
         }
     }
 }

@@ -61,20 +61,22 @@ namespace OutlookGoogleSyncRefresh.Domain.Helpers
         public static void UpdateOutlookOptions(this OutlookSettings settings, bool isDefaultProfile, bool isDefaultMailBox, bool isExchangeWebServices)
         {
             settings.OutlookOptions = OutlookOptionsEnum.None;
-            if (isDefaultProfile)
-            {
-                settings.OutlookOptions = settings.OutlookOptions | OutlookOptionsEnum.AlternateProfile;
-            }
-
-            if (isDefaultMailBox)
-            {
-                settings.OutlookOptions = settings.OutlookOptions | OutlookOptionsEnum.AlternateCalendar;
-            }
 
             if (isExchangeWebServices)
             {
                 settings.OutlookOptions = settings.OutlookOptions | OutlookOptionsEnum.ExchangeWebServices;
             }
+            else
+            {
+                settings.OutlookOptions = !isDefaultProfile
+                    ? settings.OutlookOptions | OutlookOptionsEnum.AlternateProfile
+                    : settings.OutlookOptions | OutlookOptionsEnum.DefaultProfile;
+
+                settings.OutlookOptions = !isDefaultMailBox
+                    ? settings.OutlookOptions | OutlookOptionsEnum.AlternateCalendar
+                    : settings.OutlookOptions | OutlookOptionsEnum.DefaultCalendar;
+            }
+
         }
 
     }

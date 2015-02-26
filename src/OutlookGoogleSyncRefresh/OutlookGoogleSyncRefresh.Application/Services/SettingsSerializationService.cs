@@ -23,7 +23,7 @@ using System;
 using System.ComponentModel.Composition;
 using System.IO;
 using System.Threading.Tasks;
-
+using OutlookGoogleSyncRefresh.Common.Log;
 using OutlookGoogleSyncRefresh.Domain.File.Xml;
 using OutlookGoogleSyncRefresh.Domain.Models;
 
@@ -34,6 +34,8 @@ namespace OutlookGoogleSyncRefresh.Application.Services
     [Export(typeof(ISettingsSerializationService))]
     public class SettingsSerializationService : ISettingsSerializationService
     {
+        private readonly ApplicationLogger _applicationLogger;
+
         #region Fields
 
         private readonly string applicationDataDirectory;
@@ -42,9 +44,10 @@ namespace OutlookGoogleSyncRefresh.Application.Services
         #endregion
 
         #region Constructors
-
-        public SettingsSerializationService()
+        [ImportingConstructor]
+        public SettingsSerializationService(ApplicationLogger applicationLogger)
         {
+            _applicationLogger = applicationLogger;
             applicationDataDirectory =
                 Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
                     "CalendarSyncPlus");
@@ -115,17 +118,22 @@ namespace OutlookGoogleSyncRefresh.Application.Services
         {
             if (!File.Exists(SettingsFilePath))
             {
-                var settings = new Settings()
-                {
-                    DaysInFuture = 7,
-                    DaysInPast = 1,
-                    IsFirstSave = true,
-                    MinimizeToSystemTray = true
-                };
-                settings.OutlookSettings.OutlookOptions = OutlookOptionsEnum.DefaultProfile & OutlookOptionsEnum.DefaultCalendar;
-                return settings;
+                return GetDefaultSettings();
             }
             return DeserializeSettingsBackgroundTask();
+        }
+
+        private Settings GetDefaultSettings()
+        {
+            var settings = new Settings()
+            {
+                DaysInFuture = 7,
+                DaysInPast = 1,
+                IsFirstSave = true,
+                MinimizeToSystemTray = true
+            };
+            settings.OutlookSettings.OutlookOptions = OutlookOptionsEnum.DefaultProfile & OutlookOptionsEnum.DefaultCalendar;
+            return settings;
         }
 
         #endregion
