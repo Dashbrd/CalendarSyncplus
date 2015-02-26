@@ -13,8 +13,9 @@
              d:DesignWidth="400"
              d:DataContext="{d:DesignInstance viewModels:SettingsViewModel}">
     <UserControl.Resources>
-        <WafConverters:InvertBooleanConverter x:Key="InvertBooleanConverter"/>
-        <converters:InvertBooleanToVisibilityConverter x:Key="InvertBooleanToVisibilityConverter"/>
+        <WafConverters:InvertBooleanConverter x:Key="InvertBooleanConverter" />
+        <converters:InvertBooleanToVisibilityConverter x:Key="InvertBooleanToVisibilityConverter" />
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
         <DataTemplate DataType="{x:Type viewModels:HourlySyncViewModel}">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -211,7 +212,7 @@
                             <Grid.RowDefinitions>
                                 <RowDefinition />
                                 <RowDefinition />
-                                </Grid.RowDefinitions>
+                            </Grid.RowDefinitions>
                             <RadioButton Content="Outlook Application"
                                          IsChecked="{Binding IsExchangeWebServices,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged,
                                                     Converter={StaticResource ResourceKey=InvertBooleanConverter}}"
@@ -226,8 +227,74 @@
                                          Grid.Row="1"
                                          Grid.Column="0"
                                          Command="{Binding GetOutlookProfileListCommand}" />
-                            </Grid>
+                        </Grid>
                     </GroupBox>
+                    <StackPanel  Grid.Row="1"
+                                 Orientation="Vertical"
+                                 Visibility="{Binding IsExchangeWebServices,Converter={StaticResource BooleanToVisibilityConverter}}">
+                        <GroupBox Header="Exchange Server Settings">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="2*" />
+                                    <ColumnDefinition Width="3*" />
+                                </Grid.ColumnDefinitions>
+                                <CheckBox Grid.ColumnSpan="2"
+                                          Margin="2"
+                                          Content="Auto detect settings "
+                                          x:Name="autoDetectSettingsCheckBox" />
+                                <TextBlock Text="Help: Enter username to auto detect Exchange Web Server. Leave password empty if connected to corporate network."
+                                           Grid.Row="1"
+                                           Grid.ColumnSpan="2"
+                                           Margin="2"
+                                           TextWrapping="Wrap" />
+                                <TextBlock Grid.Row="2"
+                                           Text="Email"
+                                           VerticalAlignment="Center"
+                                           Margin="4" />
+                                <TextBox Grid.Row="2"
+                                         Grid.Column="1"
+                                         Margin="4"
+                                         Text="{Binding Username,Mode=TwoWay}" />
+                                <TextBlock Text="Password"
+                                           Grid.Row="3"
+                                           VerticalAlignment="Center"
+                                           Margin="4" />
+                                <PasswordBox Grid.Row="3"
+                                             Grid.Column="1"
+                                             Margin="4"
+                                             PasswordChar="*"
+                                             controls:PasswordBoxHelper.CapsLockWarningToolTip="CAPSLOCK IS ON" />
+                            </Grid>
+                        </GroupBox>
+                        <GroupBox Header="Advanced Server Settings">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="2*" />
+                                    <ColumnDefinition Width="3*" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Row="1"
+                                           Text="Exchange Server Url"
+                                           VerticalAlignment="Center" />
+                                <TextBox Grid.Row="1"
+                                         Grid.Column="1"
+                                         Margin="4"
+                                         Text="{Binding ExchangeServerUrl,Mode=TwoWay}"
+                                         IsEnabled="{Binding IsChecked,ElementName=autoDetectSettingsCheckBox,Converter={StaticResource InvertBooleanConverter}}" />
+                            </Grid>
+                        </GroupBox>
+                    </StackPanel>
                     <GroupBox Header="Profile &amp; MailBox Settings"
                               Grid.Row="1"
                               Visibility="{Binding IsExchangeWebServices,Converter={StaticResource InvertBooleanToVisibilityConverter}}">
@@ -271,7 +338,7 @@
                             <ComboBox Grid.Row="2"
                                       Grid.Column="1"
                                       SelectedItem="{Binding Path=SelectedOutlookProfileName}"
-                                      DisplayMemberPath="."
+                                      DisplayMemberPath="Name"
                                       Margin="4"
                                       ItemsSource="{Binding Path=OutlookProfileList}"
                                       IsEnabled="{Binding Path=IsChecked,ElementName=outlookProfileRadioButton}" />
@@ -301,7 +368,8 @@
                                       Grid.Column="1"
                                       SelectedItem="{Binding Path=SelectedOutlookMailBox}"
                                       DisplayMemberPath="Name"
-                                      Margin="4" ItemsSource="{Binding Path=OutlookMailBoxes}"
+                                      Margin="4"
+                                      ItemsSource="{Binding Path=OutlookMailBoxes}"
                                       IsEnabled="{Binding Path=IsChecked,ElementName=MailBoxRadioButton}" />
                             <TextBlock Text="Select Calendar"
                                        Grid.Row="6"
@@ -315,7 +383,7 @@
                                       DisplayMemberPath="Name"
                                       SelectedItem="{Binding Path=SelectedOutlookCalendar}"
                                       IsEnabled="{Binding Path=IsChecked,ElementName=MailBoxRadioButton}"
-                                      ItemsSource="{Binding Path=SelectedOutlookMailBox.Calendars}"/>
+                                      ItemsSource="{Binding Path=SelectedOutlookMailBox.Calendars}" />
                         </Grid>
                     </GroupBox>
                     <GroupBox Grid.Row="2"
@@ -366,7 +434,7 @@
                                                     Value="{Binding DaysInPast,Mode=TwoWay}"
                                                     HideUpDownButtons="True"
                                                     Interval="1"
-                                                    Margin="2" 
+                                                    Margin="2"
                                                     Maximum="1825"
                                                     Minimum="0" />
                             <TextBlock Grid.Row="1"
@@ -381,7 +449,7 @@
                                                     Interval="1"
                                                     Margin="2"
                                                     Maximum="1825"
-                                                    Minimum="0"/>
+                                                    Minimum="0" />
                         </Grid>
                     </GroupBox>
                     <GroupBox Grid.Row="1"
@@ -403,6 +471,7 @@
                                 <RowDefinition />
                                 <RowDefinition />
                                 <RowDefinition />
+                                <RowDefinition />
                             </Grid.RowDefinitions>
                             <CheckBox Content="Add Description"
                                       Margin="5"
@@ -415,6 +484,11 @@
                                       Margin="5"
                                       Grid.Row="2"
                                       IsChecked="{Binding AddReminders,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
+                            <CheckBox Content="Add Attachments"
+                                      Margin="5"
+                                      Visibility="Collapsed"
+                                      Grid.Row="3"
+                                      IsChecked="{Binding AddAttachments,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
                         </Grid>
                     </GroupBox>
                 </Grid>
@@ -427,7 +501,8 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition />
                     </Grid.RowDefinitions>
-                    <GroupBox Header="Log Settings" Visibility="Collapsed">
+                    <GroupBox Header="Log Settings"
+                              Visibility="Collapsed">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition />
@@ -440,15 +515,16 @@
                                       Margin="5"
                                       Grid.Row="1"
                                       IsChecked="{Binding CreateNewFileForEverySync,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
-                                
+
                             </CheckBox>
                         </Grid>
                     </GroupBox>
-                    <GroupBox Header="Application" Grid.Row="1">
+                    <GroupBox Header="Application"
+                              Grid.Row="1">
                         <Grid>
                             <Grid.RowDefinitions>
-                                <RowDefinition/>
-                                <RowDefinition/>
+                                <RowDefinition />
+                                <RowDefinition />
                                 <RowDefinition />
                                 <RowDefinition />
                             </Grid.RowDefinitions>
@@ -456,9 +532,9 @@
                                       Visibility="Collapsed"
                                       Margin="5" />
                             <CheckBox Content="Close button minimizes to tray"
-                                      Grid.Row="1" 
-                                      Margin="5" 
-                                      IsChecked="{Binding MinimizeToSystemTray,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+                                      Grid.Row="1"
+                                      Margin="5"
+                                      IsChecked="{Binding MinimizeToSystemTray,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
                             <CheckBox Content="Sync on startup"
                                       Grid.Row="2"
                                       Visibility="Collapsed"
@@ -470,9 +546,15 @@
 
                         </Grid>
                     </GroupBox>
-                    <TextBlock Grid.Row="2" Text="More Features Coming Soon..." FontSize="40" TextWrapping="Wrap" HorizontalAlignment="Center" VerticalAlignment="Center" MaxWidth="200"/>
+                    <TextBlock Grid.Row="2"
+                               Text="More Features Coming Soon..."
+                               FontSize="40"
+                               TextWrapping="Wrap"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               MaxWidth="200" />
                 </Grid>
-                
+
             </TabItem>
         </TabControl>
         <Button Content="SAVE"

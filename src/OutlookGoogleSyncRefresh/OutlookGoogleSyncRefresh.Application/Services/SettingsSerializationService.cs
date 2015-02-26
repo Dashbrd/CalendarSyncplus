@@ -115,14 +115,15 @@ namespace OutlookGoogleSyncRefresh.Application.Services
         {
             if (!File.Exists(SettingsFilePath))
             {
-                return new Settings()
+                var settings = new Settings()
                 {
                     DaysInFuture = 7,
                     DaysInPast = 1,
-                    OutlookOptions = OutlookOptionsEnum.DefaultProfile & OutlookOptionsEnum.DefaultCalendar,
                     IsFirstSave = true,
                     MinimizeToSystemTray = true
                 };
+                settings.OutlookSettings.OutlookOptions = OutlookOptionsEnum.DefaultProfile & OutlookOptionsEnum.DefaultCalendar;
+                return settings;
             }
             return DeserializeSettingsBackgroundTask();
         }

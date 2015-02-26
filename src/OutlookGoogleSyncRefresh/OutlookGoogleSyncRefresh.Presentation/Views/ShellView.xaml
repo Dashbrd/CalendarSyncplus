@@ -23,6 +23,7 @@
                       WindowStartupLocation="CenterScreen"
                       d:DataContext="{d:DesignInstance viewModels:ShellViewModel}"
                       mc:Ignorable="d" Icon="../Resources/icon.ico">
+    
     <controls:MetroWindow.Resources>
         <converters:PercentageWidthConverter x:Key="PercentageWidthConverter" />
         <DataTemplate x:Key="IconTemplate">
@@ -73,15 +74,13 @@
                              Theme="Adapt" />
         </controls:FlyoutsControl>
     </controls:MetroWindow.Flyouts>
-    <controls:MetroWindow.LeftWindowCommands>
+    
+    <controls:MetroWindow.RightWindowCommands>
         <controls:WindowCommands>
             <Button Command="{Binding ExitCommand}"
                     Content="Exit"
                     ToolTip="Exit Application" />
-        </controls:WindowCommands>
-    </controls:MetroWindow.LeftWindowCommands>
-    <controls:MetroWindow.RightWindowCommands>
-        <controls:WindowCommands>
+
             <Button Command="{Binding Path=AuthenticateGoogleAccount}" Visibility="Collapsed">
                 <StackPanel Orientation="Horizontal">
                     <Rectangle Width="20"

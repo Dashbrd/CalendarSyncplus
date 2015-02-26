@@ -137,7 +137,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
             if (settings != null && settings.SavedCalendar != null)
             {
                 _applicationLogger.LogInfo("Reading appointments...");
-                isSuccess = await GetAppointments(settings.DaysInPast, settings.DaysInFuture, settings.SavedCalendar.Id, settings.OutlookProfileName, settings.OutlookCalendar);
+                isSuccess = await GetAppointments(settings.DaysInPast, settings.DaysInFuture, settings.SavedCalendar.Id, settings.OutlookSettings.OutlookProfileName, settings.OutlookSettings.OutlookCalendar);
                 SyncStatus = StatusHelper.GetMessage(SyncStateEnum.SourceAppointmentRead, OutlookAppointments.Count);
                 SyncStatus = StatusHelper.GetMessage(SyncStateEnum.DestinationAppointmentRead, GoogleAppointments.Count);
                 if (isSuccess)

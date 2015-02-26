@@ -94,6 +94,11 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
         private bool _minimizeToSystemTray;
         private bool _hideSystemTrayTooltip;
         private bool _settingsSaved;
+        private bool _autoDetectExchangeServer;
+        private string _username;
+        private string _password;
+        private string _exchangeServerUrl;
+        private bool _addAttachments;
 
         #endregion
 
@@ -184,15 +189,15 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             try
             {
                 OutlookMailBoxes = await Task<List<OutlookMailBox>>.Factory.StartNew(GetOutlookMailBox);
-                if (Settings.OutlookMailBox != null)
+                if (Settings.OutlookSettings.OutlookMailBox != null)
                 {
                     SelectedOutlookMailBox =
-                        OutlookMailBoxes.FirstOrDefault(t => t.EntryId.Equals(Settings.OutlookMailBox.EntryId));
-                    if (Settings.OutlookCalendar != null && SelectedOutlookMailBox != null)
+                        OutlookMailBoxes.FirstOrDefault(t => t.EntryId.Equals(Settings.OutlookSettings.OutlookMailBox.EntryId));
+                    if (Settings.OutlookSettings.OutlookCalendar != null && SelectedOutlookMailBox != null)
                     {
                         SelectedOutlookCalendar =
                             SelectedOutlookMailBox.Calendars.FirstOrDefault(
-                                t => t.EntryId.Equals(Settings.OutlookCalendar.EntryId));
+                                t => t.EntryId.Equals(Settings.OutlookSettings.OutlookCalendar.EntryId));
                     }
                 }
             }
@@ -223,6 +228,12 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
         {
             get { return _addReminders; }
             set { SetProperty(ref _addReminders, value); }
+        }
+
+        public bool AddAttachments
+        {
+            get { return _addAttachments; }
+            set { SetProperty(ref _addAttachments, value); }
         }
 
         public bool LogSyncInfo
@@ -283,6 +294,30 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
         {
             get { return _isExchangeWebServices; }
             set { SetProperty(ref _isExchangeWebServices, value); }
+        }
+
+        public bool AutoDetectExchangeServer
+        {
+            get { return _autoDetectExchangeServer; }
+            set { SetProperty(ref _autoDetectExchangeServer, value); }
+        }
+
+        public string Username
+        {
+            get { return _username; }
+            set { SetProperty(ref _username, value); }
+        }
+
+        public string Password
+        {
+            get { return _password; }
+            set { SetProperty(ref _password, value); }
+        }
+
+        public string ExchangeServerUrl
+        {
+            get { return _exchangeServerUrl; }
+            set { SetProperty(ref _exchangeServerUrl, value); }
         }
 
         public string SelectedOutlookProfileName
@@ -403,12 +438,13 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
                     AddAttendees = Settings.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Attendees);
                     AddDescription = Settings.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Description);
                     AddReminders = Settings.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Reminders);
-                    LogSyncInfo = Settings.LogSyncInfo;
+                    AddAttachments = Settings.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Attachments);
+                    LogSyncInfo = Settings.LogSettings.LogSyncInfo;
                     CreateNewFileForEverySync = CreateNewFileForEverySync;
-                    IsDefaultMailBox = Settings.OutlookOptions.HasFlag(OutlookOptionsEnum.DefaultCalendar);
-                    IsDefaultProfile = Settings.OutlookOptions.HasFlag(OutlookOptionsEnum.DefaultProfile);
-                    IsExchangeWebServices = Settings.OutlookOptions.HasFlag(OutlookOptionsEnum.ExchangeWebServices);
-                    SelectedOutlookProfileName = Settings.OutlookProfileName;
+                    IsDefaultMailBox = Settings.OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.DefaultCalendar);
+                    IsDefaultProfile = Settings.OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.DefaultProfile);
+                    IsExchangeWebServices = Settings.OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.ExchangeWebServices);
+                    SelectedOutlookProfileName = Settings.OutlookSettings.OutlookProfileName;
                     MinimizeToSystemTray = Settings.MinimizeToSystemTray;
                     HideSystemTrayTooltip = Settings.HideSystemTrayTooltip;
                 }
@@ -461,15 +497,19 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             Settings.DaysInFuture = DaysInFuture;
             Settings.DaysInPast = DaysInPast;
             Settings.SyncFrequency = SyncFrequencyViewModel.GetFrequency();
-            Settings.UpdateEntryOptions(AddDescription, AddReminders, AddAttendees);
-            Settings.LogSyncInfo = LogSyncInfo;
-            Settings.CreateNewFileForEverySync = CreateNewFileForEverySync;
-            Settings.OutlookMailBox = SelectedOutlookMailBox;
-            Settings.OutlookCalendar = SelectedOutlookCalendar;
-            Settings.OutlookProfileName = SelectedOutlookProfileName;
+            Settings.UpdateEntryOptions(AddDescription, AddReminders, AddAttendees, AddAttachments);
+            Settings.LogSettings.LogSyncInfo = LogSyncInfo;
+            Settings.LogSettings.CreateNewFileForEverySync = CreateNewFileForEverySync;
+            Settings.OutlookSettings.OutlookMailBox = SelectedOutlookMailBox;
+            Settings.OutlookSettings.OutlookCalendar = SelectedOutlookCalendar;
+            Settings.OutlookSettings.OutlookProfileName = SelectedOutlookProfileName;
             Settings.MinimizeToSystemTray = MinimizeToSystemTray;
             Settings.HideSystemTrayTooltip = HideSystemTrayTooltip;
-            Settings.UpdateOutlookOptions(IsDefaultProfile, IsDefaultMailBox, IsExchangeWebServices);
+            Settings.OutlookSettings.UpdateOutlookOptions(IsDefaultProfile, IsDefaultMailBox, IsExchangeWebServices);
+            Settings.ExchangeServerSettings.AutoDetectExchangeServer = AutoDetectExchangeServer;
+            Settings.ExchangeServerSettings.Username = Username;
+            Settings.ExchangeServerSettings.Password = Password;
+            Settings.ExchangeServerSettings.ExchangeServerUrl = ExchangeServerUrl;
             bool result;
             try
             {

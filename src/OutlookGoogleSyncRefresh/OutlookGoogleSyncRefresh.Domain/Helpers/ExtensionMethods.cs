@@ -16,16 +16,16 @@ namespace OutlookGoogleSyncRefresh.Domain.Helpers
         }
 
 
-        public static bool ValidateOutlookOptions(this Settings settings)
+        public static bool ValidateOutlookSettings(this Settings settings)
         {
-            if (!settings.OutlookOptions.HasFlag(OutlookOptionsEnum.DefaultProfile) &&
-                string.IsNullOrEmpty(settings.OutlookProfileName))
+            if (!settings.OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.DefaultProfile) &&
+                string.IsNullOrEmpty(settings.OutlookSettings.OutlookProfileName))
             {
                 return false;
             }
 
-            if (!settings.OutlookOptions.HasFlag(OutlookOptionsEnum.DefaultCalendar) &&
-                (settings.OutlookCalendar == null || settings.OutlookMailBox == null))
+            if (!settings.OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.DefaultCalendar) &&
+                (settings.OutlookSettings.OutlookCalendar == null || settings.OutlookSettings.OutlookMailBox == null))
             {
                 return false;
             }
@@ -33,7 +33,7 @@ namespace OutlookGoogleSyncRefresh.Domain.Helpers
             return true;
         }
 
-        public static void UpdateEntryOptions(this Settings settings, bool addDescription, bool addReminders, bool addAttendees)
+        public static void UpdateEntryOptions(this Settings settings, bool addDescription, bool addReminders, bool addAttendees, bool addAttachments)
         {
             settings.CalendarEntryOptions = CalendarEntryOptionsEnum.None;
             if (addDescription)
@@ -50,10 +50,15 @@ namespace OutlookGoogleSyncRefresh.Domain.Helpers
             {
                 settings.CalendarEntryOptions = settings.CalendarEntryOptions | CalendarEntryOptionsEnum.Attendees;
             }
+
+            if (addAttachments)
+            {
+                settings.CalendarEntryOptions = settings.CalendarEntryOptions | CalendarEntryOptionsEnum.Attachments;
+            }
         }
 
 
-        public static void UpdateOutlookOptions(this Settings settings, bool isDefaultProfile, bool isDefaultMailBox, bool isExchangeWebServices)
+        public static void UpdateOutlookOptions(this OutlookSettings settings, bool isDefaultProfile, bool isDefaultMailBox, bool isExchangeWebServices)
         {
             settings.OutlookOptions = OutlookOptionsEnum.None;
             if (isDefaultProfile)
