@@ -94,7 +94,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
         private bool _minimizeToSystemTray;
         private bool _hideSystemTrayTooltip;
         private bool _settingsSaved;
-        private bool _autoDetectExchangeServer;
+        private DelegateCommand _autoDetectExchangeServer;
         private string _username;
         private string _password;
         private string _exchangeServerUrl;
@@ -296,12 +296,12 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             set { SetProperty(ref _isExchangeWebServices, value); }
         }
 
-        public bool AutoDetectExchangeServer
+        public DelegateCommand AutoDetectExchangeServer
         {
-            get { return _autoDetectExchangeServer; }
-            set { SetProperty(ref _autoDetectExchangeServer, value); }
+            get { return _autoDetectExchangeServer = _autoDetectExchangeServer ?? new DelegateCommand(AutoDetectEWSSettings); }
+            
         }
-
+        
         public string Username
         {
             get { return _username; }
@@ -358,7 +358,10 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             get { return _hideSystemTrayTooltip; }
             set { SetProperty(ref _hideSystemTrayTooltip, value); }
         }
-
+        private void AutoDetectEWSSettings()
+        {
+         
+        }
         private async void GetOutlookProfileList()
         {
             IsLoading = true;
@@ -506,7 +509,6 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             Settings.MinimizeToSystemTray = MinimizeToSystemTray;
             Settings.HideSystemTrayTooltip = HideSystemTrayTooltip;
             Settings.OutlookSettings.UpdateOutlookOptions(IsDefaultProfile, IsDefaultMailBox, IsExchangeWebServices);
-            Settings.ExchangeServerSettings.AutoDetectExchangeServer = AutoDetectExchangeServer;
             Settings.ExchangeServerSettings.Username = Username;
             Settings.ExchangeServerSettings.Password = Password;
             Settings.ExchangeServerSettings.ExchangeServerUrl = ExchangeServerUrl;

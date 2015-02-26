@@ -23,6 +23,8 @@ using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.ComponentModel.Composition;
+using System.IO;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Waf.Applications;

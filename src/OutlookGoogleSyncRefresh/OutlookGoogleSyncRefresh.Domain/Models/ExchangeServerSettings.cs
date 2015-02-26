@@ -9,8 +9,6 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
     {
         public string ExchangeVersion { get; set; }
 
-        public bool AutoDetectExchangeServer { get; set; }
-
         public string Username { get; set; }
 
         public string Password { get; set; }

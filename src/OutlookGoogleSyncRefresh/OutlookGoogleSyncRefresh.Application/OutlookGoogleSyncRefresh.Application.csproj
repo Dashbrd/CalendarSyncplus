@@ -155,11 +155,13 @@
     <Compile Include="Controllers\IController.cs" />
     <Compile Include="Controllers\IShellController.cs" />
     <Compile Include="Controllers\ShellController.cs" />
+    <Compile Include="Services\ApplicationUpdateService.cs" />
     <Compile Include="Services\CalendarUpdate\OutlookGoogleCalendarUpdateService.cs" />
     <Compile Include="Services\CalendarUpdate\CalendarUpdateServiceFactory.cs" />
     <Compile Include="Services\CalendarUpdate\ICalendarUpdateService.cs" />
     <Compile Include="Services\ExchangeWeb\ExchangeWebCalendarService.cs" />
     <Compile Include="Services\ExchangeWeb\IExchangeWebCalendarService.cs" />
+    <Compile Include="Services\IApplicationUpdateService.cs" />
     <Compile Include="Services\IMessageService.cs" />
     <Compile Include="Services\IService.cs" />
     <Compile Include="Services\ISettingsProvider.cs" />

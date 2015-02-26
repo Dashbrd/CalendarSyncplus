@@ -236,7 +236,7 @@
                             <Grid>
                                 <Grid.RowDefinitions>
                                     <RowDefinition />
-                                    <RowDefinition />
+                                    <RowDefinition Height="Auto"/>
                                     <RowDefinition />
                                     <RowDefinition />
                                     <RowDefinition />
@@ -245,13 +245,11 @@
                                     <ColumnDefinition Width="2*" />
                                     <ColumnDefinition Width="3*" />
                                 </Grid.ColumnDefinitions>
-                                <CheckBox Grid.ColumnSpan="2"
-                                          Margin="2"
-                                          Content="Auto detect settings "
-                                          x:Name="autoDetectSettingsCheckBox" />
+                                <Button Margin="2"
+                                          Content="Auto detect settings"
+                                    Command="{Binding AutoDetectExchangeServer}"/>
                                 <TextBlock Text="Help: Enter username to auto detect Exchange Web Server. Leave password empty if connected to corporate network."
-                                           Grid.Row="1"
-                                           Grid.ColumnSpan="2"
+                                           Grid.Column="1"
                                            Margin="2"
                                            TextWrapping="Wrap" />
                                 <TextBlock Grid.Row="2"
@@ -290,8 +288,7 @@
                                 <TextBox Grid.Row="1"
                                          Grid.Column="1"
                                          Margin="4"
-                                         Text="{Binding ExchangeServerUrl,Mode=TwoWay}"
-                                         IsEnabled="{Binding IsChecked,ElementName=autoDetectSettingsCheckBox,Converter={StaticResource InvertBooleanConverter}}" />
+                                         Text="{Binding ExchangeServerUrl,Mode=TwoWay}"/>
                             </Grid>
                         </GroupBox>
                     </StackPanel>
