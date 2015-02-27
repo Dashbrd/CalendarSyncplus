@@ -12,15 +12,14 @@ This utility synchronizes Outlook calendar entries to a designated Google calend
 (Currently, Outlook 2007 and above are supported)
 Features
 
-    Select outlook calendar from different profiles and mailboxes
-    Synchronize calendar entries from selected Outlook calendar to selected Google calendar
-    Calendar Entry Info includes description, Location, reminder and attendees
-    Date Range Selection for Sync
-    Deletes duplicate entries
-    Setup Sync Frequency
-    Add/Delete calendar entries to Google thru batch request
-        Hourly
-        Daily
-        Weekly
+    * Select outlook calendar from different profiles and mailboxes.
+    * Synchronize calendar entries from selected Outlook calendar to selected Google calendar.
+    * Calendar Entry Info includes description, Location, reminder and attendees.
+    * Date Range Selection for Sync.
+    * Deletes duplicate entries.
+    * Setup Sync Frequency.
+    * Add/Delete calendar entries to Google thru batch request.
+        Hourly,	Daily, Weekly
+    * Checks for latest version from github
 
 More features to be added soon...
