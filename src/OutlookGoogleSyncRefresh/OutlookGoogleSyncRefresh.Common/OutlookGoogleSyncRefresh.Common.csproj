@@ -48,6 +48,7 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
     <Reference Include="WpfApplicationFramework">
       <HintPath>..\Libraries\WpfApplicationFramework.dll</HintPath>
     </Reference>
@@ -58,6 +59,7 @@
     </Compile>
     <Compile Include="CallerFilePathAttribute.cs" />
     <Compile Include="CallerMemberNameAttribute.cs" />
+    <Compile Include="DispatcherHelper.cs" />
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="Log\ApplicationLogger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

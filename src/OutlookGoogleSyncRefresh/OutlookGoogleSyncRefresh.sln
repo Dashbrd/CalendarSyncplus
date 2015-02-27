@@ -37,7 +37,6 @@ EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "CalendarSyncPlus", "CalendarSyncPlus\CalendarSyncPlus.vdproj", "{5338B029-4F95-4744-9DB9-EE6A5E3E52EB}"
 EndProject
 Global
-	
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU

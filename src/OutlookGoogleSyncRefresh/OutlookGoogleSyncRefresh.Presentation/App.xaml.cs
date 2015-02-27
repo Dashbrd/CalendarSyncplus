@@ -32,6 +32,7 @@ using System.Windows.Threading;
 using OutlookGoogleSyncRefresh.Application.Controllers;
 using OutlookGoogleSyncRefresh.Application.Services;
 using OutlookGoogleSyncRefresh.Application.ViewModels;
+using OutlookGoogleSyncRefresh.Common;
 using OutlookGoogleSyncRefresh.Common.Log;
 using OutlookGoogleSyncRefresh.Domain.Models;
 using OutlookGoogleSyncRefresh.Helpers;
@@ -54,6 +55,11 @@ namespace OutlookGoogleSyncRefresh
         private IApplicationController controller;
 
         #endregion
+
+        static App()
+        {
+            DispatcherHelper.Initialize();
+        }
 
         #region Properties
 
