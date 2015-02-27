@@ -17,8 +17,11 @@
 
 #endregion
 
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Xml.Serialization;
+
+using OutlookGoogleSyncRefresh.Common;
 
 namespace OutlookGoogleSyncRefresh.Domain.Models
 {
@@ -47,6 +50,11 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
             field = value;
             RaisePropertyChanged(propertyName);
             return true;
+        }
+
+        protected override void OnPropertyChanged(PropertyChangedEventArgs e)
+        {
+            DispatcherHelper.CheckBeginInvokeOnUI(() => base.OnPropertyChanged(e));
         }
     }
 }
