@@ -19,10 +19,12 @@
 
 #region Imports
 
+using System;
 using System.ComponentModel.Composition;
 using System.Waf.Applications;
 using OutlookGoogleSyncRefresh.Application.Services;
 using OutlookGoogleSyncRefresh.Application.Views;
+using OutlookGoogleSyncRefresh.Common;
 
 #endregion
 
@@ -105,12 +107,17 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
         public void ShowBalloon(string tooltipText)
         {
             ToolTipText = tooltipText;
-            ViewCore.ShowCustomBalloon();
+            DispatcherHelper.CheckBeginInvokeOnUI((Action)(() => ViewCore.ShowCustomBalloon()));
         }
 
         public void HideBalloon()
         {
-            ViewCore.CloseBalloon();
+            DispatcherHelper.CheckBeginInvokeOnUI((Action)(() => ViewCore.CloseBalloon()));
+        }
+
+        public void Quit()
+        {
+            ViewCore.Quit();
         }
     }
 }

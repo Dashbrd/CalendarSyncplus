@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.Composition;
+using System.Windows;
 using System.Windows.Controls.Primitives;
 using Hardcodet.Wpf.TaskbarNotification;
 using OutlookGoogleSyncRefresh.Application.Views;
@@ -24,6 +25,11 @@ namespace OutlookGoogleSyncRefresh.Presentation.Views
             var syncBalloon = new SyncBalloon();
             syncBalloon.DataContext = DataContext;
             ShowCustomBalloon(syncBalloon, PopupAnimation.Slide, null);
+        }
+
+        public void Quit()
+        {
+            this.Visibility = Visibility.Hidden;
         }
 
         #endregion

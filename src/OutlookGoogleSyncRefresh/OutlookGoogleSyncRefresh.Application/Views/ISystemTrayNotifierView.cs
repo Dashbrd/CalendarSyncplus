@@ -26,5 +26,7 @@ namespace OutlookGoogleSyncRefresh.Application.Views
         void ShowCustomBalloon();
 
         void CloseBalloon();
+
+        void Quit();
     }
 }

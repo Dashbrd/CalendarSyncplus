@@ -223,8 +223,8 @@
                             <RadioButton Content="Exchange Web Services"
                                          IsChecked="{Binding IsExchangeWebServices}"
                                          Margin="4"
-                                         Visibility="Collapsed"
                                          GroupName="OutlookApplicationGroup"
+                                         Visibility="Collapsed"
                                          Grid.Row="1"
                                          Grid.Column="0"
                                          Command="{Binding GetOutlookProfileListCommand}" />
@@ -247,11 +247,14 @@
                                     <ColumnDefinition Width="3*" />
                                 </Grid.ColumnDefinitions>
                                 <Button Margin="2"
+                                        Height="30"
                                         Content="Auto detect settings"
                                         Command="{Binding AutoDetectExchangeServer}" />
                                 <TextBlock
                                     Text="Help: Enter username to auto detect Exchange Web Server. Leave password empty if connected to corporate network."
-                                    Grid.Column="1"
+                                    Grid.ColumnSpan="2"
+                                    Grid.Row="1"
+                                    VerticalAlignment="Center"
                                     Margin="2"
                                     TextWrapping="Wrap" />
                                 <TextBlock Grid.Row="2"
@@ -337,9 +340,8 @@
                             <ComboBox Grid.Row="2"
                                       Grid.Column="1"
                                       SelectedItem="{Binding Path=SelectedOutlookProfileName}"
-                                      DisplayMemberPath="Name"
                                       Margin="4"
-                                      ItemsSource="{Binding Path=OutlookProfileList}"
+                                      ItemsSource="{Binding Path=OutlookProfileList,UpdateSourceTrigger=PropertyChanged}"
                                       IsEnabled="{Binding Path=IsChecked,ElementName=outlookProfileRadioButton}" />
                             <RadioButton Content="Default MailBox and Calendar"
                                          IsChecked="{Binding IsDefaultMailBox,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"

@@ -26,7 +26,7 @@ using OutlookGoogleSyncRefresh.Common.Log;
 
 namespace OutlookGoogleSyncRefresh.Application.Controllers
 {
-    [Export(typeof (IShellController))]
+    [Export(typeof(IShellController))]
     public class ShellController : Controller, IShellController
     {
         private readonly ApplicationLogger _applicationLogger;
@@ -82,6 +82,7 @@ namespace OutlookGoogleSyncRefresh.Application.Controllers
 
             ShellViewModel.Settings.LastSuccessfulSync = ShellViewModel.LastSyncTime.GetValueOrDefault();
             _settingsSerializationService.SerializeSettings(ShellViewModel.Settings);
+            _systemTrayNotifierViewModel.Quit();
         }
 
         #endregion

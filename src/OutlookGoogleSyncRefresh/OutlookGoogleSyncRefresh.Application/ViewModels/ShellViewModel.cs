@@ -371,8 +371,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
 
         private void ShowNotification(bool showHide, string popupText = "Syncing...")
         {
-            InvokeOnCurrentDispatcher(() =>
-            {
+            
                 if (!Settings.HideSystemTrayTooltip)
                 {
                     try
@@ -392,7 +391,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
                         //ApplicationLogger.LogError(exception.Message);
                     }
                 }
-            });
+            
         }
 
         private void InvokeOnCurrentDispatcher(Action action)
