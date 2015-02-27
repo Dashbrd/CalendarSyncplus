@@ -28,6 +28,8 @@
                                         Value="{Binding MinuteOffsetForHour,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                         VerticalAlignment="Center"
                                         HideUpDownButtons="True"
+                                        Minimum="1"
+                                        Maximum="59"
                                         Interval="1" />
             </Grid>
         </DataTemplate>
