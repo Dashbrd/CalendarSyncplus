@@ -36,6 +36,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
         List<Appointment> OutlookAppointments { get; set; }
         Appointment CurrentAppointment { get; set; }
         string SyncStatus { get; set; }
+
         #endregion
 
         #region Public Methods

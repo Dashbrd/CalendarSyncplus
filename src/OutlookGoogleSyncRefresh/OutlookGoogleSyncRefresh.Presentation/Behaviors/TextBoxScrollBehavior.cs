@@ -6,10 +6,12 @@ namespace OutlookGoogleSyncRefresh.Presentation.Behaviors
 {
     public class TextBoxScrollBehavior : Behavior<TextBox>
     {
+        private bool _isCleanup;
+
         protected override void OnAttached()
         {
-            AssociatedObject.Loaded +=AssociatedObjectOnLoaded;
-            AssociatedObject.Unloaded +=AssociatedObjectOnUnloaded;
+            AssociatedObject.Loaded += AssociatedObjectOnLoaded;
+            AssociatedObject.Unloaded += AssociatedObjectOnUnloaded;
             base.OnAttached();
         }
 
@@ -21,12 +23,12 @@ namespace OutlookGoogleSyncRefresh.Presentation.Behaviors
 
         private void AssociatedObjectOnUnloaded(object sender, RoutedEventArgs routedEventArgs)
         {
-            CleanUp();   
+            CleanUp();
         }
 
         private void AssociatedObjectOnLoaded(object sender, RoutedEventArgs routedEventArgs)
         {
-             AssociatedObject.TextChanged +=AssociatedObjectOnTextChanged;       
+            AssociatedObject.TextChanged += AssociatedObjectOnTextChanged;
         }
 
         private void AssociatedObjectOnTextChanged(object sender, TextChangedEventArgs textChangedEventArgs)
@@ -34,11 +36,12 @@ namespace OutlookGoogleSyncRefresh.Presentation.Behaviors
             AssociatedObject.ScrollToEnd();
         }
 
-        private bool _isCleanup;
-        void CleanUp()
+        private void CleanUp()
         {
-            if(_isCleanup)
+            if (_isCleanup)
+            {
                 return;
+            }
             AssociatedObject.Loaded -= AssociatedObjectOnLoaded;
             AssociatedObject.Unloaded -= AssociatedObjectOnUnloaded;
             AssociatedObject.TextChanged -= AssociatedObjectOnTextChanged;

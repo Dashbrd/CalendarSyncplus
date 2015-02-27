@@ -1,25 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Waf.Applications;
 using OutlookGoogleSyncRefresh.Domain.Models;
 
 namespace OutlookGoogleSyncRefresh.Application.ViewModels
 {
     public class WeeklySyncViewModel : SyncFrequencyViewModel
     {
-        private int _weekRecurrence;
-        private DateTime _timeOfDay;
-        private bool _isSunday;
+        private bool _isFriday;
         private bool _isMonday;
+        private bool _isSaturday;
+        private bool _isSunday;
+        private bool _isThursday;
         private bool _isTuesday;
         private bool _isWednesday;
-        private bool _isThursday;
-        private bool _isFriday;
-        private bool _isSaturday;
+        private DateTime _timeOfDay;
+        private int _weekRecurrence;
 
         public WeeklySyncViewModel()
         {
@@ -31,7 +26,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
         public WeeklySyncViewModel(WeeklySyncFrequency weeklySyncFrequency)
         {
             WeekRecurrence = weeklySyncFrequency.WeekRecurrence;
-            foreach (var dayOfWeekEnum in weeklySyncFrequency.DaysOfWeek)
+            foreach (DayOfWeek dayOfWeekEnum in weeklySyncFrequency.DaysOfWeek)
             {
                 LoadDayOfTheWeek(dayOfWeekEnum);
             }
@@ -46,78 +41,54 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
         public DateTime TimeOfDay
         {
             get { return _timeOfDay; }
-            set
-            {
-                SetProperty(ref _timeOfDay, value);
-            }
+            set { SetProperty(ref _timeOfDay, value); }
         }
 
         public bool IsSunday
         {
             get { return _isSunday; }
-            set
-            {
-                SetProperty(ref _isSunday, value);
-            }
+            set { SetProperty(ref _isSunday, value); }
         }
 
         public bool IsMonday
         {
             get { return _isMonday; }
-            set
-            {
-                SetProperty(ref _isMonday, value);
-            }
+            set { SetProperty(ref _isMonday, value); }
         }
 
         public bool IsTuesday
         {
             get { return _isTuesday; }
-            set
-            {
-                SetProperty(ref _isTuesday, value);
-            }
+            set { SetProperty(ref _isTuesday, value); }
         }
 
         public bool IsWednesday
         {
             get { return _isWednesday; }
-            set
-            {
-                SetProperty(ref _isWednesday, value);
-            }
+            set { SetProperty(ref _isWednesday, value); }
         }
 
         public bool IsThursday
         {
             get { return _isThursday; }
-            set
-            {
-                SetProperty(ref _isThursday, value);
-            }
+            set { SetProperty(ref _isThursday, value); }
         }
 
         public bool IsFriday
         {
             get { return _isFriday; }
-            set
-            {
-                SetProperty(ref _isFriday, value);
-            }
+            set { SetProperty(ref _isFriday, value); }
         }
 
         public bool IsSaturday
         {
             get { return _isSaturday; }
-            set
-            {
-                SetProperty(ref _isSaturday, value);
-            }
+            set { SetProperty(ref _isSaturday, value); }
         }
 
         public override SyncFrequency GetFrequency()
         {
-            var frequency = new WeeklySyncFrequency()
+            var frequency = new WeeklySyncFrequency
             {
                 StartDate = DateTime.Now,
                 DaysOfWeek = new List<DayOfWeek>(),
@@ -142,7 +113,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             }
         }
 
-        void LoadDayOfTheWeek(DayOfWeek dayOfTheWeek)
+        private void LoadDayOfTheWeek(DayOfWeek dayOfTheWeek)
         {
             switch (dayOfTheWeek)
             {

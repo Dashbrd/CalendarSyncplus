@@ -1,4 +1,5 @@
 ﻿#region File Header
+
 // /******************************************************************************
 //  * 
 //  *      Copyright (C) Ankesh Dave 2015 All Rights Reserved. Confidential
@@ -13,6 +14,7 @@
 //  *      FileName:       PropertyChangedEventListener.cs
 //  * 
 //  *****************************************************************************/
+
 #endregion
 
 using System;
@@ -23,28 +25,43 @@ namespace OutlookGoogleSyncRefresh.Application.Utilities
 {
     internal class PropertyChangedEventListener : IWeakEventListener
     {
-        private readonly INotifyPropertyChanged source;
         private readonly PropertyChangedEventHandler handler;
+        private readonly INotifyPropertyChanged source;
 
 
         public PropertyChangedEventListener(INotifyPropertyChanged source, PropertyChangedEventHandler handler)
         {
-            if (source == null) { throw new ArgumentNullException("source"); }
-            if (handler == null) { throw new ArgumentNullException("handler"); }
+            if (source == null)
+            {
+                throw new ArgumentNullException("source");
+            }
+            if (handler == null)
+            {
+                throw new ArgumentNullException("handler");
+            }
             this.source = source;
             this.handler = handler;
         }
 
 
-        public INotifyPropertyChanged Source { get { return source; } }
+        public INotifyPropertyChanged Source
+        {
+            get { return source; }
+        }
 
-        public PropertyChangedEventHandler Handler { get { return handler; } }
+        public PropertyChangedEventHandler Handler
+        {
+            get { return handler; }
+        }
 
+        #region IWeakEventListener Members
 
         public bool ReceiveWeakEvent(Type managerType, object sender, EventArgs e)
         {
-            handler(sender, (PropertyChangedEventArgs)e);
+            handler(sender, (PropertyChangedEventArgs) e);
             return true;
         }
+
+        #endregion
     }
 }

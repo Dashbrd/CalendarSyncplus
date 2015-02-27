@@ -19,11 +19,9 @@
 
 #region Imports
 
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Threading;
 using System.Threading.Tasks;
-
 using OutlookGoogleSyncRefresh.Domain.Models;
 
 #endregion
@@ -33,13 +31,14 @@ namespace OutlookGoogleSyncRefresh.Application.Services
     public interface ISyncService : INotifyPropertyChanged, IService
     {
         #region Properties
-        bool IsSyncInProgress { get; set; }
+
         string SyncStatus { get; set; }
+
         #endregion
 
         #region Public Methods
 
-        Task<bool> Start();
+        Task<bool> Start(TimerCallback timerCallback);
 
         void Stop();
 

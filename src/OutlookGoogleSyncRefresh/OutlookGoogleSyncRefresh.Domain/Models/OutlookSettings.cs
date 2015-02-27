@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace OutlookGoogleSyncRefresh.Domain.Models
+﻿namespace OutlookGoogleSyncRefresh.Domain.Models
 {
     public class OutlookSettings
     {
@@ -14,6 +9,5 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
         public OutlookMailBox OutlookMailBox { get; set; }
 
         public OutlookCalendar OutlookCalendar { get; set; }
-
     }
 }

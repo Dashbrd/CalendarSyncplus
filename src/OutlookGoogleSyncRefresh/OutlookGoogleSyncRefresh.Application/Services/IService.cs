@@ -1,4 +1,5 @@
 ﻿#region File Header
+
 // /******************************************************************************
 //  * 
 //  *      Copyright (C) Ankesh Dave 2015 All Rights Reserved. Confidential
@@ -13,7 +14,9 @@
 //  *      FileName:       IService.cs
 //  * 
 //  *****************************************************************************/
+
 #endregion
+
 namespace OutlookGoogleSyncRefresh.Application.Services
 {
     public interface IService
@@ -22,6 +25,6 @@ namespace OutlookGoogleSyncRefresh.Application.Services
 
         void Run();
 
-        void Shutdown();  
+        void Shutdown();
     }
 }

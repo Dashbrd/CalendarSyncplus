@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using OutlookGoogleSyncRefresh.Domain.Helpers;
 
 namespace OutlookGoogleSyncRefresh.Domain.Models
 {
@@ -7,7 +8,7 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
     {
         public WeeklySyncFrequency()
         {
-            this.Name = "Weekly";
+            Name = "Weekly";
         }
 
         public DateTime StartDate { get; set; }
@@ -23,7 +24,7 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
         {
             if (IsDayValid(dateTime))
             {
-                if (IsTimeValid(dateTime))
+                if (dateTime.IsTimeValid(TimeOfDay))
                 {
                     return true;
                 }
@@ -40,7 +41,7 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
                     return true;
                 }
             }
-            else if (StartDate.Date.Subtract(dateTime.Date).Days > 7 * WeekRecurrence)
+            else if (StartDate.Date.Subtract(dateTime.Date).Days > 7*WeekRecurrence)
             {
                 if (DaysOfWeek.Contains(dateTime.DayOfWeek))
                 {
@@ -50,22 +51,13 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
             return false;
         }
 
-        bool IsTimeValid(DateTime dateTime)
-        {
-            if (dateTime.TimeOfDay.ToString("t").Equals(TimeOfDay.TimeOfDay.ToString("t")))
-            {
-                return true;
-            }
-            return false;
-        }
-
         public override DateTime GetNextSyncTime()
         {
-
-            var dateTime = DateTime.Now;
+            DateTime dateTime = DateTime.Now;
             if (dateTime.CompareTo(TimeOfDay) > 0)
             {
-                dateTime = new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, TimeOfDay.Hour, TimeOfDay.Minute, TimeOfDay.Second);
+                dateTime = new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, TimeOfDay.Hour, TimeOfDay.Minute,
+                    TimeOfDay.Second);
                 dateTime = dateTime.Add(new TimeSpan(1, 0, 0, 0));
             }
 
@@ -73,7 +65,8 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
             {
                 if (IsDayValid(dateTime))
                 {
-                    return new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, TimeOfDay.Hour, TimeOfDay.Minute, TimeOfDay.Second);
+                    return new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, TimeOfDay.Hour, TimeOfDay.Minute,
+                        TimeOfDay.Second);
                 }
                 dateTime = dateTime.Add(new TimeSpan(1, 0, 0, 0));
             }
@@ -82,7 +75,7 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
 
         public override string ToString()
         {
-            string str = string.Format("{0} : {1}", this.GetType().Name, TimeOfDay);
+            string str = string.Format("{0} : {1}", GetType().Name, TimeOfDay);
             return str;
         }
     }

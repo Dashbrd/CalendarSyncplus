@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Threading;
 using System.Xml.Serialization;
 
 namespace OutlookGoogleSyncRefresh.Domain.Models
 {
-    [XmlInclude(typeof(HourlySyncFrequency))]
-    [XmlInclude(typeof(DailySyncFrequency))]
-    [XmlInclude(typeof(WeeklySyncFrequency))]
+    [XmlInclude(typeof (HourlySyncFrequency))]
+    [XmlInclude(typeof (DailySyncFrequency))]
+    [XmlInclude(typeof (WeeklySyncFrequency))]
     public class SyncFrequency
     {
         [XmlIgnore]

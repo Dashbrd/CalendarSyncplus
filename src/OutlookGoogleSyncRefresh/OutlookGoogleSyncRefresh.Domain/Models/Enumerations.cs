@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace OutlookGoogleSyncRefresh.Domain.Models
 {
@@ -15,6 +12,7 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
         AlternateCalendar = 8,
         ExchangeWebServices = 16,
     }
+
     [Flags]
     public enum CalendarEntryOptionsEnum
     {

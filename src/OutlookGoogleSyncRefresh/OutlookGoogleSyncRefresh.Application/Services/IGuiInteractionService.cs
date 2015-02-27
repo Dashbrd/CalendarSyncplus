@@ -1,4 +1,5 @@
 ﻿#region File Header
+
 // /******************************************************************************
 //  * 
 //  *      Copyright (C) Ankesh Dave 2015 All Rights Reserved. Confidential
@@ -13,7 +14,9 @@
 //  *      FileName:       IUiinteractionService.cs
 //  * 
 //  *****************************************************************************/
+
 #endregion
+
 namespace OutlookGoogleSyncRefresh.Application.Services
 {
     public interface IGuiInteractionService
@@ -21,6 +24,5 @@ namespace OutlookGoogleSyncRefresh.Application.Services
         void ShowApplication();
 
         void HideApplication();
-
     }
 }

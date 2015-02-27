@@ -20,23 +20,22 @@
 #region Imports
 
 using System.ComponentModel.Composition;
-using System.Waf.Foundation;
-
 using OutlookGoogleSyncRefresh.Application.Utilities;
 
 #endregion
 
 namespace OutlookGoogleSyncRefresh.Application.Services
 {
-    [Export, Export(typeof(IShellService))]
+    [Export, Export(typeof (IShellService))]
     public class ShellService : DataModel, IShellService
     {
         #region Fields
 
-        private object _settingsView;
-        private object _shellView;
         private object _aboutView;
         private object _helpView;
+        private object _settingsView;
+        private object _shellView;
+
         #endregion
 
         #region IShellService Members

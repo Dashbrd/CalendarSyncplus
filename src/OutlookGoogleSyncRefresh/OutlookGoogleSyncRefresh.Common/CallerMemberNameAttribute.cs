@@ -1,4 +1,5 @@
 ﻿#region File Header
+
 // /******************************************************************************
 //  * 
 //  *      Copyright (C) Ankesh Dave 2015 All Rights Reserved. Confidential
@@ -13,15 +14,13 @@
 //  *      FileName:       CallerMemberNameAttribute.cs
 //  * 
 //  *****************************************************************************/
+
 #endregion
-
-using System;
-
 
 namespace System.Runtime.CompilerServices
 {
     /// <summary>
-    /// To mimic .NET 4.5 Compiler Behavior on .NET 4.0 App
+    ///     To mimic .NET 4.5 Compiler Behavior on .NET 4.0 App
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter, AllowMultiple = false, Inherited = true)]
     public sealed class CallerMemberNameAttribute : Attribute

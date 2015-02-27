@@ -1,4 +1,5 @@
 ﻿#region File Header
+
 // /******************************************************************************
 //  * 
 //  *      Copyright (C) Ankesh Dave 2015 All Rights Reserved. Confidential
@@ -13,38 +14,39 @@
 //  *      FileName:       ShellController.cs
 //  * 
 //  *****************************************************************************/
+
 #endregion
 
-using System;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.ComponentModel.Composition;
 using System.Waf.Applications;
-using System.Windows.Threading;
 using OutlookGoogleSyncRefresh.Application.Services;
 using OutlookGoogleSyncRefresh.Application.ViewModels;
-using OutlookGoogleSyncRefresh.Domain.Models;
+using OutlookGoogleSyncRefresh.Common.Log;
 
 namespace OutlookGoogleSyncRefresh.Application.Controllers
 {
-
-    [Export(typeof(IShellController))]
+    [Export(typeof (IShellController))]
     public class ShellController : Controller, IShellController
     {
+        private readonly ApplicationLogger _applicationLogger;
+        private readonly ISettingsSerializationService _settingsSerializationService;
         private readonly ShellViewModel _shellViewModel;
         private readonly ISyncService _syncService;
-        private readonly ISettingsSerializationService _settingsSerializationService;
         private readonly SystemTrayNotifierViewModel _systemTrayNotifierViewModel;
 
         [ImportingConstructor]
         public ShellController(ShellViewModel shellViewModel, ISyncService syncService,
-            ISettingsSerializationService settingsSerializationService, SystemTrayNotifierViewModel systemTrayNotifierViewModel)
+            ISettingsSerializationService settingsSerializationService,
+            SystemTrayNotifierViewModel systemTrayNotifierViewModel,
+            ApplicationLogger applicationLogger)
         {
             _shellViewModel = shellViewModel;
             _syncService = syncService;
             _settingsSerializationService = settingsSerializationService;
 
             _systemTrayNotifierViewModel = systemTrayNotifierViewModel;
+            _applicationLogger = applicationLogger;
         }
 
         public ShellViewModel ShellViewModel
@@ -57,6 +59,8 @@ namespace OutlookGoogleSyncRefresh.Application.Controllers
             get { return _syncService; }
         }
 
+        #region IShellController Members
+
         public void Initialize()
         {
             //Initialize Services for Notification
@@ -64,64 +68,9 @@ namespace OutlookGoogleSyncRefresh.Application.Controllers
             AddWeakEventListener(SyncService, SyncServiceNotificationHandler);
         }
 
-        private void SyncServiceNotificationHandler(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
-        {
-            switch (propertyChangedEventArgs.PropertyName)
-            {
-                case "IsSyncInProgress":
-                    SyncInProgressChangedHandler();
-                    break;
-                case "SyncStatus":
-                    SyncStatusChangedHandler();
-                    break;
-            }
-        }
-
-        private void SyncStatusChangedHandler()
-        {
-            ShellViewModel.ErrorMessageChanged(SyncService.SyncStatus);
-        }
-
-        private void SyncInProgressChangedHandler()
-        {
-            ShellViewModel.IsSyncInProgress = SyncService.IsSyncInProgress;
-            if (!ShellViewModel.IsSyncInProgress)
-            {
-                if (string.IsNullOrEmpty(SyncService.SyncStatus))
-                {
-                    ShellViewModel.LastSyncTime = DateTime.Now;
-                }
-
-                if (ShellViewModel.Settings.SyncFrequency != null)
-                {
-                    ShellViewModel.NextSyncTime = ShellViewModel.Settings.SyncFrequency.GetNextSyncTime();
-                }
-            }
-            else
-            {
-                ShowNotification();
-            }
-        }
-
-        private void ShowNotification()
-        {
-            if (!ShellViewModel.Settings.HideSystemTrayTooltip)
-            {
-                try
-                {
-                    Dispatcher.CurrentDispatcher.Invoke((Action)(() =>
-                        _systemTrayNotifierViewModel.ShowBalloon()), DispatcherPriority.Normal);
-                }
-                catch (Exception)
-                {
-
-                }
-            }
-        }
 
         public void Run()
         {
-
         }
 
         public void Shutdown()
@@ -133,6 +82,23 @@ namespace OutlookGoogleSyncRefresh.Application.Controllers
 
             ShellViewModel.Settings.LastSuccessfulSync = ShellViewModel.LastSyncTime.GetValueOrDefault();
             _settingsSerializationService.SerializeSettings(ShellViewModel.Settings);
+        }
+
+        #endregion
+
+        private void SyncServiceNotificationHandler(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
+        {
+            switch (propertyChangedEventArgs.PropertyName)
+            {
+                case "SyncStatus":
+                    SyncStatusChangedHandler();
+                    break;
+            }
+        }
+
+        private void SyncStatusChangedHandler()
+        {
+            ShellViewModel.ErrorMessageChanged(SyncService.SyncStatus);
         }
     }
 }

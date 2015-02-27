@@ -1,36 +1,24 @@
 ﻿using System;
 using System.ComponentModel.Composition;
 using System.Windows;
-using MahApps.Metro.Controls;
-using MahApps.Metro.Controls.Dialogs;
-
 using OutlookGoogleSyncRefresh.Application.Views;
 using OutlookGoogleSyncRefresh.Helpers;
 
 namespace OutlookGoogleSyncRefresh.Presentation.Views
 {
     /// <summary>
-    /// Interaction logic for ShellView.xaml
+    ///     Interaction logic for ShellView.xaml
     /// </summary>
-    [Export,Export(typeof(IShellView))]
+    [Export, Export(typeof (IShellView))]
     public partial class ShellView : IShellView
     {
-
         public ShellView()
         {
             InitializeComponent();
-            StateChanged+=OnShellViewWindowStateChanged;
+            StateChanged += OnShellViewWindowStateChanged;
         }
 
-        private void OnShellViewWindowStateChanged(object sender, EventArgs e)
-        {
-            switch (this.WindowState)
-            {
-                case WindowState.Minimized:
-                    Utilities.HideForeground(this);
-                    break;
-            } 
-        }
+        #region IShellView Members
 
         public bool IsMaximized
         {
@@ -48,5 +36,16 @@ namespace OutlookGoogleSyncRefresh.Presentation.Views
             }
         }
 
+        #endregion
+
+        private void OnShellViewWindowStateChanged(object sender, EventArgs e)
+        {
+            switch (WindowState)
+            {
+                case WindowState.Minimized:
+                    Utilities.HideForeground(this);
+                    break;
+            }
+        }
     }
 }

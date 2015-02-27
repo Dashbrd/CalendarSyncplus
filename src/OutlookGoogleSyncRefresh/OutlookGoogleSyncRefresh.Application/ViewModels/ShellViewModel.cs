@@ -23,14 +23,11 @@ using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.ComponentModel.Composition;
-using System.IO;
-using System.Net;
+using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
 using System.Waf.Applications;
-using System.Windows.Input;
 using System.Windows.Threading;
-
 using OutlookGoogleSyncRefresh.Application.Services;
 using OutlookGoogleSyncRefresh.Application.Services.Google;
 using OutlookGoogleSyncRefresh.Application.Views;
@@ -46,33 +43,31 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
     {
         #region Fields
 
-        private readonly IAccountAuthenticationService _accountAuthenticationService;
-        private readonly IShellService _shellService;
-        private readonly ISyncService _syncStartService;
-        private Settings _settings;
-        private readonly ApplicationLogger _applicationLogger;
-
+        private readonly StringBuilder _statusBuilder;
         private DelegateCommand _authenticateGoogleAccount;
         private Appointment _currentAppointment;
+        private DelegateCommand _downloadCommand;
         private DelegateCommand _exitCommand;
         private ObservableCollection<Appointment> _googleAppointments;
         private int _googleEntriesCount;
-        private bool _isSettingsVisible;
-        private bool _isHelpVisible;
         private bool _isAboutVisible;
+        private bool _isHelpVisible;
+        private bool _isLatestVersionAvailable;
         private bool _isPeriodicSyncStarted;
+        private bool _isSettingsVisible;
         private bool _isSyncInProgress;
-        private DelegateCommand _launchSettings;
+        private DateTime? _lastCheckDateTime;
+        private DateTime? _lastSyncTime;
+        private string _latestVersion;
         private DelegateCommand _launchAbout;
         private DelegateCommand _launchHelp;
+        private DelegateCommand _launchSettings;
+        private DateTime? _nextSyncTime;
         private ObservableCollection<Appointment> _outlookAppointments;
         private int _outlookEntriesCount;
+        private Settings _settings;
         private DelegateCommand _startSyncCommand;
-        private string _syncLog;
         private DelegateCommand _syncNowCommand;
-        private StringBuilder _statusBuilder;
-        private DateTime? _lastSyncTime;
-        private DateTime? _nextSyncTime;
 
         #endregion
 
@@ -90,15 +85,18 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             IAccountAuthenticationService accountAuthenticationService,
             Settings settings,
             IMessageService messageService,
-            ApplicationLogger applicationLogger)
+            ApplicationLogger applicationLogger, IApplicationUpdateService applicationUpdateService,
+            SystemTrayNotifierViewModel systemTrayNotifierViewModel)
             : base(view)
         {
             MessageService = messageService;
-            _shellService = shellService;
-            _syncStartService = syncStartService;
-            _accountAuthenticationService = accountAuthenticationService;
+            ApplicationUpdateService = applicationUpdateService;
+            ShellService = shellService;
+            SyncStartService = syncStartService;
+            AccountAuthenticationService = accountAuthenticationService;
             _settings = settings;
-            _applicationLogger = applicationLogger;
+            ApplicationLogger = applicationLogger;
+            SystemTrayNotifierViewModel = systemTrayNotifierViewModel;
             _statusBuilder = new StringBuilder();
             view.Closing += ViewClosing;
             view.Closed += ViewClosed;
@@ -113,21 +111,29 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             {
                 LastSyncTime = Settings.LastSuccessfulSync;
                 NextSyncTime = null;
+                if (Settings.RememberPeriodicSyncOn && Settings.PeriodicSyncOn)
+                {
+                    StartPeriodicSync();
+                }
             }
         }
 
         #endregion
 
         #region Properties
+
+        public IAccountAuthenticationService AccountAuthenticationService { get; private set; }
+        public ISyncService SyncStartService { get; private set; }
+        public ApplicationLogger ApplicationLogger { get; private set; }
+        public SystemTrayNotifierViewModel SystemTrayNotifierViewModel { get; private set; }
         public IMessageService MessageService { get; set; }
+        public IApplicationUpdateService ApplicationUpdateService { get; set; }
+        public IShellService ShellService { get; set; }
 
         public ObservableCollection<Appointment> OutlookAppointments
         {
             get { return _outlookAppointments; }
-            set
-            {
-                SetProperty(ref _outlookAppointments, value);
-            }
+            set { SetProperty(ref _outlookAppointments, value); }
         }
 
         public bool IsSettingsVisible
@@ -151,6 +157,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
         {
             get { return _launchAbout ?? (_launchAbout = new DelegateCommand(LaunchAboutHandler)); }
         }
+
         public bool IsHelpVisible
         {
             get { return _isHelpVisible; }
@@ -161,6 +168,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
         {
             get { return _launchHelp ?? (_launchHelp = new DelegateCommand(LaunchHelpHandler)); }
         }
+
         public DelegateCommand StartSyncCommand
         {
             get { return _startSyncCommand ?? (_startSyncCommand = new DelegateCommand(StartSync)); }
@@ -203,16 +211,9 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
         public bool IsSyncInProgress
         {
             get { return _isSyncInProgress; }
-            set
-            {
-                SetProperty(ref _isSyncInProgress, value);
-            }
+            set { SetProperty(ref _isSyncInProgress, value); }
         }
 
-        public IShellService ShellService
-        {
-            get { return _shellService; }
-        }
 
         public DelegateCommand AuthenticateGoogleAccount
         {
@@ -232,10 +233,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
         public ObservableCollection<Appointment> GoogleAppointments
         {
             get { return _googleAppointments; }
-            set
-            {
-                SetProperty(ref _googleAppointments, value);
-            }
+            set { SetProperty(ref _googleAppointments, value); }
         }
 
         public Appointment CurrentAppointment
@@ -256,6 +254,27 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             set { SetProperty(ref _lastSyncTime, value); }
         }
 
+        public DelegateCommand DownloadCommand
+        {
+            get
+            {
+                return _downloadCommand ??
+                       (_downloadCommand = new DelegateCommand(Download));
+            }
+        }
+
+        public bool IsLatestVersionAvailable
+        {
+            get { return _isLatestVersionAvailable; }
+            set { SetProperty(ref _isLatestVersionAvailable, value); }
+        }
+
+        public string LatestVersion
+        {
+            get { return _latestVersion; }
+            set { SetProperty(ref _latestVersion, value); }
+        }
+
         #endregion
 
         #region Private Methods
@@ -272,17 +291,19 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
 
         private void AuthenticateGoogle()
         {
-            _accountAuthenticationService.AuthenticateCalenderOauth();
+            AccountAuthenticationService.AuthenticateCalenderOauth();
         }
 
         private void LaunchSettingsHandler()
         {
             IsSettingsVisible = true;
         }
+
         private void LaunchAboutHandler()
         {
             IsAboutVisible = true;
         }
+
         private void LaunchHelpHandler()
         {
             IsHelpVisible = true;
@@ -290,25 +311,99 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
 
         private async void StartSync()
         {
+            await StartPeriodicSync();
+            Settings.PeriodicSyncOn = IsPeriodicSyncStarted;
             if (IsPeriodicSyncStarted)
             {
-                _syncStartService.Stop();
+                SyncNow();
+            }
+        }
+
+        private async Task StartPeriodicSync()
+        {
+            if (IsPeriodicSyncStarted)
+            {
+                SyncStartService.Stop();
                 IsPeriodicSyncStarted = false;
-                _applicationLogger.LogInfo("Periodic Sync Stopped");
+                ApplicationLogger.LogInfo("Periodic Sync Stopped");
             }
             else
             {
-                var result = await _syncStartService.Start();
+                bool result = await SyncStartService.Start(SyncTimerCallBack);
                 if (result)
                 {
                     if (_settings.SyncFrequency != null)
                     {
                         NextSyncTime = _settings.SyncFrequency.GetNextSyncTime();
                     }
-                    _applicationLogger.LogInfo("Periodic Sync Started");
+                    ApplicationLogger.LogInfo("Periodic Sync Started");
                     IsPeriodicSyncStarted = true;
-                    SyncNow();
                 }
+            }
+        }
+
+        private void UpdateContinuationAction(Task<string> task)
+        {
+            if (task.Result == null)
+            {
+                if (ApplicationUpdateService.IsNewVersionAvailable())
+                {
+                    LatestVersion = ApplicationUpdateService.GetNewAvailableVersion();
+                    IsLatestVersionAvailable = true;
+                }
+                _lastCheckDateTime = DateTime.Now;
+            }
+        }
+
+        private void Download(object o)
+        {
+            Process.Start(new ProcessStartInfo(ApplicationUpdateService.GetDownloadUri().AbsoluteUri));
+        }
+
+        private void UpdateStatus(string text)
+        {
+            InvokeOnCurrentDispatcher(() =>
+            {
+                _statusBuilder.AppendLine(text);
+                RaisePropertyChanged("SyncLog");
+            });
+        }
+
+        private void ShowNotification(bool showHide, string popupText = "Syncing...")
+        {
+            InvokeOnCurrentDispatcher(() =>
+            {
+                if (!Settings.HideSystemTrayTooltip)
+                {
+                    try
+                    {
+                        if (showHide)
+                        {
+                            SystemTrayNotifierViewModel.ShowBalloon(popupText);
+                        }
+                        else
+                        {
+                            SystemTrayNotifierViewModel.HideBalloon();
+                        }
+                    }
+                    catch (Exception exception)
+                    {
+                        //Ignore in this release
+                        //ApplicationLogger.LogError(exception.Message);
+                    }
+                }
+            });
+        }
+
+        private void InvokeOnCurrentDispatcher(Action action)
+        {
+            if (Dispatcher.CurrentDispatcher.CheckAccess())
+            {
+                action.Invoke();
+            }
+            else
+            {
+                Dispatcher.CurrentDispatcher.Invoke(action, DispatcherPriority.Normal);
             }
         }
 
@@ -338,16 +433,46 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             ViewCore.Close();
         }
 
-        public async void SyncNow()
+        private void SyncTimerCallBack(object state)
         {
-            await _syncStartService.SyncNowAsync(Settings);
+            InvokeOnCurrentDispatcher(() =>
+            {
+                if (Settings != null)
+                {
+                    if (Settings.SyncFrequency.ValidateTimer(DateTime.Now))
+                    {
+                        SyncNow();
+                    }
+                }
+            });
         }
 
-        void UpdateStatus(string text)
+
+        public async void SyncNow()
         {
-            _statusBuilder.AppendLine(text);
-            Dispatcher.CurrentDispatcher.BeginInvoke(((Action)(() => RaisePropertyChanged("SyncLog"))));
+            if (IsSyncInProgress)
+            {
+                return;
+            }
+            ShowNotification(true);
+            IsSyncInProgress = true;
+            bool result = await SyncStartService.SyncNowAsync(Settings);
+
+            IsSyncInProgress = false;
+
+            if (result)
+            {
+                LastSyncTime = DateTime.Now;
+            }
+            ShowNotification(false);
+            if (Settings.SyncFrequency != null)
+            {
+                NextSyncTime = Settings.SyncFrequency.GetNextSyncTime();
+            }
+
+            CheckForUpdates();
         }
+
 
         public void ErrorMessageChanged(string message)
         {
@@ -356,8 +481,24 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
                 UpdateStatus(message);
             }
         }
-    }
+
+
+        public void CheckForUpdates()
+        {
+            InvokeOnCurrentDispatcher(() =>
+            {
+                if (Settings.CheckForUpdates)
+                {
+                    if (_lastCheckDateTime == null ||
+                        DateTime.Now.Subtract(_lastCheckDateTime.GetValueOrDefault()).Hours > 24)
+                    {
+                        Task<string>.Factory.StartNew(() => ApplicationUpdateService.GetLatestReleaseFromServer())
+                            .ContinueWith(UpdateContinuationAction);
+                    }
+                }
+            });
+        }
 
         #endregion
-
+    }
 }

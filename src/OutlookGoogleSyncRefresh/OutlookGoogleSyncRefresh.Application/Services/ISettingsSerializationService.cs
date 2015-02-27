@@ -1,5 +1,4 @@
 using System.Threading.Tasks;
-
 using OutlookGoogleSyncRefresh.Domain.Models;
 
 namespace OutlookGoogleSyncRefresh.Application.Services

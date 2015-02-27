@@ -20,14 +20,13 @@
 #region Imports
 
 using System.ComponentModel.Composition;
-
 using OutlookGoogleSyncRefresh.Domain.Models;
 
 #endregion
 
 namespace OutlookGoogleSyncRefresh.Application.Services
 {
-    [Export(typeof(ISettingsProvider))]
+    [Export(typeof (ISettingsProvider))]
     public class SettingsProvider : ISettingsProvider
     {
         #region Constructors

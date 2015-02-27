@@ -109,12 +109,12 @@
                                   Width="30"
                                   Style="{DynamicResource MetroCircleToggleButtonStyle}"
                                   IsChecked="{Binding IsMonday,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
-                    <ToggleButton  Margin="2"
-                                   Content="T"
-                                   Height="30"
-                                   Width="30"
-                                   Style="{DynamicResource MetroCircleToggleButtonStyle}"
-                                   IsChecked="{Binding IsTuesday,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
+                    <ToggleButton Margin="2"
+                                  Content="T"
+                                  Height="30"
+                                  Width="30"
+                                  Style="{DynamicResource MetroCircleToggleButtonStyle}"
+                                  IsChecked="{Binding IsTuesday,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
                     <ToggleButton Margin="2"
                                   Content="W"
                                   Height="30"
@@ -202,10 +202,10 @@
             <TabItem Header="Calendars">
                 <Grid>
                     <Grid.RowDefinitions>
-                        <RowDefinition  Height="Auto" />
-                        <RowDefinition  Height="Auto" />
-                        <RowDefinition  Height="Auto" />
-                        <RowDefinition  Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
                     <GroupBox Header="Outlook Settings">
                         <Grid>
@@ -223,20 +223,21 @@
                             <RadioButton Content="Exchange Web Services"
                                          IsChecked="{Binding IsExchangeWebServices}"
                                          Margin="4"
+                                         Visibility="Collapsed"
                                          GroupName="OutlookApplicationGroup"
                                          Grid.Row="1"
                                          Grid.Column="0"
                                          Command="{Binding GetOutlookProfileListCommand}" />
                         </Grid>
                     </GroupBox>
-                    <StackPanel  Grid.Row="1"
-                                 Orientation="Vertical"
-                                 Visibility="{Binding IsExchangeWebServices,Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <StackPanel Grid.Row="1"
+                                Orientation="Vertical"
+                                Visibility="{Binding IsExchangeWebServices,Converter={StaticResource BooleanToVisibilityConverter}}">
                         <GroupBox Header="Exchange Server Settings">
                             <Grid>
                                 <Grid.RowDefinitions>
                                     <RowDefinition />
-                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto" />
                                     <RowDefinition />
                                     <RowDefinition />
                                     <RowDefinition />
@@ -246,12 +247,13 @@
                                     <ColumnDefinition Width="3*" />
                                 </Grid.ColumnDefinitions>
                                 <Button Margin="2"
-                                          Content="Auto detect settings"
-                                    Command="{Binding AutoDetectExchangeServer}"/>
-                                <TextBlock Text="Help: Enter username to auto detect Exchange Web Server. Leave password empty if connected to corporate network."
-                                           Grid.Column="1"
-                                           Margin="2"
-                                           TextWrapping="Wrap" />
+                                        Content="Auto detect settings"
+                                        Command="{Binding AutoDetectExchangeServer}" />
+                                <TextBlock
+                                    Text="Help: Enter username to auto detect Exchange Web Server. Leave password empty if connected to corporate network."
+                                    Grid.Column="1"
+                                    Margin="2"
+                                    TextWrapping="Wrap" />
                                 <TextBlock Grid.Row="2"
                                            Text="Email"
                                            VerticalAlignment="Center"
@@ -288,7 +290,7 @@
                                 <TextBox Grid.Row="1"
                                          Grid.Column="1"
                                          Margin="4"
-                                         Text="{Binding ExchangeServerUrl,Mode=TwoWay}"/>
+                                         Text="{Binding ExchangeServerUrl,Mode=TwoWay}" />
                             </Grid>
                         </GroupBox>
                     </StackPanel>
@@ -511,9 +513,7 @@
                             <CheckBox Content="Log Appointments"
                                       Margin="5"
                                       Grid.Row="1"
-                                      IsChecked="{Binding CreateNewFileForEverySync,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
-
-                            </CheckBox>
+                                      IsChecked="{Binding CreateNewFileForEverySync,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
                         </Grid>
                     </GroupBox>
                     <GroupBox Header="Application"
@@ -524,22 +524,29 @@
                                 <RowDefinition />
                                 <RowDefinition />
                                 <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
                             </Grid.RowDefinitions>
                             <CheckBox Content="Run CalendarSync when computer starts"
                                       Visibility="Collapsed"
-                                      Margin="5" />
+                                      Margin="5"
+                                      IsChecked="{Binding RunApplicationAtSystemStartup,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
                             <CheckBox Content="Close button minimizes to tray"
                                       Grid.Row="1"
                                       Margin="5"
                                       IsChecked="{Binding MinimizeToSystemTray,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
-                            <CheckBox Content="Sync on startup"
+                            <CheckBox Content="Remember periodic sync start/stop status"
                                       Grid.Row="2"
-                                      Visibility="Collapsed"
-                                      Margin="5" />
+                                      Margin="5"
+                                      IsChecked="{Binding RememberPeriodicSyncOn,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
                             <CheckBox Content="Hide sync notification"
                                       Grid.Row="3"
                                       Margin="5"
                                       IsChecked="{Binding HideSystemTrayTooltip,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
+                            <CheckBox Content="Check For Updates"
+                                      Grid.Row="4"
+                                      Margin="5"
+                                      IsChecked="{Binding CheckForUpdates,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
 
                         </Grid>
                     </GroupBox>

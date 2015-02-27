@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace OutlookGoogleSyncRefresh.Application.Utilities
+﻿namespace OutlookGoogleSyncRefresh.Application.Utilities
 {
     public class Constants
     {

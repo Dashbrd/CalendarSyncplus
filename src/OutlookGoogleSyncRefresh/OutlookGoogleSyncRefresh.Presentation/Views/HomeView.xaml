@@ -89,7 +89,8 @@
                     <Style BasedOn="{StaticResource {x:Type Button}}" TargetType="Button">
                         <Setter Property="Content" Value="Start Periodic Sync" />
                         <Style.Triggers>
-                            <DataTrigger Binding="{Binding IsPeriodicSyncStarted, UpdateSourceTrigger=PropertyChanged}" Value="True">
+                            <DataTrigger Binding="{Binding IsPeriodicSyncStarted, UpdateSourceTrigger=PropertyChanged}"
+                                         Value="True">
                                 <Setter Property="Content" Value="Stop Periodic Sync" />
                             </DataTrigger>
                         </Style.Triggers>

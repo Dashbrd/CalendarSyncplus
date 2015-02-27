@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using OutlookGoogleSyncRefresh.Domain.Models;
+﻿using OutlookGoogleSyncRefresh.Domain.Models;
 
 namespace OutlookGoogleSyncRefresh.Application.ViewModels
 {
@@ -24,10 +19,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
         public int MinuteOffsetForHour
         {
             get { return _minuteOffsetForHour; }
-            set
-            {
-                SetProperty(ref _minuteOffsetForHour, value);
-            }
+            set { SetProperty(ref _minuteOffsetForHour, value); }
         }
 
         public override SyncFrequency GetFrequency()

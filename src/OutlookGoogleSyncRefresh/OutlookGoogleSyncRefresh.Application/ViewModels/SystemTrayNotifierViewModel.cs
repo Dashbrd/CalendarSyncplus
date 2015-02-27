@@ -19,10 +19,8 @@
 
 #region Imports
 
-using System;
 using System.ComponentModel.Composition;
 using System.Waf.Applications;
-
 using OutlookGoogleSyncRefresh.Application.Services;
 using OutlookGoogleSyncRefresh.Application.Views;
 
@@ -36,8 +34,8 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
         #region Fields
 
         private DelegateCommand _doubleClickCommand;
-        private DelegateCommand _showApplicationCommand;
         private DelegateCommand _exitApplicationCommand;
+        private DelegateCommand _showApplicationCommand;
         private string _toolTipText;
 
         #endregion
@@ -70,7 +68,11 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
 
         public DelegateCommand ShowApplicationCommand
         {
-            get { return _showApplicationCommand ?? (_showApplicationCommand = new DelegateCommand(ShowApplication, CanShowApplication)); }
+            get
+            {
+                return _showApplicationCommand ??
+                       (_showApplicationCommand = new DelegateCommand(ShowApplication, CanShowApplication));
+            }
         }
 
         public DelegateCommand ExitCommand
@@ -79,13 +81,11 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             get { return _exitApplicationCommand; }
         }
 
-
         #endregion
 
         #region Private Methods
 
-       
-        void ShowApplication(object obj)
+        private void ShowApplication(object obj)
         {
             GuiInteractionService.ShowApplication();
         }
@@ -99,13 +99,18 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
 
         public void ShowBalloon()
         {
-            this.ViewCore.ShowCustomBalloon();
+            ViewCore.ShowCustomBalloon();
         }
 
         public void ShowBalloon(string tooltipText)
         {
             ToolTipText = tooltipText;
-            this.ViewCore.ShowCustomBalloon();
+            ViewCore.ShowCustomBalloon();
+        }
+
+        public void HideBalloon()
+        {
+            ViewCore.CloseBalloon();
         }
     }
 }

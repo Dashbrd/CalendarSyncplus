@@ -7,7 +7,7 @@
                       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                       xmlns:viewModels="clr-namespace:OutlookGoogleSyncRefresh.Application.ViewModels;assembly=OutlookGoogleSyncRefresh.Application"
                       xmlns:views="clr-namespace:OutlookGoogleSyncRefresh.Presentation.Views"
-                      Title="Calendar Sync+"
+                      Title="Calendar Sync +"
                       Width="600"
                       Height="700"
                       BorderBrush="{DynamicResource AccentColorBrush}"
@@ -23,8 +23,9 @@
                       WindowStartupLocation="CenterScreen"
                       d:DataContext="{d:DesignInstance viewModels:ShellViewModel}"
                       mc:Ignorable="d" Icon="../Resources/icon.ico">
-    
+
     <controls:MetroWindow.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
         <converters:PercentageWidthConverter x:Key="PercentageWidthConverter" />
         <DataTemplate x:Key="IconTemplate">
             <Rectangle Fill="{DynamicResource AccentSelectedColorBrush}">
@@ -36,47 +37,68 @@
     </controls:MetroWindow.Resources>
     <controls:MetroWindow.Flyouts>
         <controls:FlyoutsControl>
-            <controls:Flyout Width="{Binding Width,
+            <controls:Flyout
+                Width="{Binding Width,
                                              RelativeSource={RelativeSource AncestorType={x:Type views:ShellView}},
                                              Converter={StaticResource PercentageWidthConverter},
                                              ConverterParameter=75}"
-                             AnimateOnPositionChange="True"
-                             Content="{Binding Path=ShellService.SettingsView}"
-                             Header="Settings"
-                             IsModal="True"
-                             IsOpen="{Binding IsSettingsVisible,
+                AnimateOnPositionChange="True"
+                Content="{Binding Path=ShellService.SettingsView}"
+                Header="Settings"
+                IsModal="True"
+                IsOpen="{Binding IsSettingsVisible,
                                               Mode=TwoWay}"
-                             Position="Right"
-                             Theme="Adapt" />
-            <controls:Flyout Width="{Binding Width,
+                Position="Right"
+                Theme="Adapt" />
+            <controls:Flyout
+                Width="{Binding Width,
                                              RelativeSource={RelativeSource AncestorType={x:Type views:ShellView}},
                                              Converter={StaticResource PercentageWidthConverter},
                                              ConverterParameter=75}"
-                             AnimateOnPositionChange="True"
-                             Content="{Binding Path=ShellService.AboutView}"
-                             Header="About"
-                             IsModal="True"
-                             IsOpen="{Binding IsAboutVisible,
+                AnimateOnPositionChange="True"
+                Content="{Binding Path=ShellService.AboutView}"
+                Header="About"
+                IsModal="True"
+                IsOpen="{Binding IsAboutVisible,
                                               Mode=TwoWay}"
-                             Position="Right"
-                             Theme="Adapt" />
-            <controls:Flyout Width="{Binding Width,
+                Position="Right"
+                Theme="Adapt" />
+            <controls:Flyout
+                Width="{Binding Width,
                                              RelativeSource={RelativeSource AncestorType={x:Type views:ShellView}},
                                              Converter={StaticResource PercentageWidthConverter},
                                              ConverterParameter=75}"
-                             AnimateOnPositionChange="True"
-                             Content="{Binding Path=ShellService.HelpView}"
-                             Header="Help"
-                             IsModal="True"
-                             IsOpen="{Binding IsHelpVisible,
+                AnimateOnPositionChange="True"
+                Content="{Binding Path=ShellService.HelpView}"
+                Header="Help"
+                IsModal="True"
+                IsOpen="{Binding IsHelpVisible,
                                               Mode=TwoWay}"
-                             Position="Right"
-                             Theme="Adapt" />
+                Position="Right"
+                Theme="Adapt" />
         </controls:FlyoutsControl>
     </controls:MetroWindow.Flyouts>
-    
+
     <controls:MetroWindow.RightWindowCommands>
         <controls:WindowCommands>
+            <Button Command="{Binding DownloadCommand}"
+                    Visibility="{Binding IsLatestVersionAvailable,Converter={StaticResource BooleanToVisibilityConverter}}"
+                    ToolTip="New version available for download">
+                <StackPanel Orientation="Horizontal">
+                    <Rectangle Width="30" Margin="2" VerticalAlignment="Center"
+                               Height="18"
+                               Fill="{Binding RelativeSource={RelativeSource AncestorType=Button},
+                                              Path=Foreground}">
+                        <Rectangle.OpacityMask>
+                            <VisualBrush Stretch="Fill"
+                                         Visual="{StaticResource appbar_cloud_download}" />
+                        </Rectangle.OpacityMask>
+                    </Rectangle>
+                    <TextBlock Margin="4 0 0 0" VerticalAlignment="Center"
+                               Text="{Binding LatestVersion,UpdateSourceTrigger=PropertyChanged,StringFormat='{}Download {0}'}"
+                               Foreground="LawnGreen" FontWeight="800" />
+                </StackPanel>
+            </Button>
             <Button Command="{Binding ExitCommand}"
                     Content="Exit"
                     ToolTip="Exit Application" />
@@ -98,10 +120,10 @@
             </Button>
             <Button Command="{Binding LaunchSettings}"
                     Content="Settings"
-                    ToolTip="Configure Outlook =&gt; Google Sync" />
+                    ToolTip="Configure Calendar Sync +" />
             <Button Command="{Binding LaunchAbout}"
                     Content="About"
-                    ToolTip="About Outlook=&gt; Google Sync" />
+                    ToolTip="About Calendar Sync +" />
             <Button Command="{Binding LaunchHelp}"
                     Content="Help"
                     ToolTip="Help" />

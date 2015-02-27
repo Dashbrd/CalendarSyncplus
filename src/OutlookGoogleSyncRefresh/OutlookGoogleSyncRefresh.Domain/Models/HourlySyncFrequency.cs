@@ -1,6 +1,4 @@
-﻿
-using System;
-using System.Threading;
+﻿using System;
 
 namespace OutlookGoogleSyncRefresh.Domain.Models
 {
@@ -8,8 +6,9 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
     {
         public HourlySyncFrequency()
         {
-            this.Name = "Hourly";
+            Name = "Hourly";
         }
+
         public int MinuteOffsetForHour { get; set; }
 
         public override bool ValidateTimer(DateTime dateTime)
@@ -23,7 +22,7 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
 
         public override DateTime GetNextSyncTime()
         {
-            var dateTime = DateTime.Now;
+            DateTime dateTime = DateTime.Now;
             if (dateTime.Minute > MinuteOffsetForHour)
             {
                 return DateTime.Now.Add(new TimeSpan(0, 60 - (dateTime.Minute - MinuteOffsetForHour), 0));
@@ -33,7 +32,7 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
 
         public override string ToString()
         {
-            string str = string.Format("{0} : Minute Offset : {1}", this.GetType().Name, MinuteOffsetForHour);
+            string str = string.Format("{0} : Minute Offset : {1}", GetType().Name, MinuteOffsetForHour);
             return str;
         }
     }

@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace OutlookGoogleSyncRefresh.Application.Services
 {
     public interface IApplicationUpdateService
     {
+        string GetLatestReleaseFromServer();
+
         bool IsNewVersionAvailable();
 
         string GetNewAvailableVersion();

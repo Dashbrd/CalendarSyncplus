@@ -8,10 +8,13 @@ namespace OutlookGoogleSyncRefresh.Domain.Helpers
         public static string Rfc339FFormat(this DateTime dateTime)
         {
             string timezone = TimeZoneInfo.Local.GetUtcOffset(dateTime).ToString();
-            if (timezone[0] != '-') timezone = '+' + timezone;
+            if (timezone[0] != '-')
+            {
+                timezone = '+' + timezone;
+            }
             timezone = timezone.Substring(0, 6);
 
-            var result = dateTime.GetDateTimeFormats('s')[0] + timezone;
+            string result = dateTime.GetDateTimeFormats('s')[0] + timezone;
             return result;
         }
 
@@ -33,7 +36,8 @@ namespace OutlookGoogleSyncRefresh.Domain.Helpers
             return true;
         }
 
-        public static void UpdateEntryOptions(this Settings settings, bool addDescription, bool addReminders, bool addAttendees, bool addAttachments)
+        public static void UpdateEntryOptions(this Settings settings, bool addDescription, bool addReminders,
+            bool addAttendees, bool addAttachments)
         {
             settings.CalendarEntryOptions = CalendarEntryOptionsEnum.None;
             if (addDescription)
@@ -58,7 +62,8 @@ namespace OutlookGoogleSyncRefresh.Domain.Helpers
         }
 
 
-        public static void UpdateOutlookOptions(this OutlookSettings settings, bool isDefaultProfile, bool isDefaultMailBox, bool isExchangeWebServices)
+        public static void UpdateOutlookOptions(this OutlookSettings settings, bool isDefaultProfile,
+            bool isDefaultMailBox, bool isExchangeWebServices)
         {
             settings.OutlookOptions = OutlookOptionsEnum.None;
 
@@ -76,8 +81,15 @@ namespace OutlookGoogleSyncRefresh.Domain.Helpers
                     ? settings.OutlookOptions | OutlookOptionsEnum.AlternateCalendar
                     : settings.OutlookOptions | OutlookOptionsEnum.DefaultCalendar;
             }
-
         }
 
+        public static bool IsTimeValid(this DateTime dateTime, DateTime timeOfDay)
+        {
+            if (dateTime.ToString("HH:mm").Equals(timeOfDay.ToString("HH:mm")))
+            {
+                return true;
+            }
+            return false;
+        }
     }
 }

@@ -1,4 +1,5 @@
 ﻿#region File Header
+
 // /******************************************************************************
 //  * 
 //  *      Copyright (C) Ankesh Dave 2015 All Rights Reserved. Confidential
@@ -13,11 +14,12 @@
 //  *      FileName:       ExtensionMethods.cs
 //  * 
 //  *****************************************************************************/
+
 #endregion
+
 namespace OutlookGoogleSyncRefresh.Common
 {
     public static class ExtensionMethods
     {
-         
     }
 }

@@ -1,4 +1,5 @@
 ﻿#region File Header
+
 // /******************************************************************************
 //  * 
 //  *      Copyright (C) Ankesh Dave 2015 All Rights Reserved. Confidential
@@ -13,7 +14,9 @@
 //  *      FileName:       IShellController.cs
 //  * 
 //  *****************************************************************************/
+
 #endregion
+
 namespace OutlookGoogleSyncRefresh.Application.Controllers
 {
     public interface IShellController : IController

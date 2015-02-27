@@ -187,7 +187,7 @@ namespace OutlookGoogleSyncRefresh.Presentation.Services.SingleInstance
 
             if (args == null)
             {
-                args = new string[] { };
+                args = new string[] {};
             }
 
             return new List<string>(args);
@@ -199,7 +199,7 @@ namespace OutlookGoogleSyncRefresh.Presentation.Services.SingleInstance
         /// <param name="channelName">Application's IPC channel name.</param>
         private static void CreateRemoteService(string channelName)
         {
-            BinaryServerFormatterSinkProvider serverProvider = new BinaryServerFormatterSinkProvider();
+            var serverProvider = new BinaryServerFormatterSinkProvider();
             serverProvider.TypeFilterLevel = TypeFilterLevel.Full;
             IDictionary props = new Dictionary<string, string>();
 
@@ -214,7 +214,7 @@ namespace OutlookGoogleSyncRefresh.Presentation.Services.SingleInstance
             ChannelServices.RegisterChannel(channel, true);
 
             // Expose the remote service with the REMOTE_SERVICE_NAME
-            IPCRemoteService remoteService = new IPCRemoteService();
+            var remoteService = new IPCRemoteService();
             RemotingServices.Marshal(remoteService, RemoteServiceName);
         }
 
@@ -229,14 +229,14 @@ namespace OutlookGoogleSyncRefresh.Presentation.Services.SingleInstance
         /// </param>
         private static void SignalFirstInstance(string channelName, IList<string> args)
         {
-            IpcClientChannel secondInstanceChannel = new IpcClientChannel();
+            var secondInstanceChannel = new IpcClientChannel();
             ChannelServices.RegisterChannel(secondInstanceChannel, true);
 
             string remotingServiceUrl = IpcProtocol + channelName + "/" + RemoteServiceName;
 
             // Obtain a reference to the remoting service exposed by the server i.e the first instance of the application
-            IPCRemoteService firstInstanceRemoteServiceReference =
-                (IPCRemoteService)RemotingServices.Connect(typeof(IPCRemoteService), remotingServiceUrl);
+            var firstInstanceRemoteServiceReference =
+                (IPCRemoteService) RemotingServices.Connect(typeof (IPCRemoteService), remotingServiceUrl);
 
             // Check that the remote service exists, in some cases the first instance may not yet have created one, in which case
             // the second instance should just exit
@@ -256,7 +256,7 @@ namespace OutlookGoogleSyncRefresh.Presentation.Services.SingleInstance
         private static object ActivateFirstInstanceCallback(object arg)
         {
             // Get command line args to be passed to first instance
-            IList<string> args = arg as IList<string>;
+            var args = arg as IList<string>;
             ActivateFirstInstance(args);
             return null;
         }
@@ -273,7 +273,7 @@ namespace OutlookGoogleSyncRefresh.Presentation.Services.SingleInstance
                 return;
             }
 
-            ((TApplication)System.Windows.Application.Current).SignalExternalCommandLineArgs(args);
+            ((TApplication) System.Windows.Application.Current).SignalExternalCommandLineArgs(args);
         }
 
         #endregion

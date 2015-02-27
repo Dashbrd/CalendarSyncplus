@@ -1,22 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.Composition;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Waf.Applications;
+﻿using System.ComponentModel.Composition;
+using OutlookGoogleSyncRefresh.Application.Utilities;
 using OutlookGoogleSyncRefresh.Application.Views;
 
 namespace OutlookGoogleSyncRefresh.Application.ViewModels
 {
     [Export]
-    public class HelpViewModel : Utilities.ViewModel<IHelpView>
+    public class HelpViewModel : ViewModel<IHelpView>
     {
         [ImportingConstructor]
         public HelpViewModel(IHelpView helpView)
             : base(helpView)
         {
-            
         }
     }
 }

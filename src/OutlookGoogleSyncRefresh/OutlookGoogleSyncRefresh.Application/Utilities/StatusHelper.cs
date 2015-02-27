@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace OutlookGoogleSyncRefresh.Application.Utilities
 {
-
     public enum SyncStateEnum
     {
         SyncStarted,
@@ -16,9 +12,11 @@ namespace OutlookGoogleSyncRefresh.Application.Utilities
         SyncSuccess,
         SyncFailed,
     }
+
     public static class StatusHelper
     {
         private const string BreakConstant = "-------------------------------------------------------";
+
         public static string GetMessage(SyncStateEnum syncStateEnum, params object[] values)
         {
             string message = string.Empty;

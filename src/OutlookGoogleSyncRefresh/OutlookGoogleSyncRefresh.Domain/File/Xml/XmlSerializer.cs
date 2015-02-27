@@ -15,6 +15,8 @@ namespace OutlookGoogleSyncRefresh.Domain.File.Xml
     /// </typeparam>
     public class XmlSerializer<T> : IXmlSerializer<T> where T : class, new()
     {
+        #region IXmlSerializer<T> Members
+
         /// <summary>
         ///     Deserializes a XML string into an object
         ///     Default encoding: <c>UTF8</c>
@@ -59,7 +61,9 @@ namespace OutlookGoogleSyncRefresh.Domain.File.Xml
         public T Deserialize(string xml, Encoding encoding, XmlReaderSettings settings)
         {
             if (string.IsNullOrEmpty(xml))
+            {
                 throw new ArgumentException("XML cannot be null or empty", "xml");
+            }
 
             var xmlSerializer = new XmlSerializer(typeof (T));
 
@@ -91,10 +95,14 @@ namespace OutlookGoogleSyncRefresh.Domain.File.Xml
         public T DeserializeFromFile(string filename, XmlReaderSettings settings)
         {
             if (string.IsNullOrEmpty(filename))
+            {
                 throw new ArgumentException("filename", "XML filename cannot be null or empty");
+            }
 
             if (!System.IO.File.Exists(filename))
+            {
                 throw new FileNotFoundException("Cannot find XML file to deserialize", filename);
+            }
 
             // Create the stream writer with the specified encoding
             using (XmlReader reader = XmlReader.Create(filename, settings))
@@ -148,7 +156,9 @@ namespace OutlookGoogleSyncRefresh.Domain.File.Xml
         public string Serialize(T source, XmlSerializerNamespaces namespaces, XmlWriterSettings settings)
         {
             if (source == null)
+            {
                 throw new ArgumentNullException("source", "Object to serialize cannot be null");
+            }
 
             string xml = null;
             var serializer = new XmlSerializer(source.GetType());
@@ -216,7 +226,9 @@ namespace OutlookGoogleSyncRefresh.Domain.File.Xml
             XmlWriterSettings settings)
         {
             if (source == null)
+            {
                 throw new ArgumentNullException("source", "Object to serialize cannot be null");
+            }
 
             var serializer = new XmlSerializer(source.GetType());
 
@@ -226,6 +238,8 @@ namespace OutlookGoogleSyncRefresh.Domain.File.Xml
                 x.Serialize(xmlWriter, source, namespaces);
             }
         }
+
+        #endregion
 
         #region Private methods
 

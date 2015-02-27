@@ -1,4 +1,5 @@
 ﻿#region File Header
+
 // /******************************************************************************
 //  * 
 //  *      Copyright (C) Ankesh Dave 2015 All Rights Reserved. Confidential
@@ -13,9 +14,11 @@
 //  *      FileName:       Program.cs
 //  * 
 //  *****************************************************************************/
+
 #endregion
 
 using System;
+using System.Diagnostics;
 using OutlookGoogleSyncRefresh.Presentation.Services.SingleInstance;
 
 namespace OutlookGoogleSyncRefresh
@@ -25,7 +28,7 @@ namespace OutlookGoogleSyncRefresh
         private const string Unique = "6DBA7828-5EDA-4215-9B75-0A7C2E6C9FD9-OutlookGoogleSyncRefresh";
 
         [STAThread]
-        [System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [DebuggerNonUserCode]
         public static void Main()
         {
             if (SingleInstance<App>.InitializeAsFirstInstance(Unique))

@@ -26,17 +26,15 @@ using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
-
 using Microsoft.Office.Interop.Outlook;
 using Microsoft.Win32;
-
 using OutlookGoogleSyncRefresh.Domain.Models;
 
 #endregion
 
 namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
 {
-    [Export(typeof(IOutlookCalendarService))]
+    [Export(typeof (IOutlookCalendarService))]
     public class OutlookCalendarService : IOutlookCalendarService
     {
         #region Private Methods
@@ -49,7 +47,8 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
             if (Process.GetProcessesByName("OUTLOOK").Any())
             {
                 // If so, use the GetActiveObject method to obtain the process and cast it to an Application object.
-                application = Marshal.GetActiveObject("Outlook.Application") as Microsoft.Office.Interop.Outlook.Application;
+                application =
+                    Marshal.GetActiveObject("Outlook.Application") as Microsoft.Office.Interop.Outlook.Application;
                 disposeOutlookInstances = false;
                 nameSpace = null;
                 if (application != null)
@@ -74,7 +73,8 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
             }
         }
 
-        private AppointmentListWrapper GetOutlookEntriesForSelectedTimeRange(int daysInPast, int daysInFuture, string profileName,
+        private AppointmentListWrapper GetOutlookEntriesForSelectedTimeRange(int daysInPast, int daysInFuture,
+            string profileName,
             OutlookCalendar outlookCalendar)
         {
             bool disposeOutlookInstances;
@@ -153,13 +153,13 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
             if (disposeOutlookInstances)
             {
                 // Casting Removes a warninig for Ambigous Call
-                ((_Application)application).Quit();
+                application.Quit();
                 Marshal.FinalReleaseComObject(application);
             }
             application = null;
             GC.Collect();
             GC.WaitForPendingFinalizers();
-            return new AppointmentListWrapper()
+            return new AppointmentListWrapper
             {
                 Appointments = outlookAppointments,
                 WaitForApplicationQuit = disposeOutlookInstances
@@ -169,7 +169,8 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
         private List<Appointment> GetAppointments(int daysInPast, int daysInFuture, string profileName,
             OutlookCalendar outlookCalendar)
         {
-            var list = GetOutlookEntriesForSelectedTimeRange(daysInPast, daysInFuture, profileName, outlookCalendar);
+            AppointmentListWrapper list = GetOutlookEntriesForSelectedTimeRange(daysInPast, daysInFuture, profileName,
+                outlookCalendar);
             if (!list.WaitForApplicationQuit)
             {
                 return list.Appointments;
@@ -188,7 +189,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
             {
                 foreach (Folder rootFolder in rootFolders)
                 {
-                    var mailBoxName = rootFolder.Name;
+                    string mailBoxName = rootFolder.Name;
 
                     //All mailBoxes Scanned Leave Public Calenders and Folders
                     if (mailBoxName.Contains("Public Folders"))
@@ -224,7 +225,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
                 searchFolder.DefaultItemType == OlItemType.olAppointmentItem)
             {
                 //Add Calendar MAPIFolder to List
-                outlookCalendars.Add(new OutlookCalendar()
+                outlookCalendars.Add(new OutlookCalendar
                 {
                     Name = searchFolder.Name,
                     EntryId = searchFolder.EntryID,
@@ -245,14 +246,16 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
         private List<string> GetOutlookProfileList()
         {
             var profileList = new List<string>();
-            const string defaultProfilePath = @"Software\Microsoft\Windows NT\CurrentVersion\Windows Messaging Subsystem\Profiles";
+            const string defaultProfilePath =
+                @"Software\Microsoft\Windows NT\CurrentVersion\Windows Messaging Subsystem\Profiles";
             const string newProfilePath = @"Software\Microsoft\Office\15.0\Outlook\Profiles";
 
-            var defaultRegKey = Registry.CurrentUser.OpenSubKey(defaultProfilePath, RegistryKeyPermissionCheck.Default);
+            RegistryKey defaultRegKey = Registry.CurrentUser.OpenSubKey(defaultProfilePath,
+                RegistryKeyPermissionCheck.Default);
 
             if (defaultRegKey != null)
             {
-                var list = defaultRegKey.GetSubKeyNames();
+                string[] list = defaultRegKey.GetSubKeyNames();
 
                 if (list.Any())
                 {
@@ -260,11 +263,11 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
                 }
             }
 
-            var newregKey = Registry.CurrentUser.OpenSubKey(newProfilePath, RegistryKeyPermissionCheck.Default);
+            RegistryKey newregKey = Registry.CurrentUser.OpenSubKey(newProfilePath, RegistryKeyPermissionCheck.Default);
 
             if (newregKey != null)
             {
-                var list = newregKey.GetSubKeyNames();
+                string[] list = newregKey.GetSubKeyNames();
 
                 if (list.Any())
                 {
@@ -289,7 +292,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
             NameSpace nameSpace;
             GetOutlookApplication(out disposeOutlookInstances, out application, out nameSpace, profileName);
             Folders rootFolders = nameSpace.Folders;
-            var mailBoxes = GetOutlookMailBoxes(rootFolders);
+            List<OutlookMailBox> mailBoxes = GetOutlookMailBoxes(rootFolders);
             //Close  and Cleanup
             //Unassign all instances
             if (rootFolders != null)
@@ -307,7 +310,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
             if (disposeOutlookInstances)
             {
                 // Casting Removes a warninig for Ambigous Call
-                ((_Application)application).Quit();
+                application.Quit();
                 Marshal.FinalReleaseComObject(application);
             }
 
@@ -327,11 +330,12 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
             return await Task<List<string>>.Factory.StartNew(GetOutlookProfileList);
         }
 
-        public async Task<List<Appointment>> GetOutlookAppointmentsAsync(int daysInPast, int daysInFuture, string profileName = "",
+        public async Task<List<Appointment>> GetOutlookAppointmentsAsync(int daysInPast, int daysInFuture,
+            string profileName = "",
             OutlookCalendar outlookCalendar = null)
         {
             //Get Outlook Entries
-            var appointmentList =
+            List<Appointment> appointmentList =
                 await
                     Task<List<Appointment>>.Factory.StartNew(
                         () => GetAppointments(daysInPast, daysInFuture, profileName, outlookCalendar));

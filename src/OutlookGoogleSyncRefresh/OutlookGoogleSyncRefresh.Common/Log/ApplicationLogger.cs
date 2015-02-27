@@ -14,22 +14,23 @@ namespace OutlookGoogleSyncRefresh.Common.Log
     [Export]
     public class ApplicationLogger
     {
+        private static ILog _logger;
         private string LogFilePath;
 
         public void Setup()
         {
-            var applicationDataDirectory =
-               Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-                   "CalendarSyncPlus", "Log");
+            string applicationDataDirectory =
+                Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                    "CalendarSyncPlus", "Log");
             LogFilePath = Path.Combine(applicationDataDirectory, "CalendarSyncPlus.log");
 
-            Hierarchy hierarchy = (Hierarchy)LogManager.GetRepository();
+            var hierarchy = (Hierarchy) LogManager.GetRepository();
 
-            PatternLayout patternLayout = new PatternLayout();
+            var patternLayout = new PatternLayout();
             patternLayout.ConversionPattern = "%date [%thread] %-5level %message%newline";
             patternLayout.ActivateOptions();
 
-            RollingFileAppender roller = new RollingFileAppender();
+            var roller = new RollingFileAppender();
             roller.AppendToFile = false;
             roller.File = LogFilePath;
             roller.Layout = patternLayout;
@@ -40,7 +41,7 @@ namespace OutlookGoogleSyncRefresh.Common.Log
             roller.ActivateOptions();
             hierarchy.Root.AddAppender(roller);
 
-            MemoryAppender memory = new MemoryAppender();
+            var memory = new MemoryAppender();
             memory.ActivateOptions();
             hierarchy.Root.AddAppender(memory);
 
@@ -48,13 +49,12 @@ namespace OutlookGoogleSyncRefresh.Common.Log
             hierarchy.Configured = true;
 
             BasicConfigurator.Configure();
-            _logger = LogManager.GetLogger(typeof(ApplicationLogger));
+            _logger = LogManager.GetLogger(typeof (ApplicationLogger));
         }
 
-        private static ILog _logger = null;
 
-
-        public void LogDebug(string message, [CallerFilePath] string filePath = null, [CallerMemberName] string methodName = null)
+        public void LogDebug(string message, [CallerFilePath] string filePath = null,
+            [CallerMemberName] string methodName = null)
         {
             if (_logger != null)
             {
@@ -63,17 +63,19 @@ namespace OutlookGoogleSyncRefresh.Common.Log
             }
         }
 
-        public void LogInfo(string message, [CallerFilePath] string filePath = null, [CallerMemberName] string methodName = null)
+        public void LogInfo(string message, [CallerFilePath] string filePath = null,
+            [CallerMemberName] string methodName = null)
         {
             if (_logger != null)
             {
                 string className = Path.GetFileNameWithoutExtension(filePath);
-                _logger.Info(string.Format("{0} - {1} - {2}",className, methodName, message));
+                _logger.Info(string.Format("{0} - {1} - {2}", className, methodName, message));
             }
         }
 
 
-        public void LogWarn(string message, [CallerFilePath] string filePath = null, [CallerMemberName] string methodName = null)
+        public void LogWarn(string message, [CallerFilePath] string filePath = null,
+            [CallerMemberName] string methodName = null)
         {
             if (_logger != null)
             {
@@ -82,7 +84,8 @@ namespace OutlookGoogleSyncRefresh.Common.Log
             }
         }
 
-        public void LogError(string message, [CallerFilePath] string filePath = null, [CallerMemberName] string methodName = null)
+        public void LogError(string message, [CallerFilePath] string filePath = null,
+            [CallerMemberName] string methodName = null)
         {
             if (_logger != null)
             {
@@ -91,7 +94,8 @@ namespace OutlookGoogleSyncRefresh.Common.Log
             }
         }
 
-        public void LogFatal(string message, [CallerFilePath] string filePath = null, [CallerMemberName] string methodName = null)
+        public void LogFatal(string message, [CallerFilePath] string filePath = null,
+            [CallerMemberName] string methodName = null)
         {
             if (_logger != null)
             {

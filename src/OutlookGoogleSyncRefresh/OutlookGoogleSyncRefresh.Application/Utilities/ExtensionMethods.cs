@@ -34,8 +34,7 @@ namespace OutlookGoogleSyncRefresh.Application.Utilities
             int chunkSize)
         {
             do
-                yield return enumerator.Current;
-            while (--chunkSize > 0 && enumerator.MoveNext());
+                yield return enumerator.Current; while (--chunkSize > 0 && enumerator.MoveNext());
         }
 
         #endregion
@@ -50,7 +49,7 @@ namespace OutlookGoogleSyncRefresh.Application.Utilities
                 throw new ArgumentException("chunkSize must be positive");
             }
 
-            using (var enumerator = enumerable.GetEnumerator())
+            using (IEnumerator<T> enumerator = enumerable.GetEnumerator())
                 while (enumerator.MoveNext())
                 {
                     yield return enumerator.GetChunk(chunkSize);

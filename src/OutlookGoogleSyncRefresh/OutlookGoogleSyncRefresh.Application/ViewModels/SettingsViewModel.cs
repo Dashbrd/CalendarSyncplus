@@ -26,6 +26,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Waf.Applications;
 using OutlookGoogleSyncRefresh.Application.Services;
+using OutlookGoogleSyncRefresh.Application.Services.ExchangeWeb;
 using OutlookGoogleSyncRefresh.Application.Services.Google;
 using OutlookGoogleSyncRefresh.Application.Services.Outlook;
 using OutlookGoogleSyncRefresh.Application.Views;
@@ -47,12 +48,13 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             IGoogleCalendarService googleCalendarService,
             Settings settings,
             ISettingsSerializationService serializationService, IOutlookCalendarService outlookCalendarService,
-            IMessageService messageService,
+            IMessageService messageService, IExchangeWebCalendarService exchangeWebCalendarService,
             ApplicationLogger applicationLogger)
             : base(view)
         {
             _settings = settings;
-            _applicationLogger = applicationLogger;
+            ExchangeWebCalendarService = exchangeWebCalendarService;
+            ApplicationLogger = applicationLogger;
             GoogleCalendarService = googleCalendarService;
             SettingsSerializationService = serializationService;
             OutlookCalendarService = outlookCalendarService;
@@ -64,41 +66,43 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
 
         #region Fields
 
+        private bool _addAttachments;
         private bool _addAttendees;
         private bool _addDescription;
         private bool _addReminders;
+        private DelegateCommand _autoDetectExchangeServer;
+        private bool _checkForUpdates;
         private bool _createNewFileForEverySync;
         private int _daysInFuture;
         private int _daysInPast;
+        private string _exchangeServerUrl;
         private DelegateCommand _getGoogleCalendarCommand;
-        private List<Calendar> _googleCalenders;
-        private bool _logSyncInfo;
         private DelegateCommand _getOutlookMailboxCommand;
-        private DelegateCommand _saveCommand;
-        private Calendar _selectedCalendar;
-        private Settings _settings;
-        private readonly ApplicationLogger _applicationLogger;
-        private List<string> _syncFrequencies;
-        private string _syncFrequency;
-        private SyncFrequencyViewModel _syncFrequencyViewModel;
-        private bool _isLoading;
-        private List<OutlookMailBox> _outlookMailBoxes;
-        private OutlookCalendar _outlookCalendar;
-        private OutlookMailBox _outlookMailBox;
+        private DelegateCommand _getOutlookProfileLIstCommand;
+        private List<Calendar> _googleCalenders;
+        private bool _hideSystemTrayTooltip;
         private bool _isDefaultMailBox = true;
         private bool _isDefaultProfile;
         private bool _isExchangeWebServices;
-        private string _selectedOutlookProfileName;
-        private List<string> _outlookProfileList;
-        private DelegateCommand _getOutlookProfileLIstCommand;
+        private bool _isLoading;
+        private bool _logSyncInfo;
         private bool _minimizeToSystemTray;
-        private bool _hideSystemTrayTooltip;
-        private bool _settingsSaved;
-        private DelegateCommand _autoDetectExchangeServer;
-        private string _username;
+        private OutlookCalendar _outlookCalendar;
+        private OutlookMailBox _outlookMailBox;
+        private List<OutlookMailBox> _outlookMailBoxes;
+        private List<string> _outlookProfileList;
         private string _password;
-        private string _exchangeServerUrl;
-        private bool _addAttachments;
+        private bool _rememberPeriodicSyncOn;
+        private bool _runApplicationAtSystemStartup;
+        private DelegateCommand _saveCommand;
+        private Calendar _selectedCalendar;
+        private string _selectedOutlookProfileName;
+        private Settings _settings;
+        private bool _settingsSaved;
+        private List<string> _syncFrequencies;
+        private string _syncFrequency;
+        private SyncFrequencyViewModel _syncFrequencyViewModel;
+        private string _username;
 
         #endregion
 
@@ -108,6 +112,8 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
         public ISettingsSerializationService SettingsSerializationService { get; set; }
         public IOutlookCalendarService OutlookCalendarService { get; set; }
         public IMessageService MessageService { get; set; }
+        public IExchangeWebCalendarService ExchangeWebCalendarService { get; private set; }
+        public ApplicationLogger ApplicationLogger { get; private set; }
 
         public Calendar SelectedCalendar
         {
@@ -175,41 +181,6 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
                 return _getOutlookMailboxCommand ??
                        (_getOutlookMailboxCommand = new DelegateCommand(GetOutlookMailBoxes));
             }
-        }
-
-        private async void GetOutlookMailBoxes()
-        {
-            IsLoading = true;
-            await GetOutlookMailBoxesInternal();
-            IsLoading = false;
-        }
-
-        private async Task GetOutlookMailBoxesInternal()
-        {
-            try
-            {
-                OutlookMailBoxes = await Task<List<OutlookMailBox>>.Factory.StartNew(GetOutlookMailBox);
-                if (Settings.OutlookSettings.OutlookMailBox != null)
-                {
-                    SelectedOutlookMailBox =
-                        OutlookMailBoxes.FirstOrDefault(t => t.EntryId.Equals(Settings.OutlookSettings.OutlookMailBox.EntryId));
-                    if (Settings.OutlookSettings.OutlookCalendar != null && SelectedOutlookMailBox != null)
-                    {
-                        SelectedOutlookCalendar =
-                            SelectedOutlookMailBox.Calendars.FirstOrDefault(
-                                t => t.EntryId.Equals(Settings.OutlookSettings.OutlookCalendar.EntryId));
-                    }
-                }
-            }
-            catch (Exception aggregateException)
-            {
-                var exception = aggregateException.ToString();
-            }
-        }
-
-        private List<OutlookMailBox> GetOutlookMailBox()
-        {
-            return OutlookCalendarService.GetAllMailBoxes(SelectedOutlookProfileName ?? string.Empty);
         }
 
         public bool AddDescription
@@ -298,10 +269,13 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
 
         public DelegateCommand AutoDetectExchangeServer
         {
-            get { return _autoDetectExchangeServer = _autoDetectExchangeServer ?? new DelegateCommand(AutoDetectEWSSettings); }
-            
+            get
+            {
+                return
+                    _autoDetectExchangeServer = _autoDetectExchangeServer ?? new DelegateCommand(AutoDetectEWSSettings);
+            }
         }
-        
+
         public string Username
         {
             get { return _username; }
@@ -332,6 +306,24 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             set { SetProperty(ref _outlookProfileList, value); }
         }
 
+        public bool CheckForUpdates
+        {
+            get { return _checkForUpdates; }
+            set { SetProperty(ref _checkForUpdates, value); }
+        }
+
+        public bool RunApplicationAtSystemStartup
+        {
+            get { return _runApplicationAtSystemStartup; }
+            set { SetProperty(ref _runApplicationAtSystemStartup, value); }
+        }
+
+        public bool RememberPeriodicSyncOn
+        {
+            get { return _rememberPeriodicSyncOn; }
+            set { SetProperty(ref _rememberPeriodicSyncOn, value); }
+        }
+
         public DelegateCommand GetOutlookProfileListCommand
         {
             get
@@ -358,10 +350,48 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             get { return _hideSystemTrayTooltip; }
             set { SetProperty(ref _hideSystemTrayTooltip, value); }
         }
+
+        private async void GetOutlookMailBoxes()
+        {
+            IsLoading = true;
+            await GetOutlookMailBoxesInternal();
+            IsLoading = false;
+        }
+
+        private async Task GetOutlookMailBoxesInternal()
+        {
+            try
+            {
+                OutlookMailBoxes = await Task<List<OutlookMailBox>>.Factory.StartNew(GetOutlookMailBox);
+                if (Settings.OutlookSettings.OutlookMailBox != null)
+                {
+                    SelectedOutlookMailBox =
+                        OutlookMailBoxes.FirstOrDefault(
+                            t => t.EntryId.Equals(Settings.OutlookSettings.OutlookMailBox.EntryId));
+                    if (Settings.OutlookSettings.OutlookCalendar != null && SelectedOutlookMailBox != null)
+                    {
+                        SelectedOutlookCalendar =
+                            SelectedOutlookMailBox.Calendars.FirstOrDefault(
+                                t => t.EntryId.Equals(Settings.OutlookSettings.OutlookCalendar.EntryId));
+                    }
+                }
+            }
+            catch (Exception aggregateException)
+            {
+                string exception = aggregateException.ToString();
+                ApplicationLogger.LogError(exception);
+            }
+        }
+
+        private List<OutlookMailBox> GetOutlookMailBox()
+        {
+            return OutlookCalendarService.GetAllMailBoxes(SelectedOutlookProfileName ?? string.Empty);
+        }
+
         private void AutoDetectEWSSettings()
         {
-         
         }
+
         private async void GetOutlookProfileList()
         {
             IsLoading = true;
@@ -444,12 +474,17 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
                     AddAttachments = Settings.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Attachments);
                     LogSyncInfo = Settings.LogSettings.LogSyncInfo;
                     CreateNewFileForEverySync = CreateNewFileForEverySync;
-                    IsDefaultMailBox = Settings.OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.DefaultCalendar);
+                    IsDefaultMailBox =
+                        Settings.OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.DefaultCalendar);
                     IsDefaultProfile = Settings.OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.DefaultProfile);
-                    IsExchangeWebServices = Settings.OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.ExchangeWebServices);
+                    IsExchangeWebServices =
+                        Settings.OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.ExchangeWebServices);
                     SelectedOutlookProfileName = Settings.OutlookSettings.OutlookProfileName;
                     MinimizeToSystemTray = Settings.MinimizeToSystemTray;
                     HideSystemTrayTooltip = Settings.HideSystemTrayTooltip;
+                    CheckForUpdates = Settings.CheckForUpdates;
+                    RunApplicationAtSystemStartup = Settings.RunApplicationAtSystemStartup;
+                    RememberPeriodicSyncOn = Settings.RememberPeriodicSyncOn;
                 }
                 else
                 {
@@ -462,6 +497,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
                     IsDefaultProfile = true;
                     MinimizeToSystemTray = true;
                     HideSystemTrayTooltip = false;
+                    CheckForUpdates = true;
                 }
 
                 if (!IsDefaultProfile)
@@ -481,7 +517,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             }
             catch (AggregateException exception)
             {
-                var flattenException = exception.Flatten();
+                AggregateException flattenException = exception.Flatten();
                 MessageService.ShowMessageAsync(flattenException.Message);
             }
             catch (Exception exception)
@@ -508,21 +544,25 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             Settings.OutlookSettings.OutlookProfileName = SelectedOutlookProfileName;
             Settings.MinimizeToSystemTray = MinimizeToSystemTray;
             Settings.HideSystemTrayTooltip = HideSystemTrayTooltip;
+            Settings.CheckForUpdates = CheckForUpdates;
+            Settings.RunApplicationAtSystemStartup = RunApplicationAtSystemStartup;
+            Settings.RememberPeriodicSyncOn = RememberPeriodicSyncOn;
             Settings.OutlookSettings.UpdateOutlookOptions(IsDefaultProfile, IsDefaultMailBox, IsExchangeWebServices);
             Settings.ExchangeServerSettings.Username = Username;
             Settings.ExchangeServerSettings.Password = Password;
             Settings.ExchangeServerSettings.ExchangeServerUrl = ExchangeServerUrl;
-            bool result;
             try
             {
-                result = await SettingsSerializationService.SerializeSettingsAsync(Settings);
-                await MessageService.ShowMessage(result ? "Settings Saved Successfully" : "Error Saving Settings", "Settings");
+                bool result = await SettingsSerializationService.SerializeSettingsAsync(Settings);
+                await
+                    MessageService.ShowMessage(result ? "Settings Saved Successfully" : "Error Saving Settings",
+                        "Settings");
                 SettingsSaved = true;
             }
             catch (AggregateException exception)
             {
                 SettingsSaved = false;
-                var flattenException = exception.Flatten();
+                AggregateException flattenException = exception.Flatten();
                 MessageService.ShowMessageAsync(flattenException.Message);
             }
             catch (Exception exception)
@@ -542,20 +582,20 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             IsLoading = true;
             try
             {
-                _applicationLogger.LogInfo("Loading Google calendars...");
+                ApplicationLogger.LogInfo("Loading Google calendars...");
                 await GetGoogleCalendarInternal();
-                _applicationLogger.LogInfo("Google calendars loaded...");
+                ApplicationLogger.LogInfo("Google calendars loaded...");
             }
             catch (AggregateException exception)
             {
-                var flattenException = exception.Flatten();
+                AggregateException flattenException = exception.Flatten();
                 MessageService.ShowMessageAsync(flattenException.Message);
-                _applicationLogger.LogError(flattenException.ToString());
+                ApplicationLogger.LogError(flattenException.ToString());
             }
             catch (Exception exception)
             {
                 MessageService.ShowMessageAsync(exception.Message);
-                _applicationLogger.LogError(exception.ToString());
+                ApplicationLogger.LogError(exception.ToString());
             }
             finally
             {
@@ -565,7 +605,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
 
         private async Task GetGoogleCalendarInternal()
         {
-            var calendars = await GoogleCalendarService.GetAvailableCalendars();
+            List<Calendar> calendars = await GoogleCalendarService.GetAvailableCalendars();
             GoogleCalenders = calendars;
             if (GoogleCalenders.Any())
             {

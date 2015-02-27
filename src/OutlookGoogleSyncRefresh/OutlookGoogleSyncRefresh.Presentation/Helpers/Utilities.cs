@@ -1,4 +1,5 @@
 ﻿#region File Header
+
 // /******************************************************************************
 //  * 
 //  *      Copyright (C) Ankesh Dave 2015 All Rights Reserved. Confidential
@@ -13,11 +14,10 @@
 //  *      FileName:       Utilities.cs
 //  * 
 //  *****************************************************************************/
+
 #endregion
 
 using System.Windows;
-
-using OutlookGoogleSyncRefresh.Presentation.Views;
 
 namespace OutlookGoogleSyncRefresh.Helpers
 {

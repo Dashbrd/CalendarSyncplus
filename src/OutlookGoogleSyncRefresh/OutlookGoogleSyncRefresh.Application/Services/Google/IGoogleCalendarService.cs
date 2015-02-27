@@ -1,23 +1,23 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-
 using OutlookGoogleSyncRefresh.Domain.Models;
-
-using Calendar = OutlookGoogleSyncRefresh.Domain.Models.Calendar;
 
 namespace OutlookGoogleSyncRefresh.Application.Services.Google
 {
     public interface IGoogleCalendarService
     {
         Task<List<Calendar>> GetAvailableCalendars();
+
         Task<bool> AddCalendarEvent(Appointment calenderAppointment, string calenderId, bool addDescription,
             bool addReminder, bool addAttendees);
+
         Task<bool> DeleteCalendarEvent(Appointment calendarAppointment, string calenderId);
 
         Task<bool> DeleteCalendarEvent(List<Appointment> calendarAppointments, string calenderId);
 
         Task<List<Appointment>> GetCalendarEventsInRangeAsync(int daysInPast, int daysInFuture, string calenderId);
 
-        Task<bool> AddCalendarEvent(List<Appointment> calenderAppointments, string calendarId, bool addDescription, bool addReminder, bool addAttendees);
+        Task<bool> AddCalendarEvent(List<Appointment> calenderAppointments, string calendarId, bool addDescription,
+            bool addReminder, bool addAttendees);
     }
 }

@@ -5,10 +5,10 @@ using OutlookGoogleSyncRefresh.Application.Views;
 namespace OutlookGoogleSyncRefresh.Presentation.Views
 {
     /// <summary>
-    /// Interaction logic for SettingsView.xaml
+    ///     Interaction logic for SettingsView.xaml
     /// </summary>
-    [Export(typeof(ISettingsView))]
-    public partial class SettingsView : UserControl ,ISettingsView
+    [Export(typeof (ISettingsView))]
+    public partial class SettingsView : UserControl, ISettingsView
     {
         public SettingsView()
         {

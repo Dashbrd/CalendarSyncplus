@@ -20,44 +20,40 @@
 #region Imports
 
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.ComponentModel.Composition;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Waf.Applications;
 using OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate;
 using OutlookGoogleSyncRefresh.Application.Utilities;
 using OutlookGoogleSyncRefresh.Common.Log;
 using OutlookGoogleSyncRefresh.Domain.Helpers;
 using OutlookGoogleSyncRefresh.Domain.Models;
 
-using DataModel = OutlookGoogleSyncRefresh.Application.Utilities.DataModel;
-
 #endregion
 
 namespace OutlookGoogleSyncRefresh.Application.Services
 {
-    [Export(typeof(ISyncService))]
+    [Export(typeof (ISyncService))]
     public class SyncService : DataModel, ISyncService
     {
         #region Fields
 
+        private readonly ApplicationLogger _applicationLogger;
         private readonly ICalendarUpdateService _calendarUpdateService;
         private readonly IMessageService _messageService;
-        private readonly ApplicationLogger _applicationLogger;
         private readonly ISettingsProvider _settingsProvider;
-        private Timer _syncTimer;
         private bool _isSyncInProgress;
         private string _syncStatus;
+        private Timer _syncTimer;
 
         #endregion
 
         #region Constructors
 
         [ImportingConstructor]
-        public SyncService(ISettingsProvider settingsProvider, ICalendarUpdateService calendarUpdateService, IMessageService messageService, ApplicationLogger applicationLogger)
+        public SyncService(ISettingsProvider settingsProvider, ICalendarUpdateService calendarUpdateService,
+            IMessageService messageService, ApplicationLogger applicationLogger)
         {
             _settingsProvider = settingsProvider;
             _calendarUpdateService = calendarUpdateService;
@@ -67,29 +63,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services
 
         #endregion
 
-        #region Private Methods
-
-
-
-        private async void SyncStartTimerCallback(object state)
-        {
-            var settings = _settingsProvider.GetSettings();
-            if (settings != null && settings.SyncFrequency.ValidateTimer(DateTime.Now))
-            {
-                await SyncNowAsync(settings);
-            }
-        }
-
-        #endregion
-
         #region ISyncService Members
-
-        public bool IsSyncInProgress
-        {
-            get { return _isSyncInProgress; }
-            set { SetProperty(ref _isSyncInProgress, value); }
-        }
-
 
         public string SyncStatus
         {
@@ -97,19 +71,17 @@ namespace OutlookGoogleSyncRefresh.Application.Services
             set { SetProperty(ref _syncStatus, value); }
         }
 
-        public async Task<bool> Start()
+        public async Task<bool> Start(TimerCallback timerCallback)
         {
-            var settings = _settingsProvider.GetSettings();
+            Settings settings = _settingsProvider.GetSettings();
             if (settings.SavedCalendar == null || !settings.ValidateOutlookSettings())
             {
                 _messageService.ShowMessageAsync("Please configure Google and Outlook calendar in settings to continue.");
                 return false;
             }
-            _syncTimer = new Timer(SyncStartTimerCallback, null, (60 - DateTime.Now.Second), 60000);
+            _syncTimer = new Timer(timerCallback, null, (60 - DateTime.Now.Second), 60000);
             return true;
         }
-
-
 
         public void Stop()
         {
@@ -118,23 +90,17 @@ namespace OutlookGoogleSyncRefresh.Application.Services
         }
 
 
-
         public async Task<bool> SyncNowAsync(Settings settings)
         {
             try
             {
-                if (IsSyncInProgress)
-                    return false;
-
                 if (settings.SavedCalendar == null || !settings.ValidateOutlookSettings())
                 {
                     _messageService.ShowMessageAsync(
                         "Please configure Google and Outlook calendar in settings to continue.");
-                    IsSyncInProgress = false;
                     return false;
                 }
 
-                IsSyncInProgress = true;
                 ResetSyncData();
                 SyncStatus = StatusHelper.GetMessage(SyncStateEnum.SyncStarted, DateTime.Now);
                 bool isSyncComplete = await _calendarUpdateService.SyncCalendarAsync(settings);
@@ -147,7 +113,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services
             }
             catch (AggregateException exception)
             {
-                var flattenException = exception.Flatten();
+                AggregateException flattenException = exception.Flatten();
                 _messageService.ShowMessageAsync(flattenException.Message);
                 _applicationLogger.LogError(exception.ToString());
             }
@@ -156,33 +122,12 @@ namespace OutlookGoogleSyncRefresh.Application.Services
                 _messageService.ShowMessageAsync(exception.Message);
                 _applicationLogger.LogError(exception.ToString());
             }
-            finally
-            {
-                IsSyncInProgress = false;
-            }
             return false;
         }
-
-        private void ResetSyncData()
-        {
-            _syncStatus = null;
-        }
-
-        #endregion
 
         public void Initialize()
         {
             AddWeakEventListener(_calendarUpdateService, CalendarUpdateNotificationChanged);
-        }
-
-        private void CalendarUpdateNotificationChanged(object sender, PropertyChangedEventArgs e)
-        {
-            switch (e.PropertyName)
-            {
-                case "SyncStatus":
-                    SyncStatus = _calendarUpdateService.SyncStatus;
-                    break;
-            }
         }
 
         public void Run()
@@ -193,6 +138,23 @@ namespace OutlookGoogleSyncRefresh.Application.Services
         public void Shutdown()
         {
             RemoveWeakEventListener(_calendarUpdateService, CalendarUpdateNotificationChanged);
+        }
+
+        #endregion
+
+        private void ResetSyncData()
+        {
+            _syncStatus = null;
+        }
+
+        private void CalendarUpdateNotificationChanged(object sender, PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case "SyncStatus":
+                    SyncStatus = _calendarUpdateService.SyncStatus;
+                    break;
+            }
         }
     }
 }

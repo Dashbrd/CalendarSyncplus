@@ -5,18 +5,18 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
 {
     public class Appointment : Model
     {
-        private DateTime? _startTime;
-        private DateTime? _endTime;
-        private string _subject;
-        private string _location;
-        private string _description;
-        private string _appointmentId;
         private bool _allDayEvent;
-        private bool _reminderSet;
-        private int _reminderMinutesBeforeStart;
-        private string _organizer;
-        private string _requiredAttendees;
+        private string _appointmentId;
+        private string _description;
+        private DateTime? _endTime;
+        private string _location;
         private string _optionalAttendees;
+        private string _organizer;
+        private int _reminderMinutesBeforeStart;
+        private bool _reminderSet;
+        private string _requiredAttendees;
+        private DateTime? _startTime;
+        private string _subject;
 
         public Appointment(string description, string location, string subject, DateTime? endTime, DateTime? startTime,
             string appointmentId) : this(description, location, subject, endTime, startTime)
@@ -129,7 +129,7 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
                 return false;
             }
             // Instances are considered equal if the ToString matches.
-            return this.ToString() == appointment.ToString();
+            return ToString() == appointment.ToString();
         }
 
         public override int GetHashCode()
@@ -138,8 +138,7 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
             // sufficient and would only cause a problem if Appointments objects
             // were stored in a non-generic hash set along side other guid instances
             // which is very unlikely!
-            return this.ToString().GetHashCode();
-
+            return ToString().GetHashCode();
         }
 
         public override string ToString()

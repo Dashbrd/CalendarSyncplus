@@ -44,6 +44,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services
         #endregion
 
         #region Constructors
+
         [ImportingConstructor]
         public SettingsSerializationService(ApplicationLogger applicationLogger)
         {
@@ -85,6 +86,10 @@ namespace OutlookGoogleSyncRefresh.Application.Services
 
         private Settings DeserializeSettingsBackgroundTask()
         {
+            if (!File.Exists(SettingsFilePath))
+            {
+                return null;
+            }
             var serializer = new XmlSerializer<Settings>();
             return serializer.DeserializeFromFile(SettingsFilePath);
         }
@@ -116,23 +121,28 @@ namespace OutlookGoogleSyncRefresh.Application.Services
 
         public Settings DeserializeSettings()
         {
-            if (!File.Exists(SettingsFilePath))
+            var result = DeserializeSettingsBackgroundTask();
+            if (result == null)
             {
                 return GetDefaultSettings();
             }
-            return DeserializeSettingsBackgroundTask();
+            return result;
         }
 
         private Settings GetDefaultSettings()
         {
-            var settings = new Settings()
+            var settings = new Settings
             {
                 DaysInFuture = 7,
                 DaysInPast = 1,
                 IsFirstSave = true,
-                MinimizeToSystemTray = true
+                MinimizeToSystemTray = true,
+                CheckForUpdates = true,
+                RememberPeriodicSyncOn = true
             };
-            settings.OutlookSettings.OutlookOptions = OutlookOptionsEnum.DefaultProfile & OutlookOptionsEnum.DefaultCalendar;
+            settings.OutlookSettings.OutlookOptions = OutlookOptionsEnum.DefaultProfile &
+                                                      OutlookOptionsEnum.DefaultCalendar;
+            settings.CalendarEntryOptions = CalendarEntryOptionsEnum.None;
             return settings;
         }
 

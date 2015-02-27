@@ -30,9 +30,9 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
         #region Fields
 
         private List<OutlookCalendar> _calendars;
-        private string name;
         private string _entryId;
         private string _storeId;
+        private string name;
 
         #endregion
 

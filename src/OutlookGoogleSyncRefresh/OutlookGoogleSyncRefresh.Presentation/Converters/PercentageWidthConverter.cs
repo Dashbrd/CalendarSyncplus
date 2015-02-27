@@ -1,4 +1,5 @@
 ﻿#region File Header
+
 // /******************************************************************************
 //  * 
 //  *      Copyright (C) Ankesh Dave 2015 All Rights Reserved. Confidential
@@ -13,6 +14,7 @@
 //  *      FileName:       PercentageWidthConverter.cs
 //  * 
 //  *****************************************************************************/
+
 #endregion
 
 using System;
@@ -23,6 +25,8 @@ namespace OutlookGoogleSyncRefresh.Presentation.Converters
 {
     public class PercentageWidthConverter : IValueConverter
     {
+        #region IValueConverter Members
+
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value != null && parameter != null)
@@ -31,7 +35,7 @@ namespace OutlookGoogleSyncRefresh.Presentation.Converters
                 int percentage;
                 if (double.TryParse(value.ToString(), out width) && int.TryParse(parameter.ToString(), out percentage))
                 {
-                    return width * percentage / 100;
+                    return width*percentage/100;
                 }
             }
             return value;
@@ -41,5 +45,7 @@ namespace OutlookGoogleSyncRefresh.Presentation.Converters
         {
             throw new NotImplementedException();
         }
+
+        #endregion
     }
 }

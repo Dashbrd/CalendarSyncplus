@@ -1,78 +1,88 @@
 <?xml version="1.0"?>
+
 <doc>
-    <assembly>
-        <name>WpfApplicationFramework.UnitTesting</name>
-    </assembly>
-    <members>
-        <member name="T:System.Waf.UnitTesting.AssertHelper">
-            <summary>
-            This class contains assert methods which can be used in unit tests.
-            </summary>
-        </member>
-        <member name="M:System.Waf.UnitTesting.AssertHelper.ExpectedException``1(System.Action)">
-            <summary>
-            Asserts that the execution of the provided action throws the specified exception.
-            </summary>
-            <typeparam name="T">The expected exception type</typeparam>
-            <param name="action">The action to execute.</param>
-            <exception cref="T:System.Waf.UnitTesting.AssertException">This exception is thrown when the expected exception was
-            not thrown by the action.</exception>
-        </member>
-        <member name="M:System.Waf.UnitTesting.AssertHelper.CanExecuteChangedEvent(System.Windows.Input.ICommand,System.Action)">
-            <summary>
-            Asserts that the execution of the provided action raises the CanExecuteChanged event of the command.
-            </summary>
-            <param name="command">The command.</param>
-            <param name="raiseCanExecuteChanged">An action that results in a CanExecuteChanged event of the command.</param>
-            <exception cref="T:System.Waf.UnitTesting.AssertException">This exception is thrown when no or more than one CanExecuteChanged event was 
-            raised by the command or the sender object of the event was not the command object.</exception>
-        </member>
-        <member name="M:System.Waf.UnitTesting.AssertHelper.PropertyChangedEvent``1(``0,System.Linq.Expressions.Expression{System.Func{``0,System.Object}},System.Action)">
-            <summary>
-            Asserts that the execution of the provided action raises the property changed event.
-            </summary>
-            <typeparam name="T">The type of the observable.</typeparam>
-            <param name="observable">The observable which should raise the property changed event.</param>
-            <param name="expression">A simple expression which identifies the property (e.g. x =&gt; x.Name).</param>
-            <param name="raisePropertyChanged">An action that results in a property changed event of the observable.</param>
-            <exception cref="T:System.Waf.UnitTesting.AssertException">This exception is thrown when no or more than one property changed event was 
-            raised by the observable or the sender object of the event was not the observable object.</exception>
-        </member>
-        <member name="T:System.Waf.UnitTesting.AssertException">
-            <summary>
-            Represents assertion errors that occur at runtime.
-            </summary>
-        </member>
-        <member name="M:System.Waf.UnitTesting.AssertException.#ctor">
-            <summary>
-            Initializes a new instance of the <see cref="T:System.Waf.UnitTesting.AssertException"/> class.
-            </summary>
-        </member>
-        <member name="M:System.Waf.UnitTesting.AssertException.#ctor(System.String)">
-            <summary>
-            Initializes a new instance of the <see cref="T:System.Waf.UnitTesting.AssertException"/> class.
-            </summary>
-            <param name="message">The message.</param>
-        </member>
-        <member name="M:System.Waf.UnitTesting.AssertException.#ctor(System.String,System.Exception)">
-            <summary>
-            Initializes a new instance of the <see cref="T:System.Waf.UnitTesting.AssertException"/> class.
-            </summary>
-            <param name="message">The message.</param>
-            <param name="inner">The inner exception.</param>
-        </member>
-        <member name="M:System.Waf.UnitTesting.AssertException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
-            <summary>
-            Initializes a new instance of the <see cref="T:System.Waf.UnitTesting.AssertException"/> class.
-            </summary>
-            <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo"/> that holds the serialized object data about the exception being thrown.</param>
-            <param name="context">The <see cref="T:System.Runtime.Serialization.StreamingContext"/> that contains contextual information about the source or destination.</param>
-            <exception cref="T:System.ArgumentNullException">
-            The <paramref name="info"/> parameter is null.
-            </exception>
-            <exception cref="T:System.Runtime.Serialization.SerializationException">
-            The class name is null or <see cref="P:System.Exception.HResult"/> is zero (0).
-            </exception>
-        </member>
-    </members>
+  <assembly>
+    <name>WpfApplicationFramework.UnitTesting</name>
+  </assembly>
+  <members>
+    <member name="T:System.Waf.UnitTesting.AssertHelper">
+      <summary>
+        This class contains assert methods which can be used in unit tests.
+      </summary>
+    </member>
+    <member name="M:System.Waf.UnitTesting.AssertHelper.ExpectedException``1(System.Action)">
+      <summary>
+        Asserts that the execution of the provided action throws the specified exception.
+      </summary>
+      <typeparam name="T">The expected exception type</typeparam>
+      <param name="action">The action to execute.</param>
+      <exception cref="T:System.Waf.UnitTesting.AssertException">
+        This exception is thrown when the expected exception was
+        not thrown by the action.
+      </exception>
+    </member>
+    <member
+      name="M:System.Waf.UnitTesting.AssertHelper.CanExecuteChangedEvent(System.Windows.Input.ICommand,System.Action)">
+      <summary>
+        Asserts that the execution of the provided action raises the CanExecuteChanged event of the command.
+      </summary>
+      <param name="command">The command.</param>
+      <param name="raiseCanExecuteChanged">An action that results in a CanExecuteChanged event of the command.</param>
+      <exception cref="T:System.Waf.UnitTesting.AssertException">
+        This exception is thrown when no or more than one CanExecuteChanged event was
+        raised by the command or the sender object of the event was not the command object.
+      </exception>
+    </member>
+    <member
+      name="M:System.Waf.UnitTesting.AssertHelper.PropertyChangedEvent``1(``0,System.Linq.Expressions.Expression{System.Func{``0,System.Object}},System.Action)">
+      <summary>
+        Asserts that the execution of the provided action raises the property changed event.
+      </summary>
+      <typeparam name="T">The type of the observable.</typeparam>
+      <param name="observable">The observable which should raise the property changed event.</param>
+      <param name="expression">A simple expression which identifies the property (e.g. x =&gt; x.Name).</param>
+      <param name="raisePropertyChanged">An action that results in a property changed event of the observable.</param>
+      <exception cref="T:System.Waf.UnitTesting.AssertException">
+        This exception is thrown when no or more than one property changed event was
+        raised by the observable or the sender object of the event was not the observable object.
+      </exception>
+    </member>
+    <member name="T:System.Waf.UnitTesting.AssertException">
+      <summary>
+        Represents assertion errors that occur at runtime.
+      </summary>
+    </member>
+    <member name="M:System.Waf.UnitTesting.AssertException.#ctor">
+      <summary>
+        Initializes a new instance of the <see cref="T:System.Waf.UnitTesting.AssertException" /> class.
+      </summary>
+    </member>
+    <member name="M:System.Waf.UnitTesting.AssertException.#ctor(System.String)">
+      <summary>
+        Initializes a new instance of the <see cref="T:System.Waf.UnitTesting.AssertException" /> class.
+      </summary>
+      <param name="message">The message.</param>
+    </member>
+    <member name="M:System.Waf.UnitTesting.AssertException.#ctor(System.String,System.Exception)">
+      <summary>
+        Initializes a new instance of the <see cref="T:System.Waf.UnitTesting.AssertException" /> class.
+      </summary>
+      <param name="message">The message.</param>
+      <param name="inner">The inner exception.</param>
+    </member>
+    <member
+      name="M:System.Waf.UnitTesting.AssertException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+      <summary>
+        Initializes a new instance of the <see cref="T:System.Waf.UnitTesting.AssertException" /> class.
+      </summary>
+      <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo" /> that holds the serialized object data about the exception being thrown.</param>
+      <param name="context">The <see cref="T:System.Runtime.Serialization.StreamingContext" /> that contains contextual information about the source or destination.</param>
+      <exception cref="T:System.ArgumentNullException">
+        The <paramref name="info" /> parameter is null.
+      </exception>
+      <exception cref="T:System.Runtime.Serialization.SerializationException">
+        The class name is null or <see cref="P:System.Exception.HResult" /> is zero (0).
+      </exception>
+    </member>
+  </members>
 </doc>

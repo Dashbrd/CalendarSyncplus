@@ -17,14 +17,14 @@
     <tb:TaskbarIcon.TrayToolTip>
         <Border Background="White"
                 MaxWidth="200" MaxHeight="100">
-        <Grid Margin="5">
-            <Grid.RowDefinitions>
-                <RowDefinition />
-                <RowDefinition />
-            </Grid.RowDefinitions>
-            <TextBlock Text="Calendar Sync +" FontWeight="800"/>
-            <TextBlock Text="Double click to maximize the application." Grid.Row="1" TextWrapping="Wrap"/>
-        </Grid>
+            <Grid Margin="5">
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <TextBlock Text="Calendar Sync +" FontWeight="800" />
+                <TextBlock Text="Double click to maximize the application." Grid.Row="1" TextWrapping="Wrap" />
+            </Grid>
         </Border>
     </tb:TaskbarIcon.TrayToolTip>
     <tb:TaskbarIcon.ContextMenu>
@@ -34,7 +34,4 @@
                       Header="Exit" />
         </ContextMenu>
     </tb:TaskbarIcon.ContextMenu>
-    <tb:TaskbarIcon.Resources>
-        <Views:SyncBalloon x:Key="_syncBalloon" x:Shared="False" DataContext="{Binding Path=DataContext, ElementName=SystemTrayTaskbarIcon}" />
-    </tb:TaskbarIcon.Resources>
 </tb:TaskbarIcon>

@@ -12,13 +12,18 @@ namespace OutlookGoogleSyncRefresh.Presentation.Services.SingleInstance
     [SuppressUnmanagedCodeSecurity]
     internal static class NativeMethods
     {
+        #region Delegates
+
         /// <summary>
         ///     Delegate declaration that matches WndProc signatures.
         /// </summary>
         public delegate IntPtr MessageHandler(WM uMsg, IntPtr wParam, IntPtr lParam, out bool handled);
 
+        #endregion
+
         [DllImport("shell32.dll", EntryPoint = "CommandLineToArgvW", CharSet = CharSet.Unicode)]
-        private static extern IntPtr _CommandLineToArgvW([MarshalAs(UnmanagedType.LPWStr)] string cmdLine, out int numArgs);
+        private static extern IntPtr _CommandLineToArgvW([MarshalAs(UnmanagedType.LPWStr)] string cmdLine,
+            out int numArgs);
 
         [DllImport("kernel32.dll", EntryPoint = "LocalFree", SetLastError = true)]
         private static extern IntPtr _LocalFree(IntPtr hMem);
@@ -39,7 +44,7 @@ namespace OutlookGoogleSyncRefresh.Presentation.Services.SingleInstance
 
                 for (int i = 0; i < numArgs; i++)
                 {
-                    IntPtr currArg = Marshal.ReadIntPtr(argv, i * Marshal.SizeOf(typeof(IntPtr)));
+                    IntPtr currArg = Marshal.ReadIntPtr(argv, i*Marshal.SizeOf(typeof (IntPtr)));
                     result[i] = Marshal.PtrToStringUni(currArg);
                 }
 

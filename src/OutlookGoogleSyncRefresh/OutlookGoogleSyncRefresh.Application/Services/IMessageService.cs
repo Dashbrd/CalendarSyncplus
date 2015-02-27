@@ -1,4 +1,5 @@
 ﻿#region File Header
+
 // /******************************************************************************
 //  * 
 //  *      Copyright (C) Ankesh Dave 2015 All Rights Reserved. Confidential
@@ -13,6 +14,7 @@
 //  *      FileName:       IMessageService.cs
 //  * 
 //  *****************************************************************************/
+
 #endregion
 
 using System.Threading.Tasks;
@@ -29,6 +31,5 @@ namespace OutlookGoogleSyncRefresh.Application.Services
         Task<MessageDialogResult> ShowMessage(string message, string title);
 
         Task<MessageDialogResult> ShowMessage(string message);
-
     }
 }

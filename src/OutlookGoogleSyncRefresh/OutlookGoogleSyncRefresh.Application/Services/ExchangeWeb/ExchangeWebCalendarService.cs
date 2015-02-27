@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Composition;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Exchange.WebServices.Data;
@@ -9,23 +10,19 @@ using Appointment = Microsoft.Exchange.WebServices.Data.Appointment;
 
 namespace OutlookGoogleSyncRefresh.Application.Services.ExchangeWeb
 {
+    [Export(typeof (IExchangeWebCalendarService))]
     public class ExchangeWebCalendarService : IExchangeWebCalendarService
     {
-        public ExchangeService GetExchangeService()
-        {
-            ExchangeService service = new ExchangeService(ExchangeVersion.Exchange2013_SP1);
-            service.UseDefaultCredentials = true;
-            //service.Credentials = new WebCredentials("user1@contoso.com", "password");
-            return service;
-        }
+        #region IExchangeWebCalendarService Members
 
-        public async Task<List<AppAppointment>> GetAppointmentsAsync(int daysInPast, int daysInFuture, string profileName, Domain.Models.OutlookCalendar outlookCalendar)
+        public async Task<List<AppAppointment>> GetAppointmentsAsync(int daysInPast, int daysInFuture,
+            string profileName, OutlookCalendar outlookCalendar)
         {
-            var service = GetExchangeService();
+            ExchangeService service = GetExchangeService();
             FindItemsResults<Appointment> outlookItems;
             DateTime startDate = DateTime.Now.AddDays(-daysInPast);
             DateTime endDate = DateTime.Now.AddDays(+(daysInFuture + 1));
-            CalendarView calendarview = new CalendarView(startDate, endDate);
+            var calendarview = new CalendarView(startDate, endDate);
 
             // Get Default Calendar
             var outlookAppointments = new List<AppAppointment>();
@@ -35,18 +32,18 @@ namespace OutlookGoogleSyncRefresh.Application.Services.ExchangeWeb
             if (outlookItems != null)
             {
                 outlookAppointments.AddRange(
-                        outlookAppointments.Select(
-                            appointmentItem =>
-                                new AppAppointment(appointmentItem.Description, appointmentItem.Location,
-                                    appointmentItem.Subject, appointmentItem.EndTime, appointmentItem.StartTime)
-                                {
-                                    AllDayEvent = appointmentItem.AllDayEvent,
-                                    OptionalAttendees = appointmentItem.OptionalAttendees,
-                                    ReminderMinutesBeforeStart = appointmentItem.ReminderMinutesBeforeStart,
-                                    Organizer = appointmentItem.Organizer,
-                                    ReminderSet = appointmentItem.ReminderSet,
-                                    RequiredAttendees = appointmentItem.RequiredAttendees,
-                                }));
+                    outlookAppointments.Select(
+                        appointmentItem =>
+                            new AppAppointment(appointmentItem.Description, appointmentItem.Location,
+                                appointmentItem.Subject, appointmentItem.EndTime, appointmentItem.StartTime)
+                            {
+                                AllDayEvent = appointmentItem.AllDayEvent,
+                                OptionalAttendees = appointmentItem.OptionalAttendees,
+                                ReminderMinutesBeforeStart = appointmentItem.ReminderMinutesBeforeStart,
+                                Organizer = appointmentItem.Organizer,
+                                ReminderSet = appointmentItem.ReminderSet,
+                                RequiredAttendees = appointmentItem.RequiredAttendees,
+                            }));
             }
 
 
@@ -55,14 +52,14 @@ namespace OutlookGoogleSyncRefresh.Application.Services.ExchangeWeb
 
         public async Task<List<OutlookCalendar>> GetCalendarsAsync()
         {
-            var service = GetExchangeService();
+            ExchangeService service = GetExchangeService();
 
             // Create a new folder view, and pass in the maximum number of folders to return.
-            FolderView view = new FolderView(1000);
+            var view = new FolderView(1000);
 
             // Create an extended property definition for the PR_ATTR_HIDDEN property,
             // so that your results will indicate whether the folder is a hidden folder.
-            ExtendedPropertyDefinition isHiddenProp = new ExtendedPropertyDefinition(0x10f4, MapiPropertyType.Boolean);
+            var isHiddenProp = new ExtendedPropertyDefinition(0x10f4, MapiPropertyType.Boolean);
 
             // As a best practice, limit the properties returned to only those required.
             // In this case, return the folder ID, DisplayName, and the value of the isHiddenProp
@@ -77,11 +74,21 @@ namespace OutlookGoogleSyncRefresh.Application.Services.ExchangeWeb
             FindFoldersResults findFolderResults = service.FindFolders(WellKnownFolderName.MsgFolderRoot, view);
 
             var outlookCalendars = new List<OutlookCalendar>();
-            foreach (var searchFolder in findFolderResults.Folders)
+            foreach (Folder searchFolder in findFolderResults.Folders)
             {
                 GetCalendars(searchFolder, outlookCalendars, view);
             }
             return outlookCalendars;
+        }
+
+        #endregion
+
+        public ExchangeService GetExchangeService()
+        {
+            var service = new ExchangeService(ExchangeVersion.Exchange2013_SP1);
+            service.UseDefaultCredentials = true;
+            //service.Credentials = new WebCredentials("user1@contoso.com", "password");
+            return service;
         }
 
         private void GetCalendars(Folder searchFolder, List<OutlookCalendar> outlookCalendars, FolderView view)
@@ -94,7 +101,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.ExchangeWeb
             if (searchFolder.FolderClass == "IPF.Appointment")
             {
                 //Add Calendar MAPIFolder to List
-                outlookCalendars.Add(new OutlookCalendar()
+                outlookCalendars.Add(new OutlookCalendar
                 {
                     Name = searchFolder.DisplayName,
                     EntryId = searchFolder.Id.ToString(),
@@ -109,7 +116,6 @@ namespace OutlookGoogleSyncRefresh.Application.Services.ExchangeWeb
                 //Get Calendar MAPIFolders
                 GetCalendars(subFolder, outlookCalendars, view);
             }
-
         }
     }
 }

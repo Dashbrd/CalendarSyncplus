@@ -3,10 +3,8 @@ using System.ComponentModel.Composition;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Waf.Applications;
-using Microsoft.Exchange.WebServices.Data;
 using OutlookGoogleSyncRefresh.Application.Services;
 using OutlookGoogleSyncRefresh.Application.Views;
-using OutlookGoogleSyncRefresh.Domain.Models;
 
 namespace OutlookGoogleSyncRefresh.Application.ViewModels
 {
@@ -14,21 +12,19 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
     public class AboutViewModel : Utilities.ViewModel<IAboutView>
     {
         private readonly IApplicationUpdateService _applicationUpdateService;
-        private readonly Settings _settings;
-        private string _productVersion;
-        private DelegateCommand _uriCommand;
         private DelegateCommand _checkForUpdatesCommand;
-        private bool _isLatestVersionAvailable;
         private DelegateCommand _downloadCommand;
-        private string _updateText;
         private bool _isCheckInProgress;
+        private bool _isLatestVersionAvailable;
+        private string _productVersion;
+        private string _updateText;
+        private DelegateCommand _uriCommand;
 
         [ImportingConstructor]
-        public AboutViewModel(IAboutView aboutView, IApplicationUpdateService applicationUpdateService, Settings settings)
+        public AboutViewModel(IAboutView aboutView, IApplicationUpdateService applicationUpdateService)
             : base(aboutView)
         {
             _applicationUpdateService = applicationUpdateService;
-            _settings = settings;
             ProductVersion = ApplicationInfo.Version;
         }
 
@@ -67,7 +63,6 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
         public DelegateCommand DownloadCommand
         {
             get { return _downloadCommand = _downloadCommand ?? new DelegateCommand(DownloadNewVersion); }
-            
         }
 
         public string UpdateText
@@ -83,27 +78,39 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
 
         private void CheckForUpdates()
         {
-            IsCheckInProgress = true;
-            var scheduler = TaskScheduler.FromCurrentSynchronizationContext();
-            Task<bool>.Factory.StartNew(() => _applicationUpdateService.IsNewVersionAvailable())
-                .ContinueWith(CheckForUpdatesComplete, scheduler);
+            if (IsCheckInProgress || IsLatestVersionAvailable)
+            {
+                return;
+            }
 
+            IsCheckInProgress = true;
+            IsLatestVersionAvailable = false;
+            UpdateText = string.Empty;
+            TaskScheduler scheduler = TaskScheduler.FromCurrentSynchronizationContext();
+            Task<string>.Factory.StartNew(() => _applicationUpdateService.GetLatestReleaseFromServer())
+                .ContinueWith(CheckForUpdatesComplete, scheduler);
         }
 
-        private void CheckForUpdatesComplete(Task<bool> task)
+        private void CheckForUpdatesComplete(Task<string> task)
         {
             IsCheckInProgress = false;
-            if (task.Result)
+            if (task.Result == null)
             {
-                UpdateText = string.Format("New version available for download : {0}",
-                    _applicationUpdateService.GetNewAvailableVersion());
-                IsLatestVersionAvailable = true;
+                if (_applicationUpdateService.IsNewVersionAvailable())
+                {
+                    UpdateText = string.Format("New version available for download : {0}",
+                        _applicationUpdateService.GetNewAvailableVersion());
+                    IsLatestVersionAvailable = true;
+                }
+                else
+                {
+                    UpdateText = "Your application is up to date.";
+                }
             }
             else
             {
-                IsLatestVersionAvailable = false;
-                UpdateText = "Your application is up to date.";
-            } 
+                UpdateText = task.Result;
+            }
         }
 
         private void RequestNavigation(object parameter)

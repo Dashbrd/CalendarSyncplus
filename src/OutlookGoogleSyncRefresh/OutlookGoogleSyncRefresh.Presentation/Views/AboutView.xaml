@@ -10,20 +10,20 @@
              d:DesignWidth="300"
              d:DataContext="{d:DesignInstance viewModels:AboutViewModel}">
     <UserControl.Resources>
-        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
-        <SolidColorBrush x:Key="AboutContentColor" Color="DimGray"/>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+        <SolidColorBrush x:Key="AboutContentColor" Color="DimGray" />
     </UserControl.Resources>
     <StackPanel VerticalAlignment="Top"
                 Orientation="Vertical"
                 Margin="20">
-        <TextBlock Text="{StaticResource ApplicationName}" 
-                   VerticalAlignment="Center" 
-                   HorizontalAlignment="Left" 
-                   FontWeight="800" 
+        <TextBlock Text="{StaticResource ApplicationName}"
+                   VerticalAlignment="Center"
+                   HorizontalAlignment="Left"
+                   FontWeight="800"
                    FontSize="30"
-                   Foreground="{StaticResource AboutContentColor}"/>
-        <TextBlock Text="{Binding ProductVersion,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
-        <TextBlock Text="Contributors:" FontWeight="800" Margin="0,10,0,0"/>
+                   Foreground="{StaticResource AboutContentColor}" />
+        <TextBlock Text="{Binding ProductVersion,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
+        <TextBlock Text="Contributors:" FontWeight="800" Margin="0,10,0,0" />
         <TextBlock Text="Ankesh Dave (ankeshdave@hotmail.com)" />
         <TextBlock Text="Akanksha Gaur (akankshagaur@outlook.com)" />
         <TextBlock Text="This utility is inspired from OutlookGoogleSync which can be found at:"
@@ -31,27 +31,34 @@
                    Margin="0,10,0,0" />
         <TextBlock Margin="0,10,0,0">
             <Hyperlink Command="{Binding UriCommand}"
-                       CommandParameter="http://outlookgooglesync.codeplex.com/">http://outlookgooglesync.codeplex.com/</Hyperlink>
+                       CommandParameter="http://outlookgooglesync.codeplex.com/">
+                http://outlookgooglesync.codeplex.com/
+            </Hyperlink>
         </TextBlock>
-        <TextBlock Text="This is a free utility. To share appreciation, comments and further suggestions, Please go to the following link." TextWrapping="Wrap"
-                   Margin="0,10,0,0" />
+        <TextBlock
+            Text="This is a free utility. To share appreciation, comments and further suggestions, Please go to the following link."
+            TextWrapping="Wrap"
+            Margin="0,10,0,0" />
         <TextBlock Margin="0,10,0,0">
             <Hyperlink Command="{Binding UriCommand}"
-                       CommandParameter="https://calendarsyncplus.codeplex.com/">https://calendarsyncplus.codeplex.com/</Hyperlink>
+                       CommandParameter="https://calendarsyncplus.codeplex.com/">
+                https://calendarsyncplus.codeplex.com/
+            </Hyperlink>
         </TextBlock>
-        <Button HorizontalAlignment="Left" Content="Check FOr updates" Margin="0,10,0,0" Command="{Binding CheckForUpdatesCommand}"
-                Width="120"/>
-        <controls:MetroProgressBar 
-                               Visibility="{Binding IsCheckInProgress, Converter={StaticResource BooleanToVisibilityConverter}}"
-                               IsIndeterminate="True"  Margin="5" />  
+        <Button HorizontalAlignment="Left" Content="Check FOr updates" Margin="0,10,0,0"
+                Command="{Binding CheckForUpdatesCommand}"
+                Width="120" />
+        <controls:MetroProgressBar
+            Visibility="{Binding IsCheckInProgress, Converter={StaticResource BooleanToVisibilityConverter}}"
+            IsIndeterminate="True" Margin="5" />
         <TextBlock Text="{Binding UpdateText}"
-                   Margin="0,10,0,0" FontSize="16" Foreground="LightSteelBlue"/>
+                   Margin="0,10,0,0" FontSize="16" Foreground="LightSteelBlue" />
         <Button HorizontalAlignment="Left"
                 Content="Download Now"
                 Width="120"
                 Margin="0,10,0,0"
                 Command="{Binding DownloadCommand}"
-                Visibility="{Binding IsLatestVersionAvailable,Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                Visibility="{Binding IsLatestVersionAvailable,Converter={StaticResource BooleanToVisibilityConverter}}" />
 
     </StackPanel>
 </UserControl>
