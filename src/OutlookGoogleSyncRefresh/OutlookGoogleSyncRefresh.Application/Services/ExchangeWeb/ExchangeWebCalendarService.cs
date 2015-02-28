@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.Exchange.WebServices.Data;
 using OutlookGoogleSyncRefresh.Domain.Models;
@@ -18,7 +19,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.ExchangeWeb
         public async Task<List<AppAppointment>> GetAppointmentsAsync(int daysInPast, int daysInFuture,
             string profileName, OutlookCalendar outlookCalendar)
         {
-            ExchangeService service = GetExchangeService();
+            ExchangeService service = GetExchangeService("","");
             FindItemsResults<Appointment> outlookItems;
             DateTime startDate = DateTime.Now.AddDays(-daysInPast);
             DateTime endDate = DateTime.Now.AddDays(+(daysInFuture + 1));
@@ -52,7 +53,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.ExchangeWeb
 
         public async Task<List<OutlookCalendar>> GetCalendarsAsync()
         {
-            ExchangeService service = GetExchangeService();
+            ExchangeService service = GetExchangeService("","");
 
             // Create a new folder view, and pass in the maximum number of folders to return.
             var view = new FolderView(1000);
@@ -83,11 +84,11 @@ namespace OutlookGoogleSyncRefresh.Application.Services.ExchangeWeb
 
         #endregion
 
-        public ExchangeService GetExchangeService()
+        public ExchangeService GetExchangeService(string username,string password = null)
         {
             var service = new ExchangeService(ExchangeVersion.Exchange2013_SP1);
-            service.UseDefaultCredentials = true;
-            //service.Credentials = new WebCredentials("user1@contoso.com", "password");
+            service.Credentials = new NetworkCredential(username,password);
+            service.AutodiscoverUrl(username);
             return service;
         }
 

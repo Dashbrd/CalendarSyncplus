@@ -47,7 +47,7 @@ namespace OutlookGoogleSyncRefresh.Application.Controllers
             Lazy<SettingsViewModel> settingsViewModelLazy,
             Lazy<AboutViewModel> aboutViewModelLazy, Lazy<HelpViewModel> helpViewModelLazy,
             Lazy<ShellService> shellServiceLazy, CompositionContainer compositionContainer,
-            Lazy<IAccountAuthenticationService> accountAuthenticationServiceLazy, IShellController shellController,
+            Lazy<IGoogleAuthenticationService> accountAuthenticationServiceLazy, IShellController shellController,
             Lazy<SystemTrayNotifierViewModel> lazySystemTrayNotifierViewModel,
             IGuiInteractionService guiInteractionService)
         {
@@ -74,7 +74,7 @@ namespace OutlookGoogleSyncRefresh.Application.Controllers
             _guiInteractionService = guiInteractionService;
         }
 
-        public IAccountAuthenticationService AccountAuthenticationService { get; set; }
+        public IGoogleAuthenticationService AccountAuthenticationService { get; set; }
 
         #region IApplicationController Members
 

@@ -82,7 +82,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
         [ImportingConstructor]
         public ShellViewModel(IShellView view, IShellService shellService,
             ISyncService syncStartService,
-            IAccountAuthenticationService accountAuthenticationService,
+            IGoogleAuthenticationService accountAuthenticationService,
             Settings settings,
             IMessageService messageService,
             ApplicationLogger applicationLogger, IApplicationUpdateService applicationUpdateService,
@@ -122,7 +122,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
 
         #region Properties
 
-        public IAccountAuthenticationService AccountAuthenticationService { get; private set; }
+        public IGoogleAuthenticationService AccountAuthenticationService { get; private set; }
         public ISyncService SyncStartService { get; private set; }
         public ApplicationLogger ApplicationLogger { get; private set; }
         public SystemTrayNotifierViewModel SystemTrayNotifierViewModel { get; private set; }

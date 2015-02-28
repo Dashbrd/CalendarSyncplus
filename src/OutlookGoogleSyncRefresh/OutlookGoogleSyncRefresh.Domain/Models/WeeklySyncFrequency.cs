@@ -54,8 +54,14 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
         public override DateTime GetNextSyncTime()
         {
             DateTime dateTime = DateTime.Now;
-            if (dateTime.CompareTo(TimeOfDay) > 0)
+            if (IsDayValid(dateTime))
             {
+                if (dateTime.TimeOfDay.CompareTo(TimeOfDay.TimeOfDay) <= 0)
+                {
+                    return new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, TimeOfDay.Hour, TimeOfDay.Minute,
+                    TimeOfDay.Second);
+                }
+
                 dateTime = new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, TimeOfDay.Hour, TimeOfDay.Minute,
                     TimeOfDay.Second);
                 dateTime = dateTime.Add(new TimeSpan(1, 0, 0, 0));

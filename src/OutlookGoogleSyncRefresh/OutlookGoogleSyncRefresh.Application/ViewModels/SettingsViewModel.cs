@@ -77,6 +77,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
         private int _daysInPast;
         private string _exchangeServerUrl;
         private DelegateCommand _getGoogleCalendarCommand;
+        private DelegateCommand _getLiveCalendarCommand;
         private DelegateCommand _getOutlookMailboxCommand;
         private DelegateCommand _getOutlookProfileLIstCommand;
         private List<Calendar> _googleCalenders;
@@ -168,6 +169,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
                 return _getGoogleCalendarCommand ?? (_getGoogleCalendarCommand = new DelegateCommand(GetGoogleCalendar));
             }
         }
+
 
         public DelegateCommand SaveCommand
         {
@@ -405,7 +407,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
         {
             OutlookProfileList = await OutlookCalendarService.GetOutLookProfieListAsync();
         }
-
+        
         #endregion
 
         #region Private Methods
@@ -512,7 +514,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
 
                 if (Settings != null && Settings.SavedCalendar != null)
                 {
-                    await GetGoogleCalendarInternal();
+                    GetGoogleCalendar();
                 }
             }
             catch (AggregateException exception)

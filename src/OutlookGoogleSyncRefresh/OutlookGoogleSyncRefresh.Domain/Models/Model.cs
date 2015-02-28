@@ -52,9 +52,9 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
             return true;
         }
 
-        protected override void OnPropertyChanged(PropertyChangedEventArgs e)
-        {
-            DispatcherHelper.CheckBeginInvokeOnUI(() => base.OnPropertyChanged(e));
-        }
+        //protected override void OnPropertyChanged(PropertyChangedEventArgs e)
+        //{
+        //    DispatcherHelper.CheckBeginInvokeOnUI(() => base.OnPropertyChanged(e));
+        //}
     }
 }

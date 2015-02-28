@@ -12,13 +12,13 @@ using OutlookGoogleSyncRefresh.Common.Log;
 
 namespace OutlookGoogleSyncRefresh.Application.Services.Google
 {
-    [Export(typeof (IAccountAuthenticationService))]
-    public class AccountAuthenticationService : IAccountAuthenticationService
+    [Export(typeof (IGoogleAuthenticationService))]
+    public class GoogleAuthenticationService : IGoogleAuthenticationService
     {
         private readonly ApplicationLogger _applicationLogger;
 
         [ImportingConstructor]
-        public AccountAuthenticationService(ApplicationLogger applicationLogger)
+        public GoogleAuthenticationService(ApplicationLogger applicationLogger)
         {
             _applicationLogger = applicationLogger;
         }
@@ -93,7 +93,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Google
                 Environment.SpecialFolderOption.None);
             string fullPath = applicationDataPath + @"\CalendarSyncPlus\" + Constants.AuthFolderPath;
 
-            return AuthenticateCalenderOauth(Constants.ClientId, Constants.ClientSecret,
+            return AuthenticateCalenderOauth(Constants.GoogleClientId, Constants.GoogleClientSecret,
                 Constants.User, fullPath, ApplicationInfo.ProductName, true);
         }
 
