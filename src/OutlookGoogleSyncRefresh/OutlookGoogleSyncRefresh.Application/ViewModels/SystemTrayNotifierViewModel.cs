@@ -31,7 +31,7 @@ using OutlookGoogleSyncRefresh.Common;
 namespace OutlookGoogleSyncRefresh.Application.ViewModels
 {
     [Export]
-    public class SystemTrayNotifierViewModel : Utilities.ViewModel<ISystemTrayNotifierView>
+    public class SystemTrayNotifierViewModel : ViewModel<ISystemTrayNotifierView>
     {
         #region Fields
 

@@ -153,7 +153,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
             if (disposeOutlookInstances)
             {
                 // Casting Removes a warninig for Ambigous Call
-                application.Quit();
+                ((_Application)application).Quit();
                 Marshal.FinalReleaseComObject(application);
             }
             application = null;
@@ -310,7 +310,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
             if (disposeOutlookInstances)
             {
                 // Casting Removes a warninig for Ambigous Call
-                application.Quit();
+                ((_Application)application).Quit(); application.Quit();
                 Marshal.FinalReleaseComObject(application);
             }
 

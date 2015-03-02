@@ -17,6 +17,7 @@
 
 #endregion
 
+using System.Waf.Foundation;
 namespace OutlookGoogleSyncRefresh.Domain.Models
 {
     public class OutlookCalendar : Model

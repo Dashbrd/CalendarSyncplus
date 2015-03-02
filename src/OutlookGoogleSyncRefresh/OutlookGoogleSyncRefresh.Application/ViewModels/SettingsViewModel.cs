@@ -39,7 +39,7 @@ using OutlookGoogleSyncRefresh.Domain.Models;
 namespace OutlookGoogleSyncRefresh.Application.ViewModels
 {
     [Export]
-    public class SettingsViewModel : Utilities.ViewModel<ISettingsView>
+    public class SettingsViewModel : ViewModel<ISettingsView>
     {
         #region Constructors
 

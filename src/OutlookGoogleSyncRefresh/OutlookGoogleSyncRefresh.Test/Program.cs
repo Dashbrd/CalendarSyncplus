@@ -18,7 +18,9 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices;
 
 using Microsoft.Office.Interop.Outlook;
@@ -39,11 +41,12 @@ namespace Test
             //application.InitializeComponent();
             //application.Run();
 
-            //var service = new EWSCalendarService();
+            var service = new EWSCalendarService();
 
-            //service.FindCalendarFolder();
+            service.FindCalendarFolder();
 
-            var list = GetOutlookProfileList();
+            //var list = GetOutlookProfileList();
+
 
         }
 

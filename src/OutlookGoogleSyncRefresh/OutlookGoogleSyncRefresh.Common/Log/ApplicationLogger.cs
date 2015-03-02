@@ -26,18 +26,19 @@ namespace OutlookGoogleSyncRefresh.Common.Log
 
             var hierarchy = (Hierarchy) LogManager.GetRepository();
 
-            var patternLayout = new PatternLayout();
-            patternLayout.ConversionPattern = "%date [%thread] %-5level %message%newline";
+            var patternLayout = new PatternLayout { ConversionPattern = "%date [%thread] %-5level %message%newline" };
             patternLayout.ActivateOptions();
 
-            var roller = new RollingFileAppender();
-            roller.AppendToFile = false;
-            roller.File = LogFilePath;
-            roller.Layout = patternLayout;
-            roller.MaxSizeRollBackups = 5;
-            roller.MaximumFileSize = "1MB";
-            roller.RollingStyle = RollingFileAppender.RollingMode.Size;
-            roller.StaticLogFileName = true;
+            var roller = new RollingFileAppender
+            {
+                AppendToFile = false,
+                File = LogFilePath,
+                Layout = patternLayout,
+                MaxSizeRollBackups = 5,
+                MaximumFileSize = "1MB",
+                RollingStyle = RollingFileAppender.RollingMode.Size,
+                StaticLogFileName = true
+            };
             roller.ActivateOptions();
             hierarchy.Root.AddAppender(roller);
 

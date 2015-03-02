@@ -36,6 +36,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{4E1643
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "CalendarSyncPlus", "CalendarSyncPlus\CalendarSyncPlus.vdproj", "{5338B029-4F95-4744-9DB9-EE6A5E3E52EB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "OutlookGoogleSyncRefresh.Test\Test.csproj", "{AD2DE39F-1E41-45AD-96C9-31906DCF4E89}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -60,6 +62,10 @@ Global
 		{FD588EBB-EAC6-4B5F-9644-FA9FA22268F7}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5338B029-4F95-4744-9DB9-EE6A5E3E52EB}.Debug|Any CPU.ActiveCfg = Debug
 		{5338B029-4F95-4744-9DB9-EE6A5E3E52EB}.Release|Any CPU.ActiveCfg = Release
+		{AD2DE39F-1E41-45AD-96C9-31906DCF4E89}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD2DE39F-1E41-45AD-96C9-31906DCF4E89}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD2DE39F-1E41-45AD-96C9-31906DCF4E89}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD2DE39F-1E41-45AD-96C9-31906DCF4E89}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

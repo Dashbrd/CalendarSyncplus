@@ -9,7 +9,7 @@ using OutlookGoogleSyncRefresh.Application.Views;
 namespace OutlookGoogleSyncRefresh.Application.ViewModels
 {
     [Export]
-    public class AboutViewModel : Utilities.ViewModel<IAboutView>
+    public class AboutViewModel : ViewModel<IAboutView>
     {
         private readonly IApplicationUpdateService _applicationUpdateService;
         private DelegateCommand _checkForUpdatesCommand;

@@ -1,4 +1,6 @@
-﻿using OutlookGoogleSyncRefresh.Domain.Models;
+﻿using System.Waf.Foundation;
+
+using OutlookGoogleSyncRefresh.Domain.Models;
 
 namespace OutlookGoogleSyncRefresh.Application.ViewModels
 {

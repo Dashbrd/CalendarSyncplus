@@ -39,7 +39,7 @@ using OutlookGoogleSyncRefresh.Domain.Models;
 namespace OutlookGoogleSyncRefresh.Application.ViewModels
 {
     [Export]
-    public class ShellViewModel : Utilities.ViewModel<IShellView>
+    public class ShellViewModel : ViewModel<IShellView>
     {
         #region Fields
 

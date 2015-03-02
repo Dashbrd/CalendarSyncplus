@@ -27,7 +27,7 @@ using OutlookGoogleSyncRefresh.Common.Log;
 namespace OutlookGoogleSyncRefresh.Application.Controllers
 {
     [Export(typeof(IShellController))]
-    public class ShellController : Controller, IShellController
+    public class ShellController : IShellController
     {
         private readonly ApplicationLogger _applicationLogger;
         private readonly ISettingsSerializationService _settingsSerializationService;
@@ -65,7 +65,7 @@ namespace OutlookGoogleSyncRefresh.Application.Controllers
         {
             //Initialize Services for Notification
             SyncService.Initialize();
-            AddWeakEventListener(SyncService, SyncServiceNotificationHandler);
+            PropertyChangedEventManager.AddHandler(SyncService, SyncServiceNotificationHandler,"");
         }
 
 
@@ -78,7 +78,7 @@ namespace OutlookGoogleSyncRefresh.Application.Controllers
             //ShutDown Services
             SyncService.Shutdown();
 
-            RemoveWeakEventListener(SyncService, SyncServiceNotificationHandler);
+            PropertyChangedEventManager.RemoveHandler(SyncService, SyncServiceNotificationHandler, "");
 
             ShellViewModel.Settings.LastSuccessfulSync = ShellViewModel.LastSyncTime.GetValueOrDefault();
             _settingsSerializationService.SerializeSettings(ShellViewModel.Settings);
