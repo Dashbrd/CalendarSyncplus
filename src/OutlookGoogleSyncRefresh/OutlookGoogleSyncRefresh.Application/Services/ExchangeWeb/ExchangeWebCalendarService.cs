@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
-using Microsoft.Exchange.WebServices.Autodiscover;
 using Microsoft.Exchange.WebServices.Data;
 using OutlookGoogleSyncRefresh.Domain.Models;
 using AppAppointment = OutlookGoogleSyncRefresh.Domain.Models.Appointment;
@@ -12,7 +10,7 @@ using Appointment = Microsoft.Exchange.WebServices.Data.Appointment;
 
 namespace OutlookGoogleSyncRefresh.Application.Services.ExchangeWeb
 {
-    [Export(typeof(IExchangeWebCalendarService))]
+    [Export(typeof (IExchangeWebCalendarService))]
     public class ExchangeWebCalendarService : IExchangeWebCalendarService
     {
         #region IExchangeWebCalendarService Members
@@ -20,7 +18,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.ExchangeWeb
         public async Task<List<AppAppointment>> GetAppointmentsAsync(int daysInPast, int daysInFuture,
             string profileName, OutlookCalendar outlookCalendar)
         {
-            ExchangeService service = GetExchangeService("", "");
+            ExchangeService service = GetExchangeService();
             FindItemsResults<Appointment> outlookItems;
             DateTime startDate = DateTime.Now.AddDays(-daysInPast);
             DateTime endDate = DateTime.Now.AddDays(+(daysInFuture + 1));
@@ -54,10 +52,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.ExchangeWeb
 
         public async Task<List<OutlookCalendar>> GetCalendarsAsync()
         {
-            ExchangeService service = GetExchangeService("akankshagaur@eaton.com", "");
-
-            if (service == null)
-                return null;
+            ExchangeService service = GetExchangeService();
 
             // Create a new folder view, and pass in the maximum number of folders to return.
             var view = new FolderView(1000);
@@ -88,96 +83,12 @@ namespace OutlookGoogleSyncRefresh.Application.Services.ExchangeWeb
 
         #endregion
 
-        public ExchangeService GetExchangeService(string username, string password = null)
+        public ExchangeService GetExchangeService()
         {
-            try
-            {
-
-                var userSettingsResponse = GetUserSettings(new AutodiscoverService(ExchangeVersion.Exchange2007_SP1), username, 4,
-                    UserSettingName.ExternalEwsUrl, UserSettingName.AutoDiscoverSMTPAddress,
-                    UserSettingName.AlternateMailboxes, UserSettingName.ExternalMailboxServer);
-
-                var service = new ExchangeService(ExchangeVersion.Exchange2007_SP1);
-
-                return null;
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-
-        }
-
-        public async Task<GetUserSettingsResponse> AutoDetectExchangeServer(string username)
-        {
-            username = "akankshagaur@eaton.com";
-            var exchangeVersions = Enum.GetValues(typeof(ExchangeVersion)).Cast<ExchangeVersion>().ToList();
-
-            for (int index = exchangeVersions.Count - 1; index >= 0; index--)
-            {
-                var result = AutoDetect(exchangeVersions[index], username);
-                if (result != null)
-                {
-                    return result;
-                }
-            }
-            return null;
-        }
-        UserSettingName[] settings = new UserSettingName[]
-        {
-            UserSettingName.InternalEwsUrl, 
-            UserSettingName.ExternalEwsUrl,
-            UserSettingName.ExternalEwsVersion, 
-            UserSettingName.AlternateMailboxes,
-        };
-
-        GetUserSettingsResponse AutoDetect(ExchangeVersion exchangeVersion, string username)
-        {
-            try
-            {
-                var userSettingsResponse = GetUserSettings(new AutodiscoverService(exchangeVersion), username, 4,
-                    settings);
-
-                if (userSettingsResponse.Settings.Count == settings.Count())
-                    return userSettingsResponse;
-
-                return null;
-            }
-            catch (Exception exception)
-            {
-                return null;
-            }
-
-        }
-
-
-        GetUserSettingsResponse GetUserSettings(AutodiscoverService service, string emailAddress, int maxHops, params UserSettingName[] settings)
-        {
-            Uri url = null;
-            GetUserSettingsResponse response = null;
-
-            for (int attempt = 0; attempt < maxHops; attempt++)
-            {
-                service.Url = url;
-                service.EnableScpLookup = (attempt < 2);
-
-                response = service.GetUserSettings(emailAddress, settings);
-
-                if (response.ErrorCode == AutodiscoverErrorCode.RedirectAddress)
-                {
-                    url = new Uri(response.RedirectTarget);
-                }
-                else if (response.ErrorCode == AutodiscoverErrorCode.RedirectUrl)
-                {
-                    url = new Uri(response.RedirectTarget);
-                }
-                else
-                {
-                    return response;
-                }
-            }
-
-            throw new Exception("No suitable Autodiscover endpoint was found.");
+            var service = new ExchangeService(ExchangeVersion.Exchange2013_SP1);
+            service.UseDefaultCredentials = true;
+            //service.Credentials = new WebCredentials("user1@contoso.com", "password");
+            return service;
         }
 
         private void GetCalendars(Folder searchFolder, List<OutlookCalendar> outlookCalendars, FolderView view)
@@ -206,5 +117,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.ExchangeWeb
                 GetCalendars(subFolder, outlookCalendars, view);
             }
         }
+
+     
     }
 }

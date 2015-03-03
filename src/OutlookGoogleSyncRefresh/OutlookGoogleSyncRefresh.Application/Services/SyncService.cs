@@ -24,6 +24,8 @@ using System.ComponentModel;
 using System.ComponentModel.Composition;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Waf.Foundation;
+
 using OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate;
 using OutlookGoogleSyncRefresh.Application.Utilities;
 using OutlookGoogleSyncRefresh.Common.Log;
@@ -35,7 +37,7 @@ using OutlookGoogleSyncRefresh.Domain.Models;
 namespace OutlookGoogleSyncRefresh.Application.Services
 {
     [Export(typeof(ISyncService))]
-    public class SyncService : DataModel, ISyncService
+    public class SyncService : Model, ISyncService
     {
         #region Fields
 
@@ -122,7 +124,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services
 
         public void Initialize()
         {
-            AddWeakEventListener(_calendarUpdateService, CalendarUpdateNotificationChanged);
+            PropertyChangedEventManager.AddHandler(_calendarUpdateService, CalendarUpdateNotificationChanged, "");
         }
 
         public void Run()
@@ -132,7 +134,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services
 
         public void Shutdown()
         {
-            RemoveWeakEventListener(_calendarUpdateService, CalendarUpdateNotificationChanged);
+            PropertyChangedEventManager.RemoveHandler(_calendarUpdateService, CalendarUpdateNotificationChanged, "");
         }
 
         #endregion

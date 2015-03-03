@@ -20,6 +20,7 @@
 #region Imports
 
 using System.Collections.Generic;
+using System.Waf.Foundation;
 
 #endregion
 

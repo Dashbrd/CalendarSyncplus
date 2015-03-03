@@ -40,7 +40,7 @@ using OutlookGoogleSyncRefresh.Domain.Models;
 namespace OutlookGoogleSyncRefresh.Application.ViewModels
 {
     [Export]
-    public class ShellViewModel : Utilities.ViewModel<IShellView>
+    public class ShellViewModel : ViewModel<IShellView>
     {
         #region Fields
 
@@ -83,7 +83,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
         [ImportingConstructor]
         public ShellViewModel(IShellView view, IShellService shellService,
             ISyncService syncStartService,
-            IGoogleAuthenticationService accountAuthenticationService,
+            IAccountAuthenticationService accountAuthenticationService,
             Settings settings,
             IMessageService messageService,
             ApplicationLogger applicationLogger, IApplicationUpdateService applicationUpdateService,
@@ -123,7 +123,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
 
         #region Properties
 
-        public IGoogleAuthenticationService AccountAuthenticationService { get; private set; }
+        public IAccountAuthenticationService AccountAuthenticationService { get; private set; }
         public ISyncService SyncStartService { get; private set; }
         public ApplicationLogger ApplicationLogger { get; private set; }
         public SystemTrayNotifierViewModel SystemTrayNotifierViewModel { get; private set; }

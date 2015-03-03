@@ -29,7 +29,7 @@ using OutlookGoogleSyncRefresh.Application.ViewModels;
 namespace OutlookGoogleSyncRefresh.Application.Controllers
 {
     [Export(typeof (IApplicationController))]
-    public class ApplicationController : Controller, IApplicationController
+    public class ApplicationController :  IApplicationController
     {
         private readonly AboutViewModel _aboutViewModel;
         private readonly IGuiInteractionService _guiInteractionService;
@@ -47,7 +47,7 @@ namespace OutlookGoogleSyncRefresh.Application.Controllers
             Lazy<SettingsViewModel> settingsViewModelLazy,
             Lazy<AboutViewModel> aboutViewModelLazy, Lazy<HelpViewModel> helpViewModelLazy,
             Lazy<ShellService> shellServiceLazy, CompositionContainer compositionContainer,
-            Lazy<IGoogleAuthenticationService> accountAuthenticationServiceLazy, IShellController shellController,
+            Lazy<IAccountAuthenticationService> accountAuthenticationServiceLazy, IShellController shellController,
             Lazy<SystemTrayNotifierViewModel> lazySystemTrayNotifierViewModel,
             IGuiInteractionService guiInteractionService)
         {
@@ -74,7 +74,7 @@ namespace OutlookGoogleSyncRefresh.Application.Controllers
             _guiInteractionService = guiInteractionService;
         }
 
-        public IGoogleAuthenticationService AccountAuthenticationService { get; set; }
+        public IAccountAuthenticationService AccountAuthenticationService { get; set; }
 
         #region IApplicationController Members
 
@@ -84,9 +84,8 @@ namespace OutlookGoogleSyncRefresh.Application.Controllers
             _systemTrayNotifierViewModel.ExitCommand = exitCommand;
             //Initialize Other Controllers if Any
             _shellController.Initialize();
-
-            AddWeakEventListener(_settingsViewModel, SettingsChangedHandler);
-            AddWeakEventListener(_shellViewModel, ShellViewUpdatedHandler);
+            PropertyChangedEventManager.AddHandler(_settingsViewModel, SettingsChangedHandler,"");
+            PropertyChangedEventManager.AddHandler(_shellViewModel, ShellViewUpdatedHandler, "");
         }
 
         public void Run()
@@ -99,6 +98,9 @@ namespace OutlookGoogleSyncRefresh.Application.Controllers
         {
             //Close All controllers if required
             _shellController.Shutdown();
+            PropertyChangedEventManager.RemoveHandler(_settingsViewModel, SettingsChangedHandler, "");
+            PropertyChangedEventManager.RemoveHandler(_shellViewModel, ShellViewUpdatedHandler, "");
+
 
             //Save Settings if any
         }
@@ -148,11 +150,12 @@ namespace OutlookGoogleSyncRefresh.Application.Controllers
         private void ShellViewModelClosing(object sender, CancelEventArgs e)
         {
             // Try to  user has already saved settings or pending operation are left.
-            if (!_isApplicationExiting && _shellViewModel.Settings.MinimizeToSystemTray)
+            if (_isApplicationExiting || !_shellViewModel.Settings.MinimizeToSystemTray)
             {
-                _guiInteractionService.HideApplication();
-                e.Cancel = true;
+                return;
             }
+            _guiInteractionService.HideApplication();
+            e.Cancel = true;
         }
     }
 }

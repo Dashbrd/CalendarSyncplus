@@ -46,7 +46,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Google
         #region Constructors
 
         [ImportingConstructor]
-        public GoogleCalendarService(IGoogleAuthenticationService accountAuthenticationService,
+        public GoogleCalendarService(IAccountAuthenticationService accountAuthenticationService,
             ApplicationLogger applicationLogger)
         {
             _applicationLogger = applicationLogger;
@@ -57,7 +57,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Google
 
         #region Properties
 
-        public IGoogleAuthenticationService AccountAuthenticationService { get; set; }
+        public IAccountAuthenticationService AccountAuthenticationService { get; set; }
 
         #endregion
 

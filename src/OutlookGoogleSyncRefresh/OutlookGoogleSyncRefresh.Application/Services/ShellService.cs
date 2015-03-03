@@ -20,6 +20,9 @@
 #region Imports
 
 using System.ComponentModel.Composition;
+using System.Waf.Applications;
+using System.Waf.Foundation;
+
 using OutlookGoogleSyncRefresh.Application.Utilities;
 
 #endregion
@@ -27,7 +30,7 @@ using OutlookGoogleSyncRefresh.Application.Utilities;
 namespace OutlookGoogleSyncRefresh.Application.Services
 {
     [Export, Export(typeof (IShellService))]
-    public class ShellService : DataModel, IShellService
+    public class ShellService : Model, IShellService
     {
         #region Fields
 

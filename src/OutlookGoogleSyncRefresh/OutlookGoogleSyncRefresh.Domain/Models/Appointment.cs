@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Waf.Foundation;
+
 using OutlookGoogleSyncRefresh.Domain.Helpers;
 
 namespace OutlookGoogleSyncRefresh.Domain.Models

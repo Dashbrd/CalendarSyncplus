@@ -2,7 +2,7 @@ using Google.Apis.Calendar.v3;
 
 namespace OutlookGoogleSyncRefresh.Application.Services.Google
 {
-    public interface IGoogleAuthenticationService
+    public interface IAccountAuthenticationService
     {
         /// <summary>
         ///     Authenticate to Google Using Oauth2

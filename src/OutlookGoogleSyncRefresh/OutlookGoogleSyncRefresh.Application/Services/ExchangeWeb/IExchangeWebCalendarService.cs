@@ -12,6 +12,5 @@ namespace OutlookGoogleSyncRefresh.Application.Services.ExchangeWeb
 
         Task<List<OutlookCalendar>> GetCalendarsAsync();
 
-        Task<GetUserSettingsResponse> AutoDetectExchangeServer(string username);
     }
 }

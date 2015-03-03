@@ -17,6 +17,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Net;
 
 using Microsoft.Exchange.WebServices.Data;
 
@@ -30,16 +32,55 @@ namespace Test.Services
 
         public ExchangeService GetAuthenticatedEWSInstance()
         {
-            var service = new ExchangeService(ExchangeVersion.Exchange2010_SP2)
+            var exchangeVersion = GetBestSuitedExchangeVersion();
+            
+            var service = new ExchangeService(exchangeVersion)
             {
                 //Url = new Uri(@"https://cas.etn.com/ews/exchange.asmx"),
-                UseDefaultCredentials = true
+                //UseDefaultCredentials = true
+
             };
 
             //https://cas.etn.com/ews/exchange.asmx
             service.AutodiscoverUrl("ankeshdave@outlook.com", ValidateRedirectionUrlCallback);
 
             return service;
+        }
+
+        private ExchangeVersion GetBestSuitedExchangeVersion()
+        {
+            var enumList = Enum.GetValues(typeof(ExchangeVersion)).Cast<ExchangeVersion>().Reverse();
+
+            IWebProxy proxy = WebRequest.DefaultWebProxy;
+            proxy.Credentials = CredentialCache.DefaultNetworkCredentials;
+
+
+            var exchangeVersions = enumList as ExchangeVersion[] ?? enumList.ToArray();
+            foreach (ExchangeVersion exchangeVersion in exchangeVersions)
+            {
+                var service = new ExchangeService(exchangeVersion)
+                {
+                    UseDefaultCredentials = true,
+                    WebProxy = proxy
+                };
+
+                try
+                {
+                    service.TraceEnabled = true;
+                    service.AutodiscoverUrl("ankeshdave@eaton.com", ValidateRedirectionUrlCallback);
+                    CalendarFolder calendarFolder = CalendarFolder.Bind(service, WellKnownFolderName.Calendar);
+
+                    var result = calendarFolder.FindAppointments(new CalendarView(DateTime.Now.AddDays(-1), DateTime.Now.AddDays(1)));
+
+                    return exchangeVersion;
+                }
+                catch (Exception exception)
+                {
+
+                    continue;
+                }
+            }
+            return exchangeVersions.ElementAtOrDefault((exchangeVersions.Count() - 1));
         }
 
         private bool ValidateRedirectionUrlCallback(string redirectionUrl)

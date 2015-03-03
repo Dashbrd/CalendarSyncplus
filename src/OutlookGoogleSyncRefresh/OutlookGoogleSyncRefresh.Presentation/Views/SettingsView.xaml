@@ -8,7 +8,6 @@
              xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
              xmlns:WafConverters="http://waf.codeplex.com/schemas"
              xmlns:converters="clr-namespace:OutlookGoogleSyncRefresh.Presentation.Converters"
-             xmlns:helpers="clr-namespace:OutlookGoogleSyncRefresh.Presentation.Helpers"
              mc:Ignorable="d"
              d:DesignHeight="600"
              d:DesignWidth="400"
@@ -45,8 +44,7 @@
                                         VerticalAlignment="Center"
                                         Minimum="1"
                                         Maximum="59"
-                                        Interval="1"
-                                        Margin="2" />
+                                        Interval="1" />
             </Grid>
         </DataTemplate>
         <DataTemplate DataType="{x:Type viewModels:DailySyncViewModel}">
@@ -59,7 +57,6 @@
                 <StackPanel Orientation="Horizontal"
                             VerticalAlignment="Center">
                     <RadioButton Content="Every"
-                                 Margin="5"
                                  GroupName="DailyFrequency"
                                  IsChecked="{Binding CustomDay,
                                                     Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
@@ -75,7 +72,6 @@
                 </StackPanel>
                 <RadioButton Grid.Row="1"
                              Content="Every Weekday"
-                             Margin="5"
                              GroupName="DailyFrequency"
                              IsChecked="{Binding EveryWeekday,
                                                     Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
@@ -84,16 +80,12 @@
                             Grid.Row="2"
                             Grid.ColumnSpan="4">
                     <TextBlock Text="Time Of Day"
-                               Margin="5"
                                VerticalAlignment="Center" />
                     <xctk:TimePicker Width="100"
                                      Margin="5"
                                      ShowButtonSpinner="False"
                                      VerticalAlignment="Center"
-                                     Format="Custom"
-                                     FormatString="hh:mm tt"
-                                     StartTime="00:00"
-                                     EndTime="23:59"
+                                     FormatString="HH:mm"
                                      Value="{Binding TimeOfDay,
                                                     Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
                 </StackPanel>
@@ -113,7 +105,7 @@
                                VerticalAlignment="Center" />
                     <controls:NumericUpDown Width="80"
                                             Interval="1"
-                                            Margin="5,2,5,2"
+                                            Margin="2"
                                             TextAlignment="Right"
                                             VerticalAlignment="Center"
                                             Value="{Binding WeekRecurrence,
@@ -174,13 +166,10 @@
                     <TextBlock Text="Time Of Day"
                                VerticalAlignment="Center" />
                     <xctk:TimePicker Width="100"
-                                     Margin="5,2,5,2"
+                                     Margin="2"
                                      ShowButtonSpinner="False"
                                      VerticalAlignment="Center"
-                                     FormatString="hh:mm tt"
-                                     Format="Custom"
-                                     StartTime="00:00"
-                                     EndTime="23:59"
+                                     FormatString="HH:mm"
                                      Value="{Binding TimeOfDay,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
                 </StackPanel>
             </Grid>
@@ -301,7 +290,6 @@
                                              Grid.Column="1"
                                              Margin="4"
                                              PasswordChar="*"
-                                             helpers:PasswordHelper.Password="{Binding Password,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                              controls:PasswordBoxHelper.CapsLockWarningToolTip="CAPSLOCK IS ON" />
                             </Grid>
                         </GroupBox>
@@ -487,7 +475,7 @@
                             <ComboBox x:Name="SyncFrequencyComboBox"
                                       ItemsSource="{Binding SyncFrequencies,UpdateSourceTrigger=PropertyChanged}"
                                       SelectedItem="{Binding SyncFrequency,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
-                            <ContentControl Margin="0,5,0,5"
+                            <ContentControl Margin="5"
                                             Content="{Binding SyncFrequencyViewModel,UpdateSourceTrigger=PropertyChanged}" />
                         </StackPanel>
                     </GroupBox>

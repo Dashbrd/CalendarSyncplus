@@ -1,4 +1,6 @@
 ﻿using System.ComponentModel.Composition;
+using System.Waf.Applications;
+
 using OutlookGoogleSyncRefresh.Application.Utilities;
 using OutlookGoogleSyncRefresh.Application.Views;
 

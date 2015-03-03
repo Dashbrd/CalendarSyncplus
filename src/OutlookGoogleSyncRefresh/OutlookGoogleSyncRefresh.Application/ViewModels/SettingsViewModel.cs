@@ -39,7 +39,7 @@ using OutlookGoogleSyncRefresh.Domain.Models;
 namespace OutlookGoogleSyncRefresh.Application.ViewModels
 {
     [Export]
-    public class SettingsViewModel : Utilities.ViewModel<ISettingsView>
+    public class SettingsViewModel : ViewModel<ISettingsView>
     {
         #region Constructors
 
@@ -77,7 +77,6 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
         private int _daysInPast;
         private string _exchangeServerUrl;
         private DelegateCommand _getGoogleCalendarCommand;
-        private DelegateCommand _getLiveCalendarCommand;
         private DelegateCommand _getOutlookMailboxCommand;
         private DelegateCommand _getOutlookProfileLIstCommand;
         private List<Calendar> _googleCalenders;
@@ -169,7 +168,6 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
                 return _getGoogleCalendarCommand ?? (_getGoogleCalendarCommand = new DelegateCommand(GetGoogleCalendar));
             }
         }
-
 
         public DelegateCommand SaveCommand
         {
@@ -393,7 +391,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
         private async void AutoDetectEWSSettings()
         {
             IsLoading = true;
-            await ExchangeWebCalendarService.AutoDetectExchangeServer(Username);
+
             IsLoading = false;
         }
 
@@ -517,7 +515,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
 
                 if (Settings != null && Settings.SavedCalendar != null)
                 {
-                    GetGoogleCalendar();
+                    await GetGoogleCalendarInternal();
                 }
             }
             catch (AggregateException exception)
