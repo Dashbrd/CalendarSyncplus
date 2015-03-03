@@ -390,8 +390,11 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             return OutlookCalendarService.GetAllMailBoxes(SelectedOutlookProfileName ?? string.Empty);
         }
 
-        private void AutoDetectEWSSettings()
+        private async void AutoDetectEWSSettings()
         {
+            IsLoading = true;
+            await ExchangeWebCalendarService.AutoDetectExchangeServer(Username);
+            IsLoading = false;
         }
 
         private async void GetOutlookProfileList()
@@ -407,7 +410,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
         {
             OutlookProfileList = await OutlookCalendarService.GetOutLookProfieListAsync();
         }
-        
+
         #endregion
 
         #region Private Methods

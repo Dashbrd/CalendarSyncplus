@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.Exchange.WebServices.Autodiscover;
 using OutlookGoogleSyncRefresh.Domain.Models;
 
 namespace OutlookGoogleSyncRefresh.Application.Services.ExchangeWeb
@@ -10,5 +11,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.ExchangeWeb
             OutlookCalendar outlookCalendar);
 
         Task<List<OutlookCalendar>> GetCalendarsAsync();
+
+        Task<GetUserSettingsResponse> AutoDetectExchangeServer(string username);
     }
 }

@@ -9,11 +9,16 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
             Name = "Hourly";
         }
 
-        public int MinuteOffsetForHour { get; set; }
+        public DateTime StartTime { get; set; }
+
+        public int Minutes { get; set; }
+
+        public int Hours { get; set; }
 
         public override bool ValidateTimer(DateTime dateTime)
         {
-            if (dateTime.Minute.Equals(MinuteOffsetForHour))
+            var timeElapsed = StartTime.Subtract(dateTime);
+            if (timeElapsed.Hours == Hours && timeElapsed.Minutes == Minutes)
             {
                 return true;
             }
@@ -23,16 +28,13 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
         public override DateTime GetNextSyncTime()
         {
             DateTime dateTime = DateTime.Now;
-            if (dateTime.Minute > MinuteOffsetForHour)
-            {
-                return DateTime.Now.Add(new TimeSpan(0, 60 - (dateTime.Minute - MinuteOffsetForHour), 0));
-            }
-            return DateTime.Now.Add(new TimeSpan(0, MinuteOffsetForHour - dateTime.Minute, 0));
+            return dateTime.Add(new TimeSpan(0, Hours, Minutes));
+
         }
 
         public override string ToString()
         {
-            string str = string.Format("{0} : Minute Offset : {1}", GetType().Name, MinuteOffsetForHour);
+            string str = string.Format("{0} : Minute Offset : {1}", GetType().Name, Minutes);
             return str;
         }
     }

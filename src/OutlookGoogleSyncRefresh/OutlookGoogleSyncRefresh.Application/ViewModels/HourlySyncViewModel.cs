@@ -1,32 +1,43 @@
-﻿using OutlookGoogleSyncRefresh.Domain.Models;
+﻿using System;
+using OutlookGoogleSyncRefresh.Domain.Models;
 
 namespace OutlookGoogleSyncRefresh.Application.ViewModels
 {
     public class HourlySyncViewModel : SyncFrequencyViewModel
     {
-        private int _minuteOffsetForHour;
+        private int _minutes;
+        private int _hours;
 
         public HourlySyncViewModel()
         {
-            MinuteOffsetForHour = 1;
+            Minutes = 1;
+            Hours = 1;
         }
 
         public HourlySyncViewModel(HourlySyncFrequency syncFrequency)
         {
-            MinuteOffsetForHour = syncFrequency.MinuteOffsetForHour;
+            Minutes = syncFrequency.Minutes;
         }
 
-        public int MinuteOffsetForHour
+        public int Hours
         {
-            get { return _minuteOffsetForHour; }
-            set { SetProperty(ref _minuteOffsetForHour, value); }
+            get { return _hours; }
+            set { SetProperty(ref _hours, value); }
+        }
+
+        public int Minutes
+        {
+            get { return _minutes; }
+            set { SetProperty(ref _minutes, value); }
         }
 
         public override SyncFrequency GetFrequency()
         {
             var frequency = new HourlySyncFrequency
             {
-                MinuteOffsetForHour = MinuteOffsetForHour
+                Hours = Hours,
+                Minutes = Minutes,
+                StartTime =  DateTime.Now
             };
             return frequency;
         }

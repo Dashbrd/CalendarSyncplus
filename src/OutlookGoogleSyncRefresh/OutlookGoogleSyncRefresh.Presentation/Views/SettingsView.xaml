@@ -19,16 +19,30 @@
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
         <DataTemplate DataType="{x:Type viewModels:HourlySyncViewModel}">
             <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
-                <TextBlock Text="Minute offset for every hour"
+                <TextBlock Text="Hours"
                            VerticalAlignment="Center" />
                 <controls:NumericUpDown Grid.Column="1"
-                                        Value="{Binding MinuteOffsetForHour,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                        Value="{Binding Hours,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                         VerticalAlignment="Center"
-                                        HideUpDownButtons="True"
+                                        Minimum="0"
+                                        Maximum="23"
+                                        Interval="1"
+                                        Margin="2" />
+                <TextBlock Text="Minutes"
+                           VerticalAlignment="Center"
+                           Grid.Row="1" />
+                <controls:NumericUpDown Grid.Row="1"
+                                        Grid.Column="1"
+                                        Value="{Binding Minutes,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                        VerticalAlignment="Center"
                                         Minimum="1"
                                         Maximum="59"
                                         Interval="1"
@@ -49,9 +63,12 @@
                                  GroupName="DailyFrequency"
                                  IsChecked="{Binding CustomDay,
                                                     Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
-                    <TextBox Width="60"
+                    <controls:NumericUpDown Width="80"
                              Margin="5"
-                             Text="{Binding DayGap,
+                            Minimum="0"
+                            Maximum="30"
+                            Interval="1"
+                            Value="{Binding DayGap,
                                                     Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
                     <TextBlock Text="day(s)"
                                VerticalAlignment="Center" />
@@ -94,8 +111,7 @@
                             Margin="5">
                     <TextBlock Text="Recur Every"
                                VerticalAlignment="Center" />
-                    <controls:NumericUpDown Width="40"
-                                            HideUpDownButtons="True"
+                    <controls:NumericUpDown Width="80"
                                             Interval="1"
                                             Margin="5,2,5,2"
                                             TextAlignment="Right"
@@ -237,7 +253,6 @@
                                          IsChecked="{Binding IsExchangeWebServices}"
                                          Margin="4"
                                          GroupName="OutlookApplicationGroup"
-                                         Visibility="Collapsed"
                                          Grid.Row="1"
                                          Grid.Column="0"
                                          Command="{Binding GetOutlookProfileListCommand}" />
@@ -447,7 +462,6 @@
                                                     Grid.Column="1"
                                                     VerticalAlignment="Center"
                                                     Value="{Binding DaysInPast,Mode=TwoWay}"
-                                                    HideUpDownButtons="True"
                                                     Interval="1"
                                                     Margin="2"
                                                     Maximum="1825"
@@ -460,7 +474,6 @@
                                                     Grid.Column="1"
                                                     VerticalAlignment="Center"
                                                     Value="{Binding DaysInFuture,Mode=TwoWay}"
-                                                    HideUpDownButtons="True"
                                                     Interval="1"
                                                     Margin="2"
                                                     Maximum="1825"

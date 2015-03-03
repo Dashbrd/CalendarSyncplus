@@ -42,7 +42,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services
 
         void Stop();
 
-        Task<bool> SyncNowAsync(Settings settings);
+        Task<string> SyncNowAsync(Settings settings);
 
         #endregion
     }

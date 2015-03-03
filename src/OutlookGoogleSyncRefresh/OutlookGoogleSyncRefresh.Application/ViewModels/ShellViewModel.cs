@@ -30,6 +30,7 @@ using System.Waf.Applications;
 using System.Windows.Threading;
 using OutlookGoogleSyncRefresh.Application.Services;
 using OutlookGoogleSyncRefresh.Application.Services.Google;
+using OutlookGoogleSyncRefresh.Application.Utilities;
 using OutlookGoogleSyncRefresh.Application.Views;
 using OutlookGoogleSyncRefresh.Common.Log;
 using OutlookGoogleSyncRefresh.Domain.Models;
@@ -371,27 +372,27 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
 
         private void ShowNotification(bool showHide, string popupText = "Syncing...")
         {
-            
-                if (!Settings.HideSystemTrayTooltip)
+
+            if (!Settings.HideSystemTrayTooltip)
+            {
+                try
                 {
-                    try
+                    if (showHide)
                     {
-                        if (showHide)
-                        {
-                            SystemTrayNotifierViewModel.ShowBalloon(popupText);
-                        }
-                        else
-                        {
-                            SystemTrayNotifierViewModel.HideBalloon();
-                        }
+                        SystemTrayNotifierViewModel.ShowBalloon(popupText);
                     }
-                    catch (Exception exception)
+                    else
                     {
-                        //Ignore in this release
-                        //ApplicationLogger.LogError(exception.Message);
+                        SystemTrayNotifierViewModel.HideBalloon();
                     }
                 }
-            
+                catch (Exception exception)
+                {
+                    //Ignore in this release
+                    //ApplicationLogger.LogError(exception.Message);
+                }
+            }
+
         }
 
         private void InvokeOnCurrentDispatcher(Action action)
@@ -455,15 +456,21 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             }
             ShowNotification(true);
             IsSyncInProgress = true;
-            bool result = await SyncStartService.SyncNowAsync(Settings);
-
-            IsSyncInProgress = false;
-
-            if (result)
+            UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.SyncStarted, DateTime.Now));
+            var result = await SyncStartService.SyncNowAsync(Settings);
+            if (string.IsNullOrEmpty(result))
             {
+                UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.SyncSuccess, DateTime.Now));
                 LastSyncTime = DateTime.Now;
             }
+            else
+            {
+                UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.SyncFailed, result));
+            }
+            UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.NewLog));
             ShowNotification(false);
+            IsSyncInProgress = false;
+
             if (Settings.SyncFrequency != null)
             {
                 NextSyncTime = Settings.SyncFrequency.GetNextSyncTime();
