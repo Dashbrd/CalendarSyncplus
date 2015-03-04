@@ -8,6 +8,7 @@
              xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
              xmlns:WafConverters="http://waf.codeplex.com/schemas"
              xmlns:converters="clr-namespace:OutlookGoogleSyncRefresh.Presentation.Converters"
+             xmlns:models="clr-namespace:OutlookGoogleSyncRefresh.Domain.Models;assembly=OutlookGoogleSyncRefresh.Domain"
              mc:Ignorable="d"
              d:DesignHeight="600"
              d:DesignWidth="400"
@@ -225,12 +226,77 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
-                    <GroupBox Header="Outlook Settings">
+                    <GroupBox Header="Calendar Sync Mode">
+                        <Grid>
+                            <Grid.Resources>
+                                <DataTemplate DataType="{x:Type models:CalendarSyncModeEnum}" x:Key="CalendarEnumDataTemplate">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="Outlook / EWS"
+                                                   VerticalAlignment="Center"
+                                                   FontWeight="600" />
+                                        <Rectangle Fill="Gray"
+                                                   Width="40"
+                                                   Height="20"
+                                                   Margin="5,3,5,3"
+                                                   Name="ImageRectangle"/>
+                                        <TextBlock Text="Google"
+                                                   VerticalAlignment="Center"
+                                                   FontWeight="600" />
+                                    </StackPanel>
+                                    <DataTemplate.Triggers>
+                                        <DataTrigger Binding="{Binding}"
+                                                     Value="{x:Static models:CalendarSyncModeEnum.OutlookGoogleOneWay}">
+                                            <Setter TargetName="ImageRectangle"
+                                                    Property="OpacityMask">
+                                                <Setter.Value>
+                                                    <VisualBrush Stretch="Fill"
+                                                                 Visual="{StaticResource appbar_arrow_right}" />
+                                                </Setter.Value>
+                                            </Setter>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding}"
+                                                     Value="{x:Static models:CalendarSyncModeEnum.OutlookGoogleOneWayToSource}">
+                                            <Setter TargetName="ImageRectangle"
+                                                    Property="OpacityMask">
+                                                <Setter.Value>
+                                                    <VisualBrush Stretch="Fill"
+                                                                 Visual="{StaticResource appbar_arrow_left}" />
+                                                </Setter.Value>
+                                            </Setter>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding}"
+                                                     Value="{x:Static models:CalendarSyncModeEnum.OutlookGoogleTwoWay}">
+                                            <Setter TargetName="ImageRectangle"
+                                                    Property="OpacityMask">
+                                                <Setter.Value>
+                                                    <VisualBrush Stretch="Fill"
+                                                                 Visual="{StaticResource appbar_arrow_right_left}" />
+                                                </Setter.Value>
+                                            </Setter>
+                                        </DataTrigger>
+                                    </DataTemplate.Triggers>
+                                </DataTemplate>
+                            </Grid.Resources>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="2*" />
+                                <ColumnDefinition Width="3*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Calendar Sync Mode" Margin="5" VerticalAlignment="Center" />
+                            <ComboBox Margin="5"
+                                      Grid.Column="1"
+                                      ItemsSource="{Binding CalendarSyncModes,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                                      SelectedItem="{Binding SelectedCalendarSyncMode,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                                      ItemTemplate="{StaticResource CalendarEnumDataTemplate}"/>
+                           
+                        </Grid>
+                    </GroupBox>
+                    <GroupBox Header="Outlook Settings" Grid.Row="1">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition />
                                 <RowDefinition />
                             </Grid.RowDefinitions>
+                            
                             <RadioButton Content="Outlook Application"
                                          IsChecked="{Binding IsExchangeWebServices,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged,
                                                     Converter={StaticResource ResourceKey=InvertBooleanConverter}}"
@@ -247,7 +313,7 @@
                                          Command="{Binding GetOutlookProfileListCommand}" />
                         </Grid>
                     </GroupBox>
-                    <StackPanel Grid.Row="1"
+                    <StackPanel Grid.Row="2"
                                 Orientation="Vertical"
                                 Visibility="{Binding IsExchangeWebServices,Converter={StaticResource BooleanToVisibilityConverter}}">
                         <GroupBox Header="Exchange Server Settings">
@@ -315,7 +381,7 @@
                         </GroupBox>
                     </StackPanel>
                     <GroupBox Header="Profile &amp; MailBox Settings"
-                              Grid.Row="1"
+                              Grid.Row="2"
                               Visibility="{Binding IsExchangeWebServices,Converter={StaticResource InvertBooleanToVisibilityConverter}}">
                         <Grid>
                             <Grid.RowDefinitions>
@@ -404,7 +470,7 @@
                                       ItemsSource="{Binding Path=SelectedOutlookMailBox.Calendars}" />
                         </Grid>
                     </GroupBox>
-                    <GroupBox Grid.Row="2"
+                    <GroupBox Grid.Row="3"
                               Grid.Column="0"
                               Header="Select Google Calendar">
                         <Grid>

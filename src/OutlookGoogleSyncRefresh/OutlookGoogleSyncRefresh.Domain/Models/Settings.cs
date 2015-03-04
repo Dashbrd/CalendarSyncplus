@@ -14,6 +14,8 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
             OutlookSettings = new OutlookSettings();
         }
 
+        public CalendarSyncModeEnum CalendarSyncMode { get; set; }
+
         public Calendar SavedCalendar { get; set; }
 
         public OutlookSettings OutlookSettings { get; set; }
