@@ -6,9 +6,9 @@ namespace OutlookGoogleSyncRefresh.Application.Services.ExchangeWeb
 {
     public interface IExchangeWebCalendarService
     {
-        Task<List<Appointment>> GetAppointmentsAsync(int daysInPast, int daysInFuture, string profileName,
+        List<Appointment> GetAppointmentsAsync(int daysInPast, int daysInFuture, string profileName,
             OutlookCalendar outlookCalendar);
 
-        Task<List<OutlookCalendar>> GetCalendarsAsync();
+        List<OutlookCalendar> GetCalendarsAsync();
     }
 }

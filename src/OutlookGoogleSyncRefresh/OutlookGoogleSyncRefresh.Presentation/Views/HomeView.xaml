@@ -32,8 +32,8 @@
                                    VerticalAlignment="Top"
                                    IsIndeterminate="True"
                                    Visibility="{Binding IsSyncInProgress,
-                                                            Converter={StaticResource BooleanToVisibilityConverter},
-                                                            UpdateSourceTrigger=PropertyChanged}" />
+                                                        Converter={StaticResource BooleanToVisibilityConverter},
+                                                        UpdateSourceTrigger=PropertyChanged}" />
         <!--  Last Sync Status  -->
         <TextBlock Grid.Row="1"
                    Grid.Column="0"
@@ -89,8 +89,7 @@
                     <Style BasedOn="{StaticResource {x:Type Button}}" TargetType="Button">
                         <Setter Property="Content" Value="Start Periodic Sync" />
                         <Style.Triggers>
-                            <DataTrigger Binding="{Binding IsPeriodicSyncStarted, UpdateSourceTrigger=PropertyChanged}"
-                                         Value="True">
+                            <DataTrigger Binding="{Binding IsPeriodicSyncStarted, UpdateSourceTrigger=PropertyChanged}" Value="True">
                                 <Setter Property="Content" Value="Stop Periodic Sync" />
                             </DataTrigger>
                         </Style.Triggers>

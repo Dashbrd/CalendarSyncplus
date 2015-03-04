@@ -31,6 +31,7 @@ using System.Windows.Threading;
 using OutlookGoogleSyncRefresh.Application.Services;
 using OutlookGoogleSyncRefresh.Application.Services.Google;
 using OutlookGoogleSyncRefresh.Application.Views;
+using OutlookGoogleSyncRefresh.Common;
 using OutlookGoogleSyncRefresh.Common.Log;
 using OutlookGoogleSyncRefresh.Domain.Models;
 
@@ -387,7 +388,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
                     }
                     catch (Exception exception)
                     {
-                        //Ignore in this release
+                        //TODO: Ignore in this release
                         //ApplicationLogger.LogError(exception.Message);
                     }
                 }
@@ -396,14 +397,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
 
         private void InvokeOnCurrentDispatcher(Action action)
         {
-            if (Dispatcher.CurrentDispatcher.CheckAccess())
-            {
-                action.Invoke();
-            }
-            else
-            {
-                Dispatcher.CurrentDispatcher.Invoke(action, DispatcherPriority.Normal);
-            }
+            DispatcherHelper.CheckBeginInvokeOnUI(action);
         }
 
         #endregion
@@ -447,7 +441,12 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
         }
 
 
-        public async void SyncNow()
+        public void SyncNow()
+        {
+            Task.Factory.StartNew(StartSyncTask);
+        }
+
+        private void StartSyncTask()
         {
             if (IsSyncInProgress)
             {
@@ -455,9 +454,12 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             }
             ShowNotification(true);
             IsSyncInProgress = true;
-            bool result = await SyncStartService.SyncNowAsync(Settings);
+            SyncStartService.SyncNowAsync(Settings).ContinueWith(OnSyncCompleted);
+        }
 
-            IsSyncInProgress = false;
+        private void OnSyncCompleted(Task<bool> task)
+        {
+            var result = task.Result;
 
             if (result)
             {
@@ -468,10 +470,9 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             {
                 NextSyncTime = Settings.SyncFrequency.GetNextSyncTime();
             }
-
             CheckForUpdates();
+            IsSyncInProgress = false;
         }
-
 
         public void ErrorMessageChanged(string message)
         {
@@ -499,5 +500,10 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
         }
 
         #endregion
+
+        protected override void OnPropertyChanged(PropertyChangedEventArgs e)
+        {
+            DispatcherHelper.CheckBeginInvokeOnUI(() => base.OnPropertyChanged(e));
+        }
     }
 }
