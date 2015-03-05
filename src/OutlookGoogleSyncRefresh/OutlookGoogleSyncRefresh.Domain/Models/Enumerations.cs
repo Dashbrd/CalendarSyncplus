@@ -22,4 +22,11 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
         Reminders = 4,
         Attachments = 8,
     }
+
+    public enum CalendarSyncModeEnum
+    {
+        OutlookGoogleOneWay = 0,
+        OutlookGoogleOneWayToSource = 1,
+        OutlookGoogleTwoWay = 2,
+    }
 }

@@ -103,6 +103,8 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
         private string _syncFrequency;
         private SyncFrequencyViewModel _syncFrequencyViewModel;
         private string _username;
+        private List<CalendarSyncModeEnum> _calendarSyncModes;
+        private CalendarSyncModeEnum _selectedCalendarSyncMode;
 
         #endregion
 
@@ -265,6 +267,18 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
         {
             get { return _isExchangeWebServices; }
             set { SetProperty(ref _isExchangeWebServices, value); }
+        }
+
+        public List<CalendarSyncModeEnum> CalendarSyncModes
+        {
+            get { return _calendarSyncModes; }
+            set { SetProperty(ref _calendarSyncModes, value); }
+        }
+
+        public CalendarSyncModeEnum SelectedCalendarSyncMode
+        {
+            get { return _selectedCalendarSyncMode; }
+            set { SetProperty(ref _selectedCalendarSyncMode, value); }
         }
 
         public DelegateCommand AutoDetectExchangeServer
@@ -455,6 +469,12 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             IsLoading = true;
             try
             {
+                CalendarSyncModes = new List<CalendarSyncModeEnum>()
+                {
+                    CalendarSyncModeEnum.OutlookGoogleOneWay,
+                    CalendarSyncModeEnum.OutlookGoogleOneWayToSource,
+                    CalendarSyncModeEnum.OutlookGoogleTwoWay
+                };
                 SyncFrequencies = new List<string>
                 {
                     "Hourly",
@@ -488,6 +508,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
                     CheckForUpdates = Settings.CheckForUpdates;
                     RunApplicationAtSystemStartup = Settings.RunApplicationAtSystemStartup;
                     RememberPeriodicSyncOn = Settings.RememberPeriodicSyncOn;
+                    SelectedCalendarSyncMode = Settings.CalendarSyncMode;
                 }
                 else
                 {
@@ -501,6 +522,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
                     MinimizeToSystemTray = true;
                     HideSystemTrayTooltip = false;
                     CheckForUpdates = true;
+                    SelectedCalendarSyncMode = CalendarSyncModeEnum.OutlookGoogleOneWay;
                 }
 
                 if (!IsDefaultProfile)
@@ -554,6 +576,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             Settings.ExchangeServerSettings.Username = Username;
             Settings.ExchangeServerSettings.Password = Password;
             Settings.ExchangeServerSettings.ExchangeServerUrl = ExchangeServerUrl;
+            Settings.CalendarSyncMode = SelectedCalendarSyncMode;
             try
             {
                 bool result = await SettingsSerializationService.SerializeSettingsAsync(Settings);
