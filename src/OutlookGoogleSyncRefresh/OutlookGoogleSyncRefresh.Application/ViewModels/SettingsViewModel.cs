@@ -388,8 +388,11 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             return OutlookCalendarService.GetAllMailBoxes(SelectedOutlookProfileName ?? string.Empty);
         }
 
-        private void AutoDetectEWSSettings()
+        private async void AutoDetectEWSSettings()
         {
+            IsLoading = true;
+
+            IsLoading = false;
         }
 
         private async void GetOutlookProfileList()

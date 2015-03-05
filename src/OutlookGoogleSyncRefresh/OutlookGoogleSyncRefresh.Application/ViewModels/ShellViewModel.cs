@@ -30,6 +30,7 @@ using System.Waf.Applications;
 using System.Windows.Threading;
 using OutlookGoogleSyncRefresh.Application.Services;
 using OutlookGoogleSyncRefresh.Application.Services.Google;
+using OutlookGoogleSyncRefresh.Application.Utilities;
 using OutlookGoogleSyncRefresh.Application.Views;
 using OutlookGoogleSyncRefresh.Common;
 using OutlookGoogleSyncRefresh.Common.Log;
@@ -398,7 +399,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
         private void InvokeOnCurrentDispatcher(Action action)
         {
             DispatcherHelper.CheckBeginInvokeOnUI(action);
-        }
+            }
 
         #endregion
 
@@ -454,18 +455,28 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             }
             ShowNotification(true);
             IsSyncInProgress = true;
+            UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.SyncStarted, DateTime.Now));
+            var result = SyncStartService.SyncNowAsync(Settings);
             SyncStartService.SyncNowAsync(Settings).ContinueWith(OnSyncCompleted);
         }
 
-        private void OnSyncCompleted(Task<bool> task)
+        private void OnSyncCompleted(Task<string> task)
         {
             var result = task.Result;
 
-            if (result)
+            if (!string.IsNullOrEmpty(result))
             {
+                UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.SyncSuccess, DateTime.Now));
                 LastSyncTime = DateTime.Now;
             }
+            else
+            {
+                UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.SyncFailed, result));
+            }
+            UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.NewLog));
             ShowNotification(false);
+            IsSyncInProgress = false;
+
             if (Settings.SyncFrequency != null)
             {
                 NextSyncTime = Settings.SyncFrequency.GetNextSyncTime();

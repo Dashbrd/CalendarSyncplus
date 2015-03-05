@@ -19,9 +19,12 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
         private string _requiredAttendees;
         private DateTime? _startTime;
         private string _subject;
+        private string _visibility;
+        private string _transparency;
 
         public Appointment(string description, string location, string subject, DateTime? endTime, DateTime? startTime,
-            string appointmentId) : this(description, location, subject, endTime, startTime)
+            string appointmentId)
+            : this(description, location, subject, endTime, startTime)
         {
             _appointmentId = appointmentId;
         }
@@ -116,6 +119,18 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
         {
             get { return _optionalAttendees; }
             set { SetProperty(ref _optionalAttendees, value); }
+        }
+
+        public string Visibility
+        {
+            get { return _visibility; }
+            set { SetProperty(ref _visibility, value); }
+        }
+
+        public string Transparency
+        {
+            get { return _transparency; }
+            set { SetProperty(ref _transparency, value); }
         }
 
         public override bool Equals(Object obj)

@@ -36,7 +36,7 @@ using OutlookGoogleSyncRefresh.Domain.Models;
 
 namespace OutlookGoogleSyncRefresh.Application.Services
 {
-    [Export(typeof (ISyncService))]
+    [Export(typeof(ISyncService))]
     public class SyncService : Model, ISyncService
     {
         #region Fields
@@ -92,7 +92,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services
         }
 
 
-        public async Task<bool> SyncNowAsync(Settings settings)
+        public async Task<string> SyncNowAsync(Settings settings)
         {
             try
             {
@@ -100,36 +100,31 @@ namespace OutlookGoogleSyncRefresh.Application.Services
                 {
                     _messageService.ShowMessageAsync(
                         "Please configure Google and Outlook calendar in settings to continue.");
-                    return false;
+                    return "Invalid Settings";
                 }
 
                 ResetSyncData();
-                SyncStatus = StatusHelper.GetMessage(SyncStateEnum.SyncStarted, DateTime.Now);
                 bool isSyncComplete = await _calendarUpdateService.SyncCalendarAsync(settings);
-                SyncStatus =
-                    StatusHelper.GetMessage(isSyncComplete ? SyncStateEnum.SyncSuccess : SyncStateEnum.SyncFailed);
-
-                SyncStatus = string.Empty;
-                //IsSyncInProgress = false;
-                return isSyncComplete;
+                return isSyncComplete ? null : "Error Occurred";
             }
             catch (AggregateException exception)
             {
                 AggregateException flattenException = exception.Flatten();
                 _messageService.ShowMessageAsync(flattenException.Message);
                 _applicationLogger.LogError(exception.ToString());
+                return flattenException.Message;
             }
             catch (Exception exception)
             {
                 _messageService.ShowMessageAsync(exception.Message);
                 _applicationLogger.LogError(exception.ToString());
+                return exception.Message;
             }
-            return false;
         }
 
         public void Initialize()
         {
-            PropertyChangedEventManager.AddHandler(_calendarUpdateService, CalendarUpdateNotificationChanged,"");
+            PropertyChangedEventManager.AddHandler(_calendarUpdateService, CalendarUpdateNotificationChanged, "");
         }
 
         public void Run()

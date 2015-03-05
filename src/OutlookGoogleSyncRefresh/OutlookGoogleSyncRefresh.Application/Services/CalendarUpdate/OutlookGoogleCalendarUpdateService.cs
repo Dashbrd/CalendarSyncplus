@@ -35,7 +35,7 @@ using OutlookGoogleSyncRefresh.Domain.Models;
 
 namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
 {
-    [Export(typeof (ICalendarUpdateService))]
+    [Export(typeof(ICalendarUpdateService))]
     public class OutlookGoogleCalendarUpdateService : Model, ICalendarUpdateService
     {
         private readonly ApplicationLogger _applicationLogger;
@@ -98,12 +98,19 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
         private async Task<bool> GetAppointments(int daysInPast, int daysInFuture, string calenderId, string profileName,
             OutlookCalendar outlookCalendar)
         {
-            GoogleAppointments =
-                await GoogleCalendarService.GetCalendarEventsInRangeAsync(daysInPast, daysInFuture, calenderId);
+            SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
+            SyncStatus = StatusHelper.GetMessage(SyncStateEnum.OutlookAppointmentsReading);
             OutlookAppointments =
                 await
                     OutlookCalendarService.GetOutlookAppointmentsAsync(daysInPast, daysInFuture, profileName,
                         outlookCalendar);
+            SyncStatus = StatusHelper.GetMessage(SyncStateEnum.OutlookAppointmentsRead, OutlookAppointments.Count);
+            SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
+            SyncStatus = StatusHelper.GetMessage(SyncStateEnum.GoogleAppointmentReading);
+            GoogleAppointments =
+                await GoogleCalendarService.GetCalendarEventsInRangeAsync(daysInPast, daysInFuture, calenderId);
+            SyncStatus = StatusHelper.GetMessage(SyncStateEnum.GoogleAppointmentRead, GoogleAppointments.Count);
+            SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
 
             return true;
         }
@@ -113,9 +120,9 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
             if (GoogleAppointments.Any() && OutlookAppointments.Any())
             {
                 return (from googleAppointment in GoogleAppointments
-                    let isFound = OutlookAppointments.Contains(googleAppointment)
-                    where !isFound
-                    select googleAppointment).ToList();
+                        let isFound = OutlookAppointments.Contains(googleAppointment)
+                        where !isFound
+                        select googleAppointment).ToList();
             }
 
             return GoogleAppointments;
@@ -126,9 +133,9 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
             if (GoogleAppointments.Any() && OutlookAppointments.Any())
             {
                 return (from outlookAppointment in OutlookAppointments
-                    let isFound = GoogleAppointments.Contains(outlookAppointment)
-                    where !isFound
-                    select outlookAppointment).ToList();
+                        let isFound = GoogleAppointments.Contains(outlookAppointment)
+                        where !isFound
+                        select outlookAppointment).ToList();
             }
             return OutlookAppointments;
         }
@@ -142,34 +149,50 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
             bool isSuccess = false;
             if (settings != null && settings.SavedCalendar != null)
             {
-                _applicationLogger.LogInfo("Reading appointments...");
-                isSuccess =
-                    await
-                        GetAppointments(settings.DaysInPast, settings.DaysInFuture, settings.SavedCalendar.Id,
+                isSuccess = await GetAppointments(settings.DaysInPast, settings.DaysInFuture, settings.SavedCalendar.Id,
                             settings.OutlookSettings.OutlookProfileName, settings.OutlookSettings.OutlookCalendar);
-                SyncStatus = StatusHelper.GetMessage(SyncStateEnum.SourceAppointmentRead, OutlookAppointments.Count);
-                SyncStatus = StatusHelper.GetMessage(SyncStateEnum.DestinationAppointmentRead, GoogleAppointments.Count);
+
                 if (isSuccess)
                 {
-                    _applicationLogger.LogInfo("Getting appointments to delete...");
+                    //Updating entry delete status
+                    SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
+                    SyncStatus = StatusHelper.GetMessage(SyncStateEnum.ReadingEntriesToDelete);
+                    //Getting appointments to delete
                     List<Appointment> appointmentsToDelete = GetAppointmentsToDelete();
+                    //Updating Get entry delete status
                     SyncStatus = StatusHelper.GetMessage(SyncStateEnum.EntriesToDelete, appointmentsToDelete.Count);
-                    _applicationLogger.LogInfo("Deleting calendar events...");
-                    isSuccess =
-                        await GoogleCalendarService.DeleteCalendarEvent(appointmentsToDelete, settings.SavedCalendar.Id);
+                    //Updating delete status
+                    SyncStatus = StatusHelper.GetMessage(SyncStateEnum.DeletingEntries);
+                    //Deleting entries
+                    isSuccess = await GoogleCalendarService.DeleteCalendarEvent(appointmentsToDelete, settings.SavedCalendar.Id);
+
                     if (isSuccess)
                     {
-                        _applicationLogger.LogInfo("Getting appointments to add...");
+                        //Deletion complete
+                        SyncStatus = StatusHelper.GetMessage(SyncStateEnum.DeletingEntriesComplete);
+                        SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
+                        SyncStatus = StatusHelper.GetMessage(SyncStateEnum.ReadingEntriesToAdd);
                         List<Appointment> calendarAppointments = GetAppointmentsToAdd();
                         SyncStatus = StatusHelper.GetMessage(SyncStateEnum.EntriesToAdd, calendarAppointments.Count);
-                        _applicationLogger.LogInfo("Adding appointments...");
-                        isSuccess =
-                            await
-                                GoogleCalendarService.AddCalendarEvent(calendarAppointments, settings.SavedCalendar.Id,
+                        SyncStatus = StatusHelper.GetMessage(SyncStateEnum.AddingEntries);
+                        isSuccess = await GoogleCalendarService.AddCalendarEvent(calendarAppointments, settings.SavedCalendar.Id,
                                     settings.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Description),
                                     settings.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Reminders),
                                     settings.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Attendees));
-                        _applicationLogger.LogInfo("Update complete.");
+                        if (isSuccess)
+                        {
+                            SyncStatus = StatusHelper.GetMessage(SyncStateEnum.AddEntriesComplete);
+                        }
+                        else
+                        {
+                            SyncStatus = StatusHelper.GetMessage(SyncStateEnum.AddEntriesFailed);
+                        }
+                        SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
+                    }
+                    else
+                    {
+                        SyncStatus = StatusHelper.GetMessage(SyncStateEnum.DeletingEntriesFailed);
+                        SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
                     }
                 }
             }

@@ -135,5 +135,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.ExchangeWeb
                 GetCalendars(subFolder, outlookCalendars, view);
             }
         }
+
+     
     }
 }

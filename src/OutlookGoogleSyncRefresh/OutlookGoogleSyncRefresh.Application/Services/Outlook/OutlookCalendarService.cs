@@ -34,7 +34,7 @@ using OutlookGoogleSyncRefresh.Domain.Models;
 
 namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
 {
-    [Export(typeof (IOutlookCalendarService))]
+    [Export(typeof(IOutlookCalendarService))]
     public class OutlookCalendarService : IOutlookCalendarService
     {
         #region Private Methods
@@ -127,6 +127,10 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
                                     Organizer = appointmentItem.Organizer,
                                     ReminderSet = appointmentItem.ReminderSet,
                                     RequiredAttendees = appointmentItem.RequiredAttendees,
+                                    AppointmentId = appointmentItem.IsRecurring ?
+                                            string.Format("{0}_{1}", appointmentItem.EntryID, appointmentItem.Start.ToString("d")) : appointmentItem.EntryID,
+                                    Visibility = (appointmentItem.Sensitivity == OlSensitivity.olNormal) ? "default" : "private",
+                                    Transparency = (appointmentItem.BusyStatus == OlBusyStatus.olFree) ? "transparent" : "opaque"
                                 }));
             }
 
