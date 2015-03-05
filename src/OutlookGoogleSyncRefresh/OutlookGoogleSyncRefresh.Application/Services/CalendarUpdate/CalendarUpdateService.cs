@@ -164,7 +164,6 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
             bool isSuccess = false;
             if (settings != null && settings.SavedCalendar != null)
             {
-                SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
                 SyncStatus = "Calendar Sync Mode : Outlook -> Google";
                 SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
                 SyncStatus = string.Format("Sync Date Range - {0} - {1}", DateTime.Now.Subtract(new TimeSpan(settings.DaysInPast, 0, 0, 0)).ToString("D"),

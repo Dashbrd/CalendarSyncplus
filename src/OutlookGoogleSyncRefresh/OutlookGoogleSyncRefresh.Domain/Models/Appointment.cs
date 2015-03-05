@@ -21,6 +21,7 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
         private string _subject;
         private string _visibility;
         private string _transparency;
+        private string _sourceId;
 
         public Appointment(string description, string location, string subject, DateTime? endTime, DateTime? startTime,
             string appointmentId)
@@ -72,6 +73,12 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
         {
             get { return _appointmentId; }
             set { SetProperty(ref _appointmentId, value); }
+        }
+
+        public string SourceId
+        {
+            get { return _sourceId; }
+            set { SetProperty(ref _sourceId, value); }
         }
 
         public string Rfc339FormatStartTime
@@ -146,7 +153,7 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
                 return false;
             }
             // Instances are considered equal if the ToString matches.
-            return this.AppointmentId.Equals(appointment.AppointmentId) && ToString() == appointment.ToString();
+            return ToString() == appointment.ToString();
         }
 
         public override int GetHashCode()

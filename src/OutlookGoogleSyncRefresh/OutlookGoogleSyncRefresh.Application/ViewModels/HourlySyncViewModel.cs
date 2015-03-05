@@ -37,8 +37,9 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             {
                 Hours = Hours,
                 Minutes = Minutes,
-                StartTime =  DateTime.Now
             };
+            var timeNow = DateTime.Now;
+            frequency.StartTime = timeNow.Subtract(new TimeSpan(0,0,timeNow.Second));
             return frequency;
         }
     }

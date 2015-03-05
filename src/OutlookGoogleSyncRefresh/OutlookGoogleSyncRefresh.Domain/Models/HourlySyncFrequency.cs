@@ -17,19 +17,38 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
 
         public override bool ValidateTimer(DateTime dateTime)
         {
-            var timeElapsed = StartTime.Subtract(dateTime);
-            if (timeElapsed.Hours == Hours && timeElapsed.Minutes == Minutes)
+            var totalTimeElapsed = StartTime.Subtract(dateTime);
+            var timeElapsed = new TimeSpan(Hours, Minutes, 0);
+            if (Math.Abs(totalTimeElapsed.TotalMinutes % timeElapsed.TotalMinutes) < 1)
             {
                 return true;
             }
+            
             return false;
         }
 
-        public override DateTime GetNextSyncTime()
+        public override DateTime GetNextSyncTime(DateTime dateTimeNow)
         {
-            DateTime dateTime = DateTime.Now;
-            return dateTime.Add(new TimeSpan(0, Hours, Minutes));
+            try
+            {
+                var timeSpan = new TimeSpan(Hours, Minutes, 0);
+                DateTime dateTime = StartTime;
+                while (dateTimeNow.Subtract(dateTime).TotalMinutes > timeSpan.TotalMinutes)
+                {
+                     dateTime = dateTime.Add(timeSpan);
+                }
 
+                if (dateTimeNow.Subtract(dateTime).TotalMinutes > 0)
+                {
+                    dateTime = dateTime.Add(timeSpan);
+                }
+                return dateTime;
+            }
+            catch
+            {
+                
+            }
+            return DateTime.Now;
         }
 
         public override string ToString()

@@ -16,9 +16,9 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
             return false;
         }
 
-        public virtual DateTime GetNextSyncTime()
+        public virtual DateTime GetNextSyncTime(DateTime dateTimeNow)
         {
-            return DateTime.Now;
+            return dateTimeNow;
         }
     }
 }

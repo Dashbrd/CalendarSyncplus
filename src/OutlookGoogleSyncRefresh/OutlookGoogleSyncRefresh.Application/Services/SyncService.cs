@@ -24,6 +24,7 @@ using System.ComponentModel;
 using System.ComponentModel.Composition;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Waf.Foundation;
 
 using OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate;
@@ -31,7 +32,7 @@ using OutlookGoogleSyncRefresh.Application.Utilities;
 using OutlookGoogleSyncRefresh.Common.Log;
 using OutlookGoogleSyncRefresh.Domain.Helpers;
 using OutlookGoogleSyncRefresh.Domain.Models;
-
+using  Timer =System.Timers.Timer;
 #endregion
 
 namespace OutlookGoogleSyncRefresh.Application.Services
@@ -73,7 +74,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services
             set { SetProperty(ref _syncStatus, value); }
         }
 
-        public async Task<bool> Start(TimerCallback timerCallback)
+        public async Task<bool> Start(ElapsedEventHandler timerCallback)
         {
             Settings settings = _settingsProvider.GetSettings();
             if (settings.SavedCalendar == null || !settings.ValidateOutlookSettings())
@@ -81,14 +82,24 @@ namespace OutlookGoogleSyncRefresh.Application.Services
                 _messageService.ShowMessageAsync("Please configure Google and Outlook calendar in settings to continue.");
                 return false;
             }
-            _syncTimer = new Timer(timerCallback, null, (60 - DateTime.Now.Second), 60000);
+            
+            //_syncTimer = new Timer(timerCallback, null, (60 - DateTime.Now.Second), 60000);
+            if (_syncTimer == null)
+                _syncTimer = new Timer(60000);
+            
+            await Task.Delay(60 - DateTime.Now.Second);
+            
+            _syncTimer.Start();
+            _syncTimer.Elapsed += timerCallback;
+            SyncStatus = string.Format("Period Sync Start : {0}", DateTime.Now);
+            SyncStatus = StatusHelper.GetMessage(SyncStateEnum.NewLog);
             return true;
         }
 
-        public void Stop()
+        public void Stop(ElapsedEventHandler ElapsedEventHandler)
         {
-            _syncTimer.Dispose();
-            _syncTimer = null;
+            _syncTimer.Stop();
+            _syncTimer.Elapsed -= ElapsedEventHandler;
         }
 
         public async Task<string> SyncNowAsync(Settings settings)
@@ -103,14 +114,13 @@ namespace OutlookGoogleSyncRefresh.Application.Services
                 }
 
                 ResetSyncData();
-                if (_calendarUpdateService != null)
-                {
-                    Shutdown();
-                }
+                
                 _calendarUpdateService = _calendarServiceFactory.GetCalendarUpdateService(settings);
                 Initialize();
+
                 bool isSyncComplete = await _calendarUpdateService.SyncCalendarAsync(settings);
                 return isSyncComplete ? null : "Error Occurred";
+                Shutdown();
             }
             catch (AggregateException exception)
             {

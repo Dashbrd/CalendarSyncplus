@@ -75,6 +75,7 @@ namespace OutlookGoogleSyncRefresh.Application.Controllers
         public void Shutdown()
         {
             //ShutDown Services
+            ShellViewModel.Shutdown();
             SyncService.Shutdown();
 
             PropertyChangedEventManager.RemoveHandler(SyncService, SyncServiceNotificationHandler, "");

@@ -22,6 +22,7 @@
 using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Timers;
 using OutlookGoogleSyncRefresh.Domain.Models;
 
 #endregion
@@ -38,9 +39,9 @@ namespace OutlookGoogleSyncRefresh.Application.Services
 
         #region Public Methods
 
-        Task<bool> Start(TimerCallback timerCallback);
+        Task<bool> Start(ElapsedEventHandler timerCallback);
 
-        void Stop();
+        void Stop(ElapsedEventHandler timerCallback);
 
         Task<string> SyncNowAsync(Settings settings);
 

@@ -55,26 +55,25 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
             return false;
         }
 
-        public override DateTime GetNextSyncTime()
+        public override DateTime GetNextSyncTime(DateTime dateTimeNow)
         {
-            DateTime dateTime = DateTime.Now;
-            if (dateTime.CompareTo(TimeOfDay) > 0)
+            if (dateTimeNow.CompareTo(TimeOfDay) > 0)
             {
-                dateTime = new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, TimeOfDay.Hour, TimeOfDay.Minute,
+                dateTimeNow = new DateTime(dateTimeNow.Year, dateTimeNow.Month, dateTimeNow.Day, TimeOfDay.Hour, TimeOfDay.Minute,
                     TimeOfDay.Second);
-                dateTime = dateTime.Add(new TimeSpan(1, 0, 0, 0));
+                dateTimeNow = dateTimeNow.Add(new TimeSpan(1, 0, 0, 0));
             }
 
-            while (!ValidateTimer(dateTime))
+            while (!ValidateTimer(dateTimeNow))
             {
-                if (IsDayValid(dateTime))
+                if (IsDayValid(dateTimeNow))
                 {
-                    return new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, TimeOfDay.Hour, TimeOfDay.Minute,
+                    return new DateTime(dateTimeNow.Year, dateTimeNow.Month, dateTimeNow.Day, TimeOfDay.Hour, TimeOfDay.Minute,
                         TimeOfDay.Second);
                 }
-                dateTime = dateTime.Add(new TimeSpan(1, 0, 0, 0));
+                dateTimeNow = dateTimeNow.Add(new TimeSpan(1, 0, 0, 0));
             }
-            return dateTime;
+            return dateTimeNow;
         }
 
         public override string ToString()

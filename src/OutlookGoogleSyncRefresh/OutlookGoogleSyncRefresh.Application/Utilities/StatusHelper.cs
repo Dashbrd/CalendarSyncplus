@@ -27,8 +27,8 @@ namespace OutlookGoogleSyncRefresh.Application.Utilities
 
     public static class StatusHelper
     {
-        private const string BreakConstant = "-------------------------------------------------------";
-        private const string NewLogConstant = "********************************************************";
+        private const string BreakConstant =  "---------------------------------------------------------------------------";
+        private const string NewLogConstant = "***************************************************************************";
         public static string GetMessage(SyncStateEnum syncStateEnum, params object[] values)
         {
             string message = string.Empty;

@@ -53,13 +53,13 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
         {
             var frequency = new DailySyncFrequency
             {
-                StartDate = DateTime.Now,
                 EveryWeekday = EveryWeekday,
                 CustomDay = CustomDay,
                 DayGap = DayGap,
                 TimeOfDay = TimeOfDay
             };
-
+            var timeNow = DateTime.Now;
+            frequency.StartDate = timeNow.Subtract(new TimeSpan(0, 0, timeNow.Second));
             return frequency;
         }
     }

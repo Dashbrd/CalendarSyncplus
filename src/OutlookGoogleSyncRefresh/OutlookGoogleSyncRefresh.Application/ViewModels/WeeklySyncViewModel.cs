@@ -90,11 +90,12 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
         {
             var frequency = new WeeklySyncFrequency
             {
-                StartDate = DateTime.Now,
                 DaysOfWeek = new List<DayOfWeek>(),
                 WeekRecurrence = WeekRecurrence,
                 TimeOfDay = TimeOfDay
             };
+            var timeNow = DateTime.Now;
+            frequency.StartDate = timeNow.Subtract(new TimeSpan(0, 0, timeNow.Second));
             UpdateDaysOfWeek(frequency, IsSunday, DayOfWeek.Sunday);
             UpdateDaysOfWeek(frequency, IsMonday, DayOfWeek.Monday);
             UpdateDaysOfWeek(frequency, IsTuesday, DayOfWeek.Tuesday);
