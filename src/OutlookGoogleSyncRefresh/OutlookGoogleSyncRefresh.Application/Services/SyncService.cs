@@ -82,17 +82,12 @@ namespace OutlookGoogleSyncRefresh.Application.Services
                 _messageService.ShowMessageAsync("Please configure Google and Outlook calendar in settings to continue.");
                 return false;
             }
-            
-            //_syncTimer = new Timer(timerCallback, null, (60 - DateTime.Now.Second), 60000);
+            await Task.Delay(1000);
             if (_syncTimer == null)
-                _syncTimer = new Timer(60000);
-            
-            await Task.Delay(60 - DateTime.Now.Second);
-            
+                _syncTimer = new Timer(1000);
+           
             _syncTimer.Start();
             _syncTimer.Elapsed += timerCallback;
-            SyncStatus = string.Format("Period Sync Start : {0}", DateTime.Now);
-            SyncStatus = StatusHelper.GetMessage(SyncStateEnum.NewLog);
             return true;
         }
 

@@ -19,7 +19,7 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
         {
             var totalTimeElapsed = StartTime.Subtract(dateTime);
             var timeElapsed = new TimeSpan(Hours, Minutes, 0);
-            if (Math.Abs(totalTimeElapsed.TotalMinutes % timeElapsed.TotalMinutes) < 1)
+            if (Math.Abs(totalTimeElapsed.TotalSeconds % timeElapsed.TotalSeconds) < 1)
             {
                 return true;
             }
@@ -33,12 +33,12 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
             {
                 var timeSpan = new TimeSpan(Hours, Minutes, 0);
                 DateTime dateTime = StartTime;
-                while (dateTimeNow.Subtract(dateTime).TotalMinutes > timeSpan.TotalMinutes)
+                while (dateTimeNow.Subtract(dateTime).TotalSeconds > timeSpan.TotalSeconds)
                 {
                      dateTime = dateTime.Add(timeSpan);
                 }
 
-                if (dateTimeNow.Subtract(dateTime).TotalMinutes > 0)
+                if (dateTimeNow.Subtract(dateTime).TotalSeconds > 0)
                 {
                     dateTime = dateTime.Add(timeSpan);
                 }

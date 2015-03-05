@@ -70,6 +70,7 @@
                   Header="Log">
             <TextBox IsReadOnly="True"
                      IsReadOnlyCaretVisible="False"
+                     IsUndoEnabled="False"
                      Text="{Binding SyncLog,
                                     Mode=OneWay}"
                      TextWrapping="Wrap"

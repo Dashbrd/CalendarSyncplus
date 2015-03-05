@@ -331,6 +331,9 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             {
                 SyncStartService.Stop(OnTimerElapsed);
                 IsPeriodicSyncStarted = false;
+
+                UpdateStatus(string.Format("Period Sync Stopped : {0}", DateTime.Now));
+                UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.NewLog));
                 ApplicationLogger.LogInfo("Periodic Sync Stopped");
             }
             else
@@ -344,6 +347,8 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
                     }
                     ApplicationLogger.LogInfo("Periodic Sync Started");
                     IsPeriodicSyncStarted = true;
+                    UpdateStatus(string.Format("Period Sync Started : {0}", DateTime.Now));
+                    UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.NewLog));
                 }
             }
         }

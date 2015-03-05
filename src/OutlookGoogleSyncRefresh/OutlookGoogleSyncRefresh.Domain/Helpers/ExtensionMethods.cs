@@ -85,7 +85,7 @@ namespace OutlookGoogleSyncRefresh.Domain.Helpers
 
         public static bool IsTimeValid(this DateTime dateTime, DateTime timeOfDay)
         {
-            if (dateTime.ToString("HH:mm").Equals(timeOfDay.ToString("HH:mm")))
+            if (dateTime.ToString("HH:mm:ss").Equals(timeOfDay.ToString("HH:mm:ss")))
             {
                 return true;
             }
