@@ -73,7 +73,10 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Google
         #endregion
 
         #region Properties
-
+        public string CalendarServiceName
+        {
+            get { return "Google"; }
+        }
         public IAccountAuthenticationService AccountAuthenticationService { get; set; }
 
         private string CalendarId

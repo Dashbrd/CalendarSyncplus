@@ -44,6 +44,11 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
     {
         #region Properties
 
+        public string CalendarServiceName
+        {
+            get { return "Outlook"; }
+        }
+
         private OutlookCalendar OutlookCalendar { get; set; }
 
         private string ProfileName { get; set; }
@@ -350,6 +355,148 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
         }
 
 
+        public async Task<List<Appointment>> GetCalendarEventsInRangeAsync(int daysInPast, int daysInFuture,
+            IDictionary<string, object> calendarSpecificData)
+        {
+            CheckCalendarSpecificData(calendarSpecificData);
+            //Get Outlook Entries
+            List<Appointment> appointmentList =
+                await
+                    Task<List<Appointment>>.Factory.StartNew(
+                        () => GetAppointments(daysInPast, daysInFuture, ProfileName, OutlookCalendar));
+            return appointmentList;
+        }
+
+        public void CheckCalendarSpecificData(IDictionary<string, object> calendarSpecificData)
+        {
+            if (calendarSpecificData == null)
+            {
+                throw new ArgumentNullException("calendarSpecificData", "Calendar Specific Data cannot be null");
+            }
+
+            object profileValue;
+            object outlookCalendarValue;
+            if (!(calendarSpecificData.TryGetValue("ProfileName", out profileValue) &&
+                  calendarSpecificData.TryGetValue("OutlookCalendar", out outlookCalendarValue)))
+            {
+                throw new InvalidOperationException(
+                    string.Format(
+                        "{0} and {1}  keys should be present, both of them can be null in case Default Profile and Default Calendar will be used. {0} is or 'string' and {1} is of 'OutlookCalendar' type"));
+            }
+            ProfileName = profileValue as String;
+            OutlookCalendar = outlookCalendarValue as OutlookCalendar;
+        }
+
+
+
+        public async Task<bool> AddCalendarEvent(List<Appointment> calenderAppointments, bool addDescription, bool addReminder,
+            bool addAttendees,
+            IDictionary<string, object> calendarSpecificData)
+        {
+            if (calendarSpecificData == null)
+            {
+                return false;
+            }
+            object data;
+            if (!calendarSpecificData.TryGetValue("OutlookCalendar", out data))
+            {
+                return false;
+            }
+            OutlookCalendar outlookCalendar = data as OutlookCalendar;
+            if (!calendarSpecificData.TryGetValue("ProfileName", out data))
+            {
+                return false;
+            }
+            string profileName = data as string;
+
+            bool disposeOutlookInstances;
+            Microsoft.Office.Interop.Outlook.Application application = null;
+            NameSpace nameSpace = null;
+            MAPIFolder defaultOutlookCalender = null;
+            Items outlookItems = null;
+            var outlookAppointments = new List<Appointment>();
+            // Get Application and Namespace
+            GetOutlookApplication(out disposeOutlookInstances, out application, out nameSpace, profileName);
+
+            // Get Default Calender
+            if (outlookCalendar != null)
+            {
+                defaultOutlookCalender = nameSpace.GetFolderFromID(outlookCalendar.EntryId, outlookCalendar.StoreId);
+            }
+            else
+            {
+                defaultOutlookCalender = nameSpace.GetDefaultFolder(OlDefaultFolders.olFolderCalendar);
+            }
+
+            foreach (var calenderAppointment in calenderAppointments)
+            {
+                AppointmentItem appt = application.CreateItem(OlItemType.olAppointmentItem) as AppointmentItem;
+                appt.Subject = calenderAppointment.Subject;
+                appt.MeetingStatus = OlMeetingStatus.olMeeting;
+                appt.Location = calenderAppointment.Location;
+                if (calenderAppointment.AllDayEvent)
+                {
+                    appt.AllDayEvent = true;
+                }
+                else
+                {
+                    appt.Start = calenderAppointment.StartTime.GetValueOrDefault();
+                    appt.End = calenderAppointment.EndTime.GetValueOrDefault();
+                }
+                Recipient recipRequired =
+                    appt.Recipients.Add("Ryan Gregg");
+                recipRequired.Type =
+                    (int)OlMeetingRecipientType.olRequired;
+                Recipient recipOptional =
+                    appt.Recipients.Add("Peter Allenspach");
+                recipOptional.Type =
+                    (int)OlMeetingRecipientType.olOptional;
+                Recipient recipConf =
+                   appt.Recipients.Add("Conf Room 36/2021 (14) AV");
+                recipConf.Type =
+                    (int)OlMeetingRecipientType.olResource;
+                appt.Recipients.ResolveAll();
+                appt.Display(false);
+                defaultOutlookCalender.Items.Add(appt);
+            }
+            
+            //Close  and Cleanup
+
+            if (disposeOutlookInstances)
+            {
+                nameSpace.Logoff();
+            }
+
+            //Unassign all instances
+            if (outlookItems != null)
+            {
+                Marshal.FinalReleaseComObject(outlookItems);
+                outlookItems = null;
+            }
+
+            Marshal.FinalReleaseComObject(defaultOutlookCalender);
+            defaultOutlookCalender = null;
+
+            Marshal.FinalReleaseComObject(nameSpace);
+            nameSpace = null;
+
+            if (disposeOutlookInstances)
+            {
+                // Casting Removes a warninig for Ambigous Call
+                ((_Application)application).Quit();
+                Marshal.FinalReleaseComObject(application);
+            }
+            application = null;
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+            return true;
+        }
+
+        //private AppointmentItem CreateOutlookAppointmentItem(Appointment calendarAppointment)
+        //{
+        //    AppointmentItem appointmentItem = new AppointmentItemClass()
+        //}
+
 
         public Task<List<Calendar>> GetAvailableCalendars(IDictionary<string, object> calendarSpecificData)
         {
@@ -372,45 +519,6 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
             IDictionary<string, object> calendarSpecificData)
         {
             throw new NotImplementedException();
-        }
-
-        public async Task<List<Appointment>> GetCalendarEventsInRangeAsync(int daysInPast, int daysInFuture,
-            IDictionary<string, object> calendarSpecificData)
-        {
-            CheckCalendarSpecificData(calendarSpecificData);
-            //Get Outlook Entries
-            List<Appointment> appointmentList =
-                await
-                    Task<List<Appointment>>.Factory.StartNew(
-                        () => GetAppointments(daysInPast, daysInFuture, ProfileName, OutlookCalendar));
-            return appointmentList;
-        }
-
-        public Task<bool> AddCalendarEvent(List<Appointment> calenderAppointments, bool addDescription, bool addReminder,
-            bool addAttendees,
-            IDictionary<string, object> calendarSpecificData)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void CheckCalendarSpecificData(IDictionary<string, object> calendarSpecificData)
-        {
-            if (calendarSpecificData == null)
-            {
-                throw new ArgumentNullException("calendarSpecificData", "Calendar Specific Data cannot be null");
-            }
-
-            object profileValue;
-            object outlookCalendarValue;
-            if (!(calendarSpecificData.TryGetValue("ProfileName", out profileValue) &&
-                  calendarSpecificData.TryGetValue("OutlookCalendar", out outlookCalendarValue)))
-            {
-                throw new InvalidOperationException(
-                    string.Format(
-                        "{0} and {1}  keys should be present, both of them can be null in case Default Profile and Default Calendar will be used. {0} is or 'string' and {1} is of 'OutlookCalendar' type"));
-            }
-            ProfileName = profileValue as String;
-            OutlookCalendar = outlookCalendarValue as OutlookCalendar;
         }
 
         #endregion
