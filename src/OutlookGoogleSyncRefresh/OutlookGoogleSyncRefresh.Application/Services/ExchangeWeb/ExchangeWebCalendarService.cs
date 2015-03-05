@@ -104,7 +104,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.ExchangeWeb
                 EnableScpLookup=false,
             };
 
-            service.AutodiscoverUrl("ankeshdave@eaton.com");
+            service.AutodiscoverUrl("ankeshdave@outlook.com");
             //service.Credentials = new WebCredentials("user1@contoso.com", "password");
             return service;
         }
