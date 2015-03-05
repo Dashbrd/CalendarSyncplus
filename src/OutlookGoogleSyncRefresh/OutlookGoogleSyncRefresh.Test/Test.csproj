@@ -211,6 +211,20 @@
   <ItemGroup>
     <Resource Include="Resources\Entypo-license.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\OutlookGoogleSyncRefresh.Application\OutlookGoogleSyncRefresh.Application.csproj">
+      <Project>{9aef8039-a3e2-452d-a73a-4af458fda0f7}</Project>
+      <Name>OutlookGoogleSyncRefresh.Application</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OutlookGoogleSyncRefresh.Common\OutlookGoogleSyncRefresh.Common.csproj">
+      <Project>{58f42963-fc3f-4bf8-88a8-da70f5ae7e58}</Project>
+      <Name>OutlookGoogleSyncRefresh.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OutlookGoogleSyncRefresh.Domain\OutlookGoogleSyncRefresh.Domain.csproj">
+      <Project>{5af06073-c8b2-4e8d-85e9-c22c44e36a8f}</Project>
+      <Name>OutlookGoogleSyncRefresh.Domain</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
