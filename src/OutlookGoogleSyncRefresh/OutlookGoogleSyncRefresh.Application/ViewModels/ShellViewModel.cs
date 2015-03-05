@@ -399,7 +399,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
         private void InvokeOnCurrentDispatcher(Action action)
         {
             DispatcherHelper.CheckBeginInvokeOnUI(action);
-            }
+        }
 
         #endregion
 
@@ -456,7 +456,6 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             ShowNotification(true);
             IsSyncInProgress = true;
             UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.SyncStarted, DateTime.Now));
-            var result = SyncStartService.SyncNowAsync(Settings);
             SyncStartService.SyncNowAsync(Settings).ContinueWith(OnSyncCompleted);
         }
 
@@ -475,8 +474,6 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             }
             UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.NewLog));
             ShowNotification(false);
-            IsSyncInProgress = false;
-
             if (Settings.SyncFrequency != null)
             {
                 NextSyncTime = Settings.SyncFrequency.GetNextSyncTime();
