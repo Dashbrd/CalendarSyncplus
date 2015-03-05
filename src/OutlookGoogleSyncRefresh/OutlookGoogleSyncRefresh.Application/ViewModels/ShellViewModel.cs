@@ -444,7 +444,24 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
         private DateTime _syncStartTime;
         public void SyncNow()
         {
-            Task.Factory.StartNew(StartSyncTask);
+            try
+            {
+                Task.Factory.StartNew(StartSyncTask);
+            }
+            catch (AggregateException exception)
+            {
+                AggregateException flattenException = exception.Flatten();
+                MessageService.ShowMessageAsync(flattenException.Message);
+            }
+            catch (Exception exception)
+            {
+                MessageService.ShowMessageAsync(exception.Message);
+            }
+            finally
+            {
+                ShowNotification(false);
+                IsSyncInProgress = false;
+            }
         }
 
         private void StartSyncTask()
@@ -458,6 +475,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             IsSyncInProgress = true;
             UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.SyncStarted, DateTime.Now));
             SyncStartService.SyncNowAsync(Settings).ContinueWith(OnSyncCompleted);
+
         }
 
         private void OnSyncCompleted(Task<string> task)

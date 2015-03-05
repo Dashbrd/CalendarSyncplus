@@ -631,7 +631,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
 
         private async Task GetGoogleCalendarInternal()
         {
-            List<Calendar> calendars = await GoogleCalendarService.GetAvailableCalendars();
+            List<Calendar> calendars = await GoogleCalendarService.GetAvailableCalendars(new Dictionary<string, object>());
             GoogleCalenders = calendars;
             if (GoogleCalenders.Any())
             {

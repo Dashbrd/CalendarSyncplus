@@ -7,10 +7,10 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
     [Export(typeof(ICalendarUpdateServiceFactory))]
     public class CalendarUpdateServiceFactory : ICalendarUpdateServiceFactory
     {
-        public Lazy<IOutlookGoogleCalendarUpdateService> LazyOutlookGoogleService { get; set; }
+        public Lazy<ICalendarUpdateService> LazyOutlookGoogleService { get; set; }
 
         [ImportingConstructor]
-        public CalendarUpdateServiceFactory(Lazy<IOutlookGoogleCalendarUpdateService> lazyOutlookGoogleService)
+        public CalendarUpdateServiceFactory(Lazy<ICalendarUpdateService> lazyOutlookGoogleService)
         {
             LazyOutlookGoogleService = lazyOutlookGoogleService;
         }

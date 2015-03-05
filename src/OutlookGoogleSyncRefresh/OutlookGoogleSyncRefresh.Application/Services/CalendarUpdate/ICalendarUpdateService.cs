@@ -32,8 +32,8 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
     {
         #region Properties
 
-        List<Appointment> GoogleAppointments { get; set; }
-        List<Appointment> OutlookAppointments { get; set; }
+        List<Appointment> GetDestinationAppointments { get; set; }
+        List<Appointment> GetSourceAppointments { get; set; }
         Appointment CurrentAppointment { get; set; }
         string SyncStatus { get; set; }
 

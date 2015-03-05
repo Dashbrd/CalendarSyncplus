@@ -26,22 +26,39 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+
 using Google;
 using Google.Apis.Calendar.v3;
 using Google.Apis.Calendar.v3.Data;
 using Google.Apis.Requests;
+
+using OutlookGoogleSyncRefresh.Common.Attributes;
 using OutlookGoogleSyncRefresh.Common.Log;
+using OutlookGoogleSyncRefresh.Common.MetaData;
 using OutlookGoogleSyncRefresh.Domain.Models;
+
 using Calendar = OutlookGoogleSyncRefresh.Domain.Models.Calendar;
 
 #endregion
 
 namespace OutlookGoogleSyncRefresh.Application.Services.Google
 {
-    [Export(typeof(IGoogleCalendarService))]
+    [Export(typeof(ICalendarService)),Export(typeof(IGoogleCalendarService))]
+    [ExportCalendarMetaData(CalendarServiceType.Google)]
     public class GoogleCalendarService : IGoogleCalendarService
     {
+        #region Static and Constants
+
+        private const string dictionaryKey_CalendarId = "CalendarId";
+
+        #endregion
+
+        #region Fields
+
         private readonly ApplicationLogger _applicationLogger;
+        private string calendarId;
+
+        #endregion
 
         #region Constructors
 
@@ -58,6 +75,12 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Google
         #region Properties
 
         public IAccountAuthenticationService AccountAuthenticationService { get; set; }
+
+        private string CalendarId
+        {
+            get { return calendarId; }
+            set { calendarId = value; }
+        }
 
         #endregion
 
@@ -86,7 +109,6 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Google
             googleEvent.ExtendedProperties.Private = new Dictionary<string, string>();
             //Need to make recurring appointment IDs unique - append the item's date
             googleEvent.ExtendedProperties.Private.Add("AppointmentId", calenderAppointment.AppointmentId);
-
 
             //Add Start/End Time
             if (calenderAppointment.AllDayEvent)
@@ -177,11 +199,68 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Google
             return AccountAuthenticationService.AuthenticateCalenderOauth();
         }
 
+        private void InsertEventErrorMessage(Event content, RequestError error, int index, HttpResponseMessage message,
+            Dictionary<KeyValuePair<int, Appointment>, HttpResponseMessage> eventListIndex)
+        {
+            //var getKey = eventListIndex.FirstOrDefault(pair => pair.Key.Key == index);
+            // eventListIndex[getKey.Key] = message;
+        }
+
+        private Appointment CreateAppointment(Event googleEvent)
+        {
+            Appointment appointment;
+            if (googleEvent.Start.DateTime == null && googleEvent.End.DateTime == null)
+            {
+                appointment = new Appointment(googleEvent.Description, googleEvent.Location, googleEvent.Summary,
+                    DateTime.Parse(googleEvent.End.Date),
+                    DateTime.Parse(googleEvent.Start.Date), googleEvent.Id);
+                appointment.AllDayEvent = true;
+            }
+            else
+            {
+                appointment = new Appointment(googleEvent.Description, googleEvent.Location, googleEvent.Summary,
+                    googleEvent.End.DateTime,
+                    googleEvent.Start.DateTime, googleEvent.Id);
+            }
+
+            string id;
+            if (googleEvent.ExtendedProperties != null && googleEvent.ExtendedProperties.Private != null &&
+                googleEvent.ExtendedProperties.Private.TryGetValue("AppointmentId", out id))
+            {
+                appointment.AppointmentId = id;
+            }
+
+            return appointment;
+        }
+
         #endregion
 
         #region IGoogleCalendarService Members
 
-        public async Task<List<Calendar>> GetAvailableCalendars()
+        public void CheckCalendarSpecificData(IDictionary<string, object> calendarSpecificData)
+        {
+            if (calendarSpecificData == null)
+            {
+                throw new ArgumentNullException("calendarSpecificData", "Calendar Specific Data cannot be null");
+            }
+
+            object keyValue;
+            if (!calendarSpecificData.TryGetValue(dictionaryKey_CalendarId, out keyValue))
+            {
+                throw new InvalidOperationException(string.Format("{0} is a required.", dictionaryKey_CalendarId));
+            }
+            else
+            {
+                CalendarId = keyValue as string;
+
+                if (string.IsNullOrEmpty(calendarId))
+                {
+                    throw new InvalidOperationException(string.Format("{0} cannot be null or empty.", dictionaryKey_CalendarId));
+                }
+            }
+        }
+
+        public async Task<List<Calendar>> GetAvailableCalendars(IDictionary<string, object> calendarSpecificData)
         {
             //Get Calendar Service
             CalendarService calendarService = GetCalendarService();
@@ -195,32 +274,36 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Google
             return locaCalendarList;
         }
 
-        public async Task<bool> AddCalendarEvent(Appointment calenderAppointment, string calenderId, bool addDescription,
-            bool addReminder, bool addAttendees)
+        public async Task<bool> AddCalendarEvent(Appointment calenderAppointment, bool addDescription,
+            bool addReminder, bool addAttendees, IDictionary<string, object> calendarSpecificData)
         {
+            CheckCalendarSpecificData(calendarSpecificData);
+
             //Get Calendar Service
             CalendarService calendarService = GetCalendarService();
 
-            if (calenderAppointment == null || string.IsNullOrEmpty(calenderId))
+            if (calenderAppointment == null || string.IsNullOrEmpty(CalendarId))
             {
                 return false;
             }
 
             Event calendarEvent = CreateGoogleCalendarEvent(calenderAppointment, addDescription, addReminder,
                 addAttendees);
-            Event returnEvent = await calendarService.Events.Insert(calendarEvent, calenderId).ExecuteAsync();
+            Event returnEvent = await calendarService.Events.Insert(calendarEvent, CalendarId).ExecuteAsync();
 
             return returnEvent != null;
         }
 
-        public async Task<bool> AddCalendarEvent(List<Appointment> appointments, string calenderId, bool addDescription,
-            bool addReminder, bool addAttendees)
+        public async Task<bool> AddCalendarEvent(List<Appointment> appointments, bool addDescription,
+            bool addReminder, bool addAttendees, IDictionary<string, object> calendarSpecificData)
         {
+            CheckCalendarSpecificData(calendarSpecificData);
+
             var eventIndexList = new Dictionary<KeyValuePair<int, Appointment>, HttpResponseMessage>();
             //Get Calendar Service
             CalendarService calendarService = GetCalendarService();
 
-            if (appointments == null || string.IsNullOrEmpty(calenderId))
+            if (appointments == null || string.IsNullOrEmpty(CalendarId))
             {
                 return false;
             }
@@ -243,7 +326,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Google
                     Appointment appointment = appointments[i];
                     Event calendarEvent = CreateGoogleCalendarEvent(appointment, addDescription, addReminder,
                         addAttendees);
-                    EventsResource.InsertRequest insertRequest = calendarService.Events.Insert(calendarEvent, calenderId);
+                    EventsResource.InsertRequest insertRequest = calendarService.Events.Insert(calendarEvent, CalendarId);
                     batchRequest.Queue<Event>(insertRequest,
                         (content, error, index, message) =>
                             InsertEventErrorMessage(content, error, index, message, eventIndexList));
@@ -254,30 +337,35 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Google
             return true;
         }
 
-        public async Task<bool> DeleteCalendarEvent(Appointment calendarAppointment, string calenderId)
+        public async Task<bool> DeleteCalendarEvent(Appointment calendarAppointment,
+            IDictionary<string, object> calendarSpecificData)
         {
+            CheckCalendarSpecificData(calendarSpecificData);
+
             //Get Calendar Service
             CalendarService calendarService = GetCalendarService();
 
-            if (calendarAppointment == null || string.IsNullOrEmpty(calenderId))
+            if (calendarAppointment == null || string.IsNullOrEmpty(CalendarId))
             {
                 return false;
             }
 
             //TODO: Manage return value for Event delete
             string returnValue =
-                await calendarService.Events.Delete(calenderId, calendarAppointment.AppointmentId).ExecuteAsync();
+                await calendarService.Events.Delete(CalendarId, calendarAppointment.AppointmentId).ExecuteAsync();
             return true;
         }
 
-
-        public async Task<bool> DeleteCalendarEvent(List<Appointment> calendarAppointment, string calenderId)
+        public async Task<bool> DeleteCalendarEvent(List<Appointment> calendarAppointment,
+            IDictionary<string, object> calendarSpecificData)
         {
+            CheckCalendarSpecificData(calendarSpecificData);
+
             var eventIndexList = new Dictionary<KeyValuePair<int, Appointment>, HttpResponseMessage>();
             //Get Calendar Service
             CalendarService calendarService = GetCalendarService();
 
-            if (calendarAppointment == null || string.IsNullOrEmpty(calenderId))
+            if (calendarAppointment == null || string.IsNullOrEmpty(CalendarId))
             {
                 return false;
             }
@@ -298,7 +386,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Google
                     }
 
                     Appointment appointment = calendarAppointment[i];
-                    EventsResource.DeleteRequest deleteRequest = calendarService.Events.Delete(calenderId,
+                    EventsResource.DeleteRequest deleteRequest = calendarService.Events.Delete(CalendarId,
                         appointment.AppointmentId);
                     batchRequest.Queue<Event>(deleteRequest,
                         (content, error, index, message) =>
@@ -311,8 +399,10 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Google
         }
 
         public async Task<List<Appointment>> GetCalendarEventsInRangeAsync(int daysInPast, int daysInFuture,
-            string calenderId)
+            IDictionary<string, object> calendarSpecificData)
         {
+            CheckCalendarSpecificData(calendarSpecificData);
+
             //Get Calendar Service
             CalendarService calendarService = GetCalendarService();
 
@@ -320,7 +410,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Google
 
             Events result = null;
 
-            EventsResource.ListRequest eventListRequest = calendarService.Events.List(calenderId);
+            EventsResource.ListRequest eventListRequest = calendarService.Events.List(CalendarId);
 
             // Add Filters to event List Request
             eventListRequest.TimeMin = DateTime.Now.AddDays(-(daysInPast));
@@ -355,39 +445,5 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Google
         }
 
         #endregion
-
-        private void InsertEventErrorMessage(Event content, RequestError error, int index, HttpResponseMessage message,
-            Dictionary<KeyValuePair<int, Appointment>, HttpResponseMessage> eventListIndex)
-        {
-            //var getKey = eventListIndex.FirstOrDefault(pair => pair.Key.Key == index);
-            // eventListIndex[getKey.Key] = message;
-        }
-
-        private Appointment CreateAppointment(Event googleEvent)
-        {
-            Appointment appointment;
-            if (googleEvent.Start.DateTime == null && googleEvent.End.DateTime == null)
-            {
-                appointment = new Appointment(googleEvent.Description, googleEvent.Location, googleEvent.Summary,
-                    DateTime.Parse(googleEvent.End.Date),
-                    DateTime.Parse(googleEvent.Start.Date), googleEvent.Id);
-                appointment.AllDayEvent = true;
-            }
-            else
-            {
-                appointment = new Appointment(googleEvent.Description, googleEvent.Location, googleEvent.Summary,
-                    googleEvent.End.DateTime,
-                    googleEvent.Start.DateTime, googleEvent.Id);
-            }
-
-            string id;
-            if (googleEvent.ExtendedProperties != null && googleEvent.ExtendedProperties.Private != null &&
-                googleEvent.ExtendedProperties.Private.TryGetValue("AppointmentId", out id))
-            {
-                appointment.AppointmentId = id;
-            }
-
-            return appointment;
-        }
     }
 }

@@ -36,16 +36,16 @@ using OutlookGoogleSyncRefresh.Domain.Models;
 
 namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
 {
-    [Export(typeof(IOutlookGoogleCalendarUpdateService))]
-    public class OutlookGoogleCalendarUpdateService : Model, IOutlookGoogleCalendarUpdateService
+    [Export(typeof(ICalendarUpdateService))]
+    public class CalendarUpdateService : Model, ICalendarUpdateService
     {
         private readonly ApplicationLogger _applicationLogger;
 
         #region Fields
 
         private Appointment _currentAppointment;
-        private List<Appointment> _googleAppointments;
-        private List<Appointment> _outlookAppointments;
+        private List<Appointment> _getDestinationAppointments;
+        private List<Appointment> _getSourceAppointments;
         private string _syncStatus;
 
         #endregion
@@ -53,7 +53,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
         #region Constructors
 
         [ImportingConstructor]
-        public OutlookGoogleCalendarUpdateService(IOutlookCalendarService outlookCalendarService,
+        public CalendarUpdateService(IOutlookCalendarService outlookCalendarService,
             IGoogleCalendarService googleCalendarService, ApplicationLogger applicationLogger)
         {
             _applicationLogger = applicationLogger;
@@ -68,16 +68,16 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
         public IOutlookCalendarService OutlookCalendarService { get; set; }
         public IGoogleCalendarService GoogleCalendarService { get; set; }
 
-        public List<Appointment> GoogleAppointments
+        public List<Appointment> GetDestinationAppointments
         {
-            get { return _googleAppointments; }
-            set { SetProperty(ref _googleAppointments, value); }
+            get { return _getDestinationAppointments; }
+            set { SetProperty(ref _getDestinationAppointments, value); }
         }
 
-        public List<Appointment> OutlookAppointments
+        public List<Appointment> GetSourceAppointments
         {
-            get { return _outlookAppointments; }
-            set { SetProperty(ref _outlookAppointments, value); }
+            get { return _getSourceAppointments; }
+            set { SetProperty(ref _getSourceAppointments, value); }
         }
 
         public Appointment CurrentAppointment
@@ -101,16 +101,26 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
         {
             SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
             SyncStatus = StatusHelper.GetMessage(SyncStateEnum.OutlookAppointmentsReading);
-            OutlookAppointments =
+
+            var outlookCalendarSpecificData= new Dictionary<string, object>
+            {
+                { "ProfileName", profileName },
+                { "OutlookCalendar", outlookCalendar }
+            };
+
+            GetSourceAppointments =
                 await
-                    OutlookCalendarService.GetOutlookAppointmentsAsync(daysInPast, daysInFuture, profileName,
-                        outlookCalendar);
-            SyncStatus = StatusHelper.GetMessage(SyncStateEnum.OutlookAppointmentsRead, OutlookAppointments.Count);
+                    OutlookCalendarService.GetCalendarEventsInRangeAsync(daysInPast, daysInFuture,outlookCalendarSpecificData);
+            SyncStatus = StatusHelper.GetMessage(SyncStateEnum.OutlookAppointmentsRead, GetSourceAppointments.Count);
             SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
             SyncStatus = StatusHelper.GetMessage(SyncStateEnum.GoogleAppointmentReading);
-            GoogleAppointments =
-                await GoogleCalendarService.GetCalendarEventsInRangeAsync(daysInPast, daysInFuture, calenderId);
-            SyncStatus = StatusHelper.GetMessage(SyncStateEnum.GoogleAppointmentRead, GoogleAppointments.Count);
+
+
+            var googleCalendarSpecificData = new Dictionary<string, object> { { "CalendarId", calenderId } };
+
+            GetDestinationAppointments =
+                await GoogleCalendarService.GetCalendarEventsInRangeAsync(daysInPast, daysInFuture, googleCalendarSpecificData);
+            SyncStatus = StatusHelper.GetMessage(SyncStateEnum.GoogleAppointmentRead, GetDestinationAppointments.Count);
             SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
 
             return true;
@@ -118,27 +128,27 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
 
         private List<Appointment> GetAppointmentsToDelete()
         {
-            if (GoogleAppointments.Any() && OutlookAppointments.Any())
+            if (GetDestinationAppointments.Any() && GetSourceAppointments.Any())
             {
-                return (from googleAppointment in GoogleAppointments
-                        let isFound = OutlookAppointments.Contains(googleAppointment)
+                return (from googleAppointment in GetDestinationAppointments
+                        let isFound = GetSourceAppointments.Contains(googleAppointment)
                         where !isFound
                         select googleAppointment).ToList();
             }
 
-            return GoogleAppointments;
+            return GetDestinationAppointments;
         }
 
         private List<Appointment> GetAppointmentsToAdd()
         {
-            if (GoogleAppointments.Any() && OutlookAppointments.Any())
+            if (GetDestinationAppointments.Any() && GetSourceAppointments.Any())
             {
-                return (from outlookAppointment in OutlookAppointments
-                        let isFound = GoogleAppointments.Contains(outlookAppointment)
+                return (from outlookAppointment in GetSourceAppointments
+                        let isFound = GetDestinationAppointments.Contains(outlookAppointment)
                         where !isFound
                         select outlookAppointment).ToList();
             }
-            return OutlookAppointments;
+            return GetSourceAppointments;
         }
 
         #endregion
@@ -161,6 +171,10 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
 
                 if (isSuccess)
                 {
+                    var googleCalendarSpecificData = new Dictionary<string, object>();
+                    googleCalendarSpecificData.Add("CalendarId", settings.SavedCalendar.Id);
+
+
                     //Updating entry delete status
                     SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
                     SyncStatus = StatusHelper.GetMessage(SyncStateEnum.ReadingEntriesToDelete);
@@ -171,7 +185,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
                     //Updating delete status
                     SyncStatus = StatusHelper.GetMessage(SyncStateEnum.DeletingEntries);
                     //Deleting entries
-                    isSuccess = await GoogleCalendarService.DeleteCalendarEvent(appointmentsToDelete, settings.SavedCalendar.Id);
+                    isSuccess = await GoogleCalendarService.DeleteCalendarEvent(appointmentsToDelete, googleCalendarSpecificData);
 
                     if (isSuccess)
                     {
@@ -182,10 +196,10 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
                         List<Appointment> calendarAppointments = GetAppointmentsToAdd();
                         SyncStatus = StatusHelper.GetMessage(SyncStateEnum.EntriesToAdd, calendarAppointments.Count);
                         SyncStatus = StatusHelper.GetMessage(SyncStateEnum.AddingEntries);
-                        isSuccess = await GoogleCalendarService.AddCalendarEvent(calendarAppointments, settings.SavedCalendar.Id,
-                                    settings.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Description),
-                                    settings.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Reminders),
-                                    settings.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Attendees));
+                        isSuccess = await GoogleCalendarService.AddCalendarEvent(calendarAppointments,
+                            settings.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Description),
+                            settings.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Reminders),
+                            settings.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Attendees), googleCalendarSpecificData);
                         if (isSuccess)
                         {
                             SyncStatus = StatusHelper.GetMessage(SyncStateEnum.AddEntriesComplete);

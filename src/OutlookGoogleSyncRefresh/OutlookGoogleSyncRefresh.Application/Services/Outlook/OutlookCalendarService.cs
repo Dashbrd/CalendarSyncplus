@@ -26,17 +26,30 @@ using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+
 using Microsoft.Office.Interop.Outlook;
 using Microsoft.Win32;
+
+using OutlookGoogleSyncRefresh.Common.Attributes;
+using OutlookGoogleSyncRefresh.Common.MetaData;
 using OutlookGoogleSyncRefresh.Domain.Models;
 
 #endregion
 
 namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
 {
-    [Export(typeof(IOutlookCalendarService))]
+    [Export(typeof(ICalendarService)),Export(typeof(IOutlookCalendarService))]
+    [ExportCalendarMetaData(CalendarServiceType.OutlookDesktop)]
     public class OutlookCalendarService : IOutlookCalendarService
     {
+        #region Properties
+
+        private OutlookCalendar OutlookCalendar { get; set; }
+
+        private string ProfileName { get; set; }
+
+        #endregion
+
         #region Private Methods
 
         private void GetOutlookApplication(out bool disposeOutlookInstances,
@@ -127,8 +140,9 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
                                     Organizer = appointmentItem.Organizer,
                                     ReminderSet = appointmentItem.ReminderSet,
                                     RequiredAttendees = appointmentItem.RequiredAttendees,
-                                    AppointmentId = appointmentItem.IsRecurring ?
-                                            string.Format("{0}_{1}", appointmentItem.EntryID, appointmentItem.Start.ToString("d")) : appointmentItem.EntryID,
+                                    AppointmentId = appointmentItem.IsRecurring
+                                        ? string.Format("{0}_{1}", appointmentItem.EntryID, appointmentItem.Start.ToString("d"))
+                                        : appointmentItem.EntryID,
                                     Visibility = (appointmentItem.Sensitivity == OlSensitivity.olNormal) ? "default" : "private",
                                     Transparency = (appointmentItem.BusyStatus == OlBusyStatus.olFree) ? "transparent" : "opaque"
                                 }));
@@ -291,10 +305,11 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
 
         public List<OutlookMailBox> GetAllMailBoxes(string profileName = "")
         {
+            ProfileName = profileName;
             bool disposeOutlookInstances;
             Microsoft.Office.Interop.Outlook.Application application;
             NameSpace nameSpace;
-            GetOutlookApplication(out disposeOutlookInstances, out application, out nameSpace, profileName);
+            GetOutlookApplication(out disposeOutlookInstances, out application, out nameSpace, ProfileName);
             Folders rootFolders = nameSpace.Folders;
             List<OutlookMailBox> mailBoxes = GetOutlookMailBoxes(rootFolders);
             //Close  and Cleanup
@@ -334,16 +349,68 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
             return await Task<List<string>>.Factory.StartNew(GetOutlookProfileList);
         }
 
-        public async Task<List<Appointment>> GetOutlookAppointmentsAsync(int daysInPast, int daysInFuture,
-            string profileName = "",
-            OutlookCalendar outlookCalendar = null)
+
+
+        public Task<List<Calendar>> GetAvailableCalendars(IDictionary<string, object> calendarSpecificData)
         {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> AddCalendarEvent(Appointment calenderAppointment, bool addDescription, bool addReminder,
+            bool addAttendees,
+            IDictionary<string, object> calendarSpecificData)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> DeleteCalendarEvent(Appointment calendarAppointment, IDictionary<string, object> calendarSpecificData)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> DeleteCalendarEvent(List<Appointment> calendarAppointments,
+            IDictionary<string, object> calendarSpecificData)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<List<Appointment>> GetCalendarEventsInRangeAsync(int daysInPast, int daysInFuture,
+            IDictionary<string, object> calendarSpecificData)
+        {
+            CheckCalendarSpecificData(calendarSpecificData);
             //Get Outlook Entries
             List<Appointment> appointmentList =
                 await
                     Task<List<Appointment>>.Factory.StartNew(
-                        () => GetAppointments(daysInPast, daysInFuture, profileName, outlookCalendar));
+                        () => GetAppointments(daysInPast, daysInFuture, ProfileName, OutlookCalendar));
             return appointmentList;
+        }
+
+        public Task<bool> AddCalendarEvent(List<Appointment> calenderAppointments, bool addDescription, bool addReminder,
+            bool addAttendees,
+            IDictionary<string, object> calendarSpecificData)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void CheckCalendarSpecificData(IDictionary<string, object> calendarSpecificData)
+        {
+            if (calendarSpecificData == null)
+            {
+                throw new ArgumentNullException("calendarSpecificData", "Calendar Specific Data cannot be null");
+            }
+
+            object profileValue;
+            object outlookCalendarValue;
+            if (!(calendarSpecificData.TryGetValue("ProfileName", out profileValue) &&
+                  calendarSpecificData.TryGetValue("OutlookCalendar", out outlookCalendarValue)))
+            {
+                throw new InvalidOperationException(
+                    string.Format(
+                        "{0} and {1}  keys should be present, both of them can be null in case Default Profile and Default Calendar will be used. {0} is or 'string' and {1} is of 'OutlookCalendar' type"));
+            }
+            ProfileName = profileValue as String;
+            OutlookCalendar = outlookCalendarValue as OutlookCalendar;
         }
 
         #endregion
