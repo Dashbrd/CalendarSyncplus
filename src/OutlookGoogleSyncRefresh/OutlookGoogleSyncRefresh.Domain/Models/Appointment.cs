@@ -146,7 +146,7 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
                 return false;
             }
             // Instances are considered equal if the ToString matches.
-            return ToString() == appointment.ToString();
+            return this.AppointmentId.Equals(appointment.AppointmentId) && ToString() == appointment.ToString();
         }
 
         public override int GetHashCode()

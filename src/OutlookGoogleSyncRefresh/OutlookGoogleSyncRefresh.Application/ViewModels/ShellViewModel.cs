@@ -447,13 +447,14 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             });
         }
 
-
+        private DateTime _syncStartTime;
         public async void SyncNow()
         {
             if (IsSyncInProgress)
             {
                 return;
             }
+            _syncStartTime = DateTime.Now;
             ShowNotification(true);
             IsSyncInProgress = true;
             UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.SyncStarted, DateTime.Now));
@@ -467,6 +468,8 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             {
                 UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.SyncFailed, result));
             }
+            UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.Line));
+            UpdateStatus(string.Format("Time Elapsed : {0} s", (int)DateTime.Now.Subtract(_syncStartTime).TotalSeconds));
             UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.NewLog));
             ShowNotification(false);
             IsSyncInProgress = false;

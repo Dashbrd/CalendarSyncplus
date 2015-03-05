@@ -19,6 +19,7 @@
 
 #region Imports
 
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
@@ -35,8 +36,8 @@ using OutlookGoogleSyncRefresh.Domain.Models;
 
 namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
 {
-    [Export(typeof(ICalendarUpdateService))]
-    public class OutlookGoogleCalendarUpdateService : Model, ICalendarUpdateService
+    [Export(typeof(IOutlookGoogleCalendarUpdateService))]
+    public class OutlookGoogleCalendarUpdateService : Model, IOutlookGoogleCalendarUpdateService
     {
         private readonly ApplicationLogger _applicationLogger;
 
@@ -149,6 +150,12 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
             bool isSuccess = false;
             if (settings != null && settings.SavedCalendar != null)
             {
+                SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
+                SyncStatus = "Calendar Sync Mode : Outlook -> Google";
+                SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
+                SyncStatus = string.Format("Sync Date Range - {0} - {1}", DateTime.Now.Subtract(new TimeSpan(settings.DaysInPast, 0, 0, 0)).ToString("D"),
+                    DateTime.Now.Add(new TimeSpan(settings.DaysInFuture, 0, 0, 0)).ToString("D"));
+
                 isSuccess = await GetAppointments(settings.DaysInPast, settings.DaysInFuture, settings.SavedCalendar.Id,
                             settings.OutlookSettings.OutlookProfileName, settings.OutlookSettings.OutlookCalendar);
 

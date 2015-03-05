@@ -379,6 +379,14 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Google
                     googleEvent.End.DateTime,
                     googleEvent.Start.DateTime, googleEvent.Id);
             }
+
+            string id;
+            if (googleEvent.ExtendedProperties != null && googleEvent.ExtendedProperties.Private != null &&
+                googleEvent.ExtendedProperties.Private.TryGetValue("AppointmentId", out id))
+            {
+                appointment.AppointmentId = id;
+            }
+
             return appointment;
         }
     }

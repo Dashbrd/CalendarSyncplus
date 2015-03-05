@@ -132,6 +132,8 @@
     <Compile Include="Controllers\IShellController.cs" />
     <Compile Include="Controllers\ShellController.cs" />
     <Compile Include="Services\ApplicationUpdateService.cs" />
+    <Compile Include="Services\CalendarUpdate\ICalendarUpdateServiceFactory.cs" />
+    <Compile Include="Services\CalendarUpdate\IOutlookGoogleCalendarUpdateService.cs" />
     <Compile Include="Services\CalendarUpdate\OutlookGoogleCalendarUpdateService.cs" />
     <Compile Include="Services\CalendarUpdate\CalendarUpdateServiceFactory.cs" />
     <Compile Include="Services\CalendarUpdate\ICalendarUpdateService.cs" />

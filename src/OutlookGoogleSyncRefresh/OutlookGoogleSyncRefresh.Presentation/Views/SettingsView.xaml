@@ -195,6 +195,60 @@
                 </controls:MetroProgressBar.Triggers>
             </controls:MetroProgressBar>
         </DataTemplate>
+        <DataTemplate DataType="{x:Type models:CalendarSyncModeEnum}"
+                      x:Key="CalendarEnumDataTemplate">
+            <Grid Height="{Binding Height,RelativeSource={RelativeSource AncestorType={x:Type ComboBox}}}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+              
+                <TextBlock Text="Outlook/EWS" VerticalAlignment="Center"/>
+                <Rectangle Fill="Gray"
+                           Width="40"
+                           Height="20"
+                           Grid.Column="1"
+                           Grid.RowSpan="2"
+                           VerticalAlignment="Center"
+                           Margin="10,0,10,0"
+                           Name="ImageRectangle"/>
+                <TextBlock Text="Google" 
+                           Grid.Column="2" VerticalAlignment="Center" />
+            </Grid>
+            <DataTemplate.Triggers>
+                <DataTrigger Binding="{Binding}"
+                             Value="{x:Static models:CalendarSyncModeEnum.OutlookGoogleOneWay}">
+                    <Setter TargetName="ImageRectangle"
+                            Property="OpacityMask">
+                        <Setter.Value>
+                            <VisualBrush Stretch="Fill"
+                                         Visual="{StaticResource appbar_arrow_right}" />
+                        </Setter.Value>
+                    </Setter>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding}"
+                             Value="{x:Static models:CalendarSyncModeEnum.OutlookGoogleOneWayToSource}">
+                    <Setter TargetName="ImageRectangle"
+                            Property="OpacityMask">
+                        <Setter.Value>
+                            <VisualBrush Stretch="Fill"
+                                         Visual="{StaticResource appbar_arrow_left}" />
+                        </Setter.Value>
+                    </Setter>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding}"
+                             Value="{x:Static models:CalendarSyncModeEnum.OutlookGoogleTwoWay}">
+                    <Setter TargetName="ImageRectangle"
+                            Property="OpacityMask">
+                        <Setter.Value>
+                            <VisualBrush Stretch="Fill"
+                                         Visual="{StaticResource appbar_arrow_right_left}" />
+                        </Setter.Value>
+                    </Setter>
+                </DataTrigger>
+            </DataTemplate.Triggers>
+        </DataTemplate>
     </UserControl.Resources>
     <Grid Margin="10">
         <Grid.RowDefinitions>
@@ -219,6 +273,7 @@
         </ContentControl>
         <TabControl Grid.Row="1">
             <TabItem Header="Calendars">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Hidden">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
@@ -226,69 +281,18 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
-                    <GroupBox Header="Calendar Sync Mode">
-                        <Grid>
-                            <Grid.Resources>
-                                <DataTemplate DataType="{x:Type models:CalendarSyncModeEnum}" x:Key="CalendarEnumDataTemplate">
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="Outlook / EWS"
-                                                   VerticalAlignment="Center"
-                                                   FontWeight="600" />
-                                        <Rectangle Fill="Gray"
-                                                   Width="40"
-                                                   Height="20"
-                                                   Margin="5,3,5,3"
-                                                   Name="ImageRectangle"/>
-                                        <TextBlock Text="Google"
-                                                   VerticalAlignment="Center"
-                                                   FontWeight="600" />
-                                    </StackPanel>
-                                    <DataTemplate.Triggers>
-                                        <DataTrigger Binding="{Binding}"
-                                                     Value="{x:Static models:CalendarSyncModeEnum.OutlookGoogleOneWay}">
-                                            <Setter TargetName="ImageRectangle"
-                                                    Property="OpacityMask">
-                                                <Setter.Value>
-                                                    <VisualBrush Stretch="Fill"
-                                                                 Visual="{StaticResource appbar_arrow_right}" />
-                                                </Setter.Value>
-                                            </Setter>
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding}"
-                                                     Value="{x:Static models:CalendarSyncModeEnum.OutlookGoogleOneWayToSource}">
-                                            <Setter TargetName="ImageRectangle"
-                                                    Property="OpacityMask">
-                                                <Setter.Value>
-                                                    <VisualBrush Stretch="Fill"
-                                                                 Visual="{StaticResource appbar_arrow_left}" />
-                                                </Setter.Value>
-                                            </Setter>
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding}"
-                                                     Value="{x:Static models:CalendarSyncModeEnum.OutlookGoogleTwoWay}">
-                                            <Setter TargetName="ImageRectangle"
-                                                    Property="OpacityMask">
-                                                <Setter.Value>
-                                                    <VisualBrush Stretch="Fill"
-                                                                 Visual="{StaticResource appbar_arrow_right_left}" />
-                                                </Setter.Value>
-                                            </Setter>
-                                        </DataTrigger>
-                                    </DataTemplate.Triggers>
-                                </DataTemplate>
-                            </Grid.Resources>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="2*" />
-                                <ColumnDefinition Width="3*" />
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Text="Calendar Sync Mode" Margin="5" VerticalAlignment="Center" />
-                            <ComboBox Margin="5"
-                                      Grid.Column="1"
+                        <GroupBox Header="Calendar Sync Mode">
+                            <Grid Margin="2">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="2*" />
+                                    <ColumnDefinition Width="3.5*" />
+                                </Grid.ColumnDefinitions>
+                            <TextBlock Text="Calendar Sync Mode" VerticalAlignment="Center"/>
+                            <ComboBox Grid.Column="1"
                                       ItemsSource="{Binding CalendarSyncModes,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                                       SelectedItem="{Binding SelectedCalendarSyncMode,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                                       ItemTemplate="{StaticResource CalendarEnumDataTemplate}"/>
-                           
-                        </Grid>
+                            </Grid>
                     </GroupBox>
                     <GroupBox Header="Outlook Settings" Grid.Row="1">
                         <Grid>
@@ -300,13 +304,13 @@
                             <RadioButton Content="Outlook Application"
                                          IsChecked="{Binding IsExchangeWebServices,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged,
                                                     Converter={StaticResource ResourceKey=InvertBooleanConverter}}"
-                                         Margin="4"
+                                         Margin="2"
                                          GroupName="OutlookApplicationGroup"
                                          Grid.ColumnSpan="2"
                                          Grid.Row="0" />
                             <RadioButton Content="Exchange Web Services"
                                          IsChecked="{Binding IsExchangeWebServices}"
-                                         Margin="4"
+                                         Margin="2"
                                          GroupName="OutlookApplicationGroup"
                                          Grid.Row="1"
                                          Grid.Column="0"
@@ -327,18 +331,19 @@
                                 </Grid.RowDefinitions>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="2*" />
-                                    <ColumnDefinition Width="3*" />
+                                        <ColumnDefinition Width="3.5*" />
                                 </Grid.ColumnDefinitions>
                                 <Button Margin="2"
                                         Height="30"
-                                        Content="Auto detect settings"
+                                        Content="Detect Settings"
                                         Command="{Binding AutoDetectExchangeServer}" />
-                                <TextBlock
+                                <TextBlock Visibility="Collapsed"
                                     Text="Help: Enter username to auto detect Exchange Web Server. Leave password empty if connected to corporate network."
                                     Grid.ColumnSpan="2"
                                     Grid.Row="1"
                                     VerticalAlignment="Center"
                                     Margin="2"
+                                    Width="200"
                                     TextWrapping="Wrap" />
                                 <TextBlock Grid.Row="2"
                                            Text="Email"
@@ -368,7 +373,7 @@
                                 </Grid.RowDefinitions>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="2*" />
-                                    <ColumnDefinition Width="3*" />
+                                        <ColumnDefinition Width="3.5*" />
                                 </Grid.ColumnDefinitions>
                                 <TextBlock Grid.Row="1"
                                            Text="Exchange Server Url"
@@ -397,17 +402,17 @@
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="2*" />
-                                <ColumnDefinition Width="3*" />
+                                    <ColumnDefinition Width="3.5*" />
                             </Grid.ColumnDefinitions>
                             <RadioButton Content="Default Profile"
                                          IsChecked="{Binding IsDefaultProfile,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                                         Margin="4"
+                                         Margin="2"
                                          GroupName="OutlookProfileGroup"
                                          Grid.ColumnSpan="2"
                                          Grid.Row="0" />
                             <RadioButton Content="Choose Profile"
                                          IsChecked="{Binding IsDefaultProfile,Converter={StaticResource ResourceKey=InvertBooleanConverter}}"
-                                         Margin="4"
+                                         Margin="2"
                                          Name="outlookProfileRadioButton"
                                          GroupName="OutlookProfileGroup"
                                          Grid.Row="1"
@@ -419,16 +424,16 @@
                                        Grid.Column="0"
                                        IsEnabled="False"
                                        VerticalAlignment="Center"
-                                       Margin="4" />
+                                       Margin="2" />
                             <ComboBox Grid.Row="2"
                                       Grid.Column="1"
                                       SelectedItem="{Binding Path=SelectedOutlookProfileName}"
-                                      Margin="4"
+                                      Margin="2"
                                       ItemsSource="{Binding Path=OutlookProfileList,UpdateSourceTrigger=PropertyChanged}"
                                       IsEnabled="{Binding Path=IsChecked,ElementName=outlookProfileRadioButton}" />
                             <RadioButton Content="Default MailBox and Calendar"
                                          IsChecked="{Binding IsDefaultMailBox,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                                         Margin="4"
+                                         Margin="2"
                                          GroupName="OutlookMailBoxGroup"
                                          Grid.ColumnSpan="2"
                                          Grid.Column="0"
@@ -436,7 +441,7 @@
                             <RadioButton Grid.Row="4"
                                          Content="Choose Another MailBox"
                                          IsChecked="{Binding IsDefaultMailBox,Converter={StaticResource ResourceKey=InvertBooleanConverter}}"
-                                         Margin="4"
+                                         Margin="2"
                                          GroupName="OutlookMailBoxGroup"
                                          Name="MailBoxRadioButton"
                                          Grid.ColumnSpan="2"
@@ -447,12 +452,12 @@
                                        Grid.Column="0"
                                        IsEnabled="False"
                                        VerticalAlignment="Center"
-                                       Margin="4" />
+                                       Margin="2" />
                             <ComboBox Grid.Row="5"
                                       Grid.Column="1"
                                       SelectedItem="{Binding Path=SelectedOutlookMailBox}"
                                       DisplayMemberPath="Name"
-                                      Margin="4"
+                                      Margin="2"
                                       ItemsSource="{Binding Path=OutlookMailBoxes}"
                                       IsEnabled="{Binding Path=IsChecked,ElementName=MailBoxRadioButton}" />
                             <TextBlock Text="Select Calendar"
@@ -460,10 +465,10 @@
                                        Grid.Column="0"
                                        IsEnabled="False"
                                        VerticalAlignment="Center"
-                                       Margin="4" />
+                                       Margin="2" />
                             <ComboBox Grid.Row="6"
                                       Grid.Column="1"
-                                      Margin="4"
+                                      Margin="2"
                                       DisplayMemberPath="Name"
                                       SelectedItem="{Binding Path=SelectedOutlookCalendar}"
                                       IsEnabled="{Binding Path=IsChecked,ElementName=MailBoxRadioButton}"
@@ -492,6 +497,7 @@
 
                     </GroupBox>
                 </Grid>
+                </ScrollViewer>
             </TabItem>
             <TabItem Header="Sync">
                 <Grid>

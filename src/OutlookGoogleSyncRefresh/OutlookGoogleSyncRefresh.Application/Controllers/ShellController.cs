@@ -64,8 +64,7 @@ namespace OutlookGoogleSyncRefresh.Application.Controllers
         public void Initialize()
         {
             //Initialize Services for Notification
-            SyncService.Initialize();
-            PropertyChangedEventManager.AddHandler(SyncService, SyncServiceNotificationHandler,"");
+            PropertyChangedEventManager.AddHandler(SyncService, SyncServiceNotificationHandler, "");
         }
 
 

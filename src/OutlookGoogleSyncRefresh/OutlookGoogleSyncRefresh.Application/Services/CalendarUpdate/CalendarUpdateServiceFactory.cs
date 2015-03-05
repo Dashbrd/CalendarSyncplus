@@ -1,18 +1,25 @@
-﻿namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
-{
-    public enum CalendarUpdateDirectionEnum
-    {
-        OutlookToGoogle,
-        GoogleToOutlook
-    }
+﻿using System;
+using System.ComponentModel.Composition;
+using OutlookGoogleSyncRefresh.Domain.Models;
 
-    public class CalendarUpdateServiceFactory
+namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
+{
+    [Export(typeof(ICalendarUpdateServiceFactory))]
+    public class CalendarUpdateServiceFactory : ICalendarUpdateServiceFactory
     {
-        public static ICalendarUpdateService GetCalendarUpdateService(
-            CalendarUpdateDirectionEnum calendarUpdateDirectionEnum)
+        public Lazy<IOutlookGoogleCalendarUpdateService> LazyOutlookGoogleService { get; set; }
+
+        [ImportingConstructor]
+        public CalendarUpdateServiceFactory(Lazy<IOutlookGoogleCalendarUpdateService> lazyOutlookGoogleService)
         {
-            if (calendarUpdateDirectionEnum == CalendarUpdateDirectionEnum.OutlookToGoogle)
+            LazyOutlookGoogleService = lazyOutlookGoogleService;
+        }
+
+        public ICalendarUpdateService GetCalendarUpdateService(Settings settings)
+        {
+            if (settings.CalendarSyncMode == CalendarSyncModeEnum.OutlookGoogleOneWay)
             {
+                return LazyOutlookGoogleService.Value;
             }
             return null;
         }

@@ -42,10 +42,10 @@ namespace OutlookGoogleSyncRefresh.Application.Services
         #region Fields
 
         private readonly ApplicationLogger _applicationLogger;
-        private readonly ICalendarUpdateService _calendarUpdateService;
+        private readonly ICalendarUpdateServiceFactory _calendarServiceFactory;
         private readonly IMessageService _messageService;
+        private ICalendarUpdateService _calendarUpdateService;
         private readonly ISettingsProvider _settingsProvider;
-        private bool _isSyncInProgress;
         private string _syncStatus;
         private Timer _syncTimer;
 
@@ -54,11 +54,11 @@ namespace OutlookGoogleSyncRefresh.Application.Services
         #region Constructors
 
         [ImportingConstructor]
-        public SyncService(ISettingsProvider settingsProvider, ICalendarUpdateService calendarUpdateService,
+        public SyncService(ISettingsProvider settingsProvider, ICalendarUpdateServiceFactory calendarServiceFactory,
             IMessageService messageService, ApplicationLogger applicationLogger)
         {
             _settingsProvider = settingsProvider;
-            _calendarUpdateService = calendarUpdateService;
+            _calendarServiceFactory = calendarServiceFactory;
             _messageService = messageService;
             _applicationLogger = applicationLogger;
         }
@@ -91,7 +91,6 @@ namespace OutlookGoogleSyncRefresh.Application.Services
             _syncTimer = null;
         }
 
-
         public async Task<string> SyncNowAsync(Settings settings)
         {
             try
@@ -104,6 +103,12 @@ namespace OutlookGoogleSyncRefresh.Application.Services
                 }
 
                 ResetSyncData();
+                if (_calendarUpdateService != null)
+                {
+                    Shutdown();
+                }
+                _calendarUpdateService = _calendarServiceFactory.GetCalendarUpdateService(settings);
+                Initialize();
                 bool isSyncComplete = await _calendarUpdateService.SyncCalendarAsync(settings);
                 return isSyncComplete ? null : "Error Occurred";
             }
@@ -134,7 +139,10 @@ namespace OutlookGoogleSyncRefresh.Application.Services
 
         public void Shutdown()
         {
-            PropertyChangedEventManager.RemoveHandler(_calendarUpdateService, CalendarUpdateNotificationChanged, "");
+            if (_calendarUpdateService != null)
+            {
+                PropertyChangedEventManager.RemoveHandler(_calendarUpdateService, CalendarUpdateNotificationChanged, "");
+            }
         }
 
         #endregion
