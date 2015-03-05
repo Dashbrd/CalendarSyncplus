@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Exchange.WebServices.Data;
 using OutlookGoogleSyncRefresh.Domain.Models;
@@ -15,42 +16,54 @@ namespace OutlookGoogleSyncRefresh.Application.Services.ExchangeWeb
     {
         #region IExchangeWebCalendarService Members
 
-        public async Task<List<AppAppointment>> GetAppointmentsAsync(int daysInPast, int daysInFuture,
+        public List<AppAppointment> GetAppointmentsAsync(int daysInPast, int daysInFuture,
             string profileName, OutlookCalendar outlookCalendar)
         {
             ExchangeService service = GetExchangeService();
-            FindItemsResults<Appointment> outlookItems;
             DateTime startDate = DateTime.Now.AddDays(-daysInPast);
             DateTime endDate = DateTime.Now.AddDays(+(daysInFuture + 1));
             var calendarview = new CalendarView(startDate, endDate);
 
             // Get Default Calendar
             var outlookAppointments = new List<AppAppointment>();
-            outlookItems = service.FindAppointments(outlookCalendar.StoreId, calendarview);
+            FindItemsResults<Appointment> exchangeAppointments = service.FindAppointments(outlookCalendar.EntryId, calendarview);
 
-
-            if (outlookItems != null)
+            if (exchangeAppointments != null)
             {
-                outlookAppointments.AddRange(
-                    outlookAppointments.Select(
-                        appointmentItem =>
-                            new AppAppointment(appointmentItem.Description, appointmentItem.Location,
-                                appointmentItem.Subject, appointmentItem.EndTime, appointmentItem.StartTime)
-                            {
-                                AllDayEvent = appointmentItem.AllDayEvent,
-                                OptionalAttendees = appointmentItem.OptionalAttendees,
-                                ReminderMinutesBeforeStart = appointmentItem.ReminderMinutesBeforeStart,
-                                Organizer = appointmentItem.Organizer,
-                                ReminderSet = appointmentItem.ReminderSet,
-                                RequiredAttendees = appointmentItem.RequiredAttendees,
-                            }));
-            }
+                foreach (Appointment exchangeAppointment in exchangeAppointments)
+                {
+                    exchangeAppointment.Load(new PropertySet(BasePropertySet.FirstClassProperties) { RequestedBodyType = BodyType.Text });
 
+                    var appointment = new AppAppointment(exchangeAppointment.Body, exchangeAppointment.Location,
+                        exchangeAppointment.Subject, exchangeAppointment.Start, exchangeAppointment.Start)
+                    {
+                        AllDayEvent = exchangeAppointment.IsAllDayEvent,
+                        OptionalAttendees = GetAttendees(exchangeAppointment.OptionalAttendees),
+                        ReminderMinutesBeforeStart = exchangeAppointment.ReminderMinutesBeforeStart,
+                        Organizer = exchangeAppointment.Organizer.Name,
+                        ReminderSet = exchangeAppointment.IsReminderSet,
+                        RequiredAttendees = GetAttendees(exchangeAppointment.RequiredAttendees),
+                    };
+                    outlookAppointments.Add(appointment);
+                }
+            }
 
             return outlookAppointments;
         }
 
-        public async Task<List<OutlookCalendar>> GetCalendarsAsync()
+        private string GetAttendees(IEnumerable<Attendee> attendeeCollection)
+        {
+            var attendees = new StringBuilder(string.Empty);
+
+            foreach (Attendee attendee in attendeeCollection)
+            {
+                attendees.Append(attendee.Name + ";");
+            }
+
+            return attendees.ToString();
+        }
+
+        public List<OutlookCalendar> GetCalendarsAsync()
         {
             ExchangeService service = GetExchangeService();
 
@@ -64,7 +77,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.ExchangeWeb
             // As a best practice, limit the properties returned to only those required.
             // In this case, return the folder ID, DisplayName, and the value of the isHiddenProp
             // extended property.
-            view.PropertySet = new PropertySet(BasePropertySet.IdOnly, FolderSchema.DisplayName, isHiddenProp);
+            view.PropertySet = new PropertySet(BasePropertySet.FirstClassProperties, FolderSchema.DisplayName, isHiddenProp);
 
             // Indicate a Traversal value of Deep, so that all subfolders are retrieved.
             view.Traversal = FolderTraversal.Deep;
@@ -85,8 +98,13 @@ namespace OutlookGoogleSyncRefresh.Application.Services.ExchangeWeb
 
         public ExchangeService GetExchangeService()
         {
-            var service = new ExchangeService(ExchangeVersion.Exchange2013_SP1);
-            service.UseDefaultCredentials = true;
+            var service = new ExchangeService(ExchangeVersion.Exchange2010_SP2)
+            {
+                UseDefaultCredentials = true,
+                EnableScpLookup=false,
+            };
+
+            service.AutodiscoverUrl("ankeshdave@outlook.com");
             //service.Credentials = new WebCredentials("user1@contoso.com", "password");
             return service;
         }

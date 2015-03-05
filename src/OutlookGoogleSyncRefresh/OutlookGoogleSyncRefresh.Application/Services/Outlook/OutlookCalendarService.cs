@@ -314,7 +314,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
             if (disposeOutlookInstances)
             {
                 // Casting Removes a warninig for Ambigous Call
-                ((_Application)application).Quit(); application.Quit();
+                ((_Application)application).Quit();
                 Marshal.FinalReleaseComObject(application);
             }
 

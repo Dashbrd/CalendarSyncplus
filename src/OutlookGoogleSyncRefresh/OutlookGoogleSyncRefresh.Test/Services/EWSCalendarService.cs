@@ -97,7 +97,7 @@ namespace Test.Services
 
             var result = calendarFolder.FindAppointments(new CalendarView(DateTime.Now.AddDays(-1), DateTime.Now.AddDays(1)));
 
-
+            
             foreach (Appointment appointment in result)
             {
                 appointment.Load(new PropertySet(BasePropertySet.FirstClassProperties) { RequestedBodyType = BodyType.Text });

@@ -22,9 +22,13 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 
 using Microsoft.Office.Interop.Outlook;
 using Microsoft.Win32;
+
+using OutlookGoogleSyncRefresh.Application.Services.ExchangeWeb;
+using OutlookGoogleSyncRefresh.Domain.Models;
 
 using Test.Model;
 using Test.Services;
@@ -41,14 +45,18 @@ namespace Test
             //application.InitializeComponent();
             //application.Run();
 
-            var service = new EWSCalendarService();
+            var service = new ExchangeWebCalendarService();
 
-            service.FindCalendarFolder();
+            var calendars = service.GetCalendarsAsync();
+            service.GetAppointmentsAsync(7, 7, "", calendars[0]);
+
 
             //var list = GetOutlookProfileList();
 
 
         }
+
+       
 
         public static List<string> GetOutlookProfileList()
         {

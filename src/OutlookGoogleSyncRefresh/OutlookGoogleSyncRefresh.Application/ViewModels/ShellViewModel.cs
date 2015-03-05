@@ -32,6 +32,7 @@ using OutlookGoogleSyncRefresh.Application.Services;
 using OutlookGoogleSyncRefresh.Application.Services.Google;
 using OutlookGoogleSyncRefresh.Application.Utilities;
 using OutlookGoogleSyncRefresh.Application.Views;
+using OutlookGoogleSyncRefresh.Common;
 using OutlookGoogleSyncRefresh.Common.Log;
 using OutlookGoogleSyncRefresh.Domain.Models;
 
@@ -388,7 +389,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
                 }
                 catch (Exception exception)
                 {
-                    //Ignore in this release
+                        //TODO: Ignore in this release
                     //ApplicationLogger.LogError(exception.Message);
                 }
             }
@@ -397,15 +398,8 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
 
         private void InvokeOnCurrentDispatcher(Action action)
         {
-            if (Dispatcher.CurrentDispatcher.CheckAccess())
-            {
-                action.Invoke();
+            DispatcherHelper.CheckBeginInvokeOnUI(action);
             }
-            else
-            {
-                Dispatcher.CurrentDispatcher.Invoke(action, DispatcherPriority.Normal);
-            }
-        }
 
         #endregion
 
@@ -448,7 +442,12 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
         }
 
         private DateTime _syncStartTime;
-        public async void SyncNow()
+        public void SyncNow()
+        {
+            Task.Factory.StartNew(StartSyncTask);
+        }
+
+        private void StartSyncTask()
         {
             if (IsSyncInProgress)
             {
@@ -458,8 +457,14 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             ShowNotification(true);
             IsSyncInProgress = true;
             UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.SyncStarted, DateTime.Now));
-            var result = await SyncStartService.SyncNowAsync(Settings);
-            if (string.IsNullOrEmpty(result))
+            SyncStartService.SyncNowAsync(Settings).ContinueWith(OnSyncCompleted);
+        }
+
+        private void OnSyncCompleted(Task<string> task)
+        {
+            var result = task.Result;
+
+            if (!string.IsNullOrEmpty(result))
             {
                 UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.SyncSuccess, DateTime.Now));
                 LastSyncTime = DateTime.Now;
@@ -472,16 +477,13 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             UpdateStatus(string.Format("Time Elapsed : {0} s", (int)DateTime.Now.Subtract(_syncStartTime).TotalSeconds));
             UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.NewLog));
             ShowNotification(false);
-            IsSyncInProgress = false;
-
             if (Settings.SyncFrequency != null)
             {
                 NextSyncTime = Settings.SyncFrequency.GetNextSyncTime();
             }
-
             CheckForUpdates();
+            IsSyncInProgress = false;
         }
-
 
         public void ErrorMessageChanged(string message)
         {
@@ -509,5 +511,10 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
         }
 
         #endregion
+
+        protected override void OnPropertyChanged(PropertyChangedEventArgs e)
+        {
+            DispatcherHelper.CheckBeginInvokeOnUI(() => base.OnPropertyChanged(e));
+        }
     }
 }
