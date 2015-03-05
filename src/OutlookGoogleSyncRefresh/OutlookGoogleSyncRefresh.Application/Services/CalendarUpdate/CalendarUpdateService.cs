@@ -30,6 +30,7 @@ using OutlookGoogleSyncRefresh.Application.Services.Google;
 using OutlookGoogleSyncRefresh.Application.Services.Outlook;
 using OutlookGoogleSyncRefresh.Application.Utilities;
 using OutlookGoogleSyncRefresh.Common.Log;
+using OutlookGoogleSyncRefresh.Common.MetaData;
 using OutlookGoogleSyncRefresh.Domain.Models;
 
 #endregion
@@ -67,6 +68,9 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
 
         public IOutlookCalendarService OutlookCalendarService { get; set; }
         public IGoogleCalendarService GoogleCalendarService { get; set; }
+
+        [ImportMany]
+        public Lazy<ICalendarService,ICalendarServiceMetaData>[] CalendarServicesFactoryLazy { get; set; }
 
         public List<Appointment> GetDestinationAppointments
         {
