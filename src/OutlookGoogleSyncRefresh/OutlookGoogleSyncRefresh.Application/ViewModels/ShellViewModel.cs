@@ -333,7 +333,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
                 IsPeriodicSyncStarted = false;
 
                 UpdateStatus(string.Format("Period Sync Stopped : {0}", DateTime.Now));
-                UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.NewLog));
+                UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.LogSeparator));
                 ApplicationLogger.LogInfo("Periodic Sync Stopped");
             }
             else
@@ -348,7 +348,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
                     ApplicationLogger.LogInfo("Periodic Sync Started");
                     IsPeriodicSyncStarted = true;
                     UpdateStatus(string.Format("Period Sync Started : {0}", DateTime.Now));
-                    UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.NewLog));
+                    UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.LogSeparator));
                 }
             }
         }
@@ -497,7 +497,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             }
             UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.Line));
             UpdateStatus(string.Format("Time Elapsed : {0} s", (int)DateTime.Now.Subtract(LastSyncTime.GetValueOrDefault()).TotalSeconds));
-            UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.NewLog));
+            UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.LogSeparator));
             ShowNotification(false);
             if (Settings.SyncFrequency != null)
             {

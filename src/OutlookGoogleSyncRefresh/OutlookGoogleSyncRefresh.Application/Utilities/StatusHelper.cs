@@ -1,16 +1,17 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace OutlookGoogleSyncRefresh.Application.Utilities
 {
     public enum SyncStateEnum
     {
-        NewLog,
+        LogSeparator,
         Line,
         SyncStarted,
-        OutlookAppointmentsReading,
-        OutlookAppointmentsRead,
-        GoogleAppointmentReading,
-        GoogleAppointmentRead,
+        SourceAppointmentsReading,
+        SourceAppointmentsRead,
+        DestAppointmentReading,
+        DestAppointmentRead,
         ReadingEntriesToDelete,
         EntriesToDelete,
         DeletingEntries,
@@ -25,72 +26,39 @@ namespace OutlookGoogleSyncRefresh.Application.Utilities
         SyncFailed,
     }
 
-    public static class StatusHelper
+    public class StatusHelper
     {
-        private const string BreakConstant =  "------------------------------------------------------------------------------";
-        private const string NewLogConstant = "***************************************************************************";
+        private const string LineConstant = "------------------------------------------------------------------------------";
+        private const string LogSeparatorConstant = "***************************************************************************";
+        static readonly Dictionary<SyncStateEnum, string> StatusDictionary = new Dictionary<SyncStateEnum, string>();
+        static StatusHelper()
+        {
+            StatusDictionary.Add(SyncStateEnum.LogSeparator, LogSeparatorConstant);
+            StatusDictionary.Add(SyncStateEnum.Line, LineConstant);
+            StatusDictionary.Add(SyncStateEnum.SyncStarted, "Sync started : {0}");
+            StatusDictionary.Add(SyncStateEnum.SourceAppointmentsReading, "Reading {0} calendar...");
+            StatusDictionary.Add(SyncStateEnum.SourceAppointmentsRead, "{0} entries read : {1}");
+            StatusDictionary.Add(SyncStateEnum.DestAppointmentReading, "Reading {0} calendar...");
+            StatusDictionary.Add(SyncStateEnum.DestAppointmentRead, "{0} entries read : {0}");
+            StatusDictionary.Add(SyncStateEnum.ReadingEntriesToDelete, "Getting {0} entries to be deleted...");
+            StatusDictionary.Add(SyncStateEnum.EntriesToDelete, "Getting {0} entries to be deleted...");
+            StatusDictionary.Add(SyncStateEnum.DeletingEntries, "Deleting {0} entries...");
+            StatusDictionary.Add(SyncStateEnum.DeletingEntriesComplete, "Delete Complete.");
+            StatusDictionary.Add(SyncStateEnum.DeletingEntriesFailed, "Delete Failed.");
+            StatusDictionary.Add(SyncStateEnum.ReadingEntriesToAdd, "Getting {0} entries to be added...");
+            StatusDictionary.Add(SyncStateEnum.EntriesToAdd, "Found {1} {0} entries to add");
+            StatusDictionary.Add(SyncStateEnum.AddingEntries, "Adding {0} entries...");
+            StatusDictionary.Add(SyncStateEnum.AddEntriesComplete, "Add Complete.");
+            StatusDictionary.Add(SyncStateEnum.AddEntriesFailed, "Add Failed.");
+            StatusDictionary.Add(SyncStateEnum.SyncSuccess, "Sync completed");
+            StatusDictionary.Add(SyncStateEnum.SyncFailed, "Sync failed : {0}");
+        }
         public static string GetMessage(SyncStateEnum syncStateEnum, params object[] values)
         {
             string message = string.Empty;
-            switch (syncStateEnum)
+            if (StatusDictionary.ContainsKey(syncStateEnum))
             {
-                case SyncStateEnum.NewLog:
-                    message = NewLogConstant;
-                    break;
-                case SyncStateEnum.Line:
-                    message = BreakConstant;
-                    break;
-                case SyncStateEnum.SyncStarted:
-                    message = "Sync started : {0}";
-                    break;
-                case SyncStateEnum.OutlookAppointmentsReading:
-                    message = "Reading outlook calendar...";
-                    break;
-                case SyncStateEnum.OutlookAppointmentsRead:
-                    message = "Outlook entries read : {0}";
-                    break;
-                case SyncStateEnum.GoogleAppointmentReading:
-                    message = "Reading Google calendar...";
-                    break;
-                case SyncStateEnum.GoogleAppointmentRead:
-                    message = "Google entries read : {0}";
-                    break;
-                case SyncStateEnum.ReadingEntriesToDelete:
-                    message = "Getting Google entries to be deleted...";
-                    break;
-                case SyncStateEnum.EntriesToDelete:
-                    message = "Found {0} Google entries to delete";
-                    break;
-                case SyncStateEnum.DeletingEntries:
-                    message = "Deleting Google entries...";
-                    break;
-                case SyncStateEnum.DeletingEntriesComplete:
-                    message = "Delete Complete.";
-                    break;
-                case SyncStateEnum.DeletingEntriesFailed:
-                    message = "Delete Failed.";
-                    break;
-                case SyncStateEnum.ReadingEntriesToAdd:
-                    message = "Getting Outlook entries to be added to Google...";
-                    break;
-                case SyncStateEnum.EntriesToAdd:
-                    message = "Found {0} Outlook entries to add";
-                    break;
-                case SyncStateEnum.AddingEntries:
-                    message = "Adding Google entries...";
-                    break;
-                case SyncStateEnum.AddEntriesComplete:
-                    message = "Add Complete.";
-                    break;
-                case SyncStateEnum.AddEntriesFailed:
-                    message = "Add Failed.";
-                    break;
-                case SyncStateEnum.SyncSuccess:
-                    message = "Sync completed";
-                    break;
-                case SyncStateEnum.SyncFailed:
-                    message = "Sync failed : {0}";
-                    break;
+                message = StatusDictionary[syncStateEnum];
             }
             if (values == null)
                 return message;
