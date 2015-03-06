@@ -207,7 +207,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
                     SyncStatus = StatusHelper.GetMessage(SyncStateEnum.DeletingEntries);
                     //Deleting entries
                     isSuccess =
-                        await DestinationCalendarService.DeleteCalendarEvent(appointmentsToDelete, sourceCalendarSpecificData);
+                        await DestinationCalendarService.DeleteCalendarEvent(appointmentsToDelete, destinationCalendarSpecificData);
 
                     if (isSuccess)
                     {
@@ -221,7 +221,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
                         isSuccess = await DestinationCalendarService.AddCalendarEvent(calendarAppointments,
                             settings.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Description),
                             settings.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Reminders),
-                            settings.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Attendees), sourceCalendarSpecificData);
+                            settings.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Attendees), destinationCalendarSpecificData);
                         SyncStatus =
                             StatusHelper.GetMessage(isSuccess ? SyncStateEnum.AddEntriesComplete : SyncStateEnum.AddEntriesFailed);
                         SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
