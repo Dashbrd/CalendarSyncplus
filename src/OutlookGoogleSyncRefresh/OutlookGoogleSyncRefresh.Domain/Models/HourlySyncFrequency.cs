@@ -23,7 +23,7 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
             {
                 return true;
             }
-            
+
             return false;
         }
 
@@ -31,11 +31,15 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
         {
             try
             {
+                if (Hours == 0 && Minutes == 0)
+                {
+                    return dateTimeNow;
+                }
                 var timeSpan = new TimeSpan(Hours, Minutes, 0);
                 DateTime dateTime = StartTime;
                 while (dateTimeNow.Subtract(dateTime).TotalSeconds > timeSpan.TotalSeconds)
                 {
-                     dateTime = dateTime.Add(timeSpan);
+                    dateTime = dateTime.Add(timeSpan);
                 }
 
                 if (dateTimeNow.Subtract(dateTime).TotalSeconds > 0)
@@ -46,7 +50,7 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
             }
             catch
             {
-                
+
             }
             return DateTime.Now;
         }
