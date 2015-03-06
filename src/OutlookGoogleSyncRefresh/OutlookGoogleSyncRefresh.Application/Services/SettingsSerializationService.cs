@@ -126,6 +126,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services
             {
                 return GetDefaultSettings();
             }
+            result.SetCalendarTypes();
             return result;
         }
 
@@ -143,6 +144,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services
             settings.OutlookSettings.OutlookOptions = OutlookOptionsEnum.DefaultProfile &
                                                       OutlookOptionsEnum.DefaultCalendar;
             settings.CalendarEntryOptions = CalendarEntryOptionsEnum.None;
+            settings.SetCalendarTypes();
             return settings;
         }
 

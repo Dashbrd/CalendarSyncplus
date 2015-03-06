@@ -30,6 +30,7 @@ using OutlookGoogleSyncRefresh.Application.Services.Google;
 using OutlookGoogleSyncRefresh.Application.Services.Outlook;
 using OutlookGoogleSyncRefresh.Application.Utilities;
 using OutlookGoogleSyncRefresh.Common.Log;
+using OutlookGoogleSyncRefresh.Common.MetaData;
 using OutlookGoogleSyncRefresh.Domain.Models;
 
 #endregion
@@ -106,9 +107,9 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
             if (GetDestinationAppointments.Any() && GetSourceAppointments.Any())
             {
                 return (from googleAppointment in GetDestinationAppointments
-                    let isFound = GetSourceAppointments.Contains(googleAppointment)
-                    where !isFound
-                    select googleAppointment).ToList();
+                        let isFound = GetSourceAppointments.Contains(googleAppointment)
+                        where !isFound
+                        select googleAppointment).ToList();
             }
 
             return GetDestinationAppointments;
@@ -119,9 +120,9 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
             if (GetDestinationAppointments.Any() && GetSourceAppointments.Any())
             {
                 return (from outlookAppointment in GetSourceAppointments
-                    let isFound = GetDestinationAppointments.Contains(outlookAppointment)
-                    where !isFound
-                    select outlookAppointment).ToList();
+                        let isFound = GetDestinationAppointments.Contains(outlookAppointment)
+                        where !isFound
+                        select outlookAppointment).ToList();
             }
             return GetSourceAppointments;
         }
@@ -143,10 +144,10 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
         }
 
         public Appointment CurrentAppointment
-        {
+            {
             get { return _currentAppointment; }
             set { SetProperty(ref _currentAppointment, value); }
-        }
+            }
 
         public string SyncStatus
         {
@@ -161,7 +162,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
         public async Task<bool> SyncCalendarAsync(Settings settings)
         {
             bool isSuccess = false;
-            if (settings != null && settings.SavedCalendar != null)
+            if (settings != null && settings.GoogleCalendar != null)
             {
                 SyncStatus = "Calendar Sync Mode : Outlook -> Google";
                 SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
@@ -169,13 +170,13 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
                     DateTime.Now.Subtract(new TimeSpan(settings.DaysInPast, 0, 0, 0)).ToString("D"),
                     DateTime.Now.Add(new TimeSpan(settings.DaysInFuture, 0, 0, 0)).ToString("D"));
 
-                isSuccess = await GetAppointments(settings.DaysInPast, settings.DaysInFuture, settings.SavedCalendar.Id,
-                    settings.OutlookSettings.OutlookProfileName, settings.OutlookSettings.OutlookCalendar);
+                isSuccess = await GetAppointments(settings.DaysInPast, settings.DaysInFuture, settings.GoogleCalendar.Id,
+                            settings.OutlookSettings.OutlookProfileName, settings.OutlookSettings.OutlookCalendar);
 
                 if (isSuccess)
                 {
                     var googleCalendarSpecificData = new Dictionary<string, object>();
-                    googleCalendarSpecificData.Add("CalendarId", settings.SavedCalendar.Id);
+                    googleCalendarSpecificData.Add("CalendarId", settings.GoogleCalendar.Id);
 
                     //Updating entry delete status
                     SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);

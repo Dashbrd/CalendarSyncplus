@@ -535,7 +535,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
                     await GetOutlookMailBoxesInternal();
                 }
 
-                if (Settings != null && Settings.SavedCalendar != null)
+                if (Settings != null && Settings.GoogleCalendar != null)
                 {
                     await GetGoogleCalendarInternal();
                 }
@@ -557,7 +557,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             IsLoading = true;
             SettingsSaved = false;
             Settings.IsFirstSave = false;
-            Settings.SavedCalendar = SelectedCalendar;
+            Settings.GoogleCalendar = SelectedCalendar;
             Settings.DaysInFuture = DaysInFuture;
             Settings.DaysInPast = DaysInPast;
             Settings.SyncFrequency = SyncFrequencyViewModel.GetFrequency();
@@ -577,6 +577,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             Settings.ExchangeServerSettings.Password = Password;
             Settings.ExchangeServerSettings.ExchangeServerUrl = ExchangeServerUrl;
             Settings.CalendarSyncMode = SelectedCalendarSyncMode;
+            Settings.SetCalendarTypes();
             try
             {
                 bool result = await SettingsSerializationService.SerializeSettingsAsync(Settings);
@@ -635,8 +636,8 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             GoogleCalenders = calendars;
             if (GoogleCalenders.Any())
             {
-                SelectedCalendar = Settings != null && Settings.SavedCalendar != null
-                    ? GoogleCalenders.FirstOrDefault(t => t.Id.Equals(Settings.SavedCalendar.Id))
+                SelectedCalendar = Settings != null && Settings.GoogleCalendar != null
+                    ? GoogleCalenders.FirstOrDefault(t => t.Id.Equals(Settings.GoogleCalendar.Id))
                     : GoogleCalenders.First();
             }
         }
