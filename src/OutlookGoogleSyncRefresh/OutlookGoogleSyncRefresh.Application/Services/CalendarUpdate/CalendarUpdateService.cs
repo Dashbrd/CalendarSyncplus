@@ -108,7 +108,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
             SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
             SyncStatus = StatusHelper.GetMessage(SyncStateEnum.OutlookAppointmentsReading);
 
-            var outlookCalendarSpecificData= new Dictionary<string, object>
+            var outlookCalendarSpecificData = new Dictionary<string, object>
             {
                 { "ProfileName", profileName },
                 { "OutlookCalendar", outlookCalendar }
@@ -116,7 +116,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
 
             GetSourceAppointments =
                 await
-                    OutlookCalendarService.GetCalendarEventsInRangeAsync(daysInPast, daysInFuture,outlookCalendarSpecificData);
+                    OutlookCalendarService.GetCalendarEventsInRangeAsync(daysInPast, daysInFuture, outlookCalendarSpecificData);
             SyncStatus = StatusHelper.GetMessage(SyncStateEnum.OutlookAppointmentsRead, GetSourceAppointments.Count);
             SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
             SyncStatus = StatusHelper.GetMessage(SyncStateEnum.GoogleAppointmentReading);
@@ -161,7 +161,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
 
         public ICalendarService GetCalendarService(CalendarServiceType serviceType)
         {
-            var serviceInstance =  CalendarServicesFactoryLazy.FirstOrDefault(list => list.Metadata.ServiceType == serviceType);
+            var serviceInstance = CalendarServicesFactoryLazy.FirstOrDefault(list => list.Metadata.ServiceType == serviceType);
 
             if (serviceInstance != null)
             {
@@ -177,20 +177,20 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
 
 
             bool isSuccess = false;
-            if (settings != null && settings.SavedCalendar != null)
+            if (settings != null && settings.GoogleCalendar != null)
             {
                 SyncStatus = "Calendar Sync Mode : Outlook -> Google";
                 SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
                 SyncStatus = string.Format("Sync Date Range - {0} - {1}", DateTime.Now.Subtract(new TimeSpan(settings.DaysInPast, 0, 0, 0)).ToString("D"),
                     DateTime.Now.Add(new TimeSpan(settings.DaysInFuture, 0, 0, 0)).ToString("D"));
 
-                isSuccess = await GetAppointments(settings.DaysInPast, settings.DaysInFuture, settings.SavedCalendar.Id,
+                isSuccess = await GetAppointments(settings.DaysInPast, settings.DaysInFuture, settings.GoogleCalendar.Id,
                             settings.OutlookSettings.OutlookProfileName, settings.OutlookSettings.OutlookCalendar);
 
                 if (isSuccess)
                 {
                     var googleCalendarSpecificData = new Dictionary<string, object>();
-                    googleCalendarSpecificData.Add("CalendarId", settings.SavedCalendar.Id);
+                    googleCalendarSpecificData.Add("CalendarId", settings.GoogleCalendar.Id);
 
 
                     //Updating entry delete status

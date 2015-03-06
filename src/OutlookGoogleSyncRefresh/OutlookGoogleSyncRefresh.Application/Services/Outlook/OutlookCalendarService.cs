@@ -30,7 +30,6 @@ using System.Threading.Tasks;
 using Microsoft.Office.Interop.Outlook;
 using Microsoft.Win32;
 
-using OutlookGoogleSyncRefresh.Common.Attributes;
 using OutlookGoogleSyncRefresh.Common.MetaData;
 using OutlookGoogleSyncRefresh.Domain.Models;
 

@@ -77,7 +77,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services
         public async Task<bool> Start(ElapsedEventHandler timerCallback)
         {
             Settings settings = _settingsProvider.GetSettings();
-            if (settings.SavedCalendar == null || !settings.ValidateOutlookSettings())
+            if (settings.GoogleCalendar == null || !settings.ValidateOutlookSettings())
             {
                 _messageService.ShowMessageAsync("Please configure Google and Outlook calendar in settings to continue.");
                 return false;
@@ -101,7 +101,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services
         {
             try
             {
-                if (settings.SavedCalendar == null || !settings.ValidateOutlookSettings())
+                if (settings.GoogleCalendar == null || !settings.ValidateOutlookSettings())
                 {
                     _messageService.ShowMessageAsync(
                         "Please configure Google and Outlook calendar in settings to continue.");
