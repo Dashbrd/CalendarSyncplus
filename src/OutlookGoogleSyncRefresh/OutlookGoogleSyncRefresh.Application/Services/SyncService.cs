@@ -43,10 +43,9 @@ namespace OutlookGoogleSyncRefresh.Application.Services
         #region Fields
 
         private readonly ApplicationLogger _applicationLogger;
-        private readonly ICalendarUpdateServiceFactory _calendarServiceFactory;
         private readonly IMessageService _messageService;
-        private ICalendarUpdateService _calendarUpdateService;
         private readonly ISettingsProvider _settingsProvider;
+        private readonly ICalendarUpdateService _calendarUpdateService;
         private string _syncStatus;
         private Timer _syncTimer;
 
@@ -55,11 +54,11 @@ namespace OutlookGoogleSyncRefresh.Application.Services
         #region Constructors
 
         [ImportingConstructor]
-        public SyncService(ISettingsProvider settingsProvider, ICalendarUpdateServiceFactory calendarServiceFactory,
+        public SyncService(ISettingsProvider settingsProvider, ICalendarUpdateService calendarUpdateService,
             IMessageService messageService, ApplicationLogger applicationLogger)
         {
             _settingsProvider = settingsProvider;
-            _calendarServiceFactory = calendarServiceFactory;
+            _calendarUpdateService = calendarUpdateService;
             _messageService = messageService;
             _applicationLogger = applicationLogger;
         }
@@ -107,15 +106,9 @@ namespace OutlookGoogleSyncRefresh.Application.Services
                         "Please configure Google and Outlook calendar in settings to continue.");
                     return "Invalid Settings";
                 }
-
                 ResetSyncData();
-                
-                _calendarUpdateService = _calendarServiceFactory.GetCalendarUpdateService(settings);
-                Initialize();
-
                 bool isSyncComplete = await _calendarUpdateService.SyncCalendarAsync(settings);
                 return isSyncComplete ? null : "Error Occurred";
-                Shutdown();
             }
             catch (AggregateException exception)
             {

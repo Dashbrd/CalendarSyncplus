@@ -132,9 +132,9 @@
     <Compile Include="Controllers\IShellController.cs" />
     <Compile Include="Controllers\ShellController.cs" />
     <Compile Include="Services\ApplicationUpdateService.cs" />
-    <Compile Include="Services\CalendarUpdate\ICalendarUpdateServiceFactory.cs" />
+    <Compile Include="Services\CalendarUpdate\ICalendarServiceFactory.cs" />
     <Compile Include="Services\CalendarUpdate\CalendarUpdateService.cs" />
-    <Compile Include="Services\CalendarUpdate\CalendarUpdateServiceFactory.cs" />
+    <Compile Include="Services\CalendarUpdate\CalendarServiceFactory.cs" />
     <Compile Include="Services\CalendarUpdate\ICalendarUpdateService.cs" />
     <Compile Include="Services\ExchangeWeb\ExchangeWebCalendarService.cs" />
     <Compile Include="Services\ExchangeWeb\IExchangeWebCalendarService.cs" />
