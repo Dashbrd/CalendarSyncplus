@@ -37,7 +37,7 @@ using OutlookGoogleSyncRefresh.Domain.Models;
 
 namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
 {
-    [Export(typeof(ICalendarService)),Export(typeof(IOutlookCalendarService))]
+    [Export(typeof(ICalendarService)), Export(typeof(IOutlookCalendarService))]
     [ExportMetadata("ServiceType", CalendarServiceType.OutlookDesktop)]
     public class OutlookCalendarService : IOutlookCalendarService
     {
@@ -414,7 +414,6 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
             NameSpace nameSpace = null;
             MAPIFolder defaultOutlookCalender = null;
             Items outlookItems = null;
-            var outlookAppointments = new List<Appointment>();
             // Get Application and Namespace
             GetOutlookApplication(out disposeOutlookInstances, out application, out nameSpace, profileName);
 
@@ -443,23 +442,35 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
                     appt.Start = calenderAppointment.StartTime.GetValueOrDefault();
                     appt.End = calenderAppointment.EndTime.GetValueOrDefault();
                 }
-                Recipient recipRequired =
-                    appt.Recipients.Add("Ryan Gregg");
-                recipRequired.Type =
-                    (int)OlMeetingRecipientType.olRequired;
-                Recipient recipOptional =
-                    appt.Recipients.Add("Peter Allenspach");
-                recipOptional.Type =
-                    (int)OlMeetingRecipientType.olOptional;
-                Recipient recipConf =
-                   appt.Recipients.Add("Conf Room 36/2021 (14) AV");
-                recipConf.Type =
-                    (int)OlMeetingRecipientType.olResource;
+                if (addAttendees)
+                {
+                    //foreach (var attendee in calenderAppointment.RequiredAttendees)
+                    //{
+                    //    Recipient recipRequired =
+                    //    appt.Recipients.Add(attendee);
+                    //    recipRequired.Type =
+                    //        (int)OlMeetingRecipientType.olRequired;
+                    //}
+
+                    //foreach (var attendee in calenderAppointment.OptionalAttendees)
+                    //{
+                    //    Recipient recipOptional =
+                    //        appt.Recipients.Add(attendee);
+                    //    recipOptional.Type =
+                    //        (int)OlMeetingRecipientType.olOptional;
+                    //}
+
+                    //Recipient recipConf =
+                    //    appt.Recipients.Add("Conf Room 36/2021 (14) AV");
+
+                    //recipConf.Type =
+                    //    (int)OlMeetingRecipientType.olResource;
+                }
                 appt.Recipients.ResolveAll();
                 appt.Display(false);
                 defaultOutlookCalender.Items.Add(appt);
             }
-            
+
             //Close  and Cleanup
 
             if (disposeOutlookInstances)
