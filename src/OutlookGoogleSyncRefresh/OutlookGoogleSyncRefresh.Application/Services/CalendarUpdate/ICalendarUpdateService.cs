@@ -23,7 +23,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading.Tasks;
 
-using OutlookGoogleSyncRefresh.Common.MetaData;
 using OutlookGoogleSyncRefresh.Domain.Models;
 
 #endregion
@@ -38,14 +37,14 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
         List<Appointment> GetSourceAppointments { get; set; }
         Appointment CurrentAppointment { get; set; }
         string SyncStatus { get; set; }
+        ICalendarService SourceCalendarService { get; set; }
+        ICalendarService DestinationCalendarService { get; set; }
 
         #endregion
 
         #region Public Methods
 
         Task<bool> SyncCalendarAsync(Settings settings);
-
-        ICalendarService GetCalendarService(CalendarServiceType serviceType);
 
         #endregion
     }

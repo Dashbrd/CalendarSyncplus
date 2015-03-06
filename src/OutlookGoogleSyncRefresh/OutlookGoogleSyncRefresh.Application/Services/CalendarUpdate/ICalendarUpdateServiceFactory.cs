@@ -10,5 +10,6 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
     public interface ICalendarUpdateServiceFactory
     {
         ICalendarUpdateService GetCalendarUpdateService(Settings settings);
+
     }
 }
