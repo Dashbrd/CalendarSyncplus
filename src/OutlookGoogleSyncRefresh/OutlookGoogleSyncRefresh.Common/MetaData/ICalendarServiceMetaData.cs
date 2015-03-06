@@ -18,6 +18,6 @@ namespace OutlookGoogleSyncRefresh.Common.MetaData
 {
     public interface ICalendarServiceMetaData
     {
-        CalendarServiceType CalendarServiceType { get; set; }
+        CalendarServiceType ServiceType { get; }
     }
 }

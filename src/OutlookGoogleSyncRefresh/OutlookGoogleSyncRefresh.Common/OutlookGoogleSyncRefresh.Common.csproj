@@ -61,13 +61,11 @@
     <Compile Include="..\Shared\SharedAssemblyProperties.cs">
       <Link>SharedAssemblyProperties.cs</Link>
     </Compile>
-    <Compile Include="Attributes\ExportCalendarMetaDataAttribute.cs" />
     <Compile Include="DispatcherHelper.cs" />
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="Log\ApplicationLogger.cs" />
     <Compile Include="MetaData\CalendarServiceType.cs" />
     <Compile Include="MetaData\ICalendarServiceMetaData.cs" />
-    <Compile Include="MetaData\ICalendarServiceMultiMetaData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

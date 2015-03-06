@@ -19,16 +19,17 @@
 
 using System;
 using System.Diagnostics;
+
 using OutlookGoogleSyncRefresh.Presentation.Services.SingleInstance;
 
-namespace OutlookGoogleSyncRefresh
+namespace OutlookGoogleSyncRefresh.Presentation
 {
     internal sealed class Program
     {
         private const string Unique = "6DBA7828-5EDA-4215-9B75-0A7C2E6C9FD9-OutlookGoogleSyncRefresh";
 
         [STAThread]
-        [DebuggerNonUserCode]
+        //[DebuggerNonUserCode]
         public static void Main()
         {
             if (SingleInstance<App>.InitializeAsFirstInstance(Unique))

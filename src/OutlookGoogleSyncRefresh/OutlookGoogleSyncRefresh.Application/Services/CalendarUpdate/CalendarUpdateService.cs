@@ -53,6 +53,9 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
 
         #region Constructors
 
+        [ImportMany(typeof(ICalendarService))]
+        public IEnumerable<Lazy<ICalendarService, ICalendarServiceMetaData>> CalendarServicesFactoryLazy { get; set; }
+
         [ImportingConstructor]
         public CalendarUpdateService(IOutlookCalendarService outlookCalendarService,
             IGoogleCalendarService googleCalendarService, ApplicationLogger applicationLogger)
@@ -69,8 +72,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
         public IOutlookCalendarService OutlookCalendarService { get; set; }
         public IGoogleCalendarService GoogleCalendarService { get; set; }
 
-        [ImportMany]
-        public Lazy<ICalendarService,ICalendarServiceMetaData>[] CalendarServicesFactoryLazy { get; set; }
+
 
         public List<Appointment> GetDestinationAppointments
         {
@@ -157,10 +159,23 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
 
         #endregion
 
+        public ICalendarService GetCalendarService(CalendarServiceType serviceType)
+        {
+            var serviceInstance =  CalendarServicesFactoryLazy.FirstOrDefault(list => list.Metadata.ServiceType == serviceType);
+
+            if (serviceInstance != null)
+            {
+                return serviceInstance.Value;
+            }
+            return null;
+        }
+
         #region ICalendarUpdateService Members
 
         public async Task<bool> SyncCalendarAsync(Settings settings)
         {
+
+
             bool isSuccess = false;
             if (settings != null && settings.SavedCalendar != null)
             {

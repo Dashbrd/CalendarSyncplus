@@ -22,6 +22,7 @@ using System.Threading.Tasks;
 using System.Waf.Applications;
 using MahApps.Metro.Controls.Dialogs;
 using OutlookGoogleSyncRefresh.Application.Services;
+using OutlookGoogleSyncRefresh.Common;
 using OutlookGoogleSyncRefresh.Presentation.Views;
 
 namespace OutlookGoogleSyncRefresh.Presentation.Services
@@ -48,7 +49,9 @@ namespace OutlookGoogleSyncRefresh.Presentation.Services
                 AnimateShow = true,
                 ColorScheme = MetroDialogColorScheme.Accented
             };
-            View.ShowMessageAsync(title, message, MessageDialogStyle.Affirmative, metroDialogSettings);
+
+            DispatcherHelper.CheckBeginInvokeOnUI(
+                () => View.ShowMessageAsync(title, message, MessageDialogStyle.Affirmative, metroDialogSettings));
         }
 
         public void ShowMessageAsync(string message)

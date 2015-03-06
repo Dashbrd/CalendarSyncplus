@@ -39,7 +39,7 @@ using OutlookGoogleSyncRefresh.Domain.Models;
 namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
 {
     [Export(typeof(ICalendarService)),Export(typeof(IOutlookCalendarService))]
-    [ExportCalendarMetaData(CalendarServiceType.OutlookDesktop)]
+    [ExportMetadata("ServiceType", CalendarServiceType.OutlookDesktop)]
     public class OutlookCalendarService : IOutlookCalendarService
     {
         #region Properties
@@ -381,7 +381,8 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
             {
                 throw new InvalidOperationException(
                     string.Format(
-                        "{0} and {1}  keys should be present, both of them can be null in case Default Profile and Default Calendar will be used. {0} is or 'string' and {1} is of 'OutlookCalendar' type"));
+                        "{0} and {1}  keys should be present, both of them can be null in case Default Profile and Default Calendar will be used. {0} is or 'string' and {1} is of 'OutlookCalendar' type",
+                        "ProfileName", OutlookCalendar));
             }
             ProfileName = profileValue as String;
             OutlookCalendar = outlookCalendarValue as OutlookCalendar;

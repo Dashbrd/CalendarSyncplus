@@ -44,7 +44,7 @@ using Calendar = OutlookGoogleSyncRefresh.Domain.Models.Calendar;
 namespace OutlookGoogleSyncRefresh.Application.Services.Google
 {
     [Export(typeof(ICalendarService)),Export(typeof(IGoogleCalendarService))]
-    [ExportCalendarMetaData(CalendarServiceType.Google)]
+    [ExportMetadata("ServiceType",CalendarServiceType.Google)]
     public class GoogleCalendarService : IGoogleCalendarService
     {
         #region Static and Constants

@@ -22,6 +22,8 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading.Tasks;
+
+using OutlookGoogleSyncRefresh.Common.MetaData;
 using OutlookGoogleSyncRefresh.Domain.Models;
 
 #endregion
@@ -42,6 +44,8 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
         #region Public Methods
 
         Task<bool> SyncCalendarAsync(Settings settings);
+
+        ICalendarService GetCalendarService(CalendarServiceType serviceType);
 
         #endregion
     }
