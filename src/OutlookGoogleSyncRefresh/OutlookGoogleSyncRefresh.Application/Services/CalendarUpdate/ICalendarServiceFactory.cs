@@ -3,13 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
+using OutlookGoogleSyncRefresh.Common.MetaData;
 using OutlookGoogleSyncRefresh.Domain.Models;
 
 namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
 {
-    public interface ICalendarUpdateServiceFactory
+    public interface ICalendarServiceFactory
     {
-        ICalendarUpdateService GetCalendarUpdateService(Settings settings);
+        ICalendarService GetCalendarService(CalendarServiceType serviceType);
 
     }
 }

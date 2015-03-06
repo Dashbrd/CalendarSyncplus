@@ -8,28 +8,16 @@ using OutlookGoogleSyncRefresh.Domain.Models;
 
 namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
 {
-    [Export(typeof(ICalendarUpdateServiceFactory))]
-    public class CalendarUpdateServiceFactory : ICalendarUpdateServiceFactory
+    [Export(typeof(ICalendarServiceFactory))]
+    public class CalendarServiceFactory : ICalendarServiceFactory
     {
-        public Lazy<ICalendarUpdateService> LazyOutlookGoogleService { get; set; }
-
         [ImportMany(typeof(ICalendarService))]
         public IEnumerable<Lazy<ICalendarService, ICalendarServiceMetaData>> CalendarServicesFactoryLazy { get; set; }
 
 
         [ImportingConstructor]
-        public CalendarUpdateServiceFactory(Lazy<ICalendarUpdateService> lazyOutlookGoogleService)
+        public CalendarServiceFactory()
         {
-            LazyOutlookGoogleService = lazyOutlookGoogleService;
-        }
-
-        public ICalendarUpdateService GetCalendarUpdateService(Settings settings)
-        {
-            if (settings.CalendarSyncMode == CalendarSyncModeEnum.OutlookGoogleOneWay)
-            {
-                return LazyOutlookGoogleService.Value;
-            }
-            return null;
         }
 
         public ICalendarService GetCalendarService(CalendarServiceType serviceType)
