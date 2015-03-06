@@ -204,7 +204,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
                     //Updating Get entry delete status
                     SyncStatus = StatusHelper.GetMessage(SyncStateEnum.EntriesToDelete, appointmentsToDelete.Count);
                     //Updating delete status
-                    SyncStatus = StatusHelper.GetMessage(SyncStateEnum.DeletingEntries);
+                    SyncStatus = StatusHelper.GetMessage(SyncStateEnum.DeletingEntries, DestinationCalendarService.CalendarServiceName);
                     //Deleting entries
                     isSuccess =
                         await DestinationCalendarService.DeleteCalendarEvent(appointmentsToDelete, destinationCalendarSpecificData);
@@ -214,7 +214,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
                         //Deletion complete
                         SyncStatus = StatusHelper.GetMessage(SyncStateEnum.DeletingEntriesComplete);
                         SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
-                        SyncStatus = StatusHelper.GetMessage(SyncStateEnum.ReadingEntriesToAdd, SourceCalendarService.CalendarServiceName);
+                        SyncStatus = StatusHelper.GetMessage(SyncStateEnum.ReadingEntriesToAdd);
                         List<Appointment> calendarAppointments = GetAppointmentsToAdd();
                         SyncStatus = StatusHelper.GetMessage(SyncStateEnum.EntriesToAdd, calendarAppointments.Count);
                         SyncStatus = StatusHelper.GetMessage(SyncStateEnum.AddingEntries, DestinationCalendarService.CalendarServiceName);
