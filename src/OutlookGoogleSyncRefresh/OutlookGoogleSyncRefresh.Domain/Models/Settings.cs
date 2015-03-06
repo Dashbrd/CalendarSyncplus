@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Security.Cryptography;
 using System.Xml.Serialization;
 using OutlookGoogleSyncRefresh.Common.MetaData;
 
@@ -65,30 +66,18 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
             if (CalendarSyncMode == CalendarSyncModeEnum.OutlookGoogleOneWay ||
                 CalendarSyncMode == CalendarSyncModeEnum.OutlookGoogleTwoWay)
             {
-                SourceCalendar = CalendarServiceType.Google;
-                if (OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.ExchangeWebServices))
-                {
-                    DestinationCalendar = CalendarServiceType.EWS;
-                }
-                else
-                {
-                    DestinationCalendar = CalendarServiceType.OutlookDesktop;
-                }
+                SourceCalendar = OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.ExchangeWebServices)
+                    ? CalendarServiceType.EWS
+                    : CalendarServiceType.OutlookDesktop;
+                DestinationCalendar = CalendarServiceType.Google;
             }
             else
             {
-                DestinationCalendar = CalendarServiceType.Google;
-                if (OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.ExchangeWebServices))
-                {
-                    SourceCalendar = CalendarServiceType.EWS;
-                }
-                else
-                {
-                    SourceCalendar = CalendarServiceType.OutlookDesktop;
-                }
-
+                SourceCalendar = CalendarServiceType.Google;
+                DestinationCalendar = OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.ExchangeWebServices)
+                    ? CalendarServiceType.EWS
+                    : CalendarServiceType.OutlookDesktop;
             }
-
         }
     }
 }
