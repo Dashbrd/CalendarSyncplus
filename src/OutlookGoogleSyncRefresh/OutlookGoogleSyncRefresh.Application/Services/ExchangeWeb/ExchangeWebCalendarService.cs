@@ -5,13 +5,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Exchange.WebServices.Data;
+using OutlookGoogleSyncRefresh.Common.MetaData;
 using OutlookGoogleSyncRefresh.Domain.Models;
 using AppAppointment = OutlookGoogleSyncRefresh.Domain.Models.Appointment;
 using Appointment = Microsoft.Exchange.WebServices.Data.Appointment;
 
 namespace OutlookGoogleSyncRefresh.Application.Services.ExchangeWeb
 {
-    [Export(typeof (IExchangeWebCalendarService))]
+    [Export(typeof(ICalendarService)),Export(typeof (IExchangeWebCalendarService))]
+    [ExportMetadata("ServiceType", CalendarServiceType.EWS)]
     public class ExchangeWebCalendarService : IExchangeWebCalendarService
     {
         #region IExchangeWebCalendarService Members
@@ -42,7 +44,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.ExchangeWeb
                         ReminderMinutesBeforeStart = exchangeAppointment.ReminderMinutesBeforeStart,
                         Organizer = exchangeAppointment.Organizer.Name,
                         ReminderSet = exchangeAppointment.IsReminderSet,
-                        RequiredAttendees = GetAttendees(exchangeAppointment.RequiredAttendees),
+                        RequiredAttendees =  GetAttendees(exchangeAppointment.RequiredAttendees),
                     };
                     outlookAppointments.Add(appointment);
                 }
@@ -136,6 +138,41 @@ namespace OutlookGoogleSyncRefresh.Application.Services.ExchangeWeb
             }
         }
 
-     
+
+
+        public string CalendarServiceName
+        {
+            get { return "Exchange Server"; }
+        }
+
+        public Task<bool> AddCalendarEvent(AppAppointment calendarAppointment, bool addDescription, bool addReminder, bool addAttendees, IDictionary<string, object> calendarSpecificData)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> DeleteCalendarEvent(AppAppointment calendarAppointment, IDictionary<string, object> calendarSpecificData)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> DeleteCalendarEvent(List<AppAppointment> calendarAppointments, IDictionary<string, object> calendarSpecificData)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<List<AppAppointment>> GetCalendarEventsInRangeAsync(int daysInPast, int daysInFuture, IDictionary<string, object> calendarSpecificData)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> AddCalendarEvent(List<AppAppointment> calenderAppointments, bool addDescription, bool addReminder, bool addAttendees, IDictionary<string, object> calendarSpecificData)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void CheckCalendarSpecificData(IDictionary<string, object> calendarSpecificData)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

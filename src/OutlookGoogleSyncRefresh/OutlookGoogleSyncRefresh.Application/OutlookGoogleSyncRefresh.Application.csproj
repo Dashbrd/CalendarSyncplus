@@ -158,6 +158,7 @@
     <Compile Include="Services\SettingsSerializationService.cs" />
     <Compile Include="Services\ShellService.cs" />
     <Compile Include="Services\SyncService.cs" />
+    <Compile Include="Utilities\AppointmentHelper.cs" />
     <Compile Include="Utilities\Constants.cs" />
     <Compile Include="Utilities\StatusHelper.cs" />
     <Compile Include="ViewModels\AboutViewModel.cs" />

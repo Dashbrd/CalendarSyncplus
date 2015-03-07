@@ -103,8 +103,8 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
         private string _syncFrequency;
         private SyncFrequencyViewModel _syncFrequencyViewModel;
         private string _username;
-        private List<CalendarSyncModeEnum> _calendarSyncModes;
-        private CalendarSyncModeEnum _selectedCalendarSyncMode;
+        private List<CalendarSyncDirectionEnum> _calendarSyncModes;
+        private CalendarSyncDirectionEnum _selectedCalendarSyncDirection;
 
         #endregion
 
@@ -269,16 +269,16 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             set { SetProperty(ref _isExchangeWebServices, value); }
         }
 
-        public List<CalendarSyncModeEnum> CalendarSyncModes
+        public List<CalendarSyncDirectionEnum> CalendarSyncModes
         {
             get { return _calendarSyncModes; }
             set { SetProperty(ref _calendarSyncModes, value); }
         }
 
-        public CalendarSyncModeEnum SelectedCalendarSyncMode
+        public CalendarSyncDirectionEnum SelectedCalendarSyncDirection
         {
-            get { return _selectedCalendarSyncMode; }
-            set { SetProperty(ref _selectedCalendarSyncMode, value); }
+            get { return _selectedCalendarSyncDirection; }
+            set { SetProperty(ref _selectedCalendarSyncDirection, value); }
         }
 
         public DelegateCommand AutoDetectExchangeServer
@@ -469,11 +469,11 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             IsLoading = true;
             try
             {
-                CalendarSyncModes = new List<CalendarSyncModeEnum>()
+                CalendarSyncModes = new List<CalendarSyncDirectionEnum>()
                 {
-                    CalendarSyncModeEnum.OutlookGoogleOneWay,
-                    CalendarSyncModeEnum.OutlookGoogleOneWayToSource,
-                    CalendarSyncModeEnum.OutlookGoogleTwoWay
+                    CalendarSyncDirectionEnum.OutlookGoogleOneWay,
+                    CalendarSyncDirectionEnum.OutlookGoogleOneWayToSource,
+                    CalendarSyncDirectionEnum.OutlookGoogleTwoWay
                 };
                 SyncFrequencies = new List<string>
                 {
@@ -508,7 +508,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
                     CheckForUpdates = Settings.CheckForUpdates;
                     RunApplicationAtSystemStartup = Settings.RunApplicationAtSystemStartup;
                     RememberPeriodicSyncOn = Settings.RememberPeriodicSyncOn;
-                    SelectedCalendarSyncMode = Settings.CalendarSyncMode;
+                    SelectedCalendarSyncDirection = Settings.SyncSettings.CalendarSyncDirection;
                 }
                 else
                 {
@@ -522,7 +522,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
                     MinimizeToSystemTray = true;
                     HideSystemTrayTooltip = false;
                     CheckForUpdates = true;
-                    SelectedCalendarSyncMode = CalendarSyncModeEnum.OutlookGoogleOneWay;
+                    SelectedCalendarSyncDirection = CalendarSyncDirectionEnum.OutlookGoogleOneWay;
                 }
 
                 if (!IsDefaultProfile)
@@ -576,7 +576,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             Settings.ExchangeServerSettings.Username = Username;
             Settings.ExchangeServerSettings.Password = Password;
             Settings.ExchangeServerSettings.ExchangeServerUrl = ExchangeServerUrl;
-            Settings.CalendarSyncMode = SelectedCalendarSyncMode;
+            Settings.SyncSettings.CalendarSyncDirection = SelectedCalendarSyncDirection;
             Settings.SetCalendarTypes();
             try
             {

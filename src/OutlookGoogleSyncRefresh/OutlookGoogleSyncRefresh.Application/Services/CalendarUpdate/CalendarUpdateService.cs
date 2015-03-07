@@ -119,8 +119,8 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
 
         private void InitiatePreSyncSetup(Settings settings)
         {
-            SourceCalendarService = CalendarServiceFactory.GetCalendarService(settings.SourceCalendar);
-            DestinationCalendarService = CalendarServiceFactory.GetCalendarService(settings.DestinationCalendar);
+            SourceCalendarService = CalendarServiceFactory.GetCalendarService(settings.SyncSettings.SourceCalendar);
+            DestinationCalendarService = CalendarServiceFactory.GetCalendarService(settings.SyncSettings.DestinationCalendar);
         }
 
         private IDictionary<string, object> GetCalendarSpecificData(CalendarServiceType serviceType, Settings settings)
@@ -185,8 +185,8 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
                 SyncStatus = string.Format("Sync Date Range - {0} - {1}",
                     DateTime.Now.Subtract(new TimeSpan(settings.DaysInPast, 0, 0, 0)).ToString("D"),
                     DateTime.Now.Add(new TimeSpan(settings.DaysInFuture, 0, 0, 0)).ToString("D"));
-                var sourceCalendarSpecificData = GetCalendarSpecificData(settings.SourceCalendar, settings);
-                var destinationCalendarSpecificData = GetCalendarSpecificData(settings.DestinationCalendar, settings);
+                var sourceCalendarSpecificData = GetCalendarSpecificData(settings.SyncSettings.SourceCalendar, settings);
+                var destinationCalendarSpecificData = GetCalendarSpecificData(settings.SyncSettings.DestinationCalendar, settings);
 
                 isSuccess =
                     await

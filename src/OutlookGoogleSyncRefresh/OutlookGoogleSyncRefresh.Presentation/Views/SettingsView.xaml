@@ -195,7 +195,7 @@
                 </controls:MetroProgressBar.Triggers>
             </controls:MetroProgressBar>
         </DataTemplate>
-        <DataTemplate DataType="{x:Type models:CalendarSyncModeEnum}"
+        <DataTemplate DataType="{x:Type models:CalendarSyncDirectionEnum}"
                       x:Key="CalendarEnumDataTemplate">
             <Grid Height="{Binding Height,RelativeSource={RelativeSource AncestorType={x:Type ComboBox}}}">
                 <Grid.ColumnDefinitions>
@@ -218,7 +218,7 @@
             </Grid>
             <DataTemplate.Triggers>
                 <DataTrigger Binding="{Binding}"
-                             Value="{x:Static models:CalendarSyncModeEnum.OutlookGoogleOneWay}">
+                             Value="{x:Static models:CalendarSyncDirectionEnum.OutlookGoogleOneWay}">
                     <Setter TargetName="ImageRectangle"
                             Property="OpacityMask">
                         <Setter.Value>
@@ -228,7 +228,7 @@
                     </Setter>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding}"
-                             Value="{x:Static models:CalendarSyncModeEnum.OutlookGoogleOneWayToSource}">
+                             Value="{x:Static models:CalendarSyncDirectionEnum.OutlookGoogleOneWayToSource}">
                     <Setter TargetName="ImageRectangle"
                             Property="OpacityMask">
                         <Setter.Value>
@@ -238,7 +238,7 @@
                     </Setter>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding}"
-                             Value="{x:Static models:CalendarSyncModeEnum.OutlookGoogleTwoWay}">
+                             Value="{x:Static models:CalendarSyncDirectionEnum.OutlookGoogleTwoWay}">
                     <Setter TargetName="ImageRectangle"
                             Property="OpacityMask">
                         <Setter.Value>
@@ -290,7 +290,7 @@
                             <TextBlock Text="Calendar Sync Mode" VerticalAlignment="Center"/>
                             <ComboBox Grid.Column="1"
                                       ItemsSource="{Binding CalendarSyncModes,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                                      SelectedItem="{Binding SelectedCalendarSyncMode,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                                      SelectedItem="{Binding SelectedCalendarSyncDirection,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                                       ItemTemplate="{StaticResource CalendarEnumDataTemplate}"/>
                             </Grid>
                     </GroupBox>

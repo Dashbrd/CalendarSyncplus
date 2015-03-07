@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Waf.Foundation;
 
 using OutlookGoogleSyncRefresh.Domain.Helpers;
@@ -7,8 +8,17 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
 {
     public class Appointment : Model
     {
+        /// <summary>
+        /// Flag if the appointment is an all day event
+        /// </summary>
         private bool _allDayEvent;
+        /// <summary>
+        /// Id to identify the appointment
+        /// </summary>
         private string _appointmentId;
+        /// <summary>
+        /// 
+        /// </summary>
         private string _description;
         private DateTime? _endTime;
         private string _location;
@@ -19,8 +29,7 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
         private string _requiredAttendees;
         private DateTime? _startTime;
         private string _subject;
-        private string _visibility;
-        private string _transparency;
+        private string _privacy;
         private string _sourceId;
 
         public Appointment(string description, string location, string subject, DateTime? endTime, DateTime? startTime,
@@ -110,6 +119,8 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
             set { SetProperty(ref _reminderMinutesBeforeStart, value); }
         }
 
+        public BusyStatusEnum BusyStatus { get; set; }
+
         public string Organizer
         {
             get { return _organizer; }
@@ -128,18 +139,12 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
             set { SetProperty(ref _optionalAttendees, value); }
         }
 
-        public string Visibility
+        public string Privacy
         {
-            get { return _visibility; }
-            set { SetProperty(ref _visibility, value); }
+            get { return _privacy; }
+            set { SetProperty(ref _privacy, value); }
         }
-
-        public string Transparency
-        {
-            get { return _transparency; }
-            set { SetProperty(ref _transparency, value); }
-        }
-
+        
         public override bool Equals(Object obj)
         {
             // Check if the object is a Appointment.
@@ -155,6 +160,7 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
             // Instances are considered equal if the ToString matches.
             return ToString() == appointment.ToString();
         }
+        
 
         public override int GetHashCode()
         {

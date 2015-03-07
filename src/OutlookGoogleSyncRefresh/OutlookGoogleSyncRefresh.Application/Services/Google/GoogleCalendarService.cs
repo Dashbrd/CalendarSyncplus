@@ -31,7 +31,7 @@ using Google;
 using Google.Apis.Calendar.v3;
 using Google.Apis.Calendar.v3.Data;
 using Google.Apis.Requests;
-
+using OutlookGoogleSyncRefresh.Application.Utilities;
 using OutlookGoogleSyncRefresh.Common.Log;
 using OutlookGoogleSyncRefresh.Common.MetaData;
 using OutlookGoogleSyncRefresh.Domain.Models;
@@ -97,14 +97,10 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Google
                 Start = new EventDateTime(),
                 End = new EventDateTime(),
                 Summary = calenderAppointment.Subject,
-                Description =
-                    addDescription
-                        ? calenderAppointment.Description +
-                          GetAdditionalDescriptionData(addAttendees, calenderAppointment)
-                        : String.Empty,
+                Description = addDescription ? calenderAppointment.GetDescriptionData(addAttendees) : String.Empty,
                 Location = calenderAppointment.Location,
-                Visibility = calenderAppointment.Visibility,
-                Transparency = calenderAppointment.Transparency
+                Visibility = calenderAppointment.Privacy,
+                Transparency = (calenderAppointment.BusyStatus == BusyStatusEnum.Free) ? "transparent" : "opaque"
             };
 
             googleEvent.ExtendedProperties = new Event.ExtendedPropertiesData();
@@ -150,51 +146,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Google
             return googleEvent;
         }
 
-        private string GetAdditionalDescriptionData(bool addAttendees, Appointment calenderAppointment)
-        {
-            var additionDescription = new StringBuilder(string.Empty);
-
-            if (!addAttendees)
-            {
-                return additionDescription.ToString();
-            }
-            //Start Header
-            additionDescription.AppendLine("==============================================");
-            additionDescription.AppendLine(string.Empty);
-            //Add Organiser
-            additionDescription.AppendLine("Organizer");
-            additionDescription.AppendLine(calenderAppointment.Organizer);
-            additionDescription.AppendLine(string.Empty);
-
-            //Add Required Attendees
-            additionDescription.AppendLine("Required Attendees:");
-            additionDescription.AppendLine(SplitAttendees(calenderAppointment.RequiredAttendees));
-            additionDescription.AppendLine(string.Empty);
-
-            //Add Optional Attendees
-            additionDescription.AppendLine("Optional Attendees:");
-            additionDescription.AppendLine(SplitAttendees(calenderAppointment.OptionalAttendees));
-            additionDescription.AppendLine(string.Empty);
-            //Close Header
-            additionDescription.AppendLine("==============================================");
-
-            return additionDescription.ToString();
-        }
-
-        private string SplitAttendees(string attendees)
-        {
-            var attendeesBuilder = new StringBuilder(string.Empty);
-            if (string.IsNullOrEmpty(attendees))
-            {
-                return attendees;
-            }
-
-            foreach (string attendeeName in attendees.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries))
-            {
-                attendeesBuilder.AppendLine(attendeeName.Trim());
-            }
-            return attendees;
-        }
+       
 
         private CalendarService GetCalendarService()
         {
@@ -276,7 +228,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Google
             return locaCalendarList;
         }
 
-        public async Task<bool> AddCalendarEvent(Appointment calenderAppointment, bool addDescription,
+        public async Task<bool> AddCalendarEvent(Appointment calendarAppointment, bool addDescription,
             bool addReminder, bool addAttendees, IDictionary<string, object> calendarSpecificData)
         {
             CheckCalendarSpecificData(calendarSpecificData);
@@ -284,12 +236,12 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Google
             //Get Calendar Service
             CalendarService calendarService = GetCalendarService();
 
-            if (calenderAppointment == null || string.IsNullOrEmpty(CalendarId))
+            if (calendarAppointment == null || string.IsNullOrEmpty(CalendarId))
             {
                 return false;
             }
 
-            Event calendarEvent = CreateGoogleCalendarEvent(calenderAppointment, addDescription, addReminder,
+            Event calendarEvent = CreateGoogleCalendarEvent(calendarAppointment, addDescription, addReminder,
                 addAttendees);
             Event returnEvent = await calendarService.Events.Insert(calendarEvent, CalendarId).ExecuteAsync();
 

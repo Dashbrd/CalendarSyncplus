@@ -23,10 +23,24 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
         Attachments = 8,
     }
 
-    public enum CalendarSyncModeEnum
+    public enum CalendarSyncDirectionEnum
     {
         OutlookGoogleOneWay = 0,
         OutlookGoogleOneWayToSource = 1,
         OutlookGoogleTwoWay = 2,
+    }
+
+    public enum SyncModeEnum
+    {
+        OneWay,
+        TwoWay
+    }
+
+    public enum BusyStatusEnum
+    {
+        Busy,
+        Free,
+        OutOfOffice,
+        Tentative
     }
 }
