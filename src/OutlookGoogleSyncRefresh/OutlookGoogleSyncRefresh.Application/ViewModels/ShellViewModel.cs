@@ -479,13 +479,13 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             IsSyncInProgress = true;
             UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.SyncStarted,LastSyncTime));
             UpdateStatus( StatusHelper.GetMessage(SyncStateEnum.Line));
-            SyncStartService.SyncNowAsync(Settings).ContinueWith(OnSyncCompleted);
+            var result= SyncStartService.SyncNow(Settings);
+            OnSyncCompleted(result);
 
         }
 
-        private void OnSyncCompleted(Task<string> task)
+        private void OnSyncCompleted(string result)
         {
-            var result = task.Result;
 
             if (result == null || !string.IsNullOrEmpty(result))
             {

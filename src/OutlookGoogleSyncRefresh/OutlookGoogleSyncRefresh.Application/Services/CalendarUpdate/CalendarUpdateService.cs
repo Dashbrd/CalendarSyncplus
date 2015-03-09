@@ -69,23 +69,19 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
 
         #region Private Methods
 
-        private async Task<bool> GetAppointments(int daysInPast, int daysInFuture,
+        private bool GetAppointments(int daysInPast, int daysInFuture,
             IDictionary<string, object> sourceCalendarSpecificData, IDictionary<string, object> destinationCalendarSpecificData)
         {
             SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
             SyncStatus = StatusHelper.GetMessage(SyncStateEnum.SourceAppointmentsReading, SourceCalendarService.CalendarServiceName);
 
-            SourceAppointments =
-                await
-                    SourceCalendarService.GetCalendarEventsInRangeAsync(daysInPast, daysInFuture, sourceCalendarSpecificData);
+            SourceAppointments = SourceCalendarService.GetCalendarEventsInRangeAsync(daysInPast, daysInFuture, sourceCalendarSpecificData).Result;
             SyncStatus = StatusHelper.GetMessage(SyncStateEnum.SourceAppointmentsRead, SourceCalendarService.CalendarServiceName, SourceAppointments.Count);
             SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
             SyncStatus = StatusHelper.GetMessage(SyncStateEnum.DestAppointmentReading, DestinationCalendarService.CalendarServiceName);
 
-            DestinationAppointments =
-                await
-                    DestinationCalendarService.GetCalendarEventsInRangeAsync(daysInPast, daysInFuture,
-                        destinationCalendarSpecificData);
+            DestinationAppointments = DestinationCalendarService.GetCalendarEventsInRangeAsync(daysInPast, daysInFuture,
+                        destinationCalendarSpecificData).Result;
             SyncStatus = StatusHelper.GetMessage(SyncStateEnum.DestAppointmentRead, DestinationCalendarService.CalendarServiceName, DestinationAppointments.Count);
             SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
 
@@ -173,7 +169,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
 
         public ICalendarService DestinationCalendarService { get; set; }
 
-        public async Task<bool> SyncCalendarAsync(Settings settings)
+        public bool SyncCalendar(Settings settings)
         {
             InitiatePreSyncSetup(settings);
 
@@ -189,7 +185,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
                 var destinationCalendarSpecificData = GetCalendarSpecificData(settings.SyncSettings.DestinationCalendar, settings);
 
                 isSuccess =
-                    await
+                    
                         GetAppointments(settings.DaysInPast, settings.DaysInFuture, sourceCalendarSpecificData,
                             destinationCalendarSpecificData);
 
@@ -206,8 +202,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
                     //Updating delete status
                     SyncStatus = StatusHelper.GetMessage(SyncStateEnum.DeletingEntries, DestinationCalendarService.CalendarServiceName);
                     //Deleting entries
-                    isSuccess =
-                        await DestinationCalendarService.DeleteCalendarEvent(appointmentsToDelete, destinationCalendarSpecificData);
+                    isSuccess =  DestinationCalendarService.DeleteCalendarEvent(appointmentsToDelete, destinationCalendarSpecificData).Result;
 
                     if (isSuccess)
                     {
@@ -218,10 +213,10 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
                         List<Appointment> calendarAppointments = GetAppointmentsToAdd();
                         SyncStatus = StatusHelper.GetMessage(SyncStateEnum.EntriesToAdd, calendarAppointments.Count);
                         SyncStatus = StatusHelper.GetMessage(SyncStateEnum.AddingEntries, DestinationCalendarService.CalendarServiceName);
-                        isSuccess = await DestinationCalendarService.AddCalendarEvent(calendarAppointments,
+                        isSuccess = DestinationCalendarService.AddCalendarEvent(calendarAppointments,
                             settings.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Description),
                             settings.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Reminders),
-                            settings.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Attendees), destinationCalendarSpecificData);
+                            settings.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Attendees), destinationCalendarSpecificData).Result;
                         SyncStatus =
                             StatusHelper.GetMessage(isSuccess ? SyncStateEnum.AddEntriesComplete : SyncStateEnum.AddEntriesFailed);
                         SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);

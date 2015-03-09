@@ -44,7 +44,11 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
 
         #region Public Methods
 
-        Task<bool> SyncCalendarAsync(Settings settings);
+        /// <summary>
+        /// </summary>
+        /// <param name="settings"></param>
+        /// <returns></returns>
+        bool SyncCalendar(Settings settings);
 
         #endregion
     }

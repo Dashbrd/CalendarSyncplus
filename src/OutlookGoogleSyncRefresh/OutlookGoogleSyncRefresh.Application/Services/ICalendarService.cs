@@ -25,7 +25,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services
     public interface ICalendarService
     {
         string CalendarServiceName { get; }
-        
+
         Task<bool> AddCalendarEvent(Appointment calendarAppointment, bool addDescription,
             bool addReminder, bool addAttendees, IDictionary<string, object> calendarSpecificData);
 
