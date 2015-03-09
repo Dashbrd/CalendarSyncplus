@@ -180,7 +180,8 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
             bool isSuccess = false;
             if (settings != null && settings.GoogleCalendar != null)
             {
-                SyncStatus = "Calendar Sync Mode : Outlook -> Google";
+                SyncStatus = string.Format("Calendar Sync : {0} {2} {1}", SourceCalendarService.CalendarServiceName, DestinationCalendarService.CalendarServiceName,
+                    settings.SyncSettings.SyncMode == SyncModeEnum.TwoWay ? "<===>": "===>");
                 SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
                 SyncStatus = string.Format("Sync Date Range - {0} - {1}",
                     DateTime.Now.Subtract(new TimeSpan(settings.DaysInPast, 0, 0, 0)).ToString("D"),

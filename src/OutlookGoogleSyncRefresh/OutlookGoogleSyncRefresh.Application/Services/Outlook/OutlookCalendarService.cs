@@ -469,19 +469,43 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
                     appItem.MeetingStatus = OlMeetingStatus.olMeeting;
                     appItem.Location = calendarAppointment.Location;
                     appItem.BusyStatus = calendarAppointment.GetOutlookBusyStatus();
+                    Recipient recipRequired = appItem.Recipients.Add("");
+                    recipRequired.Type = (int)OlMeetingRecipientType.olOptional;
+    
                     if (calendarAppointment.AllDayEvent)
                     {
                         appItem.AllDayEvent = true;
                     }
-                    else
-                    {
-                        appItem.Start = calendarAppointment.StartTime.GetValueOrDefault();
-                        appItem.End = calendarAppointment.EndTime.GetValueOrDefault();
-                    }
+                    
+                    appItem.Start = calendarAppointment.StartTime.GetValueOrDefault();
+                    appItem.End = calendarAppointment.EndTime.GetValueOrDefault();
 
                     if (addDescription)
                     {
-                        appItem.Body = calendarAppointment.GetDescriptionData(addAttendees);
+                        appItem.Body = calendarAppointment.Description;
+                    }
+
+                    if (addAttendees)
+                    {
+                        if (calendarAppointment.RequiredAttendees != null)
+                        {
+                            calendarAppointment.RequiredAttendees.Split(';').ToList().ForEach(rcptName =>
+                            {
+                                var recipient = appItem.Recipients.Add(rcptName);
+                                recipient.Type =(int)OlMeetingRecipientType.olRequired;
+                                recipient.Resolve();
+                            });
+                        }
+
+                        if (calendarAppointment.OptionalAttendees != null)
+                        {
+                            calendarAppointment.OptionalAttendees.Split(';').ToList().ForEach(rcptName =>
+                            {
+                                var recipient = appItem.Recipients.Add(rcptName);
+                                recipient.Type = (int)OlMeetingRecipientType.olOptional;
+                                recipient.Resolve();
+                            });
+                        }
                     }
 
                     if (addReminder)
