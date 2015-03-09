@@ -88,10 +88,10 @@ namespace OutlookGoogleSyncRefresh.Application.Controllers
             PropertyChangedEventManager.AddHandler(_shellViewModel, ShellViewUpdatedHandler, "");
         }
 
-        public void Run()
+        public void Run(bool startMinimized)
         {
             //Perform Other assignments if required
-            _shellViewModel.Show();
+            _shellViewModel.Show(startMinimized);
         }
 
         public void Shutdown()

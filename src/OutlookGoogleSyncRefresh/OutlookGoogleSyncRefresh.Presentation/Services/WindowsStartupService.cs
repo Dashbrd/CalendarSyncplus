@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Security.Principal;
 using Microsoft.Win32;
 using OutlookGoogleSyncRefresh.Application.Services;
+using OutlookGoogleSyncRefresh.Application.Utilities;
 
 namespace OutlookGoogleSyncRefresh.Presentation.Services
 {
@@ -38,7 +39,7 @@ namespace OutlookGoogleSyncRefresh.Presentation.Services
         {
             using (RegistryKey key = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true))
             {
-                key.SetValue("CalendarSyncPlusStartup", "\"" + Assembly.GetExecutingAssembly().Location + "\"");
+                key.SetValue("CalendarSyncPlusStartup", "\"" + Assembly.GetExecutingAssembly().Location + "\" " + Constants.Minimized);
             }
         }
 
@@ -46,7 +47,7 @@ namespace OutlookGoogleSyncRefresh.Presentation.Services
         {
             using (RegistryKey key = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true))
             {
-                key.SetValue("CalendarSyncPlusStartup", "\"" + Assembly.GetExecutingAssembly().Location + "\"");
+                key.SetValue("CalendarSyncPlusStartup", "\"" + Assembly.GetExecutingAssembly().Location + "\" " + Constants.Minimized);
             }
         }
 

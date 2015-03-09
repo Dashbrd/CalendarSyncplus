@@ -616,7 +616,7 @@
                                 <RowDefinition />
                                 <RowDefinition />
                             </Grid.RowDefinitions>
-                            <CheckBox Content="Run CalendarSync when computer starts"
+                            <CheckBox Content="Run CalendarSync+ when computer starts"
                                       Margin="5"
                                       IsChecked="{Binding RunApplicationAtSystemStartup,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
                             <CheckBox Content="Close button minimizes to tray"

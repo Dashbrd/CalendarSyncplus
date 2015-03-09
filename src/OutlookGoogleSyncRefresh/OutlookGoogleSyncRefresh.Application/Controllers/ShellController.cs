@@ -69,7 +69,7 @@ namespace OutlookGoogleSyncRefresh.Application.Controllers
         }
 
 
-        public void Run()
+        public void Run(bool startMinimized)
         {
         }
 

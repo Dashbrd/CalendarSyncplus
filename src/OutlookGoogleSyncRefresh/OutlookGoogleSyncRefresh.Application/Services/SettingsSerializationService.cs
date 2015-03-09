@@ -139,7 +139,9 @@ namespace OutlookGoogleSyncRefresh.Application.Services
                 IsFirstSave = true,
                 MinimizeToSystemTray = true,
                 CheckForUpdates = true,
-                RememberPeriodicSyncOn = true
+                RememberPeriodicSyncOn = true,
+                SyncFrequency = new HourlySyncFrequency() { Hours = 1,Minutes = 0},
+                RunApplicationAtSystemStartup = true
             };
             settings.OutlookSettings.OutlookOptions = OutlookOptionsEnum.DefaultProfile &
                                                       OutlookOptionsEnum.DefaultCalendar;

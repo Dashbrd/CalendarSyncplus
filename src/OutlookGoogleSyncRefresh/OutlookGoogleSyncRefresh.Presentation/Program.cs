@@ -19,7 +19,8 @@
 
 using System;
 using System.Diagnostics;
-
+using System.Linq;
+using OutlookGoogleSyncRefresh.Application.Utilities;
 using OutlookGoogleSyncRefresh.Presentation.Services.SingleInstance;
 
 namespace OutlookGoogleSyncRefresh.Presentation
@@ -30,13 +31,22 @@ namespace OutlookGoogleSyncRefresh.Presentation
 
         [STAThread]
         //[DebuggerNonUserCode]
-        public static void Main()
+        public static void Main(string[] args)
         {
             if (SingleInstance<App>.InitializeAsFirstInstance(Unique))
             {
                 try
                 {
-                    var application = new App();
+                    bool startMinimized = false;
+                    if (args != null)
+                    {
+                        var minimized  = args.FirstOrDefault();
+                        if (minimized != null && minimized.Equals(Constants.Minimized))
+                        {
+                            startMinimized = true;
+                        }
+                    }
+                    var application = new App(startMinimized);
                     application.InitializeComponent();
                     application.Run();
                 }

@@ -89,6 +89,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
         public ShellViewModel(IShellView view, IShellService shellService,
             ISyncService syncStartService,
             IAccountAuthenticationService accountAuthenticationService,
+            IGuiInteractionService guiInteractionService,
             Settings settings,
             IMessageService messageService,
             ApplicationLogger applicationLogger, IApplicationUpdateService applicationUpdateService,
@@ -100,6 +101,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             ShellService = shellService;
             SyncStartService = syncStartService;
             AccountAuthenticationService = accountAuthenticationService;
+            GuiInteractionService = guiInteractionService;
             _settings = settings;
             ApplicationLogger = applicationLogger;
             SystemTrayNotifierViewModel = systemTrayNotifierViewModel;
@@ -129,6 +131,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
         #region Properties
 
         public IAccountAuthenticationService AccountAuthenticationService { get; private set; }
+        public IGuiInteractionService GuiInteractionService { get; set; }
         public ISyncService SyncStartService { get; private set; }
         public ApplicationLogger ApplicationLogger { get; private set; }
         public SystemTrayNotifierViewModel SystemTrayNotifierViewModel { get; private set; }
@@ -361,6 +364,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
                 {
                     LatestVersion = ApplicationUpdateService.GetNewAvailableVersion();
                     IsLatestVersionAvailable = true;
+                    SystemTrayNotifierViewModel.ShowBalloon("New Update Available!");
                 }
                 _lastCheckDateTime = DateTime.Now;
             }
@@ -426,9 +430,16 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
 
         #region Public Methods
 
-        public void Show()
+        public void Show(bool startMinimized)
         {
-            ViewCore.Show();
+            if (startMinimized)
+            {
+                GuiInteractionService.HideApplication();
+            }
+            else
+            {
+                ViewCore.Show();
+            }
         }
 
         public void Close()

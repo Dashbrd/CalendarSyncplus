@@ -23,7 +23,7 @@ namespace OutlookGoogleSyncRefresh.Application.Controllers
     {
         void Initialize();
 
-        void Run();
+        void Run(bool startMinimized);
 
         void Shutdown();
     }

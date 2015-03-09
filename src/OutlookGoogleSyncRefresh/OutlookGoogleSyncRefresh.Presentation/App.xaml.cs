@@ -25,12 +25,14 @@ using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
 using System.Diagnostics;
 using System.Globalization;
+using System.Linq;
 using System.Reflection;
 using System.Waf.Applications;
 using System.Windows;
 using System.Windows.Threading;
 using OutlookGoogleSyncRefresh.Application.Controllers;
 using OutlookGoogleSyncRefresh.Application.Services;
+using OutlookGoogleSyncRefresh.Application.Utilities;
 using OutlookGoogleSyncRefresh.Application.ViewModels;
 using OutlookGoogleSyncRefresh.Common;
 using OutlookGoogleSyncRefresh.Common.Log;
@@ -53,12 +55,17 @@ namespace OutlookGoogleSyncRefresh
         private AggregateCatalog catalog;
         private CompositionContainer container;
         private IApplicationController controller;
-
+        private bool _startMinimized;
         #endregion
 
         static App()
         {
             DispatcherHelper.Initialize();
+        }
+
+        public App(bool startMinimized = false)
+        {
+            _startMinimized = startMinimized;
         }
 
         #region Properties
@@ -130,7 +137,7 @@ namespace OutlookGoogleSyncRefresh
             controller = container.GetExportedValue<IApplicationController>();
 
             controller.Initialize();
-            controller.Run();
+            controller.Run(_startMinimized);
         }
 
         protected override void OnExit(ExitEventArgs e)
