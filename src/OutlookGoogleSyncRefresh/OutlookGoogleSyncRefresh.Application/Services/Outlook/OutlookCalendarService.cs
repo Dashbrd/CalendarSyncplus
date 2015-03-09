@@ -472,71 +472,77 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
             // Get Default Calender
                 defaultOutlookCalender = outlookCalendar != null ? nameSpace.GetFolderFromID(outlookCalendar.EntryId, outlookCalendar.StoreId) : nameSpace.GetDefaultFolder(OlDefaultFolders.olFolderCalendar);
             outlookItems = defaultOutlookCalender.Items;
-            foreach (var calendarAppointment in calenderAppointments)
-            {
-                AppointmentItem appItem = null;
-                try
+                foreach (var calendarAppointment in calenderAppointments)
                 {
-                    appItem = outlookItems.Add(OlItemType.olAppointmentItem) as AppointmentItem;
+                    AppointmentItem appItem = null;
+                    Recipients recipients = null;
+                    try
+                    {
+                        appItem = outlookItems.Add(OlItemType.olAppointmentItem) as AppointmentItem;
                         if (appItem == null)
-                        continue;
-                    appItem.Subject = calendarAppointment.Subject;
-                    appItem.MeetingStatus = OlMeetingStatus.olMeeting;
-                    appItem.Location = calendarAppointment.Location;
-                    appItem.BusyStatus = calendarAppointment.GetOutlookBusyStatus();
-                    Recipient recipRequired = appItem.Recipients.Add("");
-                    recipRequired.Type = (int)OlMeetingRecipientType.olOptional;
+                            continue;
+                        appItem.Subject = calendarAppointment.Subject;
+                        appItem.MeetingStatus = OlMeetingStatus.olNonMeeting;
+                        appItem.Location = calendarAppointment.Location;
+                        appItem.BusyStatus = calendarAppointment.GetOutlookBusyStatus();
+                        recipients = appItem.Recipients;
+                        //Recipient recipRequired = recipients.Add("");
+                        //recipRequired.Type = (int) OlMeetingRecipientType.olOptional;
 
-                    if (calendarAppointment.AllDayEvent)
-                    {
-                        appItem.AllDayEvent = true;
-                    }
-
-                    appItem.Start = calendarAppointment.StartTime.GetValueOrDefault();
-                    appItem.End = calendarAppointment.EndTime.GetValueOrDefault();
-
-                    if (addDescription)
-                    {
-                        appItem.Body = calendarAppointment.Description;
-                    }
-
-                    if (addAttendees)
-                    {
-                        if (calendarAppointment.RequiredAttendees != null)
+                        if (calendarAppointment.AllDayEvent)
                         {
-                            calendarAppointment.RequiredAttendees.Split(';').ToList().ForEach(rcptName =>
-                            {
-                                var recipient = appItem.Recipients.Add(rcptName);
-                                recipient.Type = (int)OlMeetingRecipientType.olRequired;
-                                recipient.Resolve();
-                            });
+                            appItem.AllDayEvent = true;
                         }
 
-                        if (calendarAppointment.OptionalAttendees != null)
+                        appItem.Start = calendarAppointment.StartTime.GetValueOrDefault();
+                        appItem.End = calendarAppointment.EndTime.GetValueOrDefault();
+
+                        if (addDescription)
                         {
-                            calendarAppointment.OptionalAttendees.Split(';').ToList().ForEach(rcptName =>
+                            appItem.Body = calendarAppointment.Description;
+                        }
+
+                        if (addAttendees)
+                        {
+                            if (calendarAppointment.RequiredAttendees != null)
                             {
-                                var recipient = appItem.Recipients.Add(rcptName);
-                                recipient.Type = (int)OlMeetingRecipientType.olOptional;
-                                recipient.Resolve();
-                            });
+                                calendarAppointment.RequiredAttendees.Split(';').ToList().ForEach(rcptName =>
+                                {
+                                    var recipient = appItem.Recipients.Add(rcptName);
+                                    recipient.Type = (int) OlMeetingRecipientType.olRequired;
+                                    recipient.Resolve();
+                                });
+                            }
+
+                            if (calendarAppointment.OptionalAttendees != null)
+                            {
+                                calendarAppointment.OptionalAttendees.Split(';').ToList().ForEach(rcptName =>
+                                {
+                                    var recipient = appItem.Recipients.Add(rcptName);
+                                    recipient.Type = (int) OlMeetingRecipientType.olOptional;
+                                    recipient.Resolve();
+                                });
+                            }
+                        }
+
+                        if (addReminder)
+                        {
+                            appItem.ReminderMinutesBeforeStart = calendarAppointment.ReminderMinutesBeforeStart;
+                            appItem.ReminderSet = calendarAppointment.ReminderSet;
+                        }
+                        appItem.Save();
+                    }
+                    finally
+                    {
+                        if (recipients !=null)
+                        {
+                            Marshal.ReleaseComObject(recipients);
+                        }
+                        if (appItem != null)
+                        {
+                            Marshal.ReleaseComObject(appItem);
                         }
                     }
-
-                    if (addReminder)
-                    {
-                        appItem.ReminderMinutesBeforeStart = calendarAppointment.ReminderMinutesBeforeStart;
-                        appItem.ReminderSet = calendarAppointment.ReminderSet;
-                    }
-                    appItem.Save();
-                }
-                finally 
-                {
-                    if (appItem != null)
-                    {
-                        Marshal.ReleaseComObject(appItem);
-                    }
-                }
                 }
             }
             catch (Exception exception)
