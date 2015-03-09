@@ -7,6 +7,8 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
         public HourlySyncFrequency()
         {
             Name = "Hourly";
+            Hours = 0;
+            Minutes = 5;
         }
 
         public DateTime StartTime { get; set; }

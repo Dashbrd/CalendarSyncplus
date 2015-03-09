@@ -43,7 +43,7 @@
                                         Grid.Column="1"
                                         Value="{Binding Minutes,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                         VerticalAlignment="Center"
-                                        Minimum="1"
+                                        Minimum="0"
                                         Maximum="59"
                                         Interval="1" />
             </Grid>
@@ -617,7 +617,6 @@
                                 <RowDefinition />
                             </Grid.RowDefinitions>
                             <CheckBox Content="Run CalendarSync when computer starts"
-                                      Visibility="Collapsed"
                                       Margin="5"
                                       IsChecked="{Binding RunApplicationAtSystemStartup,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
                             <CheckBox Content="Close button minimizes to tray"

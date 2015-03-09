@@ -152,6 +152,7 @@
     <Compile Include="Services\ISettingsSerializationService.cs" />
     <Compile Include="Services\IShellService.cs" />
     <Compile Include="Services\IGuiInteractionService.cs" />
+    <Compile Include="Services\IWindowsStartupService.cs" />
     <Compile Include="Services\Outlook\IOutlookCalendarService.cs" />
     <Compile Include="Services\Outlook\OutlookCalendarService.cs" />
     <Compile Include="Services\SettingsProvider.cs" />

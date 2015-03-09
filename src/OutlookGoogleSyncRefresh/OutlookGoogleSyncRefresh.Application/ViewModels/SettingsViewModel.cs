@@ -49,12 +49,13 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             Settings settings,
             ISettingsSerializationService serializationService, IOutlookCalendarService outlookCalendarService,
             IMessageService messageService, IExchangeWebCalendarService exchangeWebCalendarService,
-            ApplicationLogger applicationLogger)
+            ApplicationLogger applicationLogger, IWindowsStartupService windowsStartupService)
             : base(view)
         {
             _settings = settings;
             ExchangeWebCalendarService = exchangeWebCalendarService;
             ApplicationLogger = applicationLogger;
+            WindowsStartupService = windowsStartupService;
             GoogleCalendarService = googleCalendarService;
             SettingsSerializationService = serializationService;
             OutlookCalendarService = outlookCalendarService;
@@ -116,6 +117,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
         public IMessageService MessageService { get; set; }
         public IExchangeWebCalendarService ExchangeWebCalendarService { get; private set; }
         public ApplicationLogger ApplicationLogger { get; private set; }
+        public IWindowsStartupService WindowsStartupService { get; set; }
 
         public Calendar SelectedCalendar
         {
@@ -329,7 +331,10 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
         public bool RunApplicationAtSystemStartup
         {
             get { return _runApplicationAtSystemStartup; }
-            set { SetProperty(ref _runApplicationAtSystemStartup, value); }
+            set
+            {
+                SetProperty(ref _runApplicationAtSystemStartup, value);
+            }
         }
 
         public bool RememberPeriodicSyncOn
@@ -578,6 +583,16 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             Settings.ExchangeServerSettings.ExchangeServerUrl = ExchangeServerUrl;
             Settings.SyncSettings.CalendarSyncDirection = SelectedCalendarSyncDirection;
             Settings.SetCalendarTypes();
+
+            if (RunApplicationAtSystemStartup)
+            {
+                WindowsStartupService.RunAtWindowsStartup();
+            }
+            else
+            {
+                WindowsStartupService.RemoveFromWindowsStartup();
+            }
+
             try
             {
                 bool result = await SettingsSerializationService.SerializeSettingsAsync(Settings);
