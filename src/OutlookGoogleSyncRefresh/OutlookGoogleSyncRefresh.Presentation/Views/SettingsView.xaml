@@ -45,6 +45,7 @@
                                         VerticalAlignment="Center"
                                         Minimum="0"
                                         Maximum="59"
+                                        Margin="2"
                                         Interval="1" />
             </Grid>
         </DataTemplate>
@@ -204,7 +205,7 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
               
-                <TextBlock Text="Outlook/EWS" VerticalAlignment="Center"/>
+                <TextBlock Text="Outlook" VerticalAlignment="Center"/>
                 <Rectangle Fill="Gray"
                            Width="40"
                            Height="20"
@@ -309,6 +310,7 @@
                                          Grid.ColumnSpan="2"
                                          Grid.Row="0" />
                             <RadioButton Content="Exchange Web Services"
+                                         Visibility="Collapsed"
                                          IsChecked="{Binding IsExchangeWebServices}"
                                          Margin="2"
                                          GroupName="OutlookApplicationGroup"
