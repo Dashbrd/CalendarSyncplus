@@ -10,6 +10,25 @@ namespace OutlookGoogleSyncRefresh.Application.Utilities
 {
     public static class AppointmentHelper
     {
+        public static string GetSourceId(this Appointment calenderAppointment)
+        {
+            if(calenderAppointment.IsRecurring)
+            {
+                return string.Format("{0}_{1}", calenderAppointment.AppointmentId,
+                    calenderAppointment.StartTime.Value.ToString("yy-mm-dd"));
+            }
+            return calenderAppointment.AppointmentId;
+        }
+
+        public static bool CompareId(this Appointment calendarAppointment, Appointment otherAppointment)
+        {
+            if (calendarAppointment.IsRecurring)
+            {
+                return calendarAppointment.GetSourceId().Equals(otherAppointment.SourceId);
+            }
+            return calendarAppointment.AppointmentId.Equals(otherAppointment.SourceId);
+        }
+
         public static string GetDescriptionData(this Appointment calenderAppointment, bool addAttendees)
         {
             var additionDescription = new StringBuilder(string.Empty);

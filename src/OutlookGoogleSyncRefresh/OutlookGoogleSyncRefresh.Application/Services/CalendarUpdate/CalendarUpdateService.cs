@@ -140,9 +140,13 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
                     foreach (var destAppointment in destinationList)
                     {
                         if (destAppointment.SourceId != null &&
-                            destAppointment.SourceId.Equals(sourceAppointment.AppointmentId))
+                            sourceAppointment.CompareId(destAppointment))
                         {
                             isFound = true;
+                            if (!destAppointment.Equals(sourceAppointment))
+                            {
+                                isFound = false;
+                            }
                             break;
                         }
                     }

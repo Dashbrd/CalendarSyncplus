@@ -7,12 +7,14 @@
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:viewModels="clr-namespace:OutlookGoogleSyncRefresh.Application.ViewModels;assembly=OutlookGoogleSyncRefresh.Application"
+             xmlns:converters="http://waf.codeplex.com/schemas"
              d:DataContext="{d:DesignInstance viewModels:ShellViewModel}"
              d:DesignHeight="300"
              d:DesignWidth="300"
              mc:Ignorable="d">
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+        <converters:InvertBooleanConverter x:Key="InvertBooleanConverter"/>
     </UserControl.Resources>
     <Grid Margin="10,0,10,10">
         <Grid.RowDefinitions>

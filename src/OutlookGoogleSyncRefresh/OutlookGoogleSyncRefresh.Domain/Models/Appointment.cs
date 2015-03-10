@@ -31,6 +31,7 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
         private string _subject;
         private string _privacy;
         private string _sourceId;
+        private bool _isRecurring;
 
         public Appointment(string description, string location, string subject, DateTime? endTime, DateTime? startTime,
             string appointmentId)
@@ -144,7 +145,13 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
             get { return _privacy; }
             set { SetProperty(ref _privacy, value); }
         }
-        
+
+        public bool IsRecurring
+        {
+            get { return _isRecurring; }
+            set { SetProperty(ref _isRecurring, value); }
+        }
+
         public override bool Equals(Object obj)
         {
             // Check if the object is a Appointment.
