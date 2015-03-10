@@ -484,7 +484,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             {
                 return;
             }
-
+            IsSettingsVisible = false;
             LastSyncTime = DateTime.Now;
             ShowNotification(true);
             IsSyncInProgress = true;
@@ -533,7 +533,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             {
                 if (Settings.CheckForUpdates)
                 {
-                    if (!IsLatestVersionAvailable && _lastCheckDateTime == null && 
+                    if (!IsLatestVersionAvailable && _lastCheckDateTime == null &&
                         DateTime.Now.Subtract(_lastCheckDateTime.GetValueOrDefault()).TotalHours > 24)
                     {
                         Task<string>.Factory.StartNew(() => ApplicationUpdateService.GetLatestReleaseFromServer())

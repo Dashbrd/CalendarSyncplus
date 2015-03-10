@@ -17,6 +17,7 @@
 
 #endregion
 
+using System;
 using System.ComponentModel;
 using System.ComponentModel.Composition;
 using System.Waf.Applications;
@@ -67,6 +68,8 @@ namespace OutlookGoogleSyncRefresh.Application.Controllers
             SyncService.Initialize();
             PropertyChangedEventManager.AddHandler(SyncService, SyncServiceNotificationHandler, "");
         }
+
+
 
 
         public void Run(bool startMinimized)

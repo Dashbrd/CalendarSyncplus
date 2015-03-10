@@ -7,6 +7,7 @@
                       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                       xmlns:viewModels="clr-namespace:OutlookGoogleSyncRefresh.Application.ViewModels;assembly=OutlookGoogleSyncRefresh.Application"
                       xmlns:views="clr-namespace:OutlookGoogleSyncRefresh.Presentation.Views"
+                      xmlns:wafConverters="http://waf.codeplex.com/schemas"
                       Title="Calendar Sync +"
                       Width="600"
                       Height="700"
@@ -26,6 +27,7 @@
 
     <controls:MetroWindow.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+        <wafConverters:InvertBooleanConverter x:Key="InvertBooleanConverter"/>
         <converters:PercentageWidthConverter x:Key="PercentageWidthConverter" />
         <DataTemplate x:Key="IconTemplate">
             <Rectangle Fill="{DynamicResource AccentSelectedColorBrush}">
@@ -120,7 +122,8 @@
             </Button>
             <Button Command="{Binding LaunchSettings}"
                     Content="Preferences"
-                    ToolTip="Configure Calendar Sync +" />
+                    ToolTip="Configure Calendar Sync +" 
+                    IsEnabled="{Binding IsSyncInProgress, Converter={StaticResource InvertBooleanConverter}}"/>
             <Button Command="{Binding LaunchAbout}"
                     Content="About"
                     ToolTip="About Calendar Sync +" />

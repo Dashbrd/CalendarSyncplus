@@ -60,7 +60,6 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             SettingsSerializationService = serializationService;
             OutlookCalendarService = outlookCalendarService;
             MessageService = messageService;
-            LoadSettingsAndGetCalenders();
         }
 
         #endregion
@@ -658,5 +657,14 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
         }
 
         #endregion
+
+        private bool _isloaded = false;
+        public void Load()
+        {
+            if (_isloaded)
+                return;
+            LoadSettingsAndGetCalenders();
+            _isloaded = true;
+        }
     }
 }
