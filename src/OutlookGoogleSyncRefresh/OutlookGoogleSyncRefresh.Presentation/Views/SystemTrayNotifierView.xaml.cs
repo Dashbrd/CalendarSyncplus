@@ -27,6 +27,13 @@ namespace OutlookGoogleSyncRefresh.Presentation.Views
             ShowCustomBalloon(syncBalloon, PopupAnimation.Slide, null);
         }
 
+        public void ShowCustomBalloon(int timeoutInMilliseconds)
+        {
+            var syncBalloon = new SyncBalloon();
+            syncBalloon.DataContext = DataContext;
+            ShowCustomBalloon(syncBalloon, PopupAnimation.Slide, timeoutInMilliseconds);
+        }
+
         public void Quit()
         {
             this.Visibility = Visibility.Hidden;

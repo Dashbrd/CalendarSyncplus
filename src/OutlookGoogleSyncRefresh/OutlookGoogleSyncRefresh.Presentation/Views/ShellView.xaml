@@ -44,7 +44,7 @@
                                              ConverterParameter=75}"
                 AnimateOnPositionChange="True"
                 Content="{Binding Path=ShellService.SettingsView}"
-                Header="Settings"
+                Header="Preferences"
                 IsModal="True"
                 IsOpen="{Binding IsSettingsVisible,
                                               Mode=TwoWay}"
@@ -119,7 +119,7 @@
                 </StackPanel>
             </Button>
             <Button Command="{Binding LaunchSettings}"
-                    Content="Settings"
+                    Content="Preferences"
                     ToolTip="Configure Calendar Sync +" />
             <Button Command="{Binding LaunchAbout}"
                     Content="About"

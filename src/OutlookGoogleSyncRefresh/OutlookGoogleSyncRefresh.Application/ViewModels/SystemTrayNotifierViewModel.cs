@@ -110,6 +110,17 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             DispatcherHelper.CheckBeginInvokeOnUI((Action)(() => ViewCore.ShowCustomBalloon()));
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="tooltipText"></param>
+        /// <param name="timeoutInMilliseconds"></param>
+        public void ShowBalloon(string tooltipText, int timeoutInMilliseconds)
+        {
+            ToolTipText = tooltipText;
+            DispatcherHelper.CheckBeginInvokeOnUI((Action)(() => ViewCore.ShowCustomBalloon(timeoutInMilliseconds)));
+        }
+
         public void HideBalloon()
         {
             DispatcherHelper.CheckBeginInvokeOnUI((Action)(() => ViewCore.CloseBalloon()));

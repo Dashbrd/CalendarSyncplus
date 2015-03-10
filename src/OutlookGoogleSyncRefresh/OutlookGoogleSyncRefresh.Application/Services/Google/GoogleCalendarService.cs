@@ -42,8 +42,8 @@ using Calendar = OutlookGoogleSyncRefresh.Domain.Models.Calendar;
 
 namespace OutlookGoogleSyncRefresh.Application.Services.Google
 {
-    [Export(typeof(ICalendarService)),Export(typeof(IGoogleCalendarService))]
-    [ExportMetadata("ServiceType",CalendarServiceType.Google)]
+    [Export(typeof(ICalendarService)), Export(typeof(IGoogleCalendarService))]
+    [ExportMetadata("ServiceType", CalendarServiceType.Google)]
     public class GoogleCalendarService : IGoogleCalendarService
     {
         #region Static and Constants
@@ -106,7 +106,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Google
             googleEvent.ExtendedProperties = new Event.ExtendedPropertiesData();
             googleEvent.ExtendedProperties.Private = new Dictionary<string, string>();
             //Need to make recurring appointment IDs unique - append the item's date
-            googleEvent.ExtendedProperties.Private.Add("CalendarAppointmentId", calenderAppointment.AppointmentId);
+            googleEvent.ExtendedProperties.Private.Add(Constants.UserPropertyName, calenderAppointment.AppointmentId);
 
             //Add Start/End Time
             if (calenderAppointment.AllDayEvent)
@@ -146,7 +146,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Google
             return googleEvent;
         }
 
-       
+
 
         private CalendarService GetCalendarService()
         {
@@ -179,7 +179,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Google
 
             string id;
             if (googleEvent.ExtendedProperties != null && googleEvent.ExtendedProperties.Private != null &&
-                googleEvent.ExtendedProperties.Private.TryGetValue("CalendarAppointmentId", out id))
+                googleEvent.ExtendedProperties.Private.TryGetValue(Constants.UserPropertyName, out id))
             {
                 appointment.SourceId = id;
             }

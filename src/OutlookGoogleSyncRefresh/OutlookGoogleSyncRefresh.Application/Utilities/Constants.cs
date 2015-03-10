@@ -15,5 +15,7 @@
         public const string NavigationUri = "https://calendarsyncplus.codeplex.com/";
 
         public const string Minimized = "/MINIMIZED";
+
+        public const string UserPropertyName = "CalendarAppointmentId";
     }
 }

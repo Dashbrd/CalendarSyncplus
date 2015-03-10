@@ -41,7 +41,7 @@ namespace OutlookGoogleSyncRefresh.Application.Utilities
             StatusDictionary.Add(SyncStateEnum.DestAppointmentReading, "Reading {0} calendar...");
             StatusDictionary.Add(SyncStateEnum.DestAppointmentRead, "{0} entries read : {1}");
             StatusDictionary.Add(SyncStateEnum.ReadingEntriesToDelete, "Getting entries to be deleted...");
-            StatusDictionary.Add(SyncStateEnum.EntriesToDelete, "Found {0} entries to add");
+            StatusDictionary.Add(SyncStateEnum.EntriesToDelete, "Found {0} entries to delete");
             StatusDictionary.Add(SyncStateEnum.DeletingEntries, "Deleting {0} entries...");
             StatusDictionary.Add(SyncStateEnum.DeletingEntriesComplete, "Delete Complete.");
             StatusDictionary.Add(SyncStateEnum.DeletingEntriesFailed, "Delete Failed.");

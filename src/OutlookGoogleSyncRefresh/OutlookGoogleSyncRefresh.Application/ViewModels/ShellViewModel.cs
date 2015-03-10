@@ -364,7 +364,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
                 {
                     LatestVersion = ApplicationUpdateService.GetNewAvailableVersion();
                     IsLatestVersionAvailable = true;
-                    SystemTrayNotifierViewModel.ShowBalloon("New Update Available!");
+                    SystemTrayNotifierViewModel.ShowBalloon("New Update Available!", 5000);
                 }
                 _lastCheckDateTime = DateTime.Now;
             }
@@ -402,7 +402,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
                 }
                 catch (Exception exception)
                 {
-                        //TODO: Ignore in this release
+                    //TODO: Ignore in this release
                     //ApplicationLogger.LogError(exception.Message);
                 }
             }
@@ -460,7 +460,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
                 }
             });
         }
-        
+
         void SyncNowHandler()
         {
             try
@@ -488,9 +488,9 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             LastSyncTime = DateTime.Now;
             ShowNotification(true);
             IsSyncInProgress = true;
-            UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.SyncStarted,LastSyncTime));
-            UpdateStatus( StatusHelper.GetMessage(SyncStateEnum.Line));
-            var result= SyncStartService.SyncNow(Settings);
+            UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.SyncStarted, LastSyncTime));
+            UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.Line));
+            var result = SyncStartService.SyncNow(Settings);
             OnSyncCompleted(result);
 
         }
@@ -533,8 +533,8 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             {
                 if (Settings.CheckForUpdates)
                 {
-                    if (_lastCheckDateTime == null ||
-                        DateTime.Now.Subtract(_lastCheckDateTime.GetValueOrDefault()).Hours > 24)
+                    if (!IsLatestVersionAvailable && _lastCheckDateTime == null && 
+                        DateTime.Now.Subtract(_lastCheckDateTime.GetValueOrDefault()).TotalHours > 24)
                     {
                         Task<string>.Factory.StartNew(() => ApplicationUpdateService.GetLatestReleaseFromServer())
                             .ContinueWith(UpdateContinuationAction);

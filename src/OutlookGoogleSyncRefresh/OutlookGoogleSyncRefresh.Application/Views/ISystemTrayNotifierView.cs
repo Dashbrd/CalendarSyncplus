@@ -25,6 +25,8 @@ namespace OutlookGoogleSyncRefresh.Application.Views
     {
         void ShowCustomBalloon();
 
+        void ShowCustomBalloon(int timeoutInMilliseconds);
+
         void CloseBalloon();
 
         void Quit();
