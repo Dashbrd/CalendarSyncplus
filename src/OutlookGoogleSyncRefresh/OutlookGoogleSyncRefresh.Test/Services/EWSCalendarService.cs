@@ -67,7 +67,7 @@ namespace Test.Services
                 try
                 {
                     service.TraceEnabled = true;
-                    service.AutodiscoverUrl("ankeshdave@eaton.com", ValidateRedirectionUrlCallback);
+                    service.AutodiscoverUrl("ankeshdave@outlook.com", ValidateRedirectionUrlCallback);
                     CalendarFolder calendarFolder = CalendarFolder.Bind(service, WellKnownFolderName.Calendar);
 
                     var result = calendarFolder.FindAppointments(new CalendarView(DateTime.Now.AddDays(-1), DateTime.Now.AddDays(1)));
