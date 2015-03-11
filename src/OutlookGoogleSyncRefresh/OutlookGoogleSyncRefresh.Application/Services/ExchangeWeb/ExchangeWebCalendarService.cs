@@ -139,7 +139,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.ExchangeWeb
                 try
                 {
                     service.TraceEnabled = true;
-                    service.AutodiscoverUrl("ankeshdave@eaton.com");
+                    service.AutodiscoverUrl("ankeshdave@outlook.com");
                     CalendarFolder calendarFolder = CalendarFolder.Bind(service, WellKnownFolderName.Calendar);
 
                     var result = calendarFolder.FindAppointments(new CalendarView(DateTime.Now.AddDays(-1), DateTime.Now.AddDays(1)));
