@@ -114,7 +114,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.ExchangeWeb
                 EnableScpLookup=false,
                 Url = new Uri(@"https://cas.etn.com/ews/exchange.asmx"),
             };
-            service.AutodiscoverUrl("ankeshdave@eaton.com");
+            service.AutodiscoverUrl("ankeshdave@outlook.com");
             //service.Credentials = new WebCredentials("user1@contoso.com", "password");
             return service;
         }
