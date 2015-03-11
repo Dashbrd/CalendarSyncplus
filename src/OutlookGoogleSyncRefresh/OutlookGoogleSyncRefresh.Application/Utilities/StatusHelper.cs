@@ -10,8 +10,10 @@ namespace OutlookGoogleSyncRefresh.Application.Utilities
         SyncStarted,
         SourceAppointmentsReading,
         SourceAppointmentsRead,
+        SourceAppointmentsReadFailed,
         DestAppointmentReading,
         DestAppointmentRead,
+        DestAppointmentReadFailed,
         ReadingEntriesToDelete,
         EntriesToDelete,
         DeletingEntries,
@@ -38,8 +40,10 @@ namespace OutlookGoogleSyncRefresh.Application.Utilities
             StatusDictionary.Add(SyncStateEnum.SyncStarted, "Sync started : {0}");
             StatusDictionary.Add(SyncStateEnum.SourceAppointmentsReading, "Reading {0} calendar...");
             StatusDictionary.Add(SyncStateEnum.SourceAppointmentsRead, "{0} entries read : {1}");
+            StatusDictionary.Add(SyncStateEnum.SourceAppointmentsReadFailed, "Read failed.");
             StatusDictionary.Add(SyncStateEnum.DestAppointmentReading, "Reading {0} calendar...");
             StatusDictionary.Add(SyncStateEnum.DestAppointmentRead, "{0} entries read : {1}");
+            StatusDictionary.Add(SyncStateEnum.DestAppointmentReadFailed, "Read failed.");
             StatusDictionary.Add(SyncStateEnum.ReadingEntriesToDelete, "Getting entries to be deleted...");
             StatusDictionary.Add(SyncStateEnum.EntriesToDelete, "Found {0} entries to delete");
             StatusDictionary.Add(SyncStateEnum.DeletingEntries, "Deleting {0} entries...");

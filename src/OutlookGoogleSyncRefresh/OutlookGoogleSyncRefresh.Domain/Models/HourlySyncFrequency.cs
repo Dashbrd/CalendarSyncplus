@@ -13,9 +13,9 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
 
         public DateTime StartTime { get; set; }
 
-        public int Minutes { get; set; }
-
         public int Hours { get; set; }
+
+        public int Minutes { get; set; }
 
         public override bool ValidateTimer(DateTime dateTime)
         {

@@ -105,10 +105,10 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Google
 
             googleEvent.ExtendedProperties = new Event.ExtendedPropertiesData();
             googleEvent.ExtendedProperties.Private = new Dictionary<string, string>();
-            
+
             //Need to make recurring appointment IDs unique - append the item's date    
-            googleEvent.ExtendedProperties.Private.Add(Constants.UserPropertyName,calenderAppointment.GetSourceId());
-            
+            googleEvent.ExtendedProperties.Private.Add(Constants.UserPropertyName, calenderAppointment.GetSourceId());
+
 
             //Add Start/End Time
             if (calenderAppointment.AllDayEvent)
@@ -177,6 +177,11 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Google
                 appointment = new Appointment(googleEvent.Description, googleEvent.Location, googleEvent.Summary,
                     googleEvent.End.DateTime,
                     googleEvent.Start.DateTime, googleEvent.Id);
+            }
+
+            if (googleEvent.RecurringEventId != null && !string.IsNullOrEmpty(googleEvent.RecurringEventId))
+            {
+                appointment.IsRecurring = true;
             }
 
             string id;
@@ -379,23 +384,31 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Google
             catch (GoogleApiException exception)
             {
                 _applicationLogger.LogError(exception.ToString());
+                return null;
             }
-            while (result.Items != null)
+            if (result != null)
             {
-                // Add events to list
-                finalEventList.AddRange(
-                    result.Items.Select(CreateAppointment));
-
-                //If all pages are over break
-                if (result.NextPageToken == null)
+                while (result.Items != null)
                 {
-                    break;
+                    // Add events to list
+                    finalEventList.AddRange(
+                        result.Items.Select(CreateAppointment));
+
+                    //If all pages are over break
+                    if (result.NextPageToken == null)
+                    {
+                        break;
+                    }
+
+                    //Set the next page to pull from request
+                    eventListRequest.PageToken = result.NextPageToken;
+
+                    result = await eventListRequest.ExecuteAsync();
                 }
-
-                //Set the next page to pull from request
-                eventListRequest.PageToken = result.NextPageToken;
-
-                result = await eventListRequest.ExecuteAsync();
+            }
+            else
+            {
+                return null;
             }
             return finalEventList;
         }

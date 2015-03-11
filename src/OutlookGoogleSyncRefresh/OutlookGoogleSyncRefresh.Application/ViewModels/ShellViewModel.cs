@@ -36,6 +36,7 @@ using OutlookGoogleSyncRefresh.Application.Utilities;
 using OutlookGoogleSyncRefresh.Application.Views;
 using OutlookGoogleSyncRefresh.Common;
 using OutlookGoogleSyncRefresh.Common.Log;
+using OutlookGoogleSyncRefresh.Domain.Helpers;
 using OutlookGoogleSyncRefresh.Domain.Models;
 using Action = System.Action;
 using Exception = System.Exception;
@@ -109,7 +110,8 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             view.Closing += ViewClosing;
             view.Closed += ViewClosed;
             //If no settings
-            if (Settings == null)
+            if (Settings == null || !Settings.ValidateOutlookSettings()
+                || Settings.GoogleCalendar == null)
             {
                 IsSettingsVisible = true;
                 LastSyncTime = null;
@@ -490,10 +492,10 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
                 MessageService.ShowMessageAsync("Unable to do the operation as sync is in progress.");
                 return;
             }
+            IsSyncInProgress = true;
             IsSettingsVisible = false;
             LastSyncTime = DateTime.Now;
             ShowNotification(true);
-            IsSyncInProgress = true;
             UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.SyncStarted, LastSyncTime));
             UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.Line));
             var result = SyncStartService.SyncNow(Settings);
@@ -520,8 +522,8 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             {
                 NextSyncTime = Settings.SyncFrequency.GetNextSyncTime(LastSyncTime.GetValueOrDefault());
             }
-            CheckForUpdates();
             IsSyncInProgress = false;
+            CheckForUpdates();
         }
 
         public void ErrorMessageChanged(string message)

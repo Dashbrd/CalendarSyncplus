@@ -11,8 +11,8 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
 
         public HourlySyncViewModel()
         {
-            Minutes = 1;
             Hours = 1;
+            Minutes = 0;
         }
 
         public HourlySyncViewModel(HourlySyncFrequency syncFrequency)
@@ -37,7 +37,6 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             set
             {
                 SetProperty(ref _minutes, value);
-                Validate();
             }
         }
 
