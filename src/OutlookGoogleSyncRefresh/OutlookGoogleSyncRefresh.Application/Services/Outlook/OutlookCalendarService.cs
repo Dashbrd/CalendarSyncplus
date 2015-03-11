@@ -154,7 +154,9 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
                                         : appointmentItem.EntryID,
                                     Privacy =
                                             (appointmentItem.Sensitivity == OlSensitivity.olNormal) ? "default" : "private",
+                                    IsRecurring =  appointmentItem.IsRecurring
                                 };
+                                
                                 app.SetBusyStatus(appointmentItem.BusyStatus);
                                 var userProperties = appointmentItem.UserProperties;
                                 var userProperty = userProperties.Find(Constants.UserPropertyName);

@@ -320,6 +320,11 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
 
         private async void PeriodicSyncCommandHandler()
         {
+            if (IsSyncInProgress)
+            {
+                MessageService.ShowMessageAsync("Unable to do the operation as sync is in progress.");
+                return;
+            }
             await StartPeriodicSync();
             Settings.PeriodicSyncOn = IsPeriodicSyncStarted;
             if (IsPeriodicSyncStarted)
@@ -482,6 +487,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
         {
             if (IsSyncInProgress)
             {
+                MessageService.ShowMessageAsync("Unable to do the operation as sync is in progress.");
                 return;
             }
             IsSettingsVisible = false;
