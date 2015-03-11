@@ -23,6 +23,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using System.Windows;
 
 using Microsoft.Office.Interop.Outlook;
 using Microsoft.Win32;
@@ -44,11 +45,17 @@ namespace Test
 
             //application.InitializeComponent();
             //application.Run();
+            var startTime = DateTime.Now;
 
             var service = new ExchangeWebCalendarService();
 
             var calendars = service.GetCalendarsAsync();
             service.GetAppointmentsAsync(7, 7, "", calendars[0]);
+
+
+            var timediff = DateTime.Now - startTime;
+
+            Debug.WriteLine(string.Format("**********************************************Time Diff : {0}**********************************************", timediff.TotalMinutes));
 
 
             //var list = GetOutlookProfileList();

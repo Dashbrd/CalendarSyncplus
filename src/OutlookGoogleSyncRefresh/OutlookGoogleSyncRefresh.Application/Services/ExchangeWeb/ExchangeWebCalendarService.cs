@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Exchange.WebServices.Data;
@@ -21,7 +22,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.ExchangeWeb
         public List<AppAppointment> GetAppointmentsAsync(int daysInPast, int daysInFuture,
             string profileName, OutlookCalendar outlookCalendar)
         {
-            ExchangeService service = GetExchangeService();
+            ExchangeService service = GetExchangeService(ExchangeVersion.Exchange2010_SP2);
             DateTime startDate = DateTime.Now.AddDays(-daysInPast);
             DateTime endDate = DateTime.Now.AddDays(+(daysInFuture + 1));
             var calendarview = new CalendarView(startDate, endDate);
@@ -30,15 +31,22 @@ namespace OutlookGoogleSyncRefresh.Application.Services.ExchangeWeb
             var outlookAppointments = new List<AppAppointment>();
             FindItemsResults<Appointment> exchangeAppointments = service.FindAppointments(outlookCalendar.EntryId, calendarview);
 
+
+
+            service.LoadPropertiesForItems(
+                from Item item in exchangeAppointments select item,
+                new PropertySet(BasePropertySet.FirstClassProperties) { RequestedBodyType = BodyType.Text });
+
             if (exchangeAppointments != null)
             {
                 foreach (Appointment exchangeAppointment in exchangeAppointments)
                 {
-                    exchangeAppointment.Load(new PropertySet(BasePropertySet.FirstClassProperties) { RequestedBodyType = BodyType.Text });
+                    //exchangeAppointment.Load(new PropertySet(BasePropertySet.FirstClassProperties) { RequestedBodyType = BodyType.Text });
 
                     var appointment = new AppAppointment(exchangeAppointment.Body, exchangeAppointment.Location,
                         exchangeAppointment.Subject, exchangeAppointment.Start, exchangeAppointment.Start)
                     {
+                        AppointmentId=exchangeAppointment.Id.UniqueId,
                         AllDayEvent = exchangeAppointment.IsAllDayEvent,
                         OptionalAttendees = GetAttendees(exchangeAppointment.OptionalAttendees),
                         ReminderMinutesBeforeStart = exchangeAppointment.ReminderMinutesBeforeStart,
@@ -59,7 +67,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.ExchangeWeb
 
             foreach (Attendee attendee in attendeeCollection)
             {
-                attendees.Append(attendee.Name + ";");
+                attendees.Append(attendee.Address + ";");
             }
 
             return attendees.ToString();
@@ -67,7 +75,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.ExchangeWeb
 
         public List<OutlookCalendar> GetCalendarsAsync()
         {
-            ExchangeService service = GetExchangeService();
+            ExchangeService service = GetExchangeService(ExchangeVersion.Exchange2010_SP2);
 
             // Create a new folder view, and pass in the maximum number of folders to return.
             var view = new FolderView(1000);
@@ -98,17 +106,53 @@ namespace OutlookGoogleSyncRefresh.Application.Services.ExchangeWeb
 
         #endregion
 
-        public ExchangeService GetExchangeService()
+        public ExchangeService GetExchangeService(ExchangeVersion exchangeVersion)
         {
-            var service = new ExchangeService(ExchangeVersion.Exchange2010_SP2)
+            var service = new ExchangeService(exchangeVersion)
             {
                 UseDefaultCredentials = true,
                 EnableScpLookup=false,
+                Url = new Uri(@"https://cas.etn.com/ews/exchange.asmx"),
             };
-
-            service.AutodiscoverUrl("ankeshdave@outlook.com");
+            service.AutodiscoverUrl("ankeshdave@eaton.com");
             //service.Credentials = new WebCredentials("user1@contoso.com", "password");
             return service;
+        }
+
+        public ExchangeVersion GetBestSuitedExchangeVersion()
+        {
+            var enumList = Enum.GetValues(typeof(ExchangeVersion)).Cast<ExchangeVersion>().Reverse();
+
+            IWebProxy proxy = WebRequest.DefaultWebProxy;
+            proxy.Credentials = CredentialCache.DefaultNetworkCredentials;
+
+
+            var exchangeVersions = enumList as ExchangeVersion[] ?? enumList.ToArray();
+            foreach (ExchangeVersion exchangeVersion in exchangeVersions)
+            {
+                var service = new ExchangeService(exchangeVersion)
+                {
+                    UseDefaultCredentials = true,
+                    WebProxy = proxy
+                };
+
+                try
+                {
+                    service.TraceEnabled = true;
+                    service.AutodiscoverUrl("ankeshdave@eaton.com");
+                    CalendarFolder calendarFolder = CalendarFolder.Bind(service, WellKnownFolderName.Calendar);
+
+                    var result = calendarFolder.FindAppointments(new CalendarView(DateTime.Now.AddDays(-1), DateTime.Now.AddDays(1)));
+
+                    return exchangeVersion;
+                }
+                catch (Exception exception)
+                {
+
+                    continue;
+                }
+            }
+            return exchangeVersions.ElementAtOrDefault((exchangeVersions.Count() - 1));
         }
 
         private void GetCalendars(Folder searchFolder, List<OutlookCalendar> outlookCalendars, FolderView view)
@@ -124,8 +168,8 @@ namespace OutlookGoogleSyncRefresh.Application.Services.ExchangeWeb
                 outlookCalendars.Add(new OutlookCalendar
                 {
                     Name = searchFolder.DisplayName,
-                    EntryId = searchFolder.Id.ToString(),
-                    StoreId = searchFolder.ParentFolderId.ToString()
+                    EntryId = searchFolder.Id.UniqueId,
+                    StoreId = searchFolder.ParentFolderId.UniqueId
                 });
                 return;
             }
