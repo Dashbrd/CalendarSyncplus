@@ -344,7 +344,6 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
 
                 UpdateStatus(string.Format("Period Sync Stopped : {0}", DateTime.Now));
                 UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.LogSeparator));
-                ApplicationLogger.LogInfo("Periodic Sync Stopped");
             }
             else
             {
@@ -355,7 +354,6 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
                     {
                         NextSyncTime = _settings.SyncSettings.SyncFrequency.GetNextSyncTime(DateTime.Now);
                     }
-                    ApplicationLogger.LogInfo("Periodic Sync Started");
                     IsPeriodicSyncStarted = true;
                     UpdateStatus(string.Format("Period Sync Started : {0}", DateTime.Now));
                     UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.LogSeparator));
@@ -387,6 +385,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             InvokeOnCurrentDispatcher(() =>
             {
                 _statusBuilder.AppendLine(text);
+                ApplicationLogger.LogInfo(text);
                 RaisePropertyChanged("SyncLog");
             });
         }
@@ -409,8 +408,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
                 }
                 catch (Exception exception)
                 {
-                    //TODO: Ignore in this release
-                    //ApplicationLogger.LogError(exception.Message);
+                    ApplicationLogger.LogError(exception.Message);
                 }
             }
 
