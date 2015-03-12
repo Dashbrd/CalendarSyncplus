@@ -34,6 +34,7 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
         private bool _isRecurring;
         private string _calendarId;
         private Dictionary<string, object> _extendedProperties;
+        private List<Recipient> _recipients; 
 
         public Appointment(string description, string location, string subject, DateTime? endTime, DateTime? startTime,
             string appointmentId)
@@ -165,6 +166,12 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
         {
             get { return _isRecurring; }
             set { SetProperty(ref _isRecurring, value); }
+        }
+
+        public List<Recipient> Recipients
+        {
+            get { return _recipients; }
+            set { SetProperty(ref _recipients, value); }
         }
 
         public override bool Equals(Object obj)
