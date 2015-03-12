@@ -289,6 +289,10 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
                     }
                 }
             }
+            SourceAppointments = null;
+            DestinationAppointments = null;
+            SourceCalendarService = null;
+            DestinationCalendarService = null;
             return isSuccess;
         }
 
