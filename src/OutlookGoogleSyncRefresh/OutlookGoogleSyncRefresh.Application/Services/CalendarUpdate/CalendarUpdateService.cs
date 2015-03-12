@@ -105,57 +105,48 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
         }
         private List<Appointment> GetAppointmentsToDelete(SyncModeEnum syncMode, List<Appointment> sourceList, List<Appointment> destinationList)
         {
-            if (sourceList.Any() && destinationList.Any())
+            var appointmentsToDelete = new List<Appointment>();
+            foreach (var destAppointment in destinationList)
             {
-                var appointmentsToDelete = new List<Appointment>();
-                foreach (var destAppointment in destinationList)
+                if (destAppointment.SourceId == null)
                 {
-                    if (destAppointment.SourceId == null)
-                    {
-                        //For one way sync, destination items with source id null should be deleted
-                        if (syncMode == SyncModeEnum.OneWay)
-                        {
-                            appointmentsToDelete.Add(destAppointment);
-                        }
-                        //For two way sync, ignore the items with source id null as they are manual entries
-                        //Which will be added to other calendar if they are not already present
-                        continue;
-                    }
-
-                    bool isFound = false;
-                    foreach (var sourceAppointment in sourceList)
-                    {
-                        //Check if appointment id is equal for recurring and non-recurring items
-                        if (sourceAppointment.CompareSourceId(destAppointment))
-                        {
-                            //If destination entry is equal to source entry, need not delete
-                            if (destAppointment.Equals(sourceAppointment))
-                            {
-                                isFound = true;
-                            }
-                            break;
-                        }
-                    }
-                    //If no entry is found in source, delete the entries in the destination
-                    if (!isFound)
+                    //For one way sync, destination items with source id null should be deleted
+                    if (syncMode == SyncModeEnum.OneWay)
                     {
                         appointmentsToDelete.Add(destAppointment);
                     }
+                    //For two way sync, ignore the items with source id null as they are manual entries
+                    //Which will be added to other calendar if they are not already present
+                    continue;
                 }
-                return appointmentsToDelete;
-            }
 
-            if (syncMode == SyncModeEnum.OneWay)
-            {
-                return destinationList;
+                bool isFound = false;
+                foreach (var sourceAppointment in sourceList)
+                {
+                    //Check if appointment id is equal for recurring and non-recurring items
+                    if (sourceAppointment.CompareSourceId(destAppointment))
+                    {
+                        //If destination entry is equal to source entry, need not delete
+                        if (destAppointment.Equals(sourceAppointment))
+                        {
+                            isFound = true;
+                        }
+                        break;
+                    }
+                }
+                //If no entry is found in source, delete the entries in the destination
+                if (!isFound)
+                {
+                    appointmentsToDelete.Add(destAppointment);
+                }
             }
+            return appointmentsToDelete;
 
-            return new List<Appointment>();
         }
 
         private List<Appointment> GetAppointmentsToAdd(SyncModeEnum syncMode, List<Appointment> sourceList, List<Appointment> destinationList)
         {
-            if (destinationList.Any() && sourceList.Any())
+            if (destinationList.Any())
             {
                 var appointmentsToAdd = new List<Appointment>();
                 foreach (var sourceAppointment in sourceList)
