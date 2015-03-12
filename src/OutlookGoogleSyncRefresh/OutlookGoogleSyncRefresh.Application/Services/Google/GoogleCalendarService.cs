@@ -107,7 +107,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Google
             googleEvent.ExtendedProperties.Private = new Dictionary<string, string>();
 
             //Need to make recurring appointment IDs unique - append the item's date    
-            googleEvent.ExtendedProperties.Private.Add(Constants.UserPropertyName, calenderAppointment.GetSourceId());
+            googleEvent.ExtendedProperties.Private.Add(calenderAppointment.GetSourceEntryKey(), calenderAppointment.GetSourceId());
 
 
             //Add Start/End Time
@@ -183,12 +183,13 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Google
             {
                 appointment.IsRecurring = true;
             }
-
-            string id;
-            if (googleEvent.ExtendedProperties != null && googleEvent.ExtendedProperties.Private != null &&
-                googleEvent.ExtendedProperties.Private.TryGetValue(Constants.UserPropertyName, out id))
+            appointment.CalendarId = CalendarId;
+            if (googleEvent.ExtendedProperties != null && googleEvent.ExtendedProperties.Private != null)
             {
-                appointment.SourceId = id;
+                foreach (var property in googleEvent.ExtendedProperties.Private)
+                {
+                    appointment.ExtendedProperties.Add(property.Key, property.Value);
+                }
             }
 
             return appointment;
@@ -259,6 +260,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Google
             bool addReminder, bool addAttendees, IDictionary<string, object> calendarSpecificData)
         {
             CheckCalendarSpecificData(calendarSpecificData);
+            object obj;
 
             var eventIndexList = new Dictionary<KeyValuePair<int, Appointment>, HttpResponseMessage>();
             //Get Calendar Service
@@ -359,7 +361,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Google
             return true;
         }
 
-        public async Task<List<Appointment>> GetCalendarEventsInRangeAsync(int daysInPast, int daysInFuture,
+        public async Task<CalendarAppointments> GetCalendarEventsInRangeAsync(int daysInPast, int daysInFuture,
             IDictionary<string, object> calendarSpecificData)
         {
             CheckCalendarSpecificData(calendarSpecificData);
@@ -410,7 +412,9 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Google
             {
                 return null;
             }
-            return finalEventList;
+            var calendarAppointments = new CalendarAppointments() { CalendarId = this.CalendarId };
+            calendarAppointments.AddRange(finalEventList);
+            return calendarAppointments;
         }
 
         #endregion

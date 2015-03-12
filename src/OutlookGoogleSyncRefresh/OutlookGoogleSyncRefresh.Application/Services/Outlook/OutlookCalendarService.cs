@@ -30,6 +30,7 @@ using System.Threading.Tasks;
 using Microsoft.Office.Interop.Outlook;
 using Microsoft.Win32;
 using OutlookGoogleSyncRefresh.Application.Utilities;
+using OutlookGoogleSyncRefresh.Common.Log;
 using OutlookGoogleSyncRefresh.Common.MetaData;
 using OutlookGoogleSyncRefresh.Domain.Models;
 using Exception = System.Exception;
@@ -42,8 +43,14 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
     [ExportMetadata("ServiceType", CalendarServiceType.OutlookDesktop)]
     public class OutlookCalendarService : IOutlookCalendarService
     {
-        #region Properties
+        [ImportingConstructor]
+        public OutlookCalendarService(ApplicationLogger applicationLogger)
+        {
+            ApplicationLogger = applicationLogger;
+        }
 
+        #region Properties
+        public ApplicationLogger ApplicationLogger { get; set; }
         public string CalendarServiceName
         {
             get { return "Outlook"; }
@@ -91,9 +98,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
             }
         }
 
-        private AppointmentListWrapper GetOutlookEntriesForSelectedTimeRange(int daysInPast, int daysInFuture,
-            string profileName,
-            OutlookCalendar outlookCalendar)
+        private AppointmentListWrapper GetOutlookEntriesForSelectedTimeRange(int daysInPast, int daysInFuture)
         {
             var disposeOutlookInstances = false;
             Microsoft.Office.Interop.Outlook.Application application = null;
@@ -107,13 +112,21 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
             try
             {
                 // Get Application and Namespace
-                GetOutlookApplication(out disposeOutlookInstances, out application, out nameSpace, profileName);
+                GetOutlookApplication(out disposeOutlookInstances, out application, out nameSpace, ProfileName);
 
                 // Get Default Calender
-                defaultOutlookCalender = outlookCalendar != null
-                    ? nameSpace.GetFolderFromID(outlookCalendar.EntryId, outlookCalendar.StoreId)
+                defaultOutlookCalender = OutlookCalendar != null
+                    ? nameSpace.GetFolderFromID(OutlookCalendar.EntryId, OutlookCalendar.StoreId)
                     : nameSpace.GetDefaultFolder(OlDefaultFolders.olFolderCalendar);
-
+                if (OutlookCalendar == null)
+                {
+                    OutlookCalendar = new OutlookCalendar()
+                    {
+                        Name = defaultOutlookCalender.Name,
+                        EntryId = defaultOutlookCalender.EntryID,
+                        StoreId = defaultOutlookCalender.StoreID
+                    };
+                }
                 // Get outlook Items
                 outlookItems = defaultOutlookCalender.Items;
 
@@ -135,45 +148,13 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
                     {
                         var appts = outlookEntries.Cast<AppointmentItem>();
                         var appointmentItems = appts as AppointmentItem[] ?? appts.ToArray();
-                        if (appointmentItems.Any())
-                        {
-                            foreach (var appointmentItem in appointmentItems)
-                            {
-                                var app = new Appointment(appointmentItem.Body, appointmentItem.Location,
-                                    appointmentItem.Subject, appointmentItem.End, appointmentItem.Start)
-                                {
-                                    AllDayEvent = appointmentItem.AllDayEvent,
-                                    OptionalAttendees = appointmentItem.OptionalAttendees,
-                                    ReminderMinutesBeforeStart = appointmentItem.ReminderMinutesBeforeStart,
-                                    Organizer = appointmentItem.Organizer,
-                                    ReminderSet = appointmentItem.ReminderSet,
-                                    RequiredAttendees = appointmentItem.RequiredAttendees,
-                                    AppointmentId = appointmentItem.IsRecurring
-                                        ? string.Format("{0}_{1}", appointmentItem.EntryID,
-                                            appointmentItem.Start.ToString("d"))
-                                        : appointmentItem.EntryID,
-                                    Privacy =
-                                            (appointmentItem.Sensitivity == OlSensitivity.olNormal) ? "default" : "private",
-                                    IsRecurring =  appointmentItem.IsRecurring
-                                };
-                                
-                                app.SetBusyStatus(appointmentItem.BusyStatus);
-                                var userProperties = appointmentItem.UserProperties;
-                                var userProperty = userProperties.Find(Constants.UserPropertyName);
-                                if (userProperty != null)
-                                {
-                                    app.SourceId = userProperty.Value;
-                                }
-                                outlookAppointments.Add(app);
-                                Marshal.FinalReleaseComObject(userProperties);
-                            }
-
-                        }
+                        GetAppointmentFromItem(appointmentItems, defaultOutlookCalender.EntryID, outlookAppointments);
                     }
                 }
             }
             catch (Exception exception)
             {
+                ApplicationLogger.LogError(exception.Message);
             }
             finally
             {
@@ -213,11 +194,54 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
             };
         }
 
-        private List<Appointment> GetAppointments(int daysInPast, int daysInFuture, string profileName,
-            OutlookCalendar outlookCalendar)
+        private static void GetAppointmentFromItem(AppointmentItem[] appointmentItems, string id,
+            List<Appointment> outlookAppointments)
         {
-            var list = GetOutlookEntriesForSelectedTimeRange(daysInPast, daysInFuture, profileName,
-                outlookCalendar);
+            if (appointmentItems.Any())
+            {
+                foreach (var appointmentItem in appointmentItems)
+                {
+                    var app = new Appointment(appointmentItem.Body, appointmentItem.Location,
+                        appointmentItem.Subject, appointmentItem.End, appointmentItem.Start)
+                    {
+                        AllDayEvent = appointmentItem.AllDayEvent,
+                        OptionalAttendees = appointmentItem.OptionalAttendees,
+                        ReminderMinutesBeforeStart = appointmentItem.ReminderMinutesBeforeStart,
+                        Organizer = appointmentItem.Organizer,
+                        ReminderSet = appointmentItem.ReminderSet,
+                        RequiredAttendees = appointmentItem.RequiredAttendees,
+                        AppointmentId = appointmentItem.IsRecurring
+                            ? string.Format("{0}_{1}", appointmentItem.EntryID,
+                                appointmentItem.Start.ToString("d"))
+                            : appointmentItem.EntryID,
+                        Privacy =
+                            (appointmentItem.Sensitivity == OlSensitivity.olNormal) ? "default" : "private",
+                        IsRecurring = appointmentItem.IsRecurring,
+                    };
+
+                    app.SetBusyStatus(appointmentItem.BusyStatus);
+
+                    var userProperties = appointmentItem.UserProperties;
+                    if (userProperties
+                        != null)
+                    {
+                        foreach (UserProperty userProperty in userProperties)
+                        {
+                            app.ExtendedProperties.Add(userProperty.Name,
+                                userProperty.Value);
+                        }
+
+                        Marshal.FinalReleaseComObject(userProperties);
+                    }
+                    app.CalendarId = id;
+                    outlookAppointments.Add(app);
+                }
+            }
+        }
+
+        private List<Appointment> GetAppointments(int daysInPast, int daysInFuture)
+        {
+            var list = GetOutlookEntriesForSelectedTimeRange(daysInPast, daysInFuture);
             if (!list.WaitForApplicationQuit)
             {
                 return list.Appointments;
@@ -392,7 +416,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
         }
 
 
-        public async Task<List<Appointment>> GetCalendarEventsInRangeAsync(int daysInPast, int daysInFuture,
+        public async Task<CalendarAppointments> GetCalendarEventsInRangeAsync(int daysInPast, int daysInFuture,
             IDictionary<string, object> calendarSpecificData)
         {
             CheckCalendarSpecificData(calendarSpecificData);
@@ -400,8 +424,14 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
             var appointmentList =
                 await
                     Task<List<Appointment>>.Factory.StartNew(
-                        () => GetAppointments(daysInPast, daysInFuture, ProfileName, OutlookCalendar));
-            return appointmentList;
+                        () => GetAppointments(daysInPast, daysInFuture));
+            var calendarAppointments = new CalendarAppointments();
+            if (OutlookCalendar != null)
+            {
+                calendarAppointments.CalendarId = OutlookCalendar.EntryId;
+            }
+            calendarAppointments.AddRange(appointmentList);
+            return calendarAppointments;
         }
 
         public void CheckCalendarSpecificData(IDictionary<string, object> calendarSpecificData)
@@ -431,34 +461,19 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
             bool addAttendees,
             IDictionary<string, object> calendarSpecificData)
         {
-            if (calendarSpecificData == null)
-            {
-                return false;
-            }
-            object data;
-            if (!calendarSpecificData.TryGetValue("OutlookCalendar", out data))
-            {
-                return false;
-            }
-            var outlookCalendar = data as OutlookCalendar;
-            if (!calendarSpecificData.TryGetValue("ProfileName", out data))
-            {
-                return false;
-            }
-            var profileName = data as string;
+            CheckCalendarSpecificData(calendarSpecificData);
+
             var result = await
-                    Task<bool>.Factory.StartNew(() => AddEvents(calenderAppointments, addDescription, addReminder, addAttendees,
-                outlookCalendar, profileName));
+                    Task<bool>.Factory.StartNew(() => AddEvents(calenderAppointments, addDescription, addReminder, addAttendees));
 
             return result;
         }
 
         bool AddEvents(List<Appointment> calenderAppointments, bool addDescription,
             bool addReminder,
-            bool addAttendees, OutlookCalendar outlookCalendar, string profileName)
+            bool addAttendees)
         {
-            var wrapper = AddEventsToOutlook(calenderAppointments, addDescription, addReminder, addAttendees,
-                outlookCalendar, profileName);
+            var wrapper = AddEventsToOutlook(calenderAppointments, addDescription, addReminder, addAttendees);
 
             if (!wrapper.WaitForApplicationQuit)
             {
@@ -482,8 +497,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
         /// <param name="profileName"></param>
         /// <returns></returns>
         private AppointmentListWrapper AddEventsToOutlook(List<Appointment> calenderAppointments, bool addDescription,
-            bool addReminder,
-            bool addAttendees, OutlookCalendar outlookCalendar, string profileName)
+            bool addReminder, bool addAttendees)
         {
             bool disposeOutlookInstances = false;
             Microsoft.Office.Interop.Outlook.Application application = null;
@@ -495,10 +509,10 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
             {
 
                 // Get Application and Namespace
-                GetOutlookApplication(out disposeOutlookInstances, out application, out nameSpace, profileName);
+                GetOutlookApplication(out disposeOutlookInstances, out application, out nameSpace, ProfileName);
 
                 // Get Default Calender
-                defaultOutlookCalender = outlookCalendar != null ? nameSpace.GetFolderFromID(outlookCalendar.EntryId, outlookCalendar.StoreId) : nameSpace.GetDefaultFolder(OlDefaultFolders.olFolderCalendar);
+                defaultOutlookCalender = OutlookCalendar != null ? nameSpace.GetFolderFromID(OutlookCalendar.EntryId, OutlookCalendar.StoreId) : nameSpace.GetDefaultFolder(OlDefaultFolders.olFolderCalendar);
                 outlookItems = defaultOutlookCalender.Items;
                 foreach (var calendarAppointment in calenderAppointments)
                 {
@@ -617,10 +631,15 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
                 userProperties = appItem.UserProperties;
                 if (userProperties != null)
                 {
-                    var sourceProperty = userProperties.Add(Constants.UserPropertyName, OlUserPropertyType.olText);
+                    var sourceProperty = userProperties.Add(calendarAppointment.GetSourceEntryKey(),
+                        OlUserPropertyType.olText);
                     sourceProperty.Value = calendarAppointment.AppointmentId;
                 }
                 appItem.Save();
+            }
+            catch (Exception exception)
+            {
+                ApplicationLogger.LogError(exception.Message);
             }
             finally
             {
@@ -642,21 +661,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
         public async Task<bool> AddCalendarEvent(Appointment calendarAppointment, bool addDescription, bool addReminder,
              bool addAttendees, IDictionary<string, object> calendarSpecificData)
         {
-            if (calendarSpecificData == null)
-            {
-                return false;
-            }
-            object data;
-            if (!calendarSpecificData.TryGetValue("OutlookCalendar", out data))
-            {
-                return false;
-            }
-            var outlookCalendar = data as OutlookCalendar;
-            if (!calendarSpecificData.TryGetValue("ProfileName", out data))
-            {
-                return false;
-            }
-            var profileName = data as string;
+            CheckCalendarSpecificData(calendarSpecificData);
 
             bool disposeOutlookInstances = false;
             Microsoft.Office.Interop.Outlook.Application application = null;
@@ -668,10 +673,10 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
             {
 
                 // Get Application and Namespace
-                GetOutlookApplication(out disposeOutlookInstances, out application, out nameSpace, profileName);
+                GetOutlookApplication(out disposeOutlookInstances, out application, out nameSpace, ProfileName);
 
                 // Get Default Calender
-                defaultOutlookCalender = outlookCalendar != null ? nameSpace.GetFolderFromID(outlookCalendar.EntryId, outlookCalendar.StoreId) : nameSpace.GetDefaultFolder(OlDefaultFolders.olFolderCalendar);
+                defaultOutlookCalender = OutlookCalendar != null ? nameSpace.GetFolderFromID(OutlookCalendar.EntryId, OutlookCalendar.StoreId) : nameSpace.GetDefaultFolder(OlDefaultFolders.olFolderCalendar);
                 outlookItems = defaultOutlookCalender.Items;
 
                 AppointmentItem appItem = outlookItems.Add(OlItemType.olAppointmentItem) as AppointmentItem;

@@ -9,5 +9,6 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
         public bool WaitForApplicationQuit { get; set; }
 
         public bool Success { get; set; }
+
     }
 }

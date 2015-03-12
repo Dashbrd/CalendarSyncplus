@@ -33,11 +33,12 @@ namespace OutlookGoogleSyncRefresh.Application.Services
 
         Task<bool> DeleteCalendarEvent(List<Appointment> calendarAppointments, IDictionary<string, object> calendarSpecificData);
 
-        Task<List<Appointment>> GetCalendarEventsInRangeAsync(int daysInPast, int daysInFuture, IDictionary<string, object> calendarSpecificData);
+        Task<CalendarAppointments> GetCalendarEventsInRangeAsync(int daysInPast, int daysInFuture, IDictionary<string, object> calendarSpecificData);
 
         Task<bool> AddCalendarEvent(List<Appointment> calenderAppointments, bool addDescription,
             bool addReminder, bool addAttendees, IDictionary<string, object> calendarSpecificData);
 
         void CheckCalendarSpecificData(IDictionary<string, object> calendarSpecificData);
     }
+
 }

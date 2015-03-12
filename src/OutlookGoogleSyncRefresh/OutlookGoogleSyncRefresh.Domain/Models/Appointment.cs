@@ -32,6 +32,8 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
         private string _privacy;
         private string _sourceId;
         private bool _isRecurring;
+        private string _calendarId;
+        private Dictionary<string, object> _extendedProperties;
 
         public Appointment(string description, string location, string subject, DateTime? endTime, DateTime? startTime,
             string appointmentId)
@@ -47,6 +49,7 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
             _subject = subject;
             _endTime = endTime;
             _startTime = startTime;
+            ExtendedProperties = new Dictionary<string, object>();
         }
 
         public DateTime? StartTime
@@ -89,6 +92,18 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
         {
             get { return _sourceId; }
             set { SetProperty(ref _sourceId, value); }
+        }
+
+        public string CalendarId
+        {
+            get { return _calendarId; }
+            set { SetProperty(ref _calendarId, value); }
+        }
+
+        public Dictionary<string, object> ExtendedProperties
+        {
+            get { return _extendedProperties; }
+            set { SetProperty(ref _extendedProperties, value); }
         }
 
         public string Rfc339FormatStartTime
@@ -167,7 +182,7 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
             // Instances are considered equal if the ToString matches.
             return ToString() == appointment.ToString();
         }
-        
+
 
         public override int GetHashCode()
         {

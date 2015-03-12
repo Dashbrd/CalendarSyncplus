@@ -45,8 +45,8 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
         private readonly ApplicationLogger _applicationLogger;
 
         private Appointment _currentAppointment;
-        private List<Appointment> _destinationAppointments;
-        private List<Appointment> _sourceAppointments;
+        private CalendarAppointments _destinationAppointments;
+        private CalendarAppointments _sourceAppointments;
         private string _syncStatus;
 
         #endregion
@@ -145,7 +145,12 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
                 return appointmentsToDelete;
             }
 
-            return destinationList;
+            if (syncMode == SyncModeEnum.OneWay)
+            {
+                return destinationList;
+            }
+
+            return new List<Appointment>();
         }
 
         private List<Appointment> GetAppointmentsToAdd(SyncModeEnum syncMode, List<Appointment> sourceList, List<Appointment> destinationList)
@@ -207,18 +212,139 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
             }
             return null;
         }
+        private void LoadSourceId()
+        {
+            if (SourceAppointments.Any())
+            {
+                string calendarId = DestinationAppointments.CalendarId;
+                foreach (var sourceAppointment in SourceAppointments)
+                {
+                    sourceAppointment.LoadSourceId(calendarId);
+                }
+            }
 
+            if (DestinationAppointments.Any())
+            {
+                string calendarId = SourceAppointments.CalendarId;
+                foreach (var destAppointment in DestinationAppointments)
+                {
+                    destAppointment.LoadSourceId(calendarId);
+                }
+            }
+        }
+
+
+        private bool AddDestinationAppointments(Settings settings, IDictionary<string, object> destinationCalendarSpecificData)
+        {
+            //Update status for reading entries to add
+            SyncStatus = StatusHelper.GetMessage(SyncStateEnum.ReadingEntriesToAdd);
+            //Get entries to add
+            List<Appointment> calendarAppointments = GetAppointmentsToAdd(settings.SyncSettings.SyncMode, SourceAppointments, DestinationAppointments);
+            SyncStatus = StatusHelper.GetMessage(SyncStateEnum.EntriesToAdd, calendarAppointments.Count);
+            SyncStatus = StatusHelper.GetMessage(SyncStateEnum.AddingEntries, DestinationCalendarService.CalendarServiceName);
+            //Add entries to destination calendar
+            bool isSuccess = DestinationCalendarService.AddCalendarEvent(calendarAppointments,
+                settings.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Description),
+                settings.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Reminders),
+                settings.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Attendees), destinationCalendarSpecificData)
+                .Result;
+            //Update status if entries were successfully added
+            SyncStatus =
+                StatusHelper.GetMessage(isSuccess ? SyncStateEnum.AddEntriesComplete : SyncStateEnum.AddEntriesFailed);
+            SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
+            return isSuccess;
+        }
+
+        private bool DeleteDestinationAppointments(Settings settings,
+            IDictionary<string, object> destinationCalendarSpecificData)
+        {
+            //Updating entry delete status
+            SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
+            SyncStatus = StatusHelper.GetMessage(SyncStateEnum.ReadingEntriesToDelete);
+            //Getting appointments to delete
+            List<Appointment> appointmentsToDelete = GetAppointmentsToDelete(settings.SyncSettings.SyncMode, SourceAppointments, DestinationAppointments);
+            //Updating Get entry delete status
+            SyncStatus = StatusHelper.GetMessage(SyncStateEnum.EntriesToDelete, appointmentsToDelete.Count);
+            //Updating delete status
+            SyncStatus = StatusHelper.GetMessage(SyncStateEnum.DeletingEntries, DestinationCalendarService.CalendarServiceName);
+            //Deleting entries
+            bool isSuccess =
+                DestinationCalendarService.DeleteCalendarEvent(appointmentsToDelete, destinationCalendarSpecificData).Result;
+            //Update status if entries were successfully deleted
+            SyncStatus =
+                StatusHelper.GetMessage(isSuccess ? SyncStateEnum.DeletingEntriesComplete : SyncStateEnum.DeletingEntriesFailed);
+            SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
+            if (isSuccess)
+            {
+                for (int index = 0; index < appointmentsToDelete.Count; index++)
+                {
+                    DestinationAppointments.Remove(appointmentsToDelete[index]);
+                }
+            }
+            return isSuccess;
+        }
+
+        private bool AddSourceAppointments(Settings settings, IDictionary<string, object> sourceCalendarSpecificData)
+        {
+            //Update status for reading entries to add
+            SyncStatus = StatusHelper.GetMessage(SyncStateEnum.ReadingEntriesToAdd);
+            //Get entries to add
+            List<Appointment> calendarAppointments = GetAppointmentsToAdd(settings.SyncSettings.SyncMode, DestinationAppointments, SourceAppointments);
+            SyncStatus = StatusHelper.GetMessage(SyncStateEnum.EntriesToAdd, calendarAppointments.Count);
+            SyncStatus = StatusHelper.GetMessage(SyncStateEnum.AddingEntries, SourceCalendarService.CalendarServiceName);
+
+            //Add entries to calendar
+            bool isSuccess = SourceCalendarService.AddCalendarEvent(calendarAppointments,
+                settings.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Description),
+                settings.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Reminders),
+                settings.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Attendees), sourceCalendarSpecificData)
+                .Result;
+            //Update status if entries were successfully added
+            SyncStatus =
+                StatusHelper.GetMessage(isSuccess ? SyncStateEnum.AddEntriesComplete : SyncStateEnum.AddEntriesFailed);
+            SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
+
+            return isSuccess;
+        }
+
+        private bool DeleteSourceAppointments(Settings settings, IDictionary<string, object> sourceCalendarSpecificData)
+        {
+            //Updating entry delete status
+            SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
+            SyncStatus = StatusHelper.GetMessage(SyncStateEnum.ReadingEntriesToDelete);
+            //Getting appointments to delete
+            List<Appointment> appointmentsToDelete = GetAppointmentsToDelete(settings.SyncSettings.SyncMode, DestinationAppointments, SourceAppointments);
+            //Updating Get entry delete status
+            SyncStatus = StatusHelper.GetMessage(SyncStateEnum.EntriesToDelete, appointmentsToDelete.Count);
+            //Updating delete status
+            SyncStatus = StatusHelper.GetMessage(SyncStateEnum.DeletingEntries, SourceCalendarService.CalendarServiceName);
+            //Deleting entries
+            bool isSuccess =
+                SourceCalendarService.DeleteCalendarEvent(appointmentsToDelete, sourceCalendarSpecificData).Result;
+            //Update status if entries were successfully deleted
+            SyncStatus =
+                StatusHelper.GetMessage(isSuccess ? SyncStateEnum.DeletingEntriesComplete : SyncStateEnum.DeletingEntriesFailed);
+            SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
+            if (isSuccess)
+            {
+                for (int index = 0; index < appointmentsToDelete.Count; index++)
+                {
+                    SourceAppointments.Remove(appointmentsToDelete[index]);
+                }
+            }
+            return isSuccess;
+        }
         #endregion
 
         #region ICalendarUpdateService Members
 
-        public List<Appointment> DestinationAppointments
+        public CalendarAppointments DestinationAppointments
         {
             get { return _destinationAppointments; }
             set { SetProperty(ref _destinationAppointments, value); }
         }
 
-        public List<Appointment> SourceAppointments
+        public CalendarAppointments SourceAppointments
         {
             get { return _sourceAppointments; }
             set { SetProperty(ref _sourceAppointments, value); }
@@ -263,24 +389,28 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
                 //Get source and destination appointments
                 isSuccess = GetAppointments(settings.DaysInPast, settings.DaysInFuture, sourceCalendarSpecificData,
                             destinationCalendarSpecificData);
+
+                if (isSuccess)
+                {
+                    LoadSourceId();
+                }
+
                 if (isSuccess)
                 {
                     //Delete destination appointments
                     isSuccess = DeleteDestinationAppointments(settings, destinationCalendarSpecificData);
                 }
+
                 if (isSuccess)
                 {
                     //Add appointments to destination
                     isSuccess = AddDestinationAppointments(settings, destinationCalendarSpecificData);
                 }
 
-                if (settings.SyncSettings.SyncMode == SyncModeEnum.TwoWay)
+                if (isSuccess && settings.SyncSettings.SyncMode == SyncModeEnum.TwoWay)
                 {
-                    if (isSuccess)
-                    {
-                        //Delete destination appointments
-                        isSuccess = DeleteSourceAppointments(settings, sourceCalendarSpecificData);
-                    }
+                    //Delete destination appointments
+                    isSuccess = DeleteSourceAppointments(settings, sourceCalendarSpecificData);
 
                     if (isSuccess)
                     {
@@ -296,92 +426,6 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
             return isSuccess;
         }
 
-
-        private bool AddDestinationAppointments(Settings settings, IDictionary<string, object> destinationCalendarSpecificData)
-        {
-            //Update status for reading entries to add
-            SyncStatus = StatusHelper.GetMessage(SyncStateEnum.ReadingEntriesToAdd);
-            //Get entries to add
-            List<Appointment> calendarAppointments = GetAppointmentsToAdd(settings.SyncSettings.SyncMode, SourceAppointments, DestinationAppointments);
-            SyncStatus = StatusHelper.GetMessage(SyncStateEnum.EntriesToAdd, calendarAppointments.Count);
-            SyncStatus = StatusHelper.GetMessage(SyncStateEnum.AddingEntries, DestinationCalendarService.CalendarServiceName);
-            //Add entries to destination calendar
-            bool isSuccess = DestinationCalendarService.AddCalendarEvent(calendarAppointments,
-                settings.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Description),
-                settings.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Reminders),
-                settings.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Attendees), destinationCalendarSpecificData)
-                .Result;
-            //Update status if entries were successfully added
-            SyncStatus =
-                StatusHelper.GetMessage(isSuccess ? SyncStateEnum.AddEntriesComplete : SyncStateEnum.AddEntriesFailed);
-            SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
-            return isSuccess;
-        }
-
-        private bool DeleteDestinationAppointments(Settings settings,
-            IDictionary<string, object> destinationCalendarSpecificData)
-        {
-            //Updating entry delete status
-            SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
-            SyncStatus = StatusHelper.GetMessage(SyncStateEnum.ReadingEntriesToDelete);
-            //Getting appointments to delete
-            List<Appointment> appointmentsToDelete = GetAppointmentsToDelete(settings.SyncSettings.SyncMode, SourceAppointments, DestinationAppointments);
-            //Updating Get entry delete status
-            SyncStatus = StatusHelper.GetMessage(SyncStateEnum.EntriesToDelete, appointmentsToDelete.Count);
-            //Updating delete status
-            SyncStatus = StatusHelper.GetMessage(SyncStateEnum.DeletingEntries, DestinationCalendarService.CalendarServiceName);
-            //Deleting entries
-            bool isSuccess =
-                DestinationCalendarService.DeleteCalendarEvent(appointmentsToDelete, destinationCalendarSpecificData).Result;
-            //Update status if entries were successfully deleted
-            SyncStatus =
-                StatusHelper.GetMessage(isSuccess ? SyncStateEnum.DeletingEntriesComplete : SyncStateEnum.DeletingEntriesFailed);
-            SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
-            return isSuccess;
-        }
-
-        private bool AddSourceAppointments(Settings settings, IDictionary<string, object> sourceCalendarSpecificData)
-        {
-            //Update status for reading entries to add
-            SyncStatus = StatusHelper.GetMessage(SyncStateEnum.ReadingEntriesToAdd);
-            //Get entries to add
-            List<Appointment> calendarAppointments = GetAppointmentsToAdd(settings.SyncSettings.SyncMode, DestinationAppointments, SourceAppointments);
-            SyncStatus = StatusHelper.GetMessage(SyncStateEnum.EntriesToAdd, calendarAppointments.Count);
-            SyncStatus = StatusHelper.GetMessage(SyncStateEnum.AddingEntries, SourceCalendarService.CalendarServiceName);
-
-            //Add entries to calendar
-            bool isSuccess = SourceCalendarService.AddCalendarEvent(calendarAppointments,
-                settings.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Description),
-                settings.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Reminders),
-                settings.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Attendees), sourceCalendarSpecificData)
-                .Result;
-            //Update status if entries were successfully added
-            SyncStatus =
-                StatusHelper.GetMessage(isSuccess ? SyncStateEnum.AddEntriesComplete : SyncStateEnum.AddEntriesFailed);
-            SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
-            return isSuccess;
-        }
-
-        private bool DeleteSourceAppointments(Settings settings, IDictionary<string, object> sourceCalendarSpecificData)
-        {
-            //Updating entry delete status
-            SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
-            SyncStatus = StatusHelper.GetMessage(SyncStateEnum.ReadingEntriesToDelete);
-            //Getting appointments to delete
-            List<Appointment> appointmentsToDelete = GetAppointmentsToDelete(settings.SyncSettings.SyncMode, DestinationAppointments, SourceAppointments);
-            //Updating Get entry delete status
-            SyncStatus = StatusHelper.GetMessage(SyncStateEnum.EntriesToDelete, appointmentsToDelete.Count);
-            //Updating delete status
-            SyncStatus = StatusHelper.GetMessage(SyncStateEnum.DeletingEntries, SourceCalendarService.CalendarServiceName);
-            //Deleting entries
-            bool isSuccess =
-                SourceCalendarService.DeleteCalendarEvent(appointmentsToDelete, sourceCalendarSpecificData).Result;
-            //Update status if entries were successfully deleted
-            SyncStatus =
-                StatusHelper.GetMessage(isSuccess ? SyncStateEnum.DeletingEntriesComplete : SyncStateEnum.DeletingEntriesFailed);
-            SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
-            return isSuccess;
-        }
         #endregion
     }
 }

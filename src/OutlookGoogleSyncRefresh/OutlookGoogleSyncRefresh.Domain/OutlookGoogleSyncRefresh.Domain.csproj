@@ -64,6 +64,7 @@
     <Compile Include="Models\Appointment.cs" />
     <Compile Include="Models\AppointmentListWrapper.cs" />
     <Compile Include="Models\Calendar.cs" />
+    <Compile Include="Models\CalendarAppointments.cs" />
     <Compile Include="Models\DailySyncFrequency.cs" />
     <Compile Include="Models\ExchangeServerSettings.cs" />
     <Compile Include="Models\HourlySyncFrequency.cs" />

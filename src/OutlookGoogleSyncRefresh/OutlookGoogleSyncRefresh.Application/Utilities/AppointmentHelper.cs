@@ -10,6 +10,26 @@ namespace OutlookGoogleSyncRefresh.Application.Utilities
 {
     public static class AppointmentHelper
     {
+        public static void LoadSourceId(this Appointment calendarAppointment, string sourceCalendarId)
+        {
+            var key = GetSourceEntryKey(sourceCalendarId);
+            if (calendarAppointment.ExtendedProperties.ContainsKey(key))
+            {
+                calendarAppointment.SourceId = calendarAppointment.ExtendedProperties[key].ToString();
+            }
+        }
+
+        public static string GetSourceEntryKey(this Appointment calendarAppointment)
+        {
+            return GetSourceEntryKey(calendarAppointment.CalendarId);
+        }
+
+        public static string GetSourceEntryKey(string sourceCalendarId)
+        {
+            return sourceCalendarId;//string.Format("{0}_{1}", Constants.UserPropertyName, sourceCalendarId);
+        }
+
+
         public static string GetSourceId(this Appointment calenderAppointment)
         {
             if (calenderAppointment.IsRecurring)
