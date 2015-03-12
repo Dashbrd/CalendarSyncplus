@@ -29,15 +29,11 @@ namespace OutlookGoogleSyncRefresh.Common.Log
             var patternLayout = new PatternLayout { ConversionPattern = "%date [%thread] %-5level %message%newline" };
             patternLayout.ActivateOptions();
 
-            var roller = new RollingFileAppender
+            var roller = new FileAppender()
             {
-                AppendToFile = false,
+                AppendToFile = true,
                 File = LogFilePath,
                 Layout = patternLayout,
-                MaxSizeRollBackups = 5,
-                MaximumFileSize = "1MB",
-                RollingStyle = RollingFileAppender.RollingMode.Size,
-                StaticLogFileName = true
             };
             roller.ActivateOptions();
             hierarchy.Root.AddAppender(roller);
