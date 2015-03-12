@@ -89,6 +89,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services
         {
             if (!File.Exists(SettingsFilePath))
             {
+                _applicationLogger.LogInfo("Settings file does not exist");
                 return null;
             }
             var serializer = new XmlSerializer<Settings>();
@@ -127,7 +128,10 @@ namespace OutlookGoogleSyncRefresh.Application.Services
             {
                 return GetDefaultSettings();
             }
-
+            if (result.SyncSettings.SyncFrequency == null)
+            {
+                result.SyncSettings.SyncFrequency = new HourlySyncFrequency();
+            }
             result.SetCalendarTypes();
             return result;
         }
@@ -144,7 +148,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services
                 RememberPeriodicSyncOn = true,
                 RunApplicationAtSystemStartup = true
             };
-            settings.SyncSettings.SyncFrequency = new HourlySyncFrequency() { Hours = 1, Minutes = 0 };
+            settings.SyncSettings.SyncFrequency = new HourlySyncFrequency();
             settings.OutlookSettings.OutlookOptions = OutlookOptionsEnum.DefaultProfile &
                                                       OutlookOptionsEnum.DefaultCalendar;
             settings.CalendarEntryOptions = CalendarEntryOptionsEnum.None;
