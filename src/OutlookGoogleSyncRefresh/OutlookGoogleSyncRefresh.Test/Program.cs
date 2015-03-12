@@ -29,6 +29,7 @@ using Microsoft.Office.Interop.Outlook;
 using Microsoft.Win32;
 
 using OutlookGoogleSyncRefresh.Application.Services.ExchangeWeb;
+using OutlookGoogleSyncRefresh.Common.Log;
 using OutlookGoogleSyncRefresh.Domain.Models;
 
 using Test.Model;
@@ -47,7 +48,7 @@ namespace Test
             //application.Run();
             var startTime = DateTime.Now;
 
-            var service = new ExchangeWebCalendarService();
+            var service = new ExchangeWebCalendarService(new ApplicationLogger());
 
             var calendars = service.GetCalendarsAsync();
             service.GetAppointmentsAsync(7, 7, "", calendars[0]);

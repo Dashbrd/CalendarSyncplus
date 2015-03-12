@@ -67,14 +67,17 @@ namespace OutlookGoogleSyncRefresh.Application.Utilities
             additionDescription.AppendLine(string.Empty);
             //Add Organiser
             additionDescription.AppendLine("Organizer");
-            additionDescription.AppendLine(calenderAppointment.Organizer);
+            additionDescription.AppendLine(calenderAppointment.Organizer.Name);
             additionDescription.AppendLine(string.Empty);
 
             //Add Required Attendees
             additionDescription.AppendLine("Required Attendees:");
             if (calenderAppointment.RequiredAttendees != null)
             {
-                additionDescription.AppendLine(SplitAttendees(calenderAppointment.RequiredAttendees));
+                foreach (var requiredAttendee in calenderAppointment.RequiredAttendees)
+                {
+                    additionDescription.AppendLine(requiredAttendee.Name);
+                }
             }
 
             additionDescription.AppendLine(string.Empty);
@@ -82,7 +85,10 @@ namespace OutlookGoogleSyncRefresh.Application.Utilities
             additionDescription.AppendLine("Optional Attendees:");
             if (calenderAppointment.OptionalAttendees != null)
             {
-                additionDescription.AppendLine(SplitAttendees(calenderAppointment.OptionalAttendees));
+                foreach (var requiredAttendee in calenderAppointment.OptionalAttendees)
+                {
+                    additionDescription.AppendLine(requiredAttendee.Name);
+                }
             }
 
             additionDescription.AppendLine(string.Empty);

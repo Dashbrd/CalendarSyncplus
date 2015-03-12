@@ -34,7 +34,8 @@ using OutlookGoogleSyncRefresh.Common.Log;
 using OutlookGoogleSyncRefresh.Common.MetaData;
 using OutlookGoogleSyncRefresh.Domain.Models;
 using Exception = System.Exception;
-
+using Recipient = Microsoft.Office.Interop.Outlook.Recipient;
+using AppRecipient = OutlookGoogleSyncRefresh.Domain.Models.Recipient;
 #endregion
 
 namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
@@ -194,7 +195,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
             };
         }
 
-        private static void GetAppointmentFromItem(AppointmentItem[] appointmentItems, string id,
+        private  void GetAppointmentFromItem(AppointmentItem[] appointmentItems, string id,
             List<Appointment> outlookAppointments)
         {
             if (appointmentItems.Any())
@@ -205,11 +206,11 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
                         appointmentItem.Subject, appointmentItem.End, appointmentItem.Start)
                     {
                         AllDayEvent = appointmentItem.AllDayEvent,
-                        OptionalAttendees = appointmentItem.OptionalAttendees,
+                        //OptionalAttendees = appointmentItem.OptionalAttendees,
                         ReminderMinutesBeforeStart = appointmentItem.ReminderMinutesBeforeStart,
-                        Organizer = appointmentItem.Organizer,
+                        //Organizer = appointmentItem.Organizer,
                         ReminderSet = appointmentItem.ReminderSet,
-                        RequiredAttendees = appointmentItem.RequiredAttendees,
+                        //RequiredAttendees = appointmentItem.RequiredAttendees,
                         AppointmentId = appointmentItem.IsRecurring
                             ? string.Format("{0}_{1}", appointmentItem.EntryID,
                                 appointmentItem.Start.ToString("d"))
@@ -219,6 +220,28 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
                         IsRecurring = appointmentItem.IsRecurring,
                     };
 
+                    foreach (Recipient attendee in appointmentItem.Recipients)
+                    {
+                        AppRecipient recipient = new AppRecipient();
+                        recipient.Name = attendee.Name;
+                        recipient.Email = attendee.Address;
+                        if (appointmentItem.RequiredAttendees != null &&
+                            appointmentItem.RequiredAttendees.Contains(recipient.Name))
+                        {
+                           app.RequiredAttendees.Add(recipient); 
+                        }
+                        else if (appointmentItem.OptionalAttendees != null &&
+                            appointmentItem.OptionalAttendees.Contains(recipient.Name))
+                        {
+                            app.OptionalAttendees.Add(recipient);
+                        }
+                        else if (appointmentItem.Organizer != null &&
+                            appointmentItem.Organizer.Contains(recipient.Name))
+                        {
+                            app.Organizer = recipient;
+                        }
+                    }
+                    
                     app.SetBusyStatus(appointmentItem.BusyStatus);
 
                     var userProperties = appointmentItem.UserProperties;
@@ -284,7 +307,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
             }
             return mailBoxes;
         }
-
+        
         private void GetCalendars(MAPIFolder searchFolder, List<OutlookCalendar> outlookCalendars)
         {
             if (searchFolder == null)
@@ -372,8 +395,9 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
                 rootFolders = nameSpace.Folders;
                 mailBoxes = GetOutlookMailBoxes(rootFolders);
             }
-            catch (Exception)
+            catch (Exception exception)
             {
+                ApplicationLogger.LogError(exception.ToString());
             }
             finally
             {
@@ -526,6 +550,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
             }
             catch (Exception exception)
             {
+                ApplicationLogger.LogError(exception.ToString());
                 return new AppointmentListWrapper()
                 {
                     WaitForApplicationQuit = disposeOutlookInstances,
@@ -604,9 +629,9 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
                 {
                     if (calendarAppointment.RequiredAttendees != null)
                     {
-                        calendarAppointment.RequiredAttendees.Split(';').ToList().ForEach(rcptName =>
+                        calendarAppointment.RequiredAttendees.ForEach(rcptName =>
                         {
-                            var recipient = appItem.Recipients.Add(rcptName);
+                            var recipient = appItem.Recipients.Add(string.Format("{0}<{1}>",rcptName.Name,rcptName.Email));
                             recipient.Type = (int)OlMeetingRecipientType.olRequired;
                             recipient.Resolve();
                         });
@@ -614,9 +639,9 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
 
                     if (calendarAppointment.OptionalAttendees != null)
                     {
-                        calendarAppointment.OptionalAttendees.Split(';').ToList().ForEach(rcptName =>
+                        calendarAppointment.OptionalAttendees.ForEach(rcptName =>
                         {
-                            var recipient = appItem.Recipients.Add(rcptName);
+                            var recipient = appItem.Recipients.Add(string.Format("{0}<{1}>", rcptName.Name, rcptName.Email));
                             recipient.Type = (int)OlMeetingRecipientType.olOptional;
                             recipient.Resolve();
                         });
@@ -688,6 +713,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
             }
             catch (Exception exception)
             {
+                ApplicationLogger.LogError(exception.ToString());
                 return false;
             }
             finally
@@ -766,6 +792,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
             }
             catch (Exception exception)
             {
+                ApplicationLogger.LogError(exception.ToString());
                 return false;
             }
             finally
@@ -844,6 +871,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
             }
             catch (Exception exception)
             {
+                ApplicationLogger.LogError(exception.ToString());
                 return false;
             }
             finally
