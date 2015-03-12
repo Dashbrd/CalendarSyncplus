@@ -13,9 +13,10 @@ namespace OutlookGoogleSyncRefresh.Application.Utilities
         public static void LoadSourceId(this Appointment calendarAppointment, string sourceCalendarId)
         {
             var key = GetSourceEntryKey(sourceCalendarId);
-            if (calendarAppointment.ExtendedProperties.ContainsKey(key))
+            object value;
+            if (calendarAppointment.ExtendedProperties.TryGetValue(key, out value))
             {
-                calendarAppointment.SourceId = calendarAppointment.ExtendedProperties[key].ToString();
+                calendarAppointment.SourceId = value.ToString();
             }
         }
 
@@ -26,7 +27,7 @@ namespace OutlookGoogleSyncRefresh.Application.Utilities
 
         public static string GetSourceEntryKey(string sourceCalendarId)
         {
-            return sourceCalendarId;//string.Format("{0}_{1}", Constants.UserPropertyName, sourceCalendarId);
+            return String.Format("{0:X}", sourceCalendarId.GetHashCode()); 
         }
 
 

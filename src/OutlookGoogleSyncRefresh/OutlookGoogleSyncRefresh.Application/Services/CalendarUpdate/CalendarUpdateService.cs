@@ -69,8 +69,15 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
         #endregion
 
         #region Private Methods
-
-        private bool GetAppointments(int daysInPast, int daysInFuture,
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="daysInPast"></param>
+        /// <param name="daysInFuture"></param>
+        /// <param name="sourceCalendarSpecificData"></param>
+        /// <param name="destinationCalendarSpecificData"></param>
+        /// <returns></returns>
+        private bool LoadAppointments(int daysInPast, int daysInFuture,
             IDictionary<string, object> sourceCalendarSpecificData, IDictionary<string, object> destinationCalendarSpecificData)
         {
             //Update status
@@ -378,7 +385,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
                 var destinationCalendarSpecificData = GetCalendarSpecificData(settings.SyncSettings.DestinationCalendar, settings);
 
                 //Get source and destination appointments
-                isSuccess = GetAppointments(settings.DaysInPast, settings.DaysInFuture, sourceCalendarSpecificData,
+                isSuccess = LoadAppointments(settings.DaysInPast, settings.DaysInFuture, sourceCalendarSpecificData,
                             destinationCalendarSpecificData);
 
                 if (isSuccess)

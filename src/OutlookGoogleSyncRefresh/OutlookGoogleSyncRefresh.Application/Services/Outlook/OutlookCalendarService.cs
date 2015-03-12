@@ -633,7 +633,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
                 {
                     var sourceProperty = userProperties.Add(calendarAppointment.GetSourceEntryKey(),
                         OlUserPropertyType.olText);
-                    sourceProperty.Value = calendarAppointment.AppointmentId;
+                    sourceProperty.Value = calendarAppointment.GetSourceId();
                 }
                 appItem.Save();
             }
