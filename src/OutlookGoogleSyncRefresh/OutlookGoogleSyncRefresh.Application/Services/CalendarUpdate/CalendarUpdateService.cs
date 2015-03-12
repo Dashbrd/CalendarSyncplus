@@ -118,12 +118,11 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
                     bool isFound = false;
                     foreach (var sourceAppointment in sourceList)
                     {
-                        if (destAppointment.SourceId.Equals(sourceAppointment.AppointmentId))
+                        if (sourceAppointment.CompareId(destAppointment))
                         {
-                            isFound = true;
-                            if (!destAppointment.Equals(sourceAppointment))
+                            if (destAppointment.Equals(sourceAppointment))
                             {
-                                isFound = false;
+                                isFound = true;
                             }
                             break;
                         }
@@ -140,23 +139,30 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
             return destinationList;
         }
 
-        private List<Appointment> GetAppointmentsToAdd(List<Appointment> sourceList, List<Appointment> destinationList)
+        private List<Appointment> GetAppointmentsToAdd(SyncModeEnum syncMode, List<Appointment> sourceList, List<Appointment> destinationList)
         {
             if (destinationList.Any() && sourceList.Any())
             {
                 var appointmentsToAdd = new List<Appointment>();
                 foreach (var sourceAppointment in sourceList)
                 {
+
+                    //if (sourceAppointment.SourceId == null && syncMode != SyncModeEnum.TwoWay)
+                    //{
+                    //    appointmentsToAdd.Add(sourceAppointment);
+                    //    continue;
+                    //}
+
+
                     bool isFound = false;
                     foreach (var destAppointment in destinationList)
                     {
                         if (destAppointment.SourceId != null &&
                             sourceAppointment.CompareId(destAppointment))
                         {
-                            isFound = true;
-                            if (!destAppointment.Equals(sourceAppointment))
+                            if (destAppointment.Equals(sourceAppointment))
                             {
-                                isFound = false;
+                                isFound = true;
                             }
                             break;
                         }
@@ -312,7 +318,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
         private bool AddSourceAppointments(Settings settings, IDictionary<string, object> sourceCalendarSpecificData)
         {
             SyncStatus = StatusHelper.GetMessage(SyncStateEnum.ReadingEntriesToAdd);
-            List<Appointment> calendarAppointments = GetAppointmentsToAdd(DestinationAppointments, SourceAppointments);
+            List<Appointment> calendarAppointments = GetAppointmentsToAdd(settings.SyncSettings.SyncMode, DestinationAppointments, SourceAppointments);
             SyncStatus = StatusHelper.GetMessage(SyncStateEnum.EntriesToAdd, calendarAppointments.Count);
             SyncStatus = StatusHelper.GetMessage(SyncStateEnum.AddingEntries, SourceCalendarService.CalendarServiceName);
             bool isSuccess = SourceCalendarService.AddCalendarEvent(calendarAppointments,
@@ -329,7 +335,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
         private bool AddDestinationAppointments(Settings settings, IDictionary<string, object> destinationCalendarSpecificData)
         {
             SyncStatus = StatusHelper.GetMessage(SyncStateEnum.ReadingEntriesToAdd);
-            List<Appointment> calendarAppointments = GetAppointmentsToAdd(SourceAppointments, DestinationAppointments);
+            List<Appointment> calendarAppointments = GetAppointmentsToAdd(settings.SyncSettings.SyncMode, SourceAppointments, DestinationAppointments);
             SyncStatus = StatusHelper.GetMessage(SyncStateEnum.EntriesToAdd, calendarAppointments.Count);
             SyncStatus = StatusHelper.GetMessage(SyncStateEnum.AddingEntries, DestinationCalendarService.CalendarServiceName);
             bool isSuccess = DestinationCalendarService.AddCalendarEvent(calendarAppointments,
