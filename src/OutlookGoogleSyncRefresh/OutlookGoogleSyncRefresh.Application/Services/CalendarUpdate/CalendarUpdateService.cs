@@ -110,30 +110,35 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
 
             return true;
         }
-        private List<Appointment> GetAppointmentsToDelete(SyncModeEnum syncMode, List<Appointment> sourceList, List<Appointment> destinationList)
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="syncMode"></param>
+        /// <param name="sourceList"></param>
+        /// <param name="destinationList"></param>
+        /// <returns></returns>
+        private List<Appointment> GetAppointmentsToDelete(SyncModeEnum syncMode,List<Appointment> sourceList, List<Appointment> destinationList)
         {
             var appointmentsToDelete = new List<Appointment>();
             foreach (var destAppointment in destinationList)
             {
-                if (destAppointment.SourceId == null)
+                if (syncMode == SyncModeEnum.TwoWay && destAppointment.SourceId == null)
                 {
-                    //For one way sync, destination items with source id null should be deleted
-                    if (syncMode == SyncModeEnum.OneWay)
-                    {
-                        appointmentsToDelete.Add(destAppointment);
-                    }
-                    //For two way sync, ignore the items with source id null as they are manual entries
-                    //Which will be added to other calendar if they are not already present
-                    continue;
+                    continue;    
                 }
 
                 bool isFound = false;
                 foreach (var sourceAppointment in sourceList)
                 {
-                    //Check if appointment id is equal for recurring and non-recurring items
-                    if (sourceAppointment.CompareSourceId(destAppointment))
+                    //Check if destination entry is a copy of source entry
+                    //Or if source entry is a copy of destination entry
+                    if ((destAppointment.SourceId != null &&
+                            sourceAppointment.CompareSourceId(destAppointment))
+                            || (sourceAppointment.SourceId != null &&
+                            destAppointment.CompareSourceId(sourceAppointment)))
                     {
-                        //If destination entry is equal to source entry, need not delete
+                        //If both entries have same content
                         if (destAppointment.Equals(sourceAppointment))
                         {
                             isFound = true;
@@ -150,8 +155,14 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
             return appointmentsToDelete;
 
         }
-
-        private List<Appointment> GetAppointmentsToAdd(SyncModeEnum syncMode, List<Appointment> sourceList, List<Appointment> destinationList)
+        /// <summary>
+        /// Gets appointments to add in the destination calendar
+        /// </summary>
+        /// <param name="syncMode"></param>
+        /// <param name="sourceList"></param>
+        /// <param name="destinationList"></param>
+        /// <returns></returns>
+        private List<Appointment> GetAppointmentsToAdd(List<Appointment> sourceList, List<Appointment> destinationList)
         {
             if (destinationList.Any())
             {
@@ -161,13 +172,14 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
                     bool isFound = false;
                     foreach (var destAppointment in destinationList)
                     {
-                        //To add entries to destination, look for source entries which are
-                        //not present in the destination
-                        //Compare the source id of destination item to source entry
-                        if (destAppointment.SourceId != null &&
+                        //Check if destination entry is a copy of source entry
+                        //Or if source entry is a copy of destination entry
+                        if ((destAppointment.SourceId != null &&
                             sourceAppointment.CompareSourceId(destAppointment))
+                            || (sourceAppointment.SourceId != null &&
+                            destAppointment.CompareSourceId(sourceAppointment)))
                         {
-                            //If destination entry is equal to source entry, need not delete
+                            //Check if both entries have same content
                             if (destAppointment.Equals(sourceAppointment))
                             {
                                 isFound = true;
@@ -231,13 +243,18 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
             }
         }
 
-
+        /// <summary>
+        /// Add appointments to destination
+        /// </summary>
+        /// <param name="settings"></param>
+        /// <param name="destinationCalendarSpecificData"></param>
+        /// <returns></returns>
         private bool AddDestinationAppointments(Settings settings, IDictionary<string, object> destinationCalendarSpecificData)
         {
             //Update status for reading entries to add
             SyncStatus = StatusHelper.GetMessage(SyncStateEnum.ReadingEntriesToAdd);
             //Get entries to add
-            List<Appointment> calendarAppointments = GetAppointmentsToAdd(settings.SyncSettings.SyncMode, SourceAppointments, DestinationAppointments);
+            List<Appointment> calendarAppointments = GetAppointmentsToAdd(SourceAppointments, DestinationAppointments);
             SyncStatus = StatusHelper.GetMessage(SyncStateEnum.EntriesToAdd, calendarAppointments.Count);
             SyncStatus = StatusHelper.GetMessage(SyncStateEnum.AddingEntries, DestinationCalendarService.CalendarServiceName);
             //Add entries to destination calendar
@@ -252,15 +269,20 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
             SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
             return isSuccess;
         }
-
-        private bool DeleteDestinationAppointments(Settings settings,
+        /// <summary>
+        /// Delete appointments in destination
+        /// </summary>
+        /// <param name="syncMode"></param>
+        /// <param name="destinationCalendarSpecificData"></param>
+        /// <returns></returns>
+        private bool DeleteDestinationAppointments(SyncModeEnum syncMode,
             IDictionary<string, object> destinationCalendarSpecificData)
         {
             //Updating entry delete status
             SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
             SyncStatus = StatusHelper.GetMessage(SyncStateEnum.ReadingEntriesToDelete);
             //Getting appointments to delete
-            List<Appointment> appointmentsToDelete = GetAppointmentsToDelete(settings.SyncSettings.SyncMode, SourceAppointments, DestinationAppointments);
+            List<Appointment> appointmentsToDelete = GetAppointmentsToDelete(syncMode,SourceAppointments, DestinationAppointments);
             //Updating Get entry delete status
             SyncStatus = StatusHelper.GetMessage(SyncStateEnum.EntriesToDelete, appointmentsToDelete.Count);
             //Updating delete status
@@ -281,13 +303,18 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
             }
             return isSuccess;
         }
-
+        /// <summary>
+        /// Add appointments to source
+        /// </summary>
+        /// <param name="settings"></param>
+        /// <param name="sourceCalendarSpecificData"></param>
+        /// <returns></returns>
         private bool AddSourceAppointments(Settings settings, IDictionary<string, object> sourceCalendarSpecificData)
         {
             //Update status for reading entries to add
             SyncStatus = StatusHelper.GetMessage(SyncStateEnum.ReadingEntriesToAdd);
             //Get entries to add
-            List<Appointment> calendarAppointments = GetAppointmentsToAdd(settings.SyncSettings.SyncMode, DestinationAppointments, SourceAppointments);
+            List<Appointment> calendarAppointments = GetAppointmentsToAdd(DestinationAppointments, SourceAppointments);
             SyncStatus = StatusHelper.GetMessage(SyncStateEnum.EntriesToAdd, calendarAppointments.Count);
             SyncStatus = StatusHelper.GetMessage(SyncStateEnum.AddingEntries, SourceCalendarService.CalendarServiceName);
 
@@ -305,13 +332,19 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
             return isSuccess;
         }
 
-        private bool DeleteSourceAppointments(Settings settings, IDictionary<string, object> sourceCalendarSpecificData)
+        /// <summary>
+        /// Delete appointments from source
+        /// </summary>
+        /// <param name="syncMode"></param>
+        /// <param name="sourceCalendarSpecificData"></param>
+        /// <returns></returns>
+        private bool DeleteSourceAppointments(SyncModeEnum syncMode, IDictionary<string, object> sourceCalendarSpecificData)
         {
             //Updating entry delete status
             SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
             SyncStatus = StatusHelper.GetMessage(SyncStateEnum.ReadingEntriesToDelete);
             //Getting appointments to delete
-            List<Appointment> appointmentsToDelete = GetAppointmentsToDelete(settings.SyncSettings.SyncMode, DestinationAppointments, SourceAppointments);
+            List<Appointment> appointmentsToDelete = GetAppointmentsToDelete(syncMode, DestinationAppointments, SourceAppointments);
             //Updating Get entry delete status
             SyncStatus = StatusHelper.GetMessage(SyncStateEnum.EntriesToDelete, appointmentsToDelete.Count);
             //Updating delete status
@@ -396,7 +429,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
                 if (isSuccess)
                 {
                     //Delete destination appointments
-                    isSuccess = DeleteDestinationAppointments(settings, destinationCalendarSpecificData);
+                    isSuccess = DeleteDestinationAppointments(settings.SyncSettings.SyncMode, destinationCalendarSpecificData);
                 }
 
                 if (isSuccess)
@@ -408,7 +441,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
                 if (isSuccess && settings.SyncSettings.SyncMode == SyncModeEnum.TwoWay)
                 {
                     //Delete destination appointments
-                    isSuccess = DeleteSourceAppointments(settings, sourceCalendarSpecificData);
+                    isSuccess = DeleteSourceAppointments(settings.SyncSettings.SyncMode, sourceCalendarSpecificData);
 
                     if (isSuccess)
                     {
