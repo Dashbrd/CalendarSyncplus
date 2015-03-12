@@ -433,21 +433,22 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
 
         private void OnSyncFrequencyChanged()
         {
-            if (Settings != null && Settings.SyncFrequency != null && SyncFrequency == Settings.SyncFrequency.Name)
+            if (Settings != null && Settings.SyncSettings.SyncFrequency != null &&
+                SyncFrequency == Settings.SyncSettings.SyncFrequency.Name)
             {
                 switch (SyncFrequency)
                 {
                     case "Hourly":
                         SyncFrequencyViewModel
-                            = new HourlySyncViewModel(Settings.SyncFrequency as HourlySyncFrequency);
+                            = new HourlySyncViewModel(Settings.SyncSettings.SyncFrequency as HourlySyncFrequency);
                         break;
                     case "Daily":
                         SyncFrequencyViewModel
-                            = new DailySyncViewModel(Settings.SyncFrequency as DailySyncFrequency);
+                            = new DailySyncViewModel(Settings.SyncSettings.SyncFrequency as DailySyncFrequency);
                         break;
                     case "Weekly":
                         SyncFrequencyViewModel
-                            = new WeeklySyncViewModel(Settings.SyncFrequency as WeeklySyncFrequency);
+                            = new WeeklySyncViewModel(Settings.SyncSettings.SyncFrequency as WeeklySyncFrequency);
                         break;
                 }
             }
@@ -488,9 +489,9 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
                 SyncFrequency = "Hourly";
                 if (Settings != null)
                 {
-                    if (Settings.SyncFrequency != null)
+                    if (Settings.SyncSettings.SyncFrequency != null)
                     {
-                        SyncFrequency = Settings.SyncFrequency.Name;
+                        SyncFrequency = Settings.SyncSettings.SyncFrequency.Name;
                     }
 
                     DaysInPast = Settings.DaysInPast;
@@ -564,7 +565,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             Settings.GoogleCalendar = SelectedCalendar;
             Settings.DaysInFuture = DaysInFuture;
             Settings.DaysInPast = DaysInPast;
-            Settings.SyncFrequency = SyncFrequencyViewModel.GetFrequency();
+            Settings.SyncSettings.SyncFrequency = SyncFrequencyViewModel.GetFrequency();
             Settings.UpdateEntryOptions(AddDescription, AddReminders, AddAttendees, AddAttachments);
             Settings.LogSettings.LogSyncInfo = LogSyncInfo;
             Settings.LogSettings.CreateNewFileForEverySync = CreateNewFileForEverySync;

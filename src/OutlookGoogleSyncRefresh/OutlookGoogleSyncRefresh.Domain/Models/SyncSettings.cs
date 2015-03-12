@@ -17,6 +17,6 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
 
         public SyncModeEnum SyncMode { get; set; }
 
-
+        public SyncFrequency SyncFrequency { get; set; }
     }
 }

@@ -23,6 +23,7 @@ using System;
 using System.ComponentModel.Composition;
 using System.IO;
 using System.Threading.Tasks;
+using System.Waf.Applications;
 using OutlookGoogleSyncRefresh.Common.Log;
 using OutlookGoogleSyncRefresh.Domain.File.Xml;
 using OutlookGoogleSyncRefresh.Domain.Models;
@@ -126,6 +127,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services
             {
                 return GetDefaultSettings();
             }
+
             result.SetCalendarTypes();
             return result;
         }
@@ -140,9 +142,9 @@ namespace OutlookGoogleSyncRefresh.Application.Services
                 MinimizeToSystemTray = true,
                 CheckForUpdates = true,
                 RememberPeriodicSyncOn = true,
-                SyncFrequency = new HourlySyncFrequency() { Hours = 1,Minutes = 0},
                 RunApplicationAtSystemStartup = true
             };
+            settings.SyncSettings.SyncFrequency = new HourlySyncFrequency() { Hours = 1, Minutes = 0 };
             settings.OutlookSettings.OutlookOptions = OutlookOptionsEnum.DefaultProfile &
                                                       OutlookOptionsEnum.DefaultCalendar;
             settings.CalendarEntryOptions = CalendarEntryOptionsEnum.None;

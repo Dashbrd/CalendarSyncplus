@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Security.Cryptography;
 using System.Xml.Serialization;
 using OutlookGoogleSyncRefresh.Common.MetaData;
 
@@ -28,11 +27,13 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
 
         public OutlookSettings OutlookSettings { get; set; }
 
+        /// <summary>
+        /// To be implemented in future
+        /// </summary>
+        [XmlIgnore]
         public ExchangeServerSettings ExchangeServerSettings { get; set; }
 
         public CalendarEntryOptionsEnum CalendarEntryOptions { get; set; }
-
-        public SyncFrequency SyncFrequency { get; set; }
 
         public int DaysInPast { get; set; }
 
