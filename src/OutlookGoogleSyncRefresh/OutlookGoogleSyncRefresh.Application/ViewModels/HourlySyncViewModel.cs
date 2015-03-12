@@ -27,7 +27,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             set
             {
                 SetProperty(ref _hours, value);
-                Validate();
+                ValidateHours();
             }
         }
 
@@ -37,13 +37,24 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             set
             {
                 SetProperty(ref _minutes, value);
+                ValidateMinutes();
             }
         }
 
-        private void Validate()
+        private void ValidateMinutes()
+        {
+            if (Minutes == 0 && Hours == 0)
+            {
+                Hours = 1;
+            }
+        }
+
+        private void ValidateHours()
         {
             if (Hours == 0 && Minutes == 0)
+            {
                 Minutes = 5;
+            }
         }
 
         public override SyncFrequency GetFrequency()

@@ -12,15 +12,18 @@ namespace OutlookGoogleSyncRefresh.Application.Utilities
     {
         public static string GetSourceId(this Appointment calenderAppointment)
         {
-            if(calenderAppointment.IsRecurring)
+            if (calenderAppointment.IsRecurring)
             {
-                return string.Format("{0}_{1}", calenderAppointment.AppointmentId,
-                    calenderAppointment.StartTime.Value.ToString("yy-mm-dd"));
+                if (calenderAppointment.StartTime != null)
+                {
+                    return string.Format("{0}_{1}", calenderAppointment.AppointmentId,
+                        calenderAppointment.StartTime.Value.ToString("yy-mm-dd"));
+                }
             }
             return calenderAppointment.AppointmentId;
         }
 
-        public static bool CompareId(this Appointment calendarAppointment, Appointment otherAppointment)
+        public static bool CompareSourceId(this Appointment calendarAppointment, Appointment otherAppointment)
         {
             if (calendarAppointment.IsRecurring)
             {
@@ -51,7 +54,7 @@ namespace OutlookGoogleSyncRefresh.Application.Utilities
             {
                 additionDescription.AppendLine(SplitAttendees(calenderAppointment.RequiredAttendees));
             }
-            
+
             additionDescription.AppendLine(string.Empty);
             //Add Optional Attendees
             additionDescription.AppendLine("Optional Attendees:");
@@ -84,13 +87,13 @@ namespace OutlookGoogleSyncRefresh.Application.Utilities
 
         public static OlBusyStatus GetOutlookBusyStatus(this Appointment calendarAppointment)
         {
-            if(calendarAppointment.BusyStatus == BusyStatusEnum.Busy)
+            if (calendarAppointment.BusyStatus == BusyStatusEnum.Busy)
                 return OlBusyStatus.olBusy;
-            if(calendarAppointment.BusyStatus == BusyStatusEnum.Free)
+            if (calendarAppointment.BusyStatus == BusyStatusEnum.Free)
                 return OlBusyStatus.olFree;
-            if(calendarAppointment.BusyStatus == BusyStatusEnum.OutOfOffice)
+            if (calendarAppointment.BusyStatus == BusyStatusEnum.OutOfOffice)
                 return OlBusyStatus.olOutOfOffice;
-            if(calendarAppointment.BusyStatus == BusyStatusEnum.Tentative)
+            if (calendarAppointment.BusyStatus == BusyStatusEnum.Tentative)
                 return OlBusyStatus.olTentative;
             return OlBusyStatus.olFree;
         }
@@ -105,7 +108,7 @@ namespace OutlookGoogleSyncRefresh.Application.Utilities
                 calendarAppointment.BusyStatus = BusyStatusEnum.OutOfOffice;
             else if (busyStatus == OlBusyStatus.olTentative)
                 calendarAppointment.BusyStatus = BusyStatusEnum.Tentative;
-            
+
         }
     }
 }
