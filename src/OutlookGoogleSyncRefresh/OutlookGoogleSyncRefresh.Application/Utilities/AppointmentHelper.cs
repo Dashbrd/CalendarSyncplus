@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Office.Interop.Outlook;
@@ -27,7 +28,7 @@ namespace OutlookGoogleSyncRefresh.Application.Utilities
 
         public static string GetSourceEntryKey(string sourceCalendarId)
         {
-            return String.Format("{0:X}", sourceCalendarId.GetHashCode()); 
+            return GetMD5Hash(sourceCalendarId); 
         }
 
 
@@ -130,6 +131,21 @@ namespace OutlookGoogleSyncRefresh.Application.Utilities
             else if (busyStatus == OlBusyStatus.olTentative)
                 calendarAppointment.BusyStatus = BusyStatusEnum.Tentative;
 
+        }
+
+        private static string GetMD5Hash(string stringToHash)
+        {
+            StringBuilder sb = new StringBuilder();
+            using (MD5 md5 = MD5.Create())
+            {
+                byte[] retVal = md5.ComputeHash(Encoding.Unicode.GetBytes(stringToHash));
+
+                foreach (byte byteval in retVal)
+                {
+                    sb.Append(byteval.ToString("x2"));
+                }
+            }
+            return sb.ToString();
         }
     }
 }
