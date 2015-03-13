@@ -148,6 +148,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services
                 RememberPeriodicSyncOn = true,
                 RunApplicationAtSystemStartup = true
             };
+            settings.SyncSettings.CalendarSyncDirection = CalendarSyncDirectionEnum.OutlookGoogleOneWay;
             settings.SyncSettings.SyncFrequency = new HourlySyncFrequency();
             settings.OutlookSettings.OutlookOptions = OutlookOptionsEnum.DefaultProfile &
                                                       OutlookOptionsEnum.DefaultCalendar;

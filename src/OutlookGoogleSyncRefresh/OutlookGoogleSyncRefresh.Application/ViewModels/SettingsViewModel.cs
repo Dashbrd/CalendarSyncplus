@@ -60,6 +60,24 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             SettingsSerializationService = serializationService;
             OutlookCalendarService = outlookCalendarService;
             MessageService = messageService;
+            Initialize();
+        }
+
+        private void Initialize()
+        {
+            CalendarSyncModes = new List<CalendarSyncDirectionEnum>()
+                {
+                    CalendarSyncDirectionEnum.OutlookGoogleOneWay,
+                    CalendarSyncDirectionEnum.OutlookGoogleOneWayToSource,
+                    CalendarSyncDirectionEnum.OutlookGoogleTwoWay
+                };
+            SyncFrequencies = new List<string>
+                {
+                    "Hourly",
+                    "Daily",
+                    "Weekly"
+                };
+            SyncFrequency = "Hourly";
         }
 
         #endregion
@@ -487,19 +505,6 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             IsLoading = true;
             try
             {
-                CalendarSyncModes = new List<CalendarSyncDirectionEnum>()
-                {
-                    CalendarSyncDirectionEnum.OutlookGoogleOneWay,
-                    CalendarSyncDirectionEnum.OutlookGoogleOneWayToSource,
-                    CalendarSyncDirectionEnum.OutlookGoogleTwoWay
-                };
-                SyncFrequencies = new List<string>
-                {
-                    "Hourly",
-                    "Daily",
-                    "Weekly"
-                };
-                SyncFrequency = "Hourly";
                 if (Settings != null)
                 {
                     if (Settings.SyncSettings.SyncFrequency != null)
