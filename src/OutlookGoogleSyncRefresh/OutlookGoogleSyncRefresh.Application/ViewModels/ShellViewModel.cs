@@ -223,7 +223,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
         public bool IsSettingsLoading
         {
             get { return _isSettingsLoading; }
-            set { SetProperty(_isSettingsLoading, value); }
+            set { SetProperty(ref _isSettingsLoading, value); }
         }
 
         public bool IsSyncInProgress
