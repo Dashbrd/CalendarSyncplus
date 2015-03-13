@@ -107,7 +107,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Google
             googleEvent.ExtendedProperties.Private = new Dictionary<string, string>();
 
             //Need to make recurring appointment IDs unique - append the item's date    
-            googleEvent.ExtendedProperties.Private.Add(calenderAppointment.GetSourceEntryKey(), calenderAppointment.GetSourceId());
+            googleEvent.ExtendedProperties.Private.Add(calenderAppointment.GetSourceEntryKey(), calenderAppointment.AppointmentId);
 
 
             //Add Start/End Time

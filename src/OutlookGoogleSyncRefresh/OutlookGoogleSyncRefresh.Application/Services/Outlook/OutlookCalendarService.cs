@@ -195,7 +195,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
             };
         }
 
-        private  void GetAppointmentFromItem(AppointmentItem[] appointmentItems, string id,
+        private void GetAppointmentFromItem(AppointmentItem[] appointmentItems, string id,
             List<Appointment> outlookAppointments)
         {
             if (appointmentItems.Any())
@@ -213,8 +213,8 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
                         //RequiredAttendees = appointmentItem.RequiredAttendees,
                         AppointmentId = appointmentItem.IsRecurring
                             ? string.Format("{0}_{1}", appointmentItem.EntryID,
-                                appointmentItem.Start.ToString("d"))
-                            : appointmentItem.EntryID,
+                              appointmentItem.Start.ToString("yy-MM-dd")) :
+                            appointmentItem.EntryID,
                         Privacy =
                             (appointmentItem.Sensitivity == OlSensitivity.olNormal) ? "default" : "private",
                         IsRecurring = appointmentItem.IsRecurring,
@@ -224,24 +224,25 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
                     {
                         AppRecipient recipient = new AppRecipient();
                         recipient.Name = attendee.Name;
-                        recipient.Email = attendee.Address;
+                        recipient.Email = GetSMTPAddressForRecipients(attendee);
                         if (appointmentItem.RequiredAttendees != null &&
                             appointmentItem.RequiredAttendees.Contains(recipient.Name))
                         {
-                           app.RequiredAttendees.Add(recipient); 
+                            app.RequiredAttendees.Add(recipient);
                         }
                         else if (appointmentItem.OptionalAttendees != null &&
                             appointmentItem.OptionalAttendees.Contains(recipient.Name))
                         {
                             app.OptionalAttendees.Add(recipient);
                         }
-                        else if (appointmentItem.Organizer != null &&
+
+                        if (appointmentItem.Organizer != null &&
                             appointmentItem.Organizer.Contains(recipient.Name))
                         {
                             app.Organizer = recipient;
                         }
                     }
-                    
+
                     app.SetBusyStatus(appointmentItem.BusyStatus);
 
                     var userProperties = appointmentItem.UserProperties;
@@ -307,7 +308,18 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
             }
             return mailBoxes;
         }
-        
+
+        private string GetSMTPAddressForRecipients(Recipient recip)
+        {
+            const string PR_SMTP_ADDRESS =
+                "http://schemas.microsoft.com/mapi/proptag/0x39FE001E";
+
+            PropertyAccessor pa = recip.PropertyAccessor;
+            string smtpAddress = pa.GetProperty(PR_SMTP_ADDRESS).ToString();
+            return smtpAddress;
+
+        }
+
         private void GetCalendars(MAPIFolder searchFolder, List<OutlookCalendar> outlookCalendars)
         {
             if (searchFolder == null)
@@ -631,7 +643,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
                     {
                         calendarAppointment.RequiredAttendees.ForEach(rcptName =>
                         {
-                            var recipient = appItem.Recipients.Add(string.Format("{0}<{1}>",rcptName.Name,rcptName.Email));
+                            var recipient = appItem.Recipients.Add(string.Format("{0}<{1}>", rcptName.Name, rcptName.Email));
                             recipient.Type = (int)OlMeetingRecipientType.olRequired;
                             recipient.Resolve();
                         });
@@ -658,7 +670,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
                 {
                     var sourceProperty = userProperties.Add(calendarAppointment.GetSourceEntryKey(),
                         OlUserPropertyType.olText);
-                    sourceProperty.Value = calendarAppointment.GetSourceId();
+                    sourceProperty.Value = calendarAppointment.AppointmentId;//.GetSourceId();
                 }
                 appItem.Save();
             }

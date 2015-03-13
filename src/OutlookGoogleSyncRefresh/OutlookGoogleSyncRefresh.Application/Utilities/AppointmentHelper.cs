@@ -28,29 +28,25 @@ namespace OutlookGoogleSyncRefresh.Application.Utilities
 
         public static string GetSourceEntryKey(string sourceCalendarId)
         {
-            return GetMD5Hash(sourceCalendarId); 
+            return GetMD5Hash(sourceCalendarId);
         }
 
 
-        public static string GetSourceId(this Appointment calenderAppointment)
-        {
-            if (calenderAppointment.IsRecurring)
-            {
-                if (calenderAppointment.StartTime != null)
-                {
-                    return string.Format("{0}_{1}", calenderAppointment.AppointmentId,
-                        calenderAppointment.StartTime.Value.ToString("yy-mm-dd"));
-                }
-            }
-            return calenderAppointment.AppointmentId;
-        }
+        //public static string GetSourceId(this Appointment calenderAppointment)
+        //{
+        //    if (calenderAppointment.IsRecurring)
+        //    {
+        //        if (calenderAppointment.StartTime != null)
+        //        {
+        //            return string.Format("{0}_{1}", calenderAppointment.AppointmentId,
+        //                calenderAppointment.StartTime.Value.ToString("yy-mm-dd"));
+        //        }
+        //    }
+        //    return calenderAppointment.AppointmentId;
+        //}
 
         public static bool CompareSourceId(this Appointment calendarAppointment, Appointment otherAppointment)
         {
-            if (calendarAppointment.IsRecurring)
-            {
-                return calendarAppointment.GetSourceId().Equals(otherAppointment.SourceId);
-            }
             return calendarAppointment.AppointmentId.Equals(otherAppointment.SourceId);
         }
 
