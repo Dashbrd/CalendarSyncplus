@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Office.Interop.Outlook;
 using OutlookGoogleSyncRefresh.Domain.Models;
+using Recipient = OutlookGoogleSyncRefresh.Domain.Models.Recipient;
 
 namespace OutlookGoogleSyncRefresh.Application.Utilities
 {
@@ -61,37 +62,49 @@ namespace OutlookGoogleSyncRefresh.Application.Utilities
             //Start Header
             additionDescription.AppendLine("==============================================");
             additionDescription.AppendLine(string.Empty);
-            //Add Organiser
-            additionDescription.AppendLine("Organizer");
-            additionDescription.AppendLine(calenderAppointment.Organizer.Name);
-            additionDescription.AppendLine(string.Empty);
-
-            //Add Required Attendees
-            additionDescription.AppendLine("Required Attendees:");
-            if (calenderAppointment.RequiredAttendees != null)
+            if (calenderAppointment.Organizer != null)
             {
+                //Add Organiser
+                additionDescription.AppendLine("Organizer");
+
+                additionDescription.AppendLine(calenderAppointment.Organizer.GetDescription());
+                additionDescription.AppendLine(string.Empty);
+            }
+            //Add Required Attendees
+            if (calenderAppointment.RequiredAttendees.Any())
+            {
+                additionDescription.AppendLine("Required Attendees:");
+
                 foreach (var requiredAttendee in calenderAppointment.RequiredAttendees)
                 {
-                    additionDescription.AppendLine(requiredAttendee.Name);
+                    additionDescription.AppendLine(requiredAttendee.GetDescription());
                 }
-            }
 
-            additionDescription.AppendLine(string.Empty);
+
+                additionDescription.AppendLine(string.Empty);
+            }
             //Add Optional Attendees
-            additionDescription.AppendLine("Optional Attendees:");
-            if (calenderAppointment.OptionalAttendees != null)
+
+            if (calenderAppointment.OptionalAttendees.Any())
             {
+                additionDescription.AppendLine("Optional Attendees:");
                 foreach (var requiredAttendee in calenderAppointment.OptionalAttendees)
                 {
-                    additionDescription.AppendLine(requiredAttendee.Name);
+                    additionDescription.AppendLine(requiredAttendee.GetDescription());
                 }
+                additionDescription.AppendLine(string.Empty);
+
             }
 
-            additionDescription.AppendLine(string.Empty);
             //Close Header
             additionDescription.AppendLine("==============================================");
 
             return additionDescription.ToString();
+        }
+
+        private static string GetDescription(this Recipient recipient)
+        {
+            return string.Format("{0} <{1}>", recipient.Name, recipient.Email);
         }
 
         private static string SplitAttendees(string attendees)

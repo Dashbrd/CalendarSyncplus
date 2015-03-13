@@ -55,7 +55,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Google
 
         #region Fields
 
-        private readonly ApplicationLogger _applicationLogger;
+        private ApplicationLogger ApplicationLogger { get; set; }
         private string calendarId;
 
         #endregion
@@ -66,7 +66,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Google
         public GoogleCalendarService(IAccountAuthenticationService accountAuthenticationService,
             ApplicationLogger applicationLogger)
         {
-            _applicationLogger = applicationLogger;
+            ApplicationLogger = applicationLogger;
             AccountAuthenticationService = accountAuthenticationService;
         }
 
@@ -349,6 +349,8 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Google
             {
                 return false;
             }
+            try
+            {
             if (appointments.Any())
             {
                 //Create a Batch Request
@@ -376,6 +378,12 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Google
                 }
 
                 await batchRequest.ExecuteAsync();
+            }
+            }
+            catch (Exception exception)
+            {
+                ApplicationLogger.LogError(exception.ToString());
+                return false;
             }
             return true;
         }
@@ -412,6 +420,9 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Google
             {
                 return false;
             }
+
+            try
+            {
             if (calendarAppointment.Any())
             {
                 //Create a Batch Request
@@ -437,6 +448,12 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Google
                 }
 
                 await batchRequest.ExecuteAsync();
+            }
+            }
+            catch (Exception exception)
+            {
+                ApplicationLogger.LogError(exception.ToString());
+                return false;
             }
             return true;
         }
@@ -465,7 +482,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Google
             }
             catch (GoogleApiException exception)
             {
-                _applicationLogger.LogError(exception.ToString());
+                ApplicationLogger.LogError(exception.ToString());
                 return null;
             }
             if (result != null)
