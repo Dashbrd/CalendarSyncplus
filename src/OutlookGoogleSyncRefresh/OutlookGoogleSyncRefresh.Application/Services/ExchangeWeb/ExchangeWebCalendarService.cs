@@ -6,6 +6,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Exchange.WebServices.Data;
+using OutlookGoogleSyncRefresh.Common.Log;
 using OutlookGoogleSyncRefresh.Common.MetaData;
 using OutlookGoogleSyncRefresh.Domain.Models;
 using AppAppointment = OutlookGoogleSyncRefresh.Domain.Models.Appointment;
@@ -13,10 +14,18 @@ using Appointment = Microsoft.Exchange.WebServices.Data.Appointment;
 
 namespace OutlookGoogleSyncRefresh.Application.Services.ExchangeWeb
 {
-    [Export(typeof(ICalendarService)),Export(typeof (IExchangeWebCalendarService))]
+    [Export(typeof(ICalendarService)), Export(typeof(IExchangeWebCalendarService))]
     [ExportMetadata("ServiceType", CalendarServiceType.EWS)]
     public class ExchangeWebCalendarService : IExchangeWebCalendarService
     {
+        public ApplicationLogger ApplicationLogger { get; set; }
+
+        [ImportingConstructor]
+        public ExchangeWebCalendarService(ApplicationLogger applicationLogger)
+        {
+            ApplicationLogger = applicationLogger;
+        }
+
         #region IExchangeWebCalendarService Members
 
         public List<AppAppointment> GetAppointmentsAsync(int daysInPast, int daysInFuture,
@@ -44,30 +53,37 @@ namespace OutlookGoogleSyncRefresh.Application.Services.ExchangeWeb
                     var appointment = new AppAppointment(exchangeAppointment.Body, exchangeAppointment.Location,
                         exchangeAppointment.Subject, exchangeAppointment.Start, exchangeAppointment.Start)
                     {
-                        AppointmentId=exchangeAppointment.Id.UniqueId,
+                        AppointmentId = exchangeAppointment.Id.UniqueId,
                         AllDayEvent = exchangeAppointment.IsAllDayEvent,
                         OptionalAttendees = GetAttendees(exchangeAppointment.OptionalAttendees),
                         ReminderMinutesBeforeStart = exchangeAppointment.ReminderMinutesBeforeStart,
-                        Organizer = exchangeAppointment.Organizer.Name,
+                        Organizer =  new Recipient(){Name = exchangeAppointment.Organizer.Name, Email = exchangeAppointment.Organizer.Address},
                         ReminderSet = exchangeAppointment.IsReminderSet,
-                        RequiredAttendees =  GetAttendees(exchangeAppointment.RequiredAttendees),
+                        RequiredAttendees = GetAttendees(exchangeAppointment.RequiredAttendees),
                     };
                     outlookAppointments.Add(appointment);
                 }
             }
             return outlookAppointments;
         }
-
-        private string GetAttendees(IEnumerable<Attendee> attendeeCollection)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="attendeeCollection"></param>
+        /// <returns></returns>
+        private List<Recipient> GetAttendees(IEnumerable<Attendee> attendeeCollection)
         {
-            var attendees = new StringBuilder(string.Empty);
+            var attendees = new List<Recipient>();
 
             foreach (Attendee attendee in attendeeCollection)
             {
-                attendees.Append(attendee.Address + ";");
+                attendees.Add(new Recipient()
+                {
+                    Name = attendee.Name,Email = attendee.Address
+                });
             }
 
-            return attendees.ToString();
+            return attendees;
         }
 
         public List<OutlookCalendar> GetCalendarsAsync()
@@ -108,7 +124,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.ExchangeWeb
             var service = new ExchangeService(exchangeVersion)
             {
                 UseDefaultCredentials = true,
-                EnableScpLookup=false,
+                EnableScpLookup = false,
                 Url = new Uri(@"https://cas.etn.com/ews/exchange.asmx"),
             };
             service.AutodiscoverUrl("ankeshdave@outlook.com");
@@ -145,7 +161,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.ExchangeWeb
                 }
                 catch (Exception exception)
                 {
-
+                    ApplicationLogger.LogError(exception.ToString());
                     continue;
                 }
             }

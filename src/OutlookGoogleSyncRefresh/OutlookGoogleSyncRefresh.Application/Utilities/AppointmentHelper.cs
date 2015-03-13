@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Office.Interop.Outlook;
@@ -13,9 +14,10 @@ namespace OutlookGoogleSyncRefresh.Application.Utilities
         public static void LoadSourceId(this Appointment calendarAppointment, string sourceCalendarId)
         {
             var key = GetSourceEntryKey(sourceCalendarId);
-            if (calendarAppointment.ExtendedProperties.ContainsKey(key))
+            object value;
+            if (calendarAppointment.ExtendedProperties.TryGetValue(key, out value))
             {
-                calendarAppointment.SourceId = calendarAppointment.ExtendedProperties[key].ToString();
+                calendarAppointment.SourceId = value.ToString();
             }
         }
 
@@ -26,7 +28,7 @@ namespace OutlookGoogleSyncRefresh.Application.Utilities
 
         public static string GetSourceEntryKey(string sourceCalendarId)
         {
-            return sourceCalendarId;//string.Format("{0}_{1}", Constants.UserPropertyName, sourceCalendarId);
+            return GetMD5Hash(sourceCalendarId); 
         }
 
 
@@ -65,14 +67,17 @@ namespace OutlookGoogleSyncRefresh.Application.Utilities
             additionDescription.AppendLine(string.Empty);
             //Add Organiser
             additionDescription.AppendLine("Organizer");
-            additionDescription.AppendLine(calenderAppointment.Organizer);
+            additionDescription.AppendLine(calenderAppointment.Organizer.Name);
             additionDescription.AppendLine(string.Empty);
 
             //Add Required Attendees
             additionDescription.AppendLine("Required Attendees:");
             if (calenderAppointment.RequiredAttendees != null)
             {
-                additionDescription.AppendLine(SplitAttendees(calenderAppointment.RequiredAttendees));
+                foreach (var requiredAttendee in calenderAppointment.RequiredAttendees)
+                {
+                    additionDescription.AppendLine(requiredAttendee.Name);
+                }
             }
 
             additionDescription.AppendLine(string.Empty);
@@ -80,7 +85,10 @@ namespace OutlookGoogleSyncRefresh.Application.Utilities
             additionDescription.AppendLine("Optional Attendees:");
             if (calenderAppointment.OptionalAttendees != null)
             {
-                additionDescription.AppendLine(SplitAttendees(calenderAppointment.OptionalAttendees));
+                foreach (var requiredAttendee in calenderAppointment.OptionalAttendees)
+                {
+                    additionDescription.AppendLine(requiredAttendee.Name);
+                }
             }
 
             additionDescription.AppendLine(string.Empty);
@@ -129,6 +137,21 @@ namespace OutlookGoogleSyncRefresh.Application.Utilities
             else if (busyStatus == OlBusyStatus.olTentative)
                 calendarAppointment.BusyStatus = BusyStatusEnum.Tentative;
 
+        }
+
+        private static string GetMD5Hash(string stringToHash)
+        {
+            StringBuilder sb = new StringBuilder();
+            using (MD5 md5 = MD5.Create())
+            {
+                byte[] retVal = md5.ComputeHash(Encoding.Unicode.GetBytes(stringToHash));
+
+                foreach (byte byteval in retVal)
+                {
+                    sb.Append(byteval.ToString("x2"));
+                }
+            }
+            return sb.ToString();
         }
     }
 }

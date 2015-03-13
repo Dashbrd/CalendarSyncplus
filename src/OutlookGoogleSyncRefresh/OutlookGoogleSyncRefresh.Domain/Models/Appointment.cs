@@ -22,11 +22,11 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
         private string _description;
         private DateTime? _endTime;
         private string _location;
-        private string _optionalAttendees;
-        private string _organizer;
+        private List<Recipient> _optionalAttendees;
+        private Recipient _organizer;
         private int _reminderMinutesBeforeStart;
         private bool _reminderSet;
-        private string _requiredAttendees;
+        private List<Recipient> _requiredAttendees;
         private DateTime? _startTime;
         private string _subject;
         private string _privacy;
@@ -34,6 +34,7 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
         private bool _isRecurring;
         private string _calendarId;
         private Dictionary<string, object> _extendedProperties;
+        private List<Recipient> _recipients; 
 
         public Appointment(string description, string location, string subject, DateTime? endTime, DateTime? startTime,
             string appointmentId)
@@ -50,6 +51,8 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
             _endTime = endTime;
             _startTime = startTime;
             ExtendedProperties = new Dictionary<string, object>();
+            RequiredAttendees  = new List<Recipient>();
+            OptionalAttendees = new List<Recipient>();
         }
 
         public DateTime? StartTime
@@ -137,19 +140,19 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
 
         public BusyStatusEnum BusyStatus { get; set; }
 
-        public string Organizer
+        public Recipient Organizer
         {
             get { return _organizer; }
             set { SetProperty(ref _organizer, value); }
         }
 
-        public string RequiredAttendees
+        public List<Recipient> RequiredAttendees
         {
             get { return _requiredAttendees; }
             set { SetProperty(ref _requiredAttendees, value); }
         }
 
-        public string OptionalAttendees
+        public List<Recipient> OptionalAttendees
         {
             get { return _optionalAttendees; }
             set { SetProperty(ref _optionalAttendees, value); }
@@ -165,6 +168,12 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
         {
             get { return _isRecurring; }
             set { SetProperty(ref _isRecurring, value); }
+        }
+
+        public List<Recipient> Recipients
+        {
+            get { return _recipients; }
+            set { SetProperty(ref _recipients, value); }
         }
 
         public override bool Equals(Object obj)

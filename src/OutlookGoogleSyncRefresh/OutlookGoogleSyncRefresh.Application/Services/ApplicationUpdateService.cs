@@ -4,6 +4,7 @@ using System.IO;
 using System.Net;
 using System.Waf.Applications;
 using Newtonsoft.Json;
+using OutlookGoogleSyncRefresh.Common.Log;
 
 namespace OutlookGoogleSyncRefresh.Application.Services
 {
@@ -12,6 +13,8 @@ namespace OutlookGoogleSyncRefresh.Application.Services
     [Export(typeof (IApplicationUpdateService))]
     public class ApplicationUpdateService : IApplicationUpdateService
     {
+        public ApplicationLogger ApplicationLogger { get; set; }
+
         /// <summary>
         /// </summary>
         private string _downloadLink;
@@ -19,6 +22,11 @@ namespace OutlookGoogleSyncRefresh.Application.Services
         /// <summary>
         /// </summary>
         private string _version;
+        [ImportingConstructor]
+        public ApplicationUpdateService(ApplicationLogger applicationLogger)
+        {
+            ApplicationLogger = applicationLogger;
+        }
 
         #region IApplicationUpdateService Members
 
@@ -54,6 +62,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services
             }
             catch (Exception exception)
             {
+                ApplicationLogger.LogError(exception.ToString());
                 return exception.Message;
             }
             return null;
@@ -74,6 +83,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services
             }
             catch (Exception exception)
             {
+                ApplicationLogger.LogError(exception.ToString());
             }
             return false;
         }
