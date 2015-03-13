@@ -71,7 +71,7 @@ namespace OutlookGoogleSyncRefresh.Application.Utilities
                 additionDescription.AppendLine(string.Empty);
             }
             //Add Required Attendees
-            if (calenderAppointment.RequiredAttendees != null)
+            if (calenderAppointment.RequiredAttendees.Any())
             {
                 additionDescription.AppendLine("Required Attendees:");
 
@@ -85,7 +85,7 @@ namespace OutlookGoogleSyncRefresh.Application.Utilities
             }
             //Add Optional Attendees
 
-            if (calenderAppointment.OptionalAttendees != null)
+            if (calenderAppointment.OptionalAttendees.Any())
             {
                 additionDescription.AppendLine("Optional Attendees:");
                 foreach (var requiredAttendee in calenderAppointment.OptionalAttendees)
