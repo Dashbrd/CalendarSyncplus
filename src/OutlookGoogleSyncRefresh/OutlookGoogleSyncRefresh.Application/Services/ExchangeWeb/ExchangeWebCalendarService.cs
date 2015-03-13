@@ -41,8 +41,6 @@ namespace OutlookGoogleSyncRefresh.Application.Services.ExchangeWeb
             {
                 foreach (Appointment exchangeAppointment in exchangeAppointments)
                 {
-                    //exchangeAppointment.Load(new PropertySet(BasePropertySet.FirstClassProperties) { RequestedBodyType = BodyType.Text });
-
                     var appointment = new AppAppointment(exchangeAppointment.Body, exchangeAppointment.Location,
                         exchangeAppointment.Subject, exchangeAppointment.Start, exchangeAppointment.Start)
                     {
@@ -57,7 +55,6 @@ namespace OutlookGoogleSyncRefresh.Application.Services.ExchangeWeb
                     outlookAppointments.Add(appointment);
                 }
             }
-
             return outlookAppointments;
         }
 
