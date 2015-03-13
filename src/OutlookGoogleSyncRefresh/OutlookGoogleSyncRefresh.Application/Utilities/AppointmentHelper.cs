@@ -32,29 +32,19 @@ namespace OutlookGoogleSyncRefresh.Application.Utilities
             return GetMD5Hash(sourceCalendarId);
         }
 
-
-        //public static string GetSourceId(this Appointment calenderAppointment)
-        //{
-        //    if (calenderAppointment.IsRecurring)
-        //    {
-        //        if (calenderAppointment.StartTime != null)
-        //        {
-        //            return string.Format("{0}_{1}", calenderAppointment.AppointmentId,
-        //                calenderAppointment.StartTime.Value.ToString("yy-mm-dd"));
-        //        }
-        //    }
-        //    return calenderAppointment.AppointmentId;
-        //}
-
         public static bool CompareSourceId(this Appointment calendarAppointment, Appointment otherAppointment)
         {
             return calendarAppointment.AppointmentId.Equals(otherAppointment.SourceId);
         }
 
-        public static string GetDescriptionData(this Appointment calenderAppointment, bool addAttendees)
+        public static string GetDescriptionData(this Appointment calenderAppointment, bool addDescription, bool addAttendees)
         {
             var additionDescription = new StringBuilder(string.Empty);
-            additionDescription.Append(calenderAppointment.Description);
+            if (addDescription)
+            {
+                additionDescription.Append(calenderAppointment.Description);
+            }
+
             if (!addAttendees)
             {
                 return additionDescription.ToString();

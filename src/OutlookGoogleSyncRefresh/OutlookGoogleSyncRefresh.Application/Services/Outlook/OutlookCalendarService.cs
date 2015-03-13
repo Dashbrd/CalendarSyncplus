@@ -206,11 +206,8 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
                         appointmentItem.Subject, appointmentItem.End, appointmentItem.Start)
                     {
                         AllDayEvent = appointmentItem.AllDayEvent,
-                        //OptionalAttendees = appointmentItem.OptionalAttendees,
                         ReminderMinutesBeforeStart = appointmentItem.ReminderMinutesBeforeStart,
-                        //Organizer = appointmentItem.Organizer,
                         ReminderSet = appointmentItem.ReminderSet,
-                        //RequiredAttendees = appointmentItem.RequiredAttendees,
                         AppointmentId = appointmentItem.IsRecurring
                             ? string.Format("{0}_{1}", appointmentItem.EntryID,
                               appointmentItem.Start.ToString("yy-MM-dd")) :
@@ -222,9 +219,11 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
 
                     foreach (Recipient attendee in appointmentItem.Recipients)
                     {
-                        AppRecipient recipient = new AppRecipient();
-                        recipient.Name = attendee.Name;
-                        recipient.Email = GetSMTPAddressForRecipients(attendee);
+                        var recipient = new AppRecipient
+                        {
+                            Name = attendee.Name,
+                            Email = GetSMTPAddressForRecipients(attendee)
+                        };
                         if (appointmentItem.RequiredAttendees != null &&
                             appointmentItem.RequiredAttendees.Contains(recipient.Name))
                         {
@@ -314,7 +313,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
             const string PR_SMTP_ADDRESS =
                 "http://schemas.microsoft.com/mapi/proptag/0x39FE001E";
 
-            PropertyAccessor pa = recip.PropertyAccessor;
+            var pa = recip.PropertyAccessor;
             string smtpAddress = pa.GetProperty(PR_SMTP_ADDRESS).ToString();
             return smtpAddress;
 
@@ -493,23 +492,22 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
 
 
         public async Task<bool> AddCalendarEvent(List<Appointment> calenderAppointments, bool addDescription,
-            bool addReminder,
-            bool addAttendees,
+            bool addReminder, bool addAttendees, bool attendeesToDescroption,
             IDictionary<string, object> calendarSpecificData)
         {
             CheckCalendarSpecificData(calendarSpecificData);
 
             var result = await
-                    Task<bool>.Factory.StartNew(() => AddEvents(calenderAppointments, addDescription, addReminder, addAttendees));
+                    Task<bool>.Factory.StartNew(() => AddEvents(calenderAppointments, addDescription, addReminder, addAttendees, attendeesToDescroption));
 
             return result;
         }
 
         bool AddEvents(List<Appointment> calenderAppointments, bool addDescription,
             bool addReminder,
-            bool addAttendees)
+            bool addAttendees, bool attendeesToDescroption)
         {
-            var wrapper = AddEventsToOutlook(calenderAppointments, addDescription, addReminder, addAttendees);
+            var wrapper = AddEventsToOutlook(calenderAppointments, addDescription, addReminder, addAttendees, attendeesToDescroption);
 
             if (!wrapper.WaitForApplicationQuit)
             {
@@ -522,6 +520,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
             }
             return wrapper.Success;
         }
+
         /// <summary>
         /// 
         /// </summary>
@@ -529,13 +528,12 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
         /// <param name="addDescription"></param>
         /// <param name="addReminder"></param>
         /// <param name="addAttendees"></param>
-        /// <param name="outlookCalendar"></param>
-        /// <param name="profileName"></param>
+        /// <param name="attendeesToDescription"></param>
         /// <returns></returns>
         private AppointmentListWrapper AddEventsToOutlook(List<Appointment> calenderAppointments, bool addDescription,
-            bool addReminder, bool addAttendees)
+            bool addReminder, bool addAttendees, bool attendeesToDescription)
         {
-            bool disposeOutlookInstances = false;
+            var disposeOutlookInstances = false;
             Microsoft.Office.Interop.Outlook.Application application = null;
             NameSpace nameSpace = null;
             MAPIFolder defaultOutlookCalender = null;
@@ -552,12 +550,12 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
                 outlookItems = defaultOutlookCalender.Items;
                 foreach (var calendarAppointment in calenderAppointments)
                 {
-                    AppointmentItem appItem = outlookItems.Add(OlItemType.olAppointmentItem) as AppointmentItem;
+                    var appItem = outlookItems.Add(OlItemType.olAppointmentItem) as AppointmentItem;
                     if (appItem == null)
                     {
                         continue;
                     }
-                    AddAppointment(addDescription, addReminder, addAttendees, appItem, calendarAppointment);
+                    AddAppointment(addDescription, addReminder, addAttendees, attendeesToDescription, appItem, calendarAppointment);
                 }
             }
             catch (Exception exception)
@@ -608,7 +606,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
             };
         }
 
-        private void AddAppointment(bool addDescription, bool addReminder, bool addAttendees, AppointmentItem appItem,
+        private void AddAppointment(bool addDescription, bool addReminder, bool addAttendees, bool attendeesToDescription, AppointmentItem appItem,
             Appointment calendarAppointment)
         {
 
@@ -632,12 +630,10 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
                 appItem.Start = calendarAppointment.StartTime.GetValueOrDefault();
                 appItem.End = calendarAppointment.EndTime.GetValueOrDefault();
 
-                if (addDescription)
-                {
-                    appItem.Body = calendarAppointment.Description;
-                }
 
-                if (addAttendees)
+                appItem.Body = calendarAppointment.GetDescriptionData(addDescription, attendeesToDescription);
+
+                if (addAttendees && !attendeesToDescription)
                 {
                     if (calendarAppointment.RequiredAttendees != null)
                     {
@@ -665,12 +661,13 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
                     appItem.ReminderMinutesBeforeStart = calendarAppointment.ReminderMinutesBeforeStart;
                     appItem.ReminderSet = calendarAppointment.ReminderSet;
                 }
+
                 userProperties = appItem.UserProperties;
                 if (userProperties != null)
                 {
                     var sourceProperty = userProperties.Add(calendarAppointment.GetSourceEntryKey(),
                         OlUserPropertyType.olText);
-                    sourceProperty.Value = calendarAppointment.AppointmentId;//.GetSourceId();
+                    sourceProperty.Value = calendarAppointment.AppointmentId;
                 }
                 appItem.Save();
             }
@@ -695,148 +692,13 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
             }
         }
 
-        public async Task<bool> AddCalendarEvent(Appointment calendarAppointment, bool addDescription, bool addReminder,
-             bool addAttendees, IDictionary<string, object> calendarSpecificData)
-        {
-            CheckCalendarSpecificData(calendarSpecificData);
 
-            bool disposeOutlookInstances = false;
-            Microsoft.Office.Interop.Outlook.Application application = null;
-            NameSpace nameSpace = null;
-            MAPIFolder defaultOutlookCalender = null;
-            Items outlookItems = null;
-
-            try
-            {
-
-                // Get Application and Namespace
-                GetOutlookApplication(out disposeOutlookInstances, out application, out nameSpace, ProfileName);
-
-                // Get Default Calender
-                defaultOutlookCalender = OutlookCalendar != null ? nameSpace.GetFolderFromID(OutlookCalendar.EntryId, OutlookCalendar.StoreId) : nameSpace.GetDefaultFolder(OlDefaultFolders.olFolderCalendar);
-                outlookItems = defaultOutlookCalender.Items;
-
-                AppointmentItem appItem = outlookItems.Add(OlItemType.olAppointmentItem) as AppointmentItem;
-                if (appItem != null)
-                {
-                    AddAppointment(addDescription, addReminder, addAttendees, appItem, calendarAppointment);
-                }
-
-            }
-            catch (Exception exception)
-            {
-                ApplicationLogger.LogError(exception.ToString());
-                return false;
-            }
-            finally
-            {
-                //Close  and Cleanup
-
-                if (disposeOutlookInstances)
-                {
-                    nameSpace.Logoff();
-                }
-
-                //Unassign all instances
-                if (outlookItems != null)
-                {
-                    Marshal.FinalReleaseComObject(outlookItems);
-                    outlookItems = null;
-                }
-
-                Marshal.FinalReleaseComObject(defaultOutlookCalender);
-                defaultOutlookCalender = null;
-
-                Marshal.FinalReleaseComObject(nameSpace);
-                nameSpace = null;
-
-                if (disposeOutlookInstances)
-                {
-                    // Casting Removes a warninig for Ambigous Call
-                    application.Quit();
-                    Marshal.FinalReleaseComObject(application);
-                }
-                application = null;
-                GC.Collect();
-                GC.WaitForPendingFinalizers();
-                while (disposeOutlookInstances && Process.GetProcessesByName("OUTLOOK").Any())
-                {
-                    Task.Delay(5000);
-                }
-            }
-            return true;
-        }
-
-        public async Task<bool> DeleteCalendarEvent(Appointment calendarAppointment,
-            IDictionary<string, object> calendarSpecificData)
-        {
-            if (calendarSpecificData == null)
-            {
-                return false;
-            }
-            object data;
-            if (!calendarSpecificData.TryGetValue("OutlookCalendar", out data))
-            {
-                return false;
-            }
-            var outlookCalendar = data as OutlookCalendar;
-            if (!calendarSpecificData.TryGetValue("ProfileName", out data))
-            {
-                return false;
-            }
-            var profileName = data as string;
-
-            bool disposeOutlookInstances = false;
-            Microsoft.Office.Interop.Outlook.Application application = null;
-            NameSpace nameSpace = null;
-
-            try
-            {
-
-                // Get Application and Namespace
-                GetOutlookApplication(out disposeOutlookInstances, out application, out nameSpace, profileName);
-
-                var appointmentItem = nameSpace.GetItemFromID(calendarAppointment.AppointmentId);
-                if (appointmentItem is AppointmentItem)
-                {
-                    appointmentItem.Delete();
-                }
-            }
-            catch (Exception exception)
-            {
-                ApplicationLogger.LogError(exception.ToString());
-                return false;
-            }
-            finally
-            {
-                //Close  and Cleanup
-                if (disposeOutlookInstances)
-                {
-                    nameSpace.Logoff();
-                }
-
-                Marshal.FinalReleaseComObject(nameSpace);
-                nameSpace = null;
-
-                if (disposeOutlookInstances)
-                {
-                    // Casting Removes a warninig for Ambigous Call
-                    application.Quit();
-                    Marshal.FinalReleaseComObject(application);
-                }
-                application = null;
-                GC.Collect();
-                GC.WaitForPendingFinalizers();
-                while (disposeOutlookInstances && Process.GetProcessesByName("OUTLOOK").Any())
-                {
-                    Task.Delay(5000);
-                }
-            }
-
-
-            return true;
-        }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="calendarAppointments"></param>
+        /// <param name="calendarSpecificData"></param>
+        /// <returns></returns>
         public async Task<bool> DeleteCalendarEvent(List<Appointment> calendarAppointments,
             IDictionary<string, object> calendarSpecificData)
         {
@@ -861,7 +723,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
             }
             var profileName = data as string;
 
-            bool disposeOutlookInstances = false;
+            var disposeOutlookInstances = false;
             Microsoft.Office.Interop.Outlook.Application application = null;
             NameSpace nameSpace = null;
 

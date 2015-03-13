@@ -519,7 +519,8 @@
                                 <ColumnDefinition />
                             </Grid.ColumnDefinitions>
                             <TextBlock Text="No of days in past"
-                                       VerticalAlignment="Center" />
+                                       VerticalAlignment="Center"
+                                       ToolTip="Select the number of days in past for which you wish to sync calendar appointments" />
                             <controls:NumericUpDown Grid.Row="0"
                                                     Grid.Column="1"
                                                     VerticalAlignment="Center"
@@ -531,7 +532,8 @@
                             <TextBlock Grid.Row="1"
                                        Grid.Column="0"
                                        Text="No of days in future"
-                                       VerticalAlignment="Center" />
+                                       VerticalAlignment="Center"
+                                       ToolTip="Select the number of days in future for which you wish to sync calendar appointments"/>
                             <controls:NumericUpDown Grid.Row="1"
                                                     Grid.Column="1"
                                                     VerticalAlignment="Center"
@@ -562,22 +564,32 @@
                                 <RowDefinition />
                                 <RowDefinition />
                                 <RowDefinition />
+                                <RowDefinition />
                             </Grid.RowDefinitions>
                             <CheckBox Content="Add Description"
                                       Margin="5"
-                                      IsChecked="{Binding AddDescription,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
+                                      IsChecked="{Binding AddDescription,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" 
+                                      ToolTip="Select this option if you wish to add description to the appointments"/>
                             <CheckBox Content="Add Attendees"
                                       Margin="5"
                                       Grid.Row="1"
-                                      IsChecked="{Binding AddAttendees,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
+                                      IsChecked="{Binding AddAttendees,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" 
+                                      ToolTip="Select this option if you wish to add attendees to appointment"/>
+                            <CheckBox Content="Add Attendees to Description "
+                                      Margin="20,5,5,5"
+                                      Grid.Row="2"
+                                      IsChecked="{Binding AddAttendeesToDescription,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                                      IsEnabled="{Binding AddAttendees, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                      ToolTip="Select this option if you wish to add attendees to appointment description instead of TO/CC/BCC fields"/>
                             <CheckBox Content="Add Reminders"
                                       Margin="5"
-                                      Grid.Row="2"
-                                      IsChecked="{Binding AddReminders,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
+                                      Grid.Row="3"
+                                      IsChecked="{Binding AddReminders,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" 
+                                      ToolTip="Select this option if you wish to add reminders of the appointment. Note: Outlook gives default reminder messages for all appointments. To disable please go to your outlook settings."/>
                             <CheckBox Content="Add Attachments"
                                       Margin="5"
                                       Visibility="Collapsed"
-                                      Grid.Row="3"
+                                      Grid.Row="4"
                                       IsChecked="{Binding AddAttachments,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
                         </Grid>
                     </GroupBox>
@@ -607,7 +619,7 @@
                                       IsChecked="{Binding CreateNewFileForEverySync,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
                         </Grid>
                     </GroupBox>
-                    <GroupBox Header="Application"
+                    <GroupBox Header="Application Options"
                               Grid.Row="1">
                         <Grid>
                             <Grid.RowDefinitions>
@@ -640,13 +652,17 @@
 
                         </Grid>
                     </GroupBox>
-                    <TextBlock Grid.Row="2"
-                               Text="More Features Coming Soon..."
+                    <TextBlock Margin="0,10,0,0"
+                               Grid.Row="2"
                                FontSize="40"
                                TextWrapping="Wrap"
                                HorizontalAlignment="Center"
                                VerticalAlignment="Center"
-                               MaxWidth="200" />
+                               Text="More Features Coming Soon..."
+                               MaxWidth="200">
+                    <Hyperlink Command="{Binding UriCommand}"
+                        CommandParameter="https://calendarsyncplus.codeplex.com/"/>
+                    </TextBlock>
                 </Grid>
 
             </TabItem>

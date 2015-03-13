@@ -261,7 +261,8 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
             bool isSuccess = DestinationCalendarService.AddCalendarEvent(calendarAppointments,
                 settings.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Description),
                 settings.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Reminders),
-                settings.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Attendees), destinationCalendarSpecificData)
+                settings.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Attendees),
+                settings.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.AttendeesToDescription), destinationCalendarSpecificData)
                 .Result;
             //Update status if entries were successfully added
             SyncStatus =
@@ -322,7 +323,8 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
             bool isSuccess = SourceCalendarService.AddCalendarEvent(calendarAppointments,
                 settings.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Description),
                 settings.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Reminders),
-                settings.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Attendees), sourceCalendarSpecificData)
+                settings.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Attendees),
+                settings.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.AttendeesToDescription), sourceCalendarSpecificData)
                 .Result;
             //Update status if entries were successfully added
             SyncStatus =

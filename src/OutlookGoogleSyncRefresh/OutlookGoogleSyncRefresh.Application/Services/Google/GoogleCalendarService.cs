@@ -89,7 +89,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Google
         #region Private Methods
 
         private Event CreateGoogleCalendarEvent(Appointment calenderAppointment, bool addDescription, bool addReminder,
-            bool addAttendees)
+            bool addAttendees, bool attendeesToDescroption)
         {
             //Create Event
             var googleEvent = new Event
@@ -97,7 +97,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Google
                 Start = new EventDateTime(),
                 End = new EventDateTime(),
                 Summary = calenderAppointment.Subject,
-                Description = addDescription ? calenderAppointment.GetDescriptionData(addAttendees) : String.Empty,
+                Description = calenderAppointment.GetDescriptionData(addDescription, attendeesToDescroption),
                 Location = calenderAppointment.Location,
                 Visibility = calenderAppointment.Privacy,
                 Transparency = (calenderAppointment.BusyStatus == BusyStatusEnum.Free) ? "transparent" : "opaque"
@@ -236,28 +236,8 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Google
             return locaCalendarList;
         }
 
-        public async Task<bool> AddCalendarEvent(Appointment calendarAppointment, bool addDescription,
-            bool addReminder, bool addAttendees, IDictionary<string, object> calendarSpecificData)
-        {
-            CheckCalendarSpecificData(calendarSpecificData);
-
-            //Get Calendar Service
-            CalendarService calendarService = GetCalendarService();
-
-            if (calendarAppointment == null || string.IsNullOrEmpty(CalendarId))
-            {
-                return false;
-            }
-
-            Event calendarEvent = CreateGoogleCalendarEvent(calendarAppointment, addDescription, addReminder,
-                addAttendees);
-            Event returnEvent = await calendarService.Events.Insert(calendarEvent, CalendarId).ExecuteAsync();
-
-            return returnEvent != null;
-        }
-
         public async Task<bool> AddCalendarEvent(List<Appointment> appointments, bool addDescription,
-            bool addReminder, bool addAttendees, IDictionary<string, object> calendarSpecificData)
+            bool addReminder, bool addAttendees, bool attendeesToDescroption, IDictionary<string, object> calendarSpecificData)
         {
             CheckCalendarSpecificData(calendarSpecificData);
             object obj;
@@ -289,7 +269,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Google
                         }
 
                         Appointment appointment = appointments[i];
-                        Event calendarEvent = CreateGoogleCalendarEvent(appointment, addDescription, addReminder,
+                        Event calendarEvent = CreateGoogleCalendarEvent(appointment, addDescription, addReminder, attendeesToDescroption,
                             addAttendees);
                         EventsResource.InsertRequest insertRequest = calendarService.Events.Insert(calendarEvent, CalendarId);
                         batchRequest.Queue<Event>(insertRequest,
@@ -308,24 +288,6 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Google
             return true;
         }
 
-        public async Task<bool> DeleteCalendarEvent(Appointment calendarAppointment,
-            IDictionary<string, object> calendarSpecificData)
-        {
-            CheckCalendarSpecificData(calendarSpecificData);
-
-            //Get Calendar Service
-            CalendarService calendarService = GetCalendarService();
-
-            if (calendarAppointment == null || string.IsNullOrEmpty(CalendarId))
-            {
-                return false;
-            }
-
-            //TODO: Manage return value for Event delete
-            string returnValue =
-                await calendarService.Events.Delete(CalendarId, calendarAppointment.AppointmentId).ExecuteAsync();
-            return true;
-        }
 
         public async Task<bool> DeleteCalendarEvent(List<Appointment> calendarAppointment,
             IDictionary<string, object> calendarSpecificData)

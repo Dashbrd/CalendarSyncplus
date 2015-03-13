@@ -19,8 +19,9 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
         None = 0,
         Description = 1,
         Attendees = 2,
-        Reminders = 4,
-        Attachments = 8,
+        AttendeesToDescription = 4,
+        Reminders = 8,
+        Attachments = 16,
     }
 
     public enum CalendarSyncDirectionEnum

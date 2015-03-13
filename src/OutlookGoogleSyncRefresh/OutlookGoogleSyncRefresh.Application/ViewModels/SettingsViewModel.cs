@@ -192,10 +192,23 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             set { SetProperty(ref _addDescription, value); }
         }
 
+        public bool AddAttendeesToDescription
+        {
+            get { return _addAttendeesToDescription; }
+            set { SetProperty(ref _addAttendeesToDescription, value); }
+        }
+
         public bool AddAttendees
         {
             get { return _addAttendees; }
-            set { SetProperty(ref _addAttendees, value); }
+            set
+            {
+                SetProperty(ref _addAttendees, value);
+                if (_addAttendees == false)
+                {
+                    AddAttendeesToDescription = false;
+                }
+            }
         }
 
         public bool AddReminders
@@ -497,6 +510,10 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
                     DaysInPast = Settings.DaysInPast;
                     DaysInFuture = Settings.DaysInFuture;
                     AddAttendees = Settings.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Attendees);
+                    if (AddAttendees)
+                    {
+                        AddAttendeesToDescription = Settings.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.AttendeesToDescription);
+                    }
                     AddDescription = Settings.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Description);
                     AddReminders = Settings.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Reminders);
                     AddAttachments = Settings.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Attachments);
@@ -566,7 +583,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             Settings.DaysInFuture = DaysInFuture;
             Settings.DaysInPast = DaysInPast;
             Settings.SyncSettings.SyncFrequency = SyncFrequencyViewModel.GetFrequency();
-            Settings.UpdateEntryOptions(AddDescription, AddReminders, AddAttendees, AddAttachments);
+            Settings.UpdateEntryOptions(AddDescription, AddReminders, AddAttendees, AddAttendeesToDescription, AddAttachments);
             Settings.LogSettings.LogSyncInfo = LogSyncInfo;
             Settings.LogSettings.CreateNewFileForEverySync = CreateNewFileForEverySync;
             Settings.OutlookSettings.OutlookMailBox = SelectedOutlookMailBox;
@@ -660,6 +677,8 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
         #endregion
 
         private bool _isloaded = false;
+        private bool _addAttendeesToDescription;
+
         public void Load()
         {
             if (_isloaded)

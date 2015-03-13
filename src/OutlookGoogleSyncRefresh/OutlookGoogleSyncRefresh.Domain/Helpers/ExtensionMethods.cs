@@ -37,7 +37,7 @@ namespace OutlookGoogleSyncRefresh.Domain.Helpers
         }
 
         public static void UpdateEntryOptions(this Settings settings, bool addDescription, bool addReminders,
-            bool addAttendees, bool addAttachments)
+            bool addAttendees, bool addAttendeesToDescription, bool addAttachments)
         {
             settings.CalendarEntryOptions = CalendarEntryOptionsEnum.None;
             if (addDescription)
@@ -53,6 +53,10 @@ namespace OutlookGoogleSyncRefresh.Domain.Helpers
             if (addAttendees)
             {
                 settings.CalendarEntryOptions = settings.CalendarEntryOptions | CalendarEntryOptionsEnum.Attendees;
+                if (addAttendeesToDescription)
+                {
+                    settings.CalendarEntryOptions = settings.CalendarEntryOptions | CalendarEntryOptionsEnum.AttendeesToDescription;
+                }
             }
 
             if (addAttachments)
