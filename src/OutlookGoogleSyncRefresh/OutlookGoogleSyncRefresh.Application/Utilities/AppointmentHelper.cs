@@ -124,6 +124,9 @@ namespace OutlookGoogleSyncRefresh.Application.Utilities
 
         private static string ParseDescription(Appointment appointment)
         {
+            if (appointment.Description == null)
+                return string.Empty;
+
             string description = appointment.Description;
             if (appointment.Description.Contains(LineBreak))
             {
