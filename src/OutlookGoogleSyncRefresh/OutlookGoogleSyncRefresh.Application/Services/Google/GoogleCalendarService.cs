@@ -150,14 +150,20 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Google
                 };
             }
 
+            if (googleEvent.Attendees==null)
+            {
+                googleEvent.Attendees = new List<EventAttendee>();
+            }
+
             //Add Required Attendees
 
             AddEventAttendees(calenderAppointment.RequiredAttendees, googleEvent, false);
 
+            //Add optional Attendees
             AddEventAttendees(calenderAppointment.OptionalAttendees, googleEvent, true);
 
             //Add Organizer
-            if (IsValidEmailAddress(calenderAppointment.Organizer.Email))
+            if (calenderAppointment.Organizer!=null && IsValidEmailAddress(calenderAppointment.Organizer.Email))
             {
                 googleEvent.Organizer = new Event.OrganizerData
                 {
@@ -252,25 +258,21 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Google
             };
 
             //Add Required Attendee
-            AddAttendee(googleEvent, appointment,false);
+            AddAttendee(googleEvent, appointment.RequiredAttendees,false);
 
             //Add optional Attendee
-            AddAttendee(googleEvent, appointment, true);
+            AddAttendee(googleEvent, appointment.OptionalAttendees, true);
 
 
             return appointment;
         }
 
-        private static void AddAttendee(Event googleEvent, Appointment appointment,bool isOptional)
+        private static void AddAttendee(Event googleEvent, List<Recipient> recipients,bool isOptional)
         {
-            var list = isOptional ? appointment.OptionalAttendees : appointment.RequiredAttendees;
-            if (!list.Any())
-            {
-                return;
-            }
+    
             foreach (EventAttendee eventAttendee in googleEvent.Attendees.Where(attendee => attendee.Optional.GetValueOrDefault()==isOptional))
             {
-                list.Add(new Recipient() { Name = eventAttendee.DisplayName, Email = eventAttendee.Email });
+                recipients.Add(new Recipient() { Name = eventAttendee.DisplayName, Email = eventAttendee.Email });
             }
         }
 
@@ -475,6 +477,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Google
             // Add Filters to event List Request
             eventListRequest.TimeMin = DateTime.Now.AddDays(-(daysInPast));
             eventListRequest.TimeMax = DateTime.Now.AddDays((daysInFuture + 1));
+            eventListRequest.MaxAttendees = 1000;
 
             try
             {
