@@ -54,7 +54,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Google
 
         #region Fields
 
-        private readonly ApplicationLogger _applicationLogger;
+        private ApplicationLogger ApplicationLogger { get; set; }
         private string calendarId;
 
         #endregion
@@ -65,7 +65,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Google
         public GoogleCalendarService(IAccountAuthenticationService accountAuthenticationService,
             ApplicationLogger applicationLogger)
         {
-            _applicationLogger = applicationLogger;
+            ApplicationLogger = applicationLogger;
             AccountAuthenticationService = accountAuthenticationService;
         }
 
@@ -270,32 +270,40 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Google
             {
                 return false;
             }
-            if (appointments.Any())
+            try
             {
-                //Create a Batch Request
-                var batchRequest = new BatchRequest(calendarService);
-
-                //Split the list of appointments by 1000 per list
-
-                //Iterate over each appointment to create a event and batch it 
-                for (int i = 0; i < appointments.Count; i++)
+                if (appointments.Any())
                 {
-                    if (i != 0 && i % 999 == 0)
+                    //Create a Batch Request
+                    var batchRequest = new BatchRequest(calendarService);
+
+                    //Split the list of appointments by 1000 per list
+
+                    //Iterate over each appointment to create a event and batch it 
+                    for (int i = 0; i < appointments.Count; i++)
                     {
-                        await batchRequest.ExecuteAsync();
-                        batchRequest = new BatchRequest(calendarService);
+                        if (i != 0 && i % 999 == 0)
+                        {
+                            await batchRequest.ExecuteAsync();
+                            batchRequest = new BatchRequest(calendarService);
+                        }
+
+                        Appointment appointment = appointments[i];
+                        Event calendarEvent = CreateGoogleCalendarEvent(appointment, addDescription, addReminder,
+                            addAttendees);
+                        EventsResource.InsertRequest insertRequest = calendarService.Events.Insert(calendarEvent, CalendarId);
+                        batchRequest.Queue<Event>(insertRequest,
+                            (content, error, index, message) =>
+                                InsertEventErrorMessage(content, error, index, message, eventIndexList));
                     }
 
-                    Appointment appointment = appointments[i];
-                    Event calendarEvent = CreateGoogleCalendarEvent(appointment, addDescription, addReminder,
-                        addAttendees);
-                    EventsResource.InsertRequest insertRequest = calendarService.Events.Insert(calendarEvent, CalendarId);
-                    batchRequest.Queue<Event>(insertRequest,
-                        (content, error, index, message) =>
-                            InsertEventErrorMessage(content, error, index, message, eventIndexList));
+                    await batchRequest.ExecuteAsync();
                 }
-
-                await batchRequest.ExecuteAsync();
+            }
+            catch (Exception exception)
+            {
+                ApplicationLogger.LogError(exception.ToString());
+                return false;
             }
             return true;
         }
@@ -332,31 +340,40 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Google
             {
                 return false;
             }
-            if (calendarAppointment.Any())
+
+            try
             {
-                //Create a Batch Request
-                var batchRequest = new BatchRequest(calendarService);
-
-                //Split the list of appointments by 1000 per list
-
-                //Iterate over each appointment to create a event and batch it 
-                for (int i = 0; i < calendarAppointment.Count; i++)
+                if (calendarAppointment.Any())
                 {
-                    if (i != 0 && i % 999 == 0)
+                    //Create a Batch Request
+                    var batchRequest = new BatchRequest(calendarService);
+
+                    //Split the list of appointments by 1000 per list
+
+                    //Iterate over each appointment to create a event and batch it 
+                    for (int i = 0; i < calendarAppointment.Count; i++)
                     {
-                        await batchRequest.ExecuteAsync();
-                        batchRequest = new BatchRequest(calendarService);
+                        if (i != 0 && i % 999 == 0)
+                        {
+                            await batchRequest.ExecuteAsync();
+                            batchRequest = new BatchRequest(calendarService);
+                        }
+
+                        Appointment appointment = calendarAppointment[i];
+                        EventsResource.DeleteRequest deleteRequest = calendarService.Events.Delete(CalendarId,
+                            appointment.AppointmentId);
+                        batchRequest.Queue<Event>(deleteRequest,
+                            (content, error, index, message) =>
+                                InsertEventErrorMessage(content, error, index, message, eventIndexList));
                     }
 
-                    Appointment appointment = calendarAppointment[i];
-                    EventsResource.DeleteRequest deleteRequest = calendarService.Events.Delete(CalendarId,
-                        appointment.AppointmentId);
-                    batchRequest.Queue<Event>(deleteRequest,
-                        (content, error, index, message) =>
-                            InsertEventErrorMessage(content, error, index, message, eventIndexList));
+                    await batchRequest.ExecuteAsync();
                 }
-
-                await batchRequest.ExecuteAsync();
+            }
+            catch (Exception exception)
+            {
+                ApplicationLogger.LogError(exception.ToString());
+                return false;
             }
             return true;
         }
@@ -385,7 +402,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Google
             }
             catch (GoogleApiException exception)
             {
-                _applicationLogger.LogError(exception.ToString());
+                ApplicationLogger.LogError(exception.ToString());
                 return null;
             }
             if (result != null)

@@ -118,14 +118,14 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
         /// <param name="sourceList"></param>
         /// <param name="destinationList"></param>
         /// <returns></returns>
-        private List<Appointment> GetAppointmentsToDelete(SyncModeEnum syncMode,List<Appointment> sourceList, List<Appointment> destinationList)
+        private List<Appointment> GetAppointmentsToDelete(SyncModeEnum syncMode, List<Appointment> sourceList, List<Appointment> destinationList)
         {
             var appointmentsToDelete = new List<Appointment>();
             foreach (var destAppointment in destinationList)
             {
                 if (syncMode == SyncModeEnum.TwoWay && destAppointment.SourceId == null)
                 {
-                    continue;    
+                    continue;
                 }
 
                 bool isFound = false;
@@ -282,7 +282,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
             SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
             SyncStatus = StatusHelper.GetMessage(SyncStateEnum.ReadingEntriesToDelete);
             //Getting appointments to delete
-            List<Appointment> appointmentsToDelete = GetAppointmentsToDelete(syncMode,SourceAppointments, DestinationAppointments);
+            List<Appointment> appointmentsToDelete = GetAppointmentsToDelete(syncMode, SourceAppointments, DestinationAppointments);
             //Updating Get entry delete status
             SyncStatus = StatusHelper.GetMessage(SyncStateEnum.EntriesToDelete, appointmentsToDelete.Count);
             //Updating delete status
@@ -409,7 +409,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
                     settings.SyncSettings.SyncMode == SyncModeEnum.TwoWay ? "<===>" : "===>");
                 SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
                 //Add log for date range
-                SyncStatus = string.Format("Sync Date Range - {0} - {1}",
+                SyncStatus = string.Format("Date Range - {0} - {1}",
                     DateTime.Now.Subtract(new TimeSpan(settings.DaysInPast, 0, 0, 0)).ToString("D"),
                     DateTime.Now.Add(new TimeSpan(settings.DaysInFuture, 0, 0, 0)).ToString("D"));
 
