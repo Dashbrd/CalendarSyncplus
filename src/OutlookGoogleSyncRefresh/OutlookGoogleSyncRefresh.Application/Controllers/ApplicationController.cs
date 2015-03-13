@@ -143,6 +143,10 @@ namespace OutlookGoogleSyncRefresh.Application.Controllers
                         }
                     }
                     break;
+                case "IsLoading":
+                    _shellViewModel.IsSettingsLoading = _settingsViewModel.IsLoading;
+                    break;
+
             }
         }
 

@@ -75,6 +75,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
         private Settings _settings;
         private DelegateCommand _startSyncCommand;
         private DelegateCommand _syncNowCommand;
+        private bool _isSettingsLoading;
 
         #endregion
 
@@ -219,6 +220,12 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             set { SetProperty(ref _isPeriodicSyncStarted, value); }
         }
 
+        public bool IsSettingsLoading
+        {
+            get { return _isSettingsLoading; }
+            set { SetProperty(_isSettingsLoading, value); }
+        }
+
         public bool IsSyncInProgress
         {
             get { return _isSyncInProgress; }
@@ -322,6 +329,12 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
 
         private async void PeriodicSyncCommandHandler()
         {
+            if (IsSettingsLoading)
+            {
+                MessageService.ShowMessageAsync("Unable to do the operation as settings are loading.");
+                return;
+            }
+
             if (IsSyncInProgress)
             {
                 MessageService.ShowMessageAsync("Unable to do the operation as sync is in progress.");
@@ -485,6 +498,12 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
 
         private void StartSyncTask()
         {
+            if (IsSettingsLoading)
+            {
+                MessageService.ShowMessageAsync("Unable to do the operation as settings are loading.");
+                return;
+            }
+
             if (IsSyncInProgress)
             {
                 MessageService.ShowMessageAsync("Unable to do the operation as sync is in progress.");
