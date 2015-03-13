@@ -90,7 +90,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Google
         #region Private Methods
 
         private Event CreateGoogleCalendarEvent(Appointment calenderAppointment, bool addDescription, bool addReminder,
-            bool addAttendees, bool attendeesToDescroption)
+            bool addAttendees, bool attendeesToDescription)
         {
             //Create Event
             var googleEvent = new Event
@@ -98,7 +98,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Google
                 Start = new EventDateTime(),
                 End = new EventDateTime(),
                 Summary = calenderAppointment.Subject,
-                Description = calenderAppointment.GetDescriptionData(addDescription, attendeesToDescroption),
+                Description = calenderAppointment.GetDescriptionData(addDescription, attendeesToDescription),
                 Location = calenderAppointment.Location,
                 Visibility = calenderAppointment.Privacy,
                 Transparency = (calenderAppointment.BusyStatus == BusyStatusEnum.Free) ? "transparent" : "opaque",
@@ -150,20 +150,21 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Google
                 };
             }
 
-            if (googleEvent.Attendees==null)
+            if (googleEvent.Attendees == null)
             {
                 googleEvent.Attendees = new List<EventAttendee>();
             }
 
-            //Add Required Attendees
+            if (addAttendees && !attendeesToDescription)
+            {
+                //Add Required Attendees
+                AddEventAttendees(calenderAppointment.RequiredAttendees, googleEvent, false);
 
-            AddEventAttendees(calenderAppointment.RequiredAttendees, googleEvent, false);
-
-            //Add optional Attendees
-            AddEventAttendees(calenderAppointment.OptionalAttendees, googleEvent, true);
-
+                //Add optional Attendees
+                AddEventAttendees(calenderAppointment.OptionalAttendees, googleEvent, true);
+            }
             //Add Organizer
-            if (calenderAppointment.Organizer!=null && IsValidEmailAddress(calenderAppointment.Organizer.Email))
+            if (calenderAppointment.Organizer != null && IsValidEmailAddress(calenderAppointment.Organizer.Email))
             {
                 googleEvent.Organizer = new Event.OrganizerData
                 {
@@ -177,7 +178,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Google
         private void AddEventAttendees(IEnumerable<Recipient> recipients, Event googleEvent, bool optional)
         {
             IEnumerable<Recipient> recipeintList = recipients as IList<Recipient> ?? recipients.ToList();
-            if (!recipeintList.Any() && googleEvent==null)
+            if (!recipeintList.Any() && googleEvent == null)
             {
                 return;
             }
@@ -223,7 +224,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Google
         private Appointment CreateAppointment(Event googleEvent)
         {
             Appointment appointment;
-            
+
             if (googleEvent.Start.DateTime == null && googleEvent.End.DateTime == null)
             {
                 appointment = new Appointment(googleEvent.Description, googleEvent.Location, googleEvent.Summary,
@@ -258,21 +259,24 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Google
             };
 
             //Add Required Attendee
-            AddAttendee(googleEvent, appointment.RequiredAttendees,false);
+            GetAttendees(googleEvent, appointment.RequiredAttendees, false);
 
             //Add optional Attendee
-            AddAttendee(googleEvent, appointment.OptionalAttendees, true);
+            GetAttendees(googleEvent, appointment.OptionalAttendees, true);
 
 
             return appointment;
         }
 
-        private static void AddAttendee(Event googleEvent, List<Recipient> recipients,bool isOptional)
+        private void GetAttendees(Event googleEvent, List<Recipient> recipients, bool isOptional)
         {
-    
-            foreach (EventAttendee eventAttendee in googleEvent.Attendees.Where(attendee => attendee.Optional.GetValueOrDefault()==isOptional))
+            if (googleEvent != null && googleEvent.Attendees != null)
             {
-                recipients.Add(new Recipient() { Name = eventAttendee.DisplayName, Email = eventAttendee.Email });
+                foreach (EventAttendee eventAttendee in
+                        googleEvent.Attendees.Where(attendee => attendee.Optional.GetValueOrDefault() == isOptional))
+                {
+                    recipients.Add(new Recipient() { Name = eventAttendee.DisplayName, Email = eventAttendee.Email });
+                }
             }
         }
 
@@ -353,7 +357,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Google
                         Event calendarEvent = CreateGoogleCalendarEvent(appointment, addDescription, addReminder, attendeesToDescroption,
                             addAttendees);
                         EventsResource.InsertRequest insertRequest = calendarService.Events.Insert(calendarEvent, CalendarId);
-                    insertRequest.SendNotifications = false;
+                        insertRequest.SendNotifications = false;
                         batchRequest.Queue<Event>(insertRequest,
                             (content, error, index, message) =>
                                 InsertEventErrorMessage(content, error, index, message, eventIndexList));
@@ -444,36 +448,42 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Google
             try
             {
                 result = eventListRequest.Execute();
+                if (result != null)
+                {
+                    while (result.Items != null)
+                    {
+                        // Add events to list
+                        finalEventList.AddRange(
+                            result.Items.Select(CreateAppointment));
+
+                        //If all pages are over break
+                        if (result.NextPageToken == null)
+                        {
+                            break;
+                        }
+
+                        //Set the next page to pull from request
+                        eventListRequest.PageToken = result.NextPageToken;
+
+                        result = await eventListRequest.ExecuteAsync();
+                    }
+                }
+                else
+                {
+                    return null;
+                }
             }
             catch (GoogleApiException exception)
             {
                 ApplicationLogger.LogError(exception.ToString());
                 return null;
             }
-            if (result != null)
+            catch (Exception exception)
             {
-                while (result.Items != null)
-                {
-                    // Add events to list
-                    finalEventList.AddRange(
-                        result.Items.Select(CreateAppointment));
-
-                    //If all pages are over break
-                    if (result.NextPageToken == null)
-                    {
-                        break;
-                    }
-
-                    //Set the next page to pull from request
-                    eventListRequest.PageToken = result.NextPageToken;
-
-                    result = await eventListRequest.ExecuteAsync();
-                }
-            }
-            else
-            {
+                ApplicationLogger.LogError(exception.ToString());
                 return null;
             }
+
             var calendarAppointments = new CalendarAppointments() { CalendarId = this.CalendarId };
             calendarAppointments.AddRange(finalEventList);
             return calendarAppointments;
