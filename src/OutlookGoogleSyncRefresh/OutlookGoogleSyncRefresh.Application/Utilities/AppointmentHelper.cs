@@ -37,6 +37,7 @@ namespace OutlookGoogleSyncRefresh.Application.Utilities
             return calendarAppointment.AppointmentId.Equals(otherAppointment.SourceId);
         }
 
+        public const string LineBreak = "==============================================";
         public static string GetDescriptionData(this Appointment calenderAppointment, bool addDescription, bool addAttendees)
         {
             var additionDescription = new StringBuilder(string.Empty);
@@ -49,8 +50,9 @@ namespace OutlookGoogleSyncRefresh.Application.Utilities
             {
                 return additionDescription.ToString();
             }
+            bool hasData = false;
             //Start Header
-            additionDescription.AppendLine("==============================================");
+            additionDescription.AppendLine(LineBreak);
             additionDescription.AppendLine(string.Empty);
             if (calenderAppointment.Organizer != null)
             {
@@ -59,6 +61,7 @@ namespace OutlookGoogleSyncRefresh.Application.Utilities
 
                 additionDescription.AppendLine(calenderAppointment.Organizer.GetDescription());
                 additionDescription.AppendLine(string.Empty);
+                hasData = true;
             }
             //Add Required Attendees
             if (calenderAppointment.RequiredAttendees.Any())
@@ -69,9 +72,9 @@ namespace OutlookGoogleSyncRefresh.Application.Utilities
                 {
                     additionDescription.AppendLine(requiredAttendee.GetDescription());
                 }
-
-
+                
                 additionDescription.AppendLine(string.Empty);
+                hasData = true;
             }
             //Add Optional Attendees
 
@@ -83,13 +86,14 @@ namespace OutlookGoogleSyncRefresh.Application.Utilities
                     additionDescription.AppendLine(requiredAttendee.GetDescription());
                 }
                 additionDescription.AppendLine(string.Empty);
+                hasData = true;
 
             }
 
             //Close Header
-            additionDescription.AppendLine("==============================================");
+            additionDescription.AppendLine(LineBreak);
 
-            return additionDescription.ToString();
+            return hasData ? additionDescription.ToString() : string.Empty;
         }
 
         private static string GetDescription(this Recipient recipient)
@@ -97,19 +101,43 @@ namespace OutlookGoogleSyncRefresh.Application.Utilities
             return string.Format("{0} <{1}>", recipient.Name, recipient.Email);
         }
 
-        private static string SplitAttendees(string attendees)
+        /// <summary>
+        /// </summary>
+        /// <param name="appointment"></param>
+        /// <param name="otherAppointment"></param>
+        /// <returns></returns>
+        public static bool CompareDescription(this Appointment appointment, Appointment otherAppointment)
         {
-            var attendeesBuilder = new StringBuilder(string.Empty);
-            if (string.IsNullOrEmpty(attendees))
+            if (appointment.Description.Equals(otherAppointment.Description))
             {
-                return attendees;
+                return true;
             }
 
-            foreach (string attendeeName in attendees.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries))
+            var description = ParseDescription(appointment);
+            var otherDescription = ParseDescription(otherAppointment);
+            if (description.Equals(otherDescription))
             {
-                attendeesBuilder.AppendLine(attendeeName.Trim());
+                return true;
             }
-            return attendees;
+            return false;
+        }
+
+        private static string ParseDescription(Appointment appointment)
+        {
+            string description = appointment.Description;
+            if (appointment.Description.Contains(LineBreak))
+            {
+                if (appointment.Description.IndexOf(LineBreak, StringComparison.Ordinal) > 1)
+                {
+                    description =
+                        appointment.Description.Split(new[] {LineBreak}, StringSplitOptions.RemoveEmptyEntries).First();
+                }
+                else
+                {
+                    description = string.Empty;
+                }
+            }
+            return description;
         }
 
         public static OlBusyStatus GetOutlookBusyStatus(this Appointment calendarAppointment)

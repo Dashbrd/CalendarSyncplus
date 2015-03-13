@@ -321,9 +321,14 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Google
             return locaCalendarList;
         }
 
-        public async Task<bool> AddCalendarEvent(List<Appointment> appointments, bool addDescription,
+        public async Task<bool> AddCalendarEvent(List<Appointment> calendarAppointments, bool addDescription,
             bool addReminder, bool addAttendees, bool attendeesToDescroption, IDictionary<string, object> calendarSpecificData)
         {
+            if (!calendarAppointments.Any())
+            {
+                return true;
+            }
+
             CheckCalendarSpecificData(calendarSpecificData);
             object obj;
 
@@ -331,21 +336,21 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Google
             //Get Calendar Service
             CalendarService calendarService = GetCalendarService();
 
-            if (appointments == null || string.IsNullOrEmpty(CalendarId))
+            if (calendarAppointments == null || string.IsNullOrEmpty(CalendarId))
             {
                 return false;
             }
             try
             {
-                if (appointments.Any())
+                if (calendarAppointments.Any())
                 {
                     //Create a Batch Request
                     var batchRequest = new BatchRequest(calendarService);
 
-                    //Split the list of appointments by 1000 per list
+                    //Split the list of calendarAppointments by 1000 per list
 
                     //Iterate over each appointment to create a event and batch it 
-                    for (int i = 0; i < appointments.Count; i++)
+                    for (int i = 0; i < calendarAppointments.Count; i++)
                     {
                         if (i != 0 && i % 999 == 0)
                         {
@@ -353,7 +358,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Google
                             batchRequest = new BatchRequest(calendarService);
                         }
 
-                        Appointment appointment = appointments[i];
+                        Appointment appointment = calendarAppointments[i];
                         Event calendarEvent = CreateGoogleCalendarEvent(appointment, addDescription, addReminder, attendeesToDescroption,
                             addAttendees);
                         EventsResource.InsertRequest insertRequest = calendarService.Events.Insert(calendarEvent, CalendarId);
@@ -375,31 +380,36 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Google
         }
 
 
-        public async Task<bool> DeleteCalendarEvent(List<Appointment> calendarAppointment,
+        public async Task<bool> DeleteCalendarEvent(List<Appointment> calendarAppointments,
             IDictionary<string, object> calendarSpecificData)
         {
+            if (!calendarAppointments.Any())
+            {
+                return true;
+            }
+
             CheckCalendarSpecificData(calendarSpecificData);
 
             var eventIndexList = new Dictionary<KeyValuePair<int, Appointment>, HttpResponseMessage>();
             //Get Calendar Service
             CalendarService calendarService = GetCalendarService();
 
-            if (calendarAppointment == null || string.IsNullOrEmpty(CalendarId))
+            if (calendarAppointments == null || string.IsNullOrEmpty(CalendarId))
             {
                 return false;
             }
 
             try
             {
-                if (calendarAppointment.Any())
+                if (calendarAppointments.Any())
                 {
                     //Create a Batch Request
                     var batchRequest = new BatchRequest(calendarService);
 
-                    //Split the list of appointments by 1000 per list
+                    //Split the list of calendarAppointments by 1000 per list
 
                     //Iterate over each appointment to create a event and batch it 
-                    for (int i = 0; i < calendarAppointment.Count; i++)
+                    for (int i = 0; i < calendarAppointments.Count; i++)
                     {
                         if (i != 0 && i % 999 == 0)
                         {
@@ -407,7 +417,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Google
                             batchRequest = new BatchRequest(calendarService);
                         }
 
-                        Appointment appointment = calendarAppointment[i];
+                        Appointment appointment = calendarAppointments[i];
                         EventsResource.DeleteRequest deleteRequest = calendarService.Events.Delete(CalendarId,
                             appointment.AppointmentId);
                         batchRequest.Queue<Event>(deleteRequest,

@@ -520,7 +520,7 @@
                             </Grid.ColumnDefinitions>
                             <TextBlock Text="No of days in past"
                                        VerticalAlignment="Center"
-                                       ToolTip="Select the number of days in past for which you wish to sync calendar appointments" />
+                                       ToolTip="Select the number of days in past for which you wish to sync calendar calendarAppointments" />
                             <controls:NumericUpDown Grid.Row="0"
                                                     Grid.Column="1"
                                                     VerticalAlignment="Center"
@@ -533,7 +533,7 @@
                                        Grid.Column="0"
                                        Text="No of days in future"
                                        VerticalAlignment="Center"
-                                       ToolTip="Select the number of days in future for which you wish to sync calendar appointments"/>
+                                       ToolTip="Select the number of days in future for which you wish to sync calendar calendarAppointments"/>
                             <controls:NumericUpDown Grid.Row="1"
                                                     Grid.Column="1"
                                                     VerticalAlignment="Center"
@@ -569,23 +569,23 @@
                             <CheckBox Content="Add Description"
                                       Margin="5"
                                       IsChecked="{Binding AddDescription,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" 
-                                      ToolTip="Select this option if you wish to add description to the appointments"/>
+                                      ToolTip="Select this option to add description to the calendarAppointments"/>
                             <CheckBox Content="Add Attendees"
                                       Margin="5"
                                       Grid.Row="1"
                                       IsChecked="{Binding AddAttendees,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" 
-                                      ToolTip="Select this option if you wish to add attendees to appointment"/>
+                                      ToolTip="Select this option to add attendees to appointment"/>
                             <CheckBox Content="Add Attendees to Description "
                                       Margin="20,5,5,5"
                                       Grid.Row="2"
                                       IsChecked="{Binding AddAttendeesToDescription,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                                       IsEnabled="{Binding AddAttendees, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                      ToolTip="Select this option if you wish to add attendees to appointment description instead of TO/CC/BCC fields"/>
+                                      ToolTip="Select this option to add attendees to appointment description instead of TO/CC/BCC fields"/>
                             <CheckBox Content="Add Reminders"
                                       Margin="5"
                                       Grid.Row="3"
                                       IsChecked="{Binding AddReminders,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" 
-                                      ToolTip="Select this option if you wish to add reminders of the appointment. Note: Outlook gives default reminder messages for all appointments. To disable please go to your outlook settings."/>
+                                      ToolTip="Select this option to add reminders of the appointment. Note: Outlook gives default reminder messages for all calendarAppointments. To disable please go to your outlook settings."/>
                             <CheckBox Content="Add Attachments"
                                       Margin="5"
                                       Visibility="Collapsed"
@@ -632,23 +632,28 @@
                             </Grid.RowDefinitions>
                             <CheckBox Content="Run CalendarSync+ when computer starts"
                                       Margin="5"
-                                      IsChecked="{Binding RunApplicationAtSystemStartup,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
+                                      IsChecked="{Binding RunApplicationAtSystemStartup,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" 
+                                      ToolTip="Select this option to start CalendarSync+ when computer starts"/>
                             <CheckBox Content="Close button minimizes to tray"
                                       Grid.Row="1"
                                       Margin="5"
-                                      IsChecked="{Binding MinimizeToSystemTray,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
+                                      IsChecked="{Binding MinimizeToSystemTray,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" 
+                                      ToolTip="Select this option to minimize to system tray on closing the window"/>
                             <CheckBox Content="Remember periodic sync start/stop status"
                                       Grid.Row="2"
                                       Margin="5"
-                                      IsChecked="{Binding RememberPeriodicSyncOn,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
+                                      IsChecked="{Binding RememberPeriodicSyncOn,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" 
+                                      ToolTip="Select this option to remember the periodic sync status when application starts"/>
                             <CheckBox Content="Hide sync notification"
                                       Grid.Row="3"
                                       Margin="5"
-                                      IsChecked="{Binding HideSystemTrayTooltip,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
+                                      IsChecked="{Binding HideSystemTrayTooltip,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                                      ToolTip="Select this option to hide system tray tooltip"/>
                             <CheckBox Content="Check For Updates"
                                       Grid.Row="4"
                                       Margin="5"
-                                      IsChecked="{Binding CheckForUpdates,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
+                                      IsChecked="{Binding CheckForUpdates,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" 
+                                      ToolTip="Select this option to automatically check for latest version of this application"/>
 
                         </Grid>
                     </GroupBox>

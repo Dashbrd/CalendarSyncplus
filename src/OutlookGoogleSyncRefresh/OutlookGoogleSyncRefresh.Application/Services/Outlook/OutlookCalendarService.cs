@@ -108,7 +108,6 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
             Items outlookItems = null;
             var outlookAppointments = new List<Appointment>();
 
-
             //Close  and Cleanup
             try
             {
@@ -156,6 +155,11 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
             catch (Exception exception)
             {
                 ApplicationLogger.LogError(exception.Message);
+                return new AppointmentListWrapper
+                {
+                    Appointments = null,
+                    WaitForApplicationQuit = disposeOutlookInstances
+                };
             }
             finally
             {
@@ -498,14 +502,18 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
         }
 
 
-        public async Task<bool> AddCalendarEvent(List<Appointment> calenderAppointments, bool addDescription,
+        public async Task<bool> AddCalendarEvent(List<Appointment> calendarAppointments, bool addDescription,
             bool addReminder, bool addAttendees, bool attendeesToDescroption,
             IDictionary<string, object> calendarSpecificData)
         {
+            if (!calendarAppointments.Any())
+            {
+                return true;
+            }
             CheckCalendarSpecificData(calendarSpecificData);
 
             var result = await
-                    Task<bool>.Factory.StartNew(() => AddEvents(calenderAppointments, addDescription, addReminder, addAttendees, attendeesToDescroption));
+                    Task<bool>.Factory.StartNew(() => AddEvents(calendarAppointments, addDescription, addReminder, addAttendees, attendeesToDescroption));
 
             return result;
         }
@@ -713,32 +721,38 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
             {
                 return true;
             }
+            CheckCalendarSpecificData(calendarSpecificData);
+            var result = await Task<bool>.Factory.StartNew(() => DeleteEvents(calendarAppointments));
 
-            if (calendarSpecificData == null)
-            {
-                return false;
-            }
-            object data;
-            if (!calendarSpecificData.TryGetValue("OutlookCalendar", out data))
-            {
-                return false;
-            }
-            var outlookCalendar = data as OutlookCalendar;
-            if (!calendarSpecificData.TryGetValue("ProfileName", out data))
-            {
-                return false;
-            }
-            var profileName = data as string;
+            return result;
+        }
 
+        private bool DeleteEvents(List<Appointment> calendarAppointments)
+        {
+            var wrapper = DeleteEventsFromOutlook(calendarAppointments);
+
+            if (!wrapper.WaitForApplicationQuit)
+            {
+                return wrapper.Success;
+            }
+
+            while (Process.GetProcessesByName("OUTLOOK").Any())
+            {
+                Task.Delay(5000);
+            }
+            return wrapper.Success;
+        
+        }
+        private AppointmentListWrapper DeleteEventsFromOutlook(List<Appointment> calendarAppointments)
+        {
             var disposeOutlookInstances = false;
             Microsoft.Office.Interop.Outlook.Application application = null;
             NameSpace nameSpace = null;
 
             try
             {
-
                 // Get Application and Namespace
-                GetOutlookApplication(out disposeOutlookInstances, out application, out nameSpace, profileName);
+                GetOutlookApplication(out disposeOutlookInstances, out application, out nameSpace, ProfileName);
 
 
                 foreach (var calendarAppointment in calendarAppointments)
@@ -753,7 +767,11 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
             catch (Exception exception)
             {
                 ApplicationLogger.LogError(exception.ToString());
-                return false;
+                return new AppointmentListWrapper()
+                {
+                    WaitForApplicationQuit = disposeOutlookInstances,
+                    Success = false
+                };
             }
             finally
             {
@@ -780,7 +798,11 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
                     Task.Delay(5000);
                 }
             }
-            return true;
+            return new AppointmentListWrapper()
+            {
+                WaitForApplicationQuit = disposeOutlookInstances,
+                Success = true
+            };
         }
 
         #endregion

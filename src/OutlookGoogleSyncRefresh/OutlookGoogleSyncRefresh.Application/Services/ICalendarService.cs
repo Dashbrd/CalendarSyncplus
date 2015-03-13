@@ -35,7 +35,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services
 
         Task<CalendarAppointments> GetCalendarEventsInRangeAsync(int daysInPast, int daysInFuture, IDictionary<string, object> calendarSpecificData);
 
-        Task<bool> AddCalendarEvent(List<Appointment> calenderAppointments, bool addDescription,
+        Task<bool> AddCalendarEvent(List<Appointment> calendarAppointments, bool addDescription,
             bool addReminder, bool addAttendees, bool attendeesToDescroption, IDictionary<string, object> calendarSpecificData);
 
         void CheckCalendarSpecificData(IDictionary<string, object> calendarSpecificData);
