@@ -227,12 +227,19 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
                         if (appointmentItem.RequiredAttendees != null &&
                             appointmentItem.RequiredAttendees.Contains(recipient.Name))
                         {
-                            app.RequiredAttendees.Add(recipient);
+                            if (!app.RequiredAttendees.Any(reci => reci.Email.Equals(recipient.Email)))
+                            {
+                                app.RequiredAttendees.Add(recipient);
+
+                            }
                         }
-                        else if (appointmentItem.OptionalAttendees != null &&
+                        if (appointmentItem.OptionalAttendees != null &&
                             appointmentItem.OptionalAttendees.Contains(recipient.Name))
                         {
-                            app.OptionalAttendees.Add(recipient);
+                            if (!app.OptionalAttendees.Any(reci => reci.Email.Equals(recipient.Email)))
+                            {
+                                app.OptionalAttendees.Add(recipient);
+                            }
                         }
 
                         if (appointmentItem.Organizer != null &&
@@ -615,7 +622,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
             try
             {
                 appItem.Subject = calendarAppointment.Subject;
-                appItem.MeetingStatus = OlMeetingStatus.olNonMeeting;
+                appItem.MeetingStatus = OlMeetingStatus.olMeeting;
                 appItem.Location = calendarAppointment.Location;
                 appItem.BusyStatus = calendarAppointment.GetOutlookBusyStatus();
                 recipients = appItem.Recipients;

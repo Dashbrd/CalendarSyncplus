@@ -25,6 +25,7 @@ using System.ComponentModel.Composition;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 using Google;
@@ -100,14 +101,18 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Google
                 Description = calenderAppointment.GetDescriptionData(addDescription, attendeesToDescroption),
                 Location = calenderAppointment.Location,
                 Visibility = calenderAppointment.Privacy,
-                Transparency = (calenderAppointment.BusyStatus == BusyStatusEnum.Free) ? "transparent" : "opaque"
+                Transparency = (calenderAppointment.BusyStatus == BusyStatusEnum.Free) ? "transparent" : "opaque",
+                //Need to make recurring appointment IDs unique - append the item's date   
+                ExtendedProperties =
+                    new Event.ExtendedPropertiesData
+                    {
+                        Private =
+                            new Dictionary<string, string>
+                            {
+                                { calenderAppointment.GetSourceEntryKey(), calenderAppointment.AppointmentId }
+                            }
+                    }
             };
-
-            googleEvent.ExtendedProperties = new Event.ExtendedPropertiesData();
-            googleEvent.ExtendedProperties.Private = new Dictionary<string, string>();
-
-            //Need to make recurring appointment IDs unique - append the item's date    
-            googleEvent.ExtendedProperties.Private.Add(calenderAppointment.GetSourceEntryKey(), calenderAppointment.AppointmentId);
 
 
             //Add Start/End Time
@@ -145,10 +150,63 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Google
                 };
             }
 
+            if (googleEvent.Attendees==null)
+            {
+                googleEvent.Attendees = new List<EventAttendee>();
+            }
+
+            //Add Required Attendees
+
+            AddEventAttendees(calenderAppointment.RequiredAttendees, googleEvent, false);
+
+            //Add optional Attendees
+            AddEventAttendees(calenderAppointment.OptionalAttendees, googleEvent, true);
+
+            //Add Organizer
+            if (calenderAppointment.Organizer!=null && IsValidEmailAddress(calenderAppointment.Organizer.Email))
+            {
+                googleEvent.Organizer = new Event.OrganizerData
+                {
+                    DisplayName = calenderAppointment.Organizer.Name,
+                    Email = calenderAppointment.Organizer.Email
+                };
+            }
             return googleEvent;
         }
 
+        private void AddEventAttendees(IEnumerable<Recipient> recipients, Event googleEvent, bool optional)
+        {
+            IEnumerable<Recipient> recipeintList = recipients as IList<Recipient> ?? recipients.ToList();
+            if (!recipeintList.Any() && googleEvent==null)
+            {
+                return;
+            }
 
+            foreach (Recipient recipient in recipeintList)
+            {
+                //Ignore recipients with invalid Email
+                if (!IsValidEmailAddress(recipient.Email))
+                {
+                    continue;
+                }
+                var eventAttendee = new EventAttendee()
+                {
+                    DisplayName = recipient.Name,
+                    Email = recipient.Email,
+                    Optional = optional
+                };
+                googleEvent.Attendees.Add(eventAttendee);
+            }
+
+        }
+
+        private bool IsValidEmailAddress(string email)
+        {
+            var emailRegex = @"^[\w!#$%&'*+\-/=?\^_`{|}~]+(\.[\w!#$%&'*+\-/=?\^_`{|}~]+)*" + "@" +
+                             @"((([\-\w]+\.)+[a-zA-Z]{2,4})|(([0-9]{1,3}\.){3}[0-9]{1,3}))$";
+
+            return Regex.IsMatch(email, emailRegex);
+        }
 
         private CalendarService GetCalendarService()
         {
@@ -165,12 +223,12 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Google
         private Appointment CreateAppointment(Event googleEvent)
         {
             Appointment appointment;
+            
             if (googleEvent.Start.DateTime == null && googleEvent.End.DateTime == null)
             {
                 appointment = new Appointment(googleEvent.Description, googleEvent.Location, googleEvent.Summary,
                     DateTime.Parse(googleEvent.End.Date),
-                    DateTime.Parse(googleEvent.Start.Date), googleEvent.Id);
-                appointment.AllDayEvent = true;
+                    DateTime.Parse(googleEvent.Start.Date), googleEvent.Id) { AllDayEvent = true };
             }
             else
             {
@@ -192,7 +250,30 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Google
                 }
             }
 
+            //Add Organizer
+            appointment.Organizer = new Recipient()
+            {
+                Name = googleEvent.Organizer.DisplayName,
+                Email = googleEvent.Organizer.Email
+            };
+
+            //Add Required Attendee
+            AddAttendee(googleEvent, appointment.RequiredAttendees,false);
+
+            //Add optional Attendee
+            AddAttendee(googleEvent, appointment.OptionalAttendees, true);
+
+
             return appointment;
+        }
+
+        private static void AddAttendee(Event googleEvent, List<Recipient> recipients,bool isOptional)
+        {
+    
+            foreach (EventAttendee eventAttendee in googleEvent.Attendees.Where(attendee => attendee.Optional.GetValueOrDefault()==isOptional))
+            {
+                recipients.Add(new Recipient() { Name = eventAttendee.DisplayName, Email = eventAttendee.Email });
+            }
         }
 
         #endregion
@@ -272,6 +353,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Google
                         Event calendarEvent = CreateGoogleCalendarEvent(appointment, addDescription, addReminder, attendeesToDescroption,
                             addAttendees);
                         EventsResource.InsertRequest insertRequest = calendarService.Events.Insert(calendarEvent, CalendarId);
+                    insertRequest.SendNotifications = false;
                         batchRequest.Queue<Event>(insertRequest,
                             (content, error, index, message) =>
                                 InsertEventErrorMessage(content, error, index, message, eventIndexList));
@@ -357,6 +439,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Google
             // Add Filters to event List Request
             eventListRequest.TimeMin = DateTime.Now.AddDays(-(daysInPast));
             eventListRequest.TimeMax = DateTime.Now.AddDays((daysInFuture + 1));
+            eventListRequest.MaxAttendees = 1000;
 
             try
             {
