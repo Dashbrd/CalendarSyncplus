@@ -72,6 +72,10 @@ namespace OutlookGoogleSyncRefresh.Application.Controllers
             _shellService.HelpView = _helpViewModel.View;
             _shellController = shellController;
             _guiInteractionService = guiInteractionService;
+            if (_shellViewModel.IsSettingsVisible)
+            {
+                _settingsViewModel.Load();
+            }
         }
 
         public IAccountAuthenticationService AccountAuthenticationService { get; set; }

@@ -89,10 +89,10 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
         private bool _addDescription;
         private bool _addReminders;
         private DelegateCommand _autoDetectExchangeServer;
-        private bool _checkForUpdates;
+        private bool _checkForUpdates = true;
         private bool _createNewFileForEverySync;
-        private int _daysInFuture;
-        private int _daysInPast;
+        private int _daysInFuture = 7;
+        private int _daysInPast = 1;
         private string _exchangeServerUrl;
         private DelegateCommand _getGoogleCalendarCommand;
         private DelegateCommand _getOutlookMailboxCommand;
@@ -100,18 +100,18 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
         private List<Calendar> _googleCalenders;
         private bool _hideSystemTrayTooltip;
         private bool _isDefaultMailBox = true;
-        private bool _isDefaultProfile;
+        private bool _isDefaultProfile = true;
         private bool _isExchangeWebServices;
         private bool _isLoading;
         private bool _logSyncInfo;
-        private bool _minimizeToSystemTray;
+        private bool _minimizeToSystemTray = true;
         private OutlookCalendar _outlookCalendar;
         private OutlookMailBox _outlookMailBox;
         private List<OutlookMailBox> _outlookMailBoxes;
         private List<string> _outlookProfileList;
         private string _password;
-        private bool _rememberPeriodicSyncOn;
-        private bool _runApplicationAtSystemStartup;
+        private bool _rememberPeriodicSyncOn = true;
+        private bool _runApplicationAtSystemStartup = true;
         private DelegateCommand _saveCommand;
         private Calendar _selectedCalendar;
         private string _selectedOutlookProfileName;
@@ -524,9 +524,9 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
                     AddAttachments = Settings.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Attachments);
                     LogSyncInfo = Settings.LogSettings.LogSyncInfo;
                     CreateNewFileForEverySync = CreateNewFileForEverySync;
+                    IsDefaultProfile = Settings.OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.DefaultProfile);
                     IsDefaultMailBox =
                         Settings.OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.DefaultCalendar);
-                    IsDefaultProfile = Settings.OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.DefaultProfile);
                     IsExchangeWebServices =
                         Settings.OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.ExchangeWebServices);
                     SelectedOutlookProfileName = Settings.OutlookSettings.OutlookProfileName;
@@ -539,13 +539,13 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
                 }
                 else
                 {
-                    DaysInPast = 0;
-                    DaysInFuture = 1;
+                    DaysInPast = 1;
+                    DaysInFuture = 7;
                     LogSyncInfo = true;
                     AddDescription = true;
                     CreateNewFileForEverySync = false;
-                    IsDefaultMailBox = true;
                     IsDefaultProfile = true;
+                    IsDefaultMailBox = true;
                     MinimizeToSystemTray = true;
                     HideSystemTrayTooltip = false;
                     CheckForUpdates = true;

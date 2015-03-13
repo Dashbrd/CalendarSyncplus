@@ -150,8 +150,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services
             };
             settings.SyncSettings.CalendarSyncDirection = CalendarSyncDirectionEnum.OutlookGoogleOneWay;
             settings.SyncSettings.SyncFrequency = new HourlySyncFrequency();
-            settings.OutlookSettings.OutlookOptions = OutlookOptionsEnum.DefaultProfile &
-                                                      OutlookOptionsEnum.DefaultCalendar;
+            settings.OutlookSettings.OutlookOptions = OutlookOptionsEnum.DefaultProfile | OutlookOptionsEnum.DefaultCalendar;
             settings.CalendarEntryOptions = CalendarEntryOptionsEnum.None;
             settings.SetCalendarTypes();
             return settings;
