@@ -108,17 +108,7 @@ namespace OutlookGoogleSyncRefresh.Application.Utilities
         /// <returns></returns>
         public static bool CompareDescription(this Appointment appointment, Appointment otherAppointment)
         {
-            if (appointment.Description == null && otherAppointment.Description == null)
-            {
-                return true;
-            }
-
-            if (appointment.Description == null || otherAppointment.Description == null)
-            {
-                return false;
-            }
-
-            if (appointment.Description.Equals(otherAppointment.Description))
+            if (string.IsNullOrEmpty(appointment.Description) && string.IsNullOrEmpty(otherAppointment.Description))
             {
                 return true;
             }
