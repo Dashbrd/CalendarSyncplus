@@ -252,7 +252,8 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
                             app.Organizer = recipient;
                         }
                     }
-
+                    app.Created = appointmentItem.CreationTime;
+                    app.LastModified = appointmentItem.LastModificationTime;
                     app.SetBusyStatus(appointmentItem.BusyStatus);
 
                     var userProperties = appointmentItem.UserProperties;
@@ -741,7 +742,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
                 Task.Delay(5000);
             }
             return wrapper.Success;
-        
+
         }
         private AppointmentListWrapper DeleteEventsFromOutlook(List<Appointment> calendarAppointments)
         {

@@ -251,6 +251,9 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Google
                 }
             }
 
+            appointment.Created = googleEvent.Created;
+            appointment.LastModified = googleEvent.Updated;
+
             //Add Organizer
             appointment.Organizer = new Recipient()
             {
