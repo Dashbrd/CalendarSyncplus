@@ -121,6 +121,8 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
         private List<Appointment> GetAppointmentsToDelete(Settings settings,
             List<Appointment> sourceList, List<Appointment> destinationList)
         {
+            bool addDescription =
+                    settings.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Description);
             bool addAttendeesToDescription =
                 settings.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.AttendeesToDescription);
             var appointmentsToDelete = new List<Appointment>();
@@ -144,7 +146,14 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
                         //If both entries have same content
                         if (destAppointment.Equals(sourceAppointment))
                         {
-                            if (sourceAppointment.CompareDescription(destAppointment))
+                            if (addDescription)
+                            {
+                                if (sourceAppointment.CompareDescription(destAppointment))
+                                {
+                                    isFound = true;
+                                }
+                            }
+                            else
                             {
                                 isFound = true;
                             }
@@ -169,11 +178,14 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
         /// <param name="sourceList"></param>
         /// <param name="destinationList"></param>
         /// <returns></returns>
-        private List<Appointment> GetAppointmentsToAdd(Settings settings, List<Appointment> sourceList, 
+        private List<Appointment> GetAppointmentsToAdd(Settings settings, List<Appointment> sourceList,
             List<Appointment> destinationList)
         {
+
             if (destinationList.Any())
             {
+                bool addDescription =
+                    settings.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Description);
                 bool addAttendeesToDescription =
                 settings.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.AttendeesToDescription);
                 var appointmentsToAdd = new List<Appointment>();
@@ -189,14 +201,23 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
                             || (sourceAppointment.SourceId != null &&
                             destAppointment.CompareSourceId(sourceAppointment)))
                         {
+
                             //Check if both entries have same content
                             if (destAppointment.Equals(sourceAppointment))
                             {
-                                if (sourceAppointment.CompareDescription(destAppointment))
+                                if (addDescription)
+                                {
+                                    if (sourceAppointment.CompareDescription(destAppointment))
+                                    {
+                                        isFound = true;
+                                    }
+                                }
+                                else
                                 {
                                     isFound = true;
                                 }
                             }
+
                             break;
                         }
                     }

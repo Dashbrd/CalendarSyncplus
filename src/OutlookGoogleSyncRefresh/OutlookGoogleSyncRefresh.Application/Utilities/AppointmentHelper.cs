@@ -72,7 +72,7 @@ namespace OutlookGoogleSyncRefresh.Application.Utilities
                 {
                     additionDescription.AppendLine(requiredAttendee.GetDescription());
                 }
-                
+
                 additionDescription.AppendLine(string.Empty);
                 hasData = true;
             }
@@ -108,6 +108,16 @@ namespace OutlookGoogleSyncRefresh.Application.Utilities
         /// <returns></returns>
         public static bool CompareDescription(this Appointment appointment, Appointment otherAppointment)
         {
+            if (appointment.Description == null && otherAppointment.Description == null)
+            {
+                return true;
+            }
+
+            if (appointment.Description == null || otherAppointment.Description == null)
+            {
+                return false;
+            }
+
             if (appointment.Description.Equals(otherAppointment.Description))
             {
                 return true;
@@ -133,7 +143,7 @@ namespace OutlookGoogleSyncRefresh.Application.Utilities
                 if (appointment.Description.IndexOf(LineBreak, StringComparison.Ordinal) > 1)
                 {
                     description =
-                        appointment.Description.Split(new[] {LineBreak}, StringSplitOptions.RemoveEmptyEntries).First();
+                        appointment.Description.Split(new[] { LineBreak }, StringSplitOptions.RemoveEmptyEntries).First();
                 }
                 else
                 {
