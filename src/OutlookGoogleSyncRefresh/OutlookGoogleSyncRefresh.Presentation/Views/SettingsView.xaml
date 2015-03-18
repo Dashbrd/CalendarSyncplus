@@ -16,8 +16,8 @@
              d:DesignWidth="500"
              d:DataContext="{d:DesignInstance viewModels:SettingsViewModel}">
     <UserControl.Resources>
-        <converters:BoolToCalendarServiceTypeConverter x:Key="BoolToCalendarServiceTypeConverter" />
         <metroConverters:ToUpperConverter x:Key="ToUpperConverter" />
+        <converters:BoolToCalendarServiceTypeConverter x:Key="BoolToCalendarServiceTypeConverter" />
         <DataTemplate x:Key="ExchangeHeaderTemplate">
             <StackPanel Orientation="Horizontal"
                         VerticalAlignment="Center">
@@ -361,7 +361,7 @@
                                             Grid.Row="1"
                                             Grid.Column="1"
                                             VerticalAlignment="Center"
-                                            Margin="2"
+                                            Margin="2,5,5,5"
                                             Visibility="{Binding AllowMasterCalendarSelect,Mode=TwoWay,Converter={StaticResource BooleanToVisibilityConverter} }">
                                     <RadioButton GroupName="MasterCalendar"
                                                  Margin="2"
@@ -370,13 +370,12 @@
                                                     Converter={StaticResource BoolToCalendarServiceTypeConverter},
                                         ConverterParameter={x:Static metaData:CalendarServiceType.OutlookDesktop}}" />
                                     <RadioButton GroupName="MasterCalendar"
-                                                 Margin="10,2,2,2"
+                                                 Margin="20,2,2,2"
                                                  Content="Google"
                                                  IsChecked="{Binding MasterCalendarServiceType,
                                                    Mode=TwoWay,Converter={StaticResource BoolToCalendarServiceTypeConverter},
                                                  ConverterParameter={x:Static metaData:CalendarServiceType.Google}}" />
                                 </StackPanel>
-
                             </Grid>
                         </GroupBox>
                         <TabControl Grid.Row="1">
