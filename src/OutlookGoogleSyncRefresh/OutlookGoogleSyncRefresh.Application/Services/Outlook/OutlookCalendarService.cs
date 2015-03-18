@@ -477,7 +477,11 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
             {
                 calendarAppointments.CalendarId = OutlookCalendar.EntryId;
             }
-            calendarAppointments.AddRange(appointmentList);
+
+            if (appointmentList != null)
+            {
+                calendarAppointments.AddRange(appointmentList);
+            }
             return calendarAppointments;
         }
 

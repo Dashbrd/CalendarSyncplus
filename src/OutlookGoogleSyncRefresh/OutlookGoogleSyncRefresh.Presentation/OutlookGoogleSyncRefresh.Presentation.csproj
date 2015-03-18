@@ -163,6 +163,7 @@
       <Link>SharedAssemblyProperties.cs</Link>
     </Compile>
     <Compile Include="Behaviors\TextBoxScrollBehavior.cs" />
+    <Compile Include="Converters\BoolToCalendarServiceTypeConverter.cs" />
     <Compile Include="Converters\InvertBooleanToVisibilityConverter.cs" />
     <Compile Include="Converters\PercentageWidthConverter.cs" />
     <Compile Include="Helpers\Utilities.cs" />
