@@ -5,21 +5,29 @@ using System.Security.Principal;
 using Microsoft.Win32;
 using OutlookGoogleSyncRefresh.Application.Services;
 using OutlookGoogleSyncRefresh.Application.Utilities;
+using OutlookGoogleSyncRefresh.Common.Log;
 
 namespace OutlookGoogleSyncRefresh.Presentation.Services
 {
     [Export(typeof(IWindowsStartupService))]
     public class WindowsStartupService : IWindowsStartupService
     {
+        public ApplicationLogger ApplicationLogger { get; set; }
+        [ImportingConstructor]
+        public WindowsStartupService(ApplicationLogger applicationLogger)
+        {
+            ApplicationLogger = applicationLogger;
+        }
+
         public void RunAtWindowsStartup()
         {
             try
             {
                 AddApplicationToCurrentUserStartup();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
+                ApplicationLogger.LogError(ex.ToString());
             }
         }
 
@@ -29,9 +37,9 @@ namespace OutlookGoogleSyncRefresh.Presentation.Services
             {
                 RemoveApplicationFromCurrentUserStartup();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
+                ApplicationLogger.LogError(ex.ToString());
             }
         }
 
@@ -81,10 +89,12 @@ namespace OutlookGoogleSyncRefresh.Presentation.Services
             catch (UnauthorizedAccessException ex)
             {
                 isAdmin = false;
+                ApplicationLogger.LogError(ex.ToString());
             }
             catch (Exception ex)
             {
                 isAdmin = false;
+                ApplicationLogger.LogError(ex.ToString());
             }
             return isAdmin;
         }

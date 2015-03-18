@@ -14,12 +14,12 @@ namespace OutlookGoogleSyncRefresh.Presentation.Converters
         {
             try
             {
-                CalendarServiceType inputServiceType = (CalendarServiceType)Enum.Parse(typeof(CalendarServiceType), value.ToString());
-                CalendarServiceType parameterServiceType = (CalendarServiceType)Enum.Parse(typeof(CalendarServiceType), parameter.ToString());
-                if (inputServiceType == parameterServiceType)
-                {
-                    return true;
-                }
+                //CalendarServiceType inputServiceType = (CalendarServiceType)Enum.Parse(typeof(CalendarServiceType), value.ToString());
+                //CalendarServiceType parameterServiceType = (CalendarServiceType)Enum.Parse(typeof(CalendarServiceType), parameter.ToString());
+                //if (inputServiceType == parameterServiceType)
+                //{
+                //    return true;
+                //}
             }
             catch (Exception)
             {
@@ -33,12 +33,12 @@ namespace OutlookGoogleSyncRefresh.Presentation.Converters
         {
             try
             {
-                bool isValid = (bool)value;
-                CalendarServiceType parameterServiceType = (CalendarServiceType)Enum.Parse(typeof(CalendarServiceType), parameter.ToString());
-                if (isValid)
-                {
-                    return parameterServiceType;
-                }
+                //bool isValid = (bool)value;
+                //CalendarServiceType parameterServiceType = (CalendarServiceType)Enum.Parse(typeof(CalendarServiceType), parameter.ToString());
+                //if (isValid)
+                //{
+                //    return parameterServiceType;
+                //}
 
             }
             catch (Exception)
