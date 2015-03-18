@@ -326,7 +326,16 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
                 "http://schemas.microsoft.com/mapi/proptag/0x39FE001E";
 
             var pa = recip.PropertyAccessor;
-            string smtpAddress = pa.GetProperty(PR_SMTP_ADDRESS).ToString();
+            string smtpAddress = "fake.email.generated@for.user";
+            try
+            {
+                smtpAddress = pa.GetProperty(PR_SMTP_ADDRESS).ToString();
+            }
+            catch (Exception exception)
+            {
+                ApplicationLogger.LogInfo(string.Format("Unable to retrive Email for the User : {0}{1}{2}", recip.Name,
+                    Environment.NewLine, exception.Message));
+            }
             return smtpAddress;
 
         }
