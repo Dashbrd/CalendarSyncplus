@@ -9,11 +9,56 @@
              xmlns:WafConverters="http://waf.codeplex.com/schemas"
              xmlns:converters="clr-namespace:OutlookGoogleSyncRefresh.Presentation.Converters"
              xmlns:models="clr-namespace:OutlookGoogleSyncRefresh.Domain.Models;assembly=OutlookGoogleSyncRefresh.Domain"
+             xmlns:metroConverters="http://metro.mahapps.com/winfx/xaml/shared"
              mc:Ignorable="d"
              d:DesignHeight="600"
              d:DesignWidth="400"
              d:DataContext="{d:DesignInstance viewModels:SettingsViewModel}">
     <UserControl.Resources>
+        <metroConverters:ToUpperConverter x:Key="ToUpperConverter" />
+        <DataTemplate x:Key="ExchangeHeaderTemplate">
+            <StackPanel Orientation="Horizontal"
+                        VerticalAlignment="Center">
+                <Rectangle Width="18"
+                           Fill="{DynamicResource AccentSelectedColorBrush}">
+                    <Rectangle.OpacityMask>
+                        <VisualBrush Stretch="Fill"
+                                     Visual="{StaticResource appbar_email}" />
+                    </Rectangle.OpacityMask>
+                </Rectangle>
+                <TextBlock Margin="5,0,0,0"
+                           Text="{Binding Header,RelativeSource={RelativeSource AncestorType=GroupBox},Mode=OneWay,Converter={StaticResource ToUpperConverter}}"
+                           Foreground="{DynamicResource AccentSelectedColorBrush}" />
+            </StackPanel>
+        </DataTemplate>
+        <DataTemplate x:Key="OutlookHeaderTemplate">
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                <Rectangle Width="18"  Fill="{DynamicResource AccentSelectedColorBrush}">
+                    <Rectangle.OpacityMask>
+                        <VisualBrush Stretch="Fill"
+                                     Visual="{StaticResource appbar_office_outlook}" />
+                    </Rectangle.OpacityMask>
+                </Rectangle>
+                <TextBlock Margin="5,0,0,0"
+                    Text="{Binding Header,RelativeSource={RelativeSource AncestorType=GroupBox},Mode=OneWay,Converter={StaticResource ToUpperConverter}}"
+                           Foreground="{DynamicResource AccentSelectedColorBrush}"/>
+            </StackPanel>
+        </DataTemplate>
+        <DataTemplate x:Key="GoogleHeaderTemplate">
+            <StackPanel Orientation="Horizontal"
+                        VerticalAlignment="Center">
+                <Rectangle Width="18"
+                           Fill="{DynamicResource AccentSelectedColorBrush}">
+                    <Rectangle.OpacityMask>
+                        <VisualBrush Stretch="Fill"
+                                     Visual="{StaticResource appbar_google}" />
+                    </Rectangle.OpacityMask>
+                </Rectangle>
+                <TextBlock Margin="5,0,0,0"
+                           Text="{Binding Header,RelativeSource={RelativeSource AncestorType=GroupBox},Mode=OneWay,Converter={StaticResource ToUpperConverter}}"
+                           Foreground="{DynamicResource AccentSelectedColorBrush}" />
+            </StackPanel>
+        </DataTemplate>
         <WafConverters:InvertBooleanConverter x:Key="InvertBooleanConverter" />
         <converters:InvertBooleanToVisibilityConverter x:Key="InvertBooleanToVisibilityConverter" />
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
@@ -310,7 +355,6 @@
                                          Grid.ColumnSpan="2"
                                          Grid.Row="0" />
                             <RadioButton Content="Exchange Web Services"
-                                         Visibility="Collapsed"
                                          IsChecked="{Binding IsExchangeWebServices}"
                                          Margin="2"
                                          GroupName="OutlookApplicationGroup"
@@ -319,10 +363,9 @@
                                          Command="{Binding GetOutlookProfileListCommand}" />
                         </Grid>
                     </GroupBox>
-                    <StackPanel Grid.Row="2"
-                                Orientation="Vertical"
-                                Visibility="{Binding IsExchangeWebServices,Converter={StaticResource BooleanToVisibilityConverter}}">
-                        <GroupBox Header="Exchange Server Settings">
+                    
+                        <GroupBox Grid.Row="2" Header="Exchange Server Settings" HeaderTemplate="{StaticResource ExchangeHeaderTemplate}"
+                                      Visibility="{Binding IsExchangeWebServices,Converter={StaticResource BooleanToVisibilityConverter}}">
                             <Grid>
                                 <Grid.RowDefinitions>
                                     <RowDefinition />
@@ -335,61 +378,46 @@
                                     <ColumnDefinition Width="2*" />
                                         <ColumnDefinition Width="3.5*" />
                                 </Grid.ColumnDefinitions>
+                                
+                                <TextBlock 
+                                           Text="Email"
+                                           VerticalAlignment="Center"
+                                           Margin="2" />
+                                <TextBox 
+                                         Grid.Column="1"
+                                         Margin="2"
+                                         Text="{Binding Username,Mode=TwoWay}" />
+                                <TextBlock Text="Password"
+                                           Grid.Row="1"
+                                           VerticalAlignment="Center"
+                                           Margin="2" />
+                                <PasswordBox Grid.Row="1"
+                                             Grid.Column="1"
+                                             Margin="2"
+                                             PasswordChar="*"
+                                             controls:PasswordBoxHelper.CapsLockWarningToolTip="CAPSLOCK IS ON" />
+                                    <TextBlock Grid.Row="2"
+                                               Margin="2"
+                                               Text="Exchange Server Url"
+                                               VerticalAlignment="Center" />
+                                    <TextBox Grid.Row="2"
+                                             Grid.Column="1"
+                                             Margin="2"
+                                             Text="{Binding ExchangeServerUrl,Mode=TwoWay}" />
                                 <Button Margin="2"
+                                        Grid.Row="3"
+                                        Grid.ColumnSpan="2"
+                                        HorizontalAlignment="Right"
                                         Height="30"
                                         Content="Detect Settings"
                                         Command="{Binding AutoDetectExchangeServer}" />
-                                <TextBlock Visibility="Collapsed"
-                                    Text="Help: Enter username to auto detect Exchange Web Server. Leave password empty if connected to corporate network."
-                                    Grid.ColumnSpan="2"
-                                    Grid.Row="1"
-                                    VerticalAlignment="Center"
-                                    Margin="2"
-                                    Width="200"
-                                    TextWrapping="Wrap" />
-                                <TextBlock Grid.Row="2"
-                                           Text="Email"
-                                           VerticalAlignment="Center"
-                                           Margin="4" />
-                                <TextBox Grid.Row="2"
-                                         Grid.Column="1"
-                                         Margin="4"
-                                         Text="{Binding Username,Mode=TwoWay}" />
-                                <TextBlock Text="Password"
-                                           Grid.Row="3"
-                                           VerticalAlignment="Center"
-                                           Margin="4" />
-                                <PasswordBox Grid.Row="3"
-                                             Grid.Column="1"
-                                             Margin="4"
-                                             PasswordChar="*"
-                                             controls:PasswordBoxHelper.CapsLockWarningToolTip="CAPSLOCK IS ON" />
                             </Grid>
                         </GroupBox>
-                        <GroupBox Header="Advanced Server Settings">
-                            <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition />
-                                    <RowDefinition />
-                                    <RowDefinition />
-                                </Grid.RowDefinitions>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="2*" />
-                                        <ColumnDefinition Width="3.5*" />
-                                </Grid.ColumnDefinitions>
-                                <TextBlock Grid.Row="1"
-                                           Text="Exchange Server Url"
-                                           VerticalAlignment="Center" />
-                                <TextBox Grid.Row="1"
-                                         Grid.Column="1"
-                                         Margin="4"
-                                         Text="{Binding ExchangeServerUrl,Mode=TwoWay}" />
-                            </Grid>
-                        </GroupBox>
-                    </StackPanel>
+                      
                     <GroupBox Header="Profile &amp; MailBox Settings"
                               Grid.Row="2"
-                              Visibility="{Binding IsExchangeWebServices,Converter={StaticResource InvertBooleanToVisibilityConverter}}">
+                                  HeaderTemplate="{StaticResource OutlookHeaderTemplate}"
+                                  Visibility="{Binding IsExchangeWebServices,Converter={StaticResource InvertBooleanToVisibilityConverter}}">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition />
@@ -479,7 +507,8 @@
                     </GroupBox>
                     <GroupBox Grid.Row="3"
                               Grid.Column="0"
-                              Header="Select Google Calendar">
+                              Header="Select Google Calendar"
+                              HeaderTemplate="{StaticResource GoogleHeaderTemplate}">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition />
