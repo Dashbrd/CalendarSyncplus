@@ -252,7 +252,8 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
                             app.Organizer = recipient;
                         }
                     }
-
+                    app.Created = appointmentItem.CreationTime;
+                    app.LastModified = appointmentItem.LastModificationTime;
                     app.SetBusyStatus(appointmentItem.BusyStatus);
 
                     var userProperties = appointmentItem.UserProperties;
@@ -325,7 +326,16 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
                 "http://schemas.microsoft.com/mapi/proptag/0x39FE001E";
 
             var pa = recip.PropertyAccessor;
-            string smtpAddress = pa.GetProperty(PR_SMTP_ADDRESS).ToString();
+            string smtpAddress = "fake.email.generated@for.user";
+            try
+            {
+                smtpAddress = pa.GetProperty(PR_SMTP_ADDRESS).ToString();
+            }
+            catch (Exception exception)
+            {
+                ApplicationLogger.LogInfo(string.Format("Unable to retrive Email for the User : {0}{1}{2}", recip.Name,
+                    Environment.NewLine, exception.Message));
+            }
             return smtpAddress;
 
         }
@@ -476,7 +486,11 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
             {
                 calendarAppointments.CalendarId = OutlookCalendar.EntryId;
             }
-            calendarAppointments.AddRange(appointmentList);
+
+            if (appointmentList != null)
+            {
+                calendarAppointments.AddRange(appointmentList);
+            }
             return calendarAppointments;
         }
 
@@ -741,7 +755,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
                 Task.Delay(5000);
             }
             return wrapper.Success;
-        
+
         }
         private AppointmentListWrapper DeleteEventsFromOutlook(List<Appointment> calendarAppointments)
         {

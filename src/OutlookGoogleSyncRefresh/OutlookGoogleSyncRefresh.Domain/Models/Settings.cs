@@ -59,8 +59,7 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
 
         public void SetCalendarTypes()
         {
-            if (SyncSettings.CalendarSyncDirection == CalendarSyncDirectionEnum.OutlookGoogleOneWay ||
-                SyncSettings.CalendarSyncDirection == CalendarSyncDirectionEnum.OutlookGoogleTwoWay)
+            if (SyncSettings.CalendarSyncDirection == CalendarSyncDirectionEnum.OutlookGoogleOneWay)
             {
                 SyncSettings.SourceCalendar = OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.ExchangeWebServices)
                     ? CalendarServiceType.EWS
@@ -74,10 +73,23 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
                     ? CalendarServiceType.EWS
                     : CalendarServiceType.OutlookDesktop;
             }
-
             if (SyncSettings.CalendarSyncDirection == CalendarSyncDirectionEnum.OutlookGoogleTwoWay)
             {
                 SyncSettings.SyncMode = SyncModeEnum.TwoWay;
+                if (SyncSettings.MasterCalendar == CalendarServiceType.OutlookDesktop)
+                {
+                    SyncSettings.SourceCalendar = OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.ExchangeWebServices)
+                    ? CalendarServiceType.EWS
+                    : CalendarServiceType.OutlookDesktop;
+                    SyncSettings.DestinationCalendar = CalendarServiceType.Google;
+                }
+                else
+                {
+                    SyncSettings.SourceCalendar = CalendarServiceType.Google;
+                    SyncSettings.DestinationCalendar = OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.ExchangeWebServices)
+                    ? CalendarServiceType.EWS
+                    : CalendarServiceType.OutlookDesktop;
+                }
             }
             else
             {

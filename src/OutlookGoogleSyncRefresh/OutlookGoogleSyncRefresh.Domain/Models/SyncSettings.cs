@@ -11,6 +11,8 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
     {
         public CalendarSyncDirectionEnum CalendarSyncDirection { get; set; }
 
+        public CalendarServiceType MasterCalendar { get; set; }
+
         public CalendarServiceType SourceCalendar { get; set; }
 
         public CalendarServiceType DestinationCalendar { get; set; }

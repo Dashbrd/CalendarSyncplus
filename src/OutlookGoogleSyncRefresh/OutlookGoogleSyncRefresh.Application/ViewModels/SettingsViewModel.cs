@@ -31,6 +31,7 @@ using OutlookGoogleSyncRefresh.Application.Services.Google;
 using OutlookGoogleSyncRefresh.Application.Services.Outlook;
 using OutlookGoogleSyncRefresh.Application.Views;
 using OutlookGoogleSyncRefresh.Common.Log;
+using OutlookGoogleSyncRefresh.Common.MetaData;
 using OutlookGoogleSyncRefresh.Domain.Helpers;
 using OutlookGoogleSyncRefresh.Domain.Models;
 
@@ -310,7 +311,45 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
         public CalendarSyncDirectionEnum SelectedCalendarSyncDirection
         {
             get { return _selectedCalendarSyncDirection; }
-            set { SetProperty(ref _selectedCalendarSyncDirection, value); }
+            set
+            {
+                SetProperty(ref _selectedCalendarSyncDirection, value);
+                if (_selectedCalendarSyncDirection == CalendarSyncDirectionEnum.OutlookGoogleTwoWay)
+                {
+                    MasterCalendarServiceType = CalendarServiceType.OutlookDesktop;
+                    AllowMasterCalendarSelect = true;
+                }
+            }
+        }
+
+        public bool AllowMasterCalendarSelect
+        {
+            get { return _allowMasterCalendarSelect; }
+            set { SetProperty(ref _allowMasterCalendarSelect, value); }
+        }
+
+        public CalendarServiceType MasterCalendarServiceType
+        {
+            get { return _masterCalendarServiceType; }
+            set { SetProperty(ref _masterCalendarServiceType, value); }
+        }
+
+        public bool DisableDelete
+        {
+            get { return _disableDelete; }
+            set { SetProperty(ref _disableDelete, value); }
+        }
+
+        public bool ConfirmOnDelete
+        {
+            get { return _confirmOnDelete; }
+            set { SetProperty(ref _confirmOnDelete, value); }
+        }
+
+        public bool KeepLastModifiedCopy
+        {
+            get { return _keepLastModifiedCopy; }
+            set { SetProperty(ref _keepLastModifiedCopy, value); }
         }
 
         public DelegateCommand AutoDetectExchangeServer
@@ -536,6 +575,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
                     RunApplicationAtSystemStartup = Settings.RunApplicationAtSystemStartup;
                     RememberPeriodicSyncOn = Settings.RememberPeriodicSyncOn;
                     SelectedCalendarSyncDirection = Settings.SyncSettings.CalendarSyncDirection;
+                    MasterCalendarServiceType = Settings.SyncSettings.MasterCalendar;
                 }
                 else
                 {
@@ -604,6 +644,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             Settings.ExchangeServerSettings.Password = Password;
             Settings.ExchangeServerSettings.ExchangeServerUrl = ExchangeServerUrl;
             Settings.SyncSettings.CalendarSyncDirection = SelectedCalendarSyncDirection;
+            Settings.SyncSettings.MasterCalendar = MasterCalendarServiceType;
             Settings.SetCalendarTypes();
 
             if (RunApplicationAtSystemStartup)
@@ -683,6 +724,11 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
 
         private bool _isloaded = false;
         private bool _addAttendeesToDescription;
+        private bool _allowMasterCalendarSelect;
+        private CalendarServiceType _masterCalendarServiceType;
+        private bool _confirmOnDelete;
+        private bool _disableDelete;
+        private bool _keepLastModifiedCopy;
 
         public void Load()
         {
