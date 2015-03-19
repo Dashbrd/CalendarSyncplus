@@ -54,6 +54,7 @@
                 <StackPanel Orientation="Horizontal"
                             VerticalAlignment="Center">
                     <RadioButton Content="Every"
+                                 Margin="5"
                                  GroupName="DailyFrequency"
                                  IsChecked="{Binding CustomDay,
                                                     Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
@@ -96,18 +97,17 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <StackPanel Orientation="Horizontal"
-                            VerticalAlignment="Center"
-                            Margin="5">
-                    <TextBlock Text="Recur Every"
+                            VerticalAlignment="Center">
+                    <TextBlock Text="Recur Every" Margin="5"
                                VerticalAlignment="Center" />
                     <controls:NumericUpDown Width="80"
                                             Interval="1"
-                                            Margin="2"
+                                            Margin="5"
                                             TextAlignment="Right"
                                             VerticalAlignment="Center"
                                             Value="{Binding WeekRecurrence,
                                                     Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
-                    <TextBlock Text="week(s) on:"
+                    <TextBlock Text="week(s) on:" Margin="5"
                                VerticalAlignment="Center" />
                 </StackPanel>
                 <StackPanel Orientation="Horizontal"
@@ -158,9 +158,8 @@
                 <StackPanel Orientation="Horizontal"
                             VerticalAlignment="Center"
                             Grid.Row="2"
-                            Grid.ColumnSpan="4"
-                            Margin="5">
-                    <TextBlock Text="Time Of Day"
+                            Grid.ColumnSpan="4">
+                    <TextBlock Text="Time Of Day" Margin="5"
                                VerticalAlignment="Center" />
                     <customControls:TimePickerControl Margin="5"
                                                       VerticalAlignment="Center"
