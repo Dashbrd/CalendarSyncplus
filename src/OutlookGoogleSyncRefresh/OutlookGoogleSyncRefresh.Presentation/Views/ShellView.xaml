@@ -133,4 +133,5 @@
         </controls:WindowCommands>
     </controls:MetroWindow.RightWindowCommands>
     <views:HomeView DataContext="{Binding}" />
+    
 </controls:MetroWindow>

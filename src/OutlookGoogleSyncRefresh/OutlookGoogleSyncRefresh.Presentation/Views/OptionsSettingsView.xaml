@@ -1,0 +1,82 @@
+﻿<UserControl x:Class="OutlookGoogleSyncRefresh.Presentation.Views.OptionsSettingsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:viewModels="clr-namespace:OutlookGoogleSyncRefresh.Application.ViewModels;assembly=OutlookGoogleSyncRefresh.Application"
+             xmlns:converters="http://waf.codeplex.com/schemas"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300"
+             d:DataContext="{d:DesignInstance viewModels:SettingsViewModel}">
+    <UserControl.Resources>
+        <converters:InvertBooleanConverter x:Key="InvertBooleanConverter" />
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <GroupBox Grid.Column="0"
+                  Header="Destination Calendar Entry Options">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <CheckBox Content="Add Description"
+                          Margin="5"
+                          IsChecked="{Binding AddDescription,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                          ToolTip="Select this option to add description to the calendarAppointments" />
+                <CheckBox Content="Add Attendees"
+                          Margin="5"
+                          Grid.Row="1"
+                          IsChecked="{Binding AddAttendees,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                          ToolTip="Select this option to add attendees to appointment" />
+                <CheckBox Content="Add Attendees to Description "
+                          Margin="20,5,5,5"
+                          Grid.Row="2"
+                          IsChecked="{Binding AddAttendeesToDescription,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                          IsEnabled="{Binding AddAttendees, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                          ToolTip="Select this option to add attendees to appointment description instead of TO/CC/BCC fields" />
+                <CheckBox Content="Add Reminders"
+                          Margin="5"
+                          Grid.Row="3"
+                          IsChecked="{Binding AddReminders,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                          ToolTip="Select this option to add reminders of the appointment. Note: Outlook gives default reminder messages for all calendarAppointments. To disable please go to your outlook settings." />
+                <CheckBox Content="Add Attachments"
+                          Margin="5"
+                          Visibility="Collapsed"
+                          Grid.Row="4"
+                          IsChecked="{Binding AddAttachments,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
+            </Grid>
+        </GroupBox>
+        <GroupBox Grid.Row="1"
+                  Header="Other">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <CheckBox Content="Disable Delete"
+                          Margin="5"
+                          IsChecked="{Binding DisableDelete, Mode=TwoWay}" />
+                <CheckBox Grid.Row="1"
+                          Content="Confirm on Delete"
+                          Margin="5"
+                          IsChecked="{Binding ConfirmOnDelete, Mode=TwoWay}"
+                          IsEnabled="{Binding DisableDelete,Converter={StaticResource InvertBooleanConverter}, UpdateSourceTrigger=PropertyChanged}" />
+                <CheckBox Grid.Row="2"
+                          Content="Keep Last Modified Version (For Bidirectional only)"
+                          Margin="5"
+                          IsChecked="{Binding KeepLastModifiedCopy, Mode=TwoWay}"
+                          IsEnabled="{Binding DisableDelete,Converter={StaticResource InvertBooleanConverter}, UpdateSourceTrigger=PropertyChanged}" />
+            </Grid>
+        </GroupBox>
+    </Grid>
+</UserControl>

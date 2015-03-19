@@ -20,5 +20,9 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
         public SyncModeEnum SyncMode { get; set; }
 
         public SyncFrequency SyncFrequency { get; set; }
+
+        public bool DisableDelete { get; set; }
+
+        public bool ConfirmOnDelete { get; set; }
     }
 }

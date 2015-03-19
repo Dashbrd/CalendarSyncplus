@@ -1,0 +1,83 @@
+﻿<UserControl x:Class="OutlookGoogleSyncRefresh.Presentation.Views.AdvancedSettingsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:viewModels="clr-namespace:OutlookGoogleSyncRefresh.Application.ViewModels;assembly=OutlookGoogleSyncRefresh.Application"
+             mc:Ignorable="d" 
+             d:DesignHeight="500" d:DesignWidth="300"
+             d:DataContext="{d:DesignInstance viewModels:SettingsViewModel}">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <GroupBox Header="Log Settings"
+                  Visibility="Collapsed">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <CheckBox Content="Log Sync Status"
+                          Margin="5"
+                          IsChecked="{Binding LogSyncInfo,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
+                <CheckBox Content="Log Appointments"
+                          Margin="5"
+                          Grid.Row="1"
+                          IsChecked="{Binding CreateNewFileForEverySync,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
+            </Grid>
+        </GroupBox>
+        <GroupBox Header="Application Options"
+                  Grid.Row="1">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <CheckBox Content="Run CalendarSync+ when computer starts"
+                          Margin="5"
+                          IsChecked="{Binding RunApplicationAtSystemStartup,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                          ToolTip="Select this option to start CalendarSync+ when computer starts" />
+                <CheckBox Content="Close button minimizes to tray"
+                          Grid.Row="1"
+                          Margin="5"
+                          IsChecked="{Binding MinimizeToSystemTray,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                          ToolTip="Select this option to minimize to system tray on closing the window" />
+                <CheckBox Content="Remember periodic sync start/stop status"
+                          Grid.Row="2"
+                          Margin="5"
+                          IsChecked="{Binding RememberPeriodicSyncOn,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                          ToolTip="Select this option to remember the periodic sync status when application starts" />
+                <CheckBox Content="Hide sync notification"
+                          Grid.Row="3"
+                          Margin="5"
+                          IsChecked="{Binding HideSystemTrayTooltip,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                          ToolTip="Select this option to hide system tray tooltip" />
+                <CheckBox Content="Check For Updates"
+                          Grid.Row="4"
+                          Margin="5"
+                          IsChecked="{Binding CheckForUpdates,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                          ToolTip="Select this option to automatically check for latest version of this application" />
+
+            </Grid>
+        </GroupBox>
+        <TextBlock Margin="0,10,0,0"
+                   Grid.Row="2"
+                   FontSize="40"
+                   TextWrapping="Wrap"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"
+                   Text="More Features Coming Soon..."
+                   MaxWidth="200">
+                    <Hyperlink Command="{Binding UriCommand}"
+                               CommandParameter="https://calendarsyncplus.codeplex.com/" />
+        </TextBlock>
+    </Grid>
+ 
+</UserControl>

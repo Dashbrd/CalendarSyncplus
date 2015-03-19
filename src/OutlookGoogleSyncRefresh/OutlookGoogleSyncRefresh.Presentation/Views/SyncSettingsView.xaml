@@ -1,0 +1,228 @@
+﻿<UserControl x:Class="OutlookGoogleSyncRefresh.Presentation.Views.SyncSettingsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:viewModels="clr-namespace:OutlookGoogleSyncRefresh.Application.ViewModels;assembly=OutlookGoogleSyncRefresh.Application"
+             xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:customControls="clr-namespace:OutlookGoogleSyncRefresh.Presentation.Controls"
+             mc:Ignorable="d"
+             d:DesignHeight="300"
+             d:DesignWidth="300"
+             d:DataContext="{d:DesignInstance viewModels:SettingsViewModel}">
+    <UserControl.Resources>
+        <DataTemplate DataType="{x:Type viewModels:HourlySyncViewModel}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="Hours"
+                           VerticalAlignment="Center" />
+                <controls:NumericUpDown Grid.Column="1"
+                                        Value="{Binding Hours,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                        VerticalAlignment="Center"
+                                        Minimum="0"
+                                        Maximum="23"
+                                        Interval="1"
+                                        Margin="2" />
+                <TextBlock Text="Minutes"
+                           VerticalAlignment="Center"
+                           Grid.Row="1" />
+                <controls:NumericUpDown Grid.Row="1"
+                                        Grid.Column="1"
+                                        Value="{Binding Minutes,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                        VerticalAlignment="Center"
+                                        Minimum="0"
+                                        Maximum="59"
+                                        Margin="2"
+                                        Interval="1" />
+            </Grid>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModels:DailySyncViewModel}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <StackPanel Orientation="Horizontal"
+                            VerticalAlignment="Center">
+                    <RadioButton Content="Every"
+                                 GroupName="DailyFrequency"
+                                 IsChecked="{Binding CustomDay,
+                                                    Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
+                    <controls:NumericUpDown Width="80"
+                                            Margin="5"
+                                            Minimum="0"
+                                            Maximum="30"
+                                            Interval="1"
+                                            Value="{Binding DayGap,
+                                                    Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
+                    <TextBlock Text="day(s)"
+                               VerticalAlignment="Center"
+                               Margin="5" />
+                </StackPanel>
+                <RadioButton Grid.Row="1"
+                             Margin="5"
+                             Content="Every Weekday"
+                             GroupName="DailyFrequency"
+                             IsChecked="{Binding EveryWeekday,
+                                                    Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
+                <StackPanel Orientation="Horizontal"
+                            VerticalAlignment="Center"
+                            Grid.Row="2"
+                            Grid.ColumnSpan="4">
+                    <TextBlock Text="Time of Day"
+                               VerticalAlignment="Center" />
+                    <customControls:TimePickerControl Margin="5"
+                                                      VerticalAlignment="Center"
+                                                      TimeFormat="hh:mm tt"
+                                                      TimeValue="{Binding TimeOfDay,
+                                                    Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
+                </StackPanel>
+            </Grid>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModels:WeeklySyncViewModel}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <StackPanel Orientation="Horizontal"
+                            VerticalAlignment="Center"
+                            Margin="5">
+                    <TextBlock Text="Recur Every"
+                               VerticalAlignment="Center" />
+                    <controls:NumericUpDown Width="80"
+                                            Interval="1"
+                                            Margin="2"
+                                            TextAlignment="Right"
+                                            VerticalAlignment="Center"
+                                            Value="{Binding WeekRecurrence,
+                                                    Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
+                    <TextBlock Text="week(s) on:"
+                               VerticalAlignment="Center" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal"
+                            Grid.Row="1">
+                    <ToggleButton Margin="2"
+                                  Content="S"
+                                  Height="30"
+                                  Width="30"
+                                  Style="{DynamicResource MetroCircleToggleButtonStyle}"
+                                  IsChecked="{Binding IsSunday,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
+                    <ToggleButton Margin="2"
+                                  Content="M"
+                                  Height="30"
+                                  Width="30"
+                                  Style="{DynamicResource MetroCircleToggleButtonStyle}"
+                                  IsChecked="{Binding IsMonday,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
+                    <ToggleButton Margin="2"
+                                  Content="T"
+                                  Height="30"
+                                  Width="30"
+                                  Style="{DynamicResource MetroCircleToggleButtonStyle}"
+                                  IsChecked="{Binding IsTuesday,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
+                    <ToggleButton Margin="2"
+                                  Content="W"
+                                  Height="30"
+                                  Width="30"
+                                  Style="{DynamicResource MetroCircleToggleButtonStyle}"
+                                  IsChecked="{Binding IsWednesday,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
+                    <ToggleButton Margin="2"
+                                  Content="T"
+                                  Height="30"
+                                  Width="30"
+                                  Style="{DynamicResource MetroCircleToggleButtonStyle}"
+                                  IsChecked="{Binding IsThursday,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
+                    <ToggleButton Margin="2"
+                                  Content="F"
+                                  Height="30"
+                                  Width="30"
+                                  Style="{DynamicResource MetroCircleToggleButtonStyle}"
+                                  IsChecked="{Binding IsFriday,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
+                    <ToggleButton Margin="2"
+                                  Content="S"
+                                  Height="30"
+                                  Width="30"
+                                  Style="{DynamicResource MetroCircleToggleButtonStyle}"
+                                  IsChecked="{Binding IsSaturday,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal"
+                            VerticalAlignment="Center"
+                            Grid.Row="2"
+                            Grid.ColumnSpan="4"
+                            Margin="5">
+                    <TextBlock Text="Time Of Day"
+                               VerticalAlignment="Center" />
+                    <customControls:TimePickerControl Margin="5"
+                                                      VerticalAlignment="Center"
+                                                      TimeFormat="hh:mm tt"
+                                                      TimeValue="{Binding TimeOfDay,
+                                                    Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
+                </StackPanel>
+            </Grid>
+        </DataTemplate>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <GroupBox Header="Days In Range">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="No of days in past"
+                           VerticalAlignment="Center"
+                           ToolTip="Select the number of days in past for which you wish to sync calendar calendarAppointments" />
+                <controls:NumericUpDown Grid.Row="0"
+                                        Grid.Column="1"
+                                        VerticalAlignment="Center"
+                                        Value="{Binding DaysInPast,Mode=TwoWay}"
+                                        Interval="1"
+                                        Margin="2"
+                                        Maximum="1825"
+                                        Minimum="0" />
+                <TextBlock Grid.Row="1"
+                           Grid.Column="0"
+                           Text="No of days in future"
+                           VerticalAlignment="Center"
+                           ToolTip="Select the number of days in future for which you wish to sync calendar calendarAppointments" />
+                <controls:NumericUpDown Grid.Row="1"
+                                        Grid.Column="1"
+                                        VerticalAlignment="Center"
+                                        Value="{Binding DaysInFuture,Mode=TwoWay}"
+                                        Interval="1"
+                                        Margin="2"
+                                        Maximum="1825"
+                                        Minimum="0" />
+            </Grid>
+        </GroupBox>
+        <GroupBox Grid.Row="1"
+                  Header="Recurrence"
+                  MinHeight="150">
+            <StackPanel Orientation="Vertical">
+                <ComboBox x:Name="SyncFrequencyComboBox"
+                          ItemsSource="{Binding SyncFrequencies,UpdateSourceTrigger=PropertyChanged}"
+                          SelectedItem="{Binding SyncFrequency,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
+                <ContentControl Margin="0,5,0,5"
+                                Content="{Binding SyncFrequencyViewModel,UpdateSourceTrigger=PropertyChanged}" />
+            </StackPanel>
+        </GroupBox>
+
+    </Grid>
+</UserControl>

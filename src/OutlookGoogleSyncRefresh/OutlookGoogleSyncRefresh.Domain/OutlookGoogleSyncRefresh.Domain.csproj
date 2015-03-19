@@ -74,6 +74,7 @@
     <Compile Include="Models\Enumerations.cs" />
     <Compile Include="Models\Recipient.cs" />
     <Compile Include="Models\Settings.cs" />
+    <Compile Include="Models\SyncEventArgs.cs" />
     <Compile Include="Models\SyncFrequency.cs" />
     <Compile Include="Models\SyncSettings.cs" />
     <Compile Include="Models\WeeklySyncFrequency.cs" />

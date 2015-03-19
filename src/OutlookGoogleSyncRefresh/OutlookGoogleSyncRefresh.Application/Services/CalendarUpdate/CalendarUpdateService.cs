@@ -322,6 +322,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
             SyncStatus = StatusHelper.GetMessage(SyncStateEnum.EntriesToDelete, appointmentsToDelete.Count);
             //Updating delete status
             SyncStatus = StatusHelper.GetMessage(SyncStateEnum.DeletingEntries, DestinationCalendarService.CalendarServiceName);
+            
             //Deleting entries
             bool isSuccess =
                 DestinationCalendarService.DeleteCalendarEvent(appointmentsToDelete, destinationCalendarSpecificData).Result;
@@ -433,7 +434,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
 
         public ICalendarService DestinationCalendarService { get; set; }
 
-        public bool SyncCalendar(Settings settings)
+        public bool SyncCalendar(Settings settings, SyncCallback syncCallback)
         {
             InitiatePreSyncSetup(settings);
 
@@ -462,7 +463,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
                     LoadSourceId();
                 }
 
-                if (isSuccess)
+                if (isSuccess && !settings.SyncSettings.DisableDelete)
                 {
                     //Delete destination appointments
                     isSuccess = DeleteDestinationAppointments(settings, destinationCalendarSpecificData);
@@ -476,8 +477,11 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
 
                 if (isSuccess && settings.SyncSettings.SyncMode == SyncModeEnum.TwoWay)
                 {
-                    //Delete destination appointments
-                    isSuccess = DeleteSourceAppointments(settings, sourceCalendarSpecificData);
+                    if (!settings.SyncSettings.DisableDelete)
+                    {
+                        //Delete destination appointments
+                        isSuccess = DeleteSourceAppointments(settings, sourceCalendarSpecificData);
+                    }
 
                     if (isSuccess)
                     {

@@ -6,16 +6,15 @@
              xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
              mc:Ignorable="d"
              d:DesignHeight="30"
-             d:DesignWidth="300"
-             Loaded="TimePickerControl_OnLoaded">
+             d:DesignWidth="300">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition />
+            <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="Auto" />
-            <ColumnDefinition />
+            <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="Auto" />
-            <ColumnDefinition />
-            <ColumnDefinition />
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
         <controls:NumericUpDown x:Name="HoursNumericUpDown"
                                 ValueChanged="Hours_OnValueChanged"
@@ -23,24 +22,26 @@
                                 Minimum="0"
                                 Maximum="23"
                                 Interval="1"
-                                Margin="2" />
+                                Margin="2,0,2,0"
+                                StringFormat="00"/>
         <TextBlock x:Name="HoursSeparator" Text=":"
                    Grid.Column="1"
                    Margin="2"
-                   VerticalAlignment="Center" />
+                   VerticalAlignment="Center" FontSize="25" />
         <controls:NumericUpDown Grid.Column="2"
                                 x:Name="MinutesNumericUpDown"
                                 ValueChanged="Minutes_OnValueChanged"
-                                Value="{Binding Hours,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                 VerticalAlignment="Center"
                                 Minimum="0"
                                 Maximum="59"
                                 Interval="1"
-                                Margin="2" />
+                                Margin="2"
+                                StringFormat="00"/>
         <TextBlock x:Name="MinutesSeparator" Text=":"
                    Grid.Column="3"
                    Margin="2"
-                   VerticalAlignment="Center" />
+                   VerticalAlignment="Center"
+                   FontSize="25" />
 
         <controls:NumericUpDown Grid.Column="4"
                                 x:Name="SecondsNumericUpDown"
@@ -49,10 +50,11 @@
                                 Minimum="0"
                                 Maximum="59"
                                 Interval="1"
-                                Margin="2" />
-        <ComboBox Grid.Column="5"
-                  VerticalAlignment="Center"
-                  Margin="2">
+                                Margin="2"
+                                StringFormat="00" />
+        <ComboBox Grid.Column="5" x:Name="ttCombobox"
+                  VerticalAlignment="Center" 
+                  Margin="2" SelectionChanged="TtCombobox_OnSelectionChanged">
             <ComboBoxItem>AM</ComboBoxItem>
             <ComboBoxItem>PM</ComboBoxItem>
         </ComboBox>

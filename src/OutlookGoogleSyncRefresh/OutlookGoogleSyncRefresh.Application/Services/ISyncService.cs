@@ -19,10 +19,12 @@
 
 #region Imports
 
+using System;
 using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
+using OutlookGoogleSyncRefresh.Application.Utilities;
 using OutlookGoogleSyncRefresh.Domain.Models;
 
 #endregion
@@ -43,7 +45,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services
 
         void Stop(ElapsedEventHandler timerCallback);
 
-        string SyncNow(Settings settings);
+        string SyncNow(Settings settings, SyncCallback syncCallback);
 
         #endregion
     }

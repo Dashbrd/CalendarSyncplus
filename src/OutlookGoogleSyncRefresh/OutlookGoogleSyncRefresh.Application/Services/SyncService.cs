@@ -96,7 +96,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services
             _syncTimer.Elapsed -= ElapsedEventHandler;
         }
 
-        public string SyncNow(Settings settings)
+        public string SyncNow(Settings settings, SyncCallback syncCallback)
         {
             try
             {
@@ -107,7 +107,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services
                     return "Invalid Settings";
                 }
                 ResetSyncData();
-                bool isSyncComplete = _calendarUpdateService.SyncCalendar(settings);
+                bool isSyncComplete = _calendarUpdateService.SyncCalendar(settings, syncCallback);
                 return isSyncComplete ? null : "Error Occurred";
             }
             catch (AggregateException exception)

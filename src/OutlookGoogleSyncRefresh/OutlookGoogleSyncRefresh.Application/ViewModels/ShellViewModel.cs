@@ -29,6 +29,7 @@ using System.Threading.Tasks;
 using System.Timers;
 using System.Waf.Applications;
 using System.Windows.Threading;
+using MahApps.Metro.Controls.Dialogs;
 using Microsoft.Office.Interop.Outlook;
 using OutlookGoogleSyncRefresh.Application.Services;
 using OutlookGoogleSyncRefresh.Application.Services.Google;
@@ -515,15 +516,25 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             ShowNotification(true);
             UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.SyncStarted, LastSyncTime));
             UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.Line));
-            var result = SyncStartService.SyncNow(Settings);
+            var result = SyncStartService.SyncNow(Settings, SyncCallback);
             OnSyncCompleted(result);
 
         }
 
+
+        private async Task<bool> SyncCallback(SyncEventArgs e)
+        {
+            var result = await MessageService.ShowMessage("Are you sure you want to delete");
+            if (result != MessageDialogResult.Affirmative)
+            {
+                return false;
+            }
+            return true;
+        }
         private void OnSyncCompleted(string result)
         {
 
-            if (result == null || !string.IsNullOrEmpty(result))
+            if (string.IsNullOrEmpty(result))
             {
                 UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.SyncSuccess, DateTime.Now));
             }

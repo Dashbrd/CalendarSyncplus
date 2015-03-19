@@ -29,7 +29,7 @@ namespace OutlookGoogleSyncRefresh.Presentation.Controls
 
         // Using a DependencyProperty as the backing store for TimeValue.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty TimeValueProperty =
-            DependencyProperty.Register("TimeValue", typeof(DateTime), typeof(TimePickerControl), new PropertyMetadata(DateTime.Now));
+            DependencyProperty.Register("TimeValue", typeof(DateTime), typeof(TimePickerControl), new FrameworkPropertyMetadata(TimeValueChangedCallback));
 
         
         public string TimeFormat
@@ -40,9 +40,10 @@ namespace OutlookGoogleSyncRefresh.Presentation.Controls
 
         // Using a DependencyProperty as the backing store for TimeFormat.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty TimeFormatProperty =
-            DependencyProperty.Register("TimeFormat", typeof(string), typeof(TimePickerControl), new PropertyMetadata("HH:mm:ss"));
+            DependencyProperty.Register("TimeFormat", typeof(string), typeof(TimePickerControl), new FrameworkPropertyMetadata(TimeFormatChangedCallback));
 
         
+
         public TimePickerControl()
         {
             InitializeComponent();
@@ -50,46 +51,122 @@ namespace OutlookGoogleSyncRefresh.Presentation.Controls
 
         private void Hours_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double?> e)
         {
-            UpdateTime();
+            UpdateTime(DateTime.Now);
         }
 
         private void Minutes_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double?> e)
         {
-            UpdateTime();
+            UpdateTime(DateTime.Now);
         }
 
         private void Seconds_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double?> e)
         {
-            UpdateTime();
+            UpdateTime(DateTime.Now);
         }
 
-        void UpdateTime()
+        private static void TimeValueChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var now = DateTime.Now.Date;
-            int hours = (int) HoursNumericUpDown.Value.GetValueOrDefault();
-            int minutes = (int) MinutesNumericUpDown.Value.GetValueOrDefault();
-            int seconds = (int) SecondsNumericUpDown.Value.GetValueOrDefault();
-            TimeValue = now.Add(new TimeSpan(hours, minutes, seconds));
+            DateTime dateTime =(DateTime)e.NewValue;
+            TimePickerControl timePickerControl = d as TimePickerControl;
+            if (timePickerControl != null)
+            {
+                LoadTime(timePickerControl,dateTime);
+            }
         }
-        private void TimePickerControl_OnLoaded(object sender, RoutedEventArgs e)
+
+        private static void TimeFormatChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var dateTime = DateTime.Now;
-            
-            switch (TimeFormat)
+            TimePickerControl timePickerControl = d as TimePickerControl;
+            if (timePickerControl != null)
+            {
+                LoadTime(timePickerControl, timePickerControl.TimeValue);
+            }
+        }
+
+        private void TtCombobox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            UpdateTime(DateTime.Now);
+        }
+
+        private bool IsLoading = false;
+        void UpdateTime(DateTime today)
+        {
+            if (!IsLoaded || IsLoading )
+                return;
+            int hours = (int)HoursNumericUpDown.Value.GetValueOrDefault();
+            if (TimeFormat != null && TimeFormat.StartsWith("hh") && ttCombobox.SelectedIndex == 1)
+            {
+                hours += 12;
+            }
+            int minutes = (int)MinutesNumericUpDown.Value.GetValueOrDefault();
+            int seconds = (int)SecondsNumericUpDown.Value.GetValueOrDefault();
+            TimeValue = today.Date.Add(new TimeSpan(hours, minutes, seconds));
+        }
+
+        private static void LoadTime(TimePickerControl control, DateTime dateTime)
+        {
+            if (control.IsLoading)
+                return;
+            control.IsLoading = true;
+            if (control.TimeFormat == null)
+            {
+                control.HoursNumericUpDown.Maximum = 23;
+                control.HoursNumericUpDown.Value = dateTime.Hour;
+                control.MinutesNumericUpDown.Value = dateTime.Minute;
+                control.SecondsNumericUpDown.Value = dateTime.Second;
+                control.MinutesSeparator.Visibility = Visibility.Visible;
+                control.SecondsNumericUpDown.Visibility = Visibility.Visible;
+                control.ttCombobox.Visibility = Visibility.Collapsed;
+                control.IsLoading = false;
+                return;
+            }
+
+            switch (control.TimeFormat)
             {
                 case "HH:mm:ss":
-                    HoursNumericUpDown.Value = dateTime.Hour;
-                    MinutesNumericUpDown.Value = dateTime.Minute;
+                    control.HoursNumericUpDown.Maximum = 23;
+                    control.HoursNumericUpDown.Value = dateTime.Hour;
+                    control.MinutesNumericUpDown.Value = dateTime.Minute;
+                    control.SecondsNumericUpDown.Value = dateTime.Second;
+                    control.MinutesSeparator.Visibility = Visibility.Visible;
+                    control.SecondsNumericUpDown.Visibility = Visibility.Visible;
+                    control.ttCombobox.Visibility = Visibility.Collapsed;
                     break;
                 case "HH:mm":
+                    control.HoursNumericUpDown.Maximum = 23;
+                    control.HoursNumericUpDown.Value = dateTime.Hour;
+                    control.MinutesNumericUpDown.Value = dateTime.Minute;
+                    control.SecondsNumericUpDown.Value = dateTime.Second;
+                    control.MinutesSeparator.Visibility = Visibility.Collapsed;
+                    control.SecondsNumericUpDown.Visibility = Visibility.Collapsed;
+                    control.ttCombobox.Visibility = Visibility.Collapsed;
                     break;
                 case "hh:mm:ss tt":
+                    control.HoursNumericUpDown.Maximum = 11;
+                    control.HoursNumericUpDown.Value = dateTime.Hour % 12;
+                    control.MinutesNumericUpDown.Value = dateTime.Minute;
+                    control.SecondsNumericUpDown.Value = dateTime.Second;
+                    control.ttCombobox.SelectedIndex = dateTime.Hour > 12 ? 1 : 0;
+                    control.MinutesSeparator.Visibility = Visibility.Visible;
+                    control.SecondsNumericUpDown.Visibility = Visibility.Visible;
+                    control.ttCombobox.Visibility = Visibility.Visible;
                     break;
                 case "hh:mm tt":
+                    control.HoursNumericUpDown.Maximum = 11;
+                    control.HoursNumericUpDown.Value = dateTime.Hour % 12;
+                    control.MinutesNumericUpDown.Value = dateTime.Minute;
+                    control.SecondsNumericUpDown.Value = dateTime.Second;
+                    control.MinutesSeparator.Visibility = Visibility.Collapsed;
+                    control.SecondsNumericUpDown.Visibility = Visibility.Collapsed;
+                    control.ttCombobox.Visibility = Visibility.Visible;
+                    control.ttCombobox.SelectedIndex = dateTime.Hour > 12 ? 1 : 0;
                     break;
                 default:
                     throw new FormatException("Invalid time format.");
             }
+            control.IsLoading = false;
         }
+
+        
     }
 }

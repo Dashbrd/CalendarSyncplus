@@ -391,6 +391,18 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             set { SetProperty(ref _outlookProfileList, value); }
         }
 
+        public List<OutlookCalendar> ExchangeCalendarList
+        {
+            get { return _exchangeCalendarList; }
+            set { SetProperty(ref _exchangeCalendarList, value); }
+        }
+
+        public OutlookCalendar SelectedExchangeCalendar
+        {
+            get { return _selectedExchangeCalendar; }
+            set { SetProperty(ref _selectedExchangeCalendar, value); }
+        }
+
         public bool CheckForUpdates
         {
             get { return _checkForUpdates; }
@@ -576,6 +588,8 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
                     RememberPeriodicSyncOn = Settings.RememberPeriodicSyncOn;
                     SelectedCalendarSyncDirection = Settings.SyncSettings.CalendarSyncDirection;
                     MasterCalendarServiceType = Settings.SyncSettings.MasterCalendar;
+                    DisableDelete = Settings.SyncSettings.DisableDelete;
+                    ConfirmOnDelete = Settings.SyncSettings.ConfirmOnDelete;
                 }
                 else
                 {
@@ -645,6 +659,8 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             Settings.ExchangeServerSettings.ExchangeServerUrl = ExchangeServerUrl;
             Settings.SyncSettings.CalendarSyncDirection = SelectedCalendarSyncDirection;
             Settings.SyncSettings.MasterCalendar = MasterCalendarServiceType;
+            Settings.SyncSettings.DisableDelete = DisableDelete;
+            Settings.SyncSettings.ConfirmOnDelete = ConfirmOnDelete;
             Settings.SetCalendarTypes();
 
             if (RunApplicationAtSystemStartup)
@@ -729,6 +745,8 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
         private bool _confirmOnDelete;
         private bool _disableDelete;
         private bool _keepLastModifiedCopy;
+        private List<OutlookCalendar> _exchangeCalendarList;
+        private OutlookCalendar _selectedExchangeCalendar;
 
         public void Load()
         {

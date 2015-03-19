@@ -1,0 +1,401 @@
+﻿<UserControl x:Class="OutlookGoogleSyncRefresh.Presentation.Views.CalendarsSettingsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:metaData="clr-namespace:OutlookGoogleSyncRefresh.Common.MetaData;assembly=OutlookGoogleSyncRefresh.Common"
+             xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:viewModels="clr-namespace:OutlookGoogleSyncRefresh.Application.ViewModels;assembly=OutlookGoogleSyncRefresh.Application"
+             xmlns:metroConverters="http://metro.mahapps.com/winfx/xaml/shared"
+             xmlns:converters="clr-namespace:OutlookGoogleSyncRefresh.Presentation.Converters"
+             xmlns:models="clr-namespace:OutlookGoogleSyncRefresh.Domain.Models;assembly=OutlookGoogleSyncRefresh.Domain"
+             xmlns:wafConverters="http://waf.codeplex.com/schemas"
+             mc:Ignorable="d" 
+             d:DesignHeight="500" d:DesignWidth="400"
+             d:DataContext="{d:DesignInstance viewModels:SettingsViewModel}">
+    <UserControl.Resources>
+        <metroConverters:ToUpperConverter x:Key="ToUpperConverter" />
+        <converters:BoolToCalendarServiceTypeConverter x:Key="BoolToCalendarServiceTypeConverter" />
+        <converters:InvertBooleanToVisibilityConverter x:Key="InvertBooleanToVisibilityConverter" />
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+        <wafConverters:InvertBooleanConverter x:Key="InvertBooleanConverter" />
+        <DataTemplate x:Key="ExchangeHeaderTemplate">
+            <StackPanel Orientation="Horizontal"
+                        VerticalAlignment="Center">
+                <Rectangle Width="18"
+                           Fill="{DynamicResource AccentSelectedColorBrush}">
+                    <Rectangle.OpacityMask>
+                        <VisualBrush Stretch="Fill"
+                                     Visual="{StaticResource appbar_email}" />
+                    </Rectangle.OpacityMask>
+                </Rectangle>
+                <TextBlock Margin="5,0,0,0"
+                           Text="{Binding Header,RelativeSource={RelativeSource AncestorType=GroupBox},Mode=OneWay,Converter={StaticResource ToUpperConverter}}"
+                           Foreground="{DynamicResource AccentSelectedColorBrush}" />
+            </StackPanel>
+        </DataTemplate>
+        <DataTemplate x:Key="OutlookHeaderTemplate">
+            <StackPanel Orientation="Horizontal"
+                        VerticalAlignment="Center">
+                <Rectangle Width="18"
+                           Fill="{DynamicResource AccentSelectedColorBrush}">
+                    <Rectangle.OpacityMask>
+                        <VisualBrush Stretch="Fill"
+                                     Visual="{StaticResource appbar_office_outlook}" />
+                    </Rectangle.OpacityMask>
+                </Rectangle>
+                <TextBlock Margin="5,0,0,0"
+                           Text="{Binding Header,RelativeSource={RelativeSource AncestorType=GroupBox},Mode=OneWay,Converter={StaticResource ToUpperConverter}}"
+                           Foreground="{DynamicResource AccentSelectedColorBrush}" />
+            </StackPanel>
+        </DataTemplate>
+        <DataTemplate x:Key="GoogleHeaderTemplate">
+            <StackPanel Orientation="Horizontal"
+                        VerticalAlignment="Center">
+                <Rectangle Width="18"
+                           Fill="{DynamicResource AccentSelectedColorBrush}">
+                    <Rectangle.OpacityMask>
+                        <VisualBrush Stretch="Fill"
+                                     Visual="{StaticResource appbar_google}" />
+                    </Rectangle.OpacityMask>
+                </Rectangle>
+                <TextBlock Margin="5,0,0,0"
+                           Text="{Binding Header,RelativeSource={RelativeSource AncestorType=GroupBox},Mode=OneWay,Converter={StaticResource ToUpperConverter}}"
+                           Foreground="{DynamicResource AccentSelectedColorBrush}" />
+            </StackPanel>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type models:CalendarSyncDirectionEnum}"
+                      x:Key="CalendarEnumDataTemplate">
+            <Grid Height="{Binding Height,RelativeSource={RelativeSource AncestorType={x:Type ComboBox}}}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Text="Outlook"
+                           VerticalAlignment="Center" />
+                <Rectangle Fill="Gray"
+                           Width="40"
+                           Height="20"
+                           Grid.Column="1"
+                           Grid.RowSpan="2"
+                           VerticalAlignment="Center"
+                           Margin="10,0,10,0"
+                           Name="ImageRectangle" />
+                <TextBlock Text="Google"
+                           Grid.Column="2"
+                           VerticalAlignment="Center" />
+            </Grid>
+            <DataTemplate.Triggers>
+                <DataTrigger Binding="{Binding}"
+                             Value="{x:Static models:CalendarSyncDirectionEnum.OutlookGoogleOneWay}">
+                    <Setter TargetName="ImageRectangle"
+                            Property="OpacityMask">
+                        <Setter.Value>
+                            <VisualBrush Stretch="Fill"
+                                         Visual="{StaticResource appbar_arrow_right}" />
+                        </Setter.Value>
+                    </Setter>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding}"
+                             Value="{x:Static models:CalendarSyncDirectionEnum.OutlookGoogleOneWayToSource}">
+                    <Setter TargetName="ImageRectangle"
+                            Property="OpacityMask">
+                        <Setter.Value>
+                            <VisualBrush Stretch="Fill"
+                                         Visual="{StaticResource appbar_arrow_left}" />
+                        </Setter.Value>
+                    </Setter>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding}"
+                             Value="{x:Static models:CalendarSyncDirectionEnum.OutlookGoogleTwoWay}">
+                    <Setter TargetName="ImageRectangle"
+                            Property="OpacityMask">
+                        <Setter.Value>
+                            <VisualBrush Stretch="Fill"
+                                         Visual="{StaticResource appbar_arrow_right_left}" />
+                        </Setter.Value>
+                    </Setter>
+                </DataTrigger>
+            </DataTemplate.Triggers>
+        </DataTemplate>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <GroupBox Header="Calendar Sync Mode">
+            <Grid Margin="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="3.5*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="Calendar Sync Mode"
+                           VerticalAlignment="Center"
+                           Margin="2" />
+                <ComboBox Grid.Column="1"
+                          Margin="2"
+                          ItemsSource="{Binding CalendarSyncModes,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                          SelectedItem="{Binding SelectedCalendarSyncDirection,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                          ItemTemplate="{StaticResource CalendarEnumDataTemplate}" />
+                <TextBlock Text="Select Master Calendar"
+                           VerticalAlignment="Center"
+                           Margin="2"
+                           Grid.Row="1"
+                           Visibility="{Binding AllowMasterCalendarSelect,Mode=TwoWay,Converter={StaticResource BooleanToVisibilityConverter} }" />
+                <StackPanel Orientation="Horizontal"
+                            Grid.Row="1"
+                            Grid.Column="1"
+                            VerticalAlignment="Center"
+                            Margin="2,5,5,5"
+                            Visibility="{Binding AllowMasterCalendarSelect,Mode=TwoWay,Converter={StaticResource BooleanToVisibilityConverter} }">
+                    <RadioButton GroupName="MasterCalendar"
+                                 Margin="2"
+                                 Content="Outlook"
+                                 IsChecked="{Binding MasterCalendarServiceType,Mode=TwoWay,
+                                                    Converter={StaticResource BoolToCalendarServiceTypeConverter},
+                                        ConverterParameter={x:Static metaData:CalendarServiceType.OutlookDesktop}}" />
+                    <RadioButton GroupName="MasterCalendar"
+                                 Margin="20,2,2,2"
+                                 Content="Google"
+                                 IsChecked="{Binding MasterCalendarServiceType,
+                                                   Mode=TwoWay,Converter={StaticResource BoolToCalendarServiceTypeConverter},
+                                                 ConverterParameter={x:Static metaData:CalendarServiceType.Google}}" />
+                </StackPanel>
+            </Grid>
+        </GroupBox>
+        <TabControl Grid.Row="1">
+            <TabItem Header="Outlook">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <GroupBox Header="Outlook Settings">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+
+                            <RadioButton Content="Outlook Application"
+                                         IsChecked="{Binding IsExchangeWebServices,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged,
+                                                    Converter={StaticResource ResourceKey=InvertBooleanConverter}}"
+                                         Margin="2"
+                                         GroupName="OutlookApplicationGroup"
+                                         Grid.ColumnSpan="2"
+                                         Grid.Row="0" />
+                            <RadioButton Content="Exchange Web Services"
+                                         IsChecked="{Binding IsExchangeWebServices}"
+                                         Margin="2"
+                                         GroupName="OutlookApplicationGroup"
+                                         Grid.Row="1"
+                                         Grid.Column="0"
+                                         Command="{Binding GetOutlookProfileListCommand}" />
+                        </Grid>
+                    </GroupBox>
+
+                    <GroupBox Grid.Row="1"
+                              Header="Exchange Server Settings"
+                              HeaderTemplate="{StaticResource ExchangeHeaderTemplate}"
+                              Visibility="{Binding IsExchangeWebServices,Converter={StaticResource BooleanToVisibilityConverter}}">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="2*" />
+                                <ColumnDefinition Width="3.5*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Domain"
+                                       VerticalAlignment="Center"
+                                       Margin="2" />
+                            <TextBox Grid.Column="1"
+                                     Margin="2"
+                                     Text="{Binding Username,Mode=TwoWay}" />
+                            <TextBlock Grid.Row="1" Text="Username"
+                                       VerticalAlignment="Center"
+                                       Margin="2" />
+                            <TextBox Grid.Row="1" Grid.Column="1"
+                                     Margin="2"
+                                     Text="{Binding Username,Mode=TwoWay}" />
+                            <TextBlock Text="Password"
+                                       Grid.Row="2"
+                                       VerticalAlignment="Center"
+                                       Margin="2" />
+                            <PasswordBox Grid.Row="2"
+                                         Grid.Column="1"
+                                         Margin="2"
+                                         PasswordChar="*"
+                                         controls:PasswordBoxHelper.CapsLockWarningToolTip="CAPSLOCK IS ON" />
+                            <TextBlock Grid.Row="3"
+                                       Margin="2"
+                                       Text="Exchange Server Url"
+                                       VerticalAlignment="Center" />
+                            <TextBox Grid.Row="3"
+                                     Grid.Column="1"
+                                     Margin="2"
+                                     Text="{Binding ExchangeServerUrl,Mode=TwoWay}" />
+                            <Button Margin="5"
+                                    Grid.Row="4"
+                                    Grid.ColumnSpan="2"
+                                    HorizontalAlignment="Right"
+                                    Height="30"
+                                    Content="Detect Settings"
+                                    Command="{Binding AutoDetectExchangeServer}" />
+                            <TextBlock Grid.Row="5"
+                                       Margin="2"
+                                       Text="Select Calendar"
+                                       VerticalAlignment="Center" />
+                            <ComboBox Margin="2"
+                                      Grid.Column="1"
+                                      Grid.Row="5"
+                                      Height="30" />
+                        </Grid>
+                    </GroupBox>
+
+                    <GroupBox Header="Profile &amp; MailBox Settings"
+                              Grid.Row="1"
+                              HeaderTemplate="{StaticResource OutlookHeaderTemplate}"
+                              Visibility="{Binding IsExchangeWebServices,Converter={StaticResource InvertBooleanToVisibilityConverter}}">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="2*" />
+                                <ColumnDefinition Width="3.5*" />
+                            </Grid.ColumnDefinitions>
+                            <RadioButton Content="Default Profile"
+                                         IsChecked="{Binding IsDefaultProfile,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                                         Margin="2"
+                                         GroupName="OutlookProfileGroup"
+                                         Grid.ColumnSpan="2"
+                                         Grid.Row="0" />
+                            <RadioButton Content="Choose Profile"
+                                         IsChecked="{Binding IsDefaultProfile,Converter={StaticResource ResourceKey=InvertBooleanConverter}}"
+                                         Margin="2"
+                                         Name="outlookProfileRadioButton"
+                                         GroupName="OutlookProfileGroup"
+                                         Grid.Row="1"
+                                         Grid.ColumnSpan="2"
+                                         Grid.Column="0"
+                                         Command="{Binding GetOutlookProfileListCommand}" />
+                            <TextBlock Text="Select Profile"
+                                       Grid.Row="2"
+                                       Grid.Column="0"
+                                       IsEnabled="False"
+                                       VerticalAlignment="Center"
+                                       Margin="2" />
+                            <ComboBox Grid.Row="2"
+                                      Grid.Column="1"
+                                      SelectedItem="{Binding Path=SelectedOutlookProfileName}"
+                                      Margin="2"
+                                      ItemsSource="{Binding Path=OutlookProfileList,UpdateSourceTrigger=PropertyChanged}"
+                                      IsEnabled="{Binding Path=IsChecked,ElementName=outlookProfileRadioButton}" />
+                            <RadioButton Content="Default MailBox and Calendar"
+                                         IsChecked="{Binding IsDefaultMailBox,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                                         Margin="2"
+                                         GroupName="OutlookMailBoxGroup"
+                                         Grid.ColumnSpan="2"
+                                         Grid.Column="0"
+                                         Grid.Row="3" />
+                            <RadioButton Grid.Row="4"
+                                         Content="Choose Another MailBox"
+                                         IsChecked="{Binding IsDefaultMailBox,Converter={StaticResource ResourceKey=InvertBooleanConverter}}"
+                                         Margin="2"
+                                         GroupName="OutlookMailBoxGroup"
+                                         Name="MailBoxRadioButton"
+                                         Grid.ColumnSpan="2"
+                                         Grid.Column="0"
+                                         Command="{Binding GetOutlookMailBoxesCommand}" />
+                            <TextBlock Text="Select MailBox"
+                                       Grid.Row="5"
+                                       Grid.Column="0"
+                                       IsEnabled="False"
+                                       VerticalAlignment="Center"
+                                       Margin="2" />
+                            <ComboBox Grid.Row="5"
+                                      Grid.Column="1"
+                                      SelectedItem="{Binding Path=SelectedOutlookMailBox}"
+                                      DisplayMemberPath="Name"
+                                      Margin="2"
+                                      ItemsSource="{Binding Path=OutlookMailBoxes}"
+                                      IsEnabled="{Binding Path=IsChecked,ElementName=MailBoxRadioButton}" />
+                            <TextBlock Text="Select Calendar"
+                                       Grid.Row="6"
+                                       Grid.Column="0"
+                                       IsEnabled="False"
+                                       VerticalAlignment="Center"
+                                       Margin="2" />
+                            <ComboBox Grid.Row="6"
+                                      Grid.Column="1"
+                                      Margin="2"
+                                      DisplayMemberPath="Name"
+                                      SelectedItem="{Binding Path=SelectedOutlookCalendar}"
+                                      IsEnabled="{Binding Path=IsChecked,ElementName=MailBoxRadioButton}"
+                                      ItemsSource="{Binding Path=SelectedOutlookMailBox.Calendars}" />
+                        </Grid>
+                    </GroupBox>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Google">
+                <GroupBox Header="Select Google Calendar"
+                          HeaderTemplate="{StaticResource GoogleHeaderTemplate}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2*" />
+                            <ColumnDefinition Width="3.5*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Select Calendar" VerticalAlignment="Center"/>
+                        <ComboBox Margin="2"
+                                  Grid.Column="1"
+                                  DisplayMemberPath="Name"
+                                  ItemsSource="{Binding GoogleCalenders,UpdateSourceTrigger=PropertyChanged}"
+                                  SelectedItem="{Binding SelectedCalendar,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
+                        <Button Margin="2"
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                Command="{Binding GetGoogleCalendarCommand}"
+                                VerticalAlignment="Center"
+                                Content="Get Google Calendars"
+                                HorizontalAlignment="Right" />
+                        <Button Margin="2"
+                                Grid.Row="2"
+                                Grid.Column="1"
+                                VerticalAlignment="Center"
+                                Content="Wipe Calendar"
+                                HorizontalAlignment="Right" />
+                    </Grid>
+
+                </GroupBox>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</UserControl>
