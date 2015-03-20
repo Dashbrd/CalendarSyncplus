@@ -1,6 +1,6 @@
 * Cd to Release Folder of build project
-* Create a 7-zip archive and delete installation files
+* Create a 7-zip archive (name it calendarsyncplus.7z) and delete installation files
 * copy 7zsd,config.txt to the release folder
 * open cmd and navidate to release folder
 * execute the followind command (without quotes)
-	"copy /b 7zsd.sfx + config.txt + (whatever the archive name).7z (Installer_Name).exe"
+	"copy /b 7zsd.sfx + config.txt + calendarsyncplus.7z calendarsyncplus.exe"
