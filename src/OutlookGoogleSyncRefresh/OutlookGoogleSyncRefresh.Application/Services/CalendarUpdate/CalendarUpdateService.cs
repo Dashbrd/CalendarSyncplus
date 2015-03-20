@@ -311,7 +311,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
         /// <param name="destinationCalendarSpecificData"></param>
         /// <returns></returns>
         private bool DeleteDestinationAppointments(Settings settings,
-            IDictionary<string, object> destinationCalendarSpecificData)
+            IDictionary<string, object> destinationCalendarSpecificData, SyncCallback syncCallback)
         {
             //Updating entry delete status
             SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
@@ -320,9 +320,27 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
             List<Appointment> appointmentsToDelete = GetAppointmentsToDelete(settings, SourceAppointments, DestinationAppointments);
             //Updating Get entry delete status
             SyncStatus = StatusHelper.GetMessage(SyncStateEnum.EntriesToDelete, appointmentsToDelete.Count);
+
+            if (appointmentsToDelete.Count == 0)
+            {
+                return true;
+            }
+
+            if (settings.SyncSettings.ConfirmOnDelete && syncCallback != null)
+            {
+                SyncEventArgs e = new SyncEventArgs();
+                e.Message = string.Format("Are you sure you want to delete {0} items from {1}?",
+                    appointmentsToDelete.Count, DestinationCalendarService.CalendarServiceName);
+                var task = syncCallback(e);
+                if (task.Result)
+                {
+                    return true;
+                }
+            }
+
             //Updating delete status
             SyncStatus = StatusHelper.GetMessage(SyncStateEnum.DeletingEntries, DestinationCalendarService.CalendarServiceName);
-            
+
             //Deleting entries
             bool isSuccess =
                 DestinationCalendarService.DeleteCalendarEvent(appointmentsToDelete, destinationCalendarSpecificData).Result;
@@ -466,7 +484,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
                 if (isSuccess && !settings.SyncSettings.DisableDelete)
                 {
                     //Delete destination appointments
-                    isSuccess = DeleteDestinationAppointments(settings, destinationCalendarSpecificData);
+                    isSuccess = DeleteDestinationAppointments(settings, destinationCalendarSpecificData, syncCallback);
                 }
 
                 if (isSuccess)

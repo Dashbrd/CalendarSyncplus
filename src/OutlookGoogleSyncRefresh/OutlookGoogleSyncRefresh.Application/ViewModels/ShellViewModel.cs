@@ -396,7 +396,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
 
         private void UpdateStatus(string text)
         {
-            InvokeOnCurrentDispatcher(() =>
+            BeginInvokeOnCurrentDispatcher(() =>
             {
                 _statusBuilder.AppendLine(text);
                 ApplicationLogger.LogInfo(text);
@@ -428,9 +428,14 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
 
         }
 
-        private void InvokeOnCurrentDispatcher(Action action)
+        private void BeginInvokeOnCurrentDispatcher(Action action)
         {
             DispatcherHelper.CheckBeginInvokeOnUI(action);
+        }
+
+        private T InvokeOnCurrentDispatcher<T>(Func<T> action)
+        {
+            return DispatcherHelper.CheckInvokeOnUI(action);
         }
 
         #endregion
@@ -468,7 +473,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
 
         void OnTimerElapsed(object sender, ElapsedEventArgs e)
         {
-            InvokeOnCurrentDispatcher(() =>
+            BeginInvokeOnCurrentDispatcher(() =>
             {
                 if (Settings != null)
                 {
@@ -524,13 +529,17 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
 
         private async Task<bool> SyncCallback(SyncEventArgs e)
         {
-            var result = await MessageService.ShowMessage("Are you sure you want to delete");
-            if (result != MessageDialogResult.Affirmative)
+            return await InvokeOnCurrentDispatcher(async () =>
             {
-                return false;
-            }
-            return true;
+                var task = await MessageService.ShowMessage(e.Message);
+                if (task != MessageDialogResult.Affirmative)
+                {
+                    return false;
+                }
+                return true;
+            });
         }
+
         private void OnSyncCompleted(string result)
         {
 
@@ -565,7 +574,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
 
         public void CheckForUpdates()
         {
-            InvokeOnCurrentDispatcher(() =>
+            BeginInvokeOnCurrentDispatcher(() =>
             {
                 if (Settings.CheckForUpdates)
                 {

@@ -91,7 +91,36 @@ namespace OutlookGoogleSyncRefresh.Common
                 UIDispatcher.BeginInvoke(action);
             }
         }
+        /// <summary>
+        ///     Executes an action on the UI thread. If this method is called
+        ///     from the UI thread, the action is executed immendiately. If the
+        ///     method is called from another thread, the action will be enqueued
+        ///     on the UI thread's dispatcher and executed asynchronously.
+        ///     <para>
+        ///         For additional operations on the UI thread, you can get a
+        ///         reference to the UI thread's dispatcher thanks to the property
+        ///         <see cref="UIDispatcher" />
+        ///     </para>
+        ///     .
+        /// </summary>
+        /// <param name="action">
+        ///     The action that will be executed on the UI
+        ///     thread.
+        /// </param>
+        public static T CheckInvokeOnUI<T>(Func<T> action)
+        {
+            if (action == null)
+            {
+                return default(T);
+            }
+            CheckDispatcher();
+            if (UIDispatcher.CheckAccess())
+            {
+                return action();
+            }
 
+            return UIDispatcher.Invoke(action);
+        }
         /// <summary>
         ///     Invokes an action asynchronously on the UI thread.
         /// </summary>
