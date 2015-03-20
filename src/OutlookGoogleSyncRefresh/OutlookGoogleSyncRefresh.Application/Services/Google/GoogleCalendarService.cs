@@ -333,8 +333,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Google
             }
 
             CheckCalendarSpecificData(calendarSpecificData);
-            object obj;
-
+            
             var eventIndexList = new Dictionary<KeyValuePair<int, Appointment>, HttpResponseMessage>();
             //Get Calendar Service
             CalendarService calendarService = GetCalendarService();

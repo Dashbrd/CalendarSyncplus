@@ -31,5 +31,13 @@ namespace OutlookGoogleSyncRefresh.Application.Services
         Task<MessageDialogResult> ShowMessage(string message, string title);
 
         Task<MessageDialogResult> ShowMessage(string message);
+
+        void ShowConfirmMessageAsync(string message, string title);
+
+        void ShowConfirmMessageAsync(string message);
+
+        Task<MessageDialogResult> ShowConfirmMessage(string message, string title);
+
+        Task<MessageDialogResult> ShowConfirmMessage(string message);
     }
 }

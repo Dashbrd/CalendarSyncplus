@@ -44,7 +44,7 @@ namespace OutlookGoogleSyncRefresh.Presentation.Services
         {
             var metroDialogSettings = new MetroDialogSettings
             {
-                AffirmativeButtonText = "Ok",
+                AffirmativeButtonText = "OK",
                 AnimateHide = true,
                 AnimateShow = true,
                 ColorScheme = MetroDialogColorScheme.Accented
@@ -63,7 +63,7 @@ namespace OutlookGoogleSyncRefresh.Presentation.Services
         {
             var metroDialogSettings = new MetroDialogSettings
             {
-                AffirmativeButtonText = "Ok",
+                AffirmativeButtonText = "OK",
                 AnimateHide = true,
                 AnimateShow = true,
                 ColorScheme = MetroDialogColorScheme.Accented
@@ -76,6 +76,47 @@ namespace OutlookGoogleSyncRefresh.Presentation.Services
         public Task<MessageDialogResult> ShowMessage(string message)
         {
             return ShowMessage(message, ApplicationInfo.ProductName);
+        }
+
+        public void ShowConfirmMessageAsync(string message, string title)
+        {
+            var metroDialogSettings = new MetroDialogSettings
+            {
+                AffirmativeButtonText = "YES",
+                NegativeButtonText = "NO",
+                AnimateHide = true,
+                AnimateShow = true,
+                ColorScheme = MetroDialogColorScheme.Accented,
+                
+            };
+
+            DispatcherHelper.CheckBeginInvokeOnUI(
+                () => View.ShowMessageAsync(title, message, MessageDialogStyle.AffirmativeAndNegative, metroDialogSettings));
+        }
+
+        public void ShowConfirmMessageAsync(string message)
+        {
+            ShowConfirmMessageAsync(message, ApplicationInfo.ProductName);
+        }
+
+        public async Task<MessageDialogResult> ShowConfirmMessage(string message, string title)
+        {
+            var metroDialogSettings = new MetroDialogSettings
+            {
+                AffirmativeButtonText = "YES",
+                NegativeButtonText = "NO",
+                AnimateHide = true,
+                AnimateShow = true,
+                ColorScheme = MetroDialogColorScheme.Accented
+            };
+            MessageDialogResult result =
+                await View.ShowMessageAsync(title, message, MessageDialogStyle.AffirmativeAndNegative, metroDialogSettings);
+            return result;
+        }
+
+        public Task<MessageDialogResult> ShowConfirmMessage(string message)
+        {
+            return ShowConfirmMessage(message, ApplicationInfo.ProductName);
         }
 
         #endregion

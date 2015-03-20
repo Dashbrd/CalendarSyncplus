@@ -323,17 +323,19 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
 
             if (appointmentsToDelete.Count == 0)
             {
+                SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
                 return true;
             }
 
             if (settings.SyncSettings.ConfirmOnDelete && syncCallback != null)
             {
-                SyncEventArgs e = new SyncEventArgs();
-                e.Message = string.Format("Are you sure you want to delete {0} items from {1}?",
+                string message = string.Format("Are you sure you want to delete {0} items from {1}?",
                     appointmentsToDelete.Count, DestinationCalendarService.CalendarServiceName);
+                SyncEventArgs e = new SyncEventArgs(message, UserActionEnum.ConfirmDelete);
                 var task = syncCallback(e);
                 if (task.Result)
                 {
+                    SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
                     return true;
                 }
             }
@@ -393,7 +395,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
         /// <param name="settings"></param>
         /// <param name="sourceCalendarSpecificData"></param>
         /// <returns></returns>
-        private bool DeleteSourceAppointments(Settings settings, IDictionary<string, object> sourceCalendarSpecificData)
+        private bool DeleteSourceAppointments(Settings settings, IDictionary<string, object> sourceCalendarSpecificData, SyncCallback syncCallback)
         {
             //Updating entry delete status
             SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
@@ -402,6 +404,24 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
             List<Appointment> appointmentsToDelete = GetAppointmentsToDelete(settings, DestinationAppointments, SourceAppointments);
             //Updating Get entry delete status
             SyncStatus = StatusHelper.GetMessage(SyncStateEnum.EntriesToDelete, appointmentsToDelete.Count);
+            if (appointmentsToDelete.Count == 0)
+            {
+                SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
+                return true;
+            }
+
+            if (settings.SyncSettings.ConfirmOnDelete && syncCallback != null)
+            {
+                string message = string.Format("Are you sure you want to delete {0} items from {1}?",
+                    appointmentsToDelete.Count, DestinationCalendarService.CalendarServiceName);
+                SyncEventArgs e = new SyncEventArgs(message, UserActionEnum.ConfirmDelete);
+                var task = syncCallback(e);
+                if (task.Result)
+                {
+                    SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
+                    return true;
+                }
+            }
             //Updating delete status
             SyncStatus = StatusHelper.GetMessage(SyncStateEnum.DeletingEntries, SourceCalendarService.CalendarServiceName);
             //Deleting entries
@@ -498,7 +518,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
                     if (!settings.SyncSettings.DisableDelete)
                     {
                         //Delete destination appointments
-                        isSuccess = DeleteSourceAppointments(settings, sourceCalendarSpecificData);
+                        isSuccess = DeleteSourceAppointments(settings, sourceCalendarSpecificData, syncCallback);
                     }
 
                     if (isSuccess)

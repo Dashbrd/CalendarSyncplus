@@ -531,7 +531,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
         {
             return await InvokeOnCurrentDispatcher(async () =>
             {
-                var task = await MessageService.ShowMessage(e.Message);
+                var task = await MessageService.ShowConfirmMessage(e.Message);
                 if (task != MessageDialogResult.Affirmative)
                 {
                     return false;
