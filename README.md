@@ -1,25 +1,43 @@
-# CalendarSync+
+## Description
+This utility synchronizes Calendar entries between different calendar providers (Apps like Outlook,Services EWS/Google/Live). 
+The project tries to improve upon the bugs and well as provide new functionality. There will be more features added with every release. Its recommended to use the latest version. Please share your experience with us.
 
-This project is inspired by our good old but dormant project OutlookGoogleSync.
-This project aims to provide all the features provided to you by the old application but with a new and refresh look and feel (Metro)
+## Installer Details
+Different types of installers are available
+* Standard MSI installer
+* Zip Installer (for users behind corporate Proxy/Firewall)
 
-The project tries to improve upon the bugs and well as provide new functionality.
+## Primary Dependency
+.Net Framework 4.5 (setup will automatically install it)/Can be manually installed as required
 
-We'll be posting about the current and the future feature updates regular.
-Please try the application and report bugs/flaws/error. We are open to suggestions :)
-Project Description
-This utility synchronizes Outlook calendar entries to a designated Google calendar.
-(Currently, Outlook 2007 and above are supported)
-Features
+### ScreenShot
+![Main Layout](http://i.imgur.com/YhnKYAz.png?1)
 
-    * Select outlook calendar from different profiles and mailboxes.
-    * Synchronize calendar entries from selected Outlook calendar to selected Google calendar.
-    * Calendar Entry Info includes description, Location, reminder and attendees.
-    * Date Range Selection for Sync.
-    * Deletes duplicate entries.
-    * Setup Sync Frequency.
-    * Add/Delete calendar entries to Google thru batch request.
-        Hourly,	Daily, Weekly
-    * Checks for latest version from github
+## Features
+* Select outlook calendar from different profiles and mailboxes
+* Select outlook calendar from different profiles and mailboxes
+* Synchronize calendar entries
+    * Outlook -> Google
+    * Google -> Outlook
+    * Outlook <-> Google (Bidirectional)
+* Calendar Entry Info includes description, Location, reminder, attendees, privacy, availability
+* Run application when computer starts
+* Minimize to tray option for close button
+* Comparison on unique identifier
+* Date Range Selection for Sync
+* Deletes duplicate entries
+* Add/Delete calendar entries to Google thru batch request
+* Check for latest releases of the software
+* Setup Sync Frequency
+    * Hourly
+    * Daily
+    * Weekly
+* Logging Added for Diagnostic
+* Verbose status update 
 
-More features to be added soon...
+### Troubleshooting and Diagnostic
+Application log file location :
+`<Os Drive>:\Users\<User Name>\AppData\Roaming\CalendarSyncPlus\Log\CalendarSyncPlus.log`
+
+### Future updates
+We are Committed to adding new features to support different Calendar apps and service providers
