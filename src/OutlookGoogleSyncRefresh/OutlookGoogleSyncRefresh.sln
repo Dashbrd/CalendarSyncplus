@@ -36,6 +36,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{4E1643
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "CalendarSyncPlus", "CalendarSyncPlus\CalendarSyncPlus.vdproj", "{5338B029-4F95-4744-9DB9-EE6A5E3E52EB}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Installer Dependencies", "Installer Dependencies", "{FD5DE181-943E-48A0-B288-3E522A5B2704}"
+	ProjectSection(SolutionItems) = preProject
+		Installer Dependencies\7zSD.sfx = Installer Dependencies\7zSD.sfx
+		Installer Dependencies\config.txt = Installer Dependencies\config.txt
+		Installer Dependencies\Instructions to Create Installer.txt = Installer Dependencies\Instructions to Create Installer.txt
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
