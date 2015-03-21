@@ -333,7 +333,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
                     appointmentsToDelete.Count, DestinationCalendarService.CalendarServiceName);
                 SyncEventArgs e = new SyncEventArgs(message, UserActionEnum.ConfirmDelete);
                 var task = syncCallback(e);
-                if (task.Result)
+                if (!task.Result)
                 {
                     SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
                     return true;
@@ -416,8 +416,9 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
                     appointmentsToDelete.Count, DestinationCalendarService.CalendarServiceName);
                 SyncEventArgs e = new SyncEventArgs(message, UserActionEnum.ConfirmDelete);
                 var task = syncCallback(e);
-                if (task.Result)
+                if (!task.Result)
                 {
+                    SyncStatus = StatusHelper.GetMessage(SyncStateEnum.SkipDelete);
                     SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
                     return true;
                 }
@@ -501,7 +502,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
                     LoadSourceId();
                 }
 
-                if (isSuccess && !settings.SyncSettings.DisableDelete)
+                if (isSuccess)
                 {
                     //Delete destination appointments
                     isSuccess = DeleteDestinationAppointments(settings, destinationCalendarSpecificData, syncCallback);
@@ -515,12 +516,9 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
 
                 if (isSuccess && settings.SyncSettings.SyncMode == SyncModeEnum.TwoWay)
                 {
-                    if (!settings.SyncSettings.DisableDelete)
-                    {
-                        //Delete destination appointments
-                        isSuccess = DeleteSourceAppointments(settings, sourceCalendarSpecificData, syncCallback);
-                    }
-
+                    //Delete destination appointments
+                    isSuccess = DeleteSourceAppointments(settings, sourceCalendarSpecificData, syncCallback);
+                    
                     if (isSuccess)
                     {
                         //If sync mode is two way... add events to source

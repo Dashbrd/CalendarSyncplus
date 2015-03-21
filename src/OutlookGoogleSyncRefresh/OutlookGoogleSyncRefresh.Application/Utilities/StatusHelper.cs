@@ -17,6 +17,7 @@ namespace OutlookGoogleSyncRefresh.Application.Utilities
         ReadingEntriesToDelete,
         EntriesToDelete,
         DeletingEntries,
+        SkipDelete,
         DeletingEntriesComplete,
         DeletingEntriesFailed,
         ReadingEntriesToAdd,
@@ -46,6 +47,7 @@ namespace OutlookGoogleSyncRefresh.Application.Utilities
             StatusDictionary.Add(SyncStateEnum.DestAppointmentReadFailed, "Read failed.");
             StatusDictionary.Add(SyncStateEnum.ReadingEntriesToDelete, "Getting entries to be deleted...");
             StatusDictionary.Add(SyncStateEnum.EntriesToDelete, "Found {0} entries to delete");
+            StatusDictionary.Add(SyncStateEnum.SkipDelete, "Skipping Delete.");
             StatusDictionary.Add(SyncStateEnum.DeletingEntries, "Deleting {0} entries...");
             StatusDictionary.Add(SyncStateEnum.DeletingEntriesComplete, "Delete Complete.");
             StatusDictionary.Add(SyncStateEnum.DeletingEntriesFailed, "Delete Failed.");

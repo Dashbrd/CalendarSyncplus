@@ -25,6 +25,7 @@ using System.ComponentModel.Composition;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Waf.Applications;
+using MahApps.Metro.Controls.Dialogs;
 using OutlookGoogleSyncRefresh.Application.Services;
 using OutlookGoogleSyncRefresh.Application.Services.ExchangeWeb;
 using OutlookGoogleSyncRefresh.Application.Services.Google;
@@ -358,6 +359,23 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             {
                 return
                     _autoDetectExchangeServer = _autoDetectExchangeServer ?? new DelegateCommand(AutoDetectEWSSettings);
+            }
+        }
+
+        public DelegateCommand ResetOutlookCalendarCommand
+        {
+            get
+            {
+                return _resetOutlookCalendarCommand = _resetOutlookCalendarCommand ??
+                    new DelegateCommand(ResetOutlookCalendarHandler);
+            }
+        }
+
+        public DelegateCommand ResetGoogleCalendarCommand
+        {
+            get
+            {
+                return _resetGoogleCalendar = _resetGoogleCalendar ?? new DelegateCommand(ResetGoogleCalendarHandler);
             }
         }
 
@@ -736,6 +754,71 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             }
         }
 
+
+        async void ResetGoogleCalendarHandler()
+        {
+            IsLoading = true;
+            await ResetGoogleCalendarInternal();
+            IsLoading = false;
+        }
+
+        private async Task ResetGoogleCalendarInternal()
+        {
+            if (SelectedCalendar == null)
+            {
+                MessageService.ShowMessageAsync("Please select a Google calendar to wipe");
+                return;
+            }
+
+            var task = await MessageService.ShowConfirmMessage("Are you sure you want to reset events from 10 year past and 10 year future?");
+            if (task != MessageDialogResult.Affirmative)
+            {
+                return;
+            }
+
+            var calendarSpecificData = new Dictionary<string, object>() { { "CalendarId", SelectedCalendar.Id } };
+            var result = await GoogleCalendarService.ResetCalendar(calendarSpecificData);
+            if (!result)
+            {
+                MessageService.ShowMessageAsync("Reset calendar failed.");
+            }
+        }
+
+        private async void ResetOutlookCalendarHandler()
+        {
+            IsLoading = true;
+            await ResetOutlookCalendarInternal();
+            IsLoading = false;
+        }
+
+        private async Task ResetOutlookCalendarInternal()
+        {
+            if ((!IsDefaultMailBox && (SelectedOutlookMailBox == null || SelectedOutlookCalendar == null)) ||
+                (!IsDefaultProfile && string.IsNullOrEmpty(SelectedOutlookProfileName)))
+            {
+                MessageService.ShowMessageAsync("Please select a Outlook calendar to reset.");
+                return;
+            }
+
+            var task = await MessageService.ShowConfirmMessage("Are you sure you want to reset events from 10 year past and 10 year future?");
+            if (task != MessageDialogResult.Affirmative)
+            {
+                return;
+            }
+
+            var calendarSpecificData = new Dictionary<string, object>()
+            {
+                {"ProfileName",  SelectedOutlookProfileName},
+                {"OutlookCalendar", SelectedOutlookCalendar}
+            };
+
+            var result = await OutlookCalendarService.ResetCalendar(calendarSpecificData);
+            if (!result)
+            {
+                MessageService.ShowMessageAsync("Reset calendar failed.");
+            }
+
+        }
         #endregion
 
         private bool _isloaded = false;
@@ -747,6 +830,8 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
         private bool _keepLastModifiedCopy;
         private List<OutlookCalendar> _exchangeCalendarList;
         private OutlookCalendar _selectedExchangeCalendar;
+        private DelegateCommand _resetGoogleCalendar;
+        private DelegateCommand _resetOutlookCalendarCommand;
 
         public void Load()
         {

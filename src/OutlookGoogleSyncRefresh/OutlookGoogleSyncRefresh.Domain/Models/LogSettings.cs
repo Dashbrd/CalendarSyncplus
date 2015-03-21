@@ -1,4 +1,4 @@
-﻿namespace OutlookGoogleSyncRefresh.Domain
+﻿namespace OutlookGoogleSyncRefresh.Domain.Models
 {
     public class LogSettings
     {

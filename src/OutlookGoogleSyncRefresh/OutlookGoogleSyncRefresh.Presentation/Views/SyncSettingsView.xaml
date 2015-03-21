@@ -159,7 +159,7 @@
                             VerticalAlignment="Center"
                             Grid.Row="2"
                             Grid.ColumnSpan="4">
-                    <TextBlock Text="Time Of Day" Margin="5"
+                    <TextBlock Text="Time of Day" Margin="5"
                                VerticalAlignment="Center" />
                     <customControls:TimePickerControl Margin="5"
                                                       VerticalAlignment="Center"

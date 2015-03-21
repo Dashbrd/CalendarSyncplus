@@ -356,6 +356,14 @@
                                       SelectedItem="{Binding Path=SelectedOutlookCalendar}"
                                       IsEnabled="{Binding Path=IsChecked,ElementName=MailBoxRadioButton}"
                                       ItemsSource="{Binding Path=SelectedOutlookMailBox.Calendars}" />
+                            <Button Margin="2"
+                                    Grid.Row="7"
+                                    Grid.Column="1"
+                                    Width="150"
+                                    VerticalAlignment="Center"
+                                    Content="Reset Outlook Calendar"
+                                    Command="{Binding ResetOutlookCalendarCommand}"
+                                    HorizontalAlignment="Right" />
                         </Grid>
                     </GroupBox>
                 </Grid>
@@ -381,6 +389,7 @@
                                   SelectedItem="{Binding SelectedCalendar,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
                         <Button Margin="2"
                                 Grid.Row="1"
+                                Width="150"
                                 Grid.Column="1"
                                 Command="{Binding GetGoogleCalendarCommand}"
                                 VerticalAlignment="Center"
@@ -389,8 +398,10 @@
                         <Button Margin="2"
                                 Grid.Row="2"
                                 Grid.Column="1"
+                                Width="150"
                                 VerticalAlignment="Center"
-                                Content="Wipe Calendar"
+                                Content="Reset Google Calendar"
+                                Command="{Binding ResetGoogleCalendarCommand}"
                                 HorizontalAlignment="Right" />
                     </Grid>
 

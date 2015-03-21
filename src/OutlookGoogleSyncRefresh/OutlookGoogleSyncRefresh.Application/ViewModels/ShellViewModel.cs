@@ -53,11 +53,8 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
 
         private readonly StringBuilder _statusBuilder;
         private DelegateCommand _authenticateGoogleAccount;
-        private Appointment _currentAppointment;
         private DelegateCommand _downloadCommand;
         private DelegateCommand _exitCommand;
-        private ObservableCollection<Appointment> _googleAppointments;
-        private int _googleEntriesCount;
         private bool _isAboutVisible;
         private bool _isHelpVisible;
         private bool _isLatestVersionAvailable;
@@ -71,8 +68,6 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
         private DelegateCommand _launchHelp;
         private DelegateCommand _launchSettings;
         private DateTime? _nextSyncTime;
-        private ObservableCollection<Appointment> _outlookAppointments;
-        private int _outlookEntriesCount;
         private Settings _settings;
         private DelegateCommand _startSyncCommand;
         private DelegateCommand _syncNowCommand;
@@ -143,11 +138,6 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
         public IApplicationUpdateService ApplicationUpdateService { get; set; }
         public IShellService ShellService { get; set; }
 
-        public ObservableCollection<Appointment> OutlookAppointments
-        {
-            get { return _outlookAppointments; }
-            set { SetProperty(ref _outlookAppointments, value); }
-        }
 
         public bool IsSettingsVisible
         {
@@ -190,18 +180,6 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
         public DelegateCommand SyncNowCommand
         {
             get { return _syncNowCommand ?? (_syncNowCommand = new DelegateCommand(SyncNowHandler)); }
-        }
-
-        public int OutlookEntriesCount
-        {
-            get { return _outlookEntriesCount; }
-            set { SetProperty(ref _outlookEntriesCount, value); }
-        }
-
-        public int GoogleEntriesCount
-        {
-            get { return _googleEntriesCount; }
-            set { SetProperty(ref _googleEntriesCount, value); }
         }
 
         public string SyncLog
@@ -248,19 +226,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             get { return _settings; }
             set { _settings = value; }
         }
-
-        public ObservableCollection<Appointment> GoogleAppointments
-        {
-            get { return _googleAppointments; }
-            set { SetProperty(ref _googleAppointments, value); }
-        }
-
-        public Appointment CurrentAppointment
-        {
-            get { return _currentAppointment; }
-            set { SetProperty(ref _currentAppointment, value); }
-        }
-
+        
         public DateTime? NextSyncTime
         {
             get { return _nextSyncTime; }

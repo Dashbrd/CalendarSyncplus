@@ -501,6 +501,17 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Google
             return calendarAppointments;
         }
 
+        public async Task<bool> ResetCalendar(IDictionary<string,object> calendarSpecificData)
+        {
+           var appointments = await GetCalendarEventsInRangeAsync(10*365, 10*365,calendarSpecificData);
+            if (appointments != null)
+            {
+                var success = await DeleteCalendarEvent(appointments, calendarSpecificData);
+                return success;
+            }
+            return false;
+        }
+
         #endregion
     }
 }
