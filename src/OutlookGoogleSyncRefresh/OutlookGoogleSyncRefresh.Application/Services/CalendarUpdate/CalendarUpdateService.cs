@@ -123,43 +123,53 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
         {
             bool addDescription =
                     settings.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Description);
-            bool addAttendeesToDescription =
-                settings.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.AttendeesToDescription);
             var appointmentsToDelete = new List<Appointment>();
             foreach (var destAppointment in destinationList)
             {
-                if (settings.SyncSettings.SyncMode == SyncModeEnum.TwoWay && destAppointment.SourceId == null)
-                {
-                    continue;
-                }
-
                 bool isFound = false;
                 foreach (var sourceAppointment in sourceList)
                 {
+                    bool isCopy = sourceAppointment.CompareSourceId(destAppointment) ||
+                                  destAppointment.CompareSourceId(sourceAppointment);
                     //Check if destination entry is a copy of source entry
                     //Or if source entry is a copy of destination entry
-                    if ((destAppointment.SourceId != null &&
-                            sourceAppointment.CompareSourceId(destAppointment))
-                            || (sourceAppointment.SourceId != null &&
-                            destAppointment.CompareSourceId(sourceAppointment)))
+                    
+                    //If both entries have same content
+                    if (destAppointment.Equals(sourceAppointment))
                     {
-                        //If both entries have same content
-                        if (destAppointment.Equals(sourceAppointment))
+                        if (addDescription)
                         {
-                            if (addDescription)
-                            {
-                                if (sourceAppointment.CompareDescription(destAppointment))
-                                {
-                                    isFound = true;
-                                }
-                            }
-                            else
+                            if (sourceAppointment.CompareDescription(destAppointment))
                             {
                                 isFound = true;
                             }
                         }
+                        else
+                        {
+                            isFound = true;
+                        }
+                    }
+                    
+                    if (isFound)
+                    {
                         break;
                     }
+                    
+                    if (isCopy)
+                    {
+                        if (settings.SyncSettings.SyncMode == SyncModeEnum.TwoWay && settings.SyncSettings.KeepLastModifiedVersion)
+                        {
+                            if (destAppointment.LastModified.HasValue && sourceAppointment.LastModified.HasValue)
+                            {
+                                if (destAppointment.LastModified.Value > sourceAppointment.LastModified.Value)
+                                {
+                                    isFound = true;
+                                }
+                            }
+                        }
+                        break;
+                    }
+                    
                 }
                 //If no entry is found in source, delete the entries in the destination
                 if (!isFound)
@@ -186,40 +196,33 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
             {
                 bool addDescription =
                     settings.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Description);
-                bool addAttendeesToDescription =
-                settings.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.AttendeesToDescription);
                 var appointmentsToAdd = new List<Appointment>();
                 foreach (var sourceAppointment in sourceList)
                 {
                     bool isFound = false;
                     foreach (var destAppointment in destinationList)
                     {
-                        //Check if destination entry is a copy of source entry
-                        //Or if source entry is a copy of destination entry
-                        if ((destAppointment.SourceId != null &&
-                            sourceAppointment.CompareSourceId(destAppointment))
-                            || (sourceAppointment.SourceId != null &&
-                            destAppointment.CompareSourceId(sourceAppointment)))
+                        //Check if both entries have same content
+                        if (destAppointment.Equals(sourceAppointment))
                         {
-
-                            //Check if both entries have same content
-                            if (destAppointment.Equals(sourceAppointment))
+                            if (addDescription)
                             {
-                                if (addDescription)
-                                {
-                                    if (sourceAppointment.CompareDescription(destAppointment))
-                                    {
-                                        isFound = true;
-                                    }
-                                }
-                                else
+                                if (sourceAppointment.CompareDescription(destAppointment))
                                 {
                                     isFound = true;
                                 }
                             }
+                            else
+                            {
+                                isFound = true;
+                            }
+                        }
 
+                        if (isFound)
+                        {
                             break;
                         }
+                        
                     }
                     //Add the entry if no entry matching in destination is found
                     if (!isFound)
@@ -313,6 +316,10 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
         private bool DeleteDestinationAppointments(Settings settings,
             IDictionary<string, object> destinationCalendarSpecificData, SyncCallback syncCallback)
         {
+            if (settings.SyncSettings.DisableDelete)
+            {
+                return true;
+            }
             //Updating entry delete status
             SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
             SyncStatus = StatusHelper.GetMessage(SyncStateEnum.ReadingEntriesToDelete);
@@ -397,6 +404,10 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
         /// <returns></returns>
         private bool DeleteSourceAppointments(Settings settings, IDictionary<string, object> sourceCalendarSpecificData, SyncCallback syncCallback)
         {
+            if (settings.SyncSettings.DisableDelete)
+            {
+                return true;
+            }
             //Updating entry delete status
             SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
             SyncStatus = StatusHelper.GetMessage(SyncStateEnum.ReadingEntriesToDelete);

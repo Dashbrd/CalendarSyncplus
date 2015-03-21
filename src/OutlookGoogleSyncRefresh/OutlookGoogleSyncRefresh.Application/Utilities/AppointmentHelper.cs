@@ -34,6 +34,10 @@ namespace OutlookGoogleSyncRefresh.Application.Utilities
 
         public static bool CompareSourceId(this Appointment calendarAppointment, Appointment otherAppointment)
         {
+            if (otherAppointment.SourceId == null)
+            {
+                return false;
+            }
             return calendarAppointment.AppointmentId.Equals(otherAppointment.SourceId);
         }
 

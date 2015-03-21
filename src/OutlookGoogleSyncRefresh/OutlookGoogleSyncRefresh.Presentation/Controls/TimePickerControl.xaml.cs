@@ -94,9 +94,17 @@ namespace OutlookGoogleSyncRefresh.Presentation.Controls
             if (!IsLoaded || IsLoading )
                 return;
             int hours = (int)HoursNumericUpDown.Value.GetValueOrDefault();
-            if (TimeFormat != null && TimeFormat.StartsWith("hh") && ttCombobox.SelectedIndex == 1)
+            if (TimeFormat != null && TimeFormat.StartsWith("hh"))
             {
-                hours += 12;
+                if (ttCombobox.SelectedIndex == 1)
+                {
+                    HoursNumericUpDown.Maximum = 12;
+                    hours += 12;
+                }
+                else
+                {
+                    HoursNumericUpDown.Maximum = 11;
+                }
             }
             int minutes = (int)MinutesNumericUpDown.Value.GetValueOrDefault();
             int seconds = (int)SecondsNumericUpDown.Value.GetValueOrDefault();
@@ -142,24 +150,42 @@ namespace OutlookGoogleSyncRefresh.Presentation.Controls
                     control.ttCombobox.Visibility = Visibility.Collapsed;
                     break;
                 case "hh:mm:ss tt":
-                    control.HoursNumericUpDown.Maximum = 11;
-                    control.HoursNumericUpDown.Value = dateTime.Hour % 12;
                     control.MinutesNumericUpDown.Value = dateTime.Minute;
                     control.SecondsNumericUpDown.Value = dateTime.Second;
-                    control.ttCombobox.SelectedIndex = dateTime.Hour > 12 ? 1 : 0;
                     control.MinutesSeparator.Visibility = Visibility.Visible;
                     control.SecondsNumericUpDown.Visibility = Visibility.Visible;
                     control.ttCombobox.Visibility = Visibility.Visible;
+                    if (dateTime.Hour > 12)
+                    {
+                        control.HoursNumericUpDown.Value = dateTime.Hour % 12;
+                        control.HoursNumericUpDown.Maximum = 12;
+                        control.ttCombobox.SelectedIndex = 1;
+                    }
+                    else
+                    {
+                        control.HoursNumericUpDown.Value = dateTime.Hour;
+                        control.HoursNumericUpDown.Maximum = 11;
+                        control.ttCombobox.SelectedIndex = 0;
+                    }
                     break;
                 case "hh:mm tt":
-                    control.HoursNumericUpDown.Maximum = 11;
-                    control.HoursNumericUpDown.Value = dateTime.Hour % 12;
                     control.MinutesNumericUpDown.Value = dateTime.Minute;
                     control.SecondsNumericUpDown.Value = dateTime.Second;
                     control.MinutesSeparator.Visibility = Visibility.Collapsed;
                     control.SecondsNumericUpDown.Visibility = Visibility.Collapsed;
                     control.ttCombobox.Visibility = Visibility.Visible;
-                    control.ttCombobox.SelectedIndex = dateTime.Hour > 12 ? 1 : 0;
+                    if (dateTime.Hour > 12)
+                    {
+                        control.HoursNumericUpDown.Value = dateTime.Hour % 12;
+                        control.HoursNumericUpDown.Maximum = 12;
+                        control.ttCombobox.SelectedIndex = 1;
+                    }
+                    else
+                    {
+                        control.HoursNumericUpDown.Value = dateTime.Hour;
+                        control.HoursNumericUpDown.Maximum = 11;
+                        control.ttCombobox.SelectedIndex = 0;
+                    }
                     break;
                 default:
                     throw new FormatException("Invalid time format.");

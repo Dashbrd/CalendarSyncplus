@@ -24,5 +24,7 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
         public bool DisableDelete { get; set; }
 
         public bool ConfirmOnDelete { get; set; }
+
+        public bool KeepLastModifiedVersion { get; set; }
     }
 }

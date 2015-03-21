@@ -608,6 +608,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
                     MasterCalendarServiceType = Settings.SyncSettings.MasterCalendar;
                     DisableDelete = Settings.SyncSettings.DisableDelete;
                     ConfirmOnDelete = Settings.SyncSettings.ConfirmOnDelete;
+                    KeepLastModifiedCopy = Settings.SyncSettings.KeepLastModifiedVersion;
                 }
                 else
                 {
@@ -679,6 +680,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             Settings.SyncSettings.MasterCalendar = MasterCalendarServiceType;
             Settings.SyncSettings.DisableDelete = DisableDelete;
             Settings.SyncSettings.ConfirmOnDelete = ConfirmOnDelete;
+            Settings.SyncSettings.KeepLastModifiedVersion = KeepLastModifiedCopy;
             Settings.SetCalendarTypes();
 
             if (RunApplicationAtSystemStartup)
