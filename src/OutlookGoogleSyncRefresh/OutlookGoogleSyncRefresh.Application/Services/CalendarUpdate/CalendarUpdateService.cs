@@ -126,6 +126,11 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
             var appointmentsToDelete = new List<Appointment>();
             foreach (var destAppointment in destinationList)
             {
+                if (settings.SyncSettings.SyncMode == SyncModeEnum.TwoWay && destAppointment.SourceId == null)
+                {
+                    continue;
+                }
+
                 bool isFound = false;
                 foreach (var sourceAppointment in sourceList)
                 {

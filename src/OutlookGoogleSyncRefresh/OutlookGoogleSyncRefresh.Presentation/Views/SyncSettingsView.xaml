@@ -54,12 +54,12 @@
                 <StackPanel Orientation="Horizontal"
                             VerticalAlignment="Center">
                     <RadioButton Content="Every"
-                                 Margin="5"
+                                 Margin="2"
                                  GroupName="DailyFrequency"
                                  IsChecked="{Binding CustomDay,
                                                     Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
                     <controls:NumericUpDown Width="80"
-                                            Margin="5"
+                                            Margin="2"
                                             Minimum="0"
                                             Maximum="30"
                                             Interval="1"
@@ -67,21 +67,20 @@
                                                     Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
                     <TextBlock Text="day(s)"
                                VerticalAlignment="Center"
-                               Margin="5" />
+                               Margin="2" />
                 </StackPanel>
                 <RadioButton Grid.Row="1"
-                             Margin="5"
+                             Margin="2"
                              Content="Every Weekday"
                              GroupName="DailyFrequency"
                              IsChecked="{Binding EveryWeekday,
                                                     Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
                 <StackPanel Orientation="Horizontal"
                             VerticalAlignment="Center"
-                            Grid.Row="2"
-                            Grid.ColumnSpan="4">
+                            Grid.Row="2">
                     <TextBlock Text="Time of Day"
-                               VerticalAlignment="Center" />
-                    <customControls:TimePickerControl Margin="5"
+                               VerticalAlignment="Center" Margin="2" />
+                    <customControls:TimePickerControl Margin="2"
                                                       VerticalAlignment="Center"
                                                       TimeFormat="hh:mm tt"
                                                       TimeValue="{Binding TimeOfDay,
@@ -98,11 +97,11 @@
                 </Grid.RowDefinitions>
                 <StackPanel Orientation="Horizontal"
                             VerticalAlignment="Center">
-                    <TextBlock Text="Recur Every" Margin="5"
+                    <TextBlock Text="Recur Every" Margin="2"
                                VerticalAlignment="Center" />
                     <controls:NumericUpDown Width="80"
                                             Interval="1"
-                                            Margin="5"
+                                            Margin="2"
                                             TextAlignment="Right"
                                             VerticalAlignment="Center"
                                             Value="{Binding WeekRecurrence,
@@ -116,52 +115,58 @@
                                   Content="S"
                                   Height="30"
                                   Width="30"
+                                  ToolTip="Sunday"
                                   Style="{DynamicResource MetroCircleToggleButtonStyle}"
                                   IsChecked="{Binding IsSunday,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
                     <ToggleButton Margin="2"
                                   Content="M"
                                   Height="30"
                                   Width="30"
+                                  ToolTip="Monday"
                                   Style="{DynamicResource MetroCircleToggleButtonStyle}"
                                   IsChecked="{Binding IsMonday,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
                     <ToggleButton Margin="2"
                                   Content="T"
                                   Height="30"
                                   Width="30"
+                                  ToolTip="Tuesday"
                                   Style="{DynamicResource MetroCircleToggleButtonStyle}"
                                   IsChecked="{Binding IsTuesday,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
                     <ToggleButton Margin="2"
                                   Content="W"
                                   Height="30"
                                   Width="30"
+                                  ToolTip="Wednesday"
                                   Style="{DynamicResource MetroCircleToggleButtonStyle}"
                                   IsChecked="{Binding IsWednesday,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
                     <ToggleButton Margin="2"
                                   Content="T"
                                   Height="30"
                                   Width="30"
+                                  ToolTip="Thursday"
                                   Style="{DynamicResource MetroCircleToggleButtonStyle}"
                                   IsChecked="{Binding IsThursday,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
                     <ToggleButton Margin="2"
                                   Content="F"
                                   Height="30"
                                   Width="30"
+                                  ToolTip="Friday"
                                   Style="{DynamicResource MetroCircleToggleButtonStyle}"
                                   IsChecked="{Binding IsFriday,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
                     <ToggleButton Margin="2"
                                   Content="S"
                                   Height="30"
                                   Width="30"
+                                  ToolTip="Saturday"
                                   Style="{DynamicResource MetroCircleToggleButtonStyle}"
                                   IsChecked="{Binding IsSaturday,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
                 </StackPanel>
                 <StackPanel Orientation="Horizontal"
                             VerticalAlignment="Center"
-                            Grid.Row="2"
-                            Grid.ColumnSpan="4">
-                    <TextBlock Text="Time of Day" Margin="5"
+                            Grid.Row="2">
+                    <TextBlock Text="Time of Day" Margin="2"
                                VerticalAlignment="Center" />
-                    <customControls:TimePickerControl Margin="5"
+                    <customControls:TimePickerControl Margin="2"
                                                       VerticalAlignment="Center"
                                                       TimeFormat="hh:mm tt"
                                                       TimeValue="{Binding TimeOfDay,

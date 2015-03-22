@@ -807,10 +807,6 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
                 application = null;
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
-                while (disposeOutlookInstances && Process.GetProcessesByName("OUTLOOK").Any())
-                {
-                    Task.Delay(5000);
-                }
             }
             return new AppointmentListWrapper()
             {
