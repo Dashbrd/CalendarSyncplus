@@ -215,6 +215,7 @@
                                 <RowDefinition />
                                 <RowDefinition />
                                 <RowDefinition />
+                                <RowDefinition />
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="2*" />
@@ -264,6 +265,7 @@
                                       Grid.Column="1"
                                       Grid.Row="5"
                                       Height="30" />
+                            <Button Grid.Row="6" Width="150" Margin="2" Grid.Column="1" Content="Reset Exchange Calendar"/>
                         </Grid>
                     </GroupBox>
 
