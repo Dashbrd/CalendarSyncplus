@@ -31,7 +31,7 @@ namespace OutlookGoogleSyncRefresh.Presentation.Controls
         public static readonly DependencyProperty TimeValueProperty =
             DependencyProperty.Register("TimeValue", typeof(DateTime), typeof(TimePickerControl), new FrameworkPropertyMetadata(TimeValueChangedCallback));
 
-        
+
         public string TimeFormat
         {
             get { return (string)GetValue(TimeFormatProperty); }
@@ -42,7 +42,7 @@ namespace OutlookGoogleSyncRefresh.Presentation.Controls
         public static readonly DependencyProperty TimeFormatProperty =
             DependencyProperty.Register("TimeFormat", typeof(string), typeof(TimePickerControl), new FrameworkPropertyMetadata(TimeFormatChangedCallback));
 
-        
+
 
         public TimePickerControl()
         {
@@ -66,11 +66,11 @@ namespace OutlookGoogleSyncRefresh.Presentation.Controls
 
         private static void TimeValueChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            DateTime dateTime =(DateTime)e.NewValue;
+            DateTime dateTime = (DateTime)e.NewValue;
             TimePickerControl timePickerControl = d as TimePickerControl;
             if (timePickerControl != null)
             {
-                LoadTime(timePickerControl,dateTime);
+                LoadTime(timePickerControl, dateTime);
             }
         }
 
@@ -91,8 +91,9 @@ namespace OutlookGoogleSyncRefresh.Presentation.Controls
         private bool IsLoading = false;
         void UpdateTime(DateTime today)
         {
-            if (!IsLoaded || IsLoading )
+            if (IsLoading)
                 return;
+            IsLoading = true;
             int hours = (int)HoursNumericUpDown.Value.GetValueOrDefault();
             if (TimeFormat != null && TimeFormat.StartsWith("hh"))
             {
@@ -109,6 +110,7 @@ namespace OutlookGoogleSyncRefresh.Presentation.Controls
             int minutes = (int)MinutesNumericUpDown.Value.GetValueOrDefault();
             int seconds = (int)SecondsNumericUpDown.Value.GetValueOrDefault();
             TimeValue = today.Date.Add(new TimeSpan(hours, minutes, seconds));
+            IsLoading = false;
         }
 
         private static void LoadTime(TimePickerControl control, DateTime dateTime)
@@ -193,6 +195,6 @@ namespace OutlookGoogleSyncRefresh.Presentation.Controls
             control.IsLoading = false;
         }
 
-        
+
     }
 }

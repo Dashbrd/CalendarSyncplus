@@ -15,7 +15,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
         private bool _isWednesday;
         private DateTime _timeOfDay;
         private int _weekRecurrence;
-
+        private WeeklySyncFrequency _weeklySyncFrequency;
         public WeeklySyncViewModel()
         {
             TimeOfDay = DateTime.Now;
@@ -23,87 +23,159 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             LoadDayOfTheWeek(DateTime.Now.DayOfWeek);
         }
 
-        public WeeklySyncViewModel(WeeklySyncFrequency weeklySyncFrequency)
+        public WeeklySyncViewModel(WeeklySyncFrequency weeklyWeeklySyncFrequency)
         {
-            WeekRecurrence = weeklySyncFrequency.WeekRecurrence;
-            foreach (DayOfWeek dayOfWeekEnum in weeklySyncFrequency.DaysOfWeek)
+            _weeklySyncFrequency = weeklyWeeklySyncFrequency;
+            TimeOfDay = weeklyWeeklySyncFrequency.TimeOfDay;
+            WeekRecurrence = weeklyWeeklySyncFrequency.WeekRecurrence;
+            foreach (DayOfWeek dayOfWeekEnum in weeklyWeeklySyncFrequency.DaysOfWeek)
             {
                 LoadDayOfTheWeek(dayOfWeekEnum);
             }
+            IsModified = false;
         }
 
         public int WeekRecurrence
         {
             get { return _weekRecurrence; }
-            set { SetProperty(ref _weekRecurrence, value); }
+            set
+            {
+                if (!IsModified && _weekRecurrence != value)
+                {
+                    IsModified = true;
+                }
+                SetProperty(ref _weekRecurrence, value);
+
+            }
         }
 
         public DateTime TimeOfDay
         {
             get { return _timeOfDay; }
-            set { SetProperty(ref _timeOfDay, value); }
+            set
+            {
+                if (!IsModified && _timeOfDay != value)
+                {
+                    IsModified = true;
+                }
+                SetProperty(ref _timeOfDay, value);
+            }
         }
 
         public bool IsSunday
         {
             get { return _isSunday; }
-            set { SetProperty(ref _isSunday, value); }
+            set
+            {
+                if (!IsModified && _isSunday != value)
+                {
+                    IsModified = true;
+                }
+                SetProperty(ref _isSunday, value);
+            }
         }
 
         public bool IsMonday
         {
             get { return _isMonday; }
-            set { SetProperty(ref _isMonday, value); }
+            set
+            {
+                if (!IsModified && _isMonday != value)
+                {
+                    IsModified = true;
+                }
+                SetProperty(ref _isMonday, value);
+            }
         }
 
         public bool IsTuesday
         {
             get { return _isTuesday; }
-            set { SetProperty(ref _isTuesday, value); }
+            set
+            {
+                if (!IsModified && _isTuesday != value)
+                {
+                    IsModified = true;
+                }
+                SetProperty(ref _isTuesday, value);
+            }
         }
 
         public bool IsWednesday
         {
             get { return _isWednesday; }
-            set { SetProperty(ref _isWednesday, value); }
+            set
+            {
+                if (!IsModified && _isWednesday != value)
+                {
+                    IsModified = true;
+                }
+                SetProperty(ref _isWednesday, value);
+            }
         }
 
         public bool IsThursday
         {
             get { return _isThursday; }
-            set { SetProperty(ref _isThursday, value); }
+            set
+            {
+                if (!IsModified && _isThursday != value)
+                {
+                    IsModified = true;
+                }
+                SetProperty(ref _isThursday, value);
+            }
         }
 
         public bool IsFriday
         {
             get { return _isFriday; }
-            set { SetProperty(ref _isFriday, value); }
+            set
+            {
+                if (!IsModified && _isFriday != value)
+                {
+                    IsModified = true;
+                }
+                SetProperty(ref _isFriday, value);
+            }
         }
 
         public bool IsSaturday
         {
             get { return _isSaturday; }
-            set { SetProperty(ref _isSaturday, value); }
+            set
+            {
+                if (!IsModified && _isSaturday != value)
+                {
+                    IsModified = true;
+                }
+                SetProperty(ref _isSaturday, value);
+            }
         }
 
         public override SyncFrequency GetFrequency()
         {
-            var frequency = new WeeklySyncFrequency
+            if (_weeklySyncFrequency == null)
             {
-                DaysOfWeek = new List<DayOfWeek>(),
-                WeekRecurrence = WeekRecurrence,
-                TimeOfDay = TimeOfDay
-            };
-            var timeNow = DateTime.Now;
-            frequency.StartDate = timeNow.Subtract(new TimeSpan(0, 0, timeNow.Second));
-            UpdateDaysOfWeek(frequency, IsSunday, DayOfWeek.Sunday);
-            UpdateDaysOfWeek(frequency, IsMonday, DayOfWeek.Monday);
-            UpdateDaysOfWeek(frequency, IsTuesday, DayOfWeek.Tuesday);
-            UpdateDaysOfWeek(frequency, IsWednesday, DayOfWeek.Wednesday);
-            UpdateDaysOfWeek(frequency, IsThursday, DayOfWeek.Thursday);
-            UpdateDaysOfWeek(frequency, IsFriday, DayOfWeek.Friday);
-            UpdateDaysOfWeek(frequency, IsSaturday, DayOfWeek.Saturday);
-            return frequency;
+                _weeklySyncFrequency = new WeeklySyncFrequency();
+            }
+
+            if (IsModified)
+            {
+                var timeNow = DateTime.Now;
+                _weeklySyncFrequency.StartDate = timeNow.Subtract(new TimeSpan(0, 0, timeNow.Second));
+                _weeklySyncFrequency.WeekRecurrence = WeekRecurrence;
+                _weeklySyncFrequency.TimeOfDay = TimeOfDay;
+                UpdateDaysOfWeek(_weeklySyncFrequency, IsSunday, DayOfWeek.Sunday);
+                UpdateDaysOfWeek(_weeklySyncFrequency, IsMonday, DayOfWeek.Monday);
+                UpdateDaysOfWeek(_weeklySyncFrequency, IsTuesday, DayOfWeek.Tuesday);
+                UpdateDaysOfWeek(_weeklySyncFrequency, IsWednesday, DayOfWeek.Wednesday);
+                UpdateDaysOfWeek(_weeklySyncFrequency, IsThursday, DayOfWeek.Thursday);
+                UpdateDaysOfWeek(_weeklySyncFrequency, IsFriday, DayOfWeek.Friday);
+                UpdateDaysOfWeek(_weeklySyncFrequency, IsSaturday, DayOfWeek.Saturday);
+            }
+            IsModified = false;
+            return _weeklySyncFrequency;
         }
 
         private void UpdateDaysOfWeek(WeeklySyncFrequency frequency, bool isValid, DayOfWeek dayOfWeek)

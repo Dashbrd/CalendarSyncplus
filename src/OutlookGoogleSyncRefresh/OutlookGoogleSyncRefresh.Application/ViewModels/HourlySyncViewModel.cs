@@ -8,7 +8,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
     {
         private int _minutes;
         private int _hours;
-
+        private HourlySyncFrequency _syncFrequency;
         public HourlySyncViewModel()
         {
             Hours = 1;
@@ -17,8 +17,10 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
 
         public HourlySyncViewModel(HourlySyncFrequency syncFrequency)
         {
+            _syncFrequency = syncFrequency;
             Hours = syncFrequency.Hours;
             Minutes = syncFrequency.Minutes;
+            IsModified = false;
         }
 
         public int Hours
@@ -26,6 +28,10 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             get { return _hours; }
             set
             {
+                if (!IsModified && _hours != value)
+                {
+                    IsModified = true;
+                }
                 SetProperty(ref _hours, value);
                 ValidateHours();
             }
@@ -36,6 +42,10 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             get { return _minutes; }
             set
             {
+                if (!IsModified && _minutes != value)
+                {
+                    IsModified = true;
+                }
                 SetProperty(ref _minutes, value);
                 ValidateMinutes();
             }
@@ -59,14 +69,19 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
 
         public override SyncFrequency GetFrequency()
         {
-            var frequency = new HourlySyncFrequency
+            if (_syncFrequency == null)
             {
-                Hours = Hours,
-                Minutes = Minutes,
-            };
-            var timeNow = DateTime.Now;
-            frequency.StartTime = timeNow.Subtract(new TimeSpan(0, 0, timeNow.Second));
-            return frequency;
+                _syncFrequency = new HourlySyncFrequency();
+            }
+
+            if (IsModified)
+            {
+                var timeNow = DateTime.Now;
+                _syncFrequency.StartTime = timeNow.Subtract(new TimeSpan(0, 0, timeNow.Second));
+                _syncFrequency.Hours = Hours;
+                _syncFrequency.Minutes = Minutes;
+            }
+            return _syncFrequency;
         }
     }
 }

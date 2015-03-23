@@ -9,6 +9,7 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
         public WeeklySyncFrequency()
         {
             Name = "Weekly";
+            DaysOfWeek= new List<DayOfWeek>();
         }
 
         public DateTime StartDate { get; set; }

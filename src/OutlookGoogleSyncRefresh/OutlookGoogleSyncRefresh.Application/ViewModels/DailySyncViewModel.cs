@@ -9,7 +9,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
         private int _dayGap;
         private bool _everyWeekday;
         private DateTime _timeOfDay;
-
+        private DailySyncFrequency _syncFrequency;
         public DailySyncViewModel()
         {
             TimeOfDay = DateTime.Now;
@@ -19,48 +19,84 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
 
         public DailySyncViewModel(DailySyncFrequency dailySyncFrequency)
         {
+            _syncFrequency = dailySyncFrequency;
             TimeOfDay = dailySyncFrequency.TimeOfDay;
             DayGap = dailySyncFrequency.DayGap;
             EveryWeekday = dailySyncFrequency.EveryWeekday;
             CustomDay = dailySyncFrequency.CustomDay;
+            IsModified = false;
         }
 
         public DateTime TimeOfDay
         {
             get { return _timeOfDay; }
-            set { SetProperty(ref _timeOfDay, value); }
+            set
+            {
+                if (!IsModified && _timeOfDay != value)
+                {
+                    IsModified = true;
+                }
+                SetProperty(ref _timeOfDay, value);
+            }
         }
 
         public int DayGap
         {
             get { return _dayGap; }
-            set { SetProperty(ref _dayGap, value); }
+            set
+            {
+                if (!IsModified && _dayGap != value)
+                {
+                    IsModified = true;
+                }
+                SetProperty(ref _dayGap, value);
+            }
         }
 
         public bool EveryWeekday
         {
             get { return _everyWeekday; }
-            set { SetProperty(ref _everyWeekday, value); }
+            set
+            {
+                if (!IsModified && _everyWeekday != value)
+                {
+                    IsModified = true;
+                }
+                SetProperty(ref _everyWeekday, value);
+            }
         }
 
         public bool CustomDay
         {
             get { return _customDay; }
-            set { SetProperty(ref _customDay, value); }
+            set
+            {
+                if (!IsModified && _customDay != value)
+                {
+                    IsModified = true;
+                }
+                SetProperty(ref _customDay, value);
+            }
         }
 
         public override SyncFrequency GetFrequency()
         {
-            var frequency = new DailySyncFrequency
+            if (_syncFrequency == null)
             {
-                EveryWeekday = EveryWeekday,
-                CustomDay = CustomDay,
-                DayGap = DayGap,
-                TimeOfDay = TimeOfDay
-            };
-            var timeNow = DateTime.Now;
-            frequency.StartDate = timeNow.Subtract(new TimeSpan(0, 0, timeNow.Second));
-            return frequency;
+                _syncFrequency = new DailySyncFrequency();
+            }
+
+            if (IsModified)
+            {
+                var timeNow = DateTime.Now;
+                _syncFrequency.StartDate = timeNow.Subtract(new TimeSpan(0, 0, timeNow.Second));
+                _syncFrequency.EveryWeekday = EveryWeekday;
+                _syncFrequency.CustomDay = CustomDay;
+                _syncFrequency.DayGap = DayGap;
+                _syncFrequency.TimeOfDay = TimeOfDay;
+            }
+
+            return _syncFrequency;
         }
     }
 }

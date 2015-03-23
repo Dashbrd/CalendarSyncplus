@@ -10,5 +10,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
         {
             return null;
         }
+
+        public bool IsModified { get; protected set; }
     }
 }
