@@ -7,7 +7,7 @@
              xmlns:models="clr-namespace:OutlookGoogleSyncRefresh.Domain.Models;assembly=OutlookGoogleSyncRefresh.Domain"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300"
-             d:DataContext="{d:DesignInstance viewModels:ProfilesViewModel}">
+             d:DataContext="{d:DesignInstance viewModels:SettingsViewModel}">
     <UserControl.Resources>
         <DataTemplate DataType="{x:Type models:Settings}">
             <Grid>
@@ -32,6 +32,6 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         
-        <ListBox Grid.Row="1" Grid.ColumnSpan="2" ItemsSource="{Binding SyncProfiles,UpdateSourceTrigger=PropertyChanged}"/>
+        <ListBox Grid.Row="1" Grid.ColumnSpan="2" ItemsSource="{Binding Settings.SyncProfiles,UpdateSourceTrigger=PropertyChanged}"/>
     </Grid>
 </UserControl>
