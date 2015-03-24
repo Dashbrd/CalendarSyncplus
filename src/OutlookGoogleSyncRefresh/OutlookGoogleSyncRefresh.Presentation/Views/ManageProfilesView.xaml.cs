@@ -18,12 +18,11 @@ using OutlookGoogleSyncRefresh.Application.Views;
 namespace OutlookGoogleSyncRefresh.Presentation.Views
 {
     /// <summary>
-    /// Interaction logic for ProfilesView.xaml
+    /// Interaction logic for ManageProfilesView.xaml
     /// </summary>
-    [Export(typeof(IProfilesView))]
-    public partial class ProfilesView : UserControl, IProfilesView
+    public partial class ManageProfilesView : UserControl
     {
-        public ProfilesView()
+        public ManageProfilesView()
         {
             InitializeComponent();
         }

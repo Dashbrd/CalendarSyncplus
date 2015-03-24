@@ -141,9 +141,12 @@ namespace OutlookGoogleSyncRefresh.Application.Controllers
                     {
                         _shellViewModel.IsSettingsVisible = false;
                         _shellViewModel.Settings = _settingsViewModel.Settings;
-                        if (_settingsViewModel.Settings.SyncFrequency != null)
+                        foreach (var syncProfile in _settingsViewModel.Settings.SyncProfiles)
                         {
-                            _shellViewModel.NextSyncTime = _shellViewModel.Settings.SyncFrequency.GetNextSyncTime(DateTime.Now);
+                            if (syncProfile.IsSyncEnabled && syncProfile.SyncSettings.SyncFrequency != null)
+                            {
+                                syncProfile.NextSync = syncProfile.SyncSettings.SyncFrequency.GetNextSyncTime(DateTime.Now);
+                            }
                         }
                     }
                     break;

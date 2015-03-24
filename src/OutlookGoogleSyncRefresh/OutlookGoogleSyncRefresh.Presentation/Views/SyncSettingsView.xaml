@@ -19,8 +19,8 @@
                     <RowDefinition />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition />
-                    <ColumnDefinition />
+                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="3.5*" />
                 </Grid.ColumnDefinitions>
                 <TextBlock Text="Hours"
                            VerticalAlignment="Center" />
@@ -187,8 +187,8 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition />
-                    <ColumnDefinition />
+                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="3.5*" />
                 </Grid.ColumnDefinitions>
                 <TextBlock Text="No of days in past"
                            VerticalAlignment="Center"

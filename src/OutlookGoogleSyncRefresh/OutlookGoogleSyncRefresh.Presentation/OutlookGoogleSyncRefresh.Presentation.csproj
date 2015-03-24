@@ -160,8 +160,8 @@
     <Compile Include="Views\AdvancedSettingsView.xaml.cs">
       <DependentUpon>AdvancedSettingsView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\CalendarsSettingsView.xaml.cs">
-      <DependentUpon>CalendarsSettingsView.xaml</DependentUpon>
+    <Compile Include="Views\CalendarSetttingsView.xaml.cs">
+      <DependentUpon>CalendarSetttingsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\HelpView.xaml.cs">
       <DependentUpon>HelpView.xaml</DependentUpon>
@@ -172,8 +172,11 @@
     <Compile Include="Views\OptionsSettingsView.xaml.cs">
       <DependentUpon>OptionsSettingsView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\ProfilesView.xaml.cs">
-      <DependentUpon>ProfilesView.xaml</DependentUpon>
+    <Compile Include="Views\ProfileSettingsView.xaml.cs">
+      <DependentUpon>ProfileSettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ManageProfilesView.xaml.cs">
+      <DependentUpon>ManageProfilesView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\SettingsView.xaml.cs">
       <DependentUpon>SettingsView.xaml</DependentUpon>
@@ -210,7 +213,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\CalendarsSettingsView.xaml">
+    <Page Include="Views\CalendarSetttingsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -226,7 +229,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\ProfilesView.xaml">
+    <Page Include="Views\ProfileSettingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ManageProfilesView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

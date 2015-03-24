@@ -139,15 +139,14 @@ namespace OutlookGoogleSyncRefresh.Application.Services
             {
                 result.SyncProfiles.Add(GetDefaultSyncProfile());
             }
-
-            if (result.SyncFrequency == null)
-            {
-                result.SyncFrequency = new HourlySyncFrequency();
-            }
-
+            
             foreach (var syncProfile in result.SyncProfiles)
             {
                 syncProfile.SetCalendarTypes();
+                if (syncProfile.SyncSettings.SyncFrequency == null)
+                {
+                    syncProfile.SyncSettings.SyncFrequency = new HourlySyncFrequency();
+                }
             }
 
             return result;

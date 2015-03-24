@@ -69,25 +69,19 @@
         </ContentControl>
         <TabControl Grid.Row="1" 
                     IsEnabled="{Binding Path=IsLoading,Converter={StaticResource ResourceKey=InvertBooleanConverter}}">
-            <TabItem Header="Calendars">
+            <TabItem Header="Profiles">
                 <ScrollViewer VerticalScrollBarVisibility="Auto"
                               HorizontalScrollBarVisibility="Hidden">
-                    <views:CalendarsSettingsView DataContext="{Binding}" />
+                    <views:ProfileSettingsView DataContext="{Binding}" />
                 </ScrollViewer>
             </TabItem>
-            <TabItem Header="Sync">
+            <TabItem Header="Manage">
                 <ScrollViewer VerticalScrollBarVisibility="Auto"
                               HorizontalScrollBarVisibility="Hidden">
-                    <views:SyncSettingsView DataContext="{Binding}" />
+                    <views:ManageProfilesView DataContext="{Binding}" />
                 </ScrollViewer>
             </TabItem>
-            <TabItem Header="Options">
-                <ScrollViewer VerticalScrollBarVisibility="Auto"
-                              HorizontalScrollBarVisibility="Hidden">
-                    <views:OptionsSettingsView DataContext="{Binding}" />
-                </ScrollViewer>
-            </TabItem>
-            <TabItem Header="Advanced">
+            <TabItem Header="Others">
                 <ScrollViewer VerticalScrollBarVisibility="Auto"
                               HorizontalScrollBarVisibility="Hidden">
                     <views:AdvancedSettingsView DataContext="{Binding}" />

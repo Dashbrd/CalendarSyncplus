@@ -179,13 +179,11 @@
     <Compile Include="ViewModels\DailySyncViewModel.cs" />
     <Compile Include="ViewModels\HelpViewModel.cs" />
     <Compile Include="ViewModels\HourlySyncViewModel.cs" />
-    <Compile Include="ViewModels\ProfilesViewModel.cs" />
     <Compile Include="ViewModels\SyncFrequencyViewModel.cs" />
     <Compile Include="ViewModels\SystemTrayNotifierViewModel.cs" />
     <Compile Include="ViewModels\WeeklySyncViewModel.cs" />
     <Compile Include="Views\IAboutView.cs" />
     <Compile Include="Views\IHelpView.cs" />
-    <Compile Include="Views\IProfilesView.cs" />
     <Compile Include="Views\ISettingsView.cs" />
     <Compile Include="Views\IShellView.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />

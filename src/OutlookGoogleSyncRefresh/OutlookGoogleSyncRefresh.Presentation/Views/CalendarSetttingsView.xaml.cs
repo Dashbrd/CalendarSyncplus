@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace OutlookGoogleSyncRefresh.Presentation.Views
 {
     /// <summary>
-    /// Interaction logic for CalendarsSettingsView.xaml
+    /// Interaction logic for CalendarSetttingsView.xaml
     /// </summary>
-    public partial class CalendarsSettingsView : UserControl
+    public partial class CalendarSetttingsView : UserControl
     {
-        public CalendarsSettingsView()
+        public CalendarSetttingsView()
         {
             InitializeComponent();
         }

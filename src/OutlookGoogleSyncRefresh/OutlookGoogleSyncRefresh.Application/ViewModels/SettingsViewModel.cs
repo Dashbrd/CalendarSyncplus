@@ -331,6 +331,10 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
                     MasterCalendarServiceType = CalendarServiceType.OutlookDesktop;
                     AllowMasterCalendarSelect = true;
                 }
+                else
+                {
+                    AllowMasterCalendarSelect = false;
+                }
             }
         }
 
@@ -544,22 +548,22 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
 
         private void OnSyncFrequencyChanged()
         {
-            if (SyncProfile != null && Settings.SyncFrequency != null &&
-                SyncFrequency == Settings.SyncFrequency.Name)
+            if (SyncProfile != null && SyncProfile.SyncSettings.SyncFrequency != null &&
+                SyncFrequency == SyncProfile.SyncSettings.SyncFrequency.Name)
             {
                 switch (SyncFrequency)
                 {
                     case "Hourly":
                         SyncFrequencyViewModel
-                            = new HourlySyncViewModel(Settings.SyncFrequency as HourlySyncFrequency);
+                            = new HourlySyncViewModel(SyncProfile.SyncSettings.SyncFrequency as HourlySyncFrequency);
                         break;
                     case "Daily":
                         SyncFrequencyViewModel
-                            = new DailySyncViewModel(Settings.SyncFrequency as DailySyncFrequency);
+                            = new DailySyncViewModel(SyncProfile.SyncSettings.SyncFrequency as DailySyncFrequency);
                         break;
                     case "Weekly":
                         SyncFrequencyViewModel
-                            = new WeeklySyncViewModel(Settings.SyncFrequency as WeeklySyncFrequency);
+                            = new WeeklySyncViewModel(SyncProfile.SyncSettings.SyncFrequency as WeeklySyncFrequency);
                         break;
                 }
             }
@@ -587,16 +591,12 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             {
                 if (Settings != null)
                 {
-                    if (Settings.SyncFrequency != null)
-                    {
-                        SyncFrequency = Settings.SyncFrequency.Name;
-                    }
                     MinimizeToSystemTray = Settings.AppSettings.MinimizeToSystemTray;
                     HideSystemTrayTooltip = Settings.AppSettings.HideSystemTrayTooltip;
                     CheckForUpdates = Settings.AppSettings.CheckForUpdates;
                     RunApplicationAtSystemStartup = Settings.AppSettings.RunApplicationAtSystemStartup;
                     RememberPeriodicSyncOn = Settings.AppSettings.RememberPeriodicSyncOn;
-                    LogSyncInfo = Settings.LogSettings.LogSyncInfo;
+                    //LogSyncInfo = Settings.LogSettings.LogSyncInfo;
                     SyncProfile = Settings.SyncProfiles.FirstOrDefault();
                 }
                 else
@@ -653,6 +653,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
                 DisableDelete = SyncProfile.SyncSettings.DisableDelete;
                 ConfirmOnDelete = SyncProfile.SyncSettings.ConfirmOnDelete;
                 KeepLastModifiedCopy = SyncProfile.SyncSettings.KeepLastModifiedVersion;
+                SyncFrequency = SyncProfile.SyncSettings.SyncFrequency.Name;
 
                 if (!IsDefaultProfile)
                 {
@@ -676,9 +677,6 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             IsLoading = true;
             SettingsSaved = false;
             Settings.AppSettings.IsFirstSave = false;
-            Settings.SyncFrequency = SyncFrequencyViewModel.GetFrequency();
-            Settings.LogSettings.LogSyncInfo = LogSyncInfo;
-            Settings.LogSettings.CreateNewFileForEverySync = CreateNewFileForEverySync;
             Settings.AppSettings.MinimizeToSystemTray = MinimizeToSystemTray;
             Settings.AppSettings.HideSystemTrayTooltip = HideSystemTrayTooltip;
             Settings.AppSettings.CheckForUpdates = CheckForUpdates;
@@ -728,7 +726,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
                 SyncProfile.GoogleCalendar = SelectedCalendar;
                 SyncProfile.DaysInFuture = DaysInFuture;
                 SyncProfile.DaysInPast = DaysInPast;
-
+                SyncProfile.SyncSettings.SyncFrequency = SyncFrequencyViewModel.GetFrequency();
                 SyncProfile.UpdateEntryOptions(AddDescription, AddReminders, AddAttendees, AddAttendeesToDescription,
                     AddAttachments);
                 SyncProfile.OutlookSettings.OutlookMailBox = SelectedOutlookMailBox;

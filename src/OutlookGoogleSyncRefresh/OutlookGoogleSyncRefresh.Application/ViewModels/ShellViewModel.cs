@@ -119,7 +119,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             }
             else
             {
-                LastSyncTime = Settings.LastSuccessfulSync;
+                //LastSyncTime = Settings.LastSuccessfulSync;
                 NextSyncTime = null;
                 if (Settings.AppSettings.RememberPeriodicSyncOn && Settings.AppSettings.PeriodicSyncOn)
                 {
@@ -333,10 +333,14 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
                 bool result = await SyncStartService.Start(OnTimerElapsed);
                 if (result)
                 {
-                    if (_settings.SyncFrequency != null)
+                    foreach (var syncProfile in Settings.SyncProfiles)
                     {
-                        NextSyncTime = _settings.SyncFrequency.GetNextSyncTime(DateTime.Now);
+                        if (syncProfile.IsSyncEnabled && syncProfile.SyncSettings.SyncFrequency != null)
+                        {
+                            syncProfile.NextSync = syncProfile.SyncSettings.SyncFrequency.GetNextSyncTime(DateTime.Now);
+                        }   
                     }
+                    
                     IsPeriodicSyncStarted = true;
                     UpdateStatus(string.Format("Period Sync Started : {0}", DateTime.Now));
                     UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.LogSeparator));
@@ -446,10 +450,13 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             {
                 if (Settings != null)
                 {
-                    if (Settings.SyncFrequency.ValidateTimer(DateTime.Now))
+                    foreach (var syncProfile in Settings.SyncProfiles)
                     {
-                        SyncNowHandler();
+                        
+                            SyncNowHandler();
+                            
                     }
+                    
                 }
             });
         }
@@ -469,8 +476,11 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
 
                 foreach (var syncProfile in Settings.SyncProfiles)
                 {
-                    SyncProfile profile = syncProfile;
-                    _taskFactory.StartNew(() => StartSyncTask(profile));
+                    if (syncProfile.IsSyncEnabled && syncProfile.SyncSettings.SyncFrequency.ValidateTimer(DateTime.Now))
+                    {
+                        SyncProfile profile = syncProfile;
+                        _taskFactory.StartNew(() => StartSyncTask(profile));
+                    }
                 }
             }
             catch (AggregateException exception)
@@ -536,9 +546,12 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             UpdateStatus(string.Format("Time Elapsed : {0} s", (int)DateTime.Now.Subtract(LastSyncTime.GetValueOrDefault()).TotalSeconds));
             UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.LogSeparator));
             ShowNotification(false);
-            if (Settings.SyncFrequency != null)
+            foreach (var syncProfile in Settings.SyncProfiles)
             {
-                NextSyncTime = Settings.SyncFrequency.GetNextSyncTime(LastSyncTime.GetValueOrDefault());
+                if (syncProfile.IsSyncEnabled && syncProfile.SyncSettings.SyncFrequency != null)
+                {
+                    syncProfile.NextSync = syncProfile.SyncSettings.SyncFrequency.GetNextSyncTime(syncProfile.LastSuccessfulSync);
+                }
             }
             IsSyncInProgress = false;
             CheckForUpdates();

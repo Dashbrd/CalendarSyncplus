@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Waf.Foundation;
 using System.Xml.Serialization;
 using OutlookGoogleSyncRefresh.Common.MetaData;
 
@@ -6,9 +7,10 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
 {
     [XmlInclude(typeof(Calendar))]
     [XmlInclude(typeof(SyncFrequency))]
-    public class SyncProfile
+    public class SyncProfile : Model
     {
         private CalendarSyncDirectionEnum _calendarSyncDirection;
+        private DateTime _nextSync;
 
         public SyncProfile()
         {
@@ -49,7 +51,18 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
         public int DaysInPast { get; set; }
 
         public int DaysInFuture { get; set; }
+        
+        public LogSettings LogSettings { get; set; }
 
+        public DateTime LastSuccessfulSync { get; set; }
+
+        /// <summary>
+        /// </summary>
+        public DateTime NextSync
+        {
+            get { return _nextSync; }
+            set { SetProperty(ref _nextSync, value); }
+        }
 
         public void SetCalendarTypes()
         {
