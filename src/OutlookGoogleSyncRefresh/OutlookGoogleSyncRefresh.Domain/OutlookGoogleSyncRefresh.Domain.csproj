@@ -60,6 +60,7 @@
     <Compile Include="File\Xml\IXmlSerializer.cs" />
     <Compile Include="File\Xml\XmlSerializer.cs" />
     <Compile Include="Helpers\ExtensionMethods.cs" />
+    <Compile Include="Models\AppSettings.cs" />
     <Compile Include="Models\LogSettings.cs" />
     <Compile Include="Models\Appointment.cs" />
     <Compile Include="Models\AppointmentListWrapper.cs" />
@@ -73,8 +74,9 @@
     <Compile Include="Models\OutlookMailBox.cs" />
     <Compile Include="Models\Enumerations.cs" />
     <Compile Include="Models\Recipient.cs" />
-    <Compile Include="Models\Settings.cs" />
+    <Compile Include="Models\SyncProfile.cs" />
     <Compile Include="Models\SyncFrequency.cs" />
+    <Compile Include="Models\Settings.cs" />
     <Compile Include="Models\SyncSettings.cs" />
     <Compile Include="Models\WeeklySyncFrequency.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

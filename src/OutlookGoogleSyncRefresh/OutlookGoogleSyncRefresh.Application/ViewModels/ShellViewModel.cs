@@ -20,14 +20,18 @@
 #region Imports
 
 using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.ComponentModel.Composition;
 using System.Diagnostics;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Waf.Applications;
+using System.Windows.Documents;
 using System.Windows.Threading;
 using MahApps.Metro.Controls.Dialogs;
 using Microsoft.Office.Interop.Outlook;
@@ -107,8 +111,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             view.Closing += ViewClosing;
             view.Closed += ViewClosed;
             //If no settings
-            if (Settings == null || !Settings.ValidateOutlookSettings()
-                || Settings.GoogleCalendar == null)
+            if (!Settings.ValidateSettings())
             {
                 IsSettingsVisible = true;
                 LastSyncTime = null;
@@ -118,11 +121,12 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             {
                 LastSyncTime = Settings.LastSuccessfulSync;
                 NextSyncTime = null;
-                if (Settings.RememberPeriodicSyncOn && Settings.PeriodicSyncOn)
+                if (Settings.AppSettings.RememberPeriodicSyncOn && Settings.AppSettings.PeriodicSyncOn)
                 {
                     StartPeriodicSync();
                 }
             }
+            Task.Factory.StartNew(TaskExecutor);
         }
 
         #endregion
@@ -226,7 +230,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             get { return _settings; }
             set { _settings = value; }
         }
-        
+
         public DateTime? NextSyncTime
         {
             get { return _nextSyncTime; }
@@ -308,7 +312,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
                 return;
             }
             await StartPeriodicSync();
-            Settings.PeriodicSyncOn = IsPeriodicSyncStarted;
+            Settings.AppSettings.PeriodicSyncOn = IsPeriodicSyncStarted;
             if (IsPeriodicSyncStarted)
             {
                 SyncNowHandler();
@@ -330,9 +334,9 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
                 bool result = await SyncStartService.Start(OnTimerElapsed);
                 if (result)
                 {
-                    if (_settings.SyncSettings.SyncFrequency != null)
+                    if (_settings.SyncFrequency != null)
                     {
-                        NextSyncTime = _settings.SyncSettings.SyncFrequency.GetNextSyncTime(DateTime.Now);
+                        NextSyncTime = _settings.SyncFrequency.GetNextSyncTime(DateTime.Now);
                     }
                     IsPeriodicSyncStarted = true;
                     UpdateStatus(string.Format("Period Sync Started : {0}", DateTime.Now));
@@ -372,8 +376,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
 
         private void ShowNotification(bool showHide, string popupText = "Syncing...")
         {
-
-            if (!Settings.HideSystemTrayTooltip)
+            if (!Settings.AppSettings.HideSystemTrayTooltip)
             {
                 try
                 {
@@ -437,13 +440,29 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             ViewCore.Close();
         }
 
+        ConcurrentQueue<Task> _concurrentQueue = new ConcurrentQueue<Task>();
+
+        void TaskExecutor()
+        {
+            while (true)
+            {
+                if (IsSyncInProgress)
+                    return;
+                Task task;
+                if (_concurrentQueue.TryDequeue(out task))
+                {
+                    task.Start();
+                }
+            }
+        }
+
         void OnTimerElapsed(object sender, ElapsedEventArgs e)
         {
             BeginInvokeOnCurrentDispatcher(() =>
             {
                 if (Settings != null)
                 {
-                    if (Settings.SyncSettings.SyncFrequency.ValidateTimer(DateTime.Now))
+                    if (Settings.SyncFrequency.ValidateTimer(DateTime.Now))
                     {
                         SyncNowHandler();
                     }
@@ -455,7 +474,11 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
         {
             try
             {
-                Task.Factory.StartNew(StartSyncTask);
+                foreach (var syncProfile in Settings.SyncProfiles)
+                {
+                    SyncProfile profile = syncProfile;
+                    _concurrentQueue.Enqueue(new Task(() => StartSyncTask(profile)));
+                }
             }
             catch (AggregateException exception)
             {
@@ -468,7 +491,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             }
         }
 
-        private void StartSyncTask()
+        private void StartSyncTask(SyncProfile syncProfile)
         {
             if (IsSettingsLoading)
             {
@@ -487,7 +510,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             ShowNotification(true);
             UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.SyncStarted, LastSyncTime));
             UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.Line));
-            var result = SyncStartService.SyncNow(Settings, SyncCallback);
+            var result = SyncStartService.SyncNow(syncProfile, SyncCallback);
             OnSyncCompleted(result);
 
         }
@@ -508,7 +531,6 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
 
         private void OnSyncCompleted(string result)
         {
-
             if (string.IsNullOrEmpty(result))
             {
                 UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.SyncSuccess, DateTime.Now));
@@ -521,9 +543,9 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             UpdateStatus(string.Format("Time Elapsed : {0} s", (int)DateTime.Now.Subtract(LastSyncTime.GetValueOrDefault()).TotalSeconds));
             UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.LogSeparator));
             ShowNotification(false);
-            if (Settings.SyncSettings.SyncFrequency != null)
+            if (Settings.SyncFrequency != null)
             {
-                NextSyncTime = Settings.SyncSettings.SyncFrequency.GetNextSyncTime(LastSyncTime.GetValueOrDefault());
+                NextSyncTime = Settings.SyncFrequency.GetNextSyncTime(LastSyncTime.GetValueOrDefault());
             }
             IsSyncInProgress = false;
             CheckForUpdates();
@@ -542,7 +564,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
         {
             BeginInvokeOnCurrentDispatcher(() =>
             {
-                if (Settings.CheckForUpdates)
+                if (Settings.AppSettings.CheckForUpdates)
                 {
                     if (!IsLatestVersionAvailable && _lastCheckDateTime == null &&
                         DateTime.Now.Subtract(_lastCheckDateTime.GetValueOrDefault()).TotalHours > 24)

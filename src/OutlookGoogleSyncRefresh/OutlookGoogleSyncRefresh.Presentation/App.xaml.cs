@@ -115,13 +115,13 @@ namespace OutlookGoogleSyncRefresh
 
             catalog = new AggregateCatalog();
             // Add the WpfApplicationFramework assembly to the catalog
-            catalog.Catalogs.Add(new AssemblyCatalog(typeof (ViewModel).Assembly));
+            catalog.Catalogs.Add(new AssemblyCatalog(typeof(ViewModel).Assembly));
             // Add the Waf.BookLibrary.Library.Presentation assembly to the catalog
             catalog.Catalogs.Add(new AssemblyCatalog(Assembly.GetExecutingAssembly()));
             // Add the Waf.BookLibrary.Library.Applications assembly to the catalog
-            catalog.Catalogs.Add(new AssemblyCatalog(typeof (ShellViewModel).Assembly));
+            catalog.Catalogs.Add(new AssemblyCatalog(typeof(ShellViewModel).Assembly));
             // Add the Common assembly to catalog
-            catalog.Catalogs.Add(new AssemblyCatalog(typeof (ApplicationLogger).Assembly));
+            catalog.Catalogs.Add(new AssemblyCatalog(typeof(ApplicationLogger).Assembly));
 
             //Composition Container
             container = new CompositionContainer(catalog, true);
@@ -157,7 +157,7 @@ namespace OutlookGoogleSyncRefresh
         public bool SignalExternalCommandLineArgs(IList<string> args)
         {
             //Activate Hidden,Background Application
-            Current.Dispatcher.BeginInvoke(((Action) (() => Utilities.BringToForeground(MainWindow))));
+            Current.Dispatcher.BeginInvoke(((Action)(() => Utilities.BringToForeground(MainWindow))));
             return true;
         }
 

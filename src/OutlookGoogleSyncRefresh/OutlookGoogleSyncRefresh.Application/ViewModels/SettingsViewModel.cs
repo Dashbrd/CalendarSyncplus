@@ -54,7 +54,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             ApplicationLogger applicationLogger, IWindowsStartupService windowsStartupService)
             : base(view)
         {
-            _settings = settings;
+            Settings = settings;
             ExchangeWebCalendarService = exchangeWebCalendarService;
             ApplicationLogger = applicationLogger;
             WindowsStartupService = windowsStartupService;
@@ -117,7 +117,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
         private DelegateCommand _saveCommand;
         private Calendar _selectedCalendar;
         private string _selectedOutlookProfileName;
-        private Settings _settings;
+        private SyncProfile _syncProfile;
         private bool _settingsSaved;
         private List<string> _syncFrequencies;
         private string _syncFrequency;
@@ -259,6 +259,17 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
         {
             get { return _settings; }
             set { SetProperty(ref _settings, value); }
+        }
+
+        public SyncProfile SyncProfile
+        {
+            get { return _syncProfile; }
+            set
+            {
+                SaveCurrentSyncProfile();
+                SetProperty(ref _syncProfile, value);
+                LoadSyncProfile();
+            }
         }
 
         public bool IsLoading
@@ -481,16 +492,16 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             try
             {
                 OutlookMailBoxes = await Task<List<OutlookMailBox>>.Factory.StartNew(GetOutlookMailBox);
-                if (Settings.OutlookSettings.OutlookMailBox != null)
+                if (SyncProfile.OutlookSettings.OutlookMailBox != null)
                 {
                     SelectedOutlookMailBox =
                         OutlookMailBoxes.FirstOrDefault(
-                            t => t.EntryId.Equals(Settings.OutlookSettings.OutlookMailBox.EntryId));
-                    if (Settings.OutlookSettings.OutlookCalendar != null && SelectedOutlookMailBox != null)
+                            t => t.EntryId.Equals(SyncProfile.OutlookSettings.OutlookMailBox.EntryId));
+                    if (SyncProfile.OutlookSettings.OutlookCalendar != null && SelectedOutlookMailBox != null)
                     {
                         SelectedOutlookCalendar =
                             SelectedOutlookMailBox.Calendars.FirstOrDefault(
-                                t => t.EntryId.Equals(Settings.OutlookSettings.OutlookCalendar.EntryId));
+                                t => t.EntryId.Equals(SyncProfile.OutlookSettings.OutlookCalendar.EntryId));
                     }
                 }
             }
@@ -533,22 +544,22 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
 
         private void OnSyncFrequencyChanged()
         {
-            if (Settings != null && Settings.SyncSettings.SyncFrequency != null &&
-                SyncFrequency == Settings.SyncSettings.SyncFrequency.Name)
+            if (SyncProfile != null && Settings.SyncFrequency != null &&
+                SyncFrequency == Settings.SyncFrequency.Name)
             {
                 switch (SyncFrequency)
                 {
                     case "Hourly":
                         SyncFrequencyViewModel
-                            = new HourlySyncViewModel(Settings.SyncSettings.SyncFrequency as HourlySyncFrequency);
+                            = new HourlySyncViewModel(Settings.SyncFrequency as HourlySyncFrequency);
                         break;
                     case "Daily":
                         SyncFrequencyViewModel
-                            = new DailySyncViewModel(Settings.SyncSettings.SyncFrequency as DailySyncFrequency);
+                            = new DailySyncViewModel(Settings.SyncFrequency as DailySyncFrequency);
                         break;
                     case "Weekly":
                         SyncFrequencyViewModel
-                            = new WeeklySyncViewModel(Settings.SyncSettings.SyncFrequency as WeeklySyncFrequency);
+                            = new WeeklySyncViewModel(Settings.SyncFrequency as WeeklySyncFrequency);
                         break;
                 }
             }
@@ -576,39 +587,17 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             {
                 if (Settings != null)
                 {
-                    if (Settings.SyncSettings.SyncFrequency != null)
+                    if (Settings.SyncFrequency != null)
                     {
-                        SyncFrequency = Settings.SyncSettings.SyncFrequency.Name;
+                        SyncFrequency = Settings.SyncFrequency.Name;
                     }
-
-                    DaysInPast = Settings.DaysInPast;
-                    DaysInFuture = Settings.DaysInFuture;
-                    AddAttendees = Settings.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Attendees);
-                    if (AddAttendees)
-                    {
-                        AddAttendeesToDescription = Settings.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.AttendeesToDescription);
-                    }
-                    AddDescription = Settings.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Description);
-                    AddReminders = Settings.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Reminders);
-                    AddAttachments = Settings.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Attachments);
+                    MinimizeToSystemTray = Settings.AppSettings.MinimizeToSystemTray;
+                    HideSystemTrayTooltip = Settings.AppSettings.HideSystemTrayTooltip;
+                    CheckForUpdates = Settings.AppSettings.CheckForUpdates;
+                    RunApplicationAtSystemStartup = Settings.AppSettings.RunApplicationAtSystemStartup;
+                    RememberPeriodicSyncOn = Settings.AppSettings.RememberPeriodicSyncOn;
                     LogSyncInfo = Settings.LogSettings.LogSyncInfo;
-                    CreateNewFileForEverySync = CreateNewFileForEverySync;
-                    IsDefaultProfile = Settings.OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.DefaultProfile);
-                    IsDefaultMailBox =
-                        Settings.OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.DefaultCalendar);
-                    IsExchangeWebServices =
-                        Settings.OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.ExchangeWebServices);
-                    SelectedOutlookProfileName = Settings.OutlookSettings.OutlookProfileName;
-                    MinimizeToSystemTray = Settings.MinimizeToSystemTray;
-                    HideSystemTrayTooltip = Settings.HideSystemTrayTooltip;
-                    CheckForUpdates = Settings.CheckForUpdates;
-                    RunApplicationAtSystemStartup = Settings.RunApplicationAtSystemStartup;
-                    RememberPeriodicSyncOn = Settings.RememberPeriodicSyncOn;
-                    SelectedCalendarSyncDirection = Settings.SyncSettings.CalendarSyncDirection;
-                    MasterCalendarServiceType = Settings.SyncSettings.MasterCalendar;
-                    DisableDelete = Settings.SyncSettings.DisableDelete;
-                    ConfirmOnDelete = Settings.SyncSettings.ConfirmOnDelete;
-                    KeepLastModifiedCopy = Settings.SyncSettings.KeepLastModifiedVersion;
+                    SyncProfile = Settings.SyncProfiles.FirstOrDefault();
                 }
                 else
                 {
@@ -625,20 +614,6 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
                     SelectedCalendarSyncDirection = CalendarSyncDirectionEnum.OutlookGoogleOneWay;
                 }
 
-                if (!IsDefaultProfile)
-                {
-                    await GetOutlookProfileListInternal();
-                }
-
-                if (!IsDefaultMailBox)
-                {
-                    await GetOutlookMailBoxesInternal();
-                }
-
-                if (Settings != null && Settings.GoogleCalendar != null)
-                {
-                    await GetGoogleCalendarInternal();
-                }
             }
             catch (AggregateException exception)
             {
@@ -652,36 +627,65 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             IsLoading = false;
         }
 
+        async void LoadSyncProfile()
+        {
+            if (SyncProfile != null)
+            {
+                DaysInPast = SyncProfile.DaysInPast;
+                DaysInFuture = SyncProfile.DaysInFuture;
+                AddAttendees = SyncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Attendees);
+                if (AddAttendees)
+                {
+                    AddAttendeesToDescription = SyncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.AttendeesToDescription);
+                }
+                AddDescription = SyncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Description);
+                AddReminders = SyncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Reminders);
+                AddAttachments = SyncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Attachments);
+                CreateNewFileForEverySync = CreateNewFileForEverySync;
+                IsDefaultProfile = SyncProfile.OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.DefaultProfile);
+                IsDefaultMailBox =
+                    SyncProfile.OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.DefaultCalendar);
+                IsExchangeWebServices =
+                    SyncProfile.OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.ExchangeWebServices);
+                SelectedOutlookProfileName = SyncProfile.OutlookSettings.OutlookProfileName;
+                SelectedCalendarSyncDirection = SyncProfile.SyncSettings.CalendarSyncDirection;
+                MasterCalendarServiceType = SyncProfile.SyncSettings.MasterCalendar;
+                DisableDelete = SyncProfile.SyncSettings.DisableDelete;
+                ConfirmOnDelete = SyncProfile.SyncSettings.ConfirmOnDelete;
+                KeepLastModifiedCopy = SyncProfile.SyncSettings.KeepLastModifiedVersion;
+
+                if (!IsDefaultProfile)
+                {
+                    await GetOutlookProfileListInternal();
+                }
+
+                if (!IsDefaultMailBox)
+                {
+                    await GetOutlookMailBoxesInternal();
+                }
+
+                if (SyncProfile != null && SyncProfile.GoogleCalendar != null)
+                {
+                    await GetGoogleCalendarInternal();
+                }
+            }
+        }
+
         private async void SaveSettings()
         {
             IsLoading = true;
             SettingsSaved = false;
-            Settings.IsFirstSave = false;
-            Settings.GoogleCalendar = SelectedCalendar;
-            Settings.DaysInFuture = DaysInFuture;
-            Settings.DaysInPast = DaysInPast;
-            Settings.SyncSettings.SyncFrequency = SyncFrequencyViewModel.GetFrequency();
-            Settings.UpdateEntryOptions(AddDescription, AddReminders, AddAttendees, AddAttendeesToDescription, AddAttachments);
+            Settings.AppSettings.IsFirstSave = false;
+            Settings.SyncFrequency = SyncFrequencyViewModel.GetFrequency();
             Settings.LogSettings.LogSyncInfo = LogSyncInfo;
             Settings.LogSettings.CreateNewFileForEverySync = CreateNewFileForEverySync;
-            Settings.OutlookSettings.OutlookMailBox = SelectedOutlookMailBox;
-            Settings.OutlookSettings.OutlookCalendar = SelectedOutlookCalendar;
-            Settings.OutlookSettings.OutlookProfileName = SelectedOutlookProfileName;
-            Settings.MinimizeToSystemTray = MinimizeToSystemTray;
-            Settings.HideSystemTrayTooltip = HideSystemTrayTooltip;
-            Settings.CheckForUpdates = CheckForUpdates;
-            Settings.RunApplicationAtSystemStartup = RunApplicationAtSystemStartup;
-            Settings.RememberPeriodicSyncOn = RememberPeriodicSyncOn;
-            Settings.OutlookSettings.UpdateOutlookOptions(IsDefaultProfile, IsDefaultMailBox, IsExchangeWebServices);
-            Settings.ExchangeServerSettings.Username = Username;
-            Settings.ExchangeServerSettings.Password = Password;
-            Settings.ExchangeServerSettings.ExchangeServerUrl = ExchangeServerUrl;
-            Settings.SyncSettings.CalendarSyncDirection = SelectedCalendarSyncDirection;
-            Settings.SyncSettings.MasterCalendar = MasterCalendarServiceType;
-            Settings.SyncSettings.DisableDelete = DisableDelete;
-            Settings.SyncSettings.ConfirmOnDelete = ConfirmOnDelete;
-            Settings.SyncSettings.KeepLastModifiedVersion = KeepLastModifiedCopy;
-            Settings.SetCalendarTypes();
+            Settings.AppSettings.MinimizeToSystemTray = MinimizeToSystemTray;
+            Settings.AppSettings.HideSystemTrayTooltip = HideSystemTrayTooltip;
+            Settings.AppSettings.CheckForUpdates = CheckForUpdates;
+            Settings.AppSettings.RunApplicationAtSystemStartup = RunApplicationAtSystemStartup;
+            Settings.AppSettings.RememberPeriodicSyncOn = RememberPeriodicSyncOn;
+
+            SaveCurrentSyncProfile();
 
             if (RunApplicationAtSystemStartup)
             {
@@ -714,6 +718,33 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             finally
             {
                 IsLoading = false;
+            }
+        }
+
+        private void SaveCurrentSyncProfile()
+        {
+            if (SyncProfile != null)
+            {
+                SyncProfile.GoogleCalendar = SelectedCalendar;
+                SyncProfile.DaysInFuture = DaysInFuture;
+                SyncProfile.DaysInPast = DaysInPast;
+
+                SyncProfile.UpdateEntryOptions(AddDescription, AddReminders, AddAttendees, AddAttendeesToDescription,
+                    AddAttachments);
+                SyncProfile.OutlookSettings.OutlookMailBox = SelectedOutlookMailBox;
+                SyncProfile.OutlookSettings.OutlookCalendar = SelectedOutlookCalendar;
+                SyncProfile.OutlookSettings.OutlookProfileName = SelectedOutlookProfileName;
+                SyncProfile.OutlookSettings.UpdateOutlookOptions(IsDefaultProfile, IsDefaultMailBox,
+                    IsExchangeWebServices);
+                SyncProfile.ExchangeServerSettings.Username = Username;
+                SyncProfile.ExchangeServerSettings.Password = Password;
+                SyncProfile.ExchangeServerSettings.ExchangeServerUrl = ExchangeServerUrl;
+                SyncProfile.SyncSettings.CalendarSyncDirection = SelectedCalendarSyncDirection;
+                SyncProfile.SyncSettings.MasterCalendar = MasterCalendarServiceType;
+                SyncProfile.SyncSettings.DisableDelete = DisableDelete;
+                SyncProfile.SyncSettings.ConfirmOnDelete = ConfirmOnDelete;
+                SyncProfile.SyncSettings.KeepLastModifiedVersion = KeepLastModifiedCopy;
+                SyncProfile.SetCalendarTypes();
             }
         }
 
@@ -750,8 +781,8 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             GoogleCalenders = calendars;
             if (GoogleCalenders.Any())
             {
-                SelectedCalendar = Settings != null && Settings.GoogleCalendar != null
-                    ? GoogleCalenders.FirstOrDefault(t => t.Id.Equals(Settings.GoogleCalendar.Id))
+                SelectedCalendar = SyncProfile != null && SyncProfile.GoogleCalendar != null
+                    ? GoogleCalenders.FirstOrDefault(t => t.Id.Equals(SyncProfile.GoogleCalendar.Id))
                     : GoogleCalenders.First();
             }
         }
@@ -834,6 +865,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
         private OutlookCalendar _selectedExchangeCalendar;
         private DelegateCommand _resetGoogleCalendar;
         private DelegateCommand _resetOutlookCalendarCommand;
+        private Settings _settings;
 
         public void Load()
         {

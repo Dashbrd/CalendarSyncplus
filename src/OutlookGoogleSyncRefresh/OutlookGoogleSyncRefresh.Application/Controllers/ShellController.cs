@@ -84,7 +84,6 @@ namespace OutlookGoogleSyncRefresh.Application.Controllers
 
             PropertyChangedEventManager.RemoveHandler(SyncService, SyncServiceNotificationHandler, "");
 
-            ShellViewModel.Settings.LastSuccessfulSync = ShellViewModel.LastSyncTime.GetValueOrDefault();
             _settingsSerializationService.SerializeSettings(ShellViewModel.Settings);
             _systemTrayNotifierViewModel.Quit();
         }

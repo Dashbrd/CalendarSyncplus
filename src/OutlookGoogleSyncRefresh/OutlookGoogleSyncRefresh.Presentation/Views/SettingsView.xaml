@@ -52,7 +52,7 @@
             <RowDefinition />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <ContentControl>
+        <ContentControl Grid.ColumnSpan="2">
             <ContentControl.Style>
                 <Style TargetType="ContentControl">
                     <Setter Property="ContentTemplate"
@@ -67,7 +67,7 @@
                 </Style>
             </ContentControl.Style>
         </ContentControl>
-        <TabControl Grid.Row="1"
+        <TabControl Grid.Row="1" 
                     IsEnabled="{Binding Path=IsLoading,Converter={StaticResource ResourceKey=InvertBooleanConverter}}">
             <TabItem Header="Calendars">
                 <ScrollViewer VerticalScrollBarVisibility="Auto"

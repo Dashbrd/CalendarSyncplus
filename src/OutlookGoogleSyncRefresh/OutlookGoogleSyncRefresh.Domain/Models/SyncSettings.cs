@@ -18,9 +18,7 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
         public CalendarServiceType DestinationCalendar { get; set; }
 
         public SyncModeEnum SyncMode { get; set; }
-
-        public SyncFrequency SyncFrequency { get; set; }
-
+        
         public bool DisableDelete { get; set; }
 
         public bool ConfirmOnDelete { get; set; }

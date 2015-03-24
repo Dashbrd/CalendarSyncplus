@@ -172,6 +172,9 @@
     <Compile Include="Views\OptionsSettingsView.xaml.cs">
       <DependentUpon>OptionsSettingsView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\ProfilesView.xaml.cs">
+      <DependentUpon>ProfilesView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\SettingsView.xaml.cs">
       <DependentUpon>SettingsView.xaml</DependentUpon>
     </Compile>
@@ -220,6 +223,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\OptionsSettingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ProfilesView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

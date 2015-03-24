@@ -117,7 +117,7 @@ namespace OutlookGoogleSyncRefresh.Application.Controllers
                 case "IsAboutVisible":
                     if (_shellViewModel.IsAboutVisible)
                     {
-                        if (_shellViewModel.Settings.CheckForUpdates)
+                        if (_shellViewModel.Settings.AppSettings.CheckForUpdates)
                         {
                             _aboutViewModel.CheckForUpdatesCommand.Execute(null);
                         }
@@ -141,9 +141,9 @@ namespace OutlookGoogleSyncRefresh.Application.Controllers
                     {
                         _shellViewModel.IsSettingsVisible = false;
                         _shellViewModel.Settings = _settingsViewModel.Settings;
-                        if (_settingsViewModel.Settings.SyncSettings.SyncFrequency != null)
+                        if (_settingsViewModel.Settings.SyncFrequency != null)
                         {
-                            _shellViewModel.NextSyncTime = _shellViewModel.Settings.SyncSettings.SyncFrequency.GetNextSyncTime(DateTime.Now);
+                            _shellViewModel.NextSyncTime = _shellViewModel.Settings.SyncFrequency.GetNextSyncTime(DateTime.Now);
                         }
                     }
                     break;
@@ -163,7 +163,7 @@ namespace OutlookGoogleSyncRefresh.Application.Controllers
         private void ShellViewModelClosing(object sender, CancelEventArgs e)
         {
             // Try to  user has already saved settings or pending operation are left.
-            if (_isApplicationExiting || !_shellViewModel.Settings.MinimizeToSystemTray)
+            if (_isApplicationExiting || !_shellViewModel.Settings.AppSettings.MinimizeToSystemTray)
             {
                 return;
             }

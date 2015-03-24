@@ -32,7 +32,7 @@ using OutlookGoogleSyncRefresh.Application.Utilities;
 using OutlookGoogleSyncRefresh.Common.Log;
 using OutlookGoogleSyncRefresh.Domain.Helpers;
 using OutlookGoogleSyncRefresh.Domain.Models;
-using  Timer =System.Timers.Timer;
+using Timer = System.Timers.Timer;
 #endregion
 
 namespace OutlookGoogleSyncRefresh.Application.Services
@@ -76,7 +76,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services
         public async Task<bool> Start(ElapsedEventHandler timerCallback)
         {
             Settings settings = _settingsProvider.GetSettings();
-            if (settings.GoogleCalendar == null || !settings.ValidateOutlookSettings())
+            if (!settings.ValidateSettings())
             {
                 _messageService.ShowMessageAsync("Please configure Google and Outlook calendar in settings to continue.");
                 return false;
@@ -84,7 +84,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services
             await Task.Delay(1000);
             if (_syncTimer == null)
                 _syncTimer = new Timer(1000);
-           
+
             _syncTimer.Start();
             _syncTimer.Elapsed += timerCallback;
             return true;
@@ -96,18 +96,18 @@ namespace OutlookGoogleSyncRefresh.Application.Services
             _syncTimer.Elapsed -= ElapsedEventHandler;
         }
 
-        public string SyncNow(Settings settings, SyncCallback syncCallback)
+        public string SyncNow(SyncProfile syncProfile, SyncCallback syncCallback)
         {
             try
             {
-                if (settings.GoogleCalendar == null || !settings.ValidateOutlookSettings())
+                if (syncProfile.GoogleCalendar == null || !syncProfile.ValidateOutlookSettings())
                 {
                     _messageService.ShowMessageAsync(
                         "Please configure Google and Outlook calendar in settings to continue.");
                     return "Invalid Settings";
                 }
                 ResetSyncData();
-                bool isSyncComplete = _calendarUpdateService.SyncCalendar(settings, syncCallback);
+                bool isSyncComplete = _calendarUpdateService.SyncCalendar(syncProfile, syncCallback);
                 return isSyncComplete ? null : "Error Occurred";
             }
             catch (AggregateException exception)

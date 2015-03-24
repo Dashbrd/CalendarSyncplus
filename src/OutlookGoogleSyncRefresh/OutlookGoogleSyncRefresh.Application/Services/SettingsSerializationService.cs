@@ -20,6 +20,7 @@
 #region Imports
 
 using System;
+using System.Collections.ObjectModel;
 using System.ComponentModel.Composition;
 using System.IO;
 using System.Threading.Tasks;
@@ -74,7 +75,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services
 
         #region Private Methods
 
-        private void SerializeSettingsBackgroundTask(Settings settings)
+        private void SerializeSettingsBackgroundTask(Settings syncProfile)
         {
             if (!Directory.Exists(ApplicationDataDirectory))
             {
@@ -82,7 +83,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services
             }
 
             var serializer = new XmlSerializer<Settings>();
-            serializer.SerializeToFile(settings, SettingsFilePath);
+            serializer.SerializeToFile(syncProfile, SettingsFilePath);
         }
 
         private Settings DeserializeSettingsBackgroundTask()
@@ -100,9 +101,9 @@ namespace OutlookGoogleSyncRefresh.Application.Services
 
         #region Public Methods
 
-        public async Task<bool> SerializeSettingsAsync(Settings settings)
+        public async Task<bool> SerializeSettingsAsync(Settings syncProfile)
         {
-            await TaskEx.Run(() => SerializeSettingsBackgroundTask(settings));
+            await TaskEx.Run(() => SerializeSettingsBackgroundTask(syncProfile));
             return true;
         }
 
@@ -115,9 +116,9 @@ namespace OutlookGoogleSyncRefresh.Application.Services
             return await TaskEx.Run(() => DeserializeSettingsBackgroundTask());
         }
 
-        public bool SerializeSettings(Settings settings)
+        public bool SerializeSettings(Settings syncProfile)
         {
-            SerializeSettingsBackgroundTask(settings);
+            SerializeSettingsBackgroundTask(syncProfile);
             return true;
         }
 
@@ -128,32 +129,57 @@ namespace OutlookGoogleSyncRefresh.Application.Services
             {
                 return GetDefaultSettings();
             }
-            if (result.SyncSettings.SyncFrequency == null)
+
+            if (result.SyncProfiles == null)
             {
-                result.SyncSettings.SyncFrequency = new HourlySyncFrequency();
+                result.SyncProfiles = new ObservableCollection<SyncProfile>();
             }
-            result.SetCalendarTypes();
+
+            if (result.SyncProfiles.Count == 0)
+            {
+                result.SyncProfiles.Add(GetDefaultSyncProfile());
+            }
+
+            if (result.SyncFrequency == null)
+            {
+                result.SyncFrequency = new HourlySyncFrequency();
+            }
+
+            foreach (var syncProfile in result.SyncProfiles)
+            {
+                syncProfile.SetCalendarTypes();
+            }
+
             return result;
         }
 
         private Settings GetDefaultSettings()
         {
-            var settings = new Settings
+            var settings = new Settings();
+            settings.AppSettings = new AppSettings()
             {
-                DaysInFuture = 7,
-                DaysInPast = 1,
                 IsFirstSave = true,
                 MinimizeToSystemTray = true,
                 CheckForUpdates = true,
                 RememberPeriodicSyncOn = true,
                 RunApplicationAtSystemStartup = true
             };
-            settings.SyncSettings.CalendarSyncDirection = CalendarSyncDirectionEnum.OutlookGoogleOneWay;
-            settings.SyncSettings.SyncFrequency = new HourlySyncFrequency();
-            settings.OutlookSettings.OutlookOptions = OutlookOptionsEnum.DefaultProfile | OutlookOptionsEnum.DefaultCalendar;
-            settings.CalendarEntryOptions = CalendarEntryOptionsEnum.None;
-            settings.SetCalendarTypes();
+            settings.SyncProfiles.Add(GetDefaultSyncProfile());
             return settings;
+        }
+
+        private SyncProfile GetDefaultSyncProfile()
+        {
+            var syncProfile = new SyncProfile
+            {
+                DaysInFuture = 7,
+                DaysInPast = 1,
+            };
+            syncProfile.SyncSettings.CalendarSyncDirection = CalendarSyncDirectionEnum.OutlookGoogleOneWay;
+            syncProfile.OutlookSettings.OutlookOptions = OutlookOptionsEnum.DefaultProfile | OutlookOptionsEnum.DefaultCalendar;
+            syncProfile.CalendarEntryOptions = CalendarEntryOptionsEnum.None;
+            syncProfile.SetCalendarTypes();
+            return syncProfile;
         }
 
         #endregion
