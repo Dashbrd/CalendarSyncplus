@@ -126,7 +126,6 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
                     StartPeriodicSync();
                 }
             }
-            Task.Factory.StartNew(TaskExecutor);
         }
 
         #endregion
@@ -440,21 +439,6 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             ViewCore.Close();
         }
 
-        ConcurrentQueue<Task> _concurrentQueue = new ConcurrentQueue<Task>();
-
-        void TaskExecutor()
-        {
-            while (true)
-            {
-                if (IsSyncInProgress)
-                    return;
-                Task task;
-                if (_concurrentQueue.TryDequeue(out task))
-                {
-                    task.Start();
-                }
-            }
-        }
 
         void OnTimerElapsed(object sender, ElapsedEventArgs e)
         {
@@ -470,14 +454,23 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             });
         }
 
+
+        private TaskFactory _taskFactory = null;
+
         void SyncNowHandler()
         {
             try
             {
+                if (_taskFactory == null)
+                {
+                    var taskScheduler = new LimitedConcurrencyLevelTaskScheduler(1);
+                    _taskFactory = new TaskFactory(taskScheduler);
+                }
+
                 foreach (var syncProfile in Settings.SyncProfiles)
                 {
                     SyncProfile profile = syncProfile;
-                    _concurrentQueue.Enqueue(new Task(() => StartSyncTask(profile)));
+                    _taskFactory.StartNew(() => StartSyncTask(profile));
                 }
             }
             catch (AggregateException exception)
