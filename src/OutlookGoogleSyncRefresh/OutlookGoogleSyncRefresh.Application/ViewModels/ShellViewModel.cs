@@ -114,13 +114,9 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             if (!Settings.ValidateSettings())
             {
                 IsSettingsVisible = true;
-                LastSyncTime = null;
-                NextSyncTime = null;
             }
             else
             {
-                //LastSyncTime = Settings.LastSuccessfulSync;
-                NextSyncTime = null;
                 if (Settings.AppSettings.RememberPeriodicSyncOn && Settings.AppSettings.PeriodicSyncOn)
                 {
                     StartPeriodicSync();
@@ -230,17 +226,6 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             set { _settings = value; }
         }
 
-        public DateTime? NextSyncTime
-        {
-            get { return _nextSyncTime; }
-            set { SetProperty(ref _nextSyncTime, value); }
-        }
-
-        public DateTime? LastSyncTime
-        {
-            get { return _lastSyncTime; }
-            set { SetProperty(ref _lastSyncTime, value); }
-        }
 
         public DelegateCommand DownloadCommand
         {
@@ -450,13 +435,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             {
                 if (Settings != null)
                 {
-                    foreach (var syncProfile in Settings.SyncProfiles)
-                    {
-
-                        SyncNowHandler();
-
-                    }
-
+                    SyncPeriodicHandler();
                 }
             });
         }
@@ -465,6 +444,36 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
         private TaskFactory _taskFactory = null;
 
         void SyncNowHandler()
+        {
+            try
+            {
+                if (_taskFactory == null)
+                {
+                    var taskScheduler = new LimitedConcurrencyLevelTaskScheduler(1);
+                    _taskFactory = new TaskFactory(taskScheduler);
+                }
+
+                foreach (var syncProfile in Settings.SyncProfiles)
+                {
+                    if (syncProfile.IsSyncEnabled)
+                    {
+                        SyncProfile profile = syncProfile;
+                        _taskFactory.StartNew(() => StartSyncTask(profile));
+                    }
+                }
+            }
+            catch (AggregateException exception)
+            {
+                AggregateException flattenException = exception.Flatten();
+                MessageService.ShowMessageAsync(flattenException.Message);
+            }
+            catch (Exception exception)
+            {
+                MessageService.ShowMessageAsync(exception.Message);
+            }
+        }
+
+        void SyncPeriodicHandler()
         {
             try
             {
@@ -509,13 +518,12 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             }
             IsSyncInProgress = true;
             IsSettingsVisible = false;
-            LastSyncTime = DateTime.Now;
+            syncProfile.LastSync = DateTime.Now;
             ShowNotification(true);
-            UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.SyncStarted, LastSyncTime));
+            UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.SyncStarted, syncProfile.LastSync));
             UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.Line));
             var result = SyncStartService.SyncNow(syncProfile, SyncCallback);
-            OnSyncCompleted(result);
-
+            OnSyncCompleted(syncProfile, result);
         }
 
 
@@ -529,7 +537,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             return true;
         }
 
-        private void OnSyncCompleted(string result)
+        private void OnSyncCompleted(SyncProfile syncProfile, string result)
         {
             if (string.IsNullOrEmpty(result))
             {
@@ -540,16 +548,15 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
                 UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.SyncFailed, result));
             }
             UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.Line));
-            UpdateStatus(string.Format("Time Elapsed : {0} s", (int)DateTime.Now.Subtract(LastSyncTime.GetValueOrDefault()).TotalSeconds));
+            UpdateStatus(string.Format("Time Elapsed : {0} s", (int)DateTime.Now.Subtract(syncProfile.LastSync.GetValueOrDefault()).TotalSeconds));
             UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.LogSeparator));
             ShowNotification(false);
-            foreach (var syncProfile in Settings.SyncProfiles)
+
+            if (syncProfile.IsSyncEnabled && syncProfile.SyncSettings.SyncFrequency != null)
             {
-                if (syncProfile.IsSyncEnabled && syncProfile.SyncSettings.SyncFrequency != null)
-                {
-                    syncProfile.NextSync = syncProfile.SyncSettings.SyncFrequency.GetNextSyncTime(syncProfile.LastSync);
-                }
+                syncProfile.NextSync = syncProfile.SyncSettings.SyncFrequency.GetNextSyncTime(syncProfile.LastSync.GetValueOrDefault());
             }
+
             IsSyncInProgress = false;
             CheckForUpdates();
         }

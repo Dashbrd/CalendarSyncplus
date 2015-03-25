@@ -7,27 +7,68 @@
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:viewModels="clr-namespace:OutlookGoogleSyncRefresh.Application.ViewModels;assembly=OutlookGoogleSyncRefresh.Application"
-             xmlns:converters="http://waf.codeplex.com/schemas"
+             xmlns:models="clr-namespace:OutlookGoogleSyncRefresh.Domain.Models;assembly=OutlookGoogleSyncRefresh.Domain"
+             xmlns:views="clr-namespace:OutlookGoogleSyncRefresh.Presentation.Views"
              d:DataContext="{d:DesignInstance viewModels:ShellViewModel}"
              d:DesignHeight="300"
              d:DesignWidth="300"
              mc:Ignorable="d">
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
-        <converters:InvertBooleanConverter x:Key="InvertBooleanConverter"/>
+        <DataTemplate DataType="{x:Type models:SyncProfile}" x:Key="SyncProfileDataTemplate">
+            <Grid Margin="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Rectangle Fill="MediumSeaGreen"
+                           Grid.RowSpan="3"
+                           Grid.ColumnSpan="2" />
+                <TextBlock Text="Profile Name :"
+                           FontWeight="600"
+                           VerticalAlignment="Center"
+                           Margin="2" />
+                <TextBlock Text="{Binding Name}"
+                           Grid.Column="1"
+                           Margin="2" />
+
+                <TextBlock Grid.Row="1"
+                           Margin="2"
+                           FontWeight="600"
+                           Text="Last Sync : " />
+                <TextBlock Grid.Row="1"
+                           Grid.Column="1"
+                           Margin="2"
+                           Text="{Binding LastSync,
+                                  UpdateSourceTrigger=PropertyChanged,
+                                  StringFormat='{}{0:F}'}" />
+                <TextBlock Grid.Row="2"
+                           Margin="2"
+                           FontWeight="600"
+                           Text="Next Scheduled Sync : "
+                           Visibility="{Binding DataContext.IsPeriodicSyncStarted,RelativeSource={RelativeSource AncestorType={x:Type views:HomeView}},Converter={StaticResource BooleanToVisibilityConverter},UpdateSourceTrigger=PropertyChanged}" />
+                <TextBlock Grid.Row="2"
+                           Grid.Column="1"
+                           Margin="2"
+                           Text="{Binding NextSync,
+                                  UpdateSourceTrigger=PropertyChanged,
+                                  StringFormat='{}{0:F}'}"
+                           Visibility="{Binding DataContext.IsPeriodicSyncStarted,RelativeSource={RelativeSource AncestorType={x:Type views:HomeView}},Converter={StaticResource BooleanToVisibilityConverter},UpdateSourceTrigger=PropertyChanged}" />
+            </Grid>
+        </DataTemplate>
     </UserControl.Resources>
     <Grid Margin="10,0,10,10">
         <Grid.RowDefinitions>
             <RowDefinition Height="5" />
-            <RowDefinition Height="30" />
-            <RowDefinition Height="30" />
+            <RowDefinition Height="Auto" />
             <RowDefinition />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition />
-        </Grid.ColumnDefinitions>
         <!--  Sync Status  -->
         <controls:MetroProgressBar Grid.Row="0"
                                    Grid.ColumnSpan="2"
@@ -36,38 +77,14 @@
                                    Visibility="{Binding IsSyncInProgress,
                                                         Converter={StaticResource BooleanToVisibilityConverter},
                                                         UpdateSourceTrigger=PropertyChanged}" />
-        <!--  Last Sync Status  -->
-        <TextBlock Grid.Row="1"
-                   Grid.Column="0"
-                   Margin="5"
-                   FontWeight="600"
-                   Text="Last Successful Sync : " />
-        <TextBlock Grid.Row="1"
-                   Grid.Column="1"
-                   Margin="5"
-                   Text="{Binding LastSyncTime,
-                                  UpdateSourceTrigger=PropertyChanged,
-                                  StringFormat='{}{0:F}'}" />
-        <TextBlock Grid.Row="2"
-                   Grid.Column="0"
-                   Margin="5"
-                   FontWeight="600"
-                   Text="Next Scheduled Sync : "
-                   Visibility="{Binding IsPeriodicSyncStarted,
-                                        Converter={StaticResource BooleanToVisibilityConverter},
-                                        UpdateSourceTrigger=PropertyChanged}" />
-        <!--  Next Sync  -->
-        <TextBlock Grid.Row="2"
-                   Grid.Column="1"
-                   Margin="5"
-                   Text="{Binding NextSyncTime,
-                                  UpdateSourceTrigger=PropertyChanged,
-                                  StringFormat='{}{0:F}'}"
-                   Visibility="{Binding IsPeriodicSyncStarted,
-                                        Converter={StaticResource BooleanToVisibilityConverter},
-                                        UpdateSourceTrigger=PropertyChanged}" />
-
-        <GroupBox Grid.Row="3"
+        <!--  Sync Schedule  -->
+        <Expander Grid.Row="1"
+                  Header="Schedule"
+                  IsExpanded="True"
+                  MaxHeight="200">
+            <ListView ItemsSource="{Binding Settings.SyncProfiles}" ItemTemplate="{StaticResource SyncProfileDataTemplate}" />
+        </Expander>
+        <GroupBox Grid.Row="2"
                   Grid.ColumnSpan="2"
                   Header="Log">
             <TextBox IsReadOnly="True"
@@ -83,17 +100,22 @@
             </TextBox>
         </GroupBox>
 
-        <StackPanel Grid.Row="4"
+        <StackPanel Grid.Row="3"
                     Grid.ColumnSpan="2"
                     HorizontalAlignment="Left"
                     Orientation="Horizontal">
-            <Button Margin="5" Command="{Binding StartSyncCommand}">
+            <Button Margin="5"
+                    Command="{Binding StartSyncCommand}">
                 <Button.Style>
-                    <Style BasedOn="{StaticResource {x:Type Button}}" TargetType="Button">
-                        <Setter Property="Content" Value="Start Periodic Sync" />
+                    <Style BasedOn="{StaticResource {x:Type Button}}"
+                           TargetType="Button">
+                        <Setter Property="Content"
+                                Value="Start Periodic Sync" />
                         <Style.Triggers>
-                            <DataTrigger Binding="{Binding IsPeriodicSyncStarted, UpdateSourceTrigger=PropertyChanged}" Value="True">
-                                <Setter Property="Content" Value="Stop Periodic Sync" />
+                            <DataTrigger Binding="{Binding IsPeriodicSyncStarted, UpdateSourceTrigger=PropertyChanged}"
+                                         Value="True">
+                                <Setter Property="Content"
+                                        Value="Stop Periodic Sync" />
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>

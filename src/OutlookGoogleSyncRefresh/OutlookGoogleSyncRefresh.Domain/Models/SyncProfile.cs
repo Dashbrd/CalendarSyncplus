@@ -9,10 +9,10 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
     [XmlInclude(typeof(SyncFrequency))]
     public class SyncProfile : Model
     {
-        private DateTime _nextSync;
+        private DateTime? _nextSync;
         private bool _isDefault;
         private string _name;
-        private DateTime _lastSync;
+        private DateTime? _lastSync;
 
         public SyncProfile()
         {
@@ -64,7 +64,7 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
 
         public LogSettings LogSettings { get; set; }
 
-        public DateTime LastSync
+        public DateTime? LastSync
         {
             get { return _lastSync; }
             set { SetProperty(ref _lastSync, value); }
@@ -72,7 +72,7 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
 
         /// <summary>
         /// </summary>
-        public DateTime NextSync
+        public DateTime? NextSync
         {
             get { return _nextSync; }
             set { SetProperty(ref _nextSync, value); }
