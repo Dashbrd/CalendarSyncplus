@@ -31,6 +31,7 @@ using OutlookGoogleSyncRefresh.Application.Services.ExchangeWeb;
 using OutlookGoogleSyncRefresh.Application.Services.Google;
 using OutlookGoogleSyncRefresh.Application.Services.Outlook;
 using OutlookGoogleSyncRefresh.Application.Views;
+using OutlookGoogleSyncRefresh.Common;
 using OutlookGoogleSyncRefresh.Common.Log;
 using OutlookGoogleSyncRefresh.Common.MetaData;
 using OutlookGoogleSyncRefresh.Domain.Helpers;
@@ -190,6 +191,26 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             {
                 return _getGoogleCalendarCommand ?? (_getGoogleCalendarCommand = new DelegateCommand(GetGoogleCalendar));
             }
+        }
+
+        public DelegateCommand CreateProfileCommand
+        {
+            get { return _createProfileCommand ?? (_createProfileCommand = new DelegateCommand(CreateProfile)); }
+        }
+
+        public DelegateCommand DeleteProfileCommand
+        {
+            get { return _deleteProfileCommand ?? (_deleteProfileCommand = new DelegateCommand(DeleteProfile)); }
+        }
+
+        public DelegateCommand MoveUpCommand
+        {
+            get { return _moveUpCommand ?? (_moveUpCommand = new DelegateCommand(MoveProfileUp)); }
+        }
+
+        public DelegateCommand MoveDownCommand
+        {
+            get { return _moveDownCommand ?? (_moveDownCommand = new DelegateCommand(MoveProfileDown)); }
         }
 
         public DelegateCommand SaveCommand
@@ -542,6 +563,71 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             OutlookProfileList = await OutlookCalendarService.GetOutLookProfieListAsync();
         }
 
+        private async void CreateProfile()
+        {
+            var result = await MessageService.ShowInput("Please enter profile name.");
+
+            if (!string.IsNullOrEmpty(result))
+            {
+                if (Settings.SyncProfiles.Any(t => t.Name.Equals(result)))
+                {
+                    MessageService.ShowMessageAsync(string.Format("A Profile with name '{0}' already exists. Please try again.", result));
+                    return;
+                }
+
+                if (Settings.SyncProfiles.Count > 4)
+                {
+                    MessageService.ShowMessageAsync("You have reached the maximum number of profiles.");
+                    return;
+                }
+                var syncProfile = SyncProfile.GetDefaultSyncProfile();
+                syncProfile.Name = result;
+                syncProfile.IsDefault = false;
+
+                Settings.SyncProfiles.Add(syncProfile);
+            }
+        }
+
+        private async void DeleteProfile(object parameter)
+        {
+            var profile = parameter as SyncProfile;
+            if (profile != null)
+            {
+                var task = await MessageService.ShowConfirmMessage("Are you sure you want to delete the profile?");
+                if (task == MessageDialogResult.Affirmative)
+                {
+                    Settings.SyncProfiles.Remove(profile);
+                }
+            }
+        }
+
+        private void MoveProfileUp(object parameter)
+        {
+            var profile = parameter as SyncProfile;
+            if (profile != null)
+            {
+                var index = Settings.SyncProfiles.IndexOf(profile);
+                if (index > 0)
+                {
+                    Settings.SyncProfiles.Move(index, index - 1);
+                }
+            }
+
+        }
+        private void MoveProfileDown(object parameter)
+        {
+            var profile = parameter as SyncProfile;
+            if (profile != null)
+            {
+                var index = Settings.SyncProfiles.IndexOf(profile);
+                if (index < Settings.SyncProfiles.Count - 1)
+                {
+                    Settings.SyncProfiles.Move(index, index + 1);
+                }
+            }
+        }
+
+
         #endregion
 
         #region Private Methods
@@ -629,6 +715,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
 
         async void LoadSyncProfile()
         {
+            IsLoading = true;
             if (SyncProfile != null)
             {
                 DaysInPast = SyncProfile.DaysInPast;
@@ -670,6 +757,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
                     await GetGoogleCalendarInternal();
                 }
             }
+            IsLoading = false;
         }
 
         private async void SaveSettings()
@@ -743,6 +831,10 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
                 SyncProfile.SyncSettings.ConfirmOnDelete = ConfirmOnDelete;
                 SyncProfile.SyncSettings.KeepLastModifiedVersion = KeepLastModifiedCopy;
                 SyncProfile.SetCalendarTypes();
+
+                SelectedOutlookProfileName = null;
+                SelectedOutlookMailBox = null;
+                SelectedOutlookCalendar = null;
             }
         }
 
@@ -864,6 +956,10 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
         private DelegateCommand _resetGoogleCalendar;
         private DelegateCommand _resetOutlookCalendarCommand;
         private Settings _settings;
+        private DelegateCommand _deleteProfileCommand;
+        private DelegateCommand _createProfileCommand;
+        private DelegateCommand _moveUpCommand;
+        private DelegateCommand _moveDownCommand;
 
         public void Load()
         {
@@ -872,5 +968,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             LoadSettingsAndGetCalenders();
             _isloaded = true;
         }
+
+
     }
 }

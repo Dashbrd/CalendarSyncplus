@@ -127,7 +127,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services
             var result = DeserializeSettingsBackgroundTask();
             if (result == null)
             {
-                return GetDefaultSettings();
+                return Settings.GetDefaultSettings();
             }
 
             if (result.SyncProfiles == null)
@@ -137,9 +137,9 @@ namespace OutlookGoogleSyncRefresh.Application.Services
 
             if (result.SyncProfiles.Count == 0)
             {
-                result.SyncProfiles.Add(GetDefaultSyncProfile());
+                result.SyncProfiles.Add(SyncProfile.GetDefaultSyncProfile());
             }
-            
+
             foreach (var syncProfile in result.SyncProfiles)
             {
                 syncProfile.SetCalendarTypes();
@@ -150,35 +150,6 @@ namespace OutlookGoogleSyncRefresh.Application.Services
             }
 
             return result;
-        }
-
-        private Settings GetDefaultSettings()
-        {
-            var settings = new Settings();
-            settings.AppSettings = new AppSettings()
-            {
-                IsFirstSave = true,
-                MinimizeToSystemTray = true,
-                CheckForUpdates = true,
-                RememberPeriodicSyncOn = true,
-                RunApplicationAtSystemStartup = true
-            };
-            settings.SyncProfiles.Add(GetDefaultSyncProfile());
-            return settings;
-        }
-
-        private SyncProfile GetDefaultSyncProfile()
-        {
-            var syncProfile = new SyncProfile
-            {
-                DaysInFuture = 7,
-                DaysInPast = 1,
-            };
-            syncProfile.SyncSettings.CalendarSyncDirection = CalendarSyncDirectionEnum.OutlookGoogleOneWay;
-            syncProfile.OutlookSettings.OutlookOptions = OutlookOptionsEnum.DefaultProfile | OutlookOptionsEnum.DefaultCalendar;
-            syncProfile.CalendarEntryOptions = CalendarEntryOptionsEnum.None;
-            syncProfile.SetCalendarTypes();
-            return syncProfile;
         }
 
         #endregion

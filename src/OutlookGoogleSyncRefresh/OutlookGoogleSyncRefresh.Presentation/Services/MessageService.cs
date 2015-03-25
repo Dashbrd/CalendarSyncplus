@@ -17,6 +17,7 @@
 
 #endregion
 
+using System;
 using System.ComponentModel.Composition;
 using System.Threading.Tasks;
 using System.Waf.Applications;
@@ -27,7 +28,7 @@ using OutlookGoogleSyncRefresh.Presentation.Views;
 
 namespace OutlookGoogleSyncRefresh.Presentation.Services
 {
-    [Export(typeof (IMessageService))]
+    [Export(typeof(IMessageService))]
     public class MessageService : IMessageService
     {
         [ImportingConstructor]
@@ -87,7 +88,7 @@ namespace OutlookGoogleSyncRefresh.Presentation.Services
                 AnimateHide = true,
                 AnimateShow = true,
                 ColorScheme = MetroDialogColorScheme.Accented,
-                
+
             };
 
             DispatcherHelper.CheckBeginInvokeOnUI(
@@ -109,9 +110,13 @@ namespace OutlookGoogleSyncRefresh.Presentation.Services
                 AnimateShow = true,
                 ColorScheme = MetroDialogColorScheme.Accented
             };
-            MessageDialogResult result =
-                await View.ShowMessageAsync(title, message, MessageDialogStyle.AffirmativeAndNegative, metroDialogSettings);
-            return result;
+
+            return await InvokeOnCurrentDispatcher(async () =>
+            {
+                var taskResult = await View.ShowMessageAsync(title, message, MessageDialogStyle.AffirmativeAndNegative,
+                            metroDialogSettings);
+                return taskResult;
+            });
         }
 
         public Task<MessageDialogResult> ShowConfirmMessage(string message)
@@ -119,6 +124,77 @@ namespace OutlookGoogleSyncRefresh.Presentation.Services
             return ShowConfirmMessage(message, ApplicationInfo.ProductName);
         }
 
+
+        public Task<string> ShowInput(string message)
+        {
+            return ShowInput(message, ApplicationInfo.ProductName);
+        }
+
+
+        public async Task<string> ShowInput(string message, string title)
+        {
+            var metroDialogSettings = new MetroDialogSettings
+            {
+                AffirmativeButtonText = "OK",
+                NegativeButtonText = "CANCEL",
+                AnimateHide = true,
+                AnimateShow = true,
+                ColorScheme = MetroDialogColorScheme.Accented
+            };
+
+            return await InvokeOnCurrentDispatcher(async () =>
+            {
+                string result = await View.ShowInputAsync(title, message, metroDialogSettings);
+                return result;
+            });
+
+        }
+
+        public void ShowProgressAsync(string message, string title)
+        {
+            var metroDialogSettings = new MetroDialogSettings
+            {
+                AffirmativeButtonText = "OK",
+                AnimateHide = true,
+                AnimateShow = true,
+                ColorScheme = MetroDialogColorScheme.Accented
+            };
+
+            DispatcherHelper.CheckBeginInvokeOnUI(
+                () => View.ShowProgressAsync(title, message, false, metroDialogSettings));
+        }
+
+        public void ShowProgressAsync(string message)
+        {
+            ShowProgress(message, ApplicationInfo.ProductName);
+        }
+
+        public async Task<ProgressDialogController> ShowProgress(string message, string title)
+        {
+            var metroDialogSettings = new MetroDialogSettings
+            {
+                AffirmativeButtonText = "OK",
+                AnimateHide = true,
+                AnimateShow = true,
+                ColorScheme = MetroDialogColorScheme.Accented
+            };
+            return await InvokeOnCurrentDispatcher(async () =>
+            {
+                var controller = await View.ShowProgressAsync(title, message, false, metroDialogSettings);
+                return controller;
+            });
+        }
+
+        public Task<ProgressDialogController> ShowProgress(string message)
+        {
+            return ShowProgress(message, ApplicationInfo.ProductName);
+        }
+
+
+        private T InvokeOnCurrentDispatcher<T>(Func<T> action)
+        {
+            return DispatcherHelper.CheckInvokeOnUI(action);
+        }
         #endregion
     }
 }

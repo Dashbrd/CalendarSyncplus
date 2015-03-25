@@ -9,8 +9,10 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
     [XmlInclude(typeof(SyncFrequency))]
     public class SyncProfile : Model
     {
-        private CalendarSyncDirectionEnum _calendarSyncDirection;
         private DateTime _nextSync;
+        private bool _isDefault;
+        private string _name;
+        private DateTime _lastSync;
 
         public SyncProfile()
         {
@@ -18,21 +20,29 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
             SyncSettings = new SyncSettings();
             ExchangeServerSettings = new ExchangeServerSettings();
             OutlookSettings = new OutlookSettings();
-            SettingsVersion = new Version(1, 2);
             IsSyncEnabled = true;
+            IsDefault = true;
         }
 
-        public string Name { get; set; }
+        public string Id { get; set; }
+
+        public string Name
+        {
+            get { return _name; }
+            set { SetProperty(ref _name, value); }
+        }
 
         public bool IsSyncEnabled { get; set; }
 
         public bool IsValid { get; set; }
 
-        public bool IsDefault { get; set; }
+        public bool IsDefault
+        {
+            get { return _isDefault; }
+            set { SetProperty(ref _isDefault, value); }
+        }
 
         public int Order { get; set; }
-
-        public Version SettingsVersion { get; set; }
 
         public SyncSettings SyncSettings { get; set; }
 
@@ -51,10 +61,14 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
         public int DaysInPast { get; set; }
 
         public int DaysInFuture { get; set; }
-        
+
         public LogSettings LogSettings { get; set; }
 
-        public DateTime LastSuccessfulSync { get; set; }
+        public DateTime LastSync
+        {
+            get { return _lastSync; }
+            set { SetProperty(ref _lastSync, value); }
+        }
 
         /// <summary>
         /// </summary>
@@ -102,6 +116,21 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
             {
                 SyncSettings.SyncMode = SyncModeEnum.OneWay;
             }
+        }
+
+        public static SyncProfile GetDefaultSyncProfile()
+        {
+            var syncProfile = new SyncProfile
+            {
+                DaysInFuture = 7,
+                DaysInPast = 1,
+            };
+            syncProfile.SyncSettings.CalendarSyncDirection = CalendarSyncDirectionEnum.OutlookGoogleOneWay;
+            syncProfile.SyncSettings.SyncFrequency = new HourlySyncFrequency();
+            syncProfile.OutlookSettings.OutlookOptions = OutlookOptionsEnum.DefaultProfile | OutlookOptionsEnum.DefaultCalendar;
+            syncProfile.CalendarEntryOptions = CalendarEntryOptionsEnum.None;
+            syncProfile.SetCalendarTypes();
+            return syncProfile;
         }
     }
 }

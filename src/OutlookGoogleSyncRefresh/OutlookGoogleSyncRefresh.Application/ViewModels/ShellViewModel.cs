@@ -338,9 +338,9 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
                         if (syncProfile.IsSyncEnabled && syncProfile.SyncSettings.SyncFrequency != null)
                         {
                             syncProfile.NextSync = syncProfile.SyncSettings.SyncFrequency.GetNextSyncTime(DateTime.Now);
-                        }   
+                        }
                     }
-                    
+
                     IsPeriodicSyncStarted = true;
                     UpdateStatus(string.Format("Period Sync Started : {0}", DateTime.Now));
                     UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.LogSeparator));
@@ -452,11 +452,11 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
                 {
                     foreach (var syncProfile in Settings.SyncProfiles)
                     {
-                        
-                            SyncNowHandler();
-                            
+
+                        SyncNowHandler();
+
                     }
-                    
+
                 }
             });
         }
@@ -521,15 +521,12 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
 
         private async Task<bool> SyncCallback(SyncEventArgs e)
         {
-            return await InvokeOnCurrentDispatcher(async () =>
+            var task = await MessageService.ShowConfirmMessage(e.Message);
+            if (task != MessageDialogResult.Affirmative)
             {
-                var task = await MessageService.ShowConfirmMessage(e.Message);
-                if (task != MessageDialogResult.Affirmative)
-                {
-                    return false;
-                }
-                return true;
-            });
+                return false;
+            }
+            return true;
         }
 
         private void OnSyncCompleted(string result)
@@ -550,7 +547,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             {
                 if (syncProfile.IsSyncEnabled && syncProfile.SyncSettings.SyncFrequency != null)
                 {
-                    syncProfile.NextSync = syncProfile.SyncSettings.SyncFrequency.GetNextSyncTime(syncProfile.LastSuccessfulSync);
+                    syncProfile.NextSync = syncProfile.SyncSettings.SyncFrequency.GetNextSyncTime(syncProfile.LastSync);
                 }
             }
             IsSyncInProgress = false;
