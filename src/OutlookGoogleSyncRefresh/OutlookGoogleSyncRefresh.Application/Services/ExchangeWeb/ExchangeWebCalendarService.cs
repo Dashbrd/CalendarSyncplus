@@ -202,32 +202,67 @@ namespace OutlookGoogleSyncRefresh.Application.Services.ExchangeWeb
             get { return "Exchange Server"; }
         }
 
-        public Task<bool> AddCalendarEvent(AppAppointment calendarAppointment, bool addDescription, bool addReminder, bool addAttendees, IDictionary<string, object> calendarSpecificData)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> DeleteCalendarEvent(AppAppointment calendarAppointment, IDictionary<string, object> calendarSpecificData)
-        {
-            throw new NotImplementedException();
-        }
-
         public Task<bool> DeleteCalendarEvent(List<AppAppointment> calendarAppointments, IDictionary<string, object> calendarSpecificData)
         {
             throw new NotImplementedException();
         }
 
-        public Task<List<AppAppointment>> GetCalendarEventsInRangeAsync(int daysInPast, int daysInFuture, IDictionary<string, object> calendarSpecificData)
+        public async Task<CalendarAppointments> GetCalendarEventsInRangeAsync(int daysInPast, int daysInFuture, IDictionary<string, object> calendarSpecificData)
         {
+            //CheckCalendarSpecificData(calendarSpecificData);
+
+
+            //ExchangeService service = GetExchangeService(ExchangeVersion.Exchange2010_SP2);
+            //DateTime startDate = DateTime.Now.AddDays(-daysInPast);
+            //DateTime endDate = DateTime.Now.AddDays(+(daysInFuture + 1));
+            //var calendarview = new CalendarView(startDate, endDate);
+
+            //// Get Default Calendar
+            //var outlookAppointments = new List<AppAppointment>();
+            //FindItemsResults<Appointment> exchangeAppointments = await service.FindAppointments(outlookCalendar.EntryId, calendarview);
+
+
+
+            //service.LoadPropertiesForItems(
+            //    from Item item in exchangeAppointments select item,
+            //    new PropertySet(BasePropertySet.FirstClassProperties) { RequestedBodyType = BodyType.Text });
+
+            //if (exchangeAppointments != null)
+            //{
+            //    foreach (Appointment exchangeAppointment in exchangeAppointments)
+            //    {
+            //        var appointment = new AppAppointment(exchangeAppointment.Body, exchangeAppointment.Location,
+            //            exchangeAppointment.Subject, exchangeAppointment.Start, exchangeAppointment.Start)
+            //        {
+            //            AppointmentId = exchangeAppointment.Id.UniqueId,
+            //            AllDayEvent = exchangeAppointment.IsAllDayEvent,
+            //            OptionalAttendees = GetAttendees(exchangeAppointment.OptionalAttendees),
+            //            ReminderMinutesBeforeStart = exchangeAppointment.ReminderMinutesBeforeStart,
+            //            Organizer = new Recipient() { Name = exchangeAppointment.Organizer.Name, Email = exchangeAppointment.Organizer.Address },
+            //            ReminderSet = exchangeAppointment.IsReminderSet,
+            //            RequiredAttendees = GetAttendees(exchangeAppointment.RequiredAttendees),
+            //        };
+            //        outlookAppointments.Add(appointment);
+            //    }
+            //}
+            //return outlookAppointments;
+
             throw new NotImplementedException();
+
         }
 
-        public Task<bool> AddCalendarEvent(List<AppAppointment> calenderAppointments, bool addDescription, bool addReminder, bool addAttendees, IDictionary<string, object> calendarSpecificData)
+        public Task<bool> AddCalendarEvent(List<AppAppointment> calendarAppointments, bool addDescription, bool addReminder, bool addAttendees,
+            bool attendeesToDescroption, IDictionary<string, object> calendarSpecificData)
         {
             throw new NotImplementedException();
         }
 
         public void CheckCalendarSpecificData(IDictionary<string, object> calendarSpecificData)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> ResetCalendar(IDictionary<string, object> calendarSpecificData)
         {
             throw new NotImplementedException();
         }
