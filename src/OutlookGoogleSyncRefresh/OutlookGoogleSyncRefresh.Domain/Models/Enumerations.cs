@@ -44,4 +44,14 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
         OutOfOffice,
         Tentative
     }
+
+    public enum FrequencyTypeEnum
+    {
+        None,
+        Daily,
+        Weekday,
+        Weekly,
+        Monthly,
+        Yearly
+    }
 }

@@ -37,6 +37,7 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
         private List<Recipient> _recipients;
         private DateTime? _lastModified;
         private DateTime? _created;
+        private Frequency _frequency;
 
         public Appointment(string description, string location, string subject, DateTime? endTime, DateTime? startTime,
             string appointmentId)

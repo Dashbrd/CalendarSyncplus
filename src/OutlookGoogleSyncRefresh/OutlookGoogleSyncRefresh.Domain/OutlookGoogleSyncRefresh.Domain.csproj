@@ -61,6 +61,7 @@
     <Compile Include="File\Xml\XmlSerializer.cs" />
     <Compile Include="Helpers\ExtensionMethods.cs" />
     <Compile Include="Models\AppSettings.cs" />
+    <Compile Include="Models\Frequency.cs" />
     <Compile Include="Models\LogSettings.cs" />
     <Compile Include="Models\Appointment.cs" />
     <Compile Include="Models\AppointmentListWrapper.cs" />

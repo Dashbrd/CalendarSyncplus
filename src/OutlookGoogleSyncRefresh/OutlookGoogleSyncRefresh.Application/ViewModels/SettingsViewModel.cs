@@ -250,6 +250,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
                 {
                     SyncProfileList.Remove(profile);
                     PropertyChangedEventManager.RemoveHandler(profile, ProfilePropertyChangedHandler, "IsLoading");
+                    SelectedProfile = SyncProfileList.FirstOrDefault();
                 }
             }
         }

@@ -230,10 +230,11 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Google
                     googleEvent.Start.DateTime, googleEvent.Id);
             }
 
-            if (googleEvent.RecurringEventId != null && !string.IsNullOrEmpty(googleEvent.RecurringEventId))
+            if (googleEvent.Recurrence != null && googleEvent.Recurrence.Count > 0)
             {
                 appointment.IsRecurring = true;
             }
+
             appointment.CalendarId = CalendarId;
             if (googleEvent.ExtendedProperties != null && googleEvent.ExtendedProperties.Private != null)
             {

@@ -171,6 +171,7 @@
     <Compile Include="Utilities\AppointmentHelper.cs" />
     <Compile Include="Utilities\Constants.cs" />
     <Compile Include="Utilities\Delegates.cs" />
+    <Compile Include="Utilities\FrequencyHelper.cs" />
     <Compile Include="Utilities\StatusHelper.cs" />
     <Compile Include="Utilities\SyncEventArgs.cs" />
     <Compile Include="ViewModels\AboutViewModel.cs" />
