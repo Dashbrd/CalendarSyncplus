@@ -186,7 +186,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Google
             foreach (Recipient recipient in recipeintList)
             {
                 //Ignore recipients with invalid Email
-                if (!IsValidEmailAddress(recipient.Email))
+                if (!recipient.Email.IsValidEmailAddress())
                 {
                     continue;
                 }
@@ -200,15 +200,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Google
             }
 
         }
-
-        private bool IsValidEmailAddress(string email)
-        {
-            var emailRegex = @"^[\w!#$%&'*+\-/=?\^_`{|}~]+(\.[\w!#$%&'*+\-/=?\^_`{|}~]+)*" + "@" +
-                             @"((([\-\w]+\.)+[a-zA-Z]{2,4})|(([0-9]{1,3}\.){3}[0-9]{1,3}))$";
-
-            return Regex.IsMatch(email, emailRegex);
-        }
-
+        
         private CalendarService GetCalendarService()
         {
             return AccountAuthenticationService.AuthenticateCalenderOauth();
@@ -254,12 +246,15 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Google
             appointment.Created = googleEvent.Created;
             appointment.LastModified = googleEvent.Updated;
 
-            //Add Organizer
-            appointment.Organizer = new Recipient()
+            if (googleEvent.Organizer != null)
             {
-                Name = googleEvent.Organizer.DisplayName,
-                Email = googleEvent.Organizer.Email
-            };
+                //Add Organizer
+                appointment.Organizer = new Recipient()
+                {
+                    Name = googleEvent.Organizer.DisplayName,
+                    Email = googleEvent.Organizer.Email
+                };
+            }
 
             //Add Required Attendee
             GetAttendees(googleEvent, appointment.RequiredAttendees, false);
@@ -275,8 +270,10 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Google
         {
             if (googleEvent != null && googleEvent.Attendees != null)
             {
-                foreach (EventAttendee eventAttendee in
-                        googleEvent.Attendees.Where(attendee => attendee.Optional.GetValueOrDefault() == isOptional))
+                var attendees =
+                    googleEvent.Attendees.Where(attendee => attendee.Optional.GetValueOrDefault() == isOptional);
+                 
+                foreach (EventAttendee eventAttendee in attendees)
                 {
                     recipients.Add(new Recipient() { Name = eventAttendee.DisplayName, Email = eventAttendee.Email });
                 }
