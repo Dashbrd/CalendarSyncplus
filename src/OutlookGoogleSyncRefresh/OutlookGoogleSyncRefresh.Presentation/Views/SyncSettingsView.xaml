@@ -10,7 +10,7 @@
              mc:Ignorable="d"
              d:DesignHeight="300"
              d:DesignWidth="300"
-             d:DataContext="{d:DesignInstance viewModels:SettingsViewModel}">
+             d:DataContext="{d:DesignInstance viewModels:ProfileViewModel}">
     <UserControl.Resources>
         <DataTemplate DataType="{x:Type viewModels:HourlySyncViewModel}">
             <Grid>

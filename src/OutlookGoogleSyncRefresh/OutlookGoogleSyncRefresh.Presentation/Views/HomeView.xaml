@@ -16,7 +16,7 @@
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
         <DataTemplate DataType="{x:Type models:SyncProfile}" x:Key="SyncProfileDataTemplate">
-            <Grid Margin="2">
+            <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
@@ -28,7 +28,8 @@
                 </Grid.ColumnDefinitions>
                 <Rectangle Fill="MediumSeaGreen"
                            Grid.RowSpan="3"
-                           Grid.ColumnSpan="2" />
+                           Grid.ColumnSpan="2"
+                           Margin="2" />
                 <TextBlock Text="Profile Name :"
                            FontWeight="600"
                            VerticalAlignment="Center"
@@ -82,7 +83,7 @@
                   Header="Schedule"
                   IsExpanded="True"
                   MaxHeight="200">
-            <ListView ItemsSource="{Binding Settings.SyncProfiles}" ItemTemplate="{StaticResource SyncProfileDataTemplate}" />
+            <ListView ItemsSource="{Binding ScheduledProfiles,UpdateSourceTrigger=PropertyChanged}" ItemTemplate="{StaticResource SyncProfileDataTemplate}" />
         </Expander>
         <GroupBox Grid.Row="2"
                   Grid.ColumnSpan="2"

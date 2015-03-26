@@ -13,7 +13,7 @@
              mc:Ignorable="d"
              d:DesignHeight="500"
              d:DesignWidth="500"
-             d:DataContext="{d:DesignInstance viewModels:SettingsViewModel}">
+             d:DataContext="{d:DesignInstance viewModels:ProfileViewModel}">
     <UserControl.Resources>
         <converters2:ToUpperConverter x:Key="ToUpperConverter" />
         <converters1:InvertBooleanToVisibilityConverter x:Key="InvertBooleanToVisibilityConverter" />

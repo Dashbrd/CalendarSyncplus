@@ -13,6 +13,7 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
         private bool _isDefault;
         private string _name;
         private DateTime? _lastSync;
+        private bool _isSyncEnabled;
 
         public SyncProfile()
         {
@@ -32,7 +33,11 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
             set { SetProperty(ref _name, value); }
         }
 
-        public bool IsSyncEnabled { get; set; }
+        public bool IsSyncEnabled
+        {
+            get { return _isSyncEnabled; }
+            set { SetProperty(ref _isSyncEnabled, value); }
+        }
 
         public bool IsValid { get; set; }
 

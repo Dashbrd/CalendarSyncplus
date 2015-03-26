@@ -8,6 +8,7 @@ namespace OutlookGoogleSyncRefresh.Application.Utilities
         LogSeparator,
         Line,
         SyncStarted,
+        Profile,
         SourceAppointmentsReading,
         SourceAppointmentsRead,
         SourceAppointmentsReadFailed,
@@ -39,6 +40,7 @@ namespace OutlookGoogleSyncRefresh.Application.Utilities
             StatusDictionary.Add(SyncStateEnum.LogSeparator, LogSeparatorConstant);
             StatusDictionary.Add(SyncStateEnum.Line, LineConstant);
             StatusDictionary.Add(SyncStateEnum.SyncStarted, "Sync started : {0}");
+            StatusDictionary.Add(SyncStateEnum.Profile, "Profile : {0}");
             StatusDictionary.Add(SyncStateEnum.SourceAppointmentsReading, "Reading {0} calendar...");
             StatusDictionary.Add(SyncStateEnum.SourceAppointmentsRead, "{0} entries read : {1}");
             StatusDictionary.Add(SyncStateEnum.SourceAppointmentsReadFailed, "Read failed.");

@@ -64,7 +64,7 @@
                   RenderOptions.ClearTypeHint="Enabled"
                   TextOptions.TextFormattingMode="Display"
                   Margin="5"
-                  ItemsSource="{Binding Path=Settings.SyncProfiles}"
+                  ItemsSource="{Binding Path=SyncProfileList}"
                   AutoGenerateColumns="False" SelectionMode="Single" GridLinesVisibility="Horizontal" AlternatingRowBackground="{StaticResource GrayBrush5}"
                   CanUserAddRows="False" CanUserDeleteRows="False" CanUserReorderColumns="False" CanUserResizeColumns="True" CanUserSortColumns="False"
                   CanUserResizeRows="False">
@@ -74,7 +74,7 @@
                 <DataGridCheckBoxColumn Header="Sync" Width="100"
                                         ElementStyle="{DynamicResource MetroDataGridCheckBox}"
                                         EditingElementStyle="{DynamicResource MetroDataGridCheckBox}"
-                                        Binding="{Binding IsSyncEnabled}" />
+                                        Binding="{Binding IsSyncEnabled,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
                 <DataGridTemplateColumn Header="Delete" Width="80">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>

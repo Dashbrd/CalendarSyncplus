@@ -8,7 +8,7 @@
              xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="500"
-             d:DataContext="{d:DesignInstance viewModels:SettingsViewModel}">
+             d:DataContext="{d:DesignInstance viewModels:ProfileViewModel}">
     <UserControl.Resources>
         <converters:InvertBooleanConverter x:Key="InvertBooleanConverter" />
     </UserControl.Resources>
