@@ -108,7 +108,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
             Items outlookItems = null;
             var outlookAppointments = new List<Appointment>();
 
-            //Close  and Cleanup
+            //Close  and Shutdown
             try
             {
                 // Get Application and Namespace
@@ -433,7 +433,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
             }
             finally
             {
-                //Close  and Cleanup
+                //Close  and Shutdown
                 //Unassign all instances
                 if (rootFolders != null)
                 {
@@ -598,7 +598,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
             }
             finally
             {
-                //Close  and Cleanup
+                //Close  and Shutdown
 
                 if (disposeOutlookInstances)
                 {
@@ -789,7 +789,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
             }
             finally
             {
-                //Close  and Cleanup
+                //Close  and Shutdown
                 if (disposeOutlookInstances)
                 {
                     nameSpace.Logoff();

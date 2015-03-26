@@ -22,6 +22,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.ComponentModel.Composition;
 using System.Linq;
 using System.Threading.Tasks;
@@ -235,6 +236,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
                 var viewModel = new ProfileViewModel(syncProfile, GoogleCalendarService, OutlookCalendarService, MessageService,
                             ExchangeWebCalendarService, ApplicationLogger);
                 SyncProfileList.Add(viewModel);
+                PropertyChangedEventManager.AddHandler(viewModel, ProfilePropertyChangedHandler, "IsLoading");
             }
         }
 
@@ -247,6 +249,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
                 if (task == MessageDialogResult.Affirmative)
                 {
                     SyncProfileList.Remove(profile);
+                    PropertyChangedEventManager.RemoveHandler(profile, ProfilePropertyChangedHandler, "IsLoading");
                 }
             }
         }
@@ -362,6 +365,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
                         var viewModel =  new ProfileViewModel(syncProfile, GoogleCalendarService, OutlookCalendarService, MessageService,
                             ExchangeWebCalendarService, ApplicationLogger);
                         profileList.Add(viewModel);
+                        PropertyChangedEventManager.AddHandler(viewModel,ProfilePropertyChangedHandler,"IsLoading");
                     }
                     SyncProfileList = profileList;
                     SelectedProfile = SyncProfileList.FirstOrDefault();
@@ -388,6 +392,29 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             IsLoading = false;
         }
 
+        private void ProfilePropertyChangedHandler(object sender, PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case "IsLoading":
+                    var viewModel = sender as ProfileViewModel;
+                    if (viewModel != null)
+                    {
+                        IsLoading = viewModel.IsLoading;
+                    }
+                    break;
+            }
+        }
 
+        public void Shutdown()
+        {
+            if (SyncProfileList != null)
+            {
+                foreach (var profileViewModel in SyncProfileList)
+                {
+                    PropertyChangedEventManager.RemoveHandler(profileViewModel, ProfilePropertyChangedHandler, "IsLoading");
+                }
+            }
+        }
     }
 }

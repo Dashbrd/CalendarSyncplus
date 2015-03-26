@@ -102,6 +102,7 @@ namespace OutlookGoogleSyncRefresh.Application.Controllers
         {
             //Close All controllers if required
             _shellController.Shutdown();
+            _settingsViewModel.Shutdown();
             PropertyChangedEventManager.RemoveHandler(_settingsViewModel, SettingsChangedHandler, "");
             PropertyChangedEventManager.RemoveHandler(_shellViewModel, ShellViewUpdatedHandler, "");
 
