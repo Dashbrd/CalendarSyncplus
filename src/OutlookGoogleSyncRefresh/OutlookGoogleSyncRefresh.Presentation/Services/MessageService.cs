@@ -69,9 +69,11 @@ namespace OutlookGoogleSyncRefresh.Presentation.Services
                 AnimateShow = true,
                 ColorScheme = MetroDialogColorScheme.Accented
             };
-            MessageDialogResult result =
-                await View.ShowMessageAsync(title, message, MessageDialogStyle.Affirmative, metroDialogSettings);
-            return result;
+            return await InvokeOnCurrentDispatcher(async () =>
+            {
+               var taskResult = await View.ShowMessageAsync(title, message, MessageDialogStyle.Affirmative, metroDialogSettings);
+                return taskResult;
+            });
         }
 
         public Task<MessageDialogResult> ShowMessage(string message)
@@ -166,7 +168,7 @@ namespace OutlookGoogleSyncRefresh.Presentation.Services
 
         public void ShowProgressAsync(string message)
         {
-            ShowProgress(message, ApplicationInfo.ProductName);
+            ShowProgressAsync(message, ApplicationInfo.ProductName);
         }
 
         public async Task<ProgressDialogController> ShowProgress(string message, string title)

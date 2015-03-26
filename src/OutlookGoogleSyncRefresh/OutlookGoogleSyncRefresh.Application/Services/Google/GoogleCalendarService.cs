@@ -164,7 +164,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Google
                 AddEventAttendees(calenderAppointment.OptionalAttendees, googleEvent, true);
             }
             //Add Organizer
-            if (calenderAppointment.Organizer != null && IsValidEmailAddress(calenderAppointment.Organizer.Email))
+            if (calenderAppointment.Organizer != null && calenderAppointment.Organizer.Email.IsValidEmailAddress())
             {
                 googleEvent.Organizer = new Event.OrganizerData
                 {
