@@ -27,15 +27,19 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Runtime.Remoting.Messaging;
 using System.Threading.Tasks;
+using System.Windows.Media;
 using Microsoft.Office.Interop.Outlook;
 using Microsoft.Win32;
 using OutlookGoogleSyncRefresh.Application.Utilities;
+using OutlookGoogleSyncRefresh.Application.Wrappers;
 using OutlookGoogleSyncRefresh.Common.Log;
 using OutlookGoogleSyncRefresh.Common.MetaData;
 using OutlookGoogleSyncRefresh.Domain.Models;
 using Exception = System.Exception;
 using Recipient = Microsoft.Office.Interop.Outlook.Recipient;
 using AppRecipient = OutlookGoogleSyncRefresh.Domain.Models.Recipient;
+using Category = OutlookGoogleSyncRefresh.Application.Wrappers.Category;
+
 #endregion
 
 namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
@@ -407,9 +411,90 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
             return profileList;
         }
 
+        private void SetColor(Category background)
+        {
+            var list = SetColorForSelectedCalendar(background);
+            if (!list.WaitForApplicationQuit)
+            {
+                return;
+            }
+            while (Process.GetProcessesByName("OUTLOOK").Any())
+            {
+                Task.Delay(5000);
+            }
+        }
+
+        private AppointmentListWrapper SetColorForSelectedCalendar(Category background)
+        {
+            var disposeOutlookInstances = false;
+            Microsoft.Office.Interop.Outlook.Application application = null;
+            NameSpace nameSpace = null;
+
+            //Close  and Shutdown
+            try
+            {
+                // Get Application and Namespace
+                GetOutlookApplication(out disposeOutlookInstances, out application, out nameSpace, ProfileName);
+
+                if (nameSpace.Categories[Constants.CategoryName] == null)
+                {
+                    nameSpace.Categories.Add(Constants.CategoryName, background.OutlookColor,
+                        OlCategoryShortcutKey.olCategoryShortcutKeyNone);
+                }
+                else
+                {
+                    nameSpace.Categories[Constants.CategoryName].Color = background.OutlookColor;
+                }
+
+            }
+            catch (Exception exception)
+            {
+                ApplicationLogger.LogError(exception.Message);
+                return new AppointmentListWrapper
+                {
+                    Appointments = null,
+                    WaitForApplicationQuit = disposeOutlookInstances
+                };
+            }
+            finally
+            {
+                if (disposeOutlookInstances)
+                {
+                    nameSpace.Logoff();
+                }
+
+                Marshal.FinalReleaseComObject(nameSpace);
+                nameSpace = null;
+
+                if (disposeOutlookInstances)
+                {
+                    // Casting Removes a warninig for Ambigous Call
+                    ((_Application)application).Quit();
+                    Marshal.FinalReleaseComObject(application);
+                }
+                application = null;
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+            }
+
+            return new AppointmentListWrapper()
+            {
+                Appointments = null,
+                WaitForApplicationQuit = disposeOutlookInstances
+            };
+        }
+
         #endregion
 
         #region IOutlookCalendarService Members
+        public async void SetCalendarColor(Category background, IDictionary<string, object> calendarSpecificData)
+        {
+            CheckCalendarSpecificData(calendarSpecificData);
+
+            await Task.Factory.StartNew(
+                       () => SetColor(background));
+
+        }
 
         public List<OutlookMailBox> GetAllMailBoxes(string profileName = "")
         {
@@ -517,7 +602,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
 
 
         public async Task<bool> AddCalendarEvent(List<Appointment> calendarAppointments, bool addDescription,
-            bool addReminder, bool addAttendees, bool attendeesToDescroption,
+            bool addReminder, bool addAttendees, bool attendeesToDescription,
             IDictionary<string, object> calendarSpecificData)
         {
             if (!calendarAppointments.Any())
@@ -527,7 +612,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
             CheckCalendarSpecificData(calendarSpecificData);
 
             var result = await
-                    Task<bool>.Factory.StartNew(() => AddEvents(calendarAppointments, addDescription, addReminder, addAttendees, attendeesToDescroption));
+                    Task<bool>.Factory.StartNew(() => AddEvents(calendarAppointments, addDescription, addReminder, addAttendees, attendeesToDescription));
 
             return result;
         }

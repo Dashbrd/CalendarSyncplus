@@ -6,11 +6,24 @@
              xmlns:viewModels="clr-namespace:OutlookGoogleSyncRefresh.Application.ViewModels;assembly=OutlookGoogleSyncRefresh.Application"
              xmlns:converters="http://waf.codeplex.com/schemas"
              xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:converters1="clr-namespace:OutlookGoogleSyncRefresh.Presentation.Converters"
+             xmlns:wrappers="clr-namespace:OutlookGoogleSyncRefresh.Application.Wrappers;assembly=OutlookGoogleSyncRefresh.Application"
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="500"
              d:DataContext="{d:DesignInstance viewModels:ProfileViewModel}">
     <UserControl.Resources>
         <converters:InvertBooleanConverter x:Key="InvertBooleanConverter" />
+        <converters1:StringToBrushConverter x:Key="StringToBrushConverter"/>
+        <DataTemplate DataType="{x:Type wrappers:Category}">
+            <Rectangle Height="20"
+                       Width="20"
+                       StrokeThickness="0.1"
+                       Stroke="Black"
+                       Fill="{Binding Color,Converter={StaticResource StringToBrushConverter}}"
+                       ToolTip="{Binding CategoryName}"
+                       Margin="2" />
+        </DataTemplate>
+        
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -18,8 +31,31 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-       
-        <GroupBox 
+       <GroupBox Header="Category">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <StackPanel Orientation="Horizontal" Margin="2">
+                <CheckBox Content="Set Category To Appointments" IsChecked="{Binding SetCategory,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+                    <ComboBox IsEnabled="{Binding SetCategory,UpdateSourceTrigger=PropertyChanged}"
+                              ItemsSource="{Binding Categories,UpdateSourceTrigger=PropertyChanged}"
+                              SelectedItem="{Binding SelectedCategory,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                              Margin="10,2,2,2">
+                        <ComboBox.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel ItemHeight="22" ItemWidth="22" MaxWidth="150" />
+                            </ItemsPanelTemplate>
+                        </ComboBox.ItemsPanel>
+                    </ComboBox>
+                </StackPanel>
+            </Grid>
+       </GroupBox>
+        <GroupBox Grid.Row="1"
                   Header="Destination Calendar Entry Options">
             <Grid>
                 <Grid.RowDefinitions>
@@ -58,7 +94,7 @@
                           IsChecked="{Binding AddAttachments,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
             </Grid>
         </GroupBox>
-        <GroupBox Grid.Row="1"
+        <GroupBox Grid.Row="2"
                   Header="Other">
             <Grid>
                 <Grid.RowDefinitions>

@@ -22,6 +22,8 @@
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using System.Windows.Media;
+using Microsoft.Office.Interop.Outlook;
 
 #endregion
 
@@ -44,7 +46,8 @@ namespace OutlookGoogleSyncRefresh.Application.Utilities
             int chunkSize)
         {
             do
-                yield return enumerator.Current; while (--chunkSize > 0 && enumerator.MoveNext());
+                yield return enumerator.Current;
+            while (--chunkSize > 0 && enumerator.MoveNext());
         }
 
         #endregion

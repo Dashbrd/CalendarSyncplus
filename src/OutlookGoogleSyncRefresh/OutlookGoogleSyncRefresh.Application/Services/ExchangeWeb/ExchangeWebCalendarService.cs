@@ -6,6 +6,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Exchange.WebServices.Data;
+using OutlookGoogleSyncRefresh.Application.Wrappers;
 using OutlookGoogleSyncRefresh.Common.Log;
 using OutlookGoogleSyncRefresh.Common.MetaData;
 using OutlookGoogleSyncRefresh.Domain.Models;
@@ -57,7 +58,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.ExchangeWeb
                         AllDayEvent = exchangeAppointment.IsAllDayEvent,
                         OptionalAttendees = GetAttendees(exchangeAppointment.OptionalAttendees),
                         ReminderMinutesBeforeStart = exchangeAppointment.ReminderMinutesBeforeStart,
-                        Organizer =  new Recipient(){Name = exchangeAppointment.Organizer.Name, Email = exchangeAppointment.Organizer.Address},
+                        Organizer = new Recipient() { Name = exchangeAppointment.Organizer.Name, Email = exchangeAppointment.Organizer.Address },
                         ReminderSet = exchangeAppointment.IsReminderSet,
                         RequiredAttendees = GetAttendees(exchangeAppointment.RequiredAttendees),
                     };
@@ -79,7 +80,8 @@ namespace OutlookGoogleSyncRefresh.Application.Services.ExchangeWeb
             {
                 attendees.Add(new Recipient()
                 {
-                    Name = attendee.Name,Email = attendee.Address
+                    Name = attendee.Name,
+                    Email = attendee.Address
                 });
             }
 
@@ -252,7 +254,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.ExchangeWeb
         }
 
         public Task<bool> AddCalendarEvent(List<AppAppointment> calendarAppointments, bool addDescription, bool addReminder, bool addAttendees,
-            bool attendeesToDescroption, IDictionary<string, object> calendarSpecificData)
+            bool attendeesToDescription, IDictionary<string, object> calendarSpecificData)
         {
             throw new NotImplementedException();
         }

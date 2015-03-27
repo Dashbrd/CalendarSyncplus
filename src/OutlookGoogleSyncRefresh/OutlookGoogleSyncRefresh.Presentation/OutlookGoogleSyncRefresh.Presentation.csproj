@@ -145,6 +145,7 @@
     <Compile Include="Converters\BoolToCalendarServiceTypeConverter.cs" />
     <Compile Include="Converters\InvertBooleanToVisibilityConverter.cs" />
     <Compile Include="Converters\PercentageWidthConverter.cs" />
+    <Compile Include="Converters\StringToBrushConverter.cs" />
     <Compile Include="Helpers\Utilities.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Services\MessageService.cs" />

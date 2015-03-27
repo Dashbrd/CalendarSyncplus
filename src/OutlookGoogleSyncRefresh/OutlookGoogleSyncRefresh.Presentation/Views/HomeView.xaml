@@ -26,7 +26,7 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
-                <Rectangle Fill="MediumSeaGreen"
+                <Rectangle Fill="{StaticResource ScheduleColorBrush}"
                            Grid.RowSpan="3"
                            Grid.ColumnSpan="2"
                            Margin="2" />

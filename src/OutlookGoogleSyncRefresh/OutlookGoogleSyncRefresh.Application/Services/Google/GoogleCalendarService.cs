@@ -27,12 +27,13 @@ using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-
+using System.Windows.Media;
 using Google;
 using Google.Apis.Calendar.v3;
 using Google.Apis.Calendar.v3.Data;
 using Google.Apis.Requests;
 using OutlookGoogleSyncRefresh.Application.Utilities;
+using OutlookGoogleSyncRefresh.Application.Wrappers;
 using OutlookGoogleSyncRefresh.Common.Log;
 using OutlookGoogleSyncRefresh.Common.MetaData;
 using OutlookGoogleSyncRefresh.Domain.Models;
@@ -200,7 +201,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Google
             }
 
         }
-        
+
         private CalendarService GetCalendarService()
         {
             return AccountAuthenticationService.AuthenticateCalenderOauth();
@@ -273,7 +274,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Google
             {
                 var attendees =
                     googleEvent.Attendees.Where(attendee => attendee.Optional.GetValueOrDefault() == isOptional);
-                 
+
                 foreach (EventAttendee eventAttendee in attendees)
                 {
                     recipients.Add(new Recipient() { Name = eventAttendee.DisplayName, Email = eventAttendee.Email });
@@ -284,6 +285,20 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Google
         #endregion
 
         #region IGoogleCalendarService Members
+
+        public async void SetCalendarColor(Category background, IDictionary<string, object> calendarSpecificData)
+        {
+            CheckCalendarSpecificData(calendarSpecificData);
+
+            CalendarService calendarService = GetCalendarService();
+
+            CalendarListEntry calendarListEntry = await calendarService.CalendarList.Get(CalendarId).ExecuteAsync();
+
+            calendarListEntry.BackgroundColor = background.HexValue;
+
+            await calendarService.CalendarList.Update(calendarListEntry, calendarId).ExecuteAsync();
+
+        }
 
         public void CheckCalendarSpecificData(IDictionary<string, object> calendarSpecificData)
         {
@@ -297,15 +312,14 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Google
             {
                 throw new InvalidOperationException(string.Format("{0} is a required.", dictionaryKey_CalendarId));
             }
-            else
-            {
-                CalendarId = keyValue as string;
 
-                if (string.IsNullOrEmpty(calendarId))
-                {
-                    throw new InvalidOperationException(string.Format("{0} cannot be null or empty.", dictionaryKey_CalendarId));
-                }
+            CalendarId = keyValue as string;
+
+            if (string.IsNullOrEmpty(calendarId))
+            {
+                throw new InvalidOperationException(string.Format("{0} cannot be null or empty.", dictionaryKey_CalendarId));
             }
+
         }
 
         public async Task<List<Calendar>> GetAvailableCalendars(IDictionary<string, object> calendarSpecificData)
@@ -315,15 +329,15 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Google
 
             CalendarList calenderList = await calendarService.CalendarList.List().ExecuteAsync();
 
-            List<Calendar> locaCalendarList =
+            List<Calendar> localCalendarList =
                 calenderList.Items.Select(
                     calendarListEntry => new Calendar { Id = calendarListEntry.Id, Name = calendarListEntry.Summary })
                     .ToList();
-            return locaCalendarList;
+            return localCalendarList;
         }
 
         public async Task<bool> AddCalendarEvent(List<Appointment> calendarAppointments, bool addDescription,
-            bool addReminder, bool addAttendees, bool attendeesToDescroption, IDictionary<string, object> calendarSpecificData)
+            bool addReminder, bool addAttendees, bool attendeesToDescription, IDictionary<string, object> calendarSpecificData)
         {
             if (!calendarAppointments.Any())
             {
@@ -331,7 +345,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Google
             }
 
             CheckCalendarSpecificData(calendarSpecificData);
-            
+
             var eventIndexList = new Dictionary<KeyValuePair<int, Appointment>, HttpResponseMessage>();
             //Get Calendar Service
             CalendarService calendarService = GetCalendarService();
@@ -359,7 +373,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Google
                         }
 
                         Appointment appointment = calendarAppointments[i];
-                        Event calendarEvent = CreateGoogleCalendarEvent(appointment, addDescription, addReminder, attendeesToDescroption,
+                        Event calendarEvent = CreateGoogleCalendarEvent(appointment, addDescription, addReminder, attendeesToDescription,
                             addAttendees);
                         EventsResource.InsertRequest insertRequest = calendarService.Events.Insert(calendarEvent, CalendarId);
                         insertRequest.SendNotifications = false;
@@ -499,9 +513,9 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Google
             return calendarAppointments;
         }
 
-        public async Task<bool> ResetCalendar(IDictionary<string,object> calendarSpecificData)
+        public async Task<bool> ResetCalendar(IDictionary<string, object> calendarSpecificData)
         {
-           var appointments = await GetCalendarEventsInRangeAsync(10*365, 10*365,calendarSpecificData);
+            var appointments = await GetCalendarEventsInRangeAsync(10 * 365, 10 * 365, calendarSpecificData);
             if (appointments != null)
             {
                 var success = await DeleteCalendarEvent(appointments, calendarSpecificData);

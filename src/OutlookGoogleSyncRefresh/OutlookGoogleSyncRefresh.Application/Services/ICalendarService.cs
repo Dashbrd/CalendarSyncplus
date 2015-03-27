@@ -17,7 +17,8 @@
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
-
+using System.Windows.Media;
+using OutlookGoogleSyncRefresh.Application.Wrappers;
 using OutlookGoogleSyncRefresh.Domain.Models;
 
 namespace OutlookGoogleSyncRefresh.Application.Services
@@ -25,17 +26,19 @@ namespace OutlookGoogleSyncRefresh.Application.Services
     public interface ICalendarService
     {
         string CalendarServiceName { get; }
-        
+
         Task<bool> DeleteCalendarEvent(List<Appointment> calendarAppointments, IDictionary<string, object> calendarSpecificData);
 
         Task<CalendarAppointments> GetCalendarEventsInRangeAsync(int daysInPast, int daysInFuture, IDictionary<string, object> calendarSpecificData);
 
         Task<bool> AddCalendarEvent(List<Appointment> calendarAppointments, bool addDescription,
-            bool addReminder, bool addAttendees, bool attendeesToDescroption, IDictionary<string, object> calendarSpecificData);
+            bool addReminder, bool addAttendees, bool attendeesToDescription, IDictionary<string, object> calendarSpecificData);
 
         void CheckCalendarSpecificData(IDictionary<string, object> calendarSpecificData);
 
         Task<bool> ResetCalendar(IDictionary<string, object> calendarSpecificData);
+
+        //void SetCalendarColor(Color background, Color foreground, IDictionary<string, object> calendarSpecificData);
     }
 
 }

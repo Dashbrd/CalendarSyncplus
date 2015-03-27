@@ -55,6 +55,7 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
 
         public OutlookSettings OutlookSettings { get; set; }
 
+        public string Category { get; set; }
         /// <summary>
         /// To be implemented in future
         /// </summary>

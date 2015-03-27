@@ -7,14 +7,18 @@ using System.Threading.Tasks;
 using System.Waf.Applications;
 using System.Waf.Foundation;
 using MahApps.Metro.Controls.Dialogs;
+using Microsoft.Office.Interop.Outlook;
 using OutlookGoogleSyncRefresh.Application.Services;
 using OutlookGoogleSyncRefresh.Application.Services.ExchangeWeb;
 using OutlookGoogleSyncRefresh.Application.Services.Google;
 using OutlookGoogleSyncRefresh.Application.Services.Outlook;
+using OutlookGoogleSyncRefresh.Application.Utilities;
 using OutlookGoogleSyncRefresh.Common.Log;
 using OutlookGoogleSyncRefresh.Common.MetaData;
 using OutlookGoogleSyncRefresh.Domain.Helpers;
 using OutlookGoogleSyncRefresh.Domain.Models;
+using Category = OutlookGoogleSyncRefresh.Application.Wrappers.Category;
+using Exception = System.Exception;
 
 namespace OutlookGoogleSyncRefresh.Application.ViewModels
 {
@@ -62,6 +66,9 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
         private string _name;
         private bool _isSyncEnabled;
         private bool _isDefault;
+        private Category _selectedCategory;
+        private List<Category> _categories;
+        private bool _setCategory;
 
         public ProfileViewModel(SyncProfile syncProfile, IGoogleCalendarService googleCalendarService,
              IOutlookCalendarService outlookCalendarService,
@@ -84,6 +91,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
         public IExchangeWebCalendarService ExchangeWebCalendarService { get; private set; }
         public ApplicationLogger ApplicationLogger { get; private set; }
 
+        #region Properties
         public string Name
         {
             get { return _name; }
@@ -119,32 +127,6 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
         {
             get { return _keepLastModifiedCopy; }
             set { SetProperty(ref _keepLastModifiedCopy, value); }
-        }
-
-        public DelegateCommand AutoDetectExchangeServer
-        {
-            get
-            {
-                return
-                    _autoDetectExchangeServer = _autoDetectExchangeServer ?? new DelegateCommand(AutoDetectEWSSettings);
-            }
-        }
-
-        public DelegateCommand ResetOutlookCalendarCommand
-        {
-            get
-            {
-                return _resetOutlookCalendarCommand = _resetOutlookCalendarCommand ??
-                    new DelegateCommand(ResetOutlookCalendarHandler);
-            }
-        }
-
-        public DelegateCommand ResetGoogleCalendarCommand
-        {
-            get
-            {
-                return _resetGoogleCalendar = _resetGoogleCalendar ?? new DelegateCommand(ResetGoogleCalendarHandler);
-            }
         }
 
         public string Username
@@ -276,15 +258,6 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
         }
 
 
-        public DelegateCommand GetOutlookMailBoxesCommand
-        {
-            get
-            {
-                return _getOutlookMailboxCommand ??
-                       (_getOutlookMailboxCommand = new DelegateCommand(GetOutlookMailBoxes));
-            }
-        }
-
         public bool AddDescription
         {
             get { return _addDescription; }
@@ -328,13 +301,6 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             set { SetProperty(ref _syncFrequencyViewModel, value); }
         }
 
-        public DelegateCommand GetGoogleCalendarCommand
-        {
-            get
-            {
-                return _getGoogleCalendarCommand ?? (_getGoogleCalendarCommand = new DelegateCommand(GetGoogleCalendar));
-            }
-        }
 
         public List<CalendarSyncDirectionEnum> CalendarSyncModes
         {
@@ -378,6 +344,70 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             set { SetProperty(ref _isLoading, value); }
         }
 
+        public bool SetCategory
+        {
+            get { return _setCategory; }
+            set { SetProperty(ref _setCategory, value); }
+        }
+
+        public List<Category> Categories
+        {
+            get { return _categories; }
+            set { SetProperty(ref _categories, value); }
+        }
+
+        public Category SelectedCategory
+        {
+            get { return _selectedCategory; }
+            set { SetProperty(ref _selectedCategory, value); }
+        }
+
+        #endregion
+
+        #region Commands
+        public DelegateCommand GetOutlookMailBoxesCommand
+        {
+            get
+            {
+                return _getOutlookMailboxCommand ??
+                       (_getOutlookMailboxCommand = new DelegateCommand(GetOutlookMailBoxes));
+            }
+        }
+
+        public DelegateCommand GetGoogleCalendarCommand
+        {
+            get
+            {
+                return _getGoogleCalendarCommand ?? (_getGoogleCalendarCommand = new DelegateCommand(GetGoogleCalendar));
+            }
+        }
+
+        public DelegateCommand AutoDetectExchangeServer
+        {
+            get
+            {
+                return
+                    _autoDetectExchangeServer = _autoDetectExchangeServer ?? new DelegateCommand(AutoDetectEWSSettings);
+            }
+        }
+
+        public DelegateCommand ResetOutlookCalendarCommand
+        {
+            get
+            {
+                return _resetOutlookCalendarCommand = _resetOutlookCalendarCommand ??
+                    new DelegateCommand(ResetOutlookCalendarHandler);
+            }
+        }
+
+        public DelegateCommand ResetGoogleCalendarCommand
+        {
+            get
+            {
+                return _resetGoogleCalendar = _resetGoogleCalendar ?? new DelegateCommand(ResetGoogleCalendarHandler);
+            }
+        }
+        #endregion
         #region Private Methods
         private void Initialize()
         {
@@ -398,6 +428,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
                     "Weekly"
                 };
             SyncFrequency = "Hourly";
+            Categories = CategoryHelper.GetCategories();
         }
         private async void GetOutlookMailBoxes()
         {
@@ -597,7 +628,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             }
         }
 
-      
+
         public async void LoadSyncProfile()
         {
             IsLoading = true;
@@ -668,7 +699,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             SyncProfile.SyncSettings.ConfirmOnDelete = ConfirmOnDelete;
             SyncProfile.SyncSettings.KeepLastModifiedVersion = KeepLastModifiedCopy;
             SyncProfile.SetCalendarTypes();
-            
+
             return SyncProfile;
         }
         #endregion
