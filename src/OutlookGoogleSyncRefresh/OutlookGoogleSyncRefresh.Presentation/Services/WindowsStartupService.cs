@@ -9,15 +9,18 @@ using OutlookGoogleSyncRefresh.Common.Log;
 
 namespace OutlookGoogleSyncRefresh.Presentation.Services
 {
-    [Export(typeof(IWindowsStartupService))]
+    [Export(typeof (IWindowsStartupService))]
     public class WindowsStartupService : IWindowsStartupService
     {
-        public ApplicationLogger ApplicationLogger { get; set; }
         [ImportingConstructor]
         public WindowsStartupService(ApplicationLogger applicationLogger)
         {
             ApplicationLogger = applicationLogger;
         }
+
+        public ApplicationLogger ApplicationLogger { get; set; }
+
+        #region IWindowsStartupService Members
 
         public void RunAtWindowsStartup()
         {
@@ -43,25 +46,35 @@ namespace OutlookGoogleSyncRefresh.Presentation.Services
             }
         }
 
+        #endregion
+
         public void AddApplicationToCurrentUserStartup()
         {
-            using (RegistryKey key = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true))
+            using (
+                RegistryKey key = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run",
+                    true))
             {
-                key.SetValue("CalendarSyncPlusStartup", "\"" + Assembly.GetExecutingAssembly().Location + "\" " + Constants.Minimized);
+                key.SetValue("CalendarSyncPlusStartup",
+                    "\"" + Assembly.GetExecutingAssembly().Location + "\" " + Constants.Minimized);
             }
         }
 
         public void AddApplicationToAllUserStartup()
         {
-            using (RegistryKey key = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true))
+            using (
+                RegistryKey key = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run",
+                    true))
             {
-                key.SetValue("CalendarSyncPlusStartup", "\"" + Assembly.GetExecutingAssembly().Location + "\" " + Constants.Minimized);
+                key.SetValue("CalendarSyncPlusStartup",
+                    "\"" + Assembly.GetExecutingAssembly().Location + "\" " + Constants.Minimized);
             }
         }
 
         public void RemoveApplicationFromCurrentUserStartup()
         {
-            using (RegistryKey key = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true))
+            using (
+                RegistryKey key = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run",
+                    true))
             {
                 key.DeleteValue("CalendarSyncPlusStartup", false);
             }
@@ -69,7 +82,9 @@ namespace OutlookGoogleSyncRefresh.Presentation.Services
 
         public void RemoveApplicationFromAllUserStartup()
         {
-            using (RegistryKey key = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true))
+            using (
+                RegistryKey key = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run",
+                    true))
             {
                 key.DeleteValue("CalendarSyncPlusStartup", false);
             }
@@ -83,7 +98,7 @@ namespace OutlookGoogleSyncRefresh.Presentation.Services
             {
                 //get the currently logged in user
                 WindowsIdentity user = WindowsIdentity.GetCurrent();
-                WindowsPrincipal principal = new WindowsPrincipal(user);
+                var principal = new WindowsPrincipal(user);
                 isAdmin = principal.IsInRole(WindowsBuiltInRole.Administrator);
             }
             catch (UnauthorizedAccessException ex)

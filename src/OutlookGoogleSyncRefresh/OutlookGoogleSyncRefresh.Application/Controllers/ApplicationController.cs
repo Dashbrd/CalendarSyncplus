@@ -25,13 +25,15 @@ using System.Waf.Applications;
 using OutlookGoogleSyncRefresh.Application.Services;
 using OutlookGoogleSyncRefresh.Application.Services.Google;
 using OutlookGoogleSyncRefresh.Application.ViewModels;
+using OutlookGoogleSyncRefresh.Domain.Models;
 
 namespace OutlookGoogleSyncRefresh.Application.Controllers
 {
-    [Export(typeof(IApplicationController))]
+    [Export(typeof (IApplicationController))]
     public class ApplicationController : IApplicationController
     {
         private readonly AboutViewModel _aboutViewModel;
+        private readonly DelegateCommand _exitCommand;
         private readonly IGuiInteractionService _guiInteractionService;
         private readonly HelpViewModel _helpViewModel;
         private readonly SettingsViewModel _settingsViewModel;
@@ -39,7 +41,6 @@ namespace OutlookGoogleSyncRefresh.Application.Controllers
         private readonly ShellService _shellService;
         private readonly ShellViewModel _shellViewModel;
         private readonly SystemTrayNotifierViewModel _systemTrayNotifierViewModel;
-        private readonly DelegateCommand _exitCommand;
         private bool _isApplicationExiting;
 
         [ImportingConstructor]
@@ -142,11 +143,12 @@ namespace OutlookGoogleSyncRefresh.Application.Controllers
                     {
                         _shellViewModel.IsSettingsVisible = false;
                         _shellViewModel.Settings = _settingsViewModel.Settings;
-                        foreach (var syncProfile in _settingsViewModel.Settings.SyncProfiles)
+                        foreach (CalendarSyncProfile syncProfile in _settingsViewModel.Settings.SyncProfiles)
                         {
                             if (syncProfile.IsSyncEnabled && syncProfile.SyncSettings.SyncFrequency != null)
                             {
-                                syncProfile.NextSync = syncProfile.SyncSettings.SyncFrequency.GetNextSyncTime(DateTime.Now);
+                                syncProfile.NextSync =
+                                    syncProfile.SyncSettings.SyncFrequency.GetNextSyncTime(DateTime.Now);
                             }
                         }
                     }
@@ -154,7 +156,6 @@ namespace OutlookGoogleSyncRefresh.Application.Controllers
                 case "IsLoading":
                     _shellViewModel.IsSettingsLoading = _settingsViewModel.IsLoading;
                     break;
-
             }
         }
 

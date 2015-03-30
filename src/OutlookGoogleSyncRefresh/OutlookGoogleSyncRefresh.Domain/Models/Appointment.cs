@@ -1,43 +1,44 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Waf.Foundation;
-
 using OutlookGoogleSyncRefresh.Domain.Helpers;
 
 namespace OutlookGoogleSyncRefresh.Domain.Models
 {
-    public class Appointment : Model
+    public class Appointment : Model, ICloneable
     {
         /// <summary>
-        /// Flag if the appointment is an all day event
+        ///     Flag if the appointment is an all day event
         /// </summary>
         private bool _allDayEvent;
+
         /// <summary>
-        /// Id to identify the appointment
+        ///     Id to identify the appointment
         /// </summary>
         private string _appointmentId;
+
+        private string _calendarId;
+        private DateTime? _created;
+
         /// <summary>
-        /// 
         /// </summary>
         private string _description;
+
         private DateTime? _endTime;
+        private Dictionary<string, object> _extendedProperties;
+        private bool _isRecurring;
+        private DateTime? _lastModified;
         private string _location;
         private List<Recipient> _optionalAttendees;
         private Recipient _organizer;
+        private string _privacy;
+        private List<Recipient> _recipients;
         private int _reminderMinutesBeforeStart;
         private bool _reminderSet;
         private List<Recipient> _requiredAttendees;
+        private string _sourceId;
         private DateTime? _startTime;
         private string _subject;
-        private string _privacy;
-        private string _sourceId;
-        private bool _isRecurring;
-        private string _calendarId;
-        private Dictionary<string, object> _extendedProperties;
-        private List<Recipient> _recipients;
-        private DateTime? _lastModified;
-        private DateTime? _created;
-        private Frequency _frequency;
 
         public Appointment(string description, string location, string subject, DateTime? endTime, DateTime? startTime,
             string appointmentId)
@@ -190,6 +191,23 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
             get { return _created; }
             set { SetProperty(ref _created, value); }
         }
+
+        #region ICloneable Members
+
+        public object Clone()
+        {
+            var appointment = new Appointment(Description, Location, Subject, EndTime, StartTime, AppointmentId);
+            appointment.Organizer = Organizer;
+            appointment.RequiredAttendees = RequiredAttendees;
+            appointment.OptionalAttendees = OptionalAttendees;
+            appointment.Created = Created;
+            appointment.LastModified = LastModified;
+            appointment.CalendarId = CalendarId;
+            appointment.ExtendedProperties = ExtendedProperties;
+            return appointment;
+        }
+
+        #endregion
 
         public override bool Equals(Object obj)
         {

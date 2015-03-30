@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using System.Windows.Media;
 using Microsoft.Office.Interop.Outlook;
 using Category = OutlookGoogleSyncRefresh.Application.Wrappers.Category;
+using Exception = System.Exception;
 
 namespace OutlookGoogleSyncRefresh.Application.Utilities
 {
@@ -37,10 +34,11 @@ namespace OutlookGoogleSyncRefresh.Application.Utilities
             23 Dark Blue   #2858a5 ( 40  88 165)
             24 Dark Purple #5c3fa3 ( 92  63 163)
             25 Dark Maroon #93446b (147  68 107)*/
-        private static Dictionary<OlCategoryColor, string> _categoryColor;
+        private static readonly Dictionary<OlCategoryColor, string> _categoryColor;
+
         static CategoryHelper()
         {
-            _categoryColor = new Dictionary<OlCategoryColor, string>()
+            _categoryColor = new Dictionary<OlCategoryColor, string>
             {
                 {OlCategoryColor.olCategoryColorNone, "#FFFFFF"},
                 {OlCategoryColor.olCategoryColorRed, "#E7A1A2"},
@@ -69,7 +67,6 @@ namespace OutlookGoogleSyncRefresh.Application.Utilities
                 {OlCategoryColor.olCategoryColorDarkPurple, "#5c3fa3"},
                 {OlCategoryColor.olCategoryColorDarkMaroon, "#93446b"},
             };
-
         }
 
         public static List<Category> GetCategories()
@@ -79,22 +76,21 @@ namespace OutlookGoogleSyncRefresh.Application.Utilities
                 var categories = new List<Category>();
                 foreach (var outlookColor in _categoryColor)
                 {
-                    var category = new Category()
+                    var category = new Category
                     {
                         CategoryName = outlookColor.Key.ToString().Remove(0, "olCategoryColor".Length),
                         OutlookColor = outlookColor.Key,
                         HexValue = outlookColor.Value,
-                        Color = (Color)ColorConverter.ConvertFromString(outlookColor.Value)
+                        Color = (Color) ColorConverter.ConvertFromString(outlookColor.Value)
                     };
                     categories.Add(category);
                 }
                 return categories;
             }
-            catch (System.Exception)
+            catch (Exception)
             {
                 return null;
             }
         }
-
     }
 }

@@ -13,8 +13,6 @@ namespace OutlookGoogleSyncRefresh.Application.Services
     [Export(typeof (IApplicationUpdateService))]
     public class ApplicationUpdateService : IApplicationUpdateService
     {
-        public ApplicationLogger ApplicationLogger { get; set; }
-
         /// <summary>
         /// </summary>
         private string _downloadLink;
@@ -22,11 +20,14 @@ namespace OutlookGoogleSyncRefresh.Application.Services
         /// <summary>
         /// </summary>
         private string _version;
+
         [ImportingConstructor]
         public ApplicationUpdateService(ApplicationLogger applicationLogger)
         {
             ApplicationLogger = applicationLogger;
         }
+
+        public ApplicationLogger ApplicationLogger { get; set; }
 
         #region IApplicationUpdateService Members
 

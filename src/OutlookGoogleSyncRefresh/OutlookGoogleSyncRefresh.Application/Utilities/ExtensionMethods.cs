@@ -22,8 +22,6 @@
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using System.Windows.Media;
-using Microsoft.Office.Interop.Outlook;
 
 #endregion
 
@@ -32,22 +30,25 @@ namespace OutlookGoogleSyncRefresh.Application.Utilities
     public static class ExtensionMethods
     {
         #region Private Methods
+
         public static bool IsValidEmailAddress(this string email)
         {
             if (string.IsNullOrEmpty(email))
+            {
                 return false;
+            }
 
-            var emailRegex = @"^[\w!#$%&'*+\-/=?\^_`{|}~]+(\.[\w!#$%&'*+\-/=?\^_`{|}~]+)*" + "@" +
-                             @"((([\-\w]+\.)+[a-zA-Z]{2,4})|(([0-9]{1,3}\.){3}[0-9]{1,3}))$";
+            string emailRegex = @"^[\w!#$%&'*+\-/=?\^_`{|}~]+(\.[\w!#$%&'*+\-/=?\^_`{|}~]+)*" + "@" +
+                                @"((([\-\w]+\.)+[a-zA-Z]{2,4})|(([0-9]{1,3}\.){3}[0-9]{1,3}))$";
 
             return Regex.IsMatch(email, emailRegex);
         }
+
         private static IEnumerable<T> GetChunk<T>(this IEnumerator<T> enumerator,
             int chunkSize)
         {
             do
-                yield return enumerator.Current;
-            while (--chunkSize > 0 && enumerator.MoveNext());
+                yield return enumerator.Current; while (--chunkSize > 0 && enumerator.MoveNext());
         }
 
         #endregion

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.ObjectModel;
 
 namespace OutlookGoogleSyncRefresh.Domain.Models
 {
@@ -11,11 +6,11 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
     {
         public Settings()
         {
-            SyncProfiles = new ObservableCollection<SyncProfile>();
+            SyncProfiles = new ObservableCollection<CalendarSyncProfile>();
             AppSettings = new AppSettings();
         }
 
-        public ObservableCollection<SyncProfile> SyncProfiles { get; set; }
+        public ObservableCollection<CalendarSyncProfile> SyncProfiles { get; set; }
 
         public AppSettings AppSettings { get; set; }
 
@@ -23,7 +18,7 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
         public static Settings GetDefaultSettings()
         {
             var settings = new Settings();
-            settings.AppSettings = new AppSettings()
+            settings.AppSettings = new AppSettings
             {
                 IsFirstSave = true,
                 MinimizeToSystemTray = true,
@@ -31,7 +26,7 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
                 RememberPeriodicSyncOn = true,
                 RunApplicationAtSystemStartup = true
             };
-            settings.SyncProfiles.Add(SyncProfile.GetDefaultSyncProfile());
+            settings.SyncProfiles.Add(CalendarSyncProfile.GetDefaultSyncProfile());
             return settings;
         }
     }

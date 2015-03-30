@@ -28,7 +28,7 @@ using OutlookGoogleSyncRefresh.Presentation.Views;
 
 namespace OutlookGoogleSyncRefresh.Presentation.Services
 {
-    [Export(typeof(IMessageService))]
+    [Export(typeof (IMessageService))]
     public class MessageService : IMessageService
     {
         [ImportingConstructor]
@@ -71,7 +71,8 @@ namespace OutlookGoogleSyncRefresh.Presentation.Services
             };
             return await InvokeOnCurrentDispatcher(async () =>
             {
-               var taskResult = await View.ShowMessageAsync(title, message, MessageDialogStyle.Affirmative, metroDialogSettings);
+                MessageDialogResult taskResult =
+                    await View.ShowMessageAsync(title, message, MessageDialogStyle.Affirmative, metroDialogSettings);
                 return taskResult;
             });
         }
@@ -90,11 +91,11 @@ namespace OutlookGoogleSyncRefresh.Presentation.Services
                 AnimateHide = true,
                 AnimateShow = true,
                 ColorScheme = MetroDialogColorScheme.Accented,
-
             };
 
             DispatcherHelper.CheckBeginInvokeOnUI(
-                () => View.ShowMessageAsync(title, message, MessageDialogStyle.AffirmativeAndNegative, metroDialogSettings));
+                () =>
+                    View.ShowMessageAsync(title, message, MessageDialogStyle.AffirmativeAndNegative, metroDialogSettings));
         }
 
         public void ShowConfirmMessageAsync(string message)
@@ -115,8 +116,9 @@ namespace OutlookGoogleSyncRefresh.Presentation.Services
 
             return await InvokeOnCurrentDispatcher(async () =>
             {
-                var taskResult = await View.ShowMessageAsync(title, message, MessageDialogStyle.AffirmativeAndNegative,
-                            metroDialogSettings);
+                MessageDialogResult taskResult =
+                    await View.ShowMessageAsync(title, message, MessageDialogStyle.AffirmativeAndNegative,
+                        metroDialogSettings);
                 return taskResult;
             });
         }
@@ -149,7 +151,6 @@ namespace OutlookGoogleSyncRefresh.Presentation.Services
                 string result = await View.ShowInputAsync(title, message, metroDialogSettings);
                 return result;
             });
-
         }
 
         public void ShowProgressAsync(string message, string title)
@@ -182,7 +183,8 @@ namespace OutlookGoogleSyncRefresh.Presentation.Services
             };
             return await InvokeOnCurrentDispatcher(async () =>
             {
-                var controller = await View.ShowProgressAsync(title, message, false, metroDialogSettings);
+                ProgressDialogController controller =
+                    await View.ShowProgressAsync(title, message, false, metroDialogSettings);
                 return controller;
             });
         }
@@ -192,11 +194,11 @@ namespace OutlookGoogleSyncRefresh.Presentation.Services
             return ShowProgress(message, ApplicationInfo.ProductName);
         }
 
+        #endregion
 
         private T InvokeOnCurrentDispatcher<T>(Func<T> action)
         {
             return DispatcherHelper.CheckInvokeOnUI(action);
         }
-        #endregion
     }
 }

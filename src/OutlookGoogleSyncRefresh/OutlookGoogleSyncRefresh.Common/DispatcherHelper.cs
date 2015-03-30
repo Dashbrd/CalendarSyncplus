@@ -91,6 +91,7 @@ namespace OutlookGoogleSyncRefresh.Common
                 UIDispatcher.BeginInvoke(action);
             }
         }
+
         /// <summary>
         ///     Executes an action on the UI thread. If this method is called
         ///     from the UI thread, the action is executed immendiately. If the
@@ -121,6 +122,7 @@ namespace OutlookGoogleSyncRefresh.Common
 
             return UIDispatcher.Invoke(action);
         }
+
         /// <summary>
         ///     Invokes an action asynchronously on the UI thread.
         /// </summary>

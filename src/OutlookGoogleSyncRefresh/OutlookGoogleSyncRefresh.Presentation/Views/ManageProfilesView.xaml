@@ -1,104 +1,102 @@
 ﻿<UserControl x:Class="OutlookGoogleSyncRefresh.Presentation.Views.ManageProfilesView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:viewModels="clr-namespace:OutlookGoogleSyncRefresh.Application.ViewModels;assembly=OutlookGoogleSyncRefresh.Application"
              xmlns:converters="http://waf.codeplex.com/schemas"
-             mc:Ignorable="d" 
+             mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300"
              d:DataContext="{d:DesignInstance viewModels:SettingsViewModel}">
     <UserControl.Resources>
-        <converters:InvertBooleanConverter x:Key="InvertBooleanConverter"/>
+        <converters:InvertBooleanConverter x:Key="InvertBooleanConverter" />
     </UserControl.Resources>
-        
-        <Grid >
+    <GroupBox Header="Manage Calendar Profiles">
+        <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
-                <RowDefinition/>
+                <RowDefinition />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
-                <ColumnDefinition Width="100" />
-                <ColumnDefinition Width="50" />
                 <ColumnDefinition Width="Auto" />
-        </Grid.ColumnDefinitions>
-        <StackPanel Orientation="Vertical"
-                    Grid.Row="1"
-                    Grid.Column="3">
-        <Button Content="New"
-                    Width="40"
-                    HorizontalAlignment="Right"
-                Margin="2"
-                Command="{Binding CreateProfileCommand}" />
-        <Button HorizontalAlignment="Right"
-                    Margin="2"
-                    Width="40"
-                      Command="{Binding MoveUpCommand}"
-                    CommandParameter="{Binding SelectedItem,ElementName=ProfilesDataGrid}">
-            <Rectangle Width="12"
-                       Height="12"
-                       Fill="{Binding Path=Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Button}}}">
-                <Rectangle.OpacityMask>
-                    <VisualBrush Visual="{StaticResource appbar_arrow_up}" />
-                </Rectangle.OpacityMask>
-            </Rectangle>
-        </Button>
-        <Button HorizontalAlignment="Right"
-                Width="40"
-                Margin="2"
-                    Command="{Binding MoveDownCommand}"
-                    CommandParameter="{Binding SelectedItem,ElementName=ProfilesDataGrid}">
-            <Rectangle Width="12"
-                       Height="12"
-                       Fill="{Binding Path=Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Button}}}">
-                <Rectangle.OpacityMask>
-                    <VisualBrush Visual="{StaticResource appbar_arrow_down}" />
-                </Rectangle.OpacityMask>
-            </Rectangle>
-        </Button>
-        </StackPanel>
-        <DataGrid x:Name="ProfilesDataGrid"
-            Grid.Row="1"
-                  Grid.ColumnSpan="3"
-                  RenderOptions.ClearTypeHint="Enabled"
-                  TextOptions.TextFormattingMode="Display"
-                  Margin="5"
-                  ItemsSource="{Binding Path=SyncProfileList}"
-                  AutoGenerateColumns="False" SelectionMode="Single" GridLinesVisibility="Horizontal" AlternatingRowBackground="{StaticResource GrayBrush5}"
-                  CanUserAddRows="False" CanUserDeleteRows="False" CanUserReorderColumns="False" CanUserResizeColumns="True" CanUserSortColumns="False"
-                  CanUserResizeRows="False">
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="Name"
-                                    Binding="{Binding Name}" Width="150" />
-                <DataGridCheckBoxColumn Header="Sync" Width="100"
-                                        ElementStyle="{DynamicResource MetroDataGridCheckBox}"
-                                        EditingElementStyle="{DynamicResource MetroDataGridCheckBox}"
-                                        Binding="{Binding IsSyncEnabled,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
-                <DataGridTemplateColumn Header="Delete" Width="80">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <Button Margin="2"
-                                    Height="20" Width="20"
-                                    BorderThickness="0"
-                                    Style="{DynamicResource MetroCircleButtonStyle}"
-                                    IsEnabled="{Binding IsDefault,Converter={StaticResource InvertBooleanConverter},UpdateSourceTrigger=PropertyChanged}"
-                                    Command="{Binding DataContext.DeleteProfileCommand,ElementName=ProfilesDataGrid}"
-                                    CommandParameter="{Binding}" >
-                                <Rectangle Width="12"
-                                           Height="12"
-                                           Fill="{Binding Path=Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Button}}}">
-                                    <Rectangle.OpacityMask>
-                                        <VisualBrush Visual="{StaticResource appbar_delete}" />
-                                    </Rectangle.OpacityMask>
-                                </Rectangle>
-                            </Button>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-            </DataGrid.Columns>
-        </DataGrid>
+            </Grid.ColumnDefinitions>
+            <StackPanel Orientation="Vertical"
+                        Grid.Row="1"
+                        Grid.Column="1" Margin="2">
+                <Button Content="New"
+                        Width="40"
+                        HorizontalAlignment="Right"
+                        Margin="2"
+                        Command="{Binding CreateProfileCommand}" />
+                <Button HorizontalAlignment="Right"
+                        Margin="2"
+                        Width="40"
+                        Command="{Binding MoveUpCommand}"
+                        CommandParameter="{Binding SelectedItem,ElementName=ProfilesDataGrid}">
+                    <Rectangle Width="12"
+                               Height="12"
+                               Fill="{Binding Path=Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Button}}}">
+                        <Rectangle.OpacityMask>
+                            <VisualBrush Visual="{StaticResource appbar_arrow_up}" />
+                        </Rectangle.OpacityMask>
+                    </Rectangle>
+                </Button>
+                <Button HorizontalAlignment="Right"
+                        Width="40"
+                        Margin="2"
+                        Command="{Binding MoveDownCommand}"
+                        CommandParameter="{Binding SelectedItem,ElementName=ProfilesDataGrid}">
+                    <Rectangle Width="12"
+                               Height="12"
+                               Fill="{Binding Path=Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Button}}}">
+                        <Rectangle.OpacityMask>
+                            <VisualBrush Visual="{StaticResource appbar_arrow_down}" />
+                        </Rectangle.OpacityMask>
+                    </Rectangle>
+                </Button>
+            </StackPanel>
+            <DataGrid x:Name="ProfilesDataGrid"
+                      Grid.Row="1"
+                      RenderOptions.ClearTypeHint="Enabled"
+                      TextOptions.TextFormattingMode="Display"
+                      ItemsSource="{Binding Path=SyncProfileList}"
+                      AutoGenerateColumns="False" SelectionMode="Single" GridLinesVisibility="Horizontal"
+                      AlternatingRowBackground="{StaticResource AccentColorBrush}"
+                      CanUserAddRows="False" CanUserDeleteRows="False" CanUserReorderColumns="False"
+                      CanUserResizeColumns="True" CanUserSortColumns="False"
+                      CanUserResizeRows="False">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Name"
+                                        Binding="{Binding Name}" Width="150" />
+                    <DataGridCheckBoxColumn Header="Sync" Width="100"
+                                            ElementStyle="{DynamicResource MetroDataGridCheckBox}"
+                                            EditingElementStyle="{DynamicResource MetroDataGridCheckBox}"
+                                            Binding="{Binding IsSyncEnabled,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
+                    <DataGridTemplateColumn Header="Delete" Width="80">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Margin="2"
+                                        Height="20" Width="20"
+                                        BorderThickness="0"
+                                        Style="{DynamicResource MetroCircleButtonStyle}"
+                                        IsEnabled="{Binding IsDefault,Converter={StaticResource InvertBooleanConverter},UpdateSourceTrigger=PropertyChanged}"
+                                        Command="{Binding DataContext.DeleteProfileCommand,ElementName=ProfilesDataGrid}"
+                                        CommandParameter="{Binding}">
+                                    <Rectangle Width="12"
+                                               Height="12"
+                                               Fill="{Binding Path=Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Button}}}">
+                                        <Rectangle.OpacityMask>
+                                            <VisualBrush Visual="{StaticResource appbar_delete}" />
+                                        </Rectangle.OpacityMask>
+                                    </Rectangle>
+                                </Button>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
         </Grid>
-            
-    
+
+    </GroupBox>
 </UserControl>

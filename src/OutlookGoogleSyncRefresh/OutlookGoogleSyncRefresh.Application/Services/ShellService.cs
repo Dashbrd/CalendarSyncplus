@@ -20,10 +20,7 @@
 #region Imports
 
 using System.ComponentModel.Composition;
-using System.Waf.Applications;
 using System.Waf.Foundation;
-
-using OutlookGoogleSyncRefresh.Application.Utilities;
 
 #endregion
 

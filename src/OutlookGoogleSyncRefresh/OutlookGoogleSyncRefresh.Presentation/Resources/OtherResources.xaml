@@ -12,7 +12,7 @@
                     <ContentPresenter Content="{TemplateBinding Content}">
                         <ContentPresenter.Resources>
                             <Style TargetType="{x:Type TextBlock}">
-                                <Setter Property="MaxWidth" Value="350"/>
+                                <Setter Property="MaxWidth" Value="350" />
                                 <Setter Property="TextWrapping"
                                         Value="Wrap" />
                             </Style>
@@ -22,7 +22,7 @@
             </Setter.Value>
         </Setter>
     </Style>
-    <SolidColorBrush x:Key="ScheduleColorBrush" Color="Salmon"/>
+    <SolidColorBrush x:Key="ScheduleColorBrush" Color="Salmon" />
 
     <SolidColorBrush x:Key="CalendarColorBrush1"
                      Color="Salmon" />

@@ -1,4 +1,5 @@
 ﻿#region File Header
+
 // /******************************************************************************
 //  * 
 //  *      Copyright (C) Ankesh Dave 2015 All Rights Reserved. Confidential
@@ -13,11 +14,11 @@
 //  *      FileName:       ICalendarService.cs
 //  * 
 //  *****************************************************************************/
+
 #endregion
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Windows.Media;
 using OutlookGoogleSyncRefresh.Application.Wrappers;
 using OutlookGoogleSyncRefresh.Domain.Models;
 
@@ -27,12 +28,15 @@ namespace OutlookGoogleSyncRefresh.Application.Services
     {
         string CalendarServiceName { get; }
 
-        Task<bool> DeleteCalendarEvent(List<Appointment> calendarAppointments, IDictionary<string, object> calendarSpecificData);
+        Task<bool> DeleteCalendarEvent(List<Appointment> calendarAppointments,
+            IDictionary<string, object> calendarSpecificData);
 
-        Task<CalendarAppointments> GetCalendarEventsInRangeAsync(int daysInPast, int daysInFuture, IDictionary<string, object> calendarSpecificData);
+        Task<CalendarAppointments> GetCalendarEventsInRangeAsync(int daysInPast, int daysInFuture,
+            IDictionary<string, object> calendarSpecificData);
 
         Task<bool> AddCalendarEvent(List<Appointment> calendarAppointments, bool addDescription,
-            bool addReminder, bool addAttendees, bool attendeesToDescription, IDictionary<string, object> calendarSpecificData);
+            bool addReminder, bool addAttendees, bool attendeesToDescription,
+            IDictionary<string, object> calendarSpecificData);
 
         void CheckCalendarSpecificData(IDictionary<string, object> calendarSpecificData);
 
@@ -40,5 +44,4 @@ namespace OutlookGoogleSyncRefresh.Application.Services
 
         void SetCalendarColor(Category background, IDictionary<string, object> calendarSpecificData);
     }
-
 }

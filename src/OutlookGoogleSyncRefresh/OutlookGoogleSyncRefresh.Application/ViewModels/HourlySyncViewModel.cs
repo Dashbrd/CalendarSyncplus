@@ -1,14 +1,14 @@
 ﻿using System;
-using System.Windows;
 using OutlookGoogleSyncRefresh.Domain.Models;
 
 namespace OutlookGoogleSyncRefresh.Application.ViewModels
 {
     public class HourlySyncViewModel : SyncFrequencyViewModel
     {
-        private int _minutes;
         private int _hours;
+        private int _minutes;
         private HourlySyncFrequency _syncFrequency;
+
         public HourlySyncViewModel()
         {
             Hours = 1;
@@ -76,7 +76,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
 
             if (IsModified)
             {
-                var timeNow = DateTime.Now;
+                DateTime timeNow = DateTime.Now;
                 _syncFrequency.StartTime = timeNow.Subtract(new TimeSpan(0, 0, timeNow.Second));
                 _syncFrequency.Hours = Hours;
                 _syncFrequency.Minutes = Minutes;

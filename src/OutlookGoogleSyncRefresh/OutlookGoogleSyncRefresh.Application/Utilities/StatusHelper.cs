@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace OutlookGoogleSyncRefresh.Application.Utilities
 {
@@ -32,9 +31,15 @@ namespace OutlookGoogleSyncRefresh.Application.Utilities
 
     public class StatusHelper
     {
-        private const string LineConstant = "------------------------------------------------------------------------------";
-        private const string LogSeparatorConstant = "***************************************************************************";
-        static readonly Dictionary<SyncStateEnum, string> StatusDictionary = new Dictionary<SyncStateEnum, string>();
+        private const string LineConstant =
+            "------------------------------------------------------------------------------";
+
+        private const string LogSeparatorConstant =
+            "***************************************************************************";
+
+        private static readonly Dictionary<SyncStateEnum, string> StatusDictionary =
+            new Dictionary<SyncStateEnum, string>();
+
         static StatusHelper()
         {
             StatusDictionary.Add(SyncStateEnum.LogSeparator, LogSeparatorConstant);
@@ -61,6 +66,7 @@ namespace OutlookGoogleSyncRefresh.Application.Utilities
             StatusDictionary.Add(SyncStateEnum.SyncSuccess, "Sync completed");
             StatusDictionary.Add(SyncStateEnum.SyncFailed, "Sync failed : {0}");
         }
+
         public static string GetMessage(SyncStateEnum syncStateEnum, params object[] values)
         {
             string message = string.Empty;
@@ -69,7 +75,9 @@ namespace OutlookGoogleSyncRefresh.Application.Utilities
                 message = StatusDictionary[syncStateEnum];
             }
             if (values == null)
+            {
                 return message;
+            }
             return string.Format(message, values);
         }
     }

@@ -22,30 +22,28 @@
 using System;
 using System.ComponentModel;
 using System.ComponentModel.Composition;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Waf.Foundation;
-
 using OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate;
 using OutlookGoogleSyncRefresh.Application.Utilities;
 using OutlookGoogleSyncRefresh.Common.Log;
 using OutlookGoogleSyncRefresh.Domain.Helpers;
 using OutlookGoogleSyncRefresh.Domain.Models;
-using Timer = System.Timers.Timer;
+
 #endregion
 
 namespace OutlookGoogleSyncRefresh.Application.Services
 {
-    [Export(typeof(ISyncService))]
+    [Export(typeof (ISyncService))]
     public class SyncService : Model, ISyncService
     {
         #region Fields
 
         private readonly ApplicationLogger _applicationLogger;
+        private readonly ICalendarUpdateService _calendarUpdateService;
         private readonly IMessageService _messageService;
         private readonly ISettingsProvider _settingsProvider;
-        private readonly ICalendarUpdateService _calendarUpdateService;
         private string _syncStatus;
         private Timer _syncTimer;
 
@@ -83,7 +81,9 @@ namespace OutlookGoogleSyncRefresh.Application.Services
             }
             await Task.Delay(1000);
             if (_syncTimer == null)
+            {
                 _syncTimer = new Timer(1000);
+            }
 
             _syncTimer.Start();
             _syncTimer.Elapsed += timerCallback;
@@ -96,7 +96,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services
             _syncTimer.Elapsed -= ElapsedEventHandler;
         }
 
-        public string SyncNow(SyncProfile syncProfile, SyncCallback syncCallback)
+        public string SyncNow(CalendarSyncProfile syncProfile, SyncCallback syncCallback)
         {
             try
             {

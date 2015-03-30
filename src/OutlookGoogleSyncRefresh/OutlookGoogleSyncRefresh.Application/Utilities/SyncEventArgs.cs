@@ -7,6 +7,7 @@
             Message = message;
             UserActionEnum = actionEnum;
         }
+
         public string Message { get; private set; }
 
         public UserActionEnum UserActionEnum { get; private set; }

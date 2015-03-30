@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Globalization;
 using System.Windows.Data;
 using OutlookGoogleSyncRefresh.Common.MetaData;
 
@@ -10,14 +7,19 @@ namespace OutlookGoogleSyncRefresh.Presentation.Converters
 {
     public class BoolToCalendarServiceTypeConverter : IValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        #region IValueConverter Members
+
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             try
             {
                 if (value == null || parameter == null)
+                {
                     return false;
-                CalendarServiceType inputServiceType = (CalendarServiceType)Enum.Parse(typeof(CalendarServiceType), value.ToString());
-                CalendarServiceType parameterServiceType = (CalendarServiceType)Enum.Parse(typeof(CalendarServiceType), parameter.ToString());
+                }
+                var inputServiceType = (CalendarServiceType) Enum.Parse(typeof (CalendarServiceType), value.ToString());
+                var parameterServiceType =
+                    (CalendarServiceType) Enum.Parse(typeof (CalendarServiceType), parameter.ToString());
                 if (inputServiceType == parameterServiceType)
                 {
                     return true;
@@ -25,31 +27,32 @@ namespace OutlookGoogleSyncRefresh.Presentation.Converters
             }
             catch (Exception)
             {
-
-
             }
             return false;
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             try
             {
                 if (value == null || parameter == null)
+                {
                     return false;
-                bool isValid = (bool)value;
-                CalendarServiceType parameterServiceType = (CalendarServiceType)Enum.Parse(typeof(CalendarServiceType), parameter.ToString());
+                }
+                var isValid = (bool) value;
+                var parameterServiceType =
+                    (CalendarServiceType) Enum.Parse(typeof (CalendarServiceType), parameter.ToString());
                 if (isValid)
                 {
                     return parameterServiceType;
                 }
-
             }
             catch (Exception)
             {
-
             }
             return CalendarServiceType.None;
         }
+
+        #endregion
     }
 }

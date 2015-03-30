@@ -25,14 +25,12 @@ using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
 using System.Diagnostics;
 using System.Globalization;
-using System.Linq;
 using System.Reflection;
 using System.Waf.Applications;
 using System.Windows;
 using System.Windows.Threading;
 using OutlookGoogleSyncRefresh.Application.Controllers;
 using OutlookGoogleSyncRefresh.Application.Services;
-using OutlookGoogleSyncRefresh.Application.Utilities;
 using OutlookGoogleSyncRefresh.Application.ViewModels;
 using OutlookGoogleSyncRefresh.Common;
 using OutlookGoogleSyncRefresh.Common.Log;
@@ -52,10 +50,11 @@ namespace OutlookGoogleSyncRefresh
         #region Fields
 
         private static ApplicationLogger _applicationLogger;
+        private readonly bool _startMinimized;
         private AggregateCatalog catalog;
         private CompositionContainer container;
         private IApplicationController controller;
-        private bool _startMinimized;
+
         #endregion
 
         static App()
@@ -115,13 +114,13 @@ namespace OutlookGoogleSyncRefresh
 
             catalog = new AggregateCatalog();
             // Add the WpfApplicationFramework assembly to the catalog
-            catalog.Catalogs.Add(new AssemblyCatalog(typeof(ViewModel).Assembly));
+            catalog.Catalogs.Add(new AssemblyCatalog(typeof (ViewModel).Assembly));
             // Add the Waf.BookLibrary.Library.Presentation assembly to the catalog
             catalog.Catalogs.Add(new AssemblyCatalog(Assembly.GetExecutingAssembly()));
             // Add the Waf.BookLibrary.Library.Applications assembly to the catalog
-            catalog.Catalogs.Add(new AssemblyCatalog(typeof(ShellViewModel).Assembly));
+            catalog.Catalogs.Add(new AssemblyCatalog(typeof (ShellViewModel).Assembly));
             // Add the Common assembly to catalog
-            catalog.Catalogs.Add(new AssemblyCatalog(typeof(ApplicationLogger).Assembly));
+            catalog.Catalogs.Add(new AssemblyCatalog(typeof (ApplicationLogger).Assembly));
 
             //Composition Container
             container = new CompositionContainer(catalog, true);
@@ -157,7 +156,7 @@ namespace OutlookGoogleSyncRefresh
         public bool SignalExternalCommandLineArgs(IList<string> args)
         {
             //Activate Hidden,Background Application
-            Current.Dispatcher.BeginInvoke(((Action)(() => Utilities.BringToForeground(MainWindow))));
+            Current.Dispatcher.BeginInvoke(((Action) (() => Utilities.BringToForeground(MainWindow))));
             return true;
         }
 

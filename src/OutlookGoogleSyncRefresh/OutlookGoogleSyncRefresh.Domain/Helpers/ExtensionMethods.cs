@@ -29,7 +29,7 @@ namespace OutlookGoogleSyncRefresh.Domain.Helpers
             return true;
         }
 
-        public static bool ValidateOutlookSettings(this SyncProfile syncProfile)
+        public static bool ValidateOutlookSettings(this CalendarSyncProfile syncProfile)
         {
             if (!syncProfile.OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.DefaultProfile) &&
                 string.IsNullOrEmpty(syncProfile.OutlookSettings.OutlookProfileName))
@@ -38,7 +38,8 @@ namespace OutlookGoogleSyncRefresh.Domain.Helpers
             }
 
             if (!syncProfile.OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.DefaultCalendar) &&
-                (syncProfile.OutlookSettings.OutlookCalendar == null || syncProfile.OutlookSettings.OutlookMailBox == null))
+                (syncProfile.OutlookSettings.OutlookCalendar == null ||
+                 syncProfile.OutlookSettings.OutlookMailBox == null))
             {
                 return false;
             }
@@ -46,13 +47,15 @@ namespace OutlookGoogleSyncRefresh.Domain.Helpers
             return true;
         }
 
-        public static void UpdateEntryOptions(this SyncProfile syncProfile, bool addDescription, bool addReminders,
+        public static void UpdateEntryOptions(this CalendarSyncProfile syncProfile, bool addDescription,
+            bool addReminders,
             bool addAttendees, bool addAttendeesToDescription, bool addAttachments)
         {
             syncProfile.CalendarEntryOptions = CalendarEntryOptionsEnum.None;
             if (addDescription)
             {
-                syncProfile.CalendarEntryOptions = syncProfile.CalendarEntryOptions | CalendarEntryOptionsEnum.Description;
+                syncProfile.CalendarEntryOptions = syncProfile.CalendarEntryOptions |
+                                                   CalendarEntryOptionsEnum.Description;
             }
 
             if (addReminders)
@@ -65,13 +68,15 @@ namespace OutlookGoogleSyncRefresh.Domain.Helpers
                 syncProfile.CalendarEntryOptions = syncProfile.CalendarEntryOptions | CalendarEntryOptionsEnum.Attendees;
                 if (addAttendeesToDescription)
                 {
-                    syncProfile.CalendarEntryOptions = syncProfile.CalendarEntryOptions | CalendarEntryOptionsEnum.AttendeesToDescription;
+                    syncProfile.CalendarEntryOptions = syncProfile.CalendarEntryOptions |
+                                                       CalendarEntryOptionsEnum.AttendeesToDescription;
                 }
             }
 
             if (addAttachments)
             {
-                syncProfile.CalendarEntryOptions = syncProfile.CalendarEntryOptions | CalendarEntryOptionsEnum.Attachments;
+                syncProfile.CalendarEntryOptions = syncProfile.CalendarEntryOptions |
+                                                   CalendarEntryOptionsEnum.Attachments;
             }
         }
 

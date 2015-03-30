@@ -1,24 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.Composition;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Waf.Applications;
 using System.Waf.Foundation;
 using MahApps.Metro.Controls.Dialogs;
-using Microsoft.Office.Interop.Outlook;
 using OutlookGoogleSyncRefresh.Application.Services;
 using OutlookGoogleSyncRefresh.Application.Services.ExchangeWeb;
 using OutlookGoogleSyncRefresh.Application.Services.Google;
 using OutlookGoogleSyncRefresh.Application.Services.Outlook;
 using OutlookGoogleSyncRefresh.Application.Utilities;
+using OutlookGoogleSyncRefresh.Application.Wrappers;
 using OutlookGoogleSyncRefresh.Common.Log;
 using OutlookGoogleSyncRefresh.Common.MetaData;
 using OutlookGoogleSyncRefresh.Domain.Helpers;
 using OutlookGoogleSyncRefresh.Domain.Models;
-using Category = OutlookGoogleSyncRefresh.Application.Wrappers.Category;
-using Exception = System.Exception;
 
 namespace OutlookGoogleSyncRefresh.Application.ViewModels
 {
@@ -26,52 +22,52 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
     {
         private bool _addAttachments;
         private bool _addAttendees;
+        private bool _addAttendeesToDescription;
         private bool _addDescription;
         private bool _addReminders;
+        private bool _allowMasterCalendarSelect;
+        private DelegateCommand _autoDetectExchangeServer;
+        private List<CalendarSyncDirectionEnum> _calendarSyncModes;
+        private List<Category> _categories;
+        private bool _confirmOnDelete;
+        private int _daysInFuture = 7;
+        private int _daysInPast = 1;
+        private bool _disableDelete;
+        private List<OutlookCalendar> _exchangeCalendarList;
+        private string _exchangeServerUrl;
         private DelegateCommand _getGoogleCalendarCommand;
         private DelegateCommand _getOutlookMailboxCommand;
         private DelegateCommand _getOutlookProfileLIstCommand;
         private List<Calendar> _googleCalenders;
-        private DelegateCommand _autoDetectExchangeServer;
-        private bool _confirmOnDelete;
-        private bool _disableDelete;
+        private bool _isDefault;
+        private bool _isDefaultMailBox = true;
+        private bool _isDefaultProfile = true;
+        private bool _isExchangeWebServices;
+        private bool _isLoading;
+        private bool _isSyncEnabled;
         private bool _keepLastModifiedCopy;
-        private List<OutlookCalendar> _exchangeCalendarList;
-        private OutlookCalendar _selectedExchangeCalendar;
-        private DelegateCommand _resetGoogleCalendar;
-        private DelegateCommand _resetOutlookCalendarCommand;
+        private CalendarServiceType _masterCalendarServiceType;
+        private string _name;
         private OutlookCalendar _outlookCalendar;
         private OutlookMailBox _outlookMailBox;
         private List<OutlookMailBox> _outlookMailBoxes;
         private List<string> _outlookProfileList;
         private string _password;
+        private DelegateCommand _resetGoogleCalendar;
+        private DelegateCommand _resetOutlookCalendarCommand;
         private Calendar _selectedCalendar;
+        private CalendarSyncDirectionEnum _selectedCalendarSyncDirection;
+        private Category _selectedCategory;
+        private OutlookCalendar _selectedExchangeCalendar;
         private string _selectedOutlookProfileName;
+        private bool _setCategory;
         private List<string> _syncFrequencies;
         private string _syncFrequency;
         private SyncFrequencyViewModel _syncFrequencyViewModel;
         private string _username;
-        private int _daysInFuture = 7;
-        private int _daysInPast = 1;
-        private bool _addAttendeesToDescription;
-        private bool _allowMasterCalendarSelect;
-        private CalendarServiceType _masterCalendarServiceType;
-        private List<CalendarSyncDirectionEnum> _calendarSyncModes;
-        private CalendarSyncDirectionEnum _selectedCalendarSyncDirection;
-        private string _exchangeServerUrl;
-        private bool _isDefaultMailBox = true;
-        private bool _isDefaultProfile = true;
-        private bool _isExchangeWebServices;
-        private bool _isLoading;
-        private string _name;
-        private bool _isSyncEnabled;
-        private bool _isDefault;
-        private Category _selectedCategory;
-        private List<Category> _categories;
-        private bool _setCategory;
 
-        public ProfileViewModel(SyncProfile syncProfile, IGoogleCalendarService googleCalendarService,
-             IOutlookCalendarService outlookCalendarService,
+        public ProfileViewModel(CalendarSyncProfile syncProfile, IGoogleCalendarService googleCalendarService,
+            IOutlookCalendarService outlookCalendarService,
             IMessageService messageService, IExchangeWebCalendarService exchangeWebCalendarService,
             ApplicationLogger applicationLogger)
         {
@@ -84,7 +80,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             Initialize();
         }
 
-        public SyncProfile SyncProfile { get; set; }
+        public CalendarSyncProfile SyncProfile { get; set; }
         public IGoogleCalendarService GoogleCalendarService { get; set; }
         public IOutlookCalendarService OutlookCalendarService { get; set; }
         public IMessageService MessageService { get; set; }
@@ -92,6 +88,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
         public ApplicationLogger ApplicationLogger { get; private set; }
 
         #region Properties
+
         public string Name
         {
             get { return _name; }
@@ -365,6 +362,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
         #endregion
 
         #region Commands
+
         public DelegateCommand GetOutlookMailBoxesCommand
         {
             get
@@ -396,7 +394,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             get
             {
                 return _resetOutlookCalendarCommand = _resetOutlookCalendarCommand ??
-                    new DelegateCommand(ResetOutlookCalendarHandler);
+                                                      new DelegateCommand(ResetOutlookCalendarHandler);
             }
         }
 
@@ -407,29 +405,33 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
                 return _resetGoogleCalendar = _resetGoogleCalendar ?? new DelegateCommand(ResetGoogleCalendarHandler);
             }
         }
+
         #endregion
+
         #region Private Methods
+
         private void Initialize()
         {
             Name = SyncProfile.Name;
             IsSyncEnabled = SyncProfile.IsSyncEnabled;
             IsDefault = SyncProfile.IsDefault;
 
-            CalendarSyncModes = new List<CalendarSyncDirectionEnum>()
-                {
-                    CalendarSyncDirectionEnum.OutlookGoogleOneWay,
-                    CalendarSyncDirectionEnum.OutlookGoogleOneWayToSource,
-                    CalendarSyncDirectionEnum.OutlookGoogleTwoWay
-                };
+            CalendarSyncModes = new List<CalendarSyncDirectionEnum>
+            {
+                CalendarSyncDirectionEnum.OutlookGoogleOneWay,
+                CalendarSyncDirectionEnum.OutlookGoogleOneWayToSource,
+                CalendarSyncDirectionEnum.OutlookGoogleTwoWay
+            };
             SyncFrequencies = new List<string>
-                {
-                    "Hourly",
-                    "Daily",
-                    "Weekly"
-                };
+            {
+                "Hourly",
+                "Daily",
+                "Weekly"
+            };
             SyncFrequency = "Hourly";
             Categories = CategoryHelper.GetCategories();
         }
+
         private async void GetOutlookMailBoxes()
         {
             IsLoading = true;
@@ -487,6 +489,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
         {
             OutlookProfileList = await OutlookCalendarService.GetOutLookProfieListAsync();
         }
+
         private async void GetGoogleCalendar()
         {
             IsLoading = true;
@@ -515,7 +518,8 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
 
         private async Task GetGoogleCalendarInternal()
         {
-            List<Calendar> calendars = await GoogleCalendarService.GetAvailableCalendars(new Dictionary<string, object>());
+            List<Calendar> calendars =
+                await GoogleCalendarService.GetAvailableCalendars(new Dictionary<string, object>());
             GoogleCalenders = calendars;
             if (GoogleCalenders.Any())
             {
@@ -526,7 +530,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
         }
 
 
-        async void ResetGoogleCalendarHandler()
+        private async void ResetGoogleCalendarHandler()
         {
             IsLoading = true;
             await ResetGoogleCalendarInternal();
@@ -541,14 +545,17 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
                 return;
             }
 
-            var task = await MessageService.ShowConfirmMessage("Are you sure you want to reset events from 10 year past and 10 year future?");
+            MessageDialogResult task =
+                await
+                    MessageService.ShowConfirmMessage(
+                        "Are you sure you want to reset events from 10 year past and 10 year future?");
             if (task != MessageDialogResult.Affirmative)
             {
                 return;
             }
 
-            var calendarSpecificData = new Dictionary<string, object>() { { "CalendarId", SelectedCalendar.Id } };
-            var result = await GoogleCalendarService.ResetCalendar(calendarSpecificData);
+            var calendarSpecificData = new Dictionary<string, object> {{"CalendarId", SelectedCalendar.Id}};
+            bool result = await GoogleCalendarService.ResetCalendar(calendarSpecificData);
             if (!result)
             {
                 MessageService.ShowMessageAsync("Reset calendar failed.");
@@ -571,25 +578,28 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
                 return;
             }
 
-            var task = await MessageService.ShowConfirmMessage("Are you sure you want to reset events from 10 year past and 10 year future?");
+            MessageDialogResult task =
+                await
+                    MessageService.ShowConfirmMessage(
+                        "Are you sure you want to reset events from 10 year past and 10 year future?");
             if (task != MessageDialogResult.Affirmative)
             {
                 return;
             }
 
-            var calendarSpecificData = new Dictionary<string, object>()
+            var calendarSpecificData = new Dictionary<string, object>
             {
-                {"ProfileName",  SelectedOutlookProfileName},
+                {"ProfileName", SelectedOutlookProfileName},
                 {"OutlookCalendar", SelectedOutlookCalendar}
             };
 
-            var result = await OutlookCalendarService.ResetCalendar(calendarSpecificData);
+            bool result = await OutlookCalendarService.ResetCalendar(calendarSpecificData);
             if (!result)
             {
                 MessageService.ShowMessageAsync("Reset calendar failed.");
             }
-
         }
+
         private void OnSyncFrequencyChanged()
         {
             if (SyncProfile != null && SyncProfile.SyncSettings.SyncFrequency != null &&
@@ -639,7 +649,8 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
                 AddAttendees = SyncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Attendees);
                 if (AddAttendees)
                 {
-                    AddAttendeesToDescription = SyncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.AttendeesToDescription);
+                    AddAttendeesToDescription =
+                        SyncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.AttendeesToDescription);
                 }
                 AddDescription = SyncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Description);
                 AddReminders = SyncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Reminders);
@@ -676,7 +687,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
         }
 
 
-        public SyncProfile SaveCurrentSyncProfile()
+        public CalendarSyncProfile SaveCurrentSyncProfile()
         {
             SyncProfile.IsSyncEnabled = IsSyncEnabled;
             SyncProfile.GoogleCalendar = SelectedCalendar;
@@ -702,6 +713,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
 
             return SyncProfile;
         }
+
         #endregion
     }
 }

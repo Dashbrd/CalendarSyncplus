@@ -49,7 +49,6 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
     {
         None,
         Daily,
-        Weekday,
         Weekly,
         Monthly,
         Yearly

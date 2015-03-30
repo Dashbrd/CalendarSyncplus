@@ -19,10 +19,7 @@
 
 #region Imports
 
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Threading.Tasks;
 using OutlookGoogleSyncRefresh.Application.Utilities;
 using OutlookGoogleSyncRefresh.Application.Wrappers;
 using OutlookGoogleSyncRefresh.Domain.Models;
@@ -50,7 +47,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
         /// </summary>
         /// <param name="syncProfile"></param>
         /// <returns></returns>
-        bool SyncCalendar(SyncProfile syncProfile, SyncCallback synccallback);
+        bool SyncCalendar(CalendarSyncProfile syncProfile, SyncCallback synccallback);
 
         #endregion
     }

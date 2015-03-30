@@ -194,6 +194,7 @@
     <Compile Include="Wrappers\AppointmentListWrapper.cs" />
     <Compile Include="Wrappers\CalendarAppointments.cs" />
     <Compile Include="Wrappers\Category.cs" />
+    <Compile Include="Wrappers\Frequency.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OutlookGoogleSyncRefresh.Common\OutlookGoogleSyncRefresh.Common.csproj">

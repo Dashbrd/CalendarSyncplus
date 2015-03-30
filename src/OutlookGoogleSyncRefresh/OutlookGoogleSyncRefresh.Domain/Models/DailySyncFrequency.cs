@@ -59,7 +59,8 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
         {
             if (dateTimeNow.CompareTo(TimeOfDay) > 0)
             {
-                dateTimeNow = new DateTime(dateTimeNow.Year, dateTimeNow.Month, dateTimeNow.Day, TimeOfDay.Hour, TimeOfDay.Minute,
+                dateTimeNow = new DateTime(dateTimeNow.Year, dateTimeNow.Month, dateTimeNow.Day, TimeOfDay.Hour,
+                    TimeOfDay.Minute,
                     TimeOfDay.Second);
                 dateTimeNow = dateTimeNow.Add(new TimeSpan(1, 0, 0, 0));
             }
@@ -68,7 +69,8 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
             {
                 if (IsDayValid(dateTimeNow))
                 {
-                    return new DateTime(dateTimeNow.Year, dateTimeNow.Month, dateTimeNow.Day, TimeOfDay.Hour, TimeOfDay.Minute,
+                    return new DateTime(dateTimeNow.Year, dateTimeNow.Month, dateTimeNow.Day, TimeOfDay.Hour,
+                        TimeOfDay.Minute,
                         TimeOfDay.Second);
                 }
                 dateTimeNow = dateTimeNow.Add(new TimeSpan(1, 0, 0, 0));
