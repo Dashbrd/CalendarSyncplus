@@ -76,7 +76,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
         private DelegateCommand _startSyncCommand;
         private DelegateCommand _syncNowCommand;
         private bool _isSettingsLoading;
-        private List<SyncProfile> _scheduledProfiles;
+        private List<CalendarSyncProfile> _scheduledProfiles;
         #endregion
 
         #region Events
@@ -137,7 +137,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
         public IApplicationUpdateService ApplicationUpdateService { get; set; }
         public IShellService ShellService { get; set; }
 
-        public List<SyncProfile> ScheduledProfiles
+        public List<CalendarSyncProfile> ScheduledProfiles
         {
             get { return _scheduledProfiles; }
             set { SetProperty(ref _scheduledProfiles, value); }
@@ -465,7 +465,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
                 {
                     if (syncProfile.IsSyncEnabled)
                     {
-                        SyncProfile profile = syncProfile;
+                        CalendarSyncProfile profile = syncProfile;
                         Task.Factory.StartNew(() => StartSyncTask(profile));
                     }
                 }
@@ -490,7 +490,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
                 {
                     if (syncProfile.IsSyncEnabled && syncProfile.SyncSettings.SyncFrequency.ValidateTimer(dateTime))
                     {
-                        SyncProfile profile = syncProfile;
+                        CalendarSyncProfile profile = syncProfile;
                         Task.Factory.StartNew(() => StartSyncTask(profile),TaskCreationOptions.None);
                     }
                 }
@@ -507,7 +507,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
         }
 
         private static object lockerObject = new object();
-        private void StartSyncTask(SyncProfile syncProfile)
+        private void StartSyncTask(CalendarSyncProfile syncProfile)
         {
             if (IsSettingsLoading)
             {
@@ -540,7 +540,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             return true;
         }
 
-        private void OnSyncCompleted(SyncProfile syncProfile, string result)
+        private void OnSyncCompleted(CalendarSyncProfile syncProfile, string result)
         {
             if (string.IsNullOrEmpty(result))
             {

@@ -11,11 +11,11 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
     {
         public Settings()
         {
-            SyncProfiles = new ObservableCollection<SyncProfile>();
+            SyncProfiles = new ObservableCollection<CalendarSyncProfile>();
             AppSettings = new AppSettings();
         }
 
-        public ObservableCollection<SyncProfile> SyncProfiles { get; set; }
+        public ObservableCollection<CalendarSyncProfile> SyncProfiles { get; set; }
 
         public AppSettings AppSettings { get; set; }
 
@@ -31,7 +31,7 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
                 RememberPeriodicSyncOn = true,
                 RunApplicationAtSystemStartup = true
             };
-            settings.SyncProfiles.Add(SyncProfile.GetDefaultSyncProfile());
+            settings.SyncProfiles.Add(CalendarSyncProfile.GetDefaultSyncProfile());
             return settings;
         }
     }

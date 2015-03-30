@@ -140,8 +140,8 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
                     outlookItems.Sort("[Start]", Type.Missing);
                     outlookItems.IncludeRecurrences = true;
 
-                    var min = DateTime.Now.AddDays(-daysInPast);
-                    var max = DateTime.Now.AddDays(+(daysInFuture + 1));
+                    var min = DateTime.Now.Date.AddDays(-daysInPast);
+                    var max = DateTime.Now.Date.AddDays(+(daysInFuture + 1));
 
                     // create Final filter as string
                     var filter = "[End] >= '" + min.ToString("g") + "' AND [Start] < '" + max.ToString("g") + "'";

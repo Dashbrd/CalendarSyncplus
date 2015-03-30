@@ -29,7 +29,7 @@ namespace OutlookGoogleSyncRefresh.Domain.Helpers
             return true;
         }
 
-        public static bool ValidateOutlookSettings(this SyncProfile syncProfile)
+        public static bool ValidateOutlookSettings(this CalendarSyncProfile syncProfile)
         {
             if (!syncProfile.OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.DefaultProfile) &&
                 string.IsNullOrEmpty(syncProfile.OutlookSettings.OutlookProfileName))
@@ -46,7 +46,7 @@ namespace OutlookGoogleSyncRefresh.Domain.Helpers
             return true;
         }
 
-        public static void UpdateEntryOptions(this SyncProfile syncProfile, bool addDescription, bool addReminders,
+        public static void UpdateEntryOptions(this CalendarSyncProfile syncProfile, bool addDescription, bool addReminders,
             bool addAttendees, bool addAttendeesToDescription, bool addAttachments)
         {
             syncProfile.CalendarEntryOptions = CalendarEntryOptionsEnum.None;

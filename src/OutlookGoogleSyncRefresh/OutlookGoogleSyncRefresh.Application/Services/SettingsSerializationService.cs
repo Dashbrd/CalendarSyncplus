@@ -132,12 +132,12 @@ namespace OutlookGoogleSyncRefresh.Application.Services
 
             if (result.SyncProfiles == null)
             {
-                result.SyncProfiles = new ObservableCollection<SyncProfile>();
+                result.SyncProfiles = new ObservableCollection<CalendarSyncProfile>();
             }
 
             if (result.SyncProfiles.Count == 0)
             {
-                result.SyncProfiles.Add(SyncProfile.GetDefaultSyncProfile());
+                result.SyncProfiles.Add(CalendarSyncProfile.GetDefaultSyncProfile());
             }
 
             foreach (var syncProfile in result.SyncProfiles)

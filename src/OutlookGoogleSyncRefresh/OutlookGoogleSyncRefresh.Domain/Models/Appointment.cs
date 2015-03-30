@@ -6,7 +6,7 @@ using OutlookGoogleSyncRefresh.Domain.Helpers;
 
 namespace OutlookGoogleSyncRefresh.Domain.Models
 {
-    public class Appointment : Model
+    public class Appointment : Model, ICloneable
     {
         /// <summary>
         /// Flag if the appointment is an all day event
@@ -37,7 +37,6 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
         private List<Recipient> _recipients;
         private DateTime? _lastModified;
         private DateTime? _created;
-        private Frequency _frequency;
 
         public Appointment(string description, string location, string subject, DateTime? endTime, DateTime? startTime,
             string appointmentId)
@@ -221,6 +220,19 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
         {
             return Rfc339FormatStartTime + ";" + Rfc339FormatStartTime + ";" + Subject + ";" + Location;
             //return (AllDayEvent ? StartTime.Value.Date.Rfc339FFormat() : Rfc339FormatStartTime + ";" + Rfc339FormatStartTime)+ ";" + Subject + ";" + Location;
+        }
+
+        public object Clone()
+        {
+            Appointment appointment = new Appointment(Description, Location, Subject, EndTime, StartTime, AppointmentId);
+            appointment.Organizer = Organizer;
+            appointment.RequiredAttendees = RequiredAttendees;
+            appointment.OptionalAttendees = OptionalAttendees;
+            appointment.Created = Created;
+            appointment.LastModified = LastModified;
+            appointment.CalendarId = CalendarId;
+            appointment.ExtendedProperties = ExtendedProperties;
+            return appointment;
         }
     }
 }

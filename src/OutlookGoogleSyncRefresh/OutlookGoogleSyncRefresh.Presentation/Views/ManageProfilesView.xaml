@@ -11,7 +11,7 @@
     <UserControl.Resources>
         <converters:InvertBooleanConverter x:Key="InvertBooleanConverter"/>
     </UserControl.Resources>
-        
+        <GroupBox Header="Manage Calendar Profiles">
         <Grid >
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
@@ -19,13 +19,11 @@
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
-                <ColumnDefinition Width="100" />
-                <ColumnDefinition Width="50" />
                 <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
         <StackPanel Orientation="Vertical"
                     Grid.Row="1"
-                    Grid.Column="3">
+                    Grid.Column="1" Margin="2">
         <Button Content="New"
                     Width="40"
                     HorizontalAlignment="Right"
@@ -60,12 +58,10 @@
         </StackPanel>
         <DataGrid x:Name="ProfilesDataGrid"
             Grid.Row="1"
-                  Grid.ColumnSpan="3"
                   RenderOptions.ClearTypeHint="Enabled"
                   TextOptions.TextFormattingMode="Display"
-                  Margin="5"
                   ItemsSource="{Binding Path=SyncProfileList}"
-                  AutoGenerateColumns="False" SelectionMode="Single" GridLinesVisibility="Horizontal" AlternatingRowBackground="{StaticResource GrayBrush5}"
+                  AutoGenerateColumns="False" SelectionMode="Single" GridLinesVisibility="Horizontal" AlternatingRowBackground="{StaticResource AccentColorBrush}"
                   CanUserAddRows="False" CanUserDeleteRows="False" CanUserReorderColumns="False" CanUserResizeColumns="True" CanUserSortColumns="False"
                   CanUserResizeRows="False">
             <DataGrid.Columns>
@@ -99,6 +95,6 @@
             </DataGrid.Columns>
         </DataGrid>
         </Grid>
-            
-    
+
+    </GroupBox>
 </UserControl>

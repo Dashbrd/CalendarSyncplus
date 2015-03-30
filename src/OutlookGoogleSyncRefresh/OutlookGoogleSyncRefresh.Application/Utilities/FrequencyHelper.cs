@@ -4,22 +4,23 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using OutlookGoogleSyncRefresh.Application.Wrappers;
 using OutlookGoogleSyncRefresh.Domain.Models;
 
 namespace OutlookGoogleSyncRefresh.Application.Utilities
 {
     public class FrequencyHelper
     {
-        public static Frequency GetGoogleFrequency(string recurrence)
+        private static Frequency GetGoogleFrequency(string recurrence)
         {
             var frequency = new Frequency();
             //RRULE:FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR
-            string[] values = recurrence.Split(new[] {":", ";"}, StringSplitOptions.RemoveEmptyEntries);
+            string[] values = recurrence.Split(new[] { ":", ";" }, StringSplitOptions.RemoveEmptyEntries);
             foreach (var value in values)
             {
                 if (value.Contains("="))
                 {
-                    var parameter = value.Split(new[] {"="}, StringSplitOptions.RemoveEmptyEntries);
+                    var parameter = value.Split(new[] { "=" }, StringSplitOptions.RemoveEmptyEntries);
                     switch (parameter[0])
                     {
                         case "FREQ":
@@ -30,17 +31,20 @@ namespace OutlookGoogleSyncRefresh.Application.Utilities
                             break;
                         case "UNTIL":
                             DateTime endDate;
-                            if (DateTime.TryParse(parameter[1], out endDate))
+                            if (DateTime.TryParseExact(parameter[1], new[] { "yyyyMMddTHHmmssZ" }, CultureInfo.InvariantCulture.DateTimeFormat, DateTimeStyles.AssumeUniversal, out endDate))
                             {
                                 frequency.EndDate = endDate;
-                            } 
+                            }
                             break;
                         case "COUNT":
                             int count;
                             if (int.TryParse(parameter[1], out count))
                             {
                                 frequency.Count = count;
-                            } 
+                            }
+                            break;
+                        default:
+                            //Do Nothing
                             break;
                     }
                 }
@@ -52,7 +56,7 @@ namespace OutlookGoogleSyncRefresh.Application.Utilities
         {
             var daysOfWeek = new List<DayOfWeek>();
             string[] values = parameter.Split(',');
-            
+
             foreach (var value in values)
             {
                 switch (value)
@@ -99,6 +103,37 @@ namespace OutlookGoogleSyncRefresh.Application.Utilities
             return FrequencyTypeEnum.None;
         }
 
-      
+
+        public static List<Appointment> SplitRecurringAppointments(Appointment recurringAppointment, string recurrence,
+            DateTime startDate, DateTime endDate)
+        {
+            var frequency = GetGoogleFrequency(recurrence);
+            frequency.StartDate = recurringAppointment.StartTime.GetValueOrDefault();
+
+            var appointmentList = new List<Appointment>();
+            var dateTime = startDate.Date;
+            while (endDate.CompareTo(dateTime) > 0)
+            {
+                if (frequency.ValidateDate(dateTime))
+                {
+                    var newAppointment = (Appointment)recurringAppointment.Clone();
+                    newAppointment.AppointmentId = string.Format("{0}_{1}", recurringAppointment.AppointmentId,
+                        dateTime.ToString("yy-MM-dd"));
+                    newAppointment.StartTime =
+                        dateTime.Date.Add(new TimeSpan(recurringAppointment.StartTime.GetValueOrDefault().Hour,
+                            recurringAppointment.StartTime.GetValueOrDefault().Minute,
+                            recurringAppointment.StartTime.GetValueOrDefault().Second));
+                    newAppointment.EndTime =
+                        dateTime.Date.Add(new TimeSpan(recurringAppointment.EndTime.GetValueOrDefault().Hour,
+                            recurringAppointment.EndTime.GetValueOrDefault().Minute,
+                            recurringAppointment.EndTime.GetValueOrDefault().Second));
+                    appointmentList.Add(newAppointment);
+                }
+
+                dateTime = dateTime.AddDays(1);
+            }
+            return appointmentList;
+        }
+
     }
 }

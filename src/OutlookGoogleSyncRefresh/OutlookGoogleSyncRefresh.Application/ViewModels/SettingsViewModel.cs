@@ -230,7 +230,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
                     MessageService.ShowMessageAsync("You have reached the maximum number of profiles.");
                     return;
                 }
-                var syncProfile = SyncProfile.GetDefaultSyncProfile();
+                var syncProfile = CalendarSyncProfile.GetDefaultSyncProfile();
                 syncProfile.Name = result;
                 syncProfile.IsDefault = false;
                 var viewModel = new ProfileViewModel(syncProfile, GoogleCalendarService, OutlookCalendarService, MessageService,

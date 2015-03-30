@@ -50,7 +50,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
         /// </summary>
         /// <param name="syncProfile"></param>
         /// <returns></returns>
-        bool SyncCalendar(SyncProfile syncProfile, SyncCallback synccallback);
+        bool SyncCalendar(CalendarSyncProfile syncProfile, SyncCallback synccallback);
 
         #endregion
     }

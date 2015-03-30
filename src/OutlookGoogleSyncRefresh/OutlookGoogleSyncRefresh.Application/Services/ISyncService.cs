@@ -45,7 +45,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services
 
         void Stop(ElapsedEventHandler timerCallback);
 
-        string SyncNow(SyncProfile syncProfile, SyncCallback syncCallback);
+        string SyncNow(CalendarSyncProfile syncProfile, SyncCallback syncCallback);
 
         #endregion
     }

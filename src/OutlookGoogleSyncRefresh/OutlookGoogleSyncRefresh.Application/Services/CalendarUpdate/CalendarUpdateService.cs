@@ -119,7 +119,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
         /// <param name="sourceList"></param>
         /// <param name="destinationList"></param>
         /// <returns></returns>
-        private List<Appointment> GetAppointmentsToDelete(SyncProfile syncProfile,
+        private List<Appointment> GetAppointmentsToDelete(CalendarSyncProfile syncProfile,
             List<Appointment> sourceList, List<Appointment> destinationList)
         {
             bool addDescription =
@@ -194,7 +194,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
         /// <param name="sourceList"></param>
         /// <param name="destinationList"></param>
         /// <returns></returns>
-        private List<Appointment> GetAppointmentsToAdd(SyncProfile syncProfile, List<Appointment> sourceList,
+        private List<Appointment> GetAppointmentsToAdd(CalendarSyncProfile syncProfile, List<Appointment> sourceList,
             List<Appointment> destinationList)
         {
 
@@ -242,13 +242,13 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
             return sourceList;
         }
 
-        private void InitiatePreSyncSetup(SyncProfile syncProfile)
+        private void InitiatePreSyncSetup(CalendarSyncProfile syncProfile)
         {
             SourceCalendarService = CalendarServiceFactory.GetCalendarService(syncProfile.SyncSettings.SourceCalendar);
             DestinationCalendarService = CalendarServiceFactory.GetCalendarService(syncProfile.SyncSettings.DestinationCalendar);
         }
 
-        private IDictionary<string, object> GetCalendarSpecificData(CalendarServiceType serviceType, SyncProfile syncProfile)
+        private IDictionary<string, object> GetCalendarSpecificData(CalendarServiceType serviceType, CalendarSyncProfile syncProfile)
         {
             switch (serviceType)
             {
@@ -292,7 +292,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
         /// <param name="syncProfile"></param>
         /// <param name="destinationCalendarSpecificData"></param>
         /// <returns></returns>
-        private bool AddDestinationAppointments(SyncProfile syncProfile, IDictionary<string, object> destinationCalendarSpecificData)
+        private bool AddDestinationAppointments(CalendarSyncProfile syncProfile, IDictionary<string, object> destinationCalendarSpecificData)
         {
             //Update status for reading entries to add
             SyncStatus = StatusHelper.GetMessage(SyncStateEnum.ReadingEntriesToAdd);
@@ -324,7 +324,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
         /// <param name="syncProfile"></param>
         /// <param name="destinationCalendarSpecificData"></param>
         /// <returns></returns>
-        private bool DeleteDestinationAppointments(SyncProfile syncProfile,
+        private bool DeleteDestinationAppointments(CalendarSyncProfile syncProfile,
             IDictionary<string, object> destinationCalendarSpecificData, SyncCallback syncCallback)
         {
             if (syncProfile.SyncSettings.DisableDelete)
@@ -383,7 +383,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
         /// <param name="syncProfile"></param>
         /// <param name="sourceCalendarSpecificData"></param>
         /// <returns></returns>
-        private bool AddSourceAppointments(SyncProfile syncProfile, IDictionary<string, object> sourceCalendarSpecificData)
+        private bool AddSourceAppointments(CalendarSyncProfile syncProfile, IDictionary<string, object> sourceCalendarSpecificData)
         {
             //Update status for reading entries to add
             SyncStatus = StatusHelper.GetMessage(SyncStateEnum.ReadingEntriesToAdd);
@@ -418,7 +418,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
         /// <param name="syncProfile"></param>
         /// <param name="sourceCalendarSpecificData"></param>
         /// <returns></returns>
-        private bool DeleteSourceAppointments(SyncProfile syncProfile, IDictionary<string, object> sourceCalendarSpecificData, SyncCallback syncCallback)
+        private bool DeleteSourceAppointments(CalendarSyncProfile syncProfile, IDictionary<string, object> sourceCalendarSpecificData, SyncCallback syncCallback)
         {
             if (syncProfile.SyncSettings.DisableDelete)
             {
@@ -500,7 +500,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
 
         public ICalendarService DestinationCalendarService { get; set; }
 
-        public bool SyncCalendar(SyncProfile syncProfile, SyncCallback syncCallback)
+        public bool SyncCalendar(CalendarSyncProfile syncProfile, SyncCallback syncCallback)
         {
             InitiatePreSyncSetup(syncProfile);
 

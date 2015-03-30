@@ -231,11 +231,6 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Google
                     googleEvent.Start.DateTime, googleEvent.Id);
             }
 
-            if (googleEvent.Recurrence != null && googleEvent.Recurrence.Count > 0)
-            {
-                appointment.IsRecurring = true;
-            }
-
             appointment.CalendarId = CalendarId;
             if (googleEvent.ExtendedProperties != null && googleEvent.ExtendedProperties.Private != null)
             {
@@ -465,8 +460,8 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Google
             EventsResource.ListRequest eventListRequest = calendarService.Events.List(CalendarId);
 
             // Add Filters to event List Request
-            eventListRequest.TimeMin = DateTime.Now.AddDays(-(daysInPast));
-            eventListRequest.TimeMax = DateTime.Now.AddDays((daysInFuture + 1));
+            eventListRequest.TimeMin = DateTime.Now.Date.AddDays(-(daysInPast));
+            eventListRequest.TimeMax = DateTime.Now.Date.AddDays((daysInFuture + 1));
             eventListRequest.MaxAttendees = 1000;
 
             try
@@ -476,9 +471,20 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Google
                 {
                     while (result.Items != null)
                     {
-                        // Add events to list
-                        finalEventList.AddRange(
-                            result.Items.Select(CreateAppointment));
+                        // Add events to list, Split recurring appointments
+                        foreach (var eventItem in result.Items)
+                        {
+                            var appointment = CreateAppointment(eventItem);
+                            if (eventItem.Recurrence != null && eventItem.Recurrence.Count > 0)
+                            {
+                                finalEventList.AddRange(FrequencyHelper.SplitRecurringAppointments(appointment, eventItem.Recurrence.FirstOrDefault(),
+                                    DateTime.Now.Date.AddDays(-(daysInPast)), DateTime.Now.Date.AddDays((daysInFuture + 1))));
+                            }
+                            else
+                            {
+                                finalEventList.Add(appointment);
+                            }
+                        }
 
                         //If all pages are over break
                         if (result.NextPageToken == null)

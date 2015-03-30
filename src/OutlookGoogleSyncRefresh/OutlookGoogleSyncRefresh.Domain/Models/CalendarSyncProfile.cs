@@ -7,7 +7,7 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
 {
     [XmlInclude(typeof(Calendar))]
     [XmlInclude(typeof(SyncFrequency))]
-    public class SyncProfile : Model
+    public class CalendarSyncProfile : Model
     {
         private DateTime? _nextSync;
         private bool _isDefault;
@@ -15,7 +15,7 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
         private DateTime? _lastSync;
         private bool _isSyncEnabled;
 
-        public SyncProfile()
+        public CalendarSyncProfile()
         {
             Name = "Default Profile";
             SyncSettings = new SyncSettings();
@@ -124,9 +124,9 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
             }
         }
 
-        public static SyncProfile GetDefaultSyncProfile()
+        public static CalendarSyncProfile GetDefaultSyncProfile()
         {
-            var syncProfile = new SyncProfile
+            var syncProfile = new CalendarSyncProfile
             {
                 DaysInFuture = 7,
                 DaysInPast = 1,

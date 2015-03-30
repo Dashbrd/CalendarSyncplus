@@ -70,7 +70,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
         private List<Category> _categories;
         private bool _setCategory;
 
-        public ProfileViewModel(SyncProfile syncProfile, IGoogleCalendarService googleCalendarService,
+        public ProfileViewModel(CalendarSyncProfile syncProfile, IGoogleCalendarService googleCalendarService,
              IOutlookCalendarService outlookCalendarService,
             IMessageService messageService, IExchangeWebCalendarService exchangeWebCalendarService,
             ApplicationLogger applicationLogger)
@@ -84,7 +84,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             Initialize();
         }
 
-        public SyncProfile SyncProfile { get; set; }
+        public CalendarSyncProfile SyncProfile { get; set; }
         public IGoogleCalendarService GoogleCalendarService { get; set; }
         public IOutlookCalendarService OutlookCalendarService { get; set; }
         public IMessageService MessageService { get; set; }
@@ -676,7 +676,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
         }
 
 
-        public SyncProfile SaveCurrentSyncProfile()
+        public CalendarSyncProfile SaveCurrentSyncProfile()
         {
             SyncProfile.IsSyncEnabled = IsSyncEnabled;
             SyncProfile.GoogleCalendar = SelectedCalendar;

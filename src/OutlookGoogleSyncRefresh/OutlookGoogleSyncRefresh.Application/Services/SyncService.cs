@@ -96,7 +96,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services
             _syncTimer.Elapsed -= ElapsedEventHandler;
         }
 
-        public string SyncNow(SyncProfile syncProfile, SyncCallback syncCallback)
+        public string SyncNow(CalendarSyncProfile syncProfile, SyncCallback syncCallback)
         {
             try
             {
