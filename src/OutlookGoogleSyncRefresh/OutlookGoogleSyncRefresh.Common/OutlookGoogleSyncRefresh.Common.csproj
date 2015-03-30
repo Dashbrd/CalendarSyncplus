@@ -7,8 +7,8 @@
     <ProjectGuid>{58F42963-FC3F-4BF8-88A8-DA70F5AE7E58}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>OutlookGoogleSyncRefresh.Common</RootNamespace>
-    <AssemblyName>OutlookGoogleSyncRefresh.Common</AssemblyName>
+    <RootNamespace>CalendarSyncPlus.Common</RootNamespace>
+    <AssemblyName>CalendarSyncPlus.Common</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SccProjectName />

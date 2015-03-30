@@ -7,7 +7,7 @@
     <ProjectGuid>{FD588EBB-EAC6-4B5F-9644-FA9FA22268F7}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>OutlookGoogleSyncRefresh.Presentation</RootNamespace>
+    <RootNamespace>CalendarSyncPlus.Presentation</RootNamespace>
     <AssemblyName>CalendarSyncPlus</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
