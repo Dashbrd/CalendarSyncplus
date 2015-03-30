@@ -2,27 +2,27 @@
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
-
 using OutlookGoogleSyncRefresh.Common.MetaData;
-using OutlookGoogleSyncRefresh.Domain.Models;
 
 namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
 {
-    [Export(typeof(ICalendarServiceFactory))]
+    [Export(typeof (ICalendarServiceFactory))]
     public class CalendarServiceFactory : ICalendarServiceFactory
     {
-        [ImportMany(typeof(ICalendarService))]
-        public IEnumerable<Lazy<ICalendarService, ICalendarServiceMetaData>> CalendarServicesFactoryLazy { get; set; }
-
-
         [ImportingConstructor]
         public CalendarServiceFactory()
         {
         }
 
+        [ImportMany(typeof (ICalendarService))]
+        public IEnumerable<Lazy<ICalendarService, ICalendarServiceMetaData>> CalendarServicesFactoryLazy { get; set; }
+
+        #region ICalendarServiceFactory Members
+
         public ICalendarService GetCalendarService(CalendarServiceType serviceType)
         {
-            var serviceInstance = CalendarServicesFactoryLazy.FirstOrDefault(list => list.Metadata.ServiceType == serviceType);
+            Lazy<ICalendarService, ICalendarServiceMetaData> serviceInstance =
+                CalendarServicesFactoryLazy.FirstOrDefault(list => list.Metadata.ServiceType == serviceType);
 
             if (serviceInstance != null)
             {
@@ -30,5 +30,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
             }
             throw new ArgumentException("Calendar Service Type is not Available/Registered", "serviceType");
         }
+
+        #endregion
     }
 }

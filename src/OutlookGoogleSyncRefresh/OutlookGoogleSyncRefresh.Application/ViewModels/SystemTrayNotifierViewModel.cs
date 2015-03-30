@@ -19,7 +19,6 @@
 
 #region Imports
 
-using System;
 using System.ComponentModel.Composition;
 using System.Waf.Applications;
 using OutlookGoogleSyncRefresh.Application.Services;
@@ -94,7 +93,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
 
         private bool CanShowApplication(object canShowApplication)
         {
-            return canShowApplication == null || (bool)canShowApplication;
+            return canShowApplication == null || (bool) canShowApplication;
         }
 
         #endregion
@@ -107,23 +106,22 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
         public void ShowBalloon(string tooltipText)
         {
             ToolTipText = tooltipText;
-            DispatcherHelper.CheckBeginInvokeOnUI((Action)(() => ViewCore.ShowCustomBalloon()));
+            DispatcherHelper.CheckBeginInvokeOnUI(() => ViewCore.ShowCustomBalloon());
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="tooltipText"></param>
         /// <param name="timeoutInMilliseconds"></param>
         public void ShowBalloon(string tooltipText, int timeoutInMilliseconds)
         {
             ToolTipText = tooltipText;
-            DispatcherHelper.CheckBeginInvokeOnUI((Action)(() => ViewCore.ShowCustomBalloon(timeoutInMilliseconds)));
+            DispatcherHelper.CheckBeginInvokeOnUI(() => ViewCore.ShowCustomBalloon(timeoutInMilliseconds));
         }
 
         public void HideBalloon()
         {
-            DispatcherHelper.CheckBeginInvokeOnUI((Action)(() => ViewCore.CloseBalloon()));
+            DispatcherHelper.CheckBeginInvokeOnUI(() => ViewCore.CloseBalloon());
         }
 
         public void Quit()

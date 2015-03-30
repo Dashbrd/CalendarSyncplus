@@ -17,17 +17,15 @@
 
 #endregion
 
-using System;
 using System.ComponentModel;
 using System.ComponentModel.Composition;
-using System.Waf.Applications;
 using OutlookGoogleSyncRefresh.Application.Services;
 using OutlookGoogleSyncRefresh.Application.ViewModels;
 using OutlookGoogleSyncRefresh.Common.Log;
 
 namespace OutlookGoogleSyncRefresh.Application.Controllers
 {
-    [Export(typeof(IShellController))]
+    [Export(typeof (IShellController))]
     public class ShellController : IShellController
     {
         private readonly ApplicationLogger _applicationLogger;
@@ -70,8 +68,6 @@ namespace OutlookGoogleSyncRefresh.Application.Controllers
         }
 
 
-
-
         public void Run(bool startMinimized)
         {
         }
@@ -79,7 +75,7 @@ namespace OutlookGoogleSyncRefresh.Application.Controllers
         public void Shutdown()
         {
             //ShutDown Services
-            
+
             ShellViewModel.Shutdown();
             SyncService.Shutdown();
 

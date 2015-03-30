@@ -19,10 +19,7 @@
 
 #region Imports
 
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Threading.Tasks;
 using OutlookGoogleSyncRefresh.Application.Utilities;
 using OutlookGoogleSyncRefresh.Application.Wrappers;
 using OutlookGoogleSyncRefresh.Domain.Models;

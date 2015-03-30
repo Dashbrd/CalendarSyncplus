@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
 using System.Net;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Exchange.WebServices.Data;
 using OutlookGoogleSyncRefresh.Application.Wrappers;
@@ -15,17 +14,17 @@ using Appointment = Microsoft.Exchange.WebServices.Data.Appointment;
 
 namespace OutlookGoogleSyncRefresh.Application.Services.ExchangeWeb
 {
-    [Export(typeof(ICalendarService)), Export(typeof(IExchangeWebCalendarService))]
+    [Export(typeof (ICalendarService)), Export(typeof (IExchangeWebCalendarService))]
     [ExportMetadata("ServiceType", CalendarServiceType.EWS)]
     public class ExchangeWebCalendarService : IExchangeWebCalendarService
     {
-        public ApplicationLogger ApplicationLogger { get; set; }
-
         [ImportingConstructor]
         public ExchangeWebCalendarService(ApplicationLogger applicationLogger)
         {
             ApplicationLogger = applicationLogger;
         }
+
+        public ApplicationLogger ApplicationLogger { get; set; }
 
         #region IExchangeWebCalendarService Members
 
@@ -39,13 +38,13 @@ namespace OutlookGoogleSyncRefresh.Application.Services.ExchangeWeb
 
             // Get Default Calendar
             var outlookAppointments = new List<AppAppointment>();
-            FindItemsResults<Appointment> exchangeAppointments = service.FindAppointments(outlookCalendar.EntryId, calendarview);
-
+            FindItemsResults<Appointment> exchangeAppointments = service.FindAppointments(outlookCalendar.EntryId,
+                calendarview);
 
 
             service.LoadPropertiesForItems(
                 from Item item in exchangeAppointments select item,
-                new PropertySet(BasePropertySet.FirstClassProperties) { RequestedBodyType = BodyType.Text });
+                new PropertySet(BasePropertySet.FirstClassProperties) {RequestedBodyType = BodyType.Text});
 
             if (exchangeAppointments != null)
             {
@@ -58,7 +57,12 @@ namespace OutlookGoogleSyncRefresh.Application.Services.ExchangeWeb
                         AllDayEvent = exchangeAppointment.IsAllDayEvent,
                         OptionalAttendees = GetAttendees(exchangeAppointment.OptionalAttendees),
                         ReminderMinutesBeforeStart = exchangeAppointment.ReminderMinutesBeforeStart,
-                        Organizer = new Recipient() { Name = exchangeAppointment.Organizer.Name, Email = exchangeAppointment.Organizer.Address },
+                        Organizer =
+                            new Recipient
+                            {
+                                Name = exchangeAppointment.Organizer.Name,
+                                Email = exchangeAppointment.Organizer.Address
+                            },
                         ReminderSet = exchangeAppointment.IsReminderSet,
                         RequiredAttendees = GetAttendees(exchangeAppointment.RequiredAttendees),
                     };
@@ -66,26 +70,6 @@ namespace OutlookGoogleSyncRefresh.Application.Services.ExchangeWeb
                 }
             }
             return outlookAppointments;
-        }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="attendeeCollection"></param>
-        /// <returns></returns>
-        private List<Recipient> GetAttendees(IEnumerable<Attendee> attendeeCollection)
-        {
-            var attendees = new List<Recipient>();
-
-            foreach (Attendee attendee in attendeeCollection)
-            {
-                attendees.Add(new Recipient()
-                {
-                    Name = attendee.Name,
-                    Email = attendee.Address
-                });
-            }
-
-            return attendees;
         }
 
         public List<OutlookCalendar> GetCalendarsAsync()
@@ -102,7 +86,8 @@ namespace OutlookGoogleSyncRefresh.Application.Services.ExchangeWeb
             // As a best practice, limit the properties returned to only those required.
             // In this case, return the folder ID, DisplayName, and the value of the isHiddenProp
             // extended property.
-            view.PropertySet = new PropertySet(BasePropertySet.FirstClassProperties, FolderSchema.DisplayName, isHiddenProp);
+            view.PropertySet = new PropertySet(BasePropertySet.FirstClassProperties, FolderSchema.DisplayName,
+                isHiddenProp);
 
             // Indicate a Traversal value of Deep, so that all subfolders are retrieved.
             view.Traversal = FolderTraversal.Deep;
@@ -119,7 +104,105 @@ namespace OutlookGoogleSyncRefresh.Application.Services.ExchangeWeb
             return outlookCalendars;
         }
 
+
+        public string CalendarServiceName
+        {
+            get { return "Exchange Server"; }
+        }
+
+        public Task<bool> DeleteCalendarEvent(List<AppAppointment> calendarAppointments,
+            IDictionary<string, object> calendarSpecificData)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<CalendarAppointments> GetCalendarEventsInRangeAsync(int daysInPast, int daysInFuture,
+            IDictionary<string, object> calendarSpecificData)
+        {
+            //CheckCalendarSpecificData(calendarSpecificData);
+
+
+            //ExchangeService service = GetExchangeService(ExchangeVersion.Exchange2010_SP2);
+            //DateTime startDate = DateTime.Now.AddDays(-daysInPast);
+            //DateTime endDate = DateTime.Now.AddDays(+(daysInFuture + 1));
+            //var calendarview = new CalendarView(startDate, endDate);
+
+            //// Get Default Calendar
+            //var outlookAppointments = new List<AppAppointment>();
+            //FindItemsResults<Appointment> exchangeAppointments = await service.FindAppointments(outlookCalendar.EntryId, calendarview);
+
+
+            //service.LoadPropertiesForItems(
+            //    from Item item in exchangeAppointments select item,
+            //    new PropertySet(BasePropertySet.FirstClassProperties) { RequestedBodyType = BodyType.Text });
+
+            //if (exchangeAppointments != null)
+            //{
+            //    foreach (Appointment exchangeAppointment in exchangeAppointments)
+            //    {
+            //        var appointment = new AppAppointment(exchangeAppointment.Body, exchangeAppointment.Location,
+            //            exchangeAppointment.Subject, exchangeAppointment.Start, exchangeAppointment.Start)
+            //        {
+            //            AppointmentId = exchangeAppointment.Id.UniqueId,
+            //            AllDayEvent = exchangeAppointment.IsAllDayEvent,
+            //            OptionalAttendees = GetAttendees(exchangeAppointment.OptionalAttendees),
+            //            ReminderMinutesBeforeStart = exchangeAppointment.ReminderMinutesBeforeStart,
+            //            Organizer = new Recipient() { Name = exchangeAppointment.Organizer.Name, Email = exchangeAppointment.Organizer.Address },
+            //            ReminderSet = exchangeAppointment.IsReminderSet,
+            //            RequiredAttendees = GetAttendees(exchangeAppointment.RequiredAttendees),
+            //        };
+            //        outlookAppointments.Add(appointment);
+            //    }
+            //}
+            //return outlookAppointments;
+
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> AddCalendarEvent(List<AppAppointment> calendarAppointments, bool addDescription,
+            bool addReminder, bool addAttendees,
+            bool attendeesToDescription, IDictionary<string, object> calendarSpecificData)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void CheckCalendarSpecificData(IDictionary<string, object> calendarSpecificData)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> ResetCalendar(IDictionary<string, object> calendarSpecificData)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        public void SetCalendarColor(Category background, IDictionary<string, object> calendarSpecificData)
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion
+
+        /// <summary>
+        /// </summary>
+        /// <param name="attendeeCollection"></param>
+        /// <returns></returns>
+        private List<Recipient> GetAttendees(IEnumerable<Attendee> attendeeCollection)
+        {
+            var attendees = new List<Recipient>();
+
+            foreach (Attendee attendee in attendeeCollection)
+            {
+                attendees.Add(new Recipient
+                {
+                    Name = attendee.Name,
+                    Email = attendee.Address
+                });
+            }
+
+            return attendees;
+        }
 
         public ExchangeService GetExchangeService(ExchangeVersion exchangeVersion)
         {
@@ -136,13 +219,14 @@ namespace OutlookGoogleSyncRefresh.Application.Services.ExchangeWeb
 
         public ExchangeVersion GetBestSuitedExchangeVersion()
         {
-            var enumList = Enum.GetValues(typeof(ExchangeVersion)).Cast<ExchangeVersion>().Reverse();
+            IEnumerable<ExchangeVersion> enumList =
+                Enum.GetValues(typeof (ExchangeVersion)).Cast<ExchangeVersion>().Reverse();
 
             IWebProxy proxy = WebRequest.DefaultWebProxy;
             proxy.Credentials = CredentialCache.DefaultNetworkCredentials;
 
 
-            var exchangeVersions = enumList as ExchangeVersion[] ?? enumList.ToArray();
+            ExchangeVersion[] exchangeVersions = enumList as ExchangeVersion[] ?? enumList.ToArray();
             foreach (ExchangeVersion exchangeVersion in exchangeVersions)
             {
                 var service = new ExchangeService(exchangeVersion)
@@ -157,14 +241,15 @@ namespace OutlookGoogleSyncRefresh.Application.Services.ExchangeWeb
                     service.AutodiscoverUrl("ankeshdave@outlook.com");
                     CalendarFolder calendarFolder = CalendarFolder.Bind(service, WellKnownFolderName.Calendar);
 
-                    var result = calendarFolder.FindAppointments(new CalendarView(DateTime.Now.AddDays(-1), DateTime.Now.AddDays(1)));
+                    FindItemsResults<Appointment> result =
+                        calendarFolder.FindAppointments(new CalendarView(DateTime.Now.AddDays(-1),
+                            DateTime.Now.AddDays(1)));
 
                     return exchangeVersion;
                 }
                 catch (Exception exception)
                 {
                     ApplicationLogger.LogError(exception.ToString());
-                    continue;
                 }
             }
             return exchangeVersions.ElementAtOrDefault((exchangeVersions.Count() - 1));
@@ -195,84 +280,6 @@ namespace OutlookGoogleSyncRefresh.Application.Services.ExchangeWeb
                 //Get Calendar MAPIFolders
                 GetCalendars(subFolder, outlookCalendars, view);
             }
-        }
-
-
-
-        public string CalendarServiceName
-        {
-            get { return "Exchange Server"; }
-        }
-
-        public Task<bool> DeleteCalendarEvent(List<AppAppointment> calendarAppointments, IDictionary<string, object> calendarSpecificData)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<CalendarAppointments> GetCalendarEventsInRangeAsync(int daysInPast, int daysInFuture, IDictionary<string, object> calendarSpecificData)
-        {
-            //CheckCalendarSpecificData(calendarSpecificData);
-
-
-            //ExchangeService service = GetExchangeService(ExchangeVersion.Exchange2010_SP2);
-            //DateTime startDate = DateTime.Now.AddDays(-daysInPast);
-            //DateTime endDate = DateTime.Now.AddDays(+(daysInFuture + 1));
-            //var calendarview = new CalendarView(startDate, endDate);
-
-            //// Get Default Calendar
-            //var outlookAppointments = new List<AppAppointment>();
-            //FindItemsResults<Appointment> exchangeAppointments = await service.FindAppointments(outlookCalendar.EntryId, calendarview);
-
-
-
-            //service.LoadPropertiesForItems(
-            //    from Item item in exchangeAppointments select item,
-            //    new PropertySet(BasePropertySet.FirstClassProperties) { RequestedBodyType = BodyType.Text });
-
-            //if (exchangeAppointments != null)
-            //{
-            //    foreach (Appointment exchangeAppointment in exchangeAppointments)
-            //    {
-            //        var appointment = new AppAppointment(exchangeAppointment.Body, exchangeAppointment.Location,
-            //            exchangeAppointment.Subject, exchangeAppointment.Start, exchangeAppointment.Start)
-            //        {
-            //            AppointmentId = exchangeAppointment.Id.UniqueId,
-            //            AllDayEvent = exchangeAppointment.IsAllDayEvent,
-            //            OptionalAttendees = GetAttendees(exchangeAppointment.OptionalAttendees),
-            //            ReminderMinutesBeforeStart = exchangeAppointment.ReminderMinutesBeforeStart,
-            //            Organizer = new Recipient() { Name = exchangeAppointment.Organizer.Name, Email = exchangeAppointment.Organizer.Address },
-            //            ReminderSet = exchangeAppointment.IsReminderSet,
-            //            RequiredAttendees = GetAttendees(exchangeAppointment.RequiredAttendees),
-            //        };
-            //        outlookAppointments.Add(appointment);
-            //    }
-            //}
-            //return outlookAppointments;
-
-            throw new NotImplementedException();
-
-        }
-
-        public Task<bool> AddCalendarEvent(List<AppAppointment> calendarAppointments, bool addDescription, bool addReminder, bool addAttendees,
-            bool attendeesToDescription, IDictionary<string, object> calendarSpecificData)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void CheckCalendarSpecificData(IDictionary<string, object> calendarSpecificData)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> ResetCalendar(IDictionary<string, object> calendarSpecificData)
-        {
-            throw new NotImplementedException();
-        }
-
-
-        public void SetCalendarColor(Category background, IDictionary<string, object> calendarSpecificData)
-        {
-            throw new NotImplementedException();
         }
     }
 }

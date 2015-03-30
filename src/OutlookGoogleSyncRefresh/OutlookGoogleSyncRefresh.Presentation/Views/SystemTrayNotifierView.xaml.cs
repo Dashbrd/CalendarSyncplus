@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel.Composition;
+﻿using System.ComponentModel.Composition;
 using System.Windows;
 using System.Windows.Controls.Primitives;
 using Hardcodet.Wpf.TaskbarNotification;
@@ -10,7 +9,7 @@ namespace OutlookGoogleSyncRefresh.Presentation.Views
     /// <summary>
     ///     Interaction logic for SystemTrayNotifierView.xaml
     /// </summary>
-    [Export, Export(typeof(ISystemTrayNotifierView))]
+    [Export, Export(typeof (ISystemTrayNotifierView))]
     public partial class SystemTrayNotifierView : TaskbarIcon, ISystemTrayNotifierView
     {
         public SystemTrayNotifierView()
@@ -36,7 +35,7 @@ namespace OutlookGoogleSyncRefresh.Presentation.Views
 
         public void Quit()
         {
-            this.Visibility = Visibility.Hidden;
+            Visibility = Visibility.Hidden;
         }
 
         #endregion

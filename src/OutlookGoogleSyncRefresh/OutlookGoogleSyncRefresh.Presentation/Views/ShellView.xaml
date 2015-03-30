@@ -27,7 +27,7 @@
 
     <controls:MetroWindow.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
-        <wafConverters:InvertBooleanConverter x:Key="InvertBooleanConverter"/>
+        <wafConverters:InvertBooleanConverter x:Key="InvertBooleanConverter" />
         <converters:PercentageWidthConverter x:Key="PercentageWidthConverter" />
         <DataTemplate x:Key="IconTemplate">
             <Rectangle Fill="{DynamicResource AccentSelectedColorBrush}">
@@ -122,8 +122,8 @@
             </Button>
             <Button Command="{Binding LaunchSettings}"
                     Content="Preferences"
-                    ToolTip="Configure Calendar Sync +" 
-                    IsEnabled="{Binding IsSyncInProgress, Converter={StaticResource InvertBooleanConverter}}"/>
+                    ToolTip="Configure Calendar Sync +"
+                    IsEnabled="{Binding IsSyncInProgress, Converter={StaticResource InvertBooleanConverter}}" />
             <Button Command="{Binding LaunchAbout}"
                     Content="About"
                     ToolTip="About Calendar Sync +" />
@@ -133,5 +133,5 @@
         </controls:WindowCommands>
     </controls:MetroWindow.RightWindowCommands>
     <views:HomeView DataContext="{Binding}" />
-    
+
 </controls:MetroWindow>

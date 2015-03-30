@@ -38,8 +38,12 @@
         </TextBlock>
         <TextBlock Text="Please click on 'Help' learn how to use this application." TextWrapping="Wrap"
                    Margin="0,10,0,0" />
-        <TextBlock Margin="0,10,0,0"><Hyperlink Command="{Binding UriCommand}"
-                              CommandParameter="http://calendarsyncplus.codeplex.com/workitem/list/basic">Report Issue/Bug/Defect</Hyperlink></TextBlock>
+        <TextBlock Margin="0,10,0,0">
+            <Hyperlink Command="{Binding UriCommand}"
+                       CommandParameter="http://calendarsyncplus.codeplex.com/workitem/list/basic">
+                Report Issue/Bug/Defect
+            </Hyperlink>
+        </TextBlock>
 
         <Button HorizontalAlignment="Left" Content="Check FOr updates" Margin="0,10,0,0"
                 Command="{Binding CheckForUpdatesCommand}"

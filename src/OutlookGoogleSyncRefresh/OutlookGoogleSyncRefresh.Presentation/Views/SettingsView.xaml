@@ -17,8 +17,9 @@
             <Setter Property="HeaderTemplate">
                 <Setter.Value>
                     <DataTemplate>
-                        <TextBlock Text="{Binding Header,RelativeSource={RelativeSource AncestorType={x:Type TabItem}}}"
-                                   FontSize="20" />
+                        <TextBlock
+                            Text="{Binding Header,RelativeSource={RelativeSource AncestorType={x:Type TabItem}}}"
+                            FontSize="20" />
                     </DataTemplate>
                 </Setter.Value>
             </Setter>
@@ -67,7 +68,7 @@
                 </Style>
             </ContentControl.Style>
         </ContentControl>
-        <TabControl Grid.Row="1" 
+        <TabControl Grid.Row="1"
                     IsEnabled="{Binding Path=IsLoading,Converter={StaticResource ResourceKey=InvertBooleanConverter}}">
             <TabItem Header="Calendars">
                 <ScrollViewer VerticalScrollBarVisibility="Auto"

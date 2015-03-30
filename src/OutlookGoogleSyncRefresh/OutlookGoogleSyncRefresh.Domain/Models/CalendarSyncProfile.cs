@@ -5,15 +5,15 @@ using OutlookGoogleSyncRefresh.Common.MetaData;
 
 namespace OutlookGoogleSyncRefresh.Domain.Models
 {
-    [XmlInclude(typeof(Calendar))]
-    [XmlInclude(typeof(SyncFrequency))]
+    [XmlInclude(typeof (Calendar))]
+    [XmlInclude(typeof (SyncFrequency))]
     public class CalendarSyncProfile : Model
     {
-        private DateTime? _nextSync;
         private bool _isDefault;
-        private string _name;
-        private DateTime? _lastSync;
         private bool _isSyncEnabled;
+        private DateTime? _lastSync;
+        private string _name;
+        private DateTime? _nextSync;
 
         public CalendarSyncProfile()
         {
@@ -56,8 +56,9 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
         public OutlookSettings OutlookSettings { get; set; }
 
         public string Category { get; set; }
+
         /// <summary>
-        /// To be implemented in future
+        ///     To be implemented in future
         /// </summary>
         [XmlIgnore]
         public ExchangeServerSettings ExchangeServerSettings { get; set; }
@@ -88,34 +89,38 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
         {
             if (SyncSettings.CalendarSyncDirection == CalendarSyncDirectionEnum.OutlookGoogleOneWay)
             {
-                SyncSettings.SourceCalendar = OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.ExchangeWebServices)
-                    ? CalendarServiceType.EWS
-                    : CalendarServiceType.OutlookDesktop;
+                SyncSettings.SourceCalendar =
+                    OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.ExchangeWebServices)
+                        ? CalendarServiceType.EWS
+                        : CalendarServiceType.OutlookDesktop;
                 SyncSettings.DestinationCalendar = CalendarServiceType.Google;
             }
             else
             {
                 SyncSettings.SourceCalendar = CalendarServiceType.Google;
-                SyncSettings.DestinationCalendar = OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.ExchangeWebServices)
-                    ? CalendarServiceType.EWS
-                    : CalendarServiceType.OutlookDesktop;
+                SyncSettings.DestinationCalendar =
+                    OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.ExchangeWebServices)
+                        ? CalendarServiceType.EWS
+                        : CalendarServiceType.OutlookDesktop;
             }
             if (SyncSettings.CalendarSyncDirection == CalendarSyncDirectionEnum.OutlookGoogleTwoWay)
             {
                 SyncSettings.SyncMode = SyncModeEnum.TwoWay;
                 if (SyncSettings.MasterCalendar == CalendarServiceType.OutlookDesktop)
                 {
-                    SyncSettings.SourceCalendar = OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.ExchangeWebServices)
-                    ? CalendarServiceType.EWS
-                    : CalendarServiceType.OutlookDesktop;
+                    SyncSettings.SourceCalendar =
+                        OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.ExchangeWebServices)
+                            ? CalendarServiceType.EWS
+                            : CalendarServiceType.OutlookDesktop;
                     SyncSettings.DestinationCalendar = CalendarServiceType.Google;
                 }
                 else
                 {
                     SyncSettings.SourceCalendar = CalendarServiceType.Google;
-                    SyncSettings.DestinationCalendar = OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.ExchangeWebServices)
-                    ? CalendarServiceType.EWS
-                    : CalendarServiceType.OutlookDesktop;
+                    SyncSettings.DestinationCalendar =
+                        OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.ExchangeWebServices)
+                            ? CalendarServiceType.EWS
+                            : CalendarServiceType.OutlookDesktop;
                 }
             }
             else
@@ -133,7 +138,8 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
             };
             syncProfile.SyncSettings.CalendarSyncDirection = CalendarSyncDirectionEnum.OutlookGoogleOneWay;
             syncProfile.SyncSettings.SyncFrequency = new HourlySyncFrequency();
-            syncProfile.OutlookSettings.OutlookOptions = OutlookOptionsEnum.DefaultProfile | OutlookOptionsEnum.DefaultCalendar;
+            syncProfile.OutlookSettings.OutlookOptions = OutlookOptionsEnum.DefaultProfile |
+                                                         OutlookOptionsEnum.DefaultCalendar;
             syncProfile.CalendarEntryOptions = CalendarEntryOptionsEnum.None;
             syncProfile.SetCalendarTypes();
             return syncProfile;

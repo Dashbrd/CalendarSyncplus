@@ -1,7 +1,7 @@
 ﻿<UserControl x:Class="OutlookGoogleSyncRefresh.Presentation.Views.CalendarSetttingsView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:metaData="clr-namespace:OutlookGoogleSyncRefresh.Common.MetaData;assembly=OutlookGoogleSyncRefresh.Common"
              xmlns:viewModels="clr-namespace:OutlookGoogleSyncRefresh.Application.ViewModels;assembly=OutlookGoogleSyncRefresh.Application"
@@ -90,8 +90,8 @@
                                          Margin="2"
                                          GroupName="OutlookApplicationGroup"
                                          Grid.Column="1"
-                                         Command="{Binding GetOutlookProfileListCommand}" 
-                                         Visibility="Collapsed"/>
+                                         Command="{Binding GetOutlookProfileListCommand}"
+                                         Visibility="Collapsed" />
                         </Grid>
                     </GroupBox>
                     <GroupBox Grid.Row="1"

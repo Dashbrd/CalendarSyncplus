@@ -24,7 +24,6 @@ using System.Collections.ObjectModel;
 using System.ComponentModel.Composition;
 using System.IO;
 using System.Threading.Tasks;
-using System.Waf.Applications;
 using OutlookGoogleSyncRefresh.Common.Log;
 using OutlookGoogleSyncRefresh.Domain.File.Xml;
 using OutlookGoogleSyncRefresh.Domain.Models;
@@ -33,7 +32,7 @@ using OutlookGoogleSyncRefresh.Domain.Models;
 
 namespace OutlookGoogleSyncRefresh.Application.Services
 {
-    [Export(typeof(ISettingsSerializationService))]
+    [Export(typeof (ISettingsSerializationService))]
     public class SettingsSerializationService : ISettingsSerializationService
     {
         private readonly ApplicationLogger _applicationLogger;
@@ -124,7 +123,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services
 
         public Settings DeserializeSettings()
         {
-            var result = DeserializeSettingsBackgroundTask();
+            Settings result = DeserializeSettingsBackgroundTask();
             if (result == null)
             {
                 return Settings.GetDefaultSettings();
@@ -140,7 +139,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services
                 result.SyncProfiles.Add(CalendarSyncProfile.GetDefaultSyncProfile());
             }
 
-            foreach (var syncProfile in result.SyncProfiles)
+            foreach (CalendarSyncProfile syncProfile in result.SyncProfiles)
             {
                 syncProfile.SetCalendarTypes();
                 if (syncProfile.SyncSettings.SyncFrequency == null)

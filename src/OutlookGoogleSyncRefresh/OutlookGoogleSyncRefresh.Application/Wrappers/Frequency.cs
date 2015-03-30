@@ -10,6 +10,7 @@ namespace OutlookGoogleSyncRefresh.Application.Wrappers
         {
             Count = -1;
         }
+
         public FrequencyTypeEnum FrequencyType { get; set; }
 
         public DateTime StartDate { get; set; }
@@ -54,7 +55,7 @@ namespace OutlookGoogleSyncRefresh.Application.Wrappers
             if (Count > 0)
             {
                 int occurrenceCount = 0;
-                var currentDate = StartDate.Date;
+                DateTime currentDate = StartDate.Date;
                 while (dateTime.Date.CompareTo(currentDate) > 0)
                 {
                     if (DaysOfWeek.Contains(currentDate.DayOfWeek))

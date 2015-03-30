@@ -26,7 +26,7 @@ using OutlookGoogleSyncRefresh.Domain.Models;
 
 namespace OutlookGoogleSyncRefresh.Application.Services
 {
-    [Export(typeof(ISettingsProvider))]
+    [Export(typeof (ISettingsProvider))]
     public class SettingsProvider : ISettingsProvider
     {
         #region Constructors

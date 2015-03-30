@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using OutlookGoogleSyncRefresh.Domain.Models;
 
 namespace OutlookGoogleSyncRefresh.Application.ViewModels
@@ -16,6 +15,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
         private DateTime _timeOfDay;
         private int _weekRecurrence;
         private WeeklySyncFrequency _weeklySyncFrequency;
+
         public WeeklySyncViewModel()
         {
             TimeOfDay = DateTime.Now;
@@ -45,7 +45,6 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
                     IsModified = true;
                 }
                 SetProperty(ref _weekRecurrence, value);
-
             }
         }
 
@@ -162,7 +161,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
 
             if (IsModified)
             {
-                var timeNow = DateTime.Now;
+                DateTime timeNow = DateTime.Now;
                 _weeklySyncFrequency.StartDate = timeNow.Subtract(new TimeSpan(0, 0, timeNow.Second));
                 _weeklySyncFrequency.WeekRecurrence = WeekRecurrence;
                 _weeklySyncFrequency.TimeOfDay = TimeOfDay;

@@ -26,10 +26,10 @@ namespace OutlookGoogleSyncRefresh.Common.Log
 
             var hierarchy = (Hierarchy) LogManager.GetRepository();
 
-            var patternLayout = new PatternLayout { ConversionPattern = "%date [%thread] %-5level %message%newline" };
+            var patternLayout = new PatternLayout {ConversionPattern = "%date [%thread] %-5level %message%newline"};
             patternLayout.ActivateOptions();
 
-            var roller = new FileAppender()
+            var roller = new FileAppender
             {
                 AppendToFile = true,
                 File = LogFilePath,

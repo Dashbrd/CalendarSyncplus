@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace OutlookGoogleSyncRefresh.Domain.Models
+﻿namespace OutlookGoogleSyncRefresh.Domain.Models
 {
     public class AppSettings
     {
@@ -21,6 +15,5 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
         public bool PeriodicSyncOn { get; set; }
 
         public bool RunApplicationAtSystemStartup { get; set; }
-     
     }
 }

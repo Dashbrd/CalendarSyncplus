@@ -8,8 +8,9 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
         private bool _customDay;
         private int _dayGap;
         private bool _everyWeekday;
-        private DateTime _timeOfDay;
         private DailySyncFrequency _syncFrequency;
+        private DateTime _timeOfDay;
+
         public DailySyncViewModel()
         {
             TimeOfDay = DateTime.Now;
@@ -88,7 +89,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
 
             if (IsModified)
             {
-                var timeNow = DateTime.Now;
+                DateTime timeNow = DateTime.Now;
                 _syncFrequency.StartDate = timeNow.Subtract(new TimeSpan(0, 0, timeNow.Second));
                 _syncFrequency.EveryWeekday = EveryWeekday;
                 _syncFrequency.CustomDay = CustomDay;

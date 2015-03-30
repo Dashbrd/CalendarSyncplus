@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using OutlookGoogleSyncRefresh.Application.Wrappers;
 using OutlookGoogleSyncRefresh.Domain.Models;
 
@@ -15,12 +12,12 @@ namespace OutlookGoogleSyncRefresh.Application.Utilities
         {
             var frequency = new Frequency();
             //RRULE:FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR
-            string[] values = recurrence.Split(new[] { ":", ";" }, StringSplitOptions.RemoveEmptyEntries);
-            foreach (var value in values)
+            string[] values = recurrence.Split(new[] {":", ";"}, StringSplitOptions.RemoveEmptyEntries);
+            foreach (string value in values)
             {
                 if (value.Contains("="))
                 {
-                    var parameter = value.Split(new[] { "=" }, StringSplitOptions.RemoveEmptyEntries);
+                    string[] parameter = value.Split(new[] {"="}, StringSplitOptions.RemoveEmptyEntries);
                     switch (parameter[0])
                     {
                         case "FREQ":
@@ -31,7 +28,8 @@ namespace OutlookGoogleSyncRefresh.Application.Utilities
                             break;
                         case "UNTIL":
                             DateTime endDate;
-                            if (DateTime.TryParseExact(parameter[1], new[] { "yyyyMMddTHHmmssZ" }, CultureInfo.InvariantCulture.DateTimeFormat, DateTimeStyles.AssumeUniversal, out endDate))
+                            if (DateTime.TryParseExact(parameter[1], new[] {"yyyyMMddTHHmmssZ"},
+                                CultureInfo.InvariantCulture.DateTimeFormat, DateTimeStyles.AssumeUniversal, out endDate))
                             {
                                 frequency.EndDate = endDate;
                             }
@@ -57,7 +55,7 @@ namespace OutlookGoogleSyncRefresh.Application.Utilities
             var daysOfWeek = new List<DayOfWeek>();
             string[] values = parameter.Split(',');
 
-            foreach (var value in values)
+            foreach (string value in values)
             {
                 switch (value)
                 {
@@ -107,16 +105,16 @@ namespace OutlookGoogleSyncRefresh.Application.Utilities
         public static List<Appointment> SplitRecurringAppointments(Appointment recurringAppointment, string recurrence,
             DateTime startDate, DateTime endDate)
         {
-            var frequency = GetGoogleFrequency(recurrence);
+            Frequency frequency = GetGoogleFrequency(recurrence);
             frequency.StartDate = recurringAppointment.StartTime.GetValueOrDefault();
 
             var appointmentList = new List<Appointment>();
-            var dateTime = startDate.Date;
+            DateTime dateTime = startDate.Date;
             while (endDate.CompareTo(dateTime) > 0)
             {
                 if (frequency.ValidateDate(dateTime))
                 {
-                    var newAppointment = (Appointment)recurringAppointment.Clone();
+                    var newAppointment = (Appointment) recurringAppointment.Clone();
                     newAppointment.AppointmentId = string.Format("{0}_{1}", recurringAppointment.AppointmentId,
                         dateTime.ToString("yy-MM-dd"));
                     newAppointment.StartTime =
@@ -134,6 +132,5 @@ namespace OutlookGoogleSyncRefresh.Application.Utilities
             }
             return appointmentList;
         }
-
     }
 }

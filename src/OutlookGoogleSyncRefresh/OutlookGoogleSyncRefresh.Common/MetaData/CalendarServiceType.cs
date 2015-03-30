@@ -1,4 +1,5 @@
 ﻿#region File Header
+
 // /******************************************************************************
 //  * 
 //  *      Copyright (C) Ankesh Dave 2015 All Rights Reserved. Confidential
@@ -13,12 +14,14 @@
 //  *      FileName:       CalendarServiceType.cs
 //  * 
 //  *****************************************************************************/
+
 #endregion
+
 namespace OutlookGoogleSyncRefresh.Common.MetaData
 {
     public enum CalendarServiceType
     {
-        None=0,
+        None = 0,
         Google,
         OutlookDesktop,
         EWS,

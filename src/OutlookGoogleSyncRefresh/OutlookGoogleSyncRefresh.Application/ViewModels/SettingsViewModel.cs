@@ -20,12 +20,10 @@
 #region Imports
 
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.ComponentModel.Composition;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Waf.Applications;
 using MahApps.Metro.Controls.Dialogs;
 using OutlookGoogleSyncRefresh.Application.Services;
@@ -33,10 +31,7 @@ using OutlookGoogleSyncRefresh.Application.Services.ExchangeWeb;
 using OutlookGoogleSyncRefresh.Application.Services.Google;
 using OutlookGoogleSyncRefresh.Application.Services.Outlook;
 using OutlookGoogleSyncRefresh.Application.Views;
-using OutlookGoogleSyncRefresh.Common;
 using OutlookGoogleSyncRefresh.Common.Log;
-using OutlookGoogleSyncRefresh.Common.MetaData;
-using OutlookGoogleSyncRefresh.Domain.Helpers;
 using OutlookGoogleSyncRefresh.Domain.Models;
 
 #endregion
@@ -67,28 +62,27 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             MessageService = messageService;
         }
 
-
         #endregion
 
         #region Fields
-        
+
         private bool _checkForUpdates = true;
         private bool _createNewFileForEverySync;
+        private DelegateCommand _createProfileCommand;
+        private DelegateCommand _deleteProfileCommand;
         private bool _hideSystemTrayTooltip;
         private bool _isLoading;
+        private bool _isloaded;
         private bool _logSyncInfo;
         private bool _minimizeToSystemTray = true;
+        private DelegateCommand _moveDownCommand;
+        private DelegateCommand _moveUpCommand;
         private bool _rememberPeriodicSyncOn = true;
         private bool _runApplicationAtSystemStartup = true;
         private DelegateCommand _saveCommand;
         private ProfileViewModel _selectedProfile;
-        private bool _settingsSaved;
-        private bool _isloaded = false;
         private Settings _settings;
-        private DelegateCommand _deleteProfileCommand;
-        private DelegateCommand _createProfileCommand;
-        private DelegateCommand _moveUpCommand;
-        private DelegateCommand _moveDownCommand;
+        private bool _settingsSaved;
         private ObservableCollection<ProfileViewModel> _syncProfileList;
 
         #endregion
@@ -103,7 +97,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
         public ApplicationLogger ApplicationLogger { get; private set; }
         public IWindowsStartupService WindowsStartupService { get; set; }
 
-       
+
         public DelegateCommand CreateProfileCommand
         {
             get { return _createProfileCommand ?? (_createProfileCommand = new DelegateCommand(CreateProfile)); }
@@ -171,7 +165,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             get { return _isLoading; }
             set { SetProperty(ref _isLoading, value); }
         }
-        
+
 
         public bool CheckForUpdates
         {
@@ -182,10 +176,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
         public bool RunApplicationAtSystemStartup
         {
             get { return _runApplicationAtSystemStartup; }
-            set
-            {
-                SetProperty(ref _runApplicationAtSystemStartup, value);
-            }
+            set { SetProperty(ref _runApplicationAtSystemStartup, value); }
         }
 
         public bool RememberPeriodicSyncOn
@@ -215,13 +206,14 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
 
         private async void CreateProfile()
         {
-            var result = await MessageService.ShowInput("Please enter profile name.");
+            string result = await MessageService.ShowInput("Please enter profile name.");
 
             if (!string.IsNullOrEmpty(result))
             {
                 if (Settings.SyncProfiles.Any(t => t.Name.Equals(result)))
                 {
-                    MessageService.ShowMessageAsync(string.Format("A Profile with name '{0}' already exists. Please try again.", result));
+                    MessageService.ShowMessageAsync(
+                        string.Format("A Profile with name '{0}' already exists. Please try again.", result));
                     return;
                 }
 
@@ -230,11 +222,12 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
                     MessageService.ShowMessageAsync("You have reached the maximum number of profiles.");
                     return;
                 }
-                var syncProfile = CalendarSyncProfile.GetDefaultSyncProfile();
+                CalendarSyncProfile syncProfile = CalendarSyncProfile.GetDefaultSyncProfile();
                 syncProfile.Name = result;
                 syncProfile.IsDefault = false;
-                var viewModel = new ProfileViewModel(syncProfile, GoogleCalendarService, OutlookCalendarService, MessageService,
-                            ExchangeWebCalendarService, ApplicationLogger);
+                var viewModel = new ProfileViewModel(syncProfile, GoogleCalendarService, OutlookCalendarService,
+                    MessageService,
+                    ExchangeWebCalendarService, ApplicationLogger);
                 SyncProfileList.Add(viewModel);
                 PropertyChangedEventManager.AddHandler(viewModel, ProfilePropertyChangedHandler, "IsLoading");
             }
@@ -245,7 +238,8 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             var profile = parameter as ProfileViewModel;
             if (profile != null)
             {
-                var task = await MessageService.ShowConfirmMessage("Are you sure you want to delete the profile?");
+                MessageDialogResult task =
+                    await MessageService.ShowConfirmMessage("Are you sure you want to delete the profile?");
                 if (task == MessageDialogResult.Affirmative)
                 {
                     SyncProfileList.Remove(profile);
@@ -260,27 +254,26 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             var profile = parameter as ProfileViewModel;
             if (profile != null)
             {
-                var index = SyncProfileList.IndexOf(profile);
+                int index = SyncProfileList.IndexOf(profile);
                 if (index > 0)
                 {
                     SyncProfileList.Move(index, index - 1);
                 }
             }
-
         }
+
         private void MoveProfileDown(object parameter)
         {
             var profile = parameter as ProfileViewModel;
             if (profile != null)
             {
-                var index = SyncProfileList.IndexOf(profile);
+                int index = SyncProfileList.IndexOf(profile);
                 if (index < SyncProfileList.Count - 1)
                 {
                     SyncProfileList.Move(index, index + 1);
                 }
             }
         }
-
 
         #endregion
 
@@ -297,7 +290,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             Settings.AppSettings.RunApplicationAtSystemStartup = RunApplicationAtSystemStartup;
             Settings.AppSettings.RememberPeriodicSyncOn = RememberPeriodicSyncOn;
             Settings.SyncProfiles.Clear();
-            foreach (var profileViewModel in SyncProfileList)
+            foreach (ProfileViewModel profileViewModel in SyncProfileList)
             {
                 Settings.SyncProfiles.Add(profileViewModel.SaveCurrentSyncProfile());
             }
@@ -336,14 +329,14 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             }
         }
 
-
-
         #endregion
 
         public void Load()
         {
             if (_isloaded)
+            {
                 return;
+            }
             LoadSettingsAndGetCalenders();
             _isloaded = true;
         }
@@ -361,12 +354,13 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
                     RunApplicationAtSystemStartup = Settings.AppSettings.RunApplicationAtSystemStartup;
                     RememberPeriodicSyncOn = Settings.AppSettings.RememberPeriodicSyncOn;
                     var profileList = new ObservableCollection<ProfileViewModel>();
-                    foreach (var syncProfile in Settings.SyncProfiles)
+                    foreach (CalendarSyncProfile syncProfile in Settings.SyncProfiles)
                     {
-                        var viewModel =  new ProfileViewModel(syncProfile, GoogleCalendarService, OutlookCalendarService, MessageService,
+                        var viewModel = new ProfileViewModel(syncProfile, GoogleCalendarService, OutlookCalendarService,
+                            MessageService,
                             ExchangeWebCalendarService, ApplicationLogger);
                         profileList.Add(viewModel);
-                        PropertyChangedEventManager.AddHandler(viewModel,ProfilePropertyChangedHandler,"IsLoading");
+                        PropertyChangedEventManager.AddHandler(viewModel, ProfilePropertyChangedHandler, "IsLoading");
                     }
                     SyncProfileList = profileList;
                     SelectedProfile = SyncProfileList.FirstOrDefault();
@@ -379,7 +373,6 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
                     HideSystemTrayTooltip = false;
                     CheckForUpdates = true;
                 }
-
             }
             catch (AggregateException exception)
             {
@@ -411,9 +404,10 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
         {
             if (SyncProfileList != null)
             {
-                foreach (var profileViewModel in SyncProfileList)
+                foreach (ProfileViewModel profileViewModel in SyncProfileList)
                 {
-                    PropertyChangedEventManager.RemoveHandler(profileViewModel, ProfilePropertyChangedHandler, "IsLoading");
+                    PropertyChangedEventManager.RemoveHandler(profileViewModel, ProfilePropertyChangedHandler,
+                        "IsLoading");
                 }
             }
         }

@@ -20,9 +20,7 @@
 #region Imports
 
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.ComponentModel.Composition;
 using System.Diagnostics;
@@ -31,10 +29,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Waf.Applications;
-using System.Windows.Documents;
-using System.Windows.Threading;
 using MahApps.Metro.Controls.Dialogs;
-using Microsoft.Office.Interop.Outlook;
 using OutlookGoogleSyncRefresh.Application.Services;
 using OutlookGoogleSyncRefresh.Application.Services.Google;
 using OutlookGoogleSyncRefresh.Application.Utilities;
@@ -43,8 +38,6 @@ using OutlookGoogleSyncRefresh.Common;
 using OutlookGoogleSyncRefresh.Common.Log;
 using OutlookGoogleSyncRefresh.Domain.Helpers;
 using OutlookGoogleSyncRefresh.Domain.Models;
-using Action = System.Action;
-using Exception = System.Exception;
 
 #endregion
 
@@ -63,6 +56,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
         private bool _isHelpVisible;
         private bool _isLatestVersionAvailable;
         private bool _isPeriodicSyncStarted;
+        private bool _isSettingsLoading;
         private bool _isSettingsVisible;
         private bool _isSyncInProgress;
         private DateTime? _lastCheckDateTime;
@@ -72,11 +66,11 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
         private DelegateCommand _launchHelp;
         private DelegateCommand _launchSettings;
         private DateTime? _nextSyncTime;
+        private List<CalendarSyncProfile> _scheduledProfiles;
         private Settings _settings;
         private DelegateCommand _startSyncCommand;
         private DelegateCommand _syncNowCommand;
-        private bool _isSettingsLoading;
-        private List<CalendarSyncProfile> _scheduledProfiles;
+
         #endregion
 
         #region Events
@@ -212,9 +206,9 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
         public bool IsSyncInProgress
         {
             get { return _isSyncInProgress; }
-            set { SetProperty(ref _isSyncInProgress, value);}
+            set { SetProperty(ref _isSyncInProgress, value); }
         }
-        
+
         public DelegateCommand AuthenticateGoogleAccount
         {
             get
@@ -329,7 +323,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
                 bool result = await SyncStartService.Start(OnTimerElapsed);
                 if (result)
                 {
-                    foreach (var syncProfile in Settings.SyncProfiles)
+                    foreach (CalendarSyncProfile syncProfile in Settings.SyncProfiles)
                     {
                         if (syncProfile.IsSyncEnabled && syncProfile.SyncSettings.SyncFrequency != null)
                         {
@@ -393,7 +387,6 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
                     ApplicationLogger.LogError(exception.Message);
                 }
             }
-
         }
 
         private void BeginInvokeOnCurrentDispatcher(Action action)
@@ -422,6 +415,8 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
 
         #region Public Methods
 
+        private static readonly object lockerObject = new object();
+
         public void Show(bool startMinimized)
         {
             if (startMinimized)
@@ -440,7 +435,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
         }
 
 
-        void OnTimerElapsed(object sender, ElapsedEventArgs e)
+        private void OnTimerElapsed(object sender, ElapsedEventArgs e)
         {
             BeginInvokeOnCurrentDispatcher(() =>
             {
@@ -450,18 +445,18 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
                 }
             });
         }
-        
-        void SyncNowHandler()
+
+        private void SyncNowHandler()
         {
             try
             {
                 if (IsSyncInProgress)
                 {
-                    MessageService.ShowMessageAsync("Unable to do the operation as sync is in progress.");   
+                    MessageService.ShowMessageAsync("Unable to do the operation as sync is in progress.");
                     return;
                 }
 
-                foreach (var syncProfile in Settings.SyncProfiles)
+                foreach (CalendarSyncProfile syncProfile in Settings.SyncProfiles)
                 {
                     if (syncProfile.IsSyncEnabled)
                     {
@@ -481,17 +476,17 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             }
         }
 
-        void SyncPeriodicHandler()
+        private void SyncPeriodicHandler()
         {
             try
             {
-                var dateTime = DateTime.Now;
-                foreach (var syncProfile in Settings.SyncProfiles)
+                DateTime dateTime = DateTime.Now;
+                foreach (CalendarSyncProfile syncProfile in Settings.SyncProfiles)
                 {
                     if (syncProfile.IsSyncEnabled && syncProfile.SyncSettings.SyncFrequency.ValidateTimer(dateTime))
                     {
                         CalendarSyncProfile profile = syncProfile;
-                        Task.Factory.StartNew(() => StartSyncTask(profile),TaskCreationOptions.None);
+                        Task.Factory.StartNew(() => StartSyncTask(profile), TaskCreationOptions.None);
                     }
                 }
             }
@@ -506,7 +501,6 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
             }
         }
 
-        private static object lockerObject = new object();
         private void StartSyncTask(CalendarSyncProfile syncProfile)
         {
             if (IsSettingsLoading)
@@ -524,7 +518,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
                 UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.SyncStarted, syncProfile.LastSync));
                 UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.Profile, syncProfile.Name));
                 UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.Line));
-                var result = SyncStartService.SyncNow(syncProfile, SyncCallback);
+                string result = SyncStartService.SyncNow(syncProfile, SyncCallback);
                 OnSyncCompleted(syncProfile, result);
             }
         }
@@ -532,7 +526,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
 
         private async Task<bool> SyncCallback(SyncEventArgs e)
         {
-            var task = await MessageService.ShowConfirmMessage(e.Message);
+            MessageDialogResult task = await MessageService.ShowConfirmMessage(e.Message);
             if (task != MessageDialogResult.Affirmative)
             {
                 return false;
@@ -551,13 +545,15 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
                 UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.SyncFailed, result));
             }
             UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.Line));
-            UpdateStatus(string.Format("Time Elapsed : {0} s", (int)DateTime.Now.Subtract(syncProfile.LastSync.GetValueOrDefault()).TotalSeconds));
+            UpdateStatus(string.Format("Time Elapsed : {0} s",
+                (int) DateTime.Now.Subtract(syncProfile.LastSync.GetValueOrDefault()).TotalSeconds));
             UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.LogSeparator));
             ShowNotification(false);
 
             if (syncProfile.IsSyncEnabled && syncProfile.SyncSettings.SyncFrequency != null)
             {
-                syncProfile.NextSync = syncProfile.SyncSettings.SyncFrequency.GetNextSyncTime(syncProfile.LastSync.GetValueOrDefault());
+                syncProfile.NextSync =
+                    syncProfile.SyncSettings.SyncFrequency.GetNextSyncTime(syncProfile.LastSync.GetValueOrDefault());
             }
 
             IsSyncInProgress = false;
@@ -596,7 +592,7 @@ namespace OutlookGoogleSyncRefresh.Application.ViewModels
                 SyncStartService.Stop(OnTimerElapsed);
             }
         }
-        #endregion
 
+        #endregion
     }
 }

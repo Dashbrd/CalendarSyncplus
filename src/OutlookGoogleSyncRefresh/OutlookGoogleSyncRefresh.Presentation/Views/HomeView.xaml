@@ -83,7 +83,8 @@
                   Header="Schedule"
                   IsExpanded="True"
                   MaxHeight="200">
-            <ListView ItemsSource="{Binding ScheduledProfiles,UpdateSourceTrigger=PropertyChanged}" ItemTemplate="{StaticResource SyncProfileDataTemplate}" />
+            <ListView ItemsSource="{Binding ScheduledProfiles,UpdateSourceTrigger=PropertyChanged}"
+                      ItemTemplate="{StaticResource SyncProfileDataTemplate}" />
         </Expander>
         <GroupBox Grid.Row="2"
                   Grid.ColumnSpan="2"

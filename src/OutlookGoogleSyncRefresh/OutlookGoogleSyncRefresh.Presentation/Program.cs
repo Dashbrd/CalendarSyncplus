@@ -18,7 +18,6 @@
 #endregion
 
 using System;
-using System.Diagnostics;
 using System.Linq;
 using OutlookGoogleSyncRefresh.Application.Utilities;
 using OutlookGoogleSyncRefresh.Presentation.Services.SingleInstance;
@@ -40,7 +39,7 @@ namespace OutlookGoogleSyncRefresh.Presentation
                     bool startMinimized = false;
                     if (args != null)
                     {
-                        var minimized  = args.FirstOrDefault();
+                        string minimized = args.FirstOrDefault();
                         if (minimized != null && minimized.Equals(Constants.Minimized))
                         {
                             startMinimized = true;

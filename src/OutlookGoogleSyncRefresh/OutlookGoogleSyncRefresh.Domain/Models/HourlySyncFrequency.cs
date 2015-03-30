@@ -19,9 +19,9 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
 
         public override bool ValidateTimer(DateTime dateTime)
         {
-            var totalTimeElapsed = StartTime.Subtract(dateTime);
+            TimeSpan totalTimeElapsed = StartTime.Subtract(dateTime);
             var timeElapsed = new TimeSpan(Hours, Minutes, 0);
-            if (Math.Abs(totalTimeElapsed.TotalSeconds % timeElapsed.TotalSeconds) < 1)
+            if (Math.Abs(totalTimeElapsed.TotalSeconds%timeElapsed.TotalSeconds) < 1)
             {
                 return true;
             }
@@ -52,7 +52,6 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
             }
             catch
             {
-
             }
             return DateTime.Now;
         }

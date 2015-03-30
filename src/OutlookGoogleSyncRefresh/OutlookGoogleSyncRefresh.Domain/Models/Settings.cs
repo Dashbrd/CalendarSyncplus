@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.ObjectModel;
 
 namespace OutlookGoogleSyncRefresh.Domain.Models
 {
@@ -23,7 +18,7 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
         public static Settings GetDefaultSettings()
         {
             var settings = new Settings();
-            settings.AppSettings = new AppSettings()
+            settings.AppSettings = new AppSettings
             {
                 IsFirstSave = true,
                 MinimizeToSystemTray = true,

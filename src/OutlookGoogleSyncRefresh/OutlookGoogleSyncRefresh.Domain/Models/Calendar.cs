@@ -1,4 +1,5 @@
 ﻿using System.Waf.Foundation;
+
 namespace OutlookGoogleSyncRefresh.Domain.Models
 {
     public class Calendar : Model
