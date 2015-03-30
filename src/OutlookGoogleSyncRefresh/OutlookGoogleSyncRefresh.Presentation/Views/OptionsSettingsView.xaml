@@ -17,6 +17,8 @@
         <DataTemplate DataType="{x:Type wrappers:Category}">
             <Rectangle Height="20"
                        Width="20"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
                        StrokeThickness="0.1"
                        Stroke="Black"
                        Fill="{Binding Color,Converter={StaticResource StringToBrushConverter}}"

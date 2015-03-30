@@ -268,5 +268,11 @@ namespace OutlookGoogleSyncRefresh.Application.Services.ExchangeWeb
         {
             throw new NotImplementedException();
         }
+
+
+        public void SetCalendarColor(Category background, IDictionary<string, object> calendarSpecificData)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

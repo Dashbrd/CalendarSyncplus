@@ -38,7 +38,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services
 
         Task<bool> ResetCalendar(IDictionary<string, object> calendarSpecificData);
 
-        //void SetCalendarColor(Color background, Color foreground, IDictionary<string, object> calendarSpecificData);
+        void SetCalendarColor(Category background, IDictionary<string, object> calendarSpecificData);
     }
 
 }

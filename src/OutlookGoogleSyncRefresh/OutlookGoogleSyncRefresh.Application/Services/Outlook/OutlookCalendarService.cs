@@ -662,6 +662,12 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
                 // Get Default Calender
                 defaultOutlookCalender = OutlookCalendar != null ? nameSpace.GetFolderFromID(OutlookCalendar.EntryId, OutlookCalendar.StoreId) : nameSpace.GetDefaultFolder(OlDefaultFolders.olFolderCalendar);
                 outlookItems = defaultOutlookCalender.Items;
+                if (nameSpace.Categories[Constants.CategoryName] == null)
+                {
+                    nameSpace.Categories.Add(Constants.CategoryName, OlCategoryColor.olCategoryColorNone,
+                        OlCategoryShortcutKey.olCategoryShortcutKeyNone);
+                }
+
                 foreach (var calendarAppointment in calenderAppointments)
                 {
                     var appItem = outlookItems.Add(OlItemType.olAppointmentItem) as AppointmentItem;
@@ -733,8 +739,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
                 appItem.Location = calendarAppointment.Location;
                 appItem.BusyStatus = calendarAppointment.GetOutlookBusyStatus();
                 recipients = appItem.Recipients;
-                //Recipient recipRequired = recipients.Add("");
-                //recipRequired.Type = (int) OlMeetingRecipientType.olOptional;
+                appItem.Categories = Constants.CategoryName;
 
                 if (calendarAppointment.AllDayEvent)
                 {
