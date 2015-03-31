@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Globalization;
 using System.Windows.Data;
-using OutlookGoogleSyncRefresh.Common.MetaData;
+using CalendarSyncPlus.Common.MetaData;
 
-namespace OutlookGoogleSyncRefresh.Presentation.Converters
+namespace CalendarSyncPlus.Presentation.Converters
 {
     public class BoolToCalendarServiceTypeConverter : IValueConverter
     {

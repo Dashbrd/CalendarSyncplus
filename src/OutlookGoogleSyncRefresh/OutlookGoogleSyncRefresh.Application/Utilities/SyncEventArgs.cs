@@ -1,4 +1,4 @@
-﻿namespace OutlookGoogleSyncRefresh.Application.Utilities
+﻿namespace CalendarSyncPlus.Application.Utilities
 {
     public class SyncEventArgs
     {

@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Windows.Data;
 using System.Windows.Media;
 
-namespace OutlookGoogleSyncRefresh.Presentation.Converters
+namespace CalendarSyncPlus.Presentation.Converters
 {
     public class StringToBrushConverter : IValueConverter
     {

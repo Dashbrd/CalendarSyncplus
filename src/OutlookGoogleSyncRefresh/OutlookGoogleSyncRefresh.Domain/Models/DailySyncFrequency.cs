@@ -1,7 +1,7 @@
 ﻿using System;
-using OutlookGoogleSyncRefresh.Domain.Helpers;
+using CalendarSyncPlus.Domain.Helpers;
 
-namespace OutlookGoogleSyncRefresh.Domain.Models
+namespace CalendarSyncPlus.Domain.Models
 {
     public class DailySyncFrequency : SyncFrequency
     {

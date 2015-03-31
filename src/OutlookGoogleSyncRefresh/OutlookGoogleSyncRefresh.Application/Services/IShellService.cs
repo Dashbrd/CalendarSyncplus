@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace OutlookGoogleSyncRefresh.Application.Services
+namespace CalendarSyncPlus.Application.Services
 {
     public interface IShellService : INotifyPropertyChanged
     {

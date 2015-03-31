@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Xml.Serialization;
 
-namespace OutlookGoogleSyncRefresh.Domain.Models
+namespace CalendarSyncPlus.Domain.Models
 {
     [XmlInclude(typeof (HourlySyncFrequency))]
     [XmlInclude(typeof (DailySyncFrequency))]

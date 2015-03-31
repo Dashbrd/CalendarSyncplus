@@ -20,13 +20,13 @@
 #region Imports
 
 using System.ComponentModel;
-using OutlookGoogleSyncRefresh.Application.Utilities;
-using OutlookGoogleSyncRefresh.Application.Wrappers;
-using OutlookGoogleSyncRefresh.Domain.Models;
+using CalendarSyncPlus.Application.Utilities;
+using CalendarSyncPlus.Application.Wrappers;
+using CalendarSyncPlus.Domain.Models;
 
 #endregion
 
-namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
+namespace CalendarSyncPlus.Application.Services.CalendarUpdate
 {
     public interface ICalendarUpdateService : INotifyPropertyChanged
     {

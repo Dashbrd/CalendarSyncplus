@@ -21,12 +21,12 @@ using System;
 using System.ComponentModel.Composition;
 using System.Threading.Tasks;
 using System.Waf.Applications;
+using CalendarSyncPlus.Application.Services;
+using CalendarSyncPlus.Common;
+using CalendarSyncPlus.Presentation.Views;
 using MahApps.Metro.Controls.Dialogs;
-using OutlookGoogleSyncRefresh.Application.Services;
-using OutlookGoogleSyncRefresh.Common;
-using OutlookGoogleSyncRefresh.Presentation.Views;
 
-namespace OutlookGoogleSyncRefresh.Presentation.Services
+namespace CalendarSyncPlus.Presentation.Services
 {
     [Export(typeof (IMessageService))]
     public class MessageService : IMessageService

@@ -29,18 +29,18 @@ using System.Reflection;
 using System.Waf.Applications;
 using System.Windows;
 using System.Windows.Threading;
-using OutlookGoogleSyncRefresh.Application.Controllers;
-using OutlookGoogleSyncRefresh.Application.Services;
-using OutlookGoogleSyncRefresh.Application.ViewModels;
-using OutlookGoogleSyncRefresh.Common;
-using OutlookGoogleSyncRefresh.Common.Log;
-using OutlookGoogleSyncRefresh.Domain.Models;
-using OutlookGoogleSyncRefresh.Helpers;
-using OutlookGoogleSyncRefresh.Presentation.Services.SingleInstance;
+using CalendarSyncPlus.Application.Controllers;
+using CalendarSyncPlus.Application.Services;
+using CalendarSyncPlus.Application.ViewModels;
+using CalendarSyncPlus.Common;
+using CalendarSyncPlus.Common.Log;
+using CalendarSyncPlus.Domain.Models;
+using CalendarSyncPlus.Presentation.Helpers;
+using CalendarSyncPlus.Presentation.Services.SingleInstance;
 
 #endregion
 
-namespace OutlookGoogleSyncRefresh
+namespace CalendarSyncPlus.Presentation
 {
     /// <summary>
     ///     Interaction logic for App.xaml

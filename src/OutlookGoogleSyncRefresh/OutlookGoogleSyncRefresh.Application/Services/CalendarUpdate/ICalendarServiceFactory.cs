@@ -1,6 +1,6 @@
-﻿using OutlookGoogleSyncRefresh.Common.MetaData;
+﻿using CalendarSyncPlus.Common.MetaData;
 
-namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
+namespace CalendarSyncPlus.Application.Services.CalendarUpdate
 {
     public interface ICalendarServiceFactory
     {

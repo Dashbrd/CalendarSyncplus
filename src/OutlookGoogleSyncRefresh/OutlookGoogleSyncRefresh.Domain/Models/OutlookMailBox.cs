@@ -24,7 +24,7 @@ using System.Waf.Foundation;
 
 #endregion
 
-namespace OutlookGoogleSyncRefresh.Domain.Models
+namespace CalendarSyncPlus.Domain.Models
 {
     public class OutlookMailBox : Model
     {

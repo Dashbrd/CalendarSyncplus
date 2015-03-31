@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using OutlookGoogleSyncRefresh.Domain.Helpers;
+using CalendarSyncPlus.Domain.Helpers;
 
-namespace OutlookGoogleSyncRefresh.Domain.Models
+namespace CalendarSyncPlus.Domain.Models
 {
     public class WeeklySyncFrequency : SyncFrequency
     {

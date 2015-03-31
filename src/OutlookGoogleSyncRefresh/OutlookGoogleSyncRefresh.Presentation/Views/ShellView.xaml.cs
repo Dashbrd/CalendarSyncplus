@@ -1,10 +1,10 @@
 ﻿using System;
 using System.ComponentModel.Composition;
 using System.Windows;
-using OutlookGoogleSyncRefresh.Application.Views;
-using OutlookGoogleSyncRefresh.Helpers;
+using CalendarSyncPlus.Application.Views;
+using CalendarSyncPlus.Presentation.Helpers;
 
-namespace OutlookGoogleSyncRefresh.Presentation.Views
+namespace CalendarSyncPlus.Presentation.Views
 {
     /// <summary>
     ///     Interaction logic for ShellView.xaml

@@ -3,10 +3,10 @@ using System.ComponentModel.Composition;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Waf.Applications;
-using OutlookGoogleSyncRefresh.Application.Services;
-using OutlookGoogleSyncRefresh.Application.Views;
+using CalendarSyncPlus.Application.Services;
+using CalendarSyncPlus.Application.Views;
 
-namespace OutlookGoogleSyncRefresh.Application.ViewModels
+namespace CalendarSyncPlus.Application.ViewModels
 {
     [Export]
     public class AboutViewModel : ViewModel<IAboutView>

@@ -4,7 +4,7 @@ using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
 
-namespace OutlookGoogleSyncRefresh.Domain.File.Xml
+namespace CalendarSyncPlus.Domain.File.Xml
 {
     /// <summary>
     ///     XML serializer helper class. Serializes and deserializes objects from/to XML

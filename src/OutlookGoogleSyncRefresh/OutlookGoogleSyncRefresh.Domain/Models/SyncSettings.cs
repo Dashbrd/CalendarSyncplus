@@ -1,6 +1,6 @@
-﻿using OutlookGoogleSyncRefresh.Common.MetaData;
+﻿using CalendarSyncPlus.Common.MetaData;
 
-namespace OutlookGoogleSyncRefresh.Domain.Models
+namespace CalendarSyncPlus.Domain.Models
 {
     public class SyncSettings
     {

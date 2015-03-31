@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace OutlookGoogleSyncRefresh.Application.Utilities
+namespace CalendarSyncPlus.Application.Utilities
 {
     public delegate Task<bool> SyncCallback(SyncEventArgs e);
 }

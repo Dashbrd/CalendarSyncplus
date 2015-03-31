@@ -7,7 +7,7 @@ using System.Security;
 
 #endregion
 
-namespace OutlookGoogleSyncRefresh.Presentation.Services.SingleInstance
+namespace CalendarSyncPlus.Presentation.Services.SingleInstance
 {
     [SuppressUnmanagedCodeSecurity]
     internal static class NativeMethods

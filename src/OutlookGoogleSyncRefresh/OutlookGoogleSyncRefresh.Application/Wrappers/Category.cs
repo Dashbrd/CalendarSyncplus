@@ -1,7 +1,7 @@
 ﻿using System.Windows.Media;
 using Microsoft.Office.Interop.Outlook;
 
-namespace OutlookGoogleSyncRefresh.Application.Wrappers
+namespace CalendarSyncPlus.Application.Wrappers
 {
     public class Category
     {

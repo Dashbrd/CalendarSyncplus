@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.Composition;
 using System.Waf.Applications;
-using OutlookGoogleSyncRefresh.Application.Views;
+using CalendarSyncPlus.Application.Views;
 
-namespace OutlookGoogleSyncRefresh.Application.ViewModels
+namespace CalendarSyncPlus.Application.ViewModels
 {
     [Export]
     public class HelpViewModel : ViewModel<IHelpView>

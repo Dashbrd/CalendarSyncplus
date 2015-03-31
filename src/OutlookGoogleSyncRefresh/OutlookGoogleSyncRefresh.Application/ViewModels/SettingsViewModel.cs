@@ -25,18 +25,18 @@ using System.ComponentModel;
 using System.ComponentModel.Composition;
 using System.Linq;
 using System.Waf.Applications;
+using CalendarSyncPlus.Application.Services;
+using CalendarSyncPlus.Application.Services.ExchangeWeb;
+using CalendarSyncPlus.Application.Services.Google;
+using CalendarSyncPlus.Application.Services.Outlook;
+using CalendarSyncPlus.Application.Views;
+using CalendarSyncPlus.Common.Log;
+using CalendarSyncPlus.Domain.Models;
 using MahApps.Metro.Controls.Dialogs;
-using OutlookGoogleSyncRefresh.Application.Services;
-using OutlookGoogleSyncRefresh.Application.Services.ExchangeWeb;
-using OutlookGoogleSyncRefresh.Application.Services.Google;
-using OutlookGoogleSyncRefresh.Application.Services.Outlook;
-using OutlookGoogleSyncRefresh.Application.Views;
-using OutlookGoogleSyncRefresh.Common.Log;
-using OutlookGoogleSyncRefresh.Domain.Models;
 
 #endregion
 
-namespace OutlookGoogleSyncRefresh.Application.ViewModels
+namespace CalendarSyncPlus.Application.ViewModels
 {
     [Export]
     public class SettingsViewModel : ViewModel<ISettingsView>

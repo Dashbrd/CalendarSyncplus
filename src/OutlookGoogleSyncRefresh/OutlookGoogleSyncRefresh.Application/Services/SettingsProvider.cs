@@ -20,11 +20,11 @@
 #region Imports
 
 using System.ComponentModel.Composition;
-using OutlookGoogleSyncRefresh.Domain.Models;
+using CalendarSyncPlus.Domain.Models;
 
 #endregion
 
-namespace OutlookGoogleSyncRefresh.Application.Services
+namespace CalendarSyncPlus.Application.Services
 {
     [Export(typeof (ISettingsProvider))]
     public class SettingsProvider : ISettingsProvider

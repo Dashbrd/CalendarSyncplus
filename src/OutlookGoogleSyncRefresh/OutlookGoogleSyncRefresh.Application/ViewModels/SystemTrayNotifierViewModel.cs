@@ -21,13 +21,13 @@
 
 using System.ComponentModel.Composition;
 using System.Waf.Applications;
-using OutlookGoogleSyncRefresh.Application.Services;
-using OutlookGoogleSyncRefresh.Application.Views;
-using OutlookGoogleSyncRefresh.Common;
+using CalendarSyncPlus.Application.Services;
+using CalendarSyncPlus.Application.Views;
+using CalendarSyncPlus.Common;
 
 #endregion
 
-namespace OutlookGoogleSyncRefresh.Application.ViewModels
+namespace CalendarSyncPlus.Application.ViewModels
 {
     [Export]
     public class SystemTrayNotifierViewModel : ViewModel<ISystemTrayNotifierView>

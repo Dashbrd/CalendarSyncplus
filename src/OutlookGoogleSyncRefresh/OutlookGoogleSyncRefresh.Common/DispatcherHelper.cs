@@ -25,7 +25,7 @@ using System.Windows.Threading;
 
 #endregion
 
-namespace OutlookGoogleSyncRefresh.Common
+namespace CalendarSyncPlus.Common
 {
     /// <summary>
     ///     Helper class for dispatcher operations on the UI thread.

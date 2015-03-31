@@ -26,21 +26,21 @@ using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using CalendarSyncPlus.Application.Utilities;
+using CalendarSyncPlus.Application.Wrappers;
+using CalendarSyncPlus.Common.Log;
+using CalendarSyncPlus.Common.MetaData;
+using CalendarSyncPlus.Domain.Models;
 using Microsoft.Office.Interop.Outlook;
 using Microsoft.Win32;
-using OutlookGoogleSyncRefresh.Application.Utilities;
-using OutlookGoogleSyncRefresh.Application.Wrappers;
-using OutlookGoogleSyncRefresh.Common.Log;
-using OutlookGoogleSyncRefresh.Common.MetaData;
-using OutlookGoogleSyncRefresh.Domain.Models;
-using AppRecipient = OutlookGoogleSyncRefresh.Domain.Models.Recipient;
-using Category = OutlookGoogleSyncRefresh.Application.Wrappers.Category;
+using AppRecipient = CalendarSyncPlus.Domain.Models.Recipient;
+using Category = CalendarSyncPlus.Application.Wrappers.Category;
 using Exception = System.Exception;
 using Recipient = Microsoft.Office.Interop.Outlook.Recipient;
 
 #endregion
 
-namespace OutlookGoogleSyncRefresh.Application.Services.Outlook
+namespace CalendarSyncPlus.Application.Services.Outlook
 {
     [Export(typeof (ICalendarService)), Export(typeof (IOutlookCalendarService))]
     [ExportMetadata("ServiceType", CalendarServiceType.OutlookDesktop)]

@@ -2,11 +2,11 @@
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using CalendarSyncPlus.Domain.Models;
 using Microsoft.Office.Interop.Outlook;
-using OutlookGoogleSyncRefresh.Domain.Models;
-using Recipient = OutlookGoogleSyncRefresh.Domain.Models.Recipient;
+using Recipient = CalendarSyncPlus.Domain.Models.Recipient;
 
-namespace OutlookGoogleSyncRefresh.Application.Utilities
+namespace CalendarSyncPlus.Application.Utilities
 {
     public static class AppointmentHelper
     {

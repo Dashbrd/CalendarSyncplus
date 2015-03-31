@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
-using OutlookGoogleSyncRefresh.Domain.Models;
+using CalendarSyncPlus.Domain.Models;
 
-namespace OutlookGoogleSyncRefresh.Application.Services
+namespace CalendarSyncPlus.Application.Services
 {
     public interface ISettingsSerializationService
     {

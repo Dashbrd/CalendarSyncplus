@@ -3,14 +3,14 @@ using System.ComponentModel.Composition;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Waf.Applications;
+using CalendarSyncPlus.Application.Utilities;
+using CalendarSyncPlus.Common.Log;
 using Google.Apis.Auth.OAuth2;
 using Google.Apis.Calendar.v3;
 using Google.Apis.Services;
 using Google.Apis.Util.Store;
-using OutlookGoogleSyncRefresh.Application.Utilities;
-using OutlookGoogleSyncRefresh.Common.Log;
 
-namespace OutlookGoogleSyncRefresh.Application.Services.Google
+namespace CalendarSyncPlus.Application.Services.Google
 {
     [Export(typeof (IAccountAuthenticationService))]
     public class AccountAuthenticationService : IAccountAuthenticationService

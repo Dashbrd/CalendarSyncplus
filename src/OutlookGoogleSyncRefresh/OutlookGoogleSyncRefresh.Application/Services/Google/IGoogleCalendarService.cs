@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using OutlookGoogleSyncRefresh.Domain.Models;
+using CalendarSyncPlus.Domain.Models;
 
-namespace OutlookGoogleSyncRefresh.Application.Services.Google
+namespace CalendarSyncPlus.Application.Services.Google
 {
     public interface IGoogleCalendarService : ICalendarService
     {

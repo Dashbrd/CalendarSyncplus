@@ -1,4 +1,4 @@
-﻿namespace OutlookGoogleSyncRefresh.Domain.Models
+﻿namespace CalendarSyncPlus.Domain.Models
 {
     public class Recipient
     {

@@ -1,4 +1,4 @@
-namespace OutlookGoogleSyncRefresh.Presentation.Services.SingleInstance
+namespace CalendarSyncPlus.Presentation.Services.SingleInstance
 {
     internal enum WM
     {

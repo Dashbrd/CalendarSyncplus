@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Windows.Media;
 using Microsoft.Office.Interop.Outlook;
-using Category = OutlookGoogleSyncRefresh.Application.Wrappers.Category;
+using Category = CalendarSyncPlus.Application.Wrappers.Category;
 using Exception = System.Exception;
 
-namespace OutlookGoogleSyncRefresh.Application.Utilities
+namespace CalendarSyncPlus.Application.Utilities
 {
     public class CategoryHelper
     {

@@ -19,11 +19,11 @@
 
 using System;
 using System.ComponentModel.Composition;
-using OutlookGoogleSyncRefresh.Application.Services;
-using OutlookGoogleSyncRefresh.Helpers;
-using OutlookGoogleSyncRefresh.Presentation.Views;
+using CalendarSyncPlus.Application.Services;
+using CalendarSyncPlus.Presentation.Helpers;
+using CalendarSyncPlus.Presentation.Views;
 
-namespace OutlookGoogleSyncRefresh.Presentation.Services
+namespace CalendarSyncPlus.Presentation.Services
 {
     [Export(typeof (IGuiInteractionService))]
     public class GuiInteractionService : IGuiInteractionService

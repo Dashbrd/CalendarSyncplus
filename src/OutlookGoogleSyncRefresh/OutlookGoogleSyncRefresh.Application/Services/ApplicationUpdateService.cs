@@ -3,10 +3,10 @@ using System.ComponentModel.Composition;
 using System.IO;
 using System.Net;
 using System.Waf.Applications;
+using CalendarSyncPlus.Common.Log;
 using Newtonsoft.Json;
-using OutlookGoogleSyncRefresh.Common.Log;
 
-namespace OutlookGoogleSyncRefresh.Application.Services
+namespace CalendarSyncPlus.Application.Services
 {
     /// <summary>
     /// </summary>

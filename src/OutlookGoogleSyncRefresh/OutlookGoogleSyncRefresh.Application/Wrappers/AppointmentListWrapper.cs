@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using OutlookGoogleSyncRefresh.Domain.Models;
+using CalendarSyncPlus.Domain.Models;
 
-namespace OutlookGoogleSyncRefresh.Application.Wrappers
+namespace CalendarSyncPlus.Application.Wrappers
 {
     public class AppointmentListWrapper
     {

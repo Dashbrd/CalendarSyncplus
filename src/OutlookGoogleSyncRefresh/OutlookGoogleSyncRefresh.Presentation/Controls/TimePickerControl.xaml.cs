@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 
-namespace OutlookGoogleSyncRefresh.Presentation.Controls
+namespace CalendarSyncPlus.Presentation.Controls
 {
     /// <summary>
     ///     Interaction logic for TimePickerControl.xaml

@@ -19,7 +19,7 @@
 
 using System.Waf.Foundation;
 
-namespace OutlookGoogleSyncRefresh.Domain.Models
+namespace CalendarSyncPlus.Domain.Models
 {
     public class OutlookCalendar : Model
     {

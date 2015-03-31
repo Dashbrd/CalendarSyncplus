@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.Composition;
 using System.Windows.Controls;
-using OutlookGoogleSyncRefresh.Application.Views;
+using CalendarSyncPlus.Application.Views;
 
-namespace OutlookGoogleSyncRefresh.Presentation.Views
+namespace CalendarSyncPlus.Presentation.Views
 {
     /// <summary>
     ///     Interaction logic for SettingsView.xaml

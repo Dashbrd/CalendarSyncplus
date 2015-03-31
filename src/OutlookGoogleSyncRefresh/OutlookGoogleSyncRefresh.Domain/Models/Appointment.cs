@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Waf.Foundation;
-using OutlookGoogleSyncRefresh.Domain.Helpers;
+using CalendarSyncPlus.Domain.Helpers;
 
-namespace OutlookGoogleSyncRefresh.Domain.Models
+namespace CalendarSyncPlus.Domain.Models
 {
     public class Appointment : Model, ICloneable
     {
@@ -16,17 +16,33 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
         ///     Id to identify the appointment
         /// </summary>
         private string _appointmentId;
-
+        /// <summary>
+        /// 
+        /// </summary>
         private string _calendarId;
+        /// <summary>
+        /// 
+        /// </summary>
         private DateTime? _created;
 
         /// <summary>
         /// </summary>
         private string _description;
-
+        /// <summary>
+        /// 
+        /// </summary>
         private DateTime? _endTime;
+        /// <summary>
+        /// 
+        /// </summary>
         private Dictionary<string, object> _extendedProperties;
+        /// <summary>
+        /// 
+        /// </summary>
         private bool _isRecurring;
+        /// <summary>
+        /// 
+        /// </summary>
         private DateTime? _lastModified;
         private string _location;
         private List<Recipient> _optionalAttendees;
@@ -204,6 +220,7 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
             appointment.LastModified = LastModified;
             appointment.CalendarId = CalendarId;
             appointment.ExtendedProperties = ExtendedProperties;
+            appointment.AllDayEvent = AllDayEvent;
             return appointment;
         }
 

@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.Waf.Applications;
 
-namespace OutlookGoogleSyncRefresh.Application.Views
+namespace CalendarSyncPlus.Application.Views
 {
     public interface IShellView : IView
     {

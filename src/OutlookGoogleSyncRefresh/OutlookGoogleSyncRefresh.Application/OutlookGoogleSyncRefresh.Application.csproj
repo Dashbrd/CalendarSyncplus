@@ -147,6 +147,7 @@
     <Compile Include="Services\CalendarUpdate\ICalendarUpdateService.cs" />
     <Compile Include="Services\ExchangeWeb\ExchangeWebCalendarService.cs" />
     <Compile Include="Services\ExchangeWeb\IExchangeWebCalendarService.cs" />
+    <Compile Include="Services\Google\Recurrence.cs" />
     <Compile Include="Services\IApplicationUpdateService.cs" />
     <Compile Include="Services\ICalendarService.cs" />
     <Compile Include="Services\IMessageService.cs" />
@@ -172,7 +173,7 @@
     <Compile Include="Utilities\CategoryHelper.cs" />
     <Compile Include="Utilities\Constants.cs" />
     <Compile Include="Utilities\Delegates.cs" />
-    <Compile Include="Utilities\FrequencyHelper.cs" />
+    <Compile Include="Services\Google\RecurrenceHelper.cs" />
     <Compile Include="Utilities\StatusHelper.cs" />
     <Compile Include="Utilities\SyncEventArgs.cs" />
     <Compile Include="ViewModels\AboutViewModel.cs" />
@@ -194,7 +195,6 @@
     <Compile Include="Wrappers\AppointmentListWrapper.cs" />
     <Compile Include="Wrappers\CalendarAppointments.cs" />
     <Compile Include="Wrappers\Category.cs" />
-    <Compile Include="Wrappers\Frequency.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OutlookGoogleSyncRefresh.Common\OutlookGoogleSyncRefresh.Common.csproj">

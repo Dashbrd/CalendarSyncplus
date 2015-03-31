@@ -1,19 +1,18 @@
-﻿<UserControl x:Class="OutlookGoogleSyncRefresh.Presentation.Views.OptionsSettingsView"
+﻿<UserControl x:Class="CalendarSyncPlus.Presentation.Views.OptionsSettingsView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:viewModels="clr-namespace:OutlookGoogleSyncRefresh.Application.ViewModels;assembly=OutlookGoogleSyncRefresh.Application"
-             xmlns:converters="http://waf.codeplex.com/schemas"
-             xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
-             xmlns:converters1="clr-namespace:OutlookGoogleSyncRefresh.Presentation.Converters"
-             xmlns:wrappers="clr-namespace:OutlookGoogleSyncRefresh.Application.Wrappers;assembly=OutlookGoogleSyncRefresh.Application"
+             xmlns:wafConverters="http://waf.codeplex.com/schemas"
+             xmlns:converters="clr-namespace:CalendarSyncPlus.Presentation.Converters"
+             xmlns:wrappers="clr-namespace:CalendarSyncPlus.Application.Wrappers;assembly=CalendarSyncPlus.Application"
+             xmlns:viewModels="clr-namespace:CalendarSyncPlus.Application.ViewModels;assembly=CalendarSyncPlus.Application"
              mc:Ignorable="d"
              d:DesignHeight="600" d:DesignWidth="500"
              d:DataContext="{d:DesignInstance viewModels:ProfileViewModel}">
     <UserControl.Resources>
-        <converters:InvertBooleanConverter x:Key="InvertBooleanConverter" />
-        <converters1:StringToBrushConverter x:Key="StringToBrushConverter" />
+        <wafConverters:InvertBooleanConverter x:Key="InvertBooleanConverter" />
+        <converters:StringToBrushConverter x:Key="StringToBrushConverter" />
         <DataTemplate DataType="{x:Type wrappers:Category}">
             <Rectangle Height="20"
                        Width="20"

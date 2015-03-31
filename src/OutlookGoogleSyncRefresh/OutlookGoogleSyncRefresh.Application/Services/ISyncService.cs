@@ -22,12 +22,12 @@
 using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Timers;
-using OutlookGoogleSyncRefresh.Application.Utilities;
-using OutlookGoogleSyncRefresh.Domain.Models;
+using CalendarSyncPlus.Application.Utilities;
+using CalendarSyncPlus.Domain.Models;
 
 #endregion
 
-namespace OutlookGoogleSyncRefresh.Application.Services
+namespace CalendarSyncPlus.Application.Services
 {
     public interface ISyncService : INotifyPropertyChanged, IService
     {

@@ -29,19 +29,19 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Waf.Applications;
+using CalendarSyncPlus.Application.Services;
+using CalendarSyncPlus.Application.Services.Google;
+using CalendarSyncPlus.Application.Utilities;
+using CalendarSyncPlus.Application.Views;
+using CalendarSyncPlus.Common;
+using CalendarSyncPlus.Common.Log;
+using CalendarSyncPlus.Domain.Helpers;
+using CalendarSyncPlus.Domain.Models;
 using MahApps.Metro.Controls.Dialogs;
-using OutlookGoogleSyncRefresh.Application.Services;
-using OutlookGoogleSyncRefresh.Application.Services.Google;
-using OutlookGoogleSyncRefresh.Application.Utilities;
-using OutlookGoogleSyncRefresh.Application.Views;
-using OutlookGoogleSyncRefresh.Common;
-using OutlookGoogleSyncRefresh.Common.Log;
-using OutlookGoogleSyncRefresh.Domain.Helpers;
-using OutlookGoogleSyncRefresh.Domain.Models;
 
 #endregion
 
-namespace OutlookGoogleSyncRefresh.Application.ViewModels
+namespace CalendarSyncPlus.Application.ViewModels
 {
     [Export]
     public class ShellViewModel : ViewModel<IShellView>

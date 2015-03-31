@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace OutlookGoogleSyncRefresh.Presentation.Views
+namespace CalendarSyncPlus.Presentation.Views
 {
     /// <summary>
     ///     Interaction logic for SyncSettingsView.xaml

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace OutlookGoogleSyncRefresh.Domain.Models
+namespace CalendarSyncPlus.Domain.Models
 {
     public class HourlySyncFrequency : SyncFrequency
     {

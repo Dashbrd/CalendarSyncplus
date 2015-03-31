@@ -22,12 +22,12 @@ using System.ComponentModel;
 using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
 using System.Waf.Applications;
-using OutlookGoogleSyncRefresh.Application.Services;
-using OutlookGoogleSyncRefresh.Application.Services.Google;
-using OutlookGoogleSyncRefresh.Application.ViewModels;
-using OutlookGoogleSyncRefresh.Domain.Models;
+using CalendarSyncPlus.Application.Services;
+using CalendarSyncPlus.Application.Services.Google;
+using CalendarSyncPlus.Application.ViewModels;
+using CalendarSyncPlus.Domain.Models;
 
-namespace OutlookGoogleSyncRefresh.Application.Controllers
+namespace CalendarSyncPlus.Application.Controllers
 {
     [Export(typeof (IApplicationController))]
     public class ApplicationController : IApplicationController

@@ -21,7 +21,7 @@ using System;
 using System.Globalization;
 using System.Windows.Data;
 
-namespace OutlookGoogleSyncRefresh.Presentation.Converters
+namespace CalendarSyncPlus.Presentation.Converters
 {
     public class PercentageWidthConverter : IValueConverter
     {

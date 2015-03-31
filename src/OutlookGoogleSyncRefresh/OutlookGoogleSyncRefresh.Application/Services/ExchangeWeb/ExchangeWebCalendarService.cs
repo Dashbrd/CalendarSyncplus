@@ -4,15 +4,15 @@ using System.ComponentModel.Composition;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using CalendarSyncPlus.Application.Wrappers;
+using CalendarSyncPlus.Common.Log;
+using CalendarSyncPlus.Common.MetaData;
+using CalendarSyncPlus.Domain.Models;
 using Microsoft.Exchange.WebServices.Data;
-using OutlookGoogleSyncRefresh.Application.Wrappers;
-using OutlookGoogleSyncRefresh.Common.Log;
-using OutlookGoogleSyncRefresh.Common.MetaData;
-using OutlookGoogleSyncRefresh.Domain.Models;
-using AppAppointment = OutlookGoogleSyncRefresh.Domain.Models.Appointment;
+using AppAppointment = CalendarSyncPlus.Domain.Models.Appointment;
 using Appointment = Microsoft.Exchange.WebServices.Data.Appointment;
 
-namespace OutlookGoogleSyncRefresh.Application.Services.ExchangeWeb
+namespace CalendarSyncPlus.Application.Services.ExchangeWeb
 {
     [Export(typeof (ICalendarService)), Export(typeof (IExchangeWebCalendarService))]
     [ExportMetadata("ServiceType", CalendarServiceType.EWS)]

@@ -19,7 +19,7 @@
 
 using System.Windows;
 
-namespace OutlookGoogleSyncRefresh.Helpers
+namespace CalendarSyncPlus.Presentation.Helpers
 {
     public static class Utilities
     {

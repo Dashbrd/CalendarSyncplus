@@ -19,10 +19,10 @@
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using OutlookGoogleSyncRefresh.Application.Wrappers;
-using OutlookGoogleSyncRefresh.Domain.Models;
+using CalendarSyncPlus.Application.Wrappers;
+using CalendarSyncPlus.Domain.Models;
 
-namespace OutlookGoogleSyncRefresh.Application.Services
+namespace CalendarSyncPlus.Application.Services
 {
     public interface ICalendarService
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace OutlookGoogleSyncRefresh.Domain.Models
+namespace CalendarSyncPlus.Domain.Models
 {
     [Flags]
     public enum OutlookOptionsEnum
@@ -45,12 +45,4 @@ namespace OutlookGoogleSyncRefresh.Domain.Models
         Tentative
     }
 
-    public enum FrequencyTypeEnum
-    {
-        None,
-        Daily,
-        Weekly,
-        Monthly,
-        Yearly
-    }
 }

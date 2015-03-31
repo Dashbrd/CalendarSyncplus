@@ -17,7 +17,7 @@
 
 #endregion
 
-namespace OutlookGoogleSyncRefresh.Common
+namespace CalendarSyncPlus.Common
 {
     public static class ExtensionMethods
     {

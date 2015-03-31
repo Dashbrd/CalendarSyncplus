@@ -1,6 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 
-namespace OutlookGoogleSyncRefresh.Domain.Models
+namespace CalendarSyncPlus.Domain.Models
 {
     public class Settings
     {

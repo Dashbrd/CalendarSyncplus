@@ -17,7 +17,7 @@
 
 #endregion
 
-namespace OutlookGoogleSyncRefresh.Common.MetaData
+namespace CalendarSyncPlus.Common.MetaData
 {
     public enum CalendarServiceType
     {

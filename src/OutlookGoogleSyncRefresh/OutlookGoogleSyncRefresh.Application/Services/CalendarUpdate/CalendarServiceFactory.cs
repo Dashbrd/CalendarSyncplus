@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
-using OutlookGoogleSyncRefresh.Common.MetaData;
+using CalendarSyncPlus.Common.MetaData;
 
-namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
+namespace CalendarSyncPlus.Application.Services.CalendarUpdate
 {
     [Export(typeof (ICalendarServiceFactory))]
     public class CalendarServiceFactory : ICalendarServiceFactory

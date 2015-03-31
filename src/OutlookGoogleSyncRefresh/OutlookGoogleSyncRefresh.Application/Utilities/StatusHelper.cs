@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace OutlookGoogleSyncRefresh.Application.Utilities
+namespace CalendarSyncPlus.Application.Utilities
 {
     public enum SyncStateEnum
     {

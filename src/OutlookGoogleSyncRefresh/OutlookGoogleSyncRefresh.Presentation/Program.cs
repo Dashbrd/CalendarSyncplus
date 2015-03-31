@@ -19,10 +19,10 @@
 
 using System;
 using System.Linq;
-using OutlookGoogleSyncRefresh.Application.Utilities;
-using OutlookGoogleSyncRefresh.Presentation.Services.SingleInstance;
+using CalendarSyncPlus.Application.Utilities;
+using CalendarSyncPlus.Presentation.Services.SingleInstance;
 
-namespace OutlookGoogleSyncRefresh.Presentation
+namespace CalendarSyncPlus.Presentation
 {
     internal sealed class Program
     {

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using OutlookGoogleSyncRefresh.Domain.Models;
+using CalendarSyncPlus.Domain.Models;
 
-namespace OutlookGoogleSyncRefresh.Application.Services.ExchangeWeb
+namespace CalendarSyncPlus.Application.Services.ExchangeWeb
 {
     public interface IExchangeWebCalendarService : ICalendarService
     {

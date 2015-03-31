@@ -24,13 +24,13 @@ using System.Collections.ObjectModel;
 using System.ComponentModel.Composition;
 using System.IO;
 using System.Threading.Tasks;
-using OutlookGoogleSyncRefresh.Common.Log;
-using OutlookGoogleSyncRefresh.Domain.File.Xml;
-using OutlookGoogleSyncRefresh.Domain.Models;
+using CalendarSyncPlus.Common.Log;
+using CalendarSyncPlus.Domain.File.Xml;
+using CalendarSyncPlus.Domain.Models;
 
 #endregion
 
-namespace OutlookGoogleSyncRefresh.Application.Services
+namespace CalendarSyncPlus.Application.Services
 {
     [Export(typeof (ISettingsSerializationService))]
     public class SettingsSerializationService : ISettingsSerializationService

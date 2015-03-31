@@ -4,19 +4,19 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Waf.Applications;
 using System.Waf.Foundation;
+using CalendarSyncPlus.Application.Services;
+using CalendarSyncPlus.Application.Services.ExchangeWeb;
+using CalendarSyncPlus.Application.Services.Google;
+using CalendarSyncPlus.Application.Services.Outlook;
+using CalendarSyncPlus.Application.Utilities;
+using CalendarSyncPlus.Application.Wrappers;
+using CalendarSyncPlus.Common.Log;
+using CalendarSyncPlus.Common.MetaData;
+using CalendarSyncPlus.Domain.Helpers;
+using CalendarSyncPlus.Domain.Models;
 using MahApps.Metro.Controls.Dialogs;
-using OutlookGoogleSyncRefresh.Application.Services;
-using OutlookGoogleSyncRefresh.Application.Services.ExchangeWeb;
-using OutlookGoogleSyncRefresh.Application.Services.Google;
-using OutlookGoogleSyncRefresh.Application.Services.Outlook;
-using OutlookGoogleSyncRefresh.Application.Utilities;
-using OutlookGoogleSyncRefresh.Application.Wrappers;
-using OutlookGoogleSyncRefresh.Common.Log;
-using OutlookGoogleSyncRefresh.Common.MetaData;
-using OutlookGoogleSyncRefresh.Domain.Helpers;
-using OutlookGoogleSyncRefresh.Domain.Models;
 
-namespace OutlookGoogleSyncRefresh.Application.ViewModels
+namespace CalendarSyncPlus.Application.ViewModels
 {
     public class ProfileViewModel : Model
     {

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 #endregion
 
-namespace OutlookGoogleSyncRefresh.Presentation.Services.SingleInstance
+namespace CalendarSyncPlus.Presentation.Services.SingleInstance
 {
     public interface ISingleInstanceApp
     {

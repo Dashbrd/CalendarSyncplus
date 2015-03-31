@@ -64,7 +64,7 @@
   </PropertyGroup>
   <PropertyGroup />
   <PropertyGroup>
-    <StartupObject>OutlookGoogleSyncRefresh.Presentation.Program</StartupObject>
+    <StartupObject>CalendarSyncPlus.Presentation.Program</StartupObject>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>icon.ico</ApplicationIcon>

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
-using OutlookGoogleSyncRefresh.Domain.Models;
+using CalendarSyncPlus.Domain.Models;
 
-namespace OutlookGoogleSyncRefresh.Domain.Helpers
+namespace CalendarSyncPlus.Domain.Helpers
 {
     public static class ExtensionMethods
     {

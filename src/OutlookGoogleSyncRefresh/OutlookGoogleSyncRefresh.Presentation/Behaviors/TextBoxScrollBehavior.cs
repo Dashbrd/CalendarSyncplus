@@ -2,7 +2,7 @@
 using System.Windows.Controls;
 using System.Windows.Interactivity;
 
-namespace OutlookGoogleSyncRefresh.Presentation.Behaviors
+namespace CalendarSyncPlus.Presentation.Behaviors
 {
     public class TextBoxScrollBehavior : Behavior<TextBox>
     {

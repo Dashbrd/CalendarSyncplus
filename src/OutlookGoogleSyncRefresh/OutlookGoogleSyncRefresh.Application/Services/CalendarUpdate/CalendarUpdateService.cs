@@ -25,15 +25,15 @@ using System.ComponentModel.Composition;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Waf.Foundation;
-using OutlookGoogleSyncRefresh.Application.Utilities;
-using OutlookGoogleSyncRefresh.Application.Wrappers;
-using OutlookGoogleSyncRefresh.Common.Log;
-using OutlookGoogleSyncRefresh.Common.MetaData;
-using OutlookGoogleSyncRefresh.Domain.Models;
+using CalendarSyncPlus.Application.Utilities;
+using CalendarSyncPlus.Application.Wrappers;
+using CalendarSyncPlus.Common.Log;
+using CalendarSyncPlus.Common.MetaData;
+using CalendarSyncPlus.Domain.Models;
 
 #endregion
 
-namespace OutlookGoogleSyncRefresh.Application.Services.CalendarUpdate
+namespace CalendarSyncPlus.Application.Services.CalendarUpdate
 {
     [Export(typeof (ICalendarUpdateService))]
     public class CalendarUpdateService : Model, ICalendarUpdateService

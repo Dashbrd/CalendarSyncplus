@@ -24,7 +24,7 @@ using System.Windows.Threading;
 
 #endregion
 
-namespace OutlookGoogleSyncRefresh.Presentation.Services.SingleInstance
+namespace CalendarSyncPlus.Presentation.Services.SingleInstance
 {
     /// <summary>
     ///     This class checks to make sure that only one instance of

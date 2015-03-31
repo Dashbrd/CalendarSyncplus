@@ -1,10 +1,10 @@
 ﻿using System.ComponentModel.Composition;
 using System.Windows;
 using System.Windows.Controls.Primitives;
+using CalendarSyncPlus.Application.Views;
 using Hardcodet.Wpf.TaskbarNotification;
-using OutlookGoogleSyncRefresh.Application.Views;
 
-namespace OutlookGoogleSyncRefresh.Presentation.Views
+namespace CalendarSyncPlus.Presentation.Views
 {
     /// <summary>
     ///     Interaction logic for SystemTrayNotifierView.xaml

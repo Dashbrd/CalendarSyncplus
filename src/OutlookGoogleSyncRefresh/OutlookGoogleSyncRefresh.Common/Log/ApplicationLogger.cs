@@ -9,7 +9,7 @@ using log4net.Core;
 using log4net.Layout;
 using log4net.Repository.Hierarchy;
 
-namespace OutlookGoogleSyncRefresh.Common.Log
+namespace CalendarSyncPlus.Common.Log
 {
     [Export]
     public class ApplicationLogger

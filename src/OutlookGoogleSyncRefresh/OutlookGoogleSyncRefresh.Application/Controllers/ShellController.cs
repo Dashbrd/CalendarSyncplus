@@ -19,11 +19,11 @@
 
 using System.ComponentModel;
 using System.ComponentModel.Composition;
-using OutlookGoogleSyncRefresh.Application.Services;
-using OutlookGoogleSyncRefresh.Application.ViewModels;
-using OutlookGoogleSyncRefresh.Common.Log;
+using CalendarSyncPlus.Application.Services;
+using CalendarSyncPlus.Application.ViewModels;
+using CalendarSyncPlus.Common.Log;
 
-namespace OutlookGoogleSyncRefresh.Application.Controllers
+namespace CalendarSyncPlus.Application.Controllers
 {
     [Export(typeof (IShellController))]
     public class ShellController : IShellController

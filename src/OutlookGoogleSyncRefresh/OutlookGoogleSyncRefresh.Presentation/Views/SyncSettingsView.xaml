@@ -1,12 +1,11 @@
-﻿<UserControl x:Class="OutlookGoogleSyncRefresh.Presentation.Views.SyncSettingsView"
+﻿<UserControl x:Class="CalendarSyncPlus.Presentation.Views.SyncSettingsView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:viewModels="clr-namespace:OutlookGoogleSyncRefresh.Application.ViewModels;assembly=OutlookGoogleSyncRefresh.Application"
              xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
-             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
-             xmlns:customControls="clr-namespace:OutlookGoogleSyncRefresh.Presentation.Controls"
+             xmlns:viewModels="clr-namespace:CalendarSyncPlus.Application.ViewModels;assembly=CalendarSyncPlus.Application"
+             xmlns:controls1="clr-namespace:CalendarSyncPlus.Presentation.Controls"
              mc:Ignorable="d"
              d:DesignHeight="300"
              d:DesignWidth="300"
@@ -80,7 +79,7 @@
                             Grid.Row="2">
                     <TextBlock Text="Time of Day"
                                VerticalAlignment="Center" Margin="2" />
-                    <customControls:TimePickerControl Margin="2"
+                    <controls1:TimePickerControl Margin="2"
                                                       VerticalAlignment="Center"
                                                       TimeFormat="hh:mm tt"
                                                       TimeValue="{Binding TimeOfDay,
@@ -166,7 +165,7 @@
                             Grid.Row="2">
                     <TextBlock Text="Time of Day" Margin="2"
                                VerticalAlignment="Center" />
-                    <customControls:TimePickerControl Margin="2"
+                    <controls1:TimePickerControl Margin="2"
                                                       VerticalAlignment="Center"
                                                       TimeFormat="hh:mm tt"
                                                       TimeValue="{Binding TimeOfDay,

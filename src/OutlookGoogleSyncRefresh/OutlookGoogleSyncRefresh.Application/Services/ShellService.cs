@@ -24,7 +24,7 @@ using System.Waf.Foundation;
 
 #endregion
 
-namespace OutlookGoogleSyncRefresh.Application.Services
+namespace CalendarSyncPlus.Application.Services
 {
     [Export, Export(typeof (IShellService))]
     public class ShellService : Model, IShellService

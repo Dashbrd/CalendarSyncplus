@@ -2,12 +2,12 @@
 using System.ComponentModel.Composition;
 using System.Reflection;
 using System.Security.Principal;
+using CalendarSyncPlus.Application.Services;
+using CalendarSyncPlus.Application.Utilities;
+using CalendarSyncPlus.Common.Log;
 using Microsoft.Win32;
-using OutlookGoogleSyncRefresh.Application.Services;
-using OutlookGoogleSyncRefresh.Application.Utilities;
-using OutlookGoogleSyncRefresh.Common.Log;
 
-namespace OutlookGoogleSyncRefresh.Presentation.Services
+namespace CalendarSyncPlus.Presentation.Services
 {
     [Export(typeof (IWindowsStartupService))]
     public class WindowsStartupService : IWindowsStartupService

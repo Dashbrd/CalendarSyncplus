@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Waf.Foundation;
 using System.Xml.Serialization;
-using OutlookGoogleSyncRefresh.Common.MetaData;
+using CalendarSyncPlus.Common.MetaData;
 
-namespace OutlookGoogleSyncRefresh.Domain.Models
+namespace CalendarSyncPlus.Domain.Models
 {
     [XmlInclude(typeof (Calendar))]
     [XmlInclude(typeof (SyncFrequency))]

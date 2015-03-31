@@ -17,7 +17,7 @@
 
 #endregion
 
-namespace OutlookGoogleSyncRefresh.Application.Controllers
+namespace CalendarSyncPlus.Application.Controllers
 {
     public interface IController
     {

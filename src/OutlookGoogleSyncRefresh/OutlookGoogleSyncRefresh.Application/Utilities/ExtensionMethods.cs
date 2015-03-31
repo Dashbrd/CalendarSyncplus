@@ -25,7 +25,7 @@ using System.Text.RegularExpressions;
 
 #endregion
 
-namespace OutlookGoogleSyncRefresh.Application.Utilities
+namespace CalendarSyncPlus.Application.Utilities
 {
     public static class ExtensionMethods
     {

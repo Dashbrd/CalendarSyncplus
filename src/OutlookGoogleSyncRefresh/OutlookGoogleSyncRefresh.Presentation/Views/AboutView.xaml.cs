@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.Composition;
-using OutlookGoogleSyncRefresh.Application.Views;
+using CalendarSyncPlus.Application.Views;
 
-namespace OutlookGoogleSyncRefresh.Presentation.Views
+namespace CalendarSyncPlus.Presentation.Views
 {
     /// <summary>
     ///     Interaction logic for AboutView.xaml

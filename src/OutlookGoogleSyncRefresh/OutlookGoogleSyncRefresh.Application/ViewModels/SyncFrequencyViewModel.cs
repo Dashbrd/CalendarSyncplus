@@ -1,7 +1,7 @@
 ﻿using System.Waf.Foundation;
-using OutlookGoogleSyncRefresh.Domain.Models;
+using CalendarSyncPlus.Domain.Models;
 
-namespace OutlookGoogleSyncRefresh.Application.ViewModels
+namespace CalendarSyncPlus.Application.ViewModels
 {
     public abstract class SyncFrequencyViewModel : Model
     {

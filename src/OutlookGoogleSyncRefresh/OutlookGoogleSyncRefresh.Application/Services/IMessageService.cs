@@ -20,7 +20,7 @@
 using System.Threading.Tasks;
 using MahApps.Metro.Controls.Dialogs;
 
-namespace OutlookGoogleSyncRefresh.Application.Services
+namespace CalendarSyncPlus.Application.Services
 {
     public interface IMessageService
     {

@@ -25,20 +25,20 @@ using System.ComponentModel.Composition;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using CalendarSyncPlus.Application.Utilities;
+using CalendarSyncPlus.Application.Wrappers;
+using CalendarSyncPlus.Common.Log;
+using CalendarSyncPlus.Common.MetaData;
+using CalendarSyncPlus.Domain.Models;
 using Google;
 using Google.Apis.Calendar.v3;
 using Google.Apis.Calendar.v3.Data;
 using Google.Apis.Requests;
-using OutlookGoogleSyncRefresh.Application.Utilities;
-using OutlookGoogleSyncRefresh.Application.Wrappers;
-using OutlookGoogleSyncRefresh.Common.Log;
-using OutlookGoogleSyncRefresh.Common.MetaData;
-using OutlookGoogleSyncRefresh.Domain.Models;
-using Calendar = OutlookGoogleSyncRefresh.Domain.Models.Calendar;
+using Calendar = CalendarSyncPlus.Domain.Models.Calendar;
 
 #endregion
 
-namespace OutlookGoogleSyncRefresh.Application.Services.Google
+namespace CalendarSyncPlus.Application.Services.Google
 {
     [Export(typeof (ICalendarService)), Export(typeof (IGoogleCalendarService))]
     [ExportMetadata("ServiceType", CalendarServiceType.Google)]
@@ -476,7 +476,7 @@ namespace OutlookGoogleSyncRefresh.Application.Services.Google
                             Appointment appointment = CreateAppointment(eventItem);
                             if (eventItem.Recurrence != null && eventItem.Recurrence.Count > 0)
                             {
-                                finalEventList.AddRange(FrequencyHelper.SplitRecurringAppointments(appointment,
+                                finalEventList.AddRange(RecurrenceHelper.SplitRecurringAppointments(appointment,
                                     eventItem.Recurrence.FirstOrDefault(),
                                     DateTime.Now.Date.AddDays(-(daysInPast)),
                                     DateTime.Now.Date.AddDays((daysInFuture + 1))));
