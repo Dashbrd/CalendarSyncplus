@@ -32,6 +32,8 @@ using CalendarSyncPlus.Application.Services.Outlook;
 using CalendarSyncPlus.Application.Views;
 using CalendarSyncPlus.Common.Log;
 using CalendarSyncPlus.Domain.Models;
+using CalendarSyncPlus.GoogleServices.Google;
+using CalendarSyncPlus.OutlookServices.Outlook;
 using MahApps.Metro.Controls.Dialogs;
 
 #endregion

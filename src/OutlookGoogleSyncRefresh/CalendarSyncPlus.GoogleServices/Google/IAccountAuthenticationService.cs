@@ -1,6 +1,6 @@
 using Google.Apis.Calendar.v3;
 
-namespace CalendarSyncPlus.Application.Services.Google
+namespace CalendarSyncPlus.GoogleServices.Google
 {
     public interface IAccountAuthenticationService
     {

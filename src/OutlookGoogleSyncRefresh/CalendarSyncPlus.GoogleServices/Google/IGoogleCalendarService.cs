@@ -1,8 +1,9 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using CalendarSyncPlus.Application.Services;
 using CalendarSyncPlus.Domain.Models;
 
-namespace CalendarSyncPlus.Application.Services.Google
+namespace CalendarSyncPlus.GoogleServices.Google
 {
     public interface IGoogleCalendarService : ICalendarService
     {

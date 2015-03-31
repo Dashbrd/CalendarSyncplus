@@ -3,6 +3,7 @@ using System.ComponentModel.Composition;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Waf.Applications;
+using CalendarSyncPlus.Application.Services.Google;
 using CalendarSyncPlus.Application.Utilities;
 using CalendarSyncPlus.Common.Log;
 using Google.Apis.Auth.OAuth2;
@@ -10,7 +11,7 @@ using Google.Apis.Calendar.v3;
 using Google.Apis.Services;
 using Google.Apis.Util.Store;
 
-namespace CalendarSyncPlus.Application.Services.Google
+namespace CalendarSyncPlus.GoogleServices.Google
 {
     [Export(typeof (IAccountAuthenticationService))]
     public class AccountAuthenticationService : IAccountAuthenticationService

@@ -38,6 +38,8 @@ using CalendarSyncPlus.Application.ViewModels;
 using CalendarSyncPlus.Common;
 using CalendarSyncPlus.Common.Log;
 using CalendarSyncPlus.Domain.Models;
+using CalendarSyncPlus.GoogleServices.Google;
+using CalendarSyncPlus.OutlookServices.Outlook;
 using CalendarSyncPlus.Presentation.Helpers;
 using CalendarSyncPlus.Presentation.Services.SingleInstance;
 

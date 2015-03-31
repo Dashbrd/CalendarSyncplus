@@ -26,10 +26,11 @@ using CalendarSyncPlus.Application.Services;
 using CalendarSyncPlus.Application.Services.Google;
 using CalendarSyncPlus.Application.ViewModels;
 using CalendarSyncPlus.Domain.Models;
+using CalendarSyncPlus.GoogleServices.Google;
 
 namespace CalendarSyncPlus.Application.Controllers
 {
-    [Export(typeof (IApplicationController))]
+    [Export(typeof(IApplicationController))]
     public class ApplicationController : IApplicationController
     {
         private readonly AboutViewModel _aboutViewModel;

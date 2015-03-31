@@ -37,6 +37,7 @@ using CalendarSyncPlus.Common;
 using CalendarSyncPlus.Common.Log;
 using CalendarSyncPlus.Domain.Helpers;
 using CalendarSyncPlus.Domain.Models;
+using CalendarSyncPlus.GoogleServices.Google;
 using MahApps.Metro.Controls.Dialogs;
 
 #endregion
@@ -546,7 +547,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             }
             UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.Line));
             UpdateStatus(string.Format("Time Elapsed : {0} s",
-                (int) DateTime.Now.Subtract(syncProfile.LastSync.GetValueOrDefault()).TotalSeconds));
+                (int)DateTime.Now.Subtract(syncProfile.LastSync.GetValueOrDefault()).TotalSeconds));
             UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.LogSeparator));
             ShowNotification(false);
 

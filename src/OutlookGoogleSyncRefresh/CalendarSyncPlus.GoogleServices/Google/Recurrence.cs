@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace CalendarSyncPlus.Application.Services.Google
+namespace CalendarSyncPlus.GoogleServices.Google
 {
     internal class Recurrence
     {
@@ -115,7 +112,7 @@ namespace CalendarSyncPlus.Application.Services.Google
         public static Recurrence Parse(string recurrence, DateTime startDate)
         {
             var frequency = new Recurrence(startDate);
-            
+
             string[] values = recurrence.Split(new[] { ":", ";" }, StringSplitOptions.RemoveEmptyEntries);
             foreach (string value in values)
             {

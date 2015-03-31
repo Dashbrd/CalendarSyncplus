@@ -1,8 +1,9 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using CalendarSyncPlus.Application.Services;
 using CalendarSyncPlus.Domain.Models;
 
-namespace CalendarSyncPlus.Application.Services.Outlook
+namespace CalendarSyncPlus.OutlookServices.Outlook
 {
     public interface IOutlookCalendarService : ICalendarService
     {

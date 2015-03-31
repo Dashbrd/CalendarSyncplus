@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using CalendarSyncPlus.Domain.Models;
 
-namespace CalendarSyncPlus.Application.Services.Google
+namespace CalendarSyncPlus.GoogleServices.Google
 {
     internal class RecurrenceHelper
     {
@@ -18,14 +17,14 @@ namespace CalendarSyncPlus.Application.Services.Google
         public static List<Appointment> SplitRecurringAppointments(Appointment recurringAppointment, string recurrence,
             DateTime startDateRange, DateTime endDateRange)
         {
-            Recurrence frequency = Recurrence.Parse(recurrence,recurringAppointment.StartTime.GetValueOrDefault());
+            Recurrence frequency = Recurrence.Parse(recurrence, recurringAppointment.StartTime.GetValueOrDefault());
             var appointmentList = new List<Appointment>();
             DateTime dateTime = startDateRange.Date;
             while (endDateRange.CompareTo(dateTime) > 0)
             {
                 if (frequency.ValidateDate(dateTime))
                 {
-                    var newAppointment = (Appointment) recurringAppointment.Clone();
+                    var newAppointment = (Appointment)recurringAppointment.Clone();
                     newAppointment.AppointmentId = string.Format("{0}_{1}", recurringAppointment.AppointmentId,
                         dateTime.ToString("yy-MM-dd"));
                     newAppointment.StartTime = dateTime.Date.Add(recurringAppointment.StartTime.GetValueOrDefault().TimeOfDay);

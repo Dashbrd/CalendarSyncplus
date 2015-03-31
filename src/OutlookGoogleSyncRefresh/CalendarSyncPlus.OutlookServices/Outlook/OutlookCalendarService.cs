@@ -31,6 +31,7 @@ using CalendarSyncPlus.Application.Wrappers;
 using CalendarSyncPlus.Common.Log;
 using CalendarSyncPlus.Common.MetaData;
 using CalendarSyncPlus.Domain.Models;
+using CalendarSyncPlus.OutlookServices.Outlook;
 using Microsoft.Office.Interop.Outlook;
 using Microsoft.Win32;
 using AppRecipient = CalendarSyncPlus.Domain.Models.Recipient;

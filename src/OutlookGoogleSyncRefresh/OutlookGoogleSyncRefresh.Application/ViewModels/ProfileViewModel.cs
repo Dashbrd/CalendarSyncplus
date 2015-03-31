@@ -14,6 +14,8 @@ using CalendarSyncPlus.Common.Log;
 using CalendarSyncPlus.Common.MetaData;
 using CalendarSyncPlus.Domain.Helpers;
 using CalendarSyncPlus.Domain.Models;
+using CalendarSyncPlus.GoogleServices.Google;
+using CalendarSyncPlus.OutlookServices.Outlook;
 using CalendarSyncPlus.Services.Wrappers;
 using MahApps.Metro.Controls.Dialogs;
 
