@@ -21,9 +21,9 @@
 
 using System.ComponentModel.Composition;
 using System.Waf.Applications;
-using CalendarSyncPlus.Application.Services;
 using CalendarSyncPlus.Application.Views;
 using CalendarSyncPlus.Common;
+using CalendarSyncPlus.Services.Interfaces;
 
 #endregion
 

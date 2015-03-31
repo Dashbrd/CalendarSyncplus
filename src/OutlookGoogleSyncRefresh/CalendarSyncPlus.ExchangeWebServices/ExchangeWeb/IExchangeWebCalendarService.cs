@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using CalendarSyncPlus.Domain.Models;
+using CalendarSyncPlus.Services;
+using CalendarSyncPlus.Services.Interfaces;
 
-namespace CalendarSyncPlus.Application.Services.ExchangeWeb
+namespace CalendarSyncPlus.ExchangeWebServices.ExchangeWeb
 {
     public interface IExchangeWebCalendarService : ICalendarService
     {

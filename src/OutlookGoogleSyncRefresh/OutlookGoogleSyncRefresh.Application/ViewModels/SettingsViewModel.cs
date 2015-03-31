@@ -25,15 +25,13 @@ using System.ComponentModel;
 using System.ComponentModel.Composition;
 using System.Linq;
 using System.Waf.Applications;
-using CalendarSyncPlus.Application.Services;
-using CalendarSyncPlus.Application.Services.ExchangeWeb;
-using CalendarSyncPlus.Application.Services.Google;
-using CalendarSyncPlus.Application.Services.Outlook;
 using CalendarSyncPlus.Application.Views;
 using CalendarSyncPlus.Common.Log;
 using CalendarSyncPlus.Domain.Models;
+using CalendarSyncPlus.ExchangeWebServices.ExchangeWeb;
 using CalendarSyncPlus.GoogleServices.Google;
 using CalendarSyncPlus.OutlookServices.Outlook;
+using CalendarSyncPlus.Services.Interfaces;
 using MahApps.Metro.Controls.Dialogs;
 
 #endregion

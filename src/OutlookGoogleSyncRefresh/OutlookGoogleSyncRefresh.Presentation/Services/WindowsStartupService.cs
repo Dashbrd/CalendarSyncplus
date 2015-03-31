@@ -2,9 +2,9 @@
 using System.ComponentModel.Composition;
 using System.Reflection;
 using System.Security.Principal;
-using CalendarSyncPlus.Application.Services;
-using CalendarSyncPlus.Application.Utilities;
 using CalendarSyncPlus.Common.Log;
+using CalendarSyncPlus.Services.Interfaces;
+using CalendarSyncPlus.Services.Utilities;
 using Microsoft.Win32;
 
 namespace CalendarSyncPlus.Presentation.Services

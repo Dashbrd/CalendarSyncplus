@@ -26,22 +26,24 @@ using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
-using CalendarSyncPlus.Application.Utilities;
-using CalendarSyncPlus.Application.Wrappers;
 using CalendarSyncPlus.Common.Log;
 using CalendarSyncPlus.Common.MetaData;
 using CalendarSyncPlus.Domain.Models;
-using CalendarSyncPlus.OutlookServices.Outlook;
+using CalendarSyncPlus.OutlookServices.Utilities;
+using CalendarSyncPlus.Services;
+using CalendarSyncPlus.Services.Interfaces;
+using CalendarSyncPlus.Services.Utilities;
+using CalendarSyncPlus.Services.Wrappers;
 using Microsoft.Office.Interop.Outlook;
 using Microsoft.Win32;
 using AppRecipient = CalendarSyncPlus.Domain.Models.Recipient;
-using Category = CalendarSyncPlus.Services.Wrappers.Category;
+using Category = CalendarSyncPlus.Domain.Models.Category;
 using Exception = System.Exception;
 using Recipient = Microsoft.Office.Interop.Outlook.Recipient;
 
 #endregion
 
-namespace CalendarSyncPlus.Application.Services.Outlook
+namespace CalendarSyncPlus.OutlookServices.Outlook
 {
     [Export(typeof(ICalendarService)), Export(typeof(IOutlookCalendarService))]
     [ExportMetadata("ServiceType", CalendarServiceType.OutlookDesktop)]
@@ -437,12 +439,13 @@ namespace CalendarSyncPlus.Application.Services.Outlook
 
                 if (nameSpace.Categories[Constants.CategoryName] == null)
                 {
-                    nameSpace.Categories.Add(Constants.CategoryName, background.OutlookColor,
+                    nameSpace.Categories.Add(Constants.CategoryName, CategoryHelper.GetOutlookColor(background.HexValue),
                         OlCategoryShortcutKey.olCategoryShortcutKeyNone);
                 }
                 else
                 {
-                    nameSpace.Categories[Constants.CategoryName].Color = background.OutlookColor;
+                    nameSpace.Categories[Constants.CategoryName].Color =
+                        CategoryHelper.GetOutlookColor(background.HexValue);
                 }
             }
             catch (Exception exception)

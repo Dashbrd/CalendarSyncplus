@@ -21,9 +21,9 @@ using System;
 using System.ComponentModel.Composition;
 using System.Threading.Tasks;
 using System.Waf.Applications;
-using CalendarSyncPlus.Application.Services;
 using CalendarSyncPlus.Common;
 using CalendarSyncPlus.Presentation.Views;
+using CalendarSyncPlus.Services.Interfaces;
 using MahApps.Metro.Controls.Dialogs;
 
 namespace CalendarSyncPlus.Presentation.Services

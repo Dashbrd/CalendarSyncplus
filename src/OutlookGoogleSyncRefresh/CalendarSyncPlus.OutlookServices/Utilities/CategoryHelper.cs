@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
-using System.Windows.Media;
+using System.Linq;
 using Microsoft.Office.Interop.Outlook;
-using Category = CalendarSyncPlus.Services.Wrappers.Category;
+using Category = CalendarSyncPlus.Domain.Models.Category;
 using Exception = System.Exception;
 
-namespace CalendarSyncPlus.Application.Utilities
+namespace CalendarSyncPlus.OutlookServices.Utilities
 {
     public class CategoryHelper
     {
@@ -34,11 +34,14 @@ namespace CalendarSyncPlus.Application.Utilities
             23 Dark Blue   #2858a5 ( 40  88 165)
             24 Dark Purple #5c3fa3 ( 92  63 163)
             25 Dark Maroon #93446b (147  68 107)*/
-        private static readonly Dictionary<OlCategoryColor, string> _categoryColor;
+
+        /// <summary>
+        /// </summary>
+        private static readonly Dictionary<OlCategoryColor, string> CategoryColor;
 
         static CategoryHelper()
         {
-            _categoryColor = new Dictionary<OlCategoryColor, string>
+            CategoryColor = new Dictionary<OlCategoryColor, string>
             {
                 {OlCategoryColor.olCategoryColorNone, "#FFFFFF"},
                 {OlCategoryColor.olCategoryColorRed, "#E7A1A2"},
@@ -74,14 +77,12 @@ namespace CalendarSyncPlus.Application.Utilities
             try
             {
                 var categories = new List<Category>();
-                foreach (var outlookColor in _categoryColor)
+                foreach (var outlookColor in CategoryColor)
                 {
                     var category = new Category
                     {
                         CategoryName = outlookColor.Key.ToString().Remove(0, "olCategoryColor".Length),
-                        OutlookColor = outlookColor.Key,
                         HexValue = outlookColor.Value,
-                        Color = (Color)ColorConverter.ConvertFromString(outlookColor.Value)
                     };
                     categories.Add(category);
                 }
@@ -91,6 +92,11 @@ namespace CalendarSyncPlus.Application.Utilities
             {
                 return null;
             }
+        }
+
+        public static OlCategoryColor GetOutlookColor(string hexValue)
+        {
+            return CategoryColor.First(t => t.Value.Equals(hexValue)).Key;
         }
     }
 }

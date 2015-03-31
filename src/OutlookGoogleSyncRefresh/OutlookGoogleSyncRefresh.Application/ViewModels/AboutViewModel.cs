@@ -3,8 +3,8 @@ using System.ComponentModel.Composition;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Waf.Applications;
-using CalendarSyncPlus.Application.Services;
 using CalendarSyncPlus.Application.Views;
+using CalendarSyncPlus.Services.Interfaces;
 
 namespace CalendarSyncPlus.Application.ViewModels
 {

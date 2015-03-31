@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
 using CalendarSyncPlus.Common.MetaData;
+using CalendarSyncPlus.Services.Interfaces;
 
-namespace CalendarSyncPlus.Application.Services.CalendarUpdate
+namespace CalendarSyncPlus.Services
 {
     [Export(typeof (ICalendarServiceFactory))]
     public class CalendarServiceFactory : ICalendarServiceFactory

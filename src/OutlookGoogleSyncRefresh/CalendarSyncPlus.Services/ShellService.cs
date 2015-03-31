@@ -21,10 +21,11 @@
 
 using System.ComponentModel.Composition;
 using System.Waf.Foundation;
+using CalendarSyncPlus.Services.Interfaces;
 
 #endregion
 
-namespace CalendarSyncPlus.Application.Services
+namespace CalendarSyncPlus.Services
 {
     [Export, Export(typeof (IShellService))]
     public class ShellService : Model, IShellService

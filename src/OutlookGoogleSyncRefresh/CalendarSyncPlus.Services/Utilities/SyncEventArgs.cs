@@ -1,4 +1,4 @@
-﻿namespace CalendarSyncPlus.Application.Utilities
+﻿namespace CalendarSyncPlus.Services.Utilities
 {
     public class SyncEventArgs
     {

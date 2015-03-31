@@ -29,15 +29,14 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Waf.Applications;
-using CalendarSyncPlus.Application.Services;
-using CalendarSyncPlus.Application.Services.Google;
-using CalendarSyncPlus.Application.Utilities;
 using CalendarSyncPlus.Application.Views;
 using CalendarSyncPlus.Common;
 using CalendarSyncPlus.Common.Log;
 using CalendarSyncPlus.Domain.Helpers;
 using CalendarSyncPlus.Domain.Models;
 using CalendarSyncPlus.GoogleServices.Google;
+using CalendarSyncPlus.Services.Interfaces;
+using CalendarSyncPlus.Services.Utilities;
 using MahApps.Metro.Controls.Dialogs;
 
 #endregion
@@ -50,7 +49,6 @@ namespace CalendarSyncPlus.Application.ViewModels
         #region Fields
 
         private readonly StringBuilder _statusBuilder;
-        private DelegateCommand _authenticateGoogleAccount;
         private DelegateCommand _downloadCommand;
         private DelegateCommand _exitCommand;
         private bool _isAboutVisible;
@@ -85,7 +83,6 @@ namespace CalendarSyncPlus.Application.ViewModels
         [ImportingConstructor]
         public ShellViewModel(IShellView view, IShellService shellService,
             ISyncService syncStartService,
-            IAccountAuthenticationService accountAuthenticationService,
             IGuiInteractionService guiInteractionService,
             Settings settings,
             IMessageService messageService,
@@ -97,7 +94,6 @@ namespace CalendarSyncPlus.Application.ViewModels
             ApplicationUpdateService = applicationUpdateService;
             ShellService = shellService;
             SyncStartService = syncStartService;
-            AccountAuthenticationService = accountAuthenticationService;
             GuiInteractionService = guiInteractionService;
             Settings = settings;
             ApplicationLogger = applicationLogger;
@@ -123,7 +119,6 @@ namespace CalendarSyncPlus.Application.ViewModels
 
         #region Properties
 
-        public IAccountAuthenticationService AccountAuthenticationService { get; private set; }
         public IGuiInteractionService GuiInteractionService { get; set; }
         public ISyncService SyncStartService { get; private set; }
         public ApplicationLogger ApplicationLogger { get; private set; }
@@ -210,15 +205,6 @@ namespace CalendarSyncPlus.Application.ViewModels
             set { SetProperty(ref _isSyncInProgress, value); }
         }
 
-        public DelegateCommand AuthenticateGoogleAccount
-        {
-            get
-            {
-                return _authenticateGoogleAccount ??
-                       (_authenticateGoogleAccount = new DelegateCommand(AuthenticateGoogle));
-            }
-        }
-
         public Settings Settings
         {
             get { return _settings; }
@@ -268,11 +254,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             OnClosing(e);
         }
 
-        private void AuthenticateGoogle()
-        {
-            AccountAuthenticationService.AuthenticateCalenderOauth();
-        }
-
+       
         private void LaunchSettingsHandler()
         {
             IsSettingsVisible = true;

@@ -15,7 +15,7 @@ namespace CalendarSyncPlus.Presentation.Converters
             {
                 if (value != null)
                 {
-                    var color = (Color) value;
+                    var color = (Color) ColorConverter.ConvertFromString(value.ToString());
                     return new SolidColorBrush(color);
                 }
             }
@@ -34,7 +34,7 @@ namespace CalendarSyncPlus.Presentation.Converters
                     var colorBrush = value as SolidColorBrush;
                     if (colorBrush != null)
                     {
-                        return colorBrush.Color;
+                        return colorBrush.Color.ToString();
                     }
                 }
             }

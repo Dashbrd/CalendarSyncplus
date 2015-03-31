@@ -9,22 +9,20 @@
 //  *      Project:        OutlookGoogleSyncRefresh
 //  *      SubProject:     OutlookGoogleSyncRefresh.Application
 //  *      Author:         Dave, Ankesh
-//  *      Created On:     06-02-2015 1:08 PM
-//  *      Modified On:    06-02-2015 1:08 PM
-//  *      FileName:       IService.cs
+//  *      Created On:     20-02-2015 3:18 PM
+//  *      Modified On:    20-02-2015 3:18 PM
+//  *      FileName:       IUiinteractionService.cs
 //  * 
 //  *****************************************************************************/
 
 #endregion
 
-namespace CalendarSyncPlus.Application.Services
+namespace CalendarSyncPlus.Services.Interfaces
 {
-    public interface IService
+    public interface IGuiInteractionService
     {
-        void Initialize();
+        void ShowApplication();
 
-        void Run();
-
-        void Shutdown();
+        void HideApplication();
     }
 }

@@ -4,9 +4,10 @@ using System.IO;
 using System.Net;
 using System.Waf.Applications;
 using CalendarSyncPlus.Common.Log;
+using CalendarSyncPlus.Services.Interfaces;
 using Newtonsoft.Json;
 
-namespace CalendarSyncPlus.Application.Services
+namespace CalendarSyncPlus.Services
 {
     /// <summary>
     /// </summary>

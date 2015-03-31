@@ -10,8 +10,8 @@
 //  *      SubProject:     OutlookGoogleSyncRefresh.Application
 //  *      Author:         Dave, Ankesh
 //  *      Created On:     03-02-2015 7:31 PM
-//  *      Modified On:    05-02-2015 12:43 PM
-//  *      FileName:       ISyncService.cs
+//  *      Modified On:    05-02-2015 12:40 PM
+//  *      FileName:       ICalendarUpdateService.cs
 //  * 
 //  *****************************************************************************/
 
@@ -20,30 +20,34 @@
 #region Imports
 
 using System.ComponentModel;
-using System.Threading.Tasks;
-using System.Timers;
-using CalendarSyncPlus.Application.Utilities;
 using CalendarSyncPlus.Domain.Models;
+using CalendarSyncPlus.Services.Utilities;
+using CalendarSyncPlus.Services.Wrappers;
 
 #endregion
 
-namespace CalendarSyncPlus.Application.Services
+namespace CalendarSyncPlus.Services.Interfaces
 {
-    public interface ISyncService : INotifyPropertyChanged, IService
+    public interface ICalendarUpdateService : INotifyPropertyChanged
     {
         #region Properties
 
+        CalendarAppointments DestinationAppointments { get; set; }
+        CalendarAppointments SourceAppointments { get; set; }
+        Appointment CurrentAppointment { get; set; }
         string SyncStatus { get; set; }
+        ICalendarService SourceCalendarService { get; set; }
+        ICalendarService DestinationCalendarService { get; set; }
 
         #endregion
 
         #region Public Methods
 
-        Task<bool> Start(ElapsedEventHandler timerCallback);
-
-        void Stop(ElapsedEventHandler timerCallback);
-
-        string SyncNow(CalendarSyncProfile syncProfile, SyncCallback syncCallback);
+        /// <summary>
+        /// </summary>
+        /// <param name="syncProfile"></param>
+        /// <returns></returns>
+        bool SyncCalendar(CalendarSyncProfile syncProfile, SyncCallback synccallback);
 
         #endregion
     }

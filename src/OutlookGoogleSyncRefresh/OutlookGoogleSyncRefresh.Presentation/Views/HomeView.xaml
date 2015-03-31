@@ -26,11 +26,6 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
-                <Rectangle Stroke="Black"
-                           StrokeThickness="0.2"
-                            Grid.RowSpan="3"
-                           Grid.ColumnSpan="2"
-                           Margin="1" />
                 <TextBlock Text="Profile Name :"
                            FontWeight="600"
                            VerticalAlignment="Center"
@@ -61,6 +56,10 @@
                                   UpdateSourceTrigger=PropertyChanged,
                                   StringFormat='{}{0:F}'}"
                            Visibility="{Binding DataContext.IsPeriodicSyncStarted,RelativeSource={RelativeSource AncestorType={x:Type views:HomeView}},Converter={StaticResource BooleanToVisibilityConverter},UpdateSourceTrigger=PropertyChanged}" />
+                <Rectangle Fill="{StaticResource GrayBrush9}"
+                           Grid.RowSpan="3"
+                           Grid.ColumnSpan="2"
+                           Margin="1" />
             </Grid>
         </DataTemplate>
     </UserControl.Resources>
@@ -84,8 +83,17 @@
                   Header="Schedule"
                   IsExpanded="True"
                   MaxHeight="200">
-            <ListView ItemsSource="{Binding ScheduledProfiles,UpdateSourceTrigger=PropertyChanged}"
-                      ItemTemplate="{StaticResource SyncProfileDataTemplate}" BorderThickness="0" Focusable="False"/>
+            <ItemsControl ItemsSource="{Binding ScheduledProfiles,UpdateSourceTrigger=PropertyChanged}"
+                          ItemTemplate="{StaticResource SyncProfileDataTemplate}" >
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+                            <WrapPanel/>
+                        </ScrollViewer>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
+            
         </Expander>
         <GroupBox Grid.Row="2"
                   Grid.ColumnSpan="2"

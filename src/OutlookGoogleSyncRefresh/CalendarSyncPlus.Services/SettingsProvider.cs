@@ -21,10 +21,11 @@
 
 using System.ComponentModel.Composition;
 using CalendarSyncPlus.Domain.Models;
+using CalendarSyncPlus.Services.Interfaces;
 
 #endregion
 
-namespace CalendarSyncPlus.Application.Services
+namespace CalendarSyncPlus.Services
 {
     [Export(typeof (ISettingsProvider))]
     public class SettingsProvider : ISettingsProvider

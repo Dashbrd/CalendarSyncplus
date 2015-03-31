@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace CalendarSyncPlus.Application.Utilities
+namespace CalendarSyncPlus.Services.Utilities
 {
     public enum SyncStateEnum
     {

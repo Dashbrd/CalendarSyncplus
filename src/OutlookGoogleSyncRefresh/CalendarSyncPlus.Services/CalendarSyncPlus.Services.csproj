@@ -35,11 +35,15 @@
     <Reference Include="log4net">
       <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Office.Interop.Outlook">
-      <HintPath>..\..\..\..\..\Program Files (x86)\Microsoft Visual Studio 14.0\Visual Studio Tools for Office\PIA\Office14\Microsoft.Office.Interop.Outlook.dll</HintPath>
+    <Reference Include="MahApps.Metro">
+      <HintPath>..\packages\MahApps.Metro.1.1.2.0\lib\net45\MahApps.Metro.dll</HintPath>
     </Reference>
-    <Reference Include="PresentationCore">
-      <HintPath>..\..\..\..\..\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\PresentationCore.dll</HintPath>
+    <Reference Include="Microsoft.Threading.Tasks">
+      <HintPath>..\packages\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
@@ -49,20 +53,34 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
     <Reference Include="WpfApplicationFramework">
       <HintPath>..\packages\waf.3.0.0\lib\net45\WpfApplicationFramework.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CalendarUpdate\CalendarServiceFactory.cs" />
-    <Compile Include="CalendarUpdate\CalendarUpdateService.cs" />
-    <Compile Include="CalendarUpdate\ICalendarServiceFactory.cs" />
-    <Compile Include="CalendarUpdate\ICalendarUpdateService.cs" />
-    <Compile Include="ICalendarService.cs" />
+    <Compile Include="CalendarServiceFactory.cs" />
+    <Compile Include="CalendarUpdateService.cs" />
+    <Compile Include="Interfaces\ICalendarServiceFactory.cs" />
+    <Compile Include="Interfaces\ICalendarUpdateService.cs" />
+    <Compile Include="Interfaces\ICalendarService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ApplicationUpdateService.cs" />
+    <Compile Include="Interfaces\IApplicationUpdateService.cs" />
+    <Compile Include="Interfaces\IGuiInteractionService.cs" />
+    <Compile Include="Interfaces\IMessageService.cs" />
+    <Compile Include="Interfaces\IService.cs" />
+    <Compile Include="Interfaces\ISettingsProvider.cs" />
+    <Compile Include="Interfaces\ISettingsSerializationService.cs" />
+    <Compile Include="Interfaces\IShellService.cs" />
+    <Compile Include="Interfaces\ISyncService.cs" />
+    <Compile Include="Interfaces\IWindowsStartupService.cs" />
+    <Compile Include="SettingsProvider.cs" />
+    <Compile Include="SettingsSerializationService.cs" />
+    <Compile Include="ShellService.cs" />
+    <Compile Include="SyncService.cs" />
     <Compile Include="SharedAssemblyProperties.cs" />
     <Compile Include="Utilities\AppointmentHelper.cs" />
-    <Compile Include="Utilities\CategoryHelper.cs" />
     <Compile Include="Utilities\Constants.cs" />
     <Compile Include="Utilities\Delegates.cs" />
     <Compile Include="Utilities\ExtensionMethods.cs" />
@@ -70,7 +88,6 @@
     <Compile Include="Utilities\SyncEventArgs.cs" />
     <Compile Include="Wrappers\AppointmentListWrapper.cs" />
     <Compile Include="Wrappers\CalendarAppointments.cs" />
-    <Compile Include="Wrappers\Category.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OutlookGoogleSyncRefresh.Common\OutlookGoogleSyncRefresh.Common.csproj">

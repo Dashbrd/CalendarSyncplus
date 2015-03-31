@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace CalendarSyncPlus.Application.Services
+namespace CalendarSyncPlus.Services.Interfaces
 {
     public interface IShellService : INotifyPropertyChanged
     {

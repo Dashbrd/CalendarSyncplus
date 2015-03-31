@@ -25,12 +25,12 @@ using System.ComponentModel.Composition;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using CalendarSyncPlus.Application.Utilities;
-using CalendarSyncPlus.Application.Wrappers;
 using CalendarSyncPlus.Common.Log;
 using CalendarSyncPlus.Common.MetaData;
 using CalendarSyncPlus.Domain.Models;
-using CalendarSyncPlus.GoogleServices.Google;
+using CalendarSyncPlus.Services;
+using CalendarSyncPlus.Services.Interfaces;
+using CalendarSyncPlus.Services.Utilities;
 using CalendarSyncPlus.Services.Wrappers;
 using Google;
 using Google.Apis.Calendar.v3;
@@ -40,7 +40,7 @@ using Calendar = CalendarSyncPlus.Domain.Models.Calendar;
 
 #endregion
 
-namespace CalendarSyncPlus.Application.Services.Google
+namespace CalendarSyncPlus.GoogleServices.Google
 {
     [Export(typeof(ICalendarService)), Export(typeof(IGoogleCalendarService))]
     [ExportMetadata("ServiceType", CalendarServiceType.Google)]

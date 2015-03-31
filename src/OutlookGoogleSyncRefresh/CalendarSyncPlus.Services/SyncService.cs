@@ -25,15 +25,15 @@ using System.ComponentModel.Composition;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Waf.Foundation;
-using CalendarSyncPlus.Application.Services.CalendarUpdate;
-using CalendarSyncPlus.Application.Utilities;
 using CalendarSyncPlus.Common.Log;
 using CalendarSyncPlus.Domain.Helpers;
 using CalendarSyncPlus.Domain.Models;
+using CalendarSyncPlus.Services.Interfaces;
+using CalendarSyncPlus.Services.Utilities;
 
 #endregion
 
-namespace CalendarSyncPlus.Application.Services
+namespace CalendarSyncPlus.Services
 {
     [Export(typeof (ISyncService))]
     public class SyncService : Model, ISyncService

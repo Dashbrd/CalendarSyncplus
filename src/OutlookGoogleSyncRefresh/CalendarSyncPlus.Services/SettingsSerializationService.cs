@@ -27,10 +27,11 @@ using System.Threading.Tasks;
 using CalendarSyncPlus.Common.Log;
 using CalendarSyncPlus.Domain.File.Xml;
 using CalendarSyncPlus.Domain.Models;
+using CalendarSyncPlus.Services.Interfaces;
 
 #endregion
 
-namespace CalendarSyncPlus.Application.Services
+namespace CalendarSyncPlus.Services
 {
     [Export(typeof (ISettingsSerializationService))]
     public class SettingsSerializationService : ISettingsSerializationService

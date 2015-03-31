@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CalendarSyncPlus.Application.Services
+namespace CalendarSyncPlus.Services.Interfaces
 {
     public interface IApplicationUpdateService
     {

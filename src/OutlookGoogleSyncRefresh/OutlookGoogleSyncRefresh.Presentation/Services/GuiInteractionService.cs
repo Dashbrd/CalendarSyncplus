@@ -19,9 +19,9 @@
 
 using System;
 using System.ComponentModel.Composition;
-using CalendarSyncPlus.Application.Services;
 using CalendarSyncPlus.Presentation.Helpers;
 using CalendarSyncPlus.Presentation.Views;
+using CalendarSyncPlus.Services.Interfaces;
 
 namespace CalendarSyncPlus.Presentation.Services
 {

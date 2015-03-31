@@ -22,11 +22,11 @@ using System.ComponentModel;
 using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
 using System.Waf.Applications;
-using CalendarSyncPlus.Application.Services;
-using CalendarSyncPlus.Application.Services.Google;
 using CalendarSyncPlus.Application.ViewModels;
 using CalendarSyncPlus.Domain.Models;
 using CalendarSyncPlus.GoogleServices.Google;
+using CalendarSyncPlus.Services;
+using CalendarSyncPlus.Services.Interfaces;
 
 namespace CalendarSyncPlus.Application.Controllers
 {

@@ -4,16 +4,17 @@ using System.ComponentModel.Composition;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using CalendarSyncPlus.Application.Wrappers;
 using CalendarSyncPlus.Common.Log;
 using CalendarSyncPlus.Common.MetaData;
 using CalendarSyncPlus.Domain.Models;
+using CalendarSyncPlus.Services;
+using CalendarSyncPlus.Services.Interfaces;
 using CalendarSyncPlus.Services.Wrappers;
 using Microsoft.Exchange.WebServices.Data;
 using AppAppointment = CalendarSyncPlus.Domain.Models.Appointment;
 using Appointment = Microsoft.Exchange.WebServices.Data.Appointment;
 
-namespace CalendarSyncPlus.Application.Services.ExchangeWeb
+namespace CalendarSyncPlus.ExchangeWebServices.ExchangeWeb
 {
     [Export(typeof(ICalendarService)), Export(typeof(IExchangeWebCalendarService))]
     [ExportMetadata("ServiceType", CalendarServiceType.EWS)]

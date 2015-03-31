@@ -6,21 +6,21 @@
              xmlns:wafConverters="http://waf.codeplex.com/schemas"
              xmlns:converters="clr-namespace:CalendarSyncPlus.Presentation.Converters"
              xmlns:viewModels="clr-namespace:CalendarSyncPlus.Application.ViewModels;assembly=CalendarSyncPlus.Application"
-             xmlns:wrappers1="clr-namespace:CalendarSyncPlus.Services.Wrappers;assembly=CalendarSyncPlus.Services"
+             xmlns:models="clr-namespace:CalendarSyncPlus.Domain.Models;assembly=CalendarSyncPlus.Domain"
              mc:Ignorable="d"
              d:DesignHeight="600" d:DesignWidth="500"
              d:DataContext="{d:DesignInstance viewModels:ProfileViewModel}">
     <UserControl.Resources>
         <wafConverters:InvertBooleanConverter x:Key="InvertBooleanConverter" />
         <converters:StringToBrushConverter x:Key="StringToBrushConverter" />
-        <DataTemplate DataType="{x:Type wrappers1:Category}">
+        <DataTemplate DataType="{x:Type models:Category}">
             <Rectangle Height="20"
                        Width="20"
                        HorizontalAlignment="Center"
                        VerticalAlignment="Center"
                        StrokeThickness="0.1"
                        Stroke="Black"
-                       Fill="{Binding Color,Converter={StaticResource StringToBrushConverter}}"
+                       Fill="{Binding HexValue,Converter={StaticResource StringToBrushConverter}}"
                        ToolTip="{Binding CategoryName}"
                        Margin="2" />
         </DataTemplate>

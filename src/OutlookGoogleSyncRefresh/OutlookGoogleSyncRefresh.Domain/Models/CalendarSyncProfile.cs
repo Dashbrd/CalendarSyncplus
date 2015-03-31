@@ -85,6 +85,8 @@ namespace CalendarSyncPlus.Domain.Models
             set { SetProperty(ref _nextSync, value); }
         }
 
+        public Category ColorCategory { get; set; }
+
         public void SetCalendarTypes()
         {
             if (SyncSettings.CalendarSyncDirection == CalendarSyncDirectionEnum.OutlookGoogleOneWay)

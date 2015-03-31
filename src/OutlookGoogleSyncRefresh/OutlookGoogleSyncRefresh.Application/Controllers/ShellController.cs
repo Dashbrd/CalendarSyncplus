@@ -19,9 +19,9 @@
 
 using System.ComponentModel;
 using System.ComponentModel.Composition;
-using CalendarSyncPlus.Application.Services;
 using CalendarSyncPlus.Application.ViewModels;
 using CalendarSyncPlus.Common.Log;
+using CalendarSyncPlus.Services.Interfaces;
 
 namespace CalendarSyncPlus.Application.Controllers
 {

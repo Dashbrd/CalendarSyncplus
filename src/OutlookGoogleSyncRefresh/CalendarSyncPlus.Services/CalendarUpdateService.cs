@@ -25,15 +25,16 @@ using System.ComponentModel.Composition;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Waf.Foundation;
-using CalendarSyncPlus.Application.Utilities;
-using CalendarSyncPlus.Application.Wrappers;
 using CalendarSyncPlus.Common.Log;
 using CalendarSyncPlus.Common.MetaData;
 using CalendarSyncPlus.Domain.Models;
+using CalendarSyncPlus.Services.Interfaces;
+using CalendarSyncPlus.Services.Utilities;
+using CalendarSyncPlus.Services.Wrappers;
 
 #endregion
 
-namespace CalendarSyncPlus.Application.Services.CalendarUpdate
+namespace CalendarSyncPlus.Services
 {
     [Export(typeof (ICalendarUpdateService))]
     public class CalendarUpdateService : Model, ICalendarUpdateService

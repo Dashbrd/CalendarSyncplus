@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using CalendarSyncPlus.Domain.Models;
 
-namespace CalendarSyncPlus.Application.Wrappers
+namespace CalendarSyncPlus.Services.Wrappers
 {
     public class CalendarAppointments : List<Appointment>
     {

@@ -1,6 +1,6 @@
 ﻿using CalendarSyncPlus.Common.MetaData;
 
-namespace CalendarSyncPlus.Application.Services.CalendarUpdate
+namespace CalendarSyncPlus.Services.Interfaces
 {
     public interface ICalendarServiceFactory
     {

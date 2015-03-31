@@ -19,8 +19,8 @@
 
 using System;
 using System.Linq;
-using CalendarSyncPlus.Application.Utilities;
 using CalendarSyncPlus.Presentation.Services.SingleInstance;
+using CalendarSyncPlus.Services.Utilities;
 
 namespace CalendarSyncPlus.Presentation
 {

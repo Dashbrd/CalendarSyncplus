@@ -25,7 +25,7 @@ using System.Text.RegularExpressions;
 
 #endregion
 
-namespace CalendarSyncPlus.Application.Utilities
+namespace CalendarSyncPlus.Services.Utilities
 {
     public static class ExtensionMethods
     {

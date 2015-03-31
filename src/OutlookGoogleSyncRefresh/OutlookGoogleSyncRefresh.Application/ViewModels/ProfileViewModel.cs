@@ -4,19 +4,15 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Waf.Applications;
 using System.Waf.Foundation;
-using CalendarSyncPlus.Application.Services;
-using CalendarSyncPlus.Application.Services.ExchangeWeb;
-using CalendarSyncPlus.Application.Services.Google;
-using CalendarSyncPlus.Application.Services.Outlook;
-using CalendarSyncPlus.Application.Utilities;
-using CalendarSyncPlus.Application.Wrappers;
 using CalendarSyncPlus.Common.Log;
 using CalendarSyncPlus.Common.MetaData;
 using CalendarSyncPlus.Domain.Helpers;
 using CalendarSyncPlus.Domain.Models;
+using CalendarSyncPlus.ExchangeWebServices.ExchangeWeb;
 using CalendarSyncPlus.GoogleServices.Google;
 using CalendarSyncPlus.OutlookServices.Outlook;
-using CalendarSyncPlus.Services.Wrappers;
+using CalendarSyncPlus.OutlookServices.Utilities;
+using CalendarSyncPlus.Services.Interfaces;
 using MahApps.Metro.Controls.Dialogs;
 
 namespace CalendarSyncPlus.Application.ViewModels

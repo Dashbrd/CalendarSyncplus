@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace CalendarSyncPlus.Application.Utilities
+namespace CalendarSyncPlus.Services.Utilities
 {
     public delegate Task<bool> SyncCallback(SyncEventArgs e);
 }

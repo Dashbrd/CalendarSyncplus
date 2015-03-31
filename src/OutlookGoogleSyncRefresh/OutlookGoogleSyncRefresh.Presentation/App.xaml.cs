@@ -30,18 +30,17 @@ using System.Waf.Applications;
 using System.Windows;
 using System.Windows.Threading;
 using CalendarSyncPlus.Application.Controllers;
-using CalendarSyncPlus.Application.Services;
-using CalendarSyncPlus.Application.Services.ExchangeWeb;
-using CalendarSyncPlus.Application.Services.Google;
-using CalendarSyncPlus.Application.Services.Outlook;
 using CalendarSyncPlus.Application.ViewModels;
 using CalendarSyncPlus.Common;
 using CalendarSyncPlus.Common.Log;
 using CalendarSyncPlus.Domain.Models;
+using CalendarSyncPlus.ExchangeWebServices.ExchangeWeb;
 using CalendarSyncPlus.GoogleServices.Google;
 using CalendarSyncPlus.OutlookServices.Outlook;
 using CalendarSyncPlus.Presentation.Helpers;
 using CalendarSyncPlus.Presentation.Services.SingleInstance;
+using CalendarSyncPlus.Services;
+using CalendarSyncPlus.Services.Interfaces;
 
 #endregion
 
