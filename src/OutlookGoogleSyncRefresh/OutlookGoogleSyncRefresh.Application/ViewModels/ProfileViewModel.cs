@@ -14,6 +14,7 @@ using CalendarSyncPlus.Common.Log;
 using CalendarSyncPlus.Common.MetaData;
 using CalendarSyncPlus.Domain.Helpers;
 using CalendarSyncPlus.Domain.Models;
+using CalendarSyncPlus.Services.Wrappers;
 using MahApps.Metro.Controls.Dialogs;
 
 namespace CalendarSyncPlus.Application.ViewModels
@@ -554,7 +555,7 @@ namespace CalendarSyncPlus.Application.ViewModels
                 return;
             }
 
-            var calendarSpecificData = new Dictionary<string, object> {{"CalendarId", SelectedCalendar.Id}};
+            var calendarSpecificData = new Dictionary<string, object> { { "CalendarId", SelectedCalendar.Id } };
             bool result = await GoogleCalendarService.ResetCalendar(calendarSpecificData);
             if (!result)
             {

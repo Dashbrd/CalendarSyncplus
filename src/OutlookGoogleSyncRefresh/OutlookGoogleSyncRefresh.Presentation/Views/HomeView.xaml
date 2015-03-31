@@ -26,10 +26,11 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
-                <Rectangle Fill="{StaticResource ScheduleColorBrush}"
-                           Grid.RowSpan="3"
+                <Rectangle Stroke="Black"
+                           StrokeThickness="0.2"
+                            Grid.RowSpan="3"
                            Grid.ColumnSpan="2"
-                           Margin="2" />
+                           Margin="1" />
                 <TextBlock Text="Profile Name :"
                            FontWeight="600"
                            VerticalAlignment="Center"
@@ -84,7 +85,7 @@
                   IsExpanded="True"
                   MaxHeight="200">
             <ListView ItemsSource="{Binding ScheduledProfiles,UpdateSourceTrigger=PropertyChanged}"
-                      ItemTemplate="{StaticResource SyncProfileDataTemplate}" />
+                      ItemTemplate="{StaticResource SyncProfileDataTemplate}" BorderThickness="0" Focusable="False"/>
         </Expander>
         <GroupBox Grid.Row="2"
                   Grid.ColumnSpan="2"

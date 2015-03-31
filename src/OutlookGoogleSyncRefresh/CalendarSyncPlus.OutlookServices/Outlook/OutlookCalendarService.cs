@@ -34,7 +34,7 @@ using CalendarSyncPlus.Domain.Models;
 using Microsoft.Office.Interop.Outlook;
 using Microsoft.Win32;
 using AppRecipient = CalendarSyncPlus.Domain.Models.Recipient;
-using Category = CalendarSyncPlus.Application.Wrappers.Category;
+using Category = CalendarSyncPlus.Services.Wrappers.Category;
 using Exception = System.Exception;
 using Recipient = Microsoft.Office.Interop.Outlook.Recipient;
 
@@ -42,7 +42,7 @@ using Recipient = Microsoft.Office.Interop.Outlook.Recipient;
 
 namespace CalendarSyncPlus.Application.Services.Outlook
 {
-    [Export(typeof (ICalendarService)), Export(typeof (IOutlookCalendarService))]
+    [Export(typeof(ICalendarService)), Export(typeof(IOutlookCalendarService))]
     [ExportMetadata("ServiceType", CalendarServiceType.OutlookDesktop)]
     public class OutlookCalendarService : IOutlookCalendarService
     {
@@ -527,7 +527,10 @@ namespace CalendarSyncPlus.Application.Services.Outlook
                     nameSpace.Logoff();
                 }
 
-                Marshal.FinalReleaseComObject(nameSpace);
+                if (nameSpace != null)
+                {
+                    Marshal.FinalReleaseComObject(nameSpace);
+                }
 
                 if (disposeOutlookInstances)
                 {
@@ -638,7 +641,7 @@ namespace CalendarSyncPlus.Application.Services.Outlook
         public async Task<bool> ResetCalendar(IDictionary<string, object> calendarSpecificData)
         {
             CalendarAppointments appointments =
-                await GetCalendarEventsInRangeAsync(10*365, 10*365, calendarSpecificData);
+                await GetCalendarEventsInRangeAsync(10 * 365, 10 * 365, calendarSpecificData);
             if (appointments != null)
             {
                 bool success = await DeleteCalendarEvent(appointments, calendarSpecificData);
@@ -794,7 +797,7 @@ namespace CalendarSyncPlus.Application.Services.Outlook
                         {
                             Recipient recipient =
                                 appItem.Recipients.Add(string.Format("{0}<{1}>", rcptName.Name, rcptName.Email));
-                            recipient.Type = (int) OlMeetingRecipientType.olRequired;
+                            recipient.Type = (int)OlMeetingRecipientType.olRequired;
                             recipient.Resolve();
                         });
                     }
@@ -805,7 +808,7 @@ namespace CalendarSyncPlus.Application.Services.Outlook
                         {
                             Recipient recipient =
                                 appItem.Recipients.Add(string.Format("{0}<{1}>", rcptName.Name, rcptName.Email));
-                            recipient.Type = (int) OlMeetingRecipientType.olOptional;
+                            recipient.Type = (int)OlMeetingRecipientType.olOptional;
                             recipient.Resolve();
                         });
                     }

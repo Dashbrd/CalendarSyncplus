@@ -30,6 +30,7 @@ using CalendarSyncPlus.Application.Wrappers;
 using CalendarSyncPlus.Common.Log;
 using CalendarSyncPlus.Common.MetaData;
 using CalendarSyncPlus.Domain.Models;
+using CalendarSyncPlus.Services.Wrappers;
 using Google;
 using Google.Apis.Calendar.v3;
 using Google.Apis.Calendar.v3.Data;
@@ -40,7 +41,7 @@ using Calendar = CalendarSyncPlus.Domain.Models.Calendar;
 
 namespace CalendarSyncPlus.Application.Services.Google
 {
-    [Export(typeof (ICalendarService)), Export(typeof (IGoogleCalendarService))]
+    [Export(typeof(ICalendarService)), Export(typeof(IGoogleCalendarService))]
     [ExportMetadata("ServiceType", CalendarServiceType.Google)]
     public class GoogleCalendarService : IGoogleCalendarService
     {
@@ -219,7 +220,7 @@ namespace CalendarSyncPlus.Application.Services.Google
             {
                 appointment = new Appointment(googleEvent.Description, googleEvent.Location, googleEvent.Summary,
                     DateTime.Parse(googleEvent.End.Date),
-                    DateTime.Parse(googleEvent.Start.Date), googleEvent.Id) {AllDayEvent = true};
+                    DateTime.Parse(googleEvent.Start.Date), googleEvent.Id) { AllDayEvent = true };
             }
             else
             {
@@ -269,7 +270,7 @@ namespace CalendarSyncPlus.Application.Services.Google
 
                 foreach (EventAttendee eventAttendee in attendees)
                 {
-                    recipients.Add(new Recipient {Name = eventAttendee.DisplayName, Email = eventAttendee.Email});
+                    recipients.Add(new Recipient { Name = eventAttendee.DisplayName, Email = eventAttendee.Email });
                 }
             }
         }
@@ -322,7 +323,7 @@ namespace CalendarSyncPlus.Application.Services.Google
 
             List<Calendar> localCalendarList =
                 calenderList.Items.Select(
-                    calendarListEntry => new Calendar {Id = calendarListEntry.Id, Name = calendarListEntry.Summary})
+                    calendarListEntry => new Calendar { Id = calendarListEntry.Id, Name = calendarListEntry.Summary })
                     .ToList();
             return localCalendarList;
         }
@@ -358,7 +359,7 @@ namespace CalendarSyncPlus.Application.Services.Google
                     //Iterate over each appointment to create a event and batch it 
                     for (int i = 0; i < calendarAppointments.Count; i++)
                     {
-                        if (i != 0 && i%999 == 0)
+                        if (i != 0 && i % 999 == 0)
                         {
                             await batchRequest.ExecuteAsync();
                             batchRequest = new BatchRequest(calendarService);
@@ -419,7 +420,7 @@ namespace CalendarSyncPlus.Application.Services.Google
                     //Iterate over each appointment to create a event and batch it 
                     for (int i = 0; i < calendarAppointments.Count; i++)
                     {
-                        if (i != 0 && i%999 == 0)
+                        if (i != 0 && i % 999 == 0)
                         {
                             await batchRequest.ExecuteAsync();
                             batchRequest = new BatchRequest(calendarService);
@@ -515,7 +516,7 @@ namespace CalendarSyncPlus.Application.Services.Google
                 return null;
             }
 
-            var calendarAppointments = new CalendarAppointments {CalendarId = CalendarId};
+            var calendarAppointments = new CalendarAppointments { CalendarId = CalendarId };
             calendarAppointments.AddRange(finalEventList);
             return calendarAppointments;
         }
@@ -523,7 +524,7 @@ namespace CalendarSyncPlus.Application.Services.Google
         public async Task<bool> ResetCalendar(IDictionary<string, object> calendarSpecificData)
         {
             CalendarAppointments appointments =
-                await GetCalendarEventsInRangeAsync(10*365, 10*365, calendarSpecificData);
+                await GetCalendarEventsInRangeAsync(10 * 365, 10 * 365, calendarSpecificData);
             if (appointments != null)
             {
                 bool success = await DeleteCalendarEvent(appointments, calendarSpecificData);

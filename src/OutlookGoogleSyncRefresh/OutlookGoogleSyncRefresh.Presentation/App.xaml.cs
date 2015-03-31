@@ -31,6 +31,9 @@ using System.Windows;
 using System.Windows.Threading;
 using CalendarSyncPlus.Application.Controllers;
 using CalendarSyncPlus.Application.Services;
+using CalendarSyncPlus.Application.Services.ExchangeWeb;
+using CalendarSyncPlus.Application.Services.Google;
+using CalendarSyncPlus.Application.Services.Outlook;
 using CalendarSyncPlus.Application.ViewModels;
 using CalendarSyncPlus.Common;
 using CalendarSyncPlus.Common.Log;
@@ -114,13 +117,21 @@ namespace CalendarSyncPlus.Presentation
 
             catalog = new AggregateCatalog();
             // Add the WpfApplicationFramework assembly to the catalog
-            catalog.Catalogs.Add(new AssemblyCatalog(typeof (ViewModel).Assembly));
+            catalog.Catalogs.Add(new AssemblyCatalog(typeof(ViewModel).Assembly));
             // Add the Waf.BookLibrary.Library.Presentation assembly to the catalog
             catalog.Catalogs.Add(new AssemblyCatalog(Assembly.GetExecutingAssembly()));
             // Add the Waf.BookLibrary.Library.Applications assembly to the catalog
-            catalog.Catalogs.Add(new AssemblyCatalog(typeof (ShellViewModel).Assembly));
+            catalog.Catalogs.Add(new AssemblyCatalog(typeof(ShellViewModel).Assembly));
             // Add the Common assembly to catalog
-            catalog.Catalogs.Add(new AssemblyCatalog(typeof (ApplicationLogger).Assembly));
+            catalog.Catalogs.Add(new AssemblyCatalog(typeof(ApplicationLogger).Assembly));
+            //Add Services assembly to catalog
+            catalog.Catalogs.Add(new AssemblyCatalog(typeof(ICalendarService).Assembly));
+            //Add GoogleServices assembly to catalog
+            catalog.Catalogs.Add(new AssemblyCatalog(typeof(IGoogleCalendarService).Assembly));
+            //Add OutlookServices assembly to catalog
+            catalog.Catalogs.Add(new AssemblyCatalog(typeof(IOutlookCalendarService).Assembly));
+            //Add ExchangeWebServices assembly to catalog
+            catalog.Catalogs.Add(new AssemblyCatalog(typeof(IExchangeWebCalendarService).Assembly));
 
             //Composition Container
             container = new CompositionContainer(catalog, true);
@@ -156,7 +167,7 @@ namespace CalendarSyncPlus.Presentation
         public bool SignalExternalCommandLineArgs(IList<string> args)
         {
             //Activate Hidden,Background Application
-            Current.Dispatcher.BeginInvoke(((Action) (() => Utilities.BringToForeground(MainWindow))));
+            Current.Dispatcher.BeginInvoke(((Action)(() => Utilities.BringToForeground(MainWindow))));
             return true;
         }
 

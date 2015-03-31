@@ -8,13 +8,14 @@ using CalendarSyncPlus.Application.Wrappers;
 using CalendarSyncPlus.Common.Log;
 using CalendarSyncPlus.Common.MetaData;
 using CalendarSyncPlus.Domain.Models;
+using CalendarSyncPlus.Services.Wrappers;
 using Microsoft.Exchange.WebServices.Data;
 using AppAppointment = CalendarSyncPlus.Domain.Models.Appointment;
 using Appointment = Microsoft.Exchange.WebServices.Data.Appointment;
 
 namespace CalendarSyncPlus.Application.Services.ExchangeWeb
 {
-    [Export(typeof (ICalendarService)), Export(typeof (IExchangeWebCalendarService))]
+    [Export(typeof(ICalendarService)), Export(typeof(IExchangeWebCalendarService))]
     [ExportMetadata("ServiceType", CalendarServiceType.EWS)]
     public class ExchangeWebCalendarService : IExchangeWebCalendarService
     {
@@ -44,7 +45,7 @@ namespace CalendarSyncPlus.Application.Services.ExchangeWeb
 
             service.LoadPropertiesForItems(
                 from Item item in exchangeAppointments select item,
-                new PropertySet(BasePropertySet.FirstClassProperties) {RequestedBodyType = BodyType.Text});
+                new PropertySet(BasePropertySet.FirstClassProperties) { RequestedBodyType = BodyType.Text });
 
             if (exchangeAppointments != null)
             {
@@ -220,7 +221,7 @@ namespace CalendarSyncPlus.Application.Services.ExchangeWeb
         public ExchangeVersion GetBestSuitedExchangeVersion()
         {
             IEnumerable<ExchangeVersion> enumList =
-                Enum.GetValues(typeof (ExchangeVersion)).Cast<ExchangeVersion>().Reverse();
+                Enum.GetValues(typeof(ExchangeVersion)).Cast<ExchangeVersion>().Reverse();
 
             IWebProxy proxy = WebRequest.DefaultWebProxy;
             proxy.Credentials = CredentialCache.DefaultNetworkCredentials;

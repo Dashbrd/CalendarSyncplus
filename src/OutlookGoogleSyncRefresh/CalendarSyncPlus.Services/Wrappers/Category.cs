@@ -1,7 +1,7 @@
 ﻿using System.Windows.Media;
 using Microsoft.Office.Interop.Outlook;
 
-namespace CalendarSyncPlus.Application.Wrappers
+namespace CalendarSyncPlus.Services.Wrappers
 {
     public class Category
     {

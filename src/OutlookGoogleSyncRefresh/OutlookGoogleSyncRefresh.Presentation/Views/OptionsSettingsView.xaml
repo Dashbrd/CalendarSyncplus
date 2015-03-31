@@ -5,15 +5,15 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:wafConverters="http://waf.codeplex.com/schemas"
              xmlns:converters="clr-namespace:CalendarSyncPlus.Presentation.Converters"
-             xmlns:wrappers="clr-namespace:CalendarSyncPlus.Application.Wrappers;assembly=CalendarSyncPlus.Application"
              xmlns:viewModels="clr-namespace:CalendarSyncPlus.Application.ViewModels;assembly=CalendarSyncPlus.Application"
+             xmlns:wrappers1="clr-namespace:CalendarSyncPlus.Services.Wrappers;assembly=CalendarSyncPlus.Services"
              mc:Ignorable="d"
              d:DesignHeight="600" d:DesignWidth="500"
              d:DataContext="{d:DesignInstance viewModels:ProfileViewModel}">
     <UserControl.Resources>
         <wafConverters:InvertBooleanConverter x:Key="InvertBooleanConverter" />
         <converters:StringToBrushConverter x:Key="StringToBrushConverter" />
-        <DataTemplate DataType="{x:Type wrappers:Category}">
+        <DataTemplate DataType="{x:Type wrappers1:Category}">
             <Rectangle Height="20"
                        Width="20"
                        HorizontalAlignment="Center"

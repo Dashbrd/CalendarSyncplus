@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Windows.Media;
 using Microsoft.Office.Interop.Outlook;
-using Category = CalendarSyncPlus.Application.Wrappers.Category;
+using Category = CalendarSyncPlus.Services.Wrappers.Category;
 using Exception = System.Exception;
 
 namespace CalendarSyncPlus.Application.Utilities
@@ -81,7 +81,7 @@ namespace CalendarSyncPlus.Application.Utilities
                         CategoryName = outlookColor.Key.ToString().Remove(0, "olCategoryColor".Length),
                         OutlookColor = outlookColor.Key,
                         HexValue = outlookColor.Value,
-                        Color = (Color) ColorConverter.ConvertFromString(outlookColor.Value)
+                        Color = (Color)ColorConverter.ConvertFromString(outlookColor.Value)
                     };
                     categories.Add(category);
                 }

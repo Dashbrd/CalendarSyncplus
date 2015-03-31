@@ -87,6 +87,11 @@
     <Reference Include="MefContrib">
       <HintPath>..\packages\MefContrib.1.2.2.1\lib\net40-Client\MefContrib.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Office.Interop.Outlook, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>..\..\..\..\..\Program Files (x86)\Microsoft Visual Studio 14.0\Visual Studio Tools for Office\PIA\Office14\Microsoft.Office.Interop.Outlook.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Threading.Tasks">
       <HintPath>..\packages\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.dll</HintPath>
     </Reference>
@@ -306,6 +311,22 @@
     <Resource Include="Resources\icon.ico" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CalendarSyncPlus.ExchangeWebServices\CalendarSyncPlus.ExchangeWebServices.csproj">
+      <Project>{60c60a47-1227-4659-8b9e-bfc6b7fcad0d}</Project>
+      <Name>CalendarSyncPlus.ExchangeWebServices</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CalendarSyncPlus.GoogleServices\CalendarSyncPlus.GoogleServices.csproj">
+      <Project>{e95afcf5-28f3-4ced-8901-4bcd0db5fa56}</Project>
+      <Name>CalendarSyncPlus.GoogleServices</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CalendarSyncPlus.OutlookServices\CalendarSyncPlus.OutlookServices.csproj">
+      <Project>{0348dc28-4b15-4e21-bb4e-9a8bd11f4ec3}</Project>
+      <Name>CalendarSyncPlus.OutlookServices</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CalendarSyncPlus.Services\CalendarSyncPlus.Services.csproj">
+      <Project>{5FF53B1A-81F5-4FF6-8444-4561DD7F6AF4}</Project>
+      <Name>CalendarSyncPlus.Services</Name>
+    </ProjectReference>
     <ProjectReference Include="..\OutlookGoogleSyncRefresh.Application\OutlookGoogleSyncRefresh.Application.csproj">
       <Project>{9aef8039-a3e2-452d-a73a-4af458fda0f7}</Project>
       <Name>OutlookGoogleSyncRefresh.Application</Name>

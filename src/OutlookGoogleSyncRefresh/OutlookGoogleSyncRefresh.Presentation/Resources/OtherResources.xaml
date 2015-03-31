@@ -22,16 +22,4 @@
             </Setter.Value>
         </Setter>
     </Style>
-    <SolidColorBrush x:Key="ScheduleColorBrush" Color="Salmon" />
-
-    <SolidColorBrush x:Key="CalendarColorBrush1"
-                     Color="Salmon" />
-    <SolidColorBrush x:Key="CalendarColorBrush2"
-                     Color="Salmon" />
-    <SolidColorBrush x:Key="CalendarColorBrush3"
-                     Color="Salmon" />
-    <SolidColorBrush x:Key="CalendarColorBrush4"
-                     Color="Salmon" />
-    <SolidColorBrush x:Key="CalendarColorBrush5"
-                     Color="Salmon" />
 </ResourceDictionary>
