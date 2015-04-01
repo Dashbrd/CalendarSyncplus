@@ -63,6 +63,8 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
 
         private string ProfileName { get; set; }
 
+        private Category EventCategory { get; set; }
+
         public string CalendarServiceName
         {
             get { return "Outlook"; }
@@ -73,7 +75,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
         #region Private Methods
 
         private void GetOutlookApplication(out bool disposeOutlookInstances,
-            out Microsoft.Office.Interop.Outlook.Application application,
+            out Application application,
             out NameSpace nameSpace, string profileName)
         {
             // Check whether there is an Outlook process running.
@@ -81,7 +83,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
             {
                 // If so, use the GetActiveObject method to obtain the process and cast it to an Application object.
                 application =
-                    Marshal.GetActiveObject("Outlook.Application") as Microsoft.Office.Interop.Outlook.Application;
+                    Marshal.GetActiveObject("Outlook.Application") as Application;
                 disposeOutlookInstances = false;
                 nameSpace = null;
                 if (application != null)
@@ -99,7 +101,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
             else
             {
                 // If not, create a new instance of Outlook and log on to the default profile.
-                application = new Microsoft.Office.Interop.Outlook.Application();
+                application = new Application();
                 nameSpace = application.GetNamespace("MAPI");
                 nameSpace.Logon(profileName, "", false, true);
                 disposeOutlookInstances = true;
@@ -109,7 +111,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
         private AppointmentListWrapper GetOutlookEntriesForSelectedTimeRange(int daysInPast, int daysInFuture)
         {
             bool disposeOutlookInstances = false;
-            Microsoft.Office.Interop.Outlook.Application application = null;
+            Application application = null;
             NameSpace nameSpace = null;
             MAPIFolder defaultOutlookCalender = null;
             Items outlookItems = null;
@@ -428,7 +430,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
         private AppointmentListWrapper SetColorForSelectedCalendar(Category background)
         {
             bool disposeOutlookInstances = false;
-            Microsoft.Office.Interop.Outlook.Application application = null;
+            Application application = null;
             NameSpace nameSpace = null;
 
             //Close  and Shutdown
@@ -437,14 +439,14 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
                 // Get Application and Namespace
                 GetOutlookApplication(out disposeOutlookInstances, out application, out nameSpace, ProfileName);
 
-                if (nameSpace.Categories[Constants.CategoryName] == null)
+                if (nameSpace.Categories[background.CategoryName] == null)
                 {
-                    nameSpace.Categories.Add(Constants.CategoryName, CategoryHelper.GetOutlookColor(background.HexValue),
+                    nameSpace.Categories.Add(background.CategoryName, CategoryHelper.GetOutlookColor(background.HexValue),
                         OlCategoryShortcutKey.olCategoryShortcutKeyNone);
                 }
                 else
                 {
-                    nameSpace.Categories[Constants.CategoryName].Color =
+                    nameSpace.Categories[background.CategoryName].Color =
                         CategoryHelper.GetOutlookColor(background.HexValue);
                 }
             }
@@ -501,7 +503,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
         {
             ProfileName = profileName;
             bool disposeOutlookInstances = false;
-            Microsoft.Office.Interop.Outlook.Application application = null;
+            Application application = null;
             NameSpace nameSpace = null;
             Folders rootFolders = null;
             var mailBoxes = new List<OutlookMailBox>();
@@ -602,6 +604,17 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
             }
             ProfileName = profileValue as String;
             OutlookCalendar = outlookCalendarValue as OutlookCalendar;
+
+            object eventCategory;
+            if (calendarSpecificData.TryGetValue("EventCategory", out eventCategory))
+            {
+                EventCategory = eventCategory as Category;
+            }
+            else
+            {
+                EventCategory = null;
+            }
+
         }
 
 
@@ -687,7 +700,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
             bool addReminder, bool addAttendees, bool attendeesToDescription)
         {
             bool disposeOutlookInstances = false;
-            Microsoft.Office.Interop.Outlook.Application application = null;
+            Application application = null;
             NameSpace nameSpace = null;
             MAPIFolder defaultOutlookCalender = null;
             Items outlookItems = null;
@@ -702,10 +715,19 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
                     ? nameSpace.GetFolderFromID(OutlookCalendar.EntryId, OutlookCalendar.StoreId)
                     : nameSpace.GetDefaultFolder(OlDefaultFolders.olFolderCalendar);
                 outlookItems = defaultOutlookCalender.Items;
-                if (nameSpace.Categories[Constants.CategoryName] == null)
+
+                if (EventCategory != null)
                 {
-                    nameSpace.Categories.Add(Constants.CategoryName, OlCategoryColor.olCategoryColorNone,
+                    if (nameSpace.Categories[EventCategory.CategoryName] == null)
+                    {
+                        nameSpace.Categories.Add(EventCategory.CategoryName, CategoryHelper.GetOutlookColor(EventCategory.HexValue),
                         OlCategoryShortcutKey.olCategoryShortcutKeyNone);
+                    }
+                    else
+                    {
+                        nameSpace.Categories[EventCategory.CategoryName].Color =
+                            CategoryHelper.GetOutlookColor(EventCategory.HexValue);
+                    }
                 }
 
                 foreach (Appointment calendarAppointment in calenderAppointments)
@@ -780,7 +802,10 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
                 appItem.Location = calendarAppointment.Location;
                 appItem.BusyStatus = calendarAppointment.GetOutlookBusyStatus();
                 recipients = appItem.Recipients;
-                appItem.Categories = Constants.CategoryName;
+                if (EventCategory != null)
+                {
+                    appItem.Categories = EventCategory.CategoryName;
+                }
 
                 if (calendarAppointment.AllDayEvent)
                 {
@@ -874,7 +899,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
         private AppointmentListWrapper DeleteEventsFromOutlook(List<Appointment> calendarAppointments)
         {
             bool disposeOutlookInstances = false;
-            Microsoft.Office.Interop.Outlook.Application application = null;
+            Application application = null;
             NameSpace nameSpace = null;
 
             try

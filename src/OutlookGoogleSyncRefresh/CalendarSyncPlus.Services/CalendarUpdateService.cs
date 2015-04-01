@@ -36,7 +36,7 @@ using CalendarSyncPlus.Services.Wrappers;
 
 namespace CalendarSyncPlus.Services
 {
-    [Export(typeof (ICalendarUpdateService))]
+    [Export(typeof(ICalendarUpdateService))]
     public class CalendarUpdateService : Model, ICalendarUpdateService
     {
         #region Fields
@@ -253,20 +253,30 @@ namespace CalendarSyncPlus.Services
         private IDictionary<string, object> GetCalendarSpecificData(CalendarServiceType serviceType,
             CalendarSyncProfile syncProfile)
         {
+            IDictionary<string, object> calendarSpecificData = null;
             switch (serviceType)
             {
                 case CalendarServiceType.Google:
-                    return new Dictionary<string, object> {{"CalendarId", syncProfile.GoogleCalendar.Id}};
+                    calendarSpecificData = new Dictionary<string, object> 
+                    { 
+                        {"CalendarId", syncProfile.GoogleCalendar.Id}
+                    };
+                    break;
                 case CalendarServiceType.OutlookDesktop:
-                    return new Dictionary<string, object>
+                    calendarSpecificData = new Dictionary<string, object>
                     {
                         {"ProfileName", syncProfile.OutlookSettings.OutlookProfileName},
                         {"OutlookCalendar", syncProfile.OutlookSettings.OutlookCalendar}
                     };
+                    break;
                 case CalendarServiceType.EWS:
                     return null;
             }
-            return null;
+            if (calendarSpecificData != null && syncProfile.SetCalendarCategory)
+            {
+                calendarSpecificData.Add("EventCategory", syncProfile.EventCategory);
+            }
+            return calendarSpecificData;
         }
 
         private void LoadSourceId()

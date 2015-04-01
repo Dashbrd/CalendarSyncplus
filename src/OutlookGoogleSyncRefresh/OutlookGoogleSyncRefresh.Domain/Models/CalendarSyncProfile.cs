@@ -7,6 +7,7 @@ namespace CalendarSyncPlus.Domain.Models
 {
     [XmlInclude(typeof(Calendar))]
     [XmlInclude(typeof(SyncFrequency))]
+    [XmlInclude(typeof(Category))]
     public class CalendarSyncProfile : Model
     {
         private bool _isDefault;
@@ -72,7 +73,7 @@ namespace CalendarSyncPlus.Domain.Models
 
         public bool SetCalendarCategory { get; set; }
 
-        public Category ColorCategory { get; set; }
+        public Category EventCategory { get; set; }
 
 
         public DateTime? LastSync

@@ -8,6 +8,32 @@ namespace CalendarSyncPlus.OutlookServices.Utilities
 {
     public class CategoryHelper
     {
+        //Google Colors
+        /*  1-#ac725e
+            2-#d06b64
+            3-#f83a22
+            4-#fa573c
+            5-#ff7537
+            6-#ffad46
+            7-#42d692
+            8-#16a765
+            9-#7bd148
+            10-#b3dc6c
+            11-#fbe983
+            12-#fad165
+            13-#92e1c0
+            14-#9fe1e7
+            15-#9fc6e7
+            16-#4986e7
+            17-#9a9cff
+            18-#b99aff
+            19-#c2c2c2
+            20-#cabdbf
+            21-#cca6ac
+            22-#f691b2
+            23-#cd74e6
+            24-#a47ae2*/
+        //Outlook Colors
         /*  ## COLOR       HEX     (RRR GGG BBB)
              1 Red         #E7A1A2 (231 161 162)
              2 Orange      #F9BA89 (249 186 137)

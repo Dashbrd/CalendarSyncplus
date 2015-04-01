@@ -427,8 +427,38 @@ namespace CalendarSyncPlus.Application.ViewModels
                 "Daily",
                 "Weekly"
             };
+
             SyncFrequency = "Hourly";
             Categories = CategoryHelper.GetCategories();
+
+            DaysInPast = SyncProfile.DaysInPast;
+            DaysInFuture = SyncProfile.DaysInFuture;
+            AddAttendees = SyncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Attendees);
+            if (AddAttendees)
+            {
+                AddAttendeesToDescription =
+                    SyncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.AttendeesToDescription);
+            }
+            AddDescription = SyncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Description);
+            AddReminders = SyncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Reminders);
+            AddAttachments = SyncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Attachments);
+            IsDefaultProfile = SyncProfile.OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.DefaultProfile);
+            IsDefaultMailBox =
+                SyncProfile.OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.DefaultCalendar);
+            IsExchangeWebServices =
+                SyncProfile.OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.ExchangeWebServices);
+            SelectedOutlookProfileName = SyncProfile.OutlookSettings.OutlookProfileName;
+            SelectedCalendarSyncDirection = SyncProfile.SyncSettings.CalendarSyncDirection;
+            MasterCalendarServiceType = SyncProfile.SyncSettings.MasterCalendar;
+            DisableDelete = SyncProfile.SyncSettings.DisableDelete;
+            ConfirmOnDelete = SyncProfile.SyncSettings.ConfirmOnDelete;
+            KeepLastModifiedCopy = SyncProfile.SyncSettings.KeepLastModifiedVersion;
+            SyncFrequency = SyncProfile.SyncSettings.SyncFrequency.Name;
+            SetCategory = SyncProfile.SetCalendarCategory;
+            if (SyncProfile.EventCategory != null)
+            {
+                SelectedCategory = Categories.First(t => t.CategoryName.Equals(SyncProfile.EventCategory.CategoryName));
+            }
         }
 
         private async void GetOutlookMailBoxes()
@@ -643,32 +673,6 @@ namespace CalendarSyncPlus.Application.ViewModels
             IsLoading = true;
             if (SyncProfile != null)
             {
-                DaysInPast = SyncProfile.DaysInPast;
-                DaysInFuture = SyncProfile.DaysInFuture;
-                AddAttendees = SyncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Attendees);
-                if (AddAttendees)
-                {
-                    AddAttendeesToDescription =
-                        SyncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.AttendeesToDescription);
-                }
-                AddDescription = SyncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Description);
-                AddReminders = SyncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Reminders);
-                AddAttachments = SyncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Attachments);
-                IsDefaultProfile = SyncProfile.OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.DefaultProfile);
-                IsDefaultMailBox =
-                    SyncProfile.OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.DefaultCalendar);
-                IsExchangeWebServices =
-                    SyncProfile.OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.ExchangeWebServices);
-                SelectedOutlookProfileName = SyncProfile.OutlookSettings.OutlookProfileName;
-                SelectedCalendarSyncDirection = SyncProfile.SyncSettings.CalendarSyncDirection;
-                MasterCalendarServiceType = SyncProfile.SyncSettings.MasterCalendar;
-                DisableDelete = SyncProfile.SyncSettings.DisableDelete;
-                ConfirmOnDelete = SyncProfile.SyncSettings.ConfirmOnDelete;
-                KeepLastModifiedCopy = SyncProfile.SyncSettings.KeepLastModifiedVersion;
-                SyncFrequency = SyncProfile.SyncSettings.SyncFrequency.Name;
-                SetCategory = SyncProfile.SetCalendarCategory;
-                SelectedCategory = SyncProfile.ColorCategory;
-
                 if (!IsDefaultProfile)
                 {
                     await GetOutlookProfileListInternal();
@@ -711,7 +715,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             SyncProfile.SyncSettings.KeepLastModifiedVersion = KeepLastModifiedCopy;
             SyncProfile.SetCalendarTypes();
             SyncProfile.SetCalendarCategory = SetCategory;
-            SyncProfile.ColorCategory = SelectedCategory;
+            SyncProfile.EventCategory = SelectedCategory;
             return SyncProfile;
         }
 

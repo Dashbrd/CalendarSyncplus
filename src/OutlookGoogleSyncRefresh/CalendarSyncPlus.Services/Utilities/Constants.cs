@@ -17,7 +17,5 @@
         public const string Minimized = "/MINIMIZED";
 
         public const string UserPropertyName = "CalendarAppointmentId";
-
-        public const string CategoryName = "CalendarSyncPlusColor";
     }
 }

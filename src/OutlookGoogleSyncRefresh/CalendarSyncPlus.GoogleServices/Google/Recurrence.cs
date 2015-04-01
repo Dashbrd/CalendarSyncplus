@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 
 namespace CalendarSyncPlus.GoogleServices.Google
 {
@@ -21,11 +22,15 @@ namespace CalendarSyncPlus.GoogleServices.Google
 
         public List<DayOfWeek> DaysOfWeek { get; set; }
 
-        public int RepeatGap { get; set; }
+        public int Interval { get; set; }
 
         public int Count { get; set; }
 
         public DateTime? EndDate { get; set; }
+
+        public bool BasedOnWeek { get; set; }
+
+        public int Week { get; set; }
         #endregion
 
         #region Private Methods
@@ -55,14 +60,7 @@ namespace CalendarSyncPlus.GoogleServices.Google
                 }
             }
 
-            if (EndDate != null)
-            {
-                if (dateTime.Date.CompareTo(EndDate.GetValueOrDefault().Date) < 0)
-                {
-                    return false;
-                }
-            }
-            return true;
+            return ValidateEndDate(dateTime);
         }
 
         private bool ValidateDailyOccurence(DateTime dateTime)
@@ -74,15 +72,51 @@ namespace CalendarSyncPlus.GoogleServices.Google
                     return false;
                 }
             }
+            return ValidateEndDate(dateTime);
+        }
+
+        private bool ValidateMonthlyOccurence(DateTime dateTime)
+        {
+            if (dateTime.Day != StartDate.Date.Day)
+            {
+                return false;
+            }
+
+            if (Interval > 1 && (dateTime.Month - StartDate.Month) % Interval != 0)
+            {
+                return false;
+            }
+
+            return ValidateEndDate(dateTime);
+        }
+
+        private bool ValidateYearlyOccurence(DateTime dateTime)
+        {
+            if (dateTime.Day != StartDate.Date.Day || dateTime.Month != StartDate.Month)
+            {
+                return false;
+            }
+
+            if (Interval > 1 && (dateTime.Year - StartDate.Year) % Interval != 0)
+            {
+                return false;
+            }
+
+            return ValidateEndDate(dateTime);
+        }
+
+        private bool ValidateEndDate(DateTime dateTime)
+        {
             if (EndDate != null)
             {
-                if (dateTime.Date.CompareTo(EndDate.GetValueOrDefault().Date) < 0)
+                if (dateTime.Date.CompareTo(EndDate.GetValueOrDefault().Date) <= 0)
                 {
                     return false;
                 }
             }
             return true;
         }
+
         #endregion
 
         #region Public Methods
@@ -98,15 +132,18 @@ namespace CalendarSyncPlus.GoogleServices.Google
                 case RecurrenceTypeEnum.Daily:
                     return ValidateDailyOccurence(dateTime);
                 case RecurrenceTypeEnum.Monthly:
-                    break;
+                    return ValidateMonthlyOccurence(dateTime);
                 case RecurrenceTypeEnum.Weekly:
                     return ValidateWeeklyOccurrence(dateTime);
                 case RecurrenceTypeEnum.Yearly:
-                    break;
+                    return ValidateYearlyOccurence(dateTime);
             }
 
             return false;
         }
+
+
+
         #endregion
 
         public static Recurrence Parse(string recurrence, DateTime startDate)
@@ -125,7 +162,22 @@ namespace CalendarSyncPlus.GoogleServices.Google
                             frequency.RecurrenceType = GetFrequencyType(parameter[1]);
                             break;
                         case "BYDAY":
-                            frequency.DaysOfWeek = GetDaysOfWeek(parameter[1]);
+                            if (frequency.RecurrenceType == RecurrenceTypeEnum.Weekly)
+                            {
+                                frequency.DaysOfWeek = GetDaysOfWeek(parameter[1]);
+                            }
+                            else if (frequency.RecurrenceType == RecurrenceTypeEnum.Monthly)
+                            {
+                                string day = parameter[1].Substring(parameter[1].Length - 2);
+                                frequency.DaysOfWeek = GetDaysOfWeek(day);
+                                int week;
+                                day = parameter[1].Remove(parameter[1].Length - 2);
+                                if (int.TryParse(day, out week))
+                                {
+                                    frequency.BasedOnWeek = true;
+                                    frequency.Week = week;
+                                }
+                            }
                             break;
                         case "UNTIL":
                             DateTime endDate;
@@ -142,9 +194,15 @@ namespace CalendarSyncPlus.GoogleServices.Google
                                 frequency.Count = count;
                             }
                             break;
-                        default:
-                            //Do Nothing
+                        case "INTERVAL":
+                            int interval;
+                            if (Int32.TryParse(parameter[1], out interval))
+                            {
+                                frequency.Interval = interval;
+                            }
                             break;
+                        default:
+                            throw new InvalidDataException("Unable to identify parameter " + parameter[0]);
                     }
                 }
             }

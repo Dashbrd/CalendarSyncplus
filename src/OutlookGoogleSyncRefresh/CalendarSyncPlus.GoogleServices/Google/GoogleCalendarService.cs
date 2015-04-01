@@ -81,6 +81,8 @@ namespace CalendarSyncPlus.GoogleServices.Google
             set { calendarId = value; }
         }
 
+        public Category EventCategory { get; set; }
+
         public string CalendarServiceName
         {
             get { return "Google"; }
@@ -173,6 +175,7 @@ namespace CalendarSyncPlus.GoogleServices.Google
                     Email = calenderAppointment.Organizer.Email
                 };
             }
+
             return googleEvent;
         }
 
@@ -313,6 +316,16 @@ namespace CalendarSyncPlus.GoogleServices.Google
                 throw new InvalidOperationException(string.Format("{0} cannot be null or empty.",
                     dictionaryKey_CalendarId));
             }
+
+            object eventCategory;
+            if (calendarSpecificData.TryGetValue("EventCategory", out eventCategory))
+            {
+                EventCategory = eventCategory as Category;
+            }
+            else
+            {
+                EventCategory = null;
+            }
         }
 
         public async Task<List<Calendar>> GetAvailableCalendars(IDictionary<string, object> calendarSpecificData)
@@ -350,6 +363,7 @@ namespace CalendarSyncPlus.GoogleServices.Google
             }
             try
             {
+
                 if (calendarAppointments.Any())
                 {
                     //Create a Batch Request
@@ -370,6 +384,10 @@ namespace CalendarSyncPlus.GoogleServices.Google
                         Event calendarEvent = CreateGoogleCalendarEvent(appointment, addDescription, addReminder,
                             attendeesToDescription,
                             addAttendees);
+                        if (EventCategory != null)
+                        {
+                            calendarEvent.ColorId = "1";
+                        }
                         EventsResource.InsertRequest insertRequest = calendarService.Events.Insert(calendarEvent,
                             CalendarId);
                         insertRequest.SendNotifications = false;
