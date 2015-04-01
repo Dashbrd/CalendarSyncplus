@@ -666,6 +666,8 @@ namespace CalendarSyncPlus.Application.ViewModels
                 ConfirmOnDelete = SyncProfile.SyncSettings.ConfirmOnDelete;
                 KeepLastModifiedCopy = SyncProfile.SyncSettings.KeepLastModifiedVersion;
                 SyncFrequency = SyncProfile.SyncSettings.SyncFrequency.Name;
+                SetCategory = SyncProfile.SetCalendarCategory;
+                SelectedCategory = SyncProfile.ColorCategory;
 
                 if (!IsDefaultProfile)
                 {
@@ -677,10 +679,9 @@ namespace CalendarSyncPlus.Application.ViewModels
                     await GetOutlookMailBoxesInternal();
                 }
 
-                if (SyncProfile != null && SyncProfile.GoogleCalendar != null)
-                {
-                    await GetGoogleCalendarInternal();
-                }
+
+                await GetGoogleCalendarInternal();
+
             }
             IsLoading = false;
         }
@@ -709,7 +710,8 @@ namespace CalendarSyncPlus.Application.ViewModels
             SyncProfile.SyncSettings.ConfirmOnDelete = ConfirmOnDelete;
             SyncProfile.SyncSettings.KeepLastModifiedVersion = KeepLastModifiedCopy;
             SyncProfile.SetCalendarTypes();
-
+            SyncProfile.SetCalendarCategory = SetCategory;
+            SyncProfile.ColorCategory = SelectedCategory;
             return SyncProfile;
         }
 

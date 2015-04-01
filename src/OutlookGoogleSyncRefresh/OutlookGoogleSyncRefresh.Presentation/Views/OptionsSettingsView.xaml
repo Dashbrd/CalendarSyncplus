@@ -13,14 +13,15 @@
     <UserControl.Resources>
         <wafConverters:InvertBooleanConverter x:Key="InvertBooleanConverter" />
         <converters:StringToBrushConverter x:Key="StringToBrushConverter" />
-        <DataTemplate DataType="{x:Type models:Category}">
+        <DataTemplate DataType="{x:Type models:Category}"
+                      x:Key="CategoryDataTemplate">
             <Rectangle Height="20"
                        Width="20"
                        HorizontalAlignment="Center"
                        VerticalAlignment="Center"
                        StrokeThickness="0.1"
                        Stroke="Black"
-                       Fill="{Binding HexValue,Converter={StaticResource StringToBrushConverter}}"
+                       Fill="{Binding HexValue,Converter={StaticResource StringToBrushConverter},UpdateSourceTrigger=PropertyChanged}"
                        ToolTip="{Binding CategoryName}"
                        Margin="2" />
         </DataTemplate>
@@ -47,6 +48,7 @@
                     <ComboBox IsEnabled="{Binding SetCategory,UpdateSourceTrigger=PropertyChanged}"
                               ItemsSource="{Binding Categories,UpdateSourceTrigger=PropertyChanged}"
                               SelectedItem="{Binding SelectedCategory,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                              ItemTemplate="{StaticResource CategoryDataTemplate}"
                               Margin="10,2,2,2">
                         <ComboBox.ItemsPanel>
                             <ItemsPanelTemplate>

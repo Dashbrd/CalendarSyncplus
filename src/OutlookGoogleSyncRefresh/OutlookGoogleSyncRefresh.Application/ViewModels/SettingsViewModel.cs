@@ -206,22 +206,23 @@ namespace CalendarSyncPlus.Application.ViewModels
 
         private async void CreateProfile()
         {
+            if (SyncProfileList.Count > 4)
+            {
+                MessageService.ShowMessageAsync("You have reached the maximum number of profiles.");
+                return;
+            }
+
             string result = await MessageService.ShowInput("Please enter profile name.");
 
             if (!string.IsNullOrEmpty(result))
             {
-                if (Settings.SyncProfiles.Any(t => t.Name.Equals(result)))
+                if (SyncProfileList.Any(t => t.Name.Equals(result)))
                 {
                     MessageService.ShowMessageAsync(
                         string.Format("A Profile with name '{0}' already exists. Please try again.", result));
                     return;
                 }
 
-                if (Settings.SyncProfiles.Count > 4)
-                {
-                    MessageService.ShowMessageAsync("You have reached the maximum number of profiles.");
-                    return;
-                }
                 CalendarSyncProfile syncProfile = CalendarSyncProfile.GetDefaultSyncProfile();
                 syncProfile.Name = result;
                 syncProfile.IsDefault = false;

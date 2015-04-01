@@ -5,8 +5,8 @@ using CalendarSyncPlus.Common.MetaData;
 
 namespace CalendarSyncPlus.Domain.Models
 {
-    [XmlInclude(typeof (Calendar))]
-    [XmlInclude(typeof (SyncFrequency))]
+    [XmlInclude(typeof(Calendar))]
+    [XmlInclude(typeof(SyncFrequency))]
     public class CalendarSyncProfile : Model
     {
         private bool _isDefault;
@@ -14,6 +14,7 @@ namespace CalendarSyncPlus.Domain.Models
         private DateTime? _lastSync;
         private string _name;
         private DateTime? _nextSync;
+        private SyncSettings _syncSettings;
 
         public CalendarSyncProfile()
         {
@@ -24,8 +25,6 @@ namespace CalendarSyncPlus.Domain.Models
             IsSyncEnabled = true;
             IsDefault = true;
         }
-
-        public string Id { get; set; }
 
         public string Name
         {
@@ -39,17 +38,17 @@ namespace CalendarSyncPlus.Domain.Models
             set { SetProperty(ref _isSyncEnabled, value); }
         }
 
-        public bool IsValid { get; set; }
-
         public bool IsDefault
         {
             get { return _isDefault; }
             set { SetProperty(ref _isDefault, value); }
         }
 
-        public int Order { get; set; }
-
-        public SyncSettings SyncSettings { get; set; }
+        public SyncSettings SyncSettings
+        {
+            get { return _syncSettings; }
+            set { SetProperty(ref _syncSettings, value); }
+        }
 
         public Calendar GoogleCalendar { get; set; }
 
@@ -71,6 +70,11 @@ namespace CalendarSyncPlus.Domain.Models
 
         public LogSettings LogSettings { get; set; }
 
+        public bool SetCalendarCategory { get; set; }
+
+        public Category ColorCategory { get; set; }
+
+
         public DateTime? LastSync
         {
             get { return _lastSync; }
@@ -85,7 +89,6 @@ namespace CalendarSyncPlus.Domain.Models
             set { SetProperty(ref _nextSync, value); }
         }
 
-        public Category ColorCategory { get; set; }
 
         public void SetCalendarTypes()
         {
