@@ -479,8 +479,8 @@ namespace CalendarSyncPlus.GoogleServices.Google
             EventsResource.ListRequest eventListRequest = calendarService.Events.List(CalendarId);
 
             // Add Filters to event List Request
-            eventListRequest.TimeMin = DateTime.Now.Date.AddDays(-(daysInPast));
-            eventListRequest.TimeMax = DateTime.Now.Date.AddDays((daysInFuture + 1));
+            eventListRequest.TimeMin = DateTime.Today.AddDays(-(daysInPast));
+            eventListRequest.TimeMax = DateTime.Today.AddDays((daysInFuture + 1));
             eventListRequest.MaxAttendees = 1000;
 
             try
@@ -498,8 +498,8 @@ namespace CalendarSyncPlus.GoogleServices.Google
                             {
                                 finalEventList.AddRange(RecurrenceHelper.SplitRecurringAppointments(appointment,
                                     eventItem.Recurrence.FirstOrDefault(),
-                                    DateTime.Now.Date.AddDays(-(daysInPast)),
-                                    DateTime.Now.Date.AddDays((daysInFuture + 1))));
+                                    DateTime.Today.AddDays(-(daysInPast)),
+                                    DateTime.Today.AddDays((daysInFuture + 1))));
                             }
                             else
                             {

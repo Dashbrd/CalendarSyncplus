@@ -499,6 +499,7 @@ namespace CalendarSyncPlus.Application.ViewModels
                 syncProfile.LastSync = DateTime.Now;
                 ShowNotification(true);
                 UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.SyncStarted, syncProfile.LastSync));
+                UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.Line));
                 UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.Profile, syncProfile.Name));
                 UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.Line));
                 string result = SyncStartService.SyncNow(syncProfile, SyncCallback);

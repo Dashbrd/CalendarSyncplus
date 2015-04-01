@@ -20,7 +20,7 @@ namespace CalendarSyncPlus.GoogleServices.Google
             Recurrence frequency = Recurrence.Parse(recurrence, recurringAppointment.StartTime.GetValueOrDefault());
             var appointmentList = new List<Appointment>();
             DateTime dateTime = startDateRange.Date;
-            while (endDateRange.CompareTo(dateTime) > 0)
+            while (endDateRange.Date.CompareTo(dateTime) > 0)
             {
                 if (frequency.ValidateDate(dateTime))
                 {

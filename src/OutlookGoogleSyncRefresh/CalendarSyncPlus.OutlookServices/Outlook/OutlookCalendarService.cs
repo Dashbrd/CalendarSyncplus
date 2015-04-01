@@ -145,13 +145,14 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
                     outlookItems.Sort("[Start]", Type.Missing);
                     outlookItems.IncludeRecurrences = true;
 
-                    DateTime min = DateTime.Now.Date.AddDays(-daysInPast);
-                    DateTime max = DateTime.Now.Date.AddDays(+(daysInFuture + 1));
+                    DateTime min = DateTime.Today.AddDays(-daysInPast);
+                    DateTime max = DateTime.Today.AddDays((daysInFuture + 1));
 
                     // create Final filter as string
-                    string filter = "[End] >= '" + min.ToString("g") + "' AND [Start] < '" + max.ToString("g") + "'";
-
-                    //Set filter on outlookItems and Loop through to create appointment List
+                    //string filter = "[End] > '" + min.ToString("dd/MM/yyyy") + "' AND [Start] < '" + max.ToString("dd/MM/yyyy") + "'";
+                    string filter = "[Start] >= '"+ min.ToString("dd/MM/yyyy hh:mm tt")+ "' AND [End] <= '"+ max.ToString("dd/MM/yyyy hh:mm tt") + "'";
+                    
+                        //Set filter on outlookItems and Loop through to create appointment List
                     Items outlookEntries = outlookItems.Restrict(filter);
                     if (outlookEntries != null)
                     {

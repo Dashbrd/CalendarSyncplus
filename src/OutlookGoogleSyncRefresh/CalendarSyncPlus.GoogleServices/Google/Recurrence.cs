@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
+using CalendarSyncPlus.GoogleServices.Utilities;
 
 namespace CalendarSyncPlus.GoogleServices.Google
 {
@@ -45,7 +47,7 @@ namespace CalendarSyncPlus.GoogleServices.Google
             {
                 int occurrenceCount = 0;
                 DateTime currentDate = StartDate.Date;
-                while (dateTime.Date.CompareTo(currentDate) > 0)
+                while (dateTime.Date.CompareTo(currentDate) >= 0)
                 {
                     if (DaysOfWeek.Contains(currentDate.DayOfWeek))
                     {
@@ -67,7 +69,7 @@ namespace CalendarSyncPlus.GoogleServices.Google
         {
             if (Count > 0)
             {
-                if (dateTime.Date.Subtract(StartDate.Date).Days > Count)
+                if (dateTime.Date.Subtract(StartDate.Date).Days >= Count)
                 {
                     return false;
                 }
@@ -77,16 +79,47 @@ namespace CalendarSyncPlus.GoogleServices.Google
 
         private bool ValidateMonthlyOccurence(DateTime dateTime)
         {
-            if (dateTime.Day != StartDate.Date.Day)
+            if (BasedOnWeek)
             {
-                return false;
-            }
+                if (!DaysOfWeek.Contains(dateTime.DayOfWeek))
+                {
+                    return false;
+                }
 
-            if (Interval > 1 && (dateTime.Month - StartDate.Month) % Interval != 0)
+                if (Interval > 1 && (dateTime.Month - StartDate.Month)%Interval != 0)
+                {
+                    return false;
+                }
+
+                if (Week > 0)
+                {
+                    DateTime nextScheduleDate = dateTime.FirstOfMonth().GetNthWeekofMonth(Math.Abs(Week), DaysOfWeek.First());
+                    if (!nextScheduleDate.Date.Equals(dateTime))
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    DateTime nextScheduleDate = dateTime.LastOfMonth().GetLastNthWeekofMonth(Math.Abs(Week), DaysOfWeek.First());
+                    if (!nextScheduleDate.Date.Equals(dateTime))
+                    {
+                        return false;
+                    }
+                }
+            }
+            else
             {
-                return false;
-            }
+                if (dateTime.Day != StartDate.Date.Day)
+                {
+                    return false;
+                }
 
+                if (Interval > 1 && (dateTime.Month - StartDate.Month)%Interval != 0)
+                {
+                    return false;
+                }
+            }
             return ValidateEndDate(dateTime);
         }
 
@@ -109,7 +142,7 @@ namespace CalendarSyncPlus.GoogleServices.Google
         {
             if (EndDate != null)
             {
-                if (dateTime.Date.CompareTo(EndDate.GetValueOrDefault().Date) <= 0)
+                if (dateTime.Date.CompareTo(EndDate.GetValueOrDefault().Date) < 0)
                 {
                     return false;
                 }
