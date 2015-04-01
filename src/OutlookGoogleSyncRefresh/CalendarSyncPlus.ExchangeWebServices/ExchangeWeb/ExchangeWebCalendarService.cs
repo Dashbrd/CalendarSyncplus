@@ -74,7 +74,7 @@ namespace CalendarSyncPlus.ExchangeWebServices.ExchangeWeb
             return outlookAppointments;
         }
 
-        public List<OutlookCalendar> GetCalendarsAsync()
+        public List<EWSCalendar> GetCalendarsAsync()
         {
             ExchangeService service = GetExchangeService(ExchangeVersion.Exchange2010_SP2);
 
@@ -98,12 +98,12 @@ namespace CalendarSyncPlus.ExchangeWebServices.ExchangeWeb
             // This method call results in a FindFolder call to EWS.
             FindFoldersResults findFolderResults = service.FindFolders(WellKnownFolderName.MsgFolderRoot, view);
 
-            var outlookCalendars = new List<OutlookCalendar>();
+            var ewsCalendars = new List<EWSCalendar>();
             foreach (Folder searchFolder in findFolderResults.Folders)
             {
-                GetCalendars(searchFolder, outlookCalendars, view);
+                GetCalendars(searchFolder, ewsCalendars, view);
             }
-            return outlookCalendars;
+            return ewsCalendars;
         }
 
 
@@ -219,8 +219,9 @@ namespace CalendarSyncPlus.ExchangeWebServices.ExchangeWeb
             return service;
         }
 
-        public ExchangeVersion GetBestSuitedExchangeVersion()
+        public ExchangeServerSettings GetBestSuitedExchangeServerData(string domain,string emailId,string password,bool usingCorporateNetwork = false)
         {
+            ExchangeServerSettings exchangeServerSettings = null;
             IEnumerable<ExchangeVersion> enumList =
                 Enum.GetValues(typeof(ExchangeVersion)).Cast<ExchangeVersion>().Reverse();
 
@@ -233,31 +234,42 @@ namespace CalendarSyncPlus.ExchangeWebServices.ExchangeWeb
             {
                 var service = new ExchangeService(exchangeVersion)
                 {
-                    UseDefaultCredentials = true,
+                    UseDefaultCredentials = usingCorporateNetwork,
                     WebProxy = proxy
                 };
 
+                if (usingCorporateNetwork)
+                {
+                    service.Credentials = string.IsNullOrEmpty(domain)
+                        ? new WebCredentials(emailId, password)
+                        : new WebCredentials(emailId, password, domain);
+                }
+
                 try
                 {
-                    service.TraceEnabled = true;
                     service.AutodiscoverUrl("ankeshdave@outlook.com");
+                    //Try to get value form Exchange Server
                     CalendarFolder calendarFolder = CalendarFolder.Bind(service, WellKnownFolderName.Calendar);
+                    exchangeServerSettings = new ExchangeServerSettings
+                    {
+                        ExchangeServerUrl = service.Url.AbsoluteUri,
+                        ExchangeVersion = exchangeVersion.ToString(),
+                        Password = password,
+                        Username = emailId,
+                        Domain = domain,
+                        UsingCorporateNetwork = usingCorporateNetwork
 
-                    FindItemsResults<Appointment> result =
-                        calendarFolder.FindAppointments(new CalendarView(DateTime.Now.AddDays(-1),
-                            DateTime.Now.AddDays(1)));
-
-                    return exchangeVersion;
+                    };
                 }
                 catch (Exception exception)
                 {
                     ApplicationLogger.LogError(exception.ToString());
                 }
             }
-            return exchangeVersions.ElementAtOrDefault((exchangeVersions.Count() - 1));
+            return exchangeServerSettings;
         }
 
-        private void GetCalendars(Folder searchFolder, List<OutlookCalendar> outlookCalendars, FolderView view)
+        private void GetCalendars(Folder searchFolder, List<EWSCalendar> ewsCalendars, FolderView view)
         {
             if (searchFolder == null)
             {
@@ -267,7 +279,7 @@ namespace CalendarSyncPlus.ExchangeWebServices.ExchangeWeb
             if (searchFolder.FolderClass == "IPF.Appointment")
             {
                 //Add Calendar MAPIFolder to List
-                outlookCalendars.Add(new OutlookCalendar
+                ewsCalendars.Add(new EWSCalendar()
                 {
                     Name = searchFolder.DisplayName,
                     EntryId = searchFolder.Id.UniqueId,
@@ -280,7 +292,7 @@ namespace CalendarSyncPlus.ExchangeWebServices.ExchangeWeb
             foreach (Folder subFolder in searchFolder.FindFolders(view))
             {
                 //Get Calendar MAPIFolders
-                GetCalendars(subFolder, outlookCalendars, view);
+                GetCalendars(subFolder, ewsCalendars, view);
             }
         }
     }
