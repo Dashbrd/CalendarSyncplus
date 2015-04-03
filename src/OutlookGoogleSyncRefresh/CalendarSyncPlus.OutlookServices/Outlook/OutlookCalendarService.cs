@@ -175,7 +175,10 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
             {
                 if (disposeOutlookInstances)
                 {
-                    nameSpace.Logoff();
+                    if (nameSpace != null)
+                    {
+                        nameSpace.Logoff();
+                    }
                 }
 
                 //Unassign all instances
@@ -185,11 +188,17 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
                     outlookItems = null;
                 }
 
-                Marshal.FinalReleaseComObject(defaultOutlookCalender);
-                defaultOutlookCalender = null;
+                if (defaultOutlookCalender != null)
+                {
+                    Marshal.FinalReleaseComObject(defaultOutlookCalender);
+                    defaultOutlookCalender = null;
+                }
 
-                Marshal.FinalReleaseComObject(nameSpace);
-                nameSpace = null;
+                if (nameSpace != null)
+                {
+                    Marshal.FinalReleaseComObject(nameSpace);
+                    nameSpace = null;
+                }
 
                 if (disposeOutlookInstances)
                 {

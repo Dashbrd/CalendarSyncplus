@@ -164,6 +164,9 @@
     <Compile Include="Views\CalendarSetttingsView.xaml.cs">
       <DependentUpon>CalendarSetttingsView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\CustomInputDialog.xaml.cs">
+      <DependentUpon>CustomInputDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\HelpView.xaml.cs">
       <DependentUpon>HelpView.xaml</DependentUpon>
     </Compile>
@@ -215,6 +218,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\CalendarSetttingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\CustomInputDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -9,6 +9,7 @@ namespace CalendarSyncPlus.Domain.Models
             Name = "Hourly";
             Hours = 1;
             Minutes = 0;
+            StartTime = DateTime.Now;
         }
 
         public DateTime StartTime { get; set; }
@@ -21,7 +22,7 @@ namespace CalendarSyncPlus.Domain.Models
         {
             TimeSpan totalTimeElapsed = StartTime.Subtract(dateTime);
             var timeElapsed = new TimeSpan(Hours, Minutes, 0);
-            if (Math.Abs(totalTimeElapsed.TotalSeconds%timeElapsed.TotalSeconds) < 1)
+            if (totalTimeElapsed.TotalSeconds % timeElapsed.TotalSeconds < 1)
             {
                 return true;
             }
@@ -39,18 +40,13 @@ namespace CalendarSyncPlus.Domain.Models
                 }
                 var timeSpan = new TimeSpan(Hours, Minutes, 0);
                 DateTime dateTime = StartTime;
-                while (dateTimeNow.Subtract(dateTime).TotalSeconds > timeSpan.TotalSeconds)
-                {
-                    dateTime = dateTime.Add(timeSpan);
-                }
-
-                if (dateTimeNow.Subtract(dateTime).TotalSeconds > 0)
+                while (dateTimeNow.CompareTo(dateTime) > 0)
                 {
                     dateTime = dateTime.Add(timeSpan);
                 }
                 return dateTime;
             }
-            catch
+            catch(Exception ex)
             {
             }
             return DateTime.Now;

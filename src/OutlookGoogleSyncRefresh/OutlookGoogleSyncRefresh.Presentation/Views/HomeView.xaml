@@ -5,61 +5,38 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:views="clr-namespace:CalendarSyncPlus.Presentation.Views"
              xmlns:behaviors="clr-namespace:CalendarSyncPlus.Presentation.Behaviors"
              xmlns:viewModels="clr-namespace:CalendarSyncPlus.Application.ViewModels;assembly=CalendarSyncPlus.Application"
+             xmlns:models="clr-namespace:CalendarSyncPlus.Domain.Models;assembly=CalendarSyncPlus.Domain"
              d:DataContext="{d:DesignInstance viewModels:ShellViewModel}"
              d:DesignHeight="300"
              d:DesignWidth="300"
              mc:Ignorable="d">
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
-        <DataTemplate DataType="{x:Type viewModels:Schedule}"
+        
+        <DataTemplate DataType="{x:Type models:CalendarSyncProfile}"
                       x:Key="SyncProfileDataTemplate">
             <Grid Margin="2">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition />
-                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="120"/>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="120" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
                 <TextBlock Margin="2"
-                           FontWeight="600"
-                           Text="{Binding Day}" />
-                <ItemsControl Grid.Row="1" ItemsSource="{Binding Profiles}">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                           <Grid Margin="0,2,0,2" ToolTip="{Binding LastSync,StringFormat='{}Last Sync {0:dd/MM/yy hh:mm tt}'}">
-                               <Grid.RowDefinitions>
-                                   <RowDefinition/>
-                                    <RowDefinition Height="Auto"/>
-                                </Grid.RowDefinitions>
-                               <Grid.ColumnDefinitions>
-                                   <ColumnDefinition Width="60"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition />
-                                </Grid.ColumnDefinitions>
-                                <TextBlock Margin="2"
-                                           VerticalAlignment="Top"
-                                           FontStyle="Italic"
-                                           Text="{Binding SyncTime, StringFormat='{}{0:hh:mm tt}'}" />
-                                <Rectangle Width="4"
-                                           Grid.Column="1"
-                                           Grid.RowSpan="2"
-                                           Fill="{StaticResource AccentColorBrush}"
-                                           Margin="2,0,2,0" />
-                                <TextBlock FontWeight="600"
-                                           Text="{Binding Name}"
-                                           Margin="2" Grid.Column="2"/>
-                                <!--<ContentControl Margin="2"
-                                                Grid.Row="1"
-                                                Grid.Column="2"
-                                                ContentTemplate="{StaticResource CalendarEnumDataTemplate}"
-                                                FontStyle="Italic"
-                                                Content="{Binding CalendarSyncDirection}" />-->
-                            </Grid>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-                
+                           FontStyle="Italic"
+                           Text="{Binding NextSync,StringFormat='{}{0:dd/MM/yy hh:mm tt}'}" />
+                <Rectangle Grid.Column="1" Fill="{StaticResource AccentColorBrush}" Width="4" Margin="2"/>
+                <TextBlock FontWeight="600" Text="{Binding Name}" Margin="2" Grid.Column="2"/>
+                <Rectangle Grid.Column="3"
+                           Fill="{StaticResource AccentColorBrush}"
+                           Width="4"
+                           Margin="2" />
+                <TextBlock Grid.Column="4" Margin="2"
+                           FontStyle="Italic"
+                           Text="{Binding LastSync,StringFormat='{}Last Sync: {0:dd/MM/yy hh:mm tt}'}" />
             </Grid>
         </DataTemplate>
     </UserControl.Resources>
@@ -70,11 +47,8 @@
             <RowDefinition />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition/>
-        </Grid.ColumnDefinitions>
-        <!--  Sync Status  -->
+       
+        <!--  Progress Bar  -->
         <controls:MetroProgressBar Grid.Row="0"
                                    Grid.ColumnSpan="2"
                                    VerticalAlignment="Top"
@@ -82,22 +56,15 @@
                                    Visibility="{Binding IsSyncInProgress,
                                                         Converter={StaticResource BooleanToVisibilityConverter},
                                                         UpdateSourceTrigger=PropertyChanged}" />
-        <ToggleButton x:Name="ScheduleToggleButton" Style="{DynamicResource MetroCircleToggleButtonStyle}" Grid.Row="1" Grid.ColumnSpan="2" Height="40" Width="40" HorizontalAlignment="Left"
-                      IsChecked="True" ToolTip="Hide or Show Schedule">
-            <Rectangle Height="18"
-                       Width="18"
-                       Fill="{Binding Path=Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ToggleButton}}}">
-                <Rectangle.OpacityMask>
-                    <VisualBrush Visual="{StaticResource appbar_calendar_week}"/>
-                </Rectangle.OpacityMask>
-            </Rectangle>
-        </ToggleButton>
+        
         <!--  Sync Schedule  -->
-        <GroupBox Grid.Row="2"
-                  Visibility="{Binding IsChecked,ElementName=ScheduleToggleButton,Converter={StaticResource BooleanToVisibilityConverter}}"
-                  Header="Schedule">
+        <Expander Grid.Row="1"
+                  Header="Schedules"
+                  IsExpanded="True"
+                  Visibility="{Binding IsPeriodicSyncStarted,Converter={StaticResource BooleanToVisibilityConverter}}">
+            <StackPanel Orientation="Vertical">
             <ScrollViewer VerticalScrollBarVisibility="Auto">
-            <ItemsControl ItemsSource="{Binding Schedules}"
+            <ItemsControl ItemsSource="{Binding ScheduledSyncProfiles}"
                           ItemTemplate="{StaticResource SyncProfileDataTemplate}" >
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
@@ -106,10 +73,11 @@
                 </ItemsControl.ItemsPanel>
             </ItemsControl>
             </ScrollViewer>
-        </GroupBox>
-
+            </StackPanel>
+        </Expander>
+        
+        <!--  Status  -->
         <GroupBox Grid.Row="2"
-                  Grid.Column="1"
                   Header="Status">
             <TextBox IsReadOnly="True"
                      IsReadOnlyCaretVisible="False"

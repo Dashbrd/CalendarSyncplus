@@ -69,8 +69,7 @@ namespace CalendarSyncPlus.Application.ViewModels
         private Settings _settings;
         private DelegateCommand _startSyncCommand;
         private DelegateCommand _syncNowCommand;
-        private ObservableCollection<Schedule> _schedules;
-
+        
         #endregion
 
         #region Events
@@ -208,7 +207,7 @@ namespace CalendarSyncPlus.Application.ViewModels
                 SetProperty(ref _settings, value);
                 if (_settings != null)
                 {
-                    LoadSchedule();
+                    ScheduledSyncProfiles = Settings.SyncProfiles.Where(t => t.IsSyncEnabled).ToList();
                 }
             }
         }
@@ -235,11 +234,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             set { SetProperty(ref _latestVersion, value); }
         }
 
-        public ObservableCollection<Schedule> Schedules
-        {
-            get { return _schedules; }
-            set { SetProperty(ref _schedules, value); }
-        }
+        public List<CalendarSyncProfile> ScheduledSyncProfiles { get; set; }
 
         #endregion
 
@@ -318,10 +313,6 @@ namespace CalendarSyncPlus.Application.ViewModels
                     IsPeriodicSyncStarted = true;
                     UpdateStatus(string.Format("Period Sync Started : {0}", DateTime.Now));
                     UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.LogSeparator));
-                    if (Schedules == null)
-                    {
-                        LoadSchedule();
-                    }
                 }
             }
         }
@@ -431,8 +422,6 @@ namespace CalendarSyncPlus.Application.ViewModels
                         Task.Factory.StartNew(() => StartSyncTask(profile));
                     }
                 }
-
-                CheckForUpdates();
             }
             catch (AggregateException exception)
             {
@@ -474,14 +463,14 @@ namespace CalendarSyncPlus.Application.ViewModels
 
         private void StartSyncTask(CalendarSyncProfile syncProfile)
         {
-            if (IsSettingsLoading)
-            {
-                MessageService.ShowMessageAsync("Unable to do the operation as settings are loading.");
-                return;
-            }
-
             lock (lockerObject)
             {
+                if (IsSettingsLoading)
+                {
+                    MessageService.ShowMessageAsync("Unable to do the operation as settings are loading.");
+                    return;
+                }
+
                 IsSyncInProgress = true;
                 IsSettingsVisible = false;
                 syncProfile.LastSync = DateTime.Now;
@@ -529,110 +518,9 @@ namespace CalendarSyncPlus.Application.ViewModels
             }
 
             IsSyncInProgress = false;
-
-            UpdateSchedule();
+            CheckForUpdates();
         }
-
-        private void LoadSchedule()
-        {
-            if (!IsPeriodicSyncStarted)
-                return;
-            try
-            {
-                Task.Factory.StartNew(GetSyncSchedule);
-            }
-            catch (AggregateException exception)
-            {
-                AggregateException flattenException = exception.Flatten();
-                MessageService.ShowMessageAsync(flattenException.Message);
-            }
-            catch (Exception exception)
-            {
-                MessageService.ShowMessageAsync(exception.Message);
-            }
-        }
-
-        private static object scheduleLockerObj = new object();
-        private void GetSyncSchedule()
-        {
-            lock (scheduleLockerObj)
-            {
-                Schedules = new ObservableCollection<Schedule>();
-                var dateTime = DateTime.Now;
-                while (Schedules.Count < 1 || Schedules.SelectMany(t => t.Profiles).Count() < 5 ||
-                       dateTime.Date.Subtract(DateTime.Today).TotalDays < 7)
-                {
-                    //Get day name
-                    string day = "Today";
-                    if (dateTime.Date.Subtract(DateTime.Today).Days == 1)
-                    {
-                        day = "Tomorrow";
-                    }
-                    else if (dateTime.Date.Subtract(DateTime.Today).Days > 1)
-                    {
-                        day = dateTime.DayOfWeek.ToString();
-                    }
-
-                    var schedule = Schedules.FirstOrDefault(t => t.Day.Equals(day)) ?? new Schedule(day);
-                    if (!Schedules.Contains(schedule))
-                    {
-                        BeginInvokeOnCurrentDispatcher(() =>
-                            Schedules.Add(schedule));
-                    }
-                    foreach (var calendarSyncProfile in Settings.SyncProfiles.Where(t => t.IsSyncEnabled))
-                    {
-                        var localTime = dateTime.Date;
-                        if (localTime.CompareTo(DateTime.Now) < 0)
-                        {
-                            localTime = DateTime.Now;
-                        }
-                        while (localTime.Date.Equals(dateTime.Date))
-                        {
-                            localTime = calendarSyncProfile.SyncSettings.SyncFrequency.GetNextSyncTime(localTime);
-                            if (localTime.Date.Equals(dateTime.Date))
-                            {
-                                var profileSchedule = new ProfileSchedule(calendarSyncProfile, localTime);
-                                BeginInvokeOnCurrentDispatcher(
-                                    () => schedule.Profiles.AddSorted(profileSchedule, profileSchedule));
-                            }
-                            localTime = localTime.AddMinutes(1);
-                        }
-                    }
-
-                    if (schedule.Profiles.Count == 0)
-                    {
-                        BeginInvokeOnCurrentDispatcher(() =>
-                            Schedules.Remove(schedule));
-                    }
-
-                    dateTime = dateTime.AddDays(1);
-                }
-            }
-        }
-
-        private void UpdateSchedule()
-        {
-            lock (scheduleLockerObj)
-            {
-                for (int index = 0; index < Schedules.Count; index++)
-                {
-                    var schedule = Schedules[index];
-                    for (int i = 0; i < schedule.Profiles.Count; i++)
-                    {
-                        var profile = schedule.Profiles[i];
-                        if (profile.SyncTime.CompareTo(DateTime.Now) < 0)
-                        {
-                            schedule.Profiles.Remove(profile);
-                        }
-                    }
-                    if (schedule.Profiles.Count == 0)
-                    {
-                        Schedules.Remove(schedule);
-                    }
-                }
-            }
-        }
-
+        
         #endregion
 
         #region Public Methods
@@ -688,42 +576,5 @@ namespace CalendarSyncPlus.Application.ViewModels
         }
 
         #endregion
-    }
-
-    public class Schedule : Model
-    {
-        public Schedule(string day)
-        {
-            Day = day;
-            Profiles = new ObservableCollection<ProfileSchedule>();
-        }
-
-        public string Day { get; set; }
-
-        public ObservableCollection<ProfileSchedule> Profiles { get; set; }
-    }
-
-    public class ProfileSchedule : Model, IComparer<ProfileSchedule>
-    {
-        public ProfileSchedule(CalendarSyncProfile calendarSyncProfile, DateTime nextSyncTime)
-        {
-            Name = calendarSyncProfile.Name;
-            SyncTime = nextSyncTime;
-            CalendarSyncDirection = calendarSyncProfile.SyncSettings.CalendarSyncDirection;
-            LastSync = calendarSyncProfile.LastSync;
-        }
-
-        public string Name { get; set; }
-
-        public DateTime SyncTime { get; set; }
-
-        public CalendarSyncDirectionEnum CalendarSyncDirection { get; set; }
-
-        public DateTime? LastSync { get; set; }
-
-        public int Compare(ProfileSchedule x, ProfileSchedule y)
-        {
-            return x.SyncTime.CompareTo(y.SyncTime);
-        }
     }
 }

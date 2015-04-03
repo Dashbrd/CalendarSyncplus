@@ -25,6 +25,7 @@ using CalendarSyncPlus.Common;
 using CalendarSyncPlus.Presentation.Views;
 using CalendarSyncPlus.Services.Interfaces;
 using MahApps.Metro.Controls.Dialogs;
+using Microsoft.CSharp.RuntimeBinder;
 
 namespace CalendarSyncPlus.Presentation.Services
 {
@@ -143,7 +144,7 @@ namespace CalendarSyncPlus.Presentation.Services
                 NegativeButtonText = "CANCEL",
                 AnimateHide = true,
                 AnimateShow = true,
-                ColorScheme = MetroDialogColorScheme.Accented
+                ColorScheme = MetroDialogColorScheme.Accented,
             };
 
             return await InvokeOnCurrentDispatcher(async () =>
@@ -152,6 +153,7 @@ namespace CalendarSyncPlus.Presentation.Services
                 return result;
             });
         }
+        
 
         public void ShowProgressAsync(string message, string title)
         {
@@ -192,6 +194,26 @@ namespace CalendarSyncPlus.Presentation.Services
         public Task<ProgressDialogController> ShowProgress(string message)
         {
             return ShowProgress(message, ApplicationInfo.ProductName);
+        }
+
+        public void ShowCustomDialog()
+        {
+            CustomDialog dialog = new CustomDialog();
+            //StackPanel panel = new StackPanel();
+
+            //Label block = new Label() { Content = "custom message" };
+            //TextBlock block1 = new TextBlock() { Text = "custom message", FontSize = 22 };
+            //Button button = new Button() { Content = "close" };
+            //button.Click += (s, e) =>
+            //{
+            //    parent.HideMetroDialogAsync((BaseMetroDialog)dialog);
+            //};
+            //panel.Children.Add(block);
+            //panel.Children.Add(block1);
+            //panel.Children.Add(button);
+            dialog.Content = new CustomInputDialog();
+
+            View.ShowMetroDialogAsync(dialog);
         }
 
         #endregion
