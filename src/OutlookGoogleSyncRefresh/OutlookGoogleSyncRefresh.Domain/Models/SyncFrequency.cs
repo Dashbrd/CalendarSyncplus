@@ -11,7 +11,7 @@ namespace CalendarSyncPlus.Domain.Models
         [XmlIgnore]
         public string Name { get; protected set; }
 
-        public virtual bool ValidateTimer(DateTime dateTime)
+        public virtual bool ValidateTimer(DateTime dateTimeNow)
         {
             return false;
         }

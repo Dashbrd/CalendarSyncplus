@@ -21,11 +21,11 @@ namespace CalendarSyncPlus.Domain.Models
         public List<DayOfWeek> DaysOfWeek { get; set; }
 
 
-        public override bool ValidateTimer(DateTime dateTime)
+        public override bool ValidateTimer(DateTime dateTimeNow)
         {
-            if (IsDayValid(dateTime))
+            if (IsDayValid(dateTimeNow))
             {
-                if (dateTime.IsTimeValid(TimeOfDay))
+                if (dateTimeNow.IsTimeValid(TimeOfDay))
                 {
                     return true;
                 }

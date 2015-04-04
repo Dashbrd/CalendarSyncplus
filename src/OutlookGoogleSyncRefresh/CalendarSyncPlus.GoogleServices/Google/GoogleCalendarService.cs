@@ -233,6 +233,7 @@ namespace CalendarSyncPlus.GoogleServices.Google
                     googleEvent.Start.DateTime, googleEvent.Id);
             }
 
+            
             appointment.CalendarId = CalendarId;
             if (googleEvent.ExtendedProperties != null && googleEvent.ExtendedProperties.Private != null)
             {
@@ -254,7 +255,7 @@ namespace CalendarSyncPlus.GoogleServices.Google
                     Email = googleEvent.Organizer.Email
                 };
             }
-
+            
             //Add Required Attendee
             GetAttendees(googleEvent, appointment.RequiredAttendees, false);
 
@@ -482,7 +483,7 @@ namespace CalendarSyncPlus.GoogleServices.Google
             eventListRequest.TimeMin = DateTime.Today.AddDays(-(daysInPast));
             eventListRequest.TimeMax = DateTime.Today.AddDays((daysInFuture + 1));
             eventListRequest.MaxAttendees = 1000;
-
+            
             try
             {
                 result = eventListRequest.Execute();
@@ -493,13 +494,40 @@ namespace CalendarSyncPlus.GoogleServices.Google
                         // Add events to list, Split recurring appointments
                         foreach (Event eventItem in result.Items)
                         {
+                            if (eventItem.Status == "cancelled")
+                            {
+                                continue;
+                            }
+
                             Appointment appointment = CreateAppointment(eventItem);
                             if (eventItem.Recurrence != null && eventItem.Recurrence.Count > 0)
                             {
-                                finalEventList.AddRange(RecurrenceHelper.SplitRecurringAppointments(appointment,
-                                    eventItem.Recurrence.FirstOrDefault(),
-                                    DateTime.Today.AddDays(-(daysInPast)),
-                                    DateTime.Today.AddDays((daysInFuture + 1))));
+                                EventsResource.InstancesRequest instancesRequest  = calendarService.Events.Instances(CalendarId,
+                                    appointment.AppointmentId);
+
+                                // Add Filters to event List Request
+                                instancesRequest.TimeMin = DateTime.Today.AddDays(-(daysInPast));
+                                instancesRequest.TimeMax = DateTime.Today.AddDays((daysInFuture + 1));
+                                instancesRequest.MaxAttendees = 1000;
+
+                                var instanceResult = instancesRequest.Execute();
+                                while (instanceResult.Items != null)
+                                {
+
+                                    foreach (var instance in instanceResult.Items)
+                                    {
+                                        finalEventList.Add(CreateAppointment(instance));
+                                    }
+
+                                    //If all pages are over break
+                                    if (instanceResult.NextPageToken == null)
+                                    {
+                                        break;
+                                    }
+
+                                    instancesRequest.PageToken = instanceResult.NextPageToken;
+                                    instanceResult = await instancesRequest.ExecuteAsync();
+                                }
                             }
                             else
                             {

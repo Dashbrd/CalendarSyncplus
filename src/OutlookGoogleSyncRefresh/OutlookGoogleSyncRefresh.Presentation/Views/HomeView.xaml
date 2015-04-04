@@ -18,23 +18,21 @@
         <DataTemplate DataType="{x:Type models:CalendarSyncProfile}"
                       x:Key="SyncProfileDataTemplate">
             <Grid Margin="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="120"/>
                     <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="120" />
-                    <ColumnDefinition Width="Auto" />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
-                <TextBlock Margin="2"
+                <TextBlock Margin="2" VerticalAlignment="Center"
                            FontStyle="Italic"
-                           Text="{Binding NextSync,StringFormat='{}{0:dd/MM/yy hh:mm tt}'}" />
-                <Rectangle Grid.Column="1" Fill="{StaticResource AccentColorBrush}" Width="4" Margin="2"/>
+                           Text="{Binding NextSync,StringFormat='{}{0:dd/MM/yy hh:mm tt}'}" Grid.RowSpan="2"/>
+                <Rectangle Grid.Column="1" Fill="{StaticResource AccentColorBrush}" Width="4" Margin="2" Grid.RowSpan="2"/>
                 <TextBlock FontWeight="600" Text="{Binding Name}" Margin="2" Grid.Column="2"/>
-                <Rectangle Grid.Column="3"
-                           Fill="{StaticResource AccentColorBrush}"
-                           Width="4"
-                           Margin="2" />
-                <TextBlock Grid.Column="4" Margin="2"
+                <TextBlock Grid.Column="2" Grid.Row="1" Margin="2"
                            FontStyle="Italic"
                            Text="{Binding LastSync,StringFormat='{}Last Sync: {0:dd/MM/yy hh:mm tt}'}" />
             </Grid>

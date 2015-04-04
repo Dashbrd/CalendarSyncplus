@@ -19,8 +19,17 @@ namespace CalendarSyncPlus.Application.ViewModels
 {
     public class ProfileViewModel : Model
     {
+        /// <summary>
+        /// Stores the flag if attachments should be saved
+        /// </summary>
         private bool _addAttachments;
+        /// <summary>
+        /// Stores the flag if attendees should be synchronized
+        /// </summary>
         private bool _addAttendees;
+        /// <summary>
+        /// Stores the flag if attendees should be synchronized
+        /// </summary>
         private bool _addAttendeesToDescription;
         private bool _addDescription;
         private bool _addReminders;
@@ -35,6 +44,7 @@ namespace CalendarSyncPlus.Application.ViewModels
         private List<OutlookCalendar> _exchangeCalendarList;
         private string _exchangeServerUrl;
         private DelegateCommand _getGoogleCalendarCommand;
+        private DelegateCommand _disconnectGoogleCommand;
         private DelegateCommand _getOutlookMailboxCommand;
         private DelegateCommand _getOutlookProfileLIstCommand;
         private List<Calendar> _googleCalenders;
@@ -371,6 +381,12 @@ namespace CalendarSyncPlus.Application.ViewModels
             }
         }
 
+        public DelegateCommand DisconnectGoogleCommand
+        {
+            get { return _disconnectGoogleCommand ?? (_disconnectGoogleCommand = new DelegateCommand(Execute)); }
+        }
+        
+
         public DelegateCommand GetGoogleCalendarCommand
         {
             get
@@ -519,6 +535,11 @@ namespace CalendarSyncPlus.Application.ViewModels
             OutlookProfileList = await OutlookCalendarService.GetOutLookProfieListAsync();
         }
 
+        private void Execute()
+        {
+
+        }
+
         private async void GetGoogleCalendar()
         {
             IsLoading = true;
@@ -547,14 +568,22 @@ namespace CalendarSyncPlus.Application.ViewModels
 
         private async Task GetGoogleCalendarInternal()
         {
-            List<Calendar> calendars =
-                await GoogleCalendarService.GetAvailableCalendars(new Dictionary<string, object>());
-            GoogleCalenders = calendars;
-            if (GoogleCalenders.Any())
+            try
             {
-                SelectedCalendar = SyncProfile != null && SyncProfile.GoogleCalendar != null
-                    ? GoogleCalenders.FirstOrDefault(t => t.Id.Equals(SyncProfile.GoogleCalendar.Id))
-                    : GoogleCalenders.First();
+                List<Calendar> calendars =
+                        await GoogleCalendarService.GetAvailableCalendars(new Dictionary<string, object>());
+                GoogleCalenders = calendars;
+                if (GoogleCalenders.Any())
+                {
+                    SelectedCalendar = SyncProfile != null && SyncProfile.GoogleCalendar != null
+                        ? GoogleCalenders.FirstOrDefault(t => t.Id.Equals(SyncProfile.GoogleCalendar.Id))
+                        : GoogleCalenders.First();
+                }
+            }
+            catch (Exception exception)
+            {
+                MessageService.ShowMessageAsync("Unable to get Google calendars.");
+                ApplicationLogger.LogError(exception.ToString());
             }
         }
 
