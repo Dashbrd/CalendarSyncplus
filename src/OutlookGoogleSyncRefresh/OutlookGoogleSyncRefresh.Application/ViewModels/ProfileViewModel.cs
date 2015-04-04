@@ -78,11 +78,12 @@ namespace CalendarSyncPlus.Application.ViewModels
         public ProfileViewModel(CalendarSyncProfile syncProfile, IGoogleCalendarService googleCalendarService,
             IOutlookCalendarService outlookCalendarService,
             IMessageService messageService, IExchangeWebCalendarService exchangeWebCalendarService,
-            ApplicationLogger applicationLogger)
+            ApplicationLogger applicationLogger, IAccountAuthenticationService accountAuthenticationService)
         {
             SyncProfile = syncProfile;
             ExchangeWebCalendarService = exchangeWebCalendarService;
             ApplicationLogger = applicationLogger;
+            AccountAuthenticationService = accountAuthenticationService;
             GoogleCalendarService = googleCalendarService;
             OutlookCalendarService = outlookCalendarService;
             MessageService = messageService;
@@ -95,6 +96,7 @@ namespace CalendarSyncPlus.Application.ViewModels
         public IMessageService MessageService { get; set; }
         public IExchangeWebCalendarService ExchangeWebCalendarService { get; private set; }
         public ApplicationLogger ApplicationLogger { get; private set; }
+        public IAccountAuthenticationService AccountAuthenticationService { get; set; }
 
         #region Properties
 
@@ -383,7 +385,7 @@ namespace CalendarSyncPlus.Application.ViewModels
 
         public DelegateCommand DisconnectGoogleCommand
         {
-            get { return _disconnectGoogleCommand ?? (_disconnectGoogleCommand = new DelegateCommand(Execute)); }
+            get { return _disconnectGoogleCommand ?? (_disconnectGoogleCommand = new DelegateCommand(DisconnectGoogleHandler)); }
         }
         
 
@@ -535,9 +537,19 @@ namespace CalendarSyncPlus.Application.ViewModels
             OutlookProfileList = await OutlookCalendarService.GetOutLookProfieListAsync();
         }
 
-        private void Execute()
+        private void DisconnectGoogleHandler()
         {
-
+            var result = AccountAuthenticationService.DisconnectGoogle();
+            if (result)
+            {
+                GoogleCalenders = null;
+                SelectedCalendar = null;
+                MessageService.ShowMessageAsync("Google account successfully disconnected");
+            }
+            else
+            {
+                MessageService.ShowMessageAsync("Account wasn't authenticated earlier or disconnection failed.");
+            }
         }
 
         private async void GetGoogleCalendar()

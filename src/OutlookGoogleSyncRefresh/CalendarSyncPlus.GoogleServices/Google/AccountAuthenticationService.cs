@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.Composition;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Waf.Applications;
@@ -15,12 +16,12 @@ namespace CalendarSyncPlus.GoogleServices.Google
     [Export(typeof (IAccountAuthenticationService))]
     public class AccountAuthenticationService : IAccountAuthenticationService
     {
-        private readonly ApplicationLogger _applicationLogger;
+        private readonly ApplicationLogger ApplicationLogger;
 
         [ImportingConstructor]
         public AccountAuthenticationService(ApplicationLogger applicationLogger)
         {
-            _applicationLogger = applicationLogger;
+            ApplicationLogger = applicationLogger;
         }
 
         #region IAccountAuthenticationService Members
@@ -76,12 +77,12 @@ namespace CalendarSyncPlus.GoogleServices.Google
             }
             catch (AggregateException exception)
             {
-                _applicationLogger.LogError(exception.ToString());
+                ApplicationLogger.LogError(exception.ToString());
                 return null;
             }
             catch (Exception exception)
             {
-                _applicationLogger.LogError(exception.ToString());
+                ApplicationLogger.LogError(exception.ToString());
                 return null;
             }
         }
@@ -97,6 +98,27 @@ namespace CalendarSyncPlus.GoogleServices.Google
                 Constants.User, fullPath, ApplicationInfo.ProductName, true);
         }
 
+        public bool DisconnectGoogle()
+        {
+            try
+            {
+                string applicationDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData,
+                        Environment.SpecialFolderOption.None);
+                string fullPath = applicationDataPath + @"\CalendarSyncPlus\" + Constants.AuthFolderPath;
+
+                if (Directory.Exists(fullPath))
+                {
+                    Directory.Delete(fullPath, true);
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception exception)
+            {
+                ApplicationLogger.LogError(exception.ToString());
+                return false;
+            }
+        }
         #endregion
     }
 }
