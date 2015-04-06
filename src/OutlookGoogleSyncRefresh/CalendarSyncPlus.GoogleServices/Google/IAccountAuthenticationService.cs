@@ -25,5 +25,8 @@ namespace CalendarSyncPlus.GoogleServices.Google
         /// </summary>
         /// <returns></returns>
         CalendarService AuthenticateCalenderOauth();
+
+
+        bool DisconnectGoogle();
     }
 }

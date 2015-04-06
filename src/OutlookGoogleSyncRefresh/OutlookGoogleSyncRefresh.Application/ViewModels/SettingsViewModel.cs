@@ -49,13 +49,14 @@ namespace CalendarSyncPlus.Application.ViewModels
             Settings settings,
             ISettingsSerializationService serializationService, IOutlookCalendarService outlookCalendarService,
             IMessageService messageService, IExchangeWebCalendarService exchangeWebCalendarService,
-            ApplicationLogger applicationLogger, IWindowsStartupService windowsStartupService)
+            ApplicationLogger applicationLogger, IWindowsStartupService windowsStartupService, IAccountAuthenticationService accountAuthenticationService)
             : base(view)
         {
             Settings = settings;
             ExchangeWebCalendarService = exchangeWebCalendarService;
             ApplicationLogger = applicationLogger;
             WindowsStartupService = windowsStartupService;
+            AccountAuthenticationService = accountAuthenticationService;
             GoogleCalendarService = googleCalendarService;
             SettingsSerializationService = serializationService;
             OutlookCalendarService = outlookCalendarService;
@@ -96,6 +97,7 @@ namespace CalendarSyncPlus.Application.ViewModels
         public IExchangeWebCalendarService ExchangeWebCalendarService { get; private set; }
         public ApplicationLogger ApplicationLogger { get; private set; }
         public IWindowsStartupService WindowsStartupService { get; set; }
+        public IAccountAuthenticationService AccountAuthenticationService { get; set; }
 
 
         public DelegateCommand CreateProfileCommand
@@ -228,7 +230,7 @@ namespace CalendarSyncPlus.Application.ViewModels
                 syncProfile.IsDefault = false;
                 var viewModel = new ProfileViewModel(syncProfile, GoogleCalendarService, OutlookCalendarService,
                     MessageService,
-                    ExchangeWebCalendarService, ApplicationLogger);
+                    ExchangeWebCalendarService, ApplicationLogger, AccountAuthenticationService);
                 SyncProfileList.Add(viewModel);
                 PropertyChangedEventManager.AddHandler(viewModel, ProfilePropertyChangedHandler, "IsLoading");
             }
@@ -359,7 +361,7 @@ namespace CalendarSyncPlus.Application.ViewModels
                     {
                         var viewModel = new ProfileViewModel(syncProfile, GoogleCalendarService, OutlookCalendarService,
                             MessageService,
-                            ExchangeWebCalendarService, ApplicationLogger);
+                            ExchangeWebCalendarService, ApplicationLogger, AccountAuthenticationService);
                         profileList.Add(viewModel);
                         PropertyChangedEventManager.AddHandler(viewModel, ProfilePropertyChangedHandler, "IsLoading");
                     }

@@ -18,20 +18,20 @@ namespace CalendarSyncPlus.Domain.Models
 
         public int Minutes { get; set; }
 
-        public override bool ValidateTimer(DateTime dateTime)
+        public override bool ValidateTimer(DateTime dateTimeNow)
         {
             if (Hours == 0 && Minutes == 0)
             {
                 return false;
             }
             var timeSpan = new TimeSpan(Hours, Minutes, 0);
-            DateTime currentTime = StartTime;
-            while (currentTime.CompareTo(dateTime) < 0)
-            {
-                currentTime = currentTime.Add(timeSpan);
+            DateTime dateTime = StartTime;
+            while (dateTime.CompareTo(dateTimeNow) <= 0)
+        {
+                dateTime = dateTime.Add(timeSpan);
             }
 
-            if (dateTime.CompareTo(currentTime) == 0)
+            if (dateTime.CompareTo(dateTimeNow) == 0)
             {
                 return true;
             }
@@ -48,7 +48,7 @@ namespace CalendarSyncPlus.Domain.Models
                 }
                 var timeSpan = new TimeSpan(Hours, Minutes, 0);
                 DateTime dateTime = StartTime;
-                while (dateTimeNow.CompareTo(dateTime) > 0)
+                while (dateTime.CompareTo(dateTimeNow) < 0)
                 {
                     dateTime = dateTime.Add(timeSpan);
                 }
