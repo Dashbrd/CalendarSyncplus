@@ -212,7 +212,7 @@ namespace CalendarSyncPlus.Application.ViewModels
                 return;
             }
 
-            string result = await MessageService.ShowInput("Please enter profile name.");
+            string result = await MessageService.ShowCustomDialog("Please enter profile name.");
 
             if (!string.IsNullOrEmpty(result))
             {

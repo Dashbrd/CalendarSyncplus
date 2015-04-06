@@ -20,13 +20,21 @@ namespace CalendarSyncPlus.Domain.Models
 
         public override bool ValidateTimer(DateTime dateTime)
         {
-            TimeSpan totalTimeElapsed = StartTime.Subtract(dateTime);
-            var timeElapsed = new TimeSpan(Hours, Minutes, 0);
-            if (totalTimeElapsed.TotalSeconds % timeElapsed.TotalSeconds < 1)
+            if (Hours == 0 && Minutes == 0)
+            {
+                return false;
+            }
+            var timeSpan = new TimeSpan(Hours, Minutes, 0);
+            DateTime currentTime = StartTime;
+            while (currentTime.CompareTo(dateTime) < 0)
+            {
+                currentTime = currentTime.Add(timeSpan);
+            }
+
+            if (dateTime.CompareTo(currentTime) == 0)
             {
                 return true;
             }
-
             return false;
         }
 
@@ -46,7 +54,7 @@ namespace CalendarSyncPlus.Domain.Models
                 }
                 return dateTime;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
             }
             return DateTime.Now;

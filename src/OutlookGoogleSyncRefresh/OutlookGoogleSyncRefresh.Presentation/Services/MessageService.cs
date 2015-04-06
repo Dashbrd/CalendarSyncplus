@@ -21,7 +21,9 @@ using System;
 using System.ComponentModel.Composition;
 using System.Threading.Tasks;
 using System.Waf.Applications;
+using System.Windows;
 using CalendarSyncPlus.Common;
+using CalendarSyncPlus.GoogleServices.Google;
 using CalendarSyncPlus.Presentation.Views;
 using CalendarSyncPlus.Services.Interfaces;
 using MahApps.Metro.Controls.Dialogs;
@@ -29,7 +31,7 @@ using Microsoft.CSharp.RuntimeBinder;
 
 namespace CalendarSyncPlus.Presentation.Services
 {
-    [Export(typeof (IMessageService))]
+    [Export(typeof(IMessageService))]
     public class MessageService : IMessageService
     {
         [ImportingConstructor]
@@ -153,7 +155,7 @@ namespace CalendarSyncPlus.Presentation.Services
                 return result;
             });
         }
-        
+
 
         public void ShowProgressAsync(string message, string title)
         {
@@ -196,24 +198,40 @@ namespace CalendarSyncPlus.Presentation.Services
             return ShowProgress(message, ApplicationInfo.ProductName);
         }
 
-        public void ShowCustomDialog()
+        public async Task<string> ShowCustomDialog(string message, string title)
         {
-            CustomDialog dialog = new CustomDialog();
-            //StackPanel panel = new StackPanel();
+            var metroDialogSettings = new MetroDialogSettings()
+            {
+                AffirmativeButtonText = "OK",
+                NegativeButtonText = "CANCEL",
+                AnimateHide = true,
+                AnimateShow = true,
+                ColorScheme = MetroDialogColorScheme.Accented,
+            };
 
-            //Label block = new Label() { Content = "custom message" };
-            //TextBlock block1 = new TextBlock() { Text = "custom message", FontSize = 22 };
-            //Button button = new Button() { Content = "close" };
-            //button.Click += (s, e) =>
-            //{
-            //    parent.HideMetroDialogAsync((BaseMetroDialog)dialog);
-            //};
-            //panel.Children.Add(block);
-            //panel.Children.Add(block1);
-            //panel.Children.Add(button);
-            dialog.Content = new CustomInputDialog();
+            var dialog = new CustomInputDialog(View, metroDialogSettings)
+            {
+                Message = message,
+                Title = title,
+                Input = metroDialogSettings.DefaultText
+            };
 
-            View.ShowMetroDialogAsync(dialog);
+            return await InvokeOnCurrentDispatcher(async () =>
+            {
+                await View.ShowMetroDialogAsync(dialog, metroDialogSettings);
+
+                await dialog.WaitForButtonPressAsync().ContinueWith((m) =>
+                    {
+                        InvokeOnCurrentDispatcher(() => View.HideMetroDialogAsync(dialog));
+                    });
+
+                return dialog.Input;
+            });
+        }
+
+        public Task<string> ShowCustomDialog(string message)
+        {
+            return ShowCustomDialog(message, ApplicationInfo.ProductName);
         }
 
         #endregion
