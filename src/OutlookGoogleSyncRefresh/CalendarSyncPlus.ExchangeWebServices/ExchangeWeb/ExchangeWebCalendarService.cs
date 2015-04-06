@@ -212,7 +212,7 @@ namespace CalendarSyncPlus.ExchangeWebServices.ExchangeWeb
             {
                 UseDefaultCredentials = true,
                 EnableScpLookup = false,
-                Url = new Uri(@"");
+                Url = new Uri(@"")
             };
             service.AutodiscoverUrl("ankeshdave@outlook.com");
             //service.Credentials = new WebCredentials("user1@contoso.com", "password");
