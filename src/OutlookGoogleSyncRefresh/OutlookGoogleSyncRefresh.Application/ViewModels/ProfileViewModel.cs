@@ -387,7 +387,7 @@ namespace CalendarSyncPlus.Application.ViewModels
         {
             get { return _disconnectGoogleCommand ?? (_disconnectGoogleCommand = new DelegateCommand(DisconnectGoogleHandler)); }
         }
-        
+
 
         public DelegateCommand GetGoogleCalendarCommand
         {
@@ -473,6 +473,12 @@ namespace CalendarSyncPlus.Application.ViewModels
             KeepLastModifiedCopy = SyncProfile.SyncSettings.KeepLastModifiedVersion;
             SyncFrequency = SyncProfile.SyncSettings.SyncFrequency.Name;
             SetCategory = SyncProfile.SetCalendarCategory;
+            SelectedCalendar = SyncProfile.GoogleCalendar;
+
+            SelectedOutlookProfileName = SyncProfile.OutlookSettings.OutlookProfileName;
+            SelectedOutlookMailBox = SyncProfile.OutlookSettings.OutlookMailBox;
+            SelectedOutlookCalendar = SyncProfile.OutlookSettings.OutlookCalendar;
+
             if (SyncProfile.EventCategory != null)
             {
                 SelectedCategory = Categories.First(t => t.CategoryName.Equals(SyncProfile.EventCategory.CategoryName));
