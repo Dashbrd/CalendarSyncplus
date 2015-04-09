@@ -10,6 +10,6 @@ namespace CalendarSyncPlus.ExchangeWebServices.ExchangeWeb
         List<Appointment> GetAppointmentsAsync(int daysInPast, int daysInFuture, string profileName,
             OutlookCalendar outlookCalendar);
 
-        List<EWSCalendar> GetCalendarsAsync();
+        List<EWSCalendar> GetCalendarsAsync(int maxFoldersToRetrive);
     }
 }

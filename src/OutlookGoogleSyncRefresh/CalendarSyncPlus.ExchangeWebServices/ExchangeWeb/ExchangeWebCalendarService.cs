@@ -74,7 +74,7 @@ namespace CalendarSyncPlus.ExchangeWebServices.ExchangeWeb
             return outlookAppointments;
         }
 
-        public List<EWSCalendar> GetCalendarsAsync()
+        public List<EWSCalendar> GetCalendarsAsync(int maxFoldersToRetrive)
         {
             ExchangeService service = GetExchangeService(ExchangeVersion.Exchange2010_SP2);
 
@@ -247,7 +247,7 @@ namespace CalendarSyncPlus.ExchangeWebServices.ExchangeWeb
 
                 try
                 {
-                    service.AutodiscoverUrl("ankeshdave@outlook.com");
+                    service.AutodiscoverUrl(emailId);
                     //Try to get value form Exchange Server
                     CalendarFolder calendarFolder = CalendarFolder.Bind(service, WellKnownFolderName.Calendar);
                     exchangeServerSettings = new ExchangeServerSettings
