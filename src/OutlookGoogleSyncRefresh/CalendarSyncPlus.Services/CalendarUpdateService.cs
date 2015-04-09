@@ -547,9 +547,9 @@ namespace CalendarSyncPlus.Services
                     syncProfile.SyncSettings.SyncMode == SyncModeEnum.TwoWay ? "<===>" : "===>");
                 SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
                 //Add log for date range
-                SyncStatus = string.Format("Date Range - {0} - {1}",
-                    DateTime.Now.Subtract(new TimeSpan(syncProfile.DaysInPast, 0, 0, 0)).ToString("D"),
-                    DateTime.Now.Add(new TimeSpan(syncProfile.DaysInFuture, 0, 0, 0)).ToString("D"));
+                SyncStatus = string.Format("Date Range : {0} - {1}",
+                    DateTime.Now.Subtract(new TimeSpan(syncProfile.DaysInPast, 0, 0, 0)).ToString("d"),
+                    DateTime.Now.Add(new TimeSpan(syncProfile.DaysInFuture, 0, 0, 0)).ToString("d"));
 
                 //Load calendar specific data
                 IDictionary<string, object> sourceCalendarSpecificData =

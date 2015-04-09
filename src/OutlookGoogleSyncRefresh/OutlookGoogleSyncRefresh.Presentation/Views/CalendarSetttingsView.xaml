@@ -93,7 +93,7 @@
                                          Visibility="Collapsed" />
                         </Grid>
                     </GroupBox>
-                    <GroupBox Grid.Row="1"
+                    <GroupBox Grid.Row="1" 
                               Header="Exchange Server Settings"
                               HeaderTemplate="{StaticResource ExchangeHeaderTemplate}"
                               Visibility="{Binding IsExchangeWebServices,Converter={StaticResource BooleanToVisibilityConverter}}">

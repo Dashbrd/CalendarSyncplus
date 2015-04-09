@@ -69,7 +69,8 @@ namespace CalendarSyncPlus.Application.ViewModels
         private Settings _settings;
         private DelegateCommand _startSyncCommand;
         private DelegateCommand _syncNowCommand;
-        
+        private List<CalendarSyncProfile> _scheduledSyncProfiles;
+
         #endregion
 
         #region Events
@@ -234,7 +235,11 @@ namespace CalendarSyncPlus.Application.ViewModels
             set { SetProperty(ref _latestVersion, value); }
         }
 
-        public List<CalendarSyncProfile> ScheduledSyncProfiles { get; set; }
+        public List<CalendarSyncProfile> ScheduledSyncProfiles
+        {
+            get { return _scheduledSyncProfiles; }
+            set { SetProperty(ref _scheduledSyncProfiles, value); }
+        }
 
         #endregion
 
@@ -434,21 +439,20 @@ namespace CalendarSyncPlus.Application.ViewModels
             }
         }
 
+        private const string CompareTimeFormat = "dd/MM/yy HH:mm:ss";
         private void SyncPeriodicHandler()
         {
             try
             {
-                DateTime dateTime = DateTime.Now;
-                foreach (CalendarSyncProfile syncProfile in Settings.SyncProfiles)
+                string dateTime = DateTime.Now.ToString(CompareTimeFormat);
+                foreach (CalendarSyncProfile syncProfile in ScheduledSyncProfiles)
                 {
-                    if (syncProfile.IsSyncEnabled && syncProfile.SyncSettings.SyncFrequency.ValidateTimer(dateTime))
+                    if (syncProfile.NextSync.GetValueOrDefault().ToString(CompareTimeFormat).Equals(dateTime))
                     {
                         CalendarSyncProfile profile = syncProfile;
                         Task.Factory.StartNew(() => StartSyncTask(profile), TaskCreationOptions.None);
                     }
                 }
-
-                CheckForUpdates();
             }
             catch (AggregateException exception)
             {
@@ -511,16 +515,13 @@ namespace CalendarSyncPlus.Application.ViewModels
             UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.LogSeparator));
             ShowNotification(false);
 
-            if (syncProfile.IsSyncEnabled && syncProfile.SyncSettings.SyncFrequency != null)
-            {
-                syncProfile.NextSync =
-                    syncProfile.SyncSettings.SyncFrequency.GetNextSyncTime(syncProfile.LastSync.GetValueOrDefault());
-            }
+            syncProfile.NextSync = syncProfile.SyncSettings.SyncFrequency.GetNextSyncTime(
+                DateTime.Now);
 
             IsSyncInProgress = false;
             CheckForUpdates();
         }
-        
+
         #endregion
 
         #region Public Methods

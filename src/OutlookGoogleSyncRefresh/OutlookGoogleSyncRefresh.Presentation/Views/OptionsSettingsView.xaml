@@ -42,7 +42,7 @@
                     <RowDefinition />
                 </Grid.RowDefinitions>
                 <StackPanel Orientation="Horizontal" Margin="2">
-                    <CheckBox Content="Set Category To Appointments"
+                    <CheckBox Content="Set Category To Appointments (Outlook only)"
                               IsChecked="{Binding SetCategory,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
                     <ComboBox IsEnabled="{Binding SetCategory,UpdateSourceTrigger=PropertyChanged}"
                               ItemsSource="{Binding Categories,UpdateSourceTrigger=PropertyChanged}"

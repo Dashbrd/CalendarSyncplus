@@ -10,6 +10,7 @@ namespace CalendarSyncPlus.Domain.Models
             Hours = 1;
             Minutes = 0;
             StartTime = DateTime.Now;
+            StartTime = StartTime.AddSeconds(-StartTime.Second);
         }
 
         public DateTime StartTime { get; set; }
@@ -26,8 +27,8 @@ namespace CalendarSyncPlus.Domain.Models
             }
             var timeSpan = new TimeSpan(Hours, Minutes, 0);
             DateTime dateTime = StartTime;
-            while (dateTime.CompareTo(dateTimeNow) <= 0)
-        {
+            while (dateTime.CompareTo(dateTimeNow) < 0)
+            {
                 dateTime = dateTime.Add(timeSpan);
             }
 
@@ -48,7 +49,7 @@ namespace CalendarSyncPlus.Domain.Models
                 }
                 var timeSpan = new TimeSpan(Hours, Minutes, 0);
                 DateTime dateTime = StartTime;
-                while (dateTime.CompareTo(dateTimeNow) < 0)
+                while (dateTime.CompareTo(dateTimeNow) <= 0)
                 {
                     dateTime = dateTime.Add(timeSpan);
                 }
