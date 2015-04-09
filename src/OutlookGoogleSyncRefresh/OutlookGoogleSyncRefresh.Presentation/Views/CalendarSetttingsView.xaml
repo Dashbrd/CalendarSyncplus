@@ -280,6 +280,7 @@
                                 <RowDefinition />
                                 <RowDefinition />
                                 <RowDefinition />
+                                <RowDefinition />
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="2*" />
@@ -292,22 +293,16 @@
                                       DisplayMemberPath="Name"
                                       ItemsSource="{Binding GoogleCalenders,UpdateSourceTrigger=PropertyChanged}"
                                       SelectedItem="{Binding SelectedCalendar,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
-                            <StackPanel Orientation="Horizontal"
+                            
+                            <Button Margin="2"
                                         Grid.Row="1"
-                                        Grid.Column="1">
-                            <Button Margin="2"
-                                    Width="150"
-                                    Command="{Binding DisconnectGoogleCommand}"
-                                    VerticalAlignment="Center"
-                                    Content="Disconnect Google"
-                                    HorizontalAlignment="Right" />
-                            <Button Margin="2"
-                                    Width="150"
+                                        Grid.Column="1"
+                                        Width="150"
                                     Command="{Binding GetGoogleCalendarCommand}"
                                     VerticalAlignment="Center"
                                     Content="Get Google Calendars"
                                         HorizontalAlignment="Right" />
-                            </StackPanel>
+                            
                             <Button Margin="2"
                                     Grid.Row="2"
                                     Grid.Column="1"
@@ -315,6 +310,15 @@
                                     VerticalAlignment="Center"
                                     Content="Reset Google Calendar"
                                     Command="{Binding ResetGoogleCalendarCommand}"
+                                    HorizontalAlignment="Right" />
+                            
+                            <Button Margin="2"
+                                    Grid.Row="3"
+                                    Grid.Column="1"
+                                    Width="150"
+                                    Command="{Binding DisconnectGoogleCommand}"
+                                    VerticalAlignment="Center"
+                                    Content="Disconnect Google"
                                     HorizontalAlignment="Right" />
                         </Grid>
 
