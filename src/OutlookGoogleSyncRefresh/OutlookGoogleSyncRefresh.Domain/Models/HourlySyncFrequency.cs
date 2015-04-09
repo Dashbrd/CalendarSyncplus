@@ -9,6 +9,8 @@ namespace CalendarSyncPlus.Domain.Models
             Name = "Hourly";
             Hours = 1;
             Minutes = 0;
+            StartTime = DateTime.Now;
+            StartTime = StartTime.AddSeconds(-StartTime.Second);
         }
 
         public DateTime StartTime { get; set; }
@@ -17,15 +19,23 @@ namespace CalendarSyncPlus.Domain.Models
 
         public int Minutes { get; set; }
 
-        public override bool ValidateTimer(DateTime dateTime)
+        public override bool ValidateTimer(DateTime dateTimeNow)
         {
-            TimeSpan totalTimeElapsed = StartTime.Subtract(dateTime);
-            var timeElapsed = new TimeSpan(Hours, Minutes, 0);
-            if (Math.Abs(totalTimeElapsed.TotalSeconds%timeElapsed.TotalSeconds) < 1)
+            if (Hours == 0 && Minutes == 0)
+            {
+                return false;
+            }
+            var timeSpan = new TimeSpan(Hours, Minutes, 0);
+            DateTime dateTime = StartTime;
+            while (dateTime.CompareTo(dateTimeNow) < 0)
+            {
+                dateTime = dateTime.Add(timeSpan);
+            }
+
+            if (dateTime.CompareTo(dateTimeNow) == 0)
             {
                 return true;
             }
-
             return false;
         }
 
@@ -39,18 +49,13 @@ namespace CalendarSyncPlus.Domain.Models
                 }
                 var timeSpan = new TimeSpan(Hours, Minutes, 0);
                 DateTime dateTime = StartTime;
-                while (dateTimeNow.Subtract(dateTime).TotalSeconds > timeSpan.TotalSeconds)
-                {
-                    dateTime = dateTime.Add(timeSpan);
-                }
-
-                if (dateTimeNow.Subtract(dateTime).TotalSeconds > 0)
+                while (dateTime.CompareTo(dateTimeNow) <= 0)
                 {
                     dateTime = dateTime.Add(timeSpan);
                 }
                 return dateTime;
             }
-            catch
+            catch (Exception ex)
             {
             }
             return DateTime.Now;

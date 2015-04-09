@@ -14,68 +14,6 @@
     <UserControl.Resources>
         <converters:BoolToCalendarServiceTypeConverter x:Key="BoolToCalendarServiceTypeConverter" />
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
-        <DataTemplate DataType="{x:Type models:CalendarSyncDirectionEnum}"
-                      x:Key="CalendarEnumDataTemplate">
-            <Grid Height="{Binding Height,RelativeSource={RelativeSource AncestorType={x:Type ComboBox}}}">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-
-                <TextBlock Text="Outlook"
-                           VerticalAlignment="Center" />
-                <Rectangle Fill="Gray"
-                           Width="40"
-                           Grid.Column="1"
-                           Grid.RowSpan="2"
-                           VerticalAlignment="Center"
-                           Margin="10,0,10,0"
-                           Name="ImageRectangle" />
-                <TextBlock Text="Google"
-                           Grid.Column="2"
-                           VerticalAlignment="Center" />
-            </Grid>
-            <DataTemplate.Triggers>
-                <DataTrigger Binding="{Binding}"
-                             Value="{x:Static models:CalendarSyncDirectionEnum.OutlookGoogleOneWay}">
-                    <Setter TargetName="ImageRectangle"
-                            Property="OpacityMask">
-                        <Setter.Value>
-                            <VisualBrush Stretch="Fill"
-                                         Visual="{StaticResource appbar_arrow_right}" />
-                        </Setter.Value>
-                    </Setter>
-                    <Setter TargetName="ImageRectangle" Property="Height" Value="12" />
-                </DataTrigger>
-                <DataTrigger Binding="{Binding}"
-                             Value="{x:Static models:CalendarSyncDirectionEnum.OutlookGoogleOneWayToSource}">
-                    <Setter TargetName="ImageRectangle"
-                            Property="OpacityMask">
-                        <Setter.Value>
-                            <VisualBrush Stretch="Fill"
-                                         Visual="{StaticResource appbar_arrow_left}" />
-                        </Setter.Value>
-                    </Setter>
-                    <Setter TargetName="ImageRectangle"
-                            Property="Height"
-                            Value="12" />
-                </DataTrigger>
-                <DataTrigger Binding="{Binding}"
-                             Value="{x:Static models:CalendarSyncDirectionEnum.OutlookGoogleTwoWay}">
-                    <Setter TargetName="ImageRectangle"
-                            Property="OpacityMask">
-                        <Setter.Value>
-                            <VisualBrush Stretch="Fill"
-                                         Visual="{StaticResource appbar_arrow_right_left}" />
-                        </Setter.Value>
-                    </Setter>
-                    <Setter TargetName="ImageRectangle"
-                            Property="Height"
-                            Value="20" />
-                </DataTrigger>
-            </DataTemplate.Triggers>
-        </DataTemplate>
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>

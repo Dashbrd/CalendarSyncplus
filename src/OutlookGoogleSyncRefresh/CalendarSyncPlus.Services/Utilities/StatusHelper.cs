@@ -31,11 +31,9 @@ namespace CalendarSyncPlus.Services.Utilities
 
     public class StatusHelper
     {
-        private const string LineConstant =
-            "------------------------------------------------------------------------------";
+        private const string LineConstant =         "-------------------------------------------------------";
 
-        private const string LogSeparatorConstant =
-            "***************************************************************************";
+        private const string LogSeparatorConstant = "*******************************************************";
 
         private static readonly Dictionary<SyncStateEnum, string> StatusDictionary =
             new Dictionary<SyncStateEnum, string>();

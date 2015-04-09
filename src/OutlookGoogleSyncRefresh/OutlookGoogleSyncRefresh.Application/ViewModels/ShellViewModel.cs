@@ -21,10 +21,12 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.ComponentModel.Composition;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
@@ -67,7 +69,7 @@ namespace CalendarSyncPlus.Application.ViewModels
         private Settings _settings;
         private DelegateCommand _startSyncCommand;
         private DelegateCommand _syncNowCommand;
-        private List<Schedule> _schedules;
+        private List<CalendarSyncProfile> _scheduledSyncProfiles;
 
         #endregion
 
@@ -206,7 +208,7 @@ namespace CalendarSyncPlus.Application.ViewModels
                 SetProperty(ref _settings, value);
                 if (_settings != null)
                 {
-                    UpdateSchedule();
+                    ScheduledSyncProfiles = Settings.SyncProfiles.Where(t => t.IsSyncEnabled).ToList();
                 }
             }
         }
@@ -233,10 +235,10 @@ namespace CalendarSyncPlus.Application.ViewModels
             set { SetProperty(ref _latestVersion, value); }
         }
 
-        public List<Schedule> Schedules
+        public List<CalendarSyncProfile> ScheduledSyncProfiles
         {
-            get { return _schedules; }
-            set { SetProperty(ref _schedules, value); }
+            get { return _scheduledSyncProfiles; }
+            set { SetProperty(ref _scheduledSyncProfiles, value); }
         }
 
         #endregion
@@ -316,7 +318,6 @@ namespace CalendarSyncPlus.Application.ViewModels
                     IsPeriodicSyncStarted = true;
                     UpdateStatus(string.Format("Period Sync Started : {0}", DateTime.Now));
                     UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.LogSeparator));
-                    UpdateSchedule();
                 }
             }
         }
@@ -426,8 +427,6 @@ namespace CalendarSyncPlus.Application.ViewModels
                         Task.Factory.StartNew(() => StartSyncTask(profile));
                     }
                 }
-
-                CheckForUpdates();
             }
             catch (AggregateException exception)
             {
@@ -440,21 +439,20 @@ namespace CalendarSyncPlus.Application.ViewModels
             }
         }
 
+        private const string CompareTimeFormat = "dd/MM/yy HH:mm:ss";
         private void SyncPeriodicHandler()
         {
             try
             {
-                DateTime dateTime = DateTime.Now;
-                foreach (CalendarSyncProfile syncProfile in Settings.SyncProfiles)
+                string dateTime = DateTime.Now.ToString(CompareTimeFormat);
+                foreach (CalendarSyncProfile syncProfile in ScheduledSyncProfiles)
                 {
-                    if (syncProfile.IsSyncEnabled && syncProfile.SyncSettings.SyncFrequency.ValidateTimer(dateTime))
+                    if (syncProfile.NextSync.GetValueOrDefault().ToString(CompareTimeFormat).Equals(dateTime))
                     {
                         CalendarSyncProfile profile = syncProfile;
                         Task.Factory.StartNew(() => StartSyncTask(profile), TaskCreationOptions.None);
                     }
                 }
-
-                CheckForUpdates();
             }
             catch (AggregateException exception)
             {
@@ -469,14 +467,14 @@ namespace CalendarSyncPlus.Application.ViewModels
 
         private void StartSyncTask(CalendarSyncProfile syncProfile)
         {
-            if (IsSettingsLoading)
-            {
-                MessageService.ShowMessageAsync("Unable to do the operation as settings are loading.");
-                return;
-            }
-
             lock (lockerObject)
             {
+                if (IsSettingsLoading)
+                {
+                    MessageService.ShowMessageAsync("Unable to do the operation as settings are loading.");
+                    return;
+                }
+
                 IsSyncInProgress = true;
                 IsSettingsVisible = false;
                 syncProfile.LastSync = DateTime.Now;
@@ -517,53 +515,13 @@ namespace CalendarSyncPlus.Application.ViewModels
             UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.LogSeparator));
             ShowNotification(false);
 
-            if (syncProfile.IsSyncEnabled && syncProfile.SyncSettings.SyncFrequency != null)
-            {
-                syncProfile.NextSync =
-                    syncProfile.SyncSettings.SyncFrequency.GetNextSyncTime(syncProfile.LastSync.GetValueOrDefault());
-            }
+            syncProfile.NextSync = syncProfile.SyncSettings.SyncFrequency.GetNextSyncTime(
+                DateTime.Now);
 
             IsSyncInProgress = false;
-
-            UpdateSchedule();
+            CheckForUpdates();
         }
 
-        private void UpdateSchedule()
-        {
-            var schedules = new List<Schedule>();
-
-            foreach (var calendarSyncProfile in Settings.SyncProfiles.Where(t => t.IsSyncEnabled))
-            {
-                if (calendarSyncProfile.NextSync != null)
-                {
-                    var dateTime = DateTime.Today;
-                    int count = 0;
-                    while (count < 7)
-                    {
-                        //Get day name
-                        string day = count == 0 ? "Today" : "Tomorrow";
-                        if (count > 1)
-                        {
-                            day = dateTime.DayOfWeek.ToString();
-                        }
-
-                        if (calendarSyncProfile.NextSync.GetValueOrDefault().Date.Equals(dateTime))
-                        {
-                            var schedule = schedules.FirstOrDefault(t => t.Day.Equals(day));
-                            if (schedule == null)
-                            {
-                                schedule = new Schedule(day);
-                                schedules.Add(schedule);
-                            }
-                            schedule.PlannnedSyncProfile.Add(calendarSyncProfile.Name, calendarSyncProfile.NextSync.GetValueOrDefault());
-                        }
-                        dateTime = dateTime.AddDays(1);
-                        count++;
-                    }
-                }
-            }
-            Schedules = schedules;
-        }
         #endregion
 
         #region Public Methods
@@ -619,18 +577,5 @@ namespace CalendarSyncPlus.Application.ViewModels
         }
 
         #endregion
-    }
-
-    public class Schedule : Model
-    {
-        public Schedule(string day)
-        {
-            Day = day;
-            PlannnedSyncProfile = new Dictionary<string, DateTime>();
-        }
-
-        public string Day { get; set; }
-
-        public Dictionary<string, DateTime> PlannnedSyncProfile { get; set; }
     }
 }

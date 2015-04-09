@@ -150,9 +150,9 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
 
                     // create Final filter as string
                     //string filter = "[End] > '" + min.ToString("dd/MM/yyyy") + "' AND [Start] < '" + max.ToString("dd/MM/yyyy") + "'";
-                    string filter = "[Start] >= '"+ min.ToString("dd/MM/yyyy hh:mm tt")+ "' AND [End] <= '"+ max.ToString("dd/MM/yyyy hh:mm tt") + "'";
-                    
-                        //Set filter on outlookItems and Loop through to create appointment List
+                    //string filter = "[Start] >= '" + min.ToString("dd/MM/yy hh:mm tt") + "' AND [End] <= '" + max.ToString("dd/MM/yy hh:mm tt") + "'";
+                    string filter = "[Start] >= '" + min.ToString("g") + "' AND [End] <= '" + max.ToString("g") + "'";
+                    //Set filter on outlookItems and Loop through to create appointment List
                     Items outlookEntries = outlookItems.Restrict(filter);
                     if (outlookEntries != null)
                     {
@@ -175,7 +175,10 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
             {
                 if (disposeOutlookInstances)
                 {
-                    nameSpace.Logoff();
+                    if (nameSpace != null)
+                    {
+                        nameSpace.Logoff();
+                    }
                 }
 
                 //Unassign all instances
@@ -185,11 +188,17 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
                     outlookItems = null;
                 }
 
-                Marshal.FinalReleaseComObject(defaultOutlookCalender);
-                defaultOutlookCalender = null;
+                if (defaultOutlookCalender != null)
+                {
+                    Marshal.FinalReleaseComObject(defaultOutlookCalender);
+                    defaultOutlookCalender = null;
+                }
 
-                Marshal.FinalReleaseComObject(nameSpace);
-                nameSpace = null;
+                if (nameSpace != null)
+                {
+                    Marshal.FinalReleaseComObject(nameSpace);
+                    nameSpace = null;
+                }
 
                 if (disposeOutlookInstances)
                 {

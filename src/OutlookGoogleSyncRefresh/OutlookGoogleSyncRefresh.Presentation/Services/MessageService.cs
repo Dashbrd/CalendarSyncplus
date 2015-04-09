@@ -21,14 +21,17 @@ using System;
 using System.ComponentModel.Composition;
 using System.Threading.Tasks;
 using System.Waf.Applications;
+using System.Windows;
 using CalendarSyncPlus.Common;
+using CalendarSyncPlus.GoogleServices.Google;
 using CalendarSyncPlus.Presentation.Views;
 using CalendarSyncPlus.Services.Interfaces;
 using MahApps.Metro.Controls.Dialogs;
+using Microsoft.CSharp.RuntimeBinder;
 
 namespace CalendarSyncPlus.Presentation.Services
 {
-    [Export(typeof (IMessageService))]
+    [Export(typeof(IMessageService))]
     public class MessageService : IMessageService
     {
         [ImportingConstructor]
@@ -143,7 +146,7 @@ namespace CalendarSyncPlus.Presentation.Services
                 NegativeButtonText = "CANCEL",
                 AnimateHide = true,
                 AnimateShow = true,
-                ColorScheme = MetroDialogColorScheme.Accented
+                ColorScheme = MetroDialogColorScheme.Accented,
             };
 
             return await InvokeOnCurrentDispatcher(async () =>
@@ -152,6 +155,7 @@ namespace CalendarSyncPlus.Presentation.Services
                 return result;
             });
         }
+
 
         public void ShowProgressAsync(string message, string title)
         {
@@ -192,6 +196,42 @@ namespace CalendarSyncPlus.Presentation.Services
         public Task<ProgressDialogController> ShowProgress(string message)
         {
             return ShowProgress(message, ApplicationInfo.ProductName);
+        }
+
+        public async Task<string> ShowCustomDialog(string message, string title)
+        {
+            var metroDialogSettings = new MetroDialogSettings()
+            {
+                AffirmativeButtonText = "OK",
+                NegativeButtonText = "CANCEL",
+                AnimateHide = true,
+                AnimateShow = true,
+                ColorScheme = MetroDialogColorScheme.Accented,
+            };
+
+            var dialog = new CustomInputDialog(View, metroDialogSettings)
+            {
+                Message = message,
+                Title = title,
+                Input = metroDialogSettings.DefaultText
+            };
+
+            return await InvokeOnCurrentDispatcher(async () =>
+            {
+                await View.ShowMetroDialogAsync(dialog, metroDialogSettings);
+
+                await dialog.WaitForButtonPressAsync().ContinueWith((m) =>
+                    {
+                        InvokeOnCurrentDispatcher(() => View.HideMetroDialogAsync(dialog));
+                    });
+
+                return dialog.Input;
+            });
+        }
+
+        public Task<string> ShowCustomDialog(string message)
+        {
+            return ShowCustomDialog(message, ApplicationInfo.ProductName);
         }
 
         #endregion

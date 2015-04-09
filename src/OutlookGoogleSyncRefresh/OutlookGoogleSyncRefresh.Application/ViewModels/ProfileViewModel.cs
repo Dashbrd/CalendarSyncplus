@@ -19,8 +19,17 @@ namespace CalendarSyncPlus.Application.ViewModels
 {
     public class ProfileViewModel : Model
     {
+        /// <summary>
+        /// Stores the flag if attachments should be saved
+        /// </summary>
         private bool _addAttachments;
+        /// <summary>
+        /// Stores the flag if attendees should be synchronized
+        /// </summary>
         private bool _addAttendees;
+        /// <summary>
+        /// Stores the flag if attendees should be synchronized
+        /// </summary>
         private bool _addAttendeesToDescription;
         private bool _addDescription;
         private bool _addReminders;
@@ -35,6 +44,7 @@ namespace CalendarSyncPlus.Application.ViewModels
         private List<OutlookCalendar> _exchangeCalendarList;
         private string _exchangeServerUrl;
         private DelegateCommand _getGoogleCalendarCommand;
+        private DelegateCommand _disconnectGoogleCommand;
         private DelegateCommand _getOutlookMailboxCommand;
         private DelegateCommand _getOutlookProfileLIstCommand;
         private List<Calendar> _googleCalenders;
@@ -68,11 +78,12 @@ namespace CalendarSyncPlus.Application.ViewModels
         public ProfileViewModel(CalendarSyncProfile syncProfile, IGoogleCalendarService googleCalendarService,
             IOutlookCalendarService outlookCalendarService,
             IMessageService messageService, IExchangeWebCalendarService exchangeWebCalendarService,
-            ApplicationLogger applicationLogger)
+            ApplicationLogger applicationLogger, IAccountAuthenticationService accountAuthenticationService)
         {
             SyncProfile = syncProfile;
             ExchangeWebCalendarService = exchangeWebCalendarService;
             ApplicationLogger = applicationLogger;
+            AccountAuthenticationService = accountAuthenticationService;
             GoogleCalendarService = googleCalendarService;
             OutlookCalendarService = outlookCalendarService;
             MessageService = messageService;
@@ -85,6 +96,7 @@ namespace CalendarSyncPlus.Application.ViewModels
         public IMessageService MessageService { get; set; }
         public IExchangeWebCalendarService ExchangeWebCalendarService { get; private set; }
         public ApplicationLogger ApplicationLogger { get; private set; }
+        public IAccountAuthenticationService AccountAuthenticationService { get; set; }
 
         #region Properties
 
@@ -371,6 +383,12 @@ namespace CalendarSyncPlus.Application.ViewModels
             }
         }
 
+        public DelegateCommand DisconnectGoogleCommand
+        {
+            get { return _disconnectGoogleCommand ?? (_disconnectGoogleCommand = new DelegateCommand(DisconnectGoogleHandler)); }
+        }
+
+
         public DelegateCommand GetGoogleCalendarCommand
         {
             get
@@ -455,6 +473,12 @@ namespace CalendarSyncPlus.Application.ViewModels
             KeepLastModifiedCopy = SyncProfile.SyncSettings.KeepLastModifiedVersion;
             SyncFrequency = SyncProfile.SyncSettings.SyncFrequency.Name;
             SetCategory = SyncProfile.SetCalendarCategory;
+            SelectedCalendar = SyncProfile.GoogleCalendar;
+
+            SelectedOutlookProfileName = SyncProfile.OutlookSettings.OutlookProfileName;
+            SelectedOutlookMailBox = SyncProfile.OutlookSettings.OutlookMailBox;
+            SelectedOutlookCalendar = SyncProfile.OutlookSettings.OutlookCalendar;
+
             if (SyncProfile.EventCategory != null)
             {
                 SelectedCategory = Categories.First(t => t.CategoryName.Equals(SyncProfile.EventCategory.CategoryName));
@@ -519,6 +543,21 @@ namespace CalendarSyncPlus.Application.ViewModels
             OutlookProfileList = await OutlookCalendarService.GetOutLookProfieListAsync();
         }
 
+        private void DisconnectGoogleHandler()
+        {
+            var result = AccountAuthenticationService.DisconnectGoogle();
+            if (result)
+            {
+                GoogleCalenders = null;
+                SelectedCalendar = null;
+                MessageService.ShowMessageAsync("Google account successfully disconnected");
+            }
+            else
+            {
+                MessageService.ShowMessageAsync("Account wasn't authenticated earlier or disconnection failed.");
+            }
+        }
+
         private async void GetGoogleCalendar()
         {
             IsLoading = true;
@@ -547,14 +586,22 @@ namespace CalendarSyncPlus.Application.ViewModels
 
         private async Task GetGoogleCalendarInternal()
         {
-            List<Calendar> calendars =
-                await GoogleCalendarService.GetAvailableCalendars(new Dictionary<string, object>());
-            GoogleCalenders = calendars;
-            if (GoogleCalenders.Any())
+            try
             {
-                SelectedCalendar = SyncProfile != null && SyncProfile.GoogleCalendar != null
-                    ? GoogleCalenders.FirstOrDefault(t => t.Id.Equals(SyncProfile.GoogleCalendar.Id))
-                    : GoogleCalenders.First();
+                List<Calendar> calendars =
+                        await GoogleCalendarService.GetAvailableCalendars(new Dictionary<string, object>());
+                GoogleCalenders = calendars;
+                if (GoogleCalenders.Any())
+                {
+                    SelectedCalendar = SyncProfile != null && SyncProfile.GoogleCalendar != null
+                        ? GoogleCalenders.FirstOrDefault(t => t.Id.Equals(SyncProfile.GoogleCalendar.Id))
+                        : GoogleCalenders.First();
+                }
+            }
+            catch (Exception exception)
+            {
+                MessageService.ShowMessageAsync("Unable to get Google calendars.");
+                ApplicationLogger.LogError(exception.ToString());
             }
         }
 

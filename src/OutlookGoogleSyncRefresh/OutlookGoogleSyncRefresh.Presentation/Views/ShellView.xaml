@@ -39,7 +39,7 @@
     </controls:MetroWindow.Resources>
     <controls:MetroWindow.Flyouts>
         <controls:FlyoutsControl>
-            <controls:Flyout
+            <controls:Flyout 
                 Width="{Binding Width,
                                              RelativeSource={RelativeSource AncestorType={x:Type views:ShellView}},
                                              Converter={StaticResource PercentageWidthConverter},
@@ -52,7 +52,7 @@
                                               Mode=TwoWay}"
                 Position="Right"
                 Theme="Adapt" />
-            <controls:Flyout
+            <controls:Flyout 
                 Width="{Binding Width,
                                              RelativeSource={RelativeSource AncestorType={x:Type views:ShellView}},
                                              Converter={StaticResource PercentageWidthConverter},
@@ -65,7 +65,7 @@
                                               Mode=TwoWay}"
                 Position="Right"
                 Theme="Adapt" />
-            <controls:Flyout
+            <controls:Flyout 
                 Width="{Binding Width,
                                              RelativeSource={RelativeSource AncestorType={x:Type views:ShellView}},
                                              Converter={StaticResource PercentageWidthConverter},

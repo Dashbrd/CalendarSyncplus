@@ -29,16 +29,22 @@ namespace CalendarSyncPlus.Presentation.Converters
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
+            double width = 450;
             if (value != null && parameter != null)
             {
-                double width;
+                double parentWidth;
                 int percentage;
-                if (double.TryParse(value.ToString(), out width) && int.TryParse(parameter.ToString(), out percentage))
+                if (double.TryParse(value.ToString(), out parentWidth) && int.TryParse(parameter.ToString(), out percentage))
                 {
-                    return width*percentage/100;
+                    width = parentWidth * percentage / 100;
+                    if (width < 450)
+                    {
+                        width = 450;
+                    }
                 }
             }
-            return value;
+
+            return width;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

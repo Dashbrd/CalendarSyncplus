@@ -76,7 +76,7 @@
                     <views:ProfileSettingsView DataContext="{Binding}" />
                 </ScrollViewer>
             </TabItem>
-            <TabItem Header="Profiles">
+            <TabItem Header="Manage Profiles">
                 <ScrollViewer VerticalScrollBarVisibility="Auto"
                               HorizontalScrollBarVisibility="Hidden">
                     <views:ManageProfilesView DataContext="{Binding}" />
