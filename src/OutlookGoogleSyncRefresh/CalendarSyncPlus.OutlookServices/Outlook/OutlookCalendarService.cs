@@ -150,8 +150,8 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
 
                     // create Final filter as string
                     //string filter = "[End] > '" + min.ToString("dd/MM/yyyy") + "' AND [Start] < '" + max.ToString("dd/MM/yyyy") + "'";
-                    string filter = "[Start] >= '" + min.ToString("dd/MM/yy hh:mm tt") + "' AND [End] <= '" + max.ToString("dd/MM/yy hh:mm tt") + "'";
-                    //string filter = "[Start] >= '" + min.ToString("g") + "' AND [End] <= '" + max.ToString("g") + "'";
+                    //string filter = "[Start] >= '" + min.ToString("dd/MM/yy hh:mm tt") + "' AND [End] <= '" + max.ToString("dd/MM/yy hh:mm tt") + "'";
+                    string filter = "[Start] >= '" + min.ToString("g") + "' AND [End] <= '" + max.ToString("g") + "'";
                     //Set filter on outlookItems and Loop through to create appointment List
                     Items outlookEntries = outlookItems.Restrict(filter);
                     if (outlookEntries != null)
