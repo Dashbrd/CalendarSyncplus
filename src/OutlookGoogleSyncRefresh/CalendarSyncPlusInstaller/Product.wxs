@@ -47,53 +47,53 @@
     </ComponentGroup>
     <ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
       <Component>
-        <File Id="CalendarSyncPlus.Common.Output"
+        <File Id="CalendarSyncPlus.Common"
             Name="CalendarSyncPlus.Common.dll"
             Source="$(var.ProjectDirectory)\CalendarSyncPlus.Common.dll"
             KeyPath="yes" />
       </Component>
 
       <Component>
-        <File Id="CalendarSyncPlus.Domain.Output"
+        <File Id="CalendarSyncPlus.Domain"
             Name="CalendarSyncPlus.Domain.dll"
             Source="$(var.ProjectDirectory)\CalendarSyncPlus.Domain.dll"
             KeyPath="yes" />
       </Component>
 
       <Component>
-        <File Id="CalendarSyncPlus.Services.Output"
+        <File Id="CalendarSyncPlus.Services"
             Name="CalendarSyncPlus.Services.dll"
             Source="$(var.ProjectDirectory)\CalendarSyncPlus.Services.dll"
             KeyPath="yes" />
       </Component>
       <Component>
-        <File Id="CalendarSyncPlus.OutlookServices.Output"
+        <File Id="CalendarSyncPlus.OutlookServices"
             Name="CalendarSyncPlus.OutlookServices.dll"
             Source="$(var.ProjectDirectory)\CalendarSyncPlus.OutlookServices.dll"
             KeyPath="yes" />
       </Component>
       <Component>
-        <File Id="CalendarSyncPlus.GoogleServices.Output"
+        <File Id="CalendarSyncPlus.GoogleServices"
             Name="CalendarSyncPlus.GoogleServices.dll"
             Source="$(var.ProjectDirectory)\CalendarSyncPlus.GoogleServices.dll"
             KeyPath="yes" />
       </Component>
       <Component>
-        <File Id="CalendarSyncPlus.ExchangeWebServices.Output"
+        <File Id="CalendarSyncPlus.ExchangeWebServices"
             Name="CalendarSyncPlus.ExchangeWebServices.dll"
             Source="$(var.ProjectDirectory)\CalendarSyncPlus.ExchangeWebServices.dll"
             KeyPath="yes" />
       </Component>
 
       <Component>
-        <File Id="CalendarSyncPlus.Application.Output"
+        <File Id="CalendarSyncPlus.Application"
             Name="CalendarSyncPlus.Application.dll"
             Source="$(var.ProjectDirectory)\CalendarSyncPlus.Application.dll"
             KeyPath="yes" />
       </Component>
 
       <Component>
-        <File Id="CalendarSyncPlus.Presentation.Output"
+        <File Id="CalendarSyncPlus.Presentation"
             Name="CalendarSyncPlus.exe"
             Source="$(var.ProjectDirectory)\CalendarSyncPlus.exe"
             KeyPath="yes" />
