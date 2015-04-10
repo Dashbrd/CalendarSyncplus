@@ -98,6 +98,13 @@
             Source="$(var.ProjectDirectory)\CalendarSyncPlus.exe"
             KeyPath="yes" />
       </Component>
+            <Component>
+        <File Id="CalendarSyncPlus.Presentation"
+            Name="CalendarSyncPlus.exe.config"
+            Source="$(var.ProjectDirectory)\CalendarSyncPlus.exe.config"
+            KeyPath="yes" />
+      </Component>
+
       <!--Project Dependencies-->
       <Component>
         <File Id="log4net"
