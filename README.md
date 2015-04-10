@@ -11,7 +11,7 @@ Different types of installers are available
 .Net Framework 4.5 (setup will automatically install it)/Can be manually installed as required
 
 ### ScreenShot
-![Main Layout](http://i.imgur.com/YhnKYAz.png?1)
+![Main Layout](http://download-codeplex.sec.s-msft.com/Download?ProjectName=calendarsyncplus&DownloadId=1446069)
 
 ## Features
 * Select outlook calendar from different profiles and mailboxes
