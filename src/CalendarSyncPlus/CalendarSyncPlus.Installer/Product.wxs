@@ -32,7 +32,7 @@
 
     <Icon Id="icon.ico" SourceFile="..\CalendarSyncPlus.Presentation\icon.ico"/>
     <Property Id="ARPPRODUCTICON" Value="icon.ico" />
-
+    <WixVariable  Id="WixUIBannerBmp" Value="WixTopBanner.png" Overridable="yes"/>
     <Directory Id="TARGETDIR" Name="SourceDir">
       <!--Install Directory structure-->
       <Directory Id="ProgramFilesFolder">
