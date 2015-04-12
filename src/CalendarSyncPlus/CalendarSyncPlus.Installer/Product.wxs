@@ -2,14 +2,14 @@
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
      xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension">
   <Product Id="*" Name="Calendar Sync +" Language="1033" Version="1.3.2.0" 
-           Manufacturer="Ankesh Dave &amp; Akanksha Gaur" 
+           Manufacturer="Ankesh Dave &amp; Akanksha Gaur"  
            UpgradeCode="6A7B72FC-ED9B-4951-B733-AB54B8D4AE94" >
     
-    <Package InstallerVersion="405" Manufacturer="Ankesh Dave &amp; Akanksha Gaur" Platform="x86"
+    <Package InstallerVersion="405" Manufacturer="Ankesh Dave &amp; Akanksha Gaur" Platform="x86" InstallScope="perMachine"
              Compressed="yes" Description="A utility to synchronize Outlook to Google calendars, vice versa and bidirectional."/>
     <!--Upgrade Message-->
     <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." 
-                   AllowSameVersionUpgrades="yes" Schedule="afterInstallInitialize"/>
+                   AllowSameVersionUpgrades="no" Schedule="afterInstallInitialize"/>
     <!--Do not create cab file separately-->
     <MediaTemplate EmbedCab="yes"/>
     
