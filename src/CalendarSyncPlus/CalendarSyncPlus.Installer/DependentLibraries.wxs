@@ -3,9 +3,6 @@
 	<Fragment>
     <!--Defined Directory Variables-->
     <?define ProjectDirectory = "$(var.CalendarSyncPlus.Presentation.TargetDir)"?>
-    <?define BclAsyncDirectory = "..\packages\Microsoft.Bcl.Async.1.0.168\lib\net40"?>
-    <?define GACDirectory = "C:\Windows\assembly\GAC_MSIL\office\14.0.0.0__71e9bce111e9429c"?>
-    <?define GACstdoleDirectory ="C:\Windows\assembly\GAC\stdole\7.0.3300.0__b03f5f7f11d50a3a"?>
     <?define Net45Directory = "C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5"?>
     <?define Net45FacadeDirectory = "$(var.Net45Directory)\Facades"?>
     <?define Office14Directory ="C:\Program Files (x86)\Microsoft Visual Studio 12.0\Visual Studio Tools for Office\PIA\Office14"?>
@@ -15,59 +12,59 @@
       <Component>
         <File Id="CalendarSyncPlus.Common"
             Name="CalendarSyncPlus.Common.dll"
-            Source="$(var.ProjectDirectory)\CalendarSyncPlus.Common.dll"
+            Source="$(var.ProjectDirectory)CalendarSyncPlus.Common.dll"
             KeyPath="yes" />
       </Component>
 
       <Component>
         <File Id="CalendarSyncPlus.Domain"
             Name="CalendarSyncPlus.Domain.dll"
-            Source="$(var.ProjectDirectory)\CalendarSyncPlus.Domain.dll"
+            Source="$(var.ProjectDirectory)CalendarSyncPlus.Domain.dll"
             KeyPath="yes" />
       </Component>
 
       <Component>
         <File Id="CalendarSyncPlus.Services"
             Name="CalendarSyncPlus.Services.dll"
-            Source="$(var.ProjectDirectory)\CalendarSyncPlus.Services.dll"
+            Source="$(var.ProjectDirectory)CalendarSyncPlus.Services.dll"
             KeyPath="yes" />
       </Component>
       <Component>
         <File Id="CalendarSyncPlus.OutlookServices"
             Name="CalendarSyncPlus.OutlookServices.dll"
-            Source="$(var.ProjectDirectory)\CalendarSyncPlus.OutlookServices.dll"
+            Source="$(var.ProjectDirectory)CalendarSyncPlus.OutlookServices.dll"
             KeyPath="yes" />
       </Component>
       <Component>
         <File Id="CalendarSyncPlus.GoogleServices"
             Name="CalendarSyncPlus.GoogleServices.dll"
-            Source="$(var.ProjectDirectory)\CalendarSyncPlus.GoogleServices.dll"
+            Source="$(var.ProjectDirectory)CalendarSyncPlus.GoogleServices.dll"
             KeyPath="yes" />
       </Component>
       <Component>
         <File Id="CalendarSyncPlus.ExchangeWebServices"
             Name="CalendarSyncPlus.ExchangeWebServices.dll"
-            Source="$(var.ProjectDirectory)\CalendarSyncPlus.ExchangeWebServices.dll"
+            Source="$(var.ProjectDirectory)CalendarSyncPlus.ExchangeWebServices.dll"
             KeyPath="yes" />
       </Component>
 
       <Component>
         <File Id="CalendarSyncPlus.Application"
             Name="CalendarSyncPlus.Application.dll"
-            Source="$(var.ProjectDirectory)\CalendarSyncPlus.Application.dll"
+            Source="$(var.ProjectDirectory)CalendarSyncPlus.Application.dll"
             KeyPath="yes" />
       </Component>
 
       <Component>
         <File Id="CalendarSyncPlus.exe"
             Name="CalendarSyncPlus.exe"
-            Source="$(var.ProjectDirectory)\CalendarSyncPlus.exe"
+            Source="$(var.ProjectDirectory)CalendarSyncPlus.exe"
             KeyPath="yes" />
       </Component>
       <Component>
         <File Id="CalendarSyncPlus.exe.Config"
             Name="CalendarSyncPlus.exe.config"
-            Source="$(var.ProjectDirectory)\CalendarSyncPlus.exe.config"
+            Source="$(var.ProjectDirectory)CalendarSyncPlus.exe.config"
             KeyPath="yes" />
       </Component>
 
@@ -75,86 +72,86 @@
       <Component>
         <File Id="log4net"
           Name="log4net.dll"
-          Source="$(var.ProjectDirectory)\log4net.dll"
+          Source="$(var.ProjectDirectory)log4net.dll"
           KeyPath="yes" />
       </Component>
       <Component>
         <File Id="WpfApplicationFramework"
           Name="WpfApplicationFramework.dll"
-          Source="$(var.ProjectDirectory)\WpfApplicationFramework.dll"
+          Source="$(var.ProjectDirectory)WpfApplicationFramework.dll"
           KeyPath="yes" />
       </Component>
 
       <Component>
         <File Id="MefContrib"
           Name="MefContrib.dll"
-          Source="$(var.ProjectDirectory)\MefContrib.dll"
+          Source="$(var.ProjectDirectory)MefContrib.dll"
           KeyPath="yes" />
       </Component>
 
       <Component>
         <File Id="MahApps.Metro"
           Name="MahApps.Metro.dll"
-          Source="$(var.ProjectDirectory)\MahApps.Metro.dll"
+          Source="$(var.ProjectDirectory)MahApps.Metro.dll"
           KeyPath="yes" />
       </Component>
 
       <Component>
         <File Id="System.Windows.Interactivity"
           Name="System.Windows.Interactivity.dll"
-          Source="$(var.ProjectDirectory)\System.Windows.Interactivity.dll"
+          Source="$(var.ProjectDirectory)System.Windows.Interactivity.dll"
           KeyPath="yes" />
       </Component>
 
       <Component>
         <File Id="Hardcodet.Wpf.TaskbarNotification"
           Name="Hardcodet.Wpf.TaskbarNotification.dll"
-          Source="$(var.ProjectDirectory)\Hardcodet.Wpf.TaskbarNotification.dll"
+          Source="$(var.ProjectDirectory)Hardcodet.Wpf.TaskbarNotification.dll"
           KeyPath="yes" />
       </Component>
 
       <Component>
         <File Id="Zlib.Portable"
           Name="Zlib.Portable.dll"
-          Source="$(var.ProjectDirectory)\Zlib.Portable.dll"
+          Source="$(var.ProjectDirectory)Zlib.Portable.dll"
           KeyPath="yes" />
       </Component>
 
       <Component>
         <File Id="Newtonsoft.Json"
           Name="Newtonsoft.Json.dll"
-          Source="$(var.ProjectDirectory)\Newtonsoft.Json.dll"
+          Source="$(var.ProjectDirectory)Newtonsoft.Json.dll"
           KeyPath="yes" />
       </Component>
 
       <Component>
         <File Id="System.Net.Http.Extensions"
           Name="System.Net.Http.Extensions.dll"
-          Source="$(var.ProjectDirectory)\System.Net.Http.Extensions.dll"
+          Source="$(var.ProjectDirectory)System.Net.Http.Extensions.dll"
           KeyPath="yes" />
       </Component>
       <Component>
         <File Id="System.Net.Http.Primitives"
           Name="System.Net.Http.Primitives.dll"
-          Source="$(var.ProjectDirectory)\System.Net.Http.Primitives.dll"
+          Source="$(var.ProjectDirectory)System.Net.Http.Primitives.dll"
           KeyPath="yes" />
       </Component>
       <Component>
         <File Id="Microsoft.Threading.Tasks"
           Name="Microsoft.Threading.Tasks.dll"
-          Source="$(var.BclAsyncDirectory)\Microsoft.Threading.Tasks.dll"
+          Source="$(var.ProjectDirectory)Microsoft.Threading.Tasks.dll"
           KeyPath="yes" />
       </Component>
       <Component>
         <File Id="Microsoft.Threading.Tasks.Extensions"
           Name="Microsoft.Threading.Tasks.Extensions.dll"
-          Source="$(var.BclAsyncDirectory)\Microsoft.Threading.Tasks.Extensions.dll"
+          Source="$(var.ProjectDirectory)Microsoft.Threading.Tasks.Extensions.dll"
           KeyPath="yes" />
       </Component>
       <Component>
         <File Id="Microsoft.Threading.Tasks.Extensions.Desktop"
           Name="Microsoft.Threading.Tasks.Extensions.Desktop.dll"
-          Source="$(var.BclAsyncDirectory)\Microsoft.Threading.Tasks.Extensions.Desktop.dll"
+          Source="$(var.ProjectDirectory)Microsoft.Threading.Tasks.Extensions.Desktop.dll"
           KeyPath="yes" />
       </Component>
 
@@ -162,38 +159,38 @@
       <Component>
         <File Id="Google.Apis.Core"
           Name="Google.Apis.Core.dll"
-          Source="$(var.ProjectDirectory)\Google.Apis.Core.dll"
+          Source="$(var.ProjectDirectory)Google.Apis.Core.dll"
           KeyPath="yes" />
       </Component>
 
       <Component>
         <File Id="Google.Apis.Calendar.v3"
           Name="Google.Apis.Calendar.v3.dll"
-          Source="$(var.ProjectDirectory)\Google.Apis.Calendar.v3.dll"
+          Source="$(var.ProjectDirectory)Google.Apis.Calendar.v3.dll"
           KeyPath="yes" />
       </Component>
       <Component>
         <File Id="Google.Apis"
           Name="Google.Apis.dll"
-          Source="$(var.ProjectDirectory)\Google.Apis.dll"
+          Source="$(var.ProjectDirectory)Google.Apis.dll"
           KeyPath="yes" />
       </Component>
       <Component>
         <File Id="Google.Apis.Auth"
           Name="Google.Apis.Auth.dll"
-          Source="$(var.ProjectDirectory)\Google.Apis.Auth.dll"
+          Source="$(var.ProjectDirectory)Google.Apis.Auth.dll"
           KeyPath="yes" />
       </Component>
       <Component>
         <File Id="Google.Apis.Auth.PlatformServices"
           Name="Google.Apis.Auth.PlatformServices.dll"
-          Source="$(var.ProjectDirectory)\Google.Apis.Auth.PlatformServices.dll"
+          Source="$(var.ProjectDirectory)Google.Apis.Auth.PlatformServices.dll"
           KeyPath="yes" />
       </Component>
       <Component>
         <File Id="Google.Apis.PlatformServices"
           Name="Google.Apis.PlatformServices.dll"
-          Source="$(var.ProjectDirectory)\Google.Apis.PlatformServices.dll"
+          Source="$(var.ProjectDirectory)Google.Apis.PlatformServices.dll"
           KeyPath="yes" />
       </Component>
 
