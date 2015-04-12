@@ -13,7 +13,7 @@ assembly_info:
 before_build:
 - nuget restore src\CalendarSyncPlus\CalendarSyncPlus.sln
 build:
-  project: src\CalendarSyncPlus\CalendarSyncPlus.Presentation\CalendarSyncPlus.Installer.wixproj
+  project: src\CalendarSyncPlus\CalendarSyncPlus.Installer\CalendarSyncPlus.Installer.wixproj
   verbosity: detailed
 artifacts:
 - path: src\CalendarSyncPlus\CalendarSyncPlus.Installer\bin\$(configuration)\*.msi
