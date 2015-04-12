@@ -5,7 +5,7 @@
            Manufacturer="Ankesh Dave &amp; Akanksha Gaur"  
            UpgradeCode="6A7B72FC-ED9B-4951-B733-AB54B8D4AE94" >
     
-    <Package InstallerVersion="405" Manufacturer="Ankesh Dave &amp; Akanksha Gaur" Platform="x86" InstallScope="perMachine"
+    <Package InstallerVersion="405" Manufacturer="Ankesh Dave &amp; Akanksha Gaur" Platform="x86" 
              Compressed="yes" Description="A utility to synchronize Outlook to Google calendars, vice versa and bidirectional."/>
     <!--Upgrade Message-->
     <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." 
@@ -57,7 +57,7 @@
                          Target="[System64Folder]msiexec.exe"
                          Arguments="/x [ProductCode]"/>
         <RemoveFolder Id="ApplicationProgramsFolder" On="uninstall"/>
-        <RegistryValue Root="HKCU" Key="Software\Microsoft\CalendarSyncPlus" Name="installed" Type="integer" Value="1" KeyPath="yes"/>
+        <RegistryValue Root="HKCU" Key="Software\Ankesh Dave &amp; Akanksha Gaur\CalendarSyncPlus" Name="installed" Type="integer" Value="1" KeyPath="yes"/>
       </Component>
       
     </DirectoryRef>
