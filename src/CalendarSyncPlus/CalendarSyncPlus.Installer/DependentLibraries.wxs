@@ -5,7 +5,7 @@
     <?define ProjectDirectory = "$(var.CalendarSyncPlus.Presentation.TargetDir)"?>
     <?define Net45Directory = "C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5"?>
     <?define Net45FacadeDirectory = "$(var.Net45Directory)\Facades"?>
-    <?define Office14Directory ="C:\Program Files (x86)\Microsoft Visual Studio 12.0\Visual Studio Tools for Office\PIA\Office14"?>
+    
 
     <!--Dependent libraries-->
     <ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER" >
@@ -197,7 +197,7 @@
       <Component>
         <File Id="Microsoft.Office.Interop.Outlook"
           Name="Microsoft.Office.Interop.Outlook.dll"
-          Source="$(var.Office14Directory)\Microsoft.Office.Interop.Outlook.dll"
+          Source="ReferenceBinaries\Microsoft.Office.Interop.Outlook.dll"
           KeyPath="yes" />
       </Component>
 
