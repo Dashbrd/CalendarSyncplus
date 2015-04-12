@@ -9,5 +9,5 @@ assembly_info:
   assembly_file_version: '{version}'
   assembly_informational_version: '{version}'
 build:
-  project: src\CalendarSyncPlus\CalendarSyncPlus.Installer\CalendarSyncPlus.Installer.wixproj
+  project: src\CalendarSyncPlus\CalendarSyncPlus.Presentation\CalendarSyncPlus.Presentation.csproj
   verbosity: detailed
