@@ -15,8 +15,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{4E1643
 		Shared\SharedAssemblyProperties.cs = Shared\SharedAssemblyProperties.cs
 	EndProjectSection
 EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "CalendarSyncPlus", "CalendarSyncPlus\CalendarSyncPlus.vdproj", "{5338B029-4F95-4744-9DB9-EE6A5E3E52EB}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Installer Dependencies", "Installer Dependencies", "{FD5DE181-943E-48A0-B288-3E522A5B2704}"
 	ProjectSection(SolutionItems) = preProject
 		Installer Dependencies\7zSD.sfx = Installer Dependencies\7zSD.sfx
@@ -52,14 +50,6 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{5338B029-4F95-4744-9DB9-EE6A5E3E52EB}.Debug|Any CPU.ActiveCfg = Debug
-		{5338B029-4F95-4744-9DB9-EE6A5E3E52EB}.Debug|Mixed Platforms.ActiveCfg = Debug
-		{5338B029-4F95-4744-9DB9-EE6A5E3E52EB}.Debug|Mixed Platforms.Build.0 = Debug
-		{5338B029-4F95-4744-9DB9-EE6A5E3E52EB}.Debug|x86.ActiveCfg = Debug
-		{5338B029-4F95-4744-9DB9-EE6A5E3E52EB}.Release|Any CPU.ActiveCfg = Release
-		{5338B029-4F95-4744-9DB9-EE6A5E3E52EB}.Release|Mixed Platforms.ActiveCfg = Release
-		{5338B029-4F95-4744-9DB9-EE6A5E3E52EB}.Release|Mixed Platforms.Build.0 = Release
-		{5338B029-4F95-4744-9DB9-EE6A5E3E52EB}.Release|x86.ActiveCfg = Release
 		{5FF53B1A-81F5-4FF6-8444-4561DD7F6AF4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5FF53B1A-81F5-4FF6-8444-4561DD7F6AF4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5FF53B1A-81F5-4FF6-8444-4561DD7F6AF4}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
