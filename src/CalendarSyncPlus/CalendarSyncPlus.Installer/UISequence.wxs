@@ -4,19 +4,19 @@
     <!--Adding dialogs-->
     <UI Id="UISequence">
       <Property Id="ApplicationFolderName" Value="Calendar Sync +" />
-      <Property Id="WixAppFolder" Value="WixPerMachineFolder" />
+      <Property Id="ProgramMenuFolderName" Value="Calendar Sync +" />
+      <Property Id="WixAppFolder" Value="WixPerMachineFolder"  />
       <UIRef Id="WixUI_Advanced"/>
       <Publish Dialog="ExitDialog"
     Control="Finish"
     Event="DoAction"
     Value="LaunchApplication">WIXUI_EXITDIALOGOPTIONALCHECKBOX = 1 and NOT Installed</Publish>
-
+      
     </UI>
-   
+    
     <!--Including License agreement-->
     <WixVariable Id="WixUILicenseRtf" Value="license.rtf" />
-    <!--<Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" />-->
-
+    
     <!--Exit Dialog-->
     <Property Id="WIXUI_EXITDIALOGOPTIONALTEXT" Value="Thank you for installing this product." />
 

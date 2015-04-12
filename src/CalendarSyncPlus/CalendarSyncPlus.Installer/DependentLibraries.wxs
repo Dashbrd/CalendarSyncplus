@@ -2,7 +2,7 @@
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
 	<Fragment>
     <!--Defined Directory Variables-->
-    <?define ProjectDirectory = "..\CalendarSyncPlus.Presentation\bin\Release"?>
+    <?define ProjectDirectory = "$(var.CalendarSyncPlus.Presentation.TargetDir)"?>
     <?define BclAsyncDirectory = "..\packages\Microsoft.Bcl.Async.1.0.168\lib\net40"?>
     <?define GACDirectory = "C:\Windows\assembly\GAC_MSIL\office\14.0.0.0__71e9bce111e9429c"?>
     <?define GACstdoleDirectory ="C:\Windows\assembly\GAC\stdole\7.0.3300.0__b03f5f7f11d50a3a"?>
@@ -11,7 +11,7 @@
     <?define Office14Directory ="C:\Program Files (x86)\Microsoft Visual Studio 12.0\Visual Studio Tools for Office\PIA\Office14"?>
 
     <!--Dependent libraries-->
-    <ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
+    <ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER" >
       <Component>
         <File Id="CalendarSyncPlus.Common"
             Name="CalendarSyncPlus.Common.dll"
