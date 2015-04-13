@@ -9,6 +9,9 @@ assembly_info:
   assembly_version: '{version}'
   assembly_file_version: '{version}'
   assembly_informational_version: '{version}'
+environment:
+  GithubAccessToken:
+    secure: b6PIkkKAu6m9U9gu86ObVKq7IxvQv5ICSHWXB1KUqOvuCO8CL18DTcyn8EYpMU/U
 before_build:
 - nuget restore src\CalendarSyncPlus\CalendarSyncPlus.sln
 build:
@@ -17,3 +20,14 @@ build:
 artifacts:
 - path: src\CalendarSyncPlus\CalendarSyncPlus.Installer\bin\Release\CalendarSyncPlus.msi
   name: Installer
+deploy:
+- provider: GitHub
+  tag: v$(appveyor_build_version)
+  release: Calendar Sync Plus $(appveyor_build_version)
+  description: Release with new fixes
+  auth_token:
+    secure: 1MDHqxV1YdXO142uyU6OQMdf71UjYVDKlFdAid/xLD5A8w+C/htueN8iTeAyqb5e
+  artifact: CalendarSyncPlus.msi
+  draft: true
+  on:
+    branch: master
