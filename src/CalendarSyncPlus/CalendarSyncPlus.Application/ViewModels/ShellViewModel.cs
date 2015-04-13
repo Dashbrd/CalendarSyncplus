@@ -258,16 +258,22 @@ namespace CalendarSyncPlus.Application.ViewModels
 
         private void LaunchSettingsHandler()
         {
+            IsAboutVisible = false;
+            IsHelpVisible = false;
             IsSettingsVisible = true;
         }
 
         private void LaunchAboutHandler()
         {
+            IsSettingsVisible = false;
+            IsHelpVisible = false;
             IsAboutVisible = true;
         }
 
         private void LaunchHelpHandler()
         {
+            IsSettingsVisible = false;
+            IsAboutVisible = false;
             IsHelpVisible = true;
         }
 
