@@ -29,5 +29,6 @@ deploy:
     secure: 1MDHqxV1YdXO142uyU6OQMdf71UjYVDKlFdAid/xLD5A8w+C/htueN8iTeAyqb5e
   artifact: src\CalendarSyncPlus\CalendarSyncPlus.Installer\bin\Release\CalendarSyncPlus.msi
   draft: true
+  prerelease: true
   on:
     branch: master
