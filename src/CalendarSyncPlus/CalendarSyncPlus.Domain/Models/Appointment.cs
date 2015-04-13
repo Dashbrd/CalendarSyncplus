@@ -55,6 +55,7 @@ namespace CalendarSyncPlus.Domain.Models
         private string _sourceId;
         private DateTime? _startTime;
         private string _subject;
+        private MeetingStatusEnum _meetingStatus;
 
         public Appointment(string description, string location, string subject, DateTime? endTime, DateTime? startTime,
             string appointmentId)
@@ -176,6 +177,12 @@ namespace CalendarSyncPlus.Domain.Models
         {
             get { return _optionalAttendees; }
             set { SetProperty(ref _optionalAttendees, value); }
+        }
+
+        public MeetingStatusEnum MeetingStatus
+        {
+            get { return _meetingStatus; }
+            set { SetProperty(ref _meetingStatus, value); }
         }
 
         public string Privacy

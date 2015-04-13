@@ -238,15 +238,18 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
                         Privacy =
                             (appointmentItem.Sensitivity == OlSensitivity.olNormal) ? "default" : "private",
                         IsRecurring = appointmentItem.IsRecurring,
+                        MeetingStatus = appointmentItem.GetMeetingStatus()
                     };
-
+                    
                     foreach (Recipient attendee in appointmentItem.Recipients)
                     {
                         var recipient = new AppRecipient
                         {
                             Name = attendee.Name,
-                            Email = GetSMTPAddressForRecipients(attendee)
+                            Email = GetSMTPAddressForRecipients(attendee),
+                            MeetingResponseStatus = attendee.GetMeetingResponseStatus()
                         };
+                        
                         if (appointmentItem.RequiredAttendees != null &&
                             appointmentItem.RequiredAttendees.Contains(recipient.Name))
                         {
@@ -808,7 +811,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
             try
             {
                 appItem.Subject = calendarAppointment.Subject;
-                appItem.MeetingStatus = OlMeetingStatus.olMeeting;
+                appItem.MeetingStatus = calendarAppointment.GetMeetingStatus();
                 appItem.Location = calendarAppointment.Location;
                 appItem.BusyStatus = calendarAppointment.GetOutlookBusyStatus();
                 recipients = appItem.Recipients;

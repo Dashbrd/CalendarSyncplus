@@ -161,5 +161,6 @@ namespace CalendarSyncPlus.Services.Utilities
             }
             return sb.ToString();
         }
+        
     }
 }

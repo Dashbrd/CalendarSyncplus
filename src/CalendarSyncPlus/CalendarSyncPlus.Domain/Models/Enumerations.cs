@@ -2,6 +2,25 @@
 
 namespace CalendarSyncPlus.Domain.Models
 {
+    public enum MeetingResponseStatusEnum
+    {
+        None,
+        NotResponded,
+        Organizer,
+        Accepted,
+        Declined,
+        Tentative
+    }
+
+    public enum MeetingStatusEnum
+    {
+        Meeting,
+        MeetingCancelled,
+        MeetingReceived,
+        MeetingReceivedAndCanceled,
+        NonMeeting
+    }
+
     [Flags]
     public enum OutlookOptionsEnum
     {
