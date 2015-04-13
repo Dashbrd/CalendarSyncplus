@@ -14,5 +14,5 @@ build:
   project: src\CalendarSyncPlus\CalendarSyncPlus.Installer\CalendarSyncPlus.Installer.wixproj
   verbosity: detailed
 artifacts:
-- path: src\CalendarSyncPlus\CalendarSyncPlus.Installer\bin\Debug\CalendarSyncPlus.msi
+- path: src\CalendarSyncPlus\CalendarSyncPlus.Installer\bin\Release\CalendarSyncPlus.msi
   name: Installer
