@@ -20,15 +20,3 @@ build:
 artifacts:
 - path: src\CalendarSyncPlus\CalendarSyncPlus.Installer\bin\Release\CalendarSyncPlus.msi
   name: Installer
-deploy:
-- provider: GitHub
-  tag: v$(appveyor_build_version)
-  release: Calendar Sync Plus $(appveyor_build_version)
-  description: Release with new fixes
-  auth_token:
-    secure: 1MDHqxV1YdXO142uyU6OQMdf71UjYVDKlFdAid/xLD5A8w+C/htueN8iTeAyqb5e
-  artifact: src\CalendarSyncPlus\CalendarSyncPlus.Installer\bin\Release\CalendarSyncPlus.msi
-  draft: true
-  prerelease: true
-  on:
-    branch: master
