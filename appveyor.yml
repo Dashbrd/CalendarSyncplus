@@ -8,6 +8,11 @@ assembly_info:
   assembly_version: '{version}'
   assembly_file_version: '{version}'
   assembly_informational_version: '{version}'
+before_build:
+- nuget restore src\CalendarSyncPlus\CalendarSyncPlus.sln
 build:
   project: src\CalendarSyncPlus\CalendarSyncPlus.Installer\CalendarSyncPlus.Installer.wixproj
   verbosity: detailed
+artifacts:
+- path: src\CalendarSyncPlus\CalendarSyncPlus.Installer\bin\Debug\CalendarSyncPlus.msi
+  name: Installer
