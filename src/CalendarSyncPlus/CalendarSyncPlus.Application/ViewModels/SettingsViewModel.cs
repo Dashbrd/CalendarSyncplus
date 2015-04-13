@@ -24,9 +24,11 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.ComponentModel.Composition;
 using System.Linq;
+using System.Net;
 using System.Waf.Applications;
 using CalendarSyncPlus.Application.Views;
 using CalendarSyncPlus.Common.Log;
+using CalendarSyncPlus.Domain;
 using CalendarSyncPlus.Domain.Models;
 using CalendarSyncPlus.ExchangeWebServices.ExchangeWeb;
 using CalendarSyncPlus.GoogleServices.Google;
@@ -85,6 +87,7 @@ namespace CalendarSyncPlus.Application.ViewModels
         private Settings _settings;
         private bool _settingsSaved;
         private ObservableCollection<ProfileViewModel> _syncProfileList;
+        private ProxySetting _proxySettings;
 
         #endregion
 
@@ -205,6 +208,11 @@ namespace CalendarSyncPlus.Application.ViewModels
             set { SetProperty(ref _hideSystemTrayTooltip, value); }
         }
 
+        public ProxySetting ProxySettings
+        {
+            get { return _proxySettings; }
+            set { SetProperty(ref _proxySettings, value); }
+        }
 
         private async void CreateProfile()
         {
@@ -292,6 +300,8 @@ namespace CalendarSyncPlus.Application.ViewModels
             Settings.AppSettings.CheckForUpdates = CheckForUpdates;
             Settings.AppSettings.RunApplicationAtSystemStartup = RunApplicationAtSystemStartup;
             Settings.AppSettings.RememberPeriodicSyncOn = RememberPeriodicSyncOn;
+            Settings.AppSettings.ProxySettings = ProxySettings;
+            ApplyProxySettings();
             Settings.SyncProfiles.Clear();
             foreach (ProfileViewModel profileViewModel in SyncProfileList)
             {
@@ -351,6 +361,8 @@ namespace CalendarSyncPlus.Application.ViewModels
             {
                 if (Settings != null)
                 {
+                    ProxySettings = Settings.AppSettings.ProxySettings;
+                    ApplyProxySettings();
                     MinimizeToSystemTray = Settings.AppSettings.MinimizeToSystemTray;
                     HideSystemTrayTooltip = Settings.AppSettings.HideSystemTrayTooltip;
                     CheckForUpdates = Settings.AppSettings.CheckForUpdates;
@@ -387,6 +399,34 @@ namespace CalendarSyncPlus.Application.ViewModels
                 MessageService.ShowMessageAsync(exception.Message);
             }
             IsLoading = false;
+        }
+
+        private void ApplyProxySettings()
+        {
+            IWebProxy proxy; 
+            switch (ProxySettings.ProxyType)
+            {
+                case ProxyType.NoProxy:
+                    WebRequest.DefaultWebProxy = null;
+                    break;
+                case ProxyType.ProxyWithAuth:
+                    proxy = new WebProxy(new Uri(string.Format("{0}:{1}",ProxySettings.ProxyAddress,ProxySettings.Port)),ProxySettings.BypassOnLocal)
+                    {
+                        UseDefaultCredentials= ProxySettings.UseDefaultCredentials
+                    };
+
+                    if (!ProxySettings.UseDefaultCredentials)
+                    {
+                        proxy.Credentials = new NetworkCredential(ProxySettings.UserName, ProxySettings.Password,
+                            ProxySettings.Domain);
+                    }
+                    WebRequest.DefaultWebProxy = proxy;
+                    break;
+                default:
+                    proxy = WebRequest.GetSystemWebProxy();
+                    WebRequest.DefaultWebProxy = proxy;
+                    break;
+            }
         }
 
         private void ProfilePropertyChangedHandler(object sender, PropertyChangedEventArgs e)

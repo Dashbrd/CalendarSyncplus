@@ -4,6 +4,7 @@ namespace CalendarSyncPlus.Domain.Models
 {
     public class Settings
     {
+
         public Settings()
         {
             SyncProfiles = new ObservableCollection<CalendarSyncProfile>();
@@ -17,14 +18,20 @@ namespace CalendarSyncPlus.Domain.Models
 
         public static Settings GetDefaultSettings()
         {
-            var settings = new Settings();
-            settings.AppSettings = new AppSettings
+            var settings = new Settings
             {
-                IsFirstSave = true,
-                MinimizeToSystemTray = true,
-                CheckForUpdates = true,
-                RememberPeriodicSyncOn = true,
-                RunApplicationAtSystemStartup = true
+                AppSettings = new AppSettings
+                {
+                    IsFirstSave = true,
+                    MinimizeToSystemTray = true,
+                    CheckForUpdates = true,
+                    RememberPeriodicSyncOn = true,
+                    RunApplicationAtSystemStartup = true,
+                    ProxySettings = new ProxySetting()
+                    {
+                        ProxyType = ProxyType.Auto
+                    }
+                }
             };
             settings.SyncProfiles.Add(CalendarSyncProfile.GetDefaultSyncProfile());
             return settings;
