@@ -27,7 +27,7 @@ deploy:
   description: Release with new fixes
   auth_token:
     secure: 1MDHqxV1YdXO142uyU6OQMdf71UjYVDKlFdAid/xLD5A8w+C/htueN8iTeAyqb5e
-  artifact: CalendarSyncPlus.msi
+  artifact: src\CalendarSyncPlus\CalendarSyncPlus.Installer\bin\Release\CalendarSyncPlus.msi
   draft: true
   on:
     branch: master
