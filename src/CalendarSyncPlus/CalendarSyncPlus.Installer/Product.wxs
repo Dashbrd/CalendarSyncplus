@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
      xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension">
-  <Product Id="*" Name="Calendar Sync +" Language="1033" Version="1.3.2.0" 
+  <Product Id="*" Name="Calendar Sync +" Language="1033" Version="1.3.1.2" 
            Manufacturer="Ankesh Dave &amp; Akanksha Gaur"  
            UpgradeCode="6A7B72FC-ED9B-4951-B733-AB54B8D4AE94" >
     
@@ -32,7 +32,7 @@
 
     <Icon Id="icon.ico" SourceFile="..\CalendarSyncPlus.Presentation\icon.ico"/>
     <Property Id="ARPPRODUCTICON" Value="icon.ico" />
-    <WixVariable  Id="WixUIBannerBmp" Value="WixTopBanner.png" Overridable="yes"/>
+    <WixVariable  Id="WixUIBannerBmp" Value="WixTopBanner.png"/>
     <Directory Id="TARGETDIR" Name="SourceDir">
       <!--Install Directory structure-->
       <Directory Id="ProgramFilesFolder">
