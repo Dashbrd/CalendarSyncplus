@@ -103,11 +103,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             view.Closing += ViewClosing;
             view.Closed += ViewClosed;
             //If no settings
-            if (!Settings.ValidateSettings())
-            {
-                IsSettingsVisible = true;
-            }
-            else
+            if (Settings.ValidateSettings())
             {
                 if (Settings.AppSettings.RememberPeriodicSyncOn && Settings.AppSettings.PeriodicSyncOn)
                 {

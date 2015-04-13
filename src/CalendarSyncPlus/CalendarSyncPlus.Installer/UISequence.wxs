@@ -3,9 +3,9 @@
 	<Fragment>
     <!--Adding dialogs-->
     <UI Id="UISequence">
-      <Property Id="ApplicationFolderName" Value="Calendar Sync +" />
-      <Property Id="WixAppFolder" Value="WixPerMachineFolder"  />
-      <UIRef Id="WixUI_Advanced"/>
+      <!--<Property Id="ApplicationFolderName" Value="Calendar Sync +" />
+      <Property Id="WixAppFolder" Value="WixPerMachineFolder"  />-->
+      <UIRef Id="WixUI_Minimal"/>
       <Publish Dialog="ExitDialog"
     Control="Finish"
     Event="DoAction"

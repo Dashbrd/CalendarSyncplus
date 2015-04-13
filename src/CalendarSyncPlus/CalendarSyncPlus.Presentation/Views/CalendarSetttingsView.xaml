@@ -90,7 +90,7 @@
                                          GroupName="OutlookApplicationGroup"
                                          Grid.Column="1"
                                          Command="{Binding GetOutlookProfileListCommand}"
-                                         Visibility="Collapsed" />
+                                         IsEnabled="False"/>
                         </Grid>
                     </GroupBox>
                     <GroupBox Grid.Row="1" 

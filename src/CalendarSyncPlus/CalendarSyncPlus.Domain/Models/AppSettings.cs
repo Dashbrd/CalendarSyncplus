@@ -2,6 +2,8 @@
 {
     public class AppSettings
     {
+        #region Properties
+
         public bool IsFirstSave { get; set; }
 
         public bool MinimizeToSystemTray { get; set; }
@@ -15,5 +17,9 @@
         public bool PeriodicSyncOn { get; set; }
 
         public bool RunApplicationAtSystemStartup { get; set; }
+
+        public ProxySetting ProxySettings { get; set; }
+
+        #endregion
     }
 }

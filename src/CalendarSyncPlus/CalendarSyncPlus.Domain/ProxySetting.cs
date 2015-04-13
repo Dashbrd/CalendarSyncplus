@@ -1,0 +1,97 @@
+﻿#region File Header
+
+// /******************************************************************************
+//  * 
+//  *      Copyright (C) Ankesh Dave 2015 All Rights Reserved. Confidential
+//  * 
+//  ******************************************************************************
+//  * 
+//  *      Project:        CalendarSyncPlus
+//  *      SubProject:     CalendarSyncPlus.Domain
+//  *      Author:         Dave, Ankesh
+//  *      Created On:     13-04-2015 2:34 PM
+//  *      Modified On:    13-04-2015 2:34 PM
+//  *      FileName:       ProxySetting.cs
+//  * 
+//  *****************************************************************************/
+
+#endregion
+
+#region Imports
+
+using System.Waf.Foundation;
+
+using DataAnnotationsExtensions;
+
+#endregion
+
+namespace CalendarSyncPlus.Domain
+{
+    public class ProxySetting : Model
+    {
+        #region Fields
+
+        private bool _bypassOnLocal;
+        private string _domain;
+        private string _password;
+        private int _port;
+        private string _proxyAddress;
+        private ProxyType _proxyType;
+        private bool _useDefaultCredentials;
+        private string _userName;
+
+        #endregion
+
+        #region Properties
+        [Url]
+        public string ProxyAddress
+        {
+            get { return _proxyAddress; }
+            set { SetProperty(ref _proxyAddress, value); }
+        }
+
+        public int Port
+        {
+            get { return _port; }
+            set { SetProperty(ref _port, value); }
+        }
+
+        public ProxyType ProxyType
+        {
+            get { return _proxyType; }
+            set { SetProperty(ref _proxyType, value); }
+        }
+
+        public bool BypassOnLocal
+        {
+            get { return _bypassOnLocal; }
+            set { SetProperty(ref _bypassOnLocal, value); }
+        }
+
+        public bool UseDefaultCredentials
+        {
+            get { return _useDefaultCredentials; }
+            set { SetProperty(ref _useDefaultCredentials, value); }
+        }
+
+        public string UserName
+        {
+            get { return _userName; }
+            set { SetProperty(ref _userName, value); }
+        }
+
+        public string Password
+        {
+            get { return _password; }
+            set { SetProperty(ref _password, value); }
+        }
+
+        public string Domain
+        {
+            get { return _domain; }
+            set { SetProperty(ref _domain, value); }
+        }
+
+        #endregion
+    }
+}
