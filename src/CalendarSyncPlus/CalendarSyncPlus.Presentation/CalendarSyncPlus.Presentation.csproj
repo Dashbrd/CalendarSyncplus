@@ -145,8 +145,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="..\Shared\SharedAssemblyProperties.cs">
-      <Link>SharedAssemblyProperties.cs</Link>
+    <Compile Include="..\Shared\AssemblyInfo.cs">
+      <Link>AssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Behaviors\TextBoxScrollBehavior.cs" />
     <Compile Include="Controls\TimePickerControl.xaml.cs">

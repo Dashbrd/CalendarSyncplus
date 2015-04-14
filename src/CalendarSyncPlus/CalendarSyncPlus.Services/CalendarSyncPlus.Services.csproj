@@ -59,6 +59,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Shared\AssemblyInfo.cs">
+      <Link>AssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="CalendarServiceFactory.cs" />
     <Compile Include="CalendarUpdateService.cs" />
     <Compile Include="Interfaces\ICalendarServiceFactory.cs" />
@@ -79,7 +82,6 @@
     <Compile Include="SettingsSerializationService.cs" />
     <Compile Include="ShellService.cs" />
     <Compile Include="SyncService.cs" />
-    <Compile Include="SharedAssemblyProperties.cs" />
     <Compile Include="Utilities\AppointmentHelper.cs" />
     <Compile Include="Utilities\Constants.cs" />
     <Compile Include="Utilities\Delegates.cs" />

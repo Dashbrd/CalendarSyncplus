@@ -3,17 +3,17 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:Converters="clr-namespace:CalendarSyncPlus.Presentation.Converters"
              xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:converters="http://waf.codeplex.com/schemas"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:viewModels="clr-namespace:CalendarSyncPlus.Application.ViewModels;assembly=CalendarSyncPlus.Application"
-             xmlns:converters="http://waf.codeplex.com/schemas"
              d:DataContext="{d:DesignInstance viewModels:SettingsViewModel}"
              d:DesignHeight="500"
              d:DesignWidth="450"
              mc:Ignorable="d">
     <UserControl.Resources>
         <Converters:BoolToEnumConverter x:Key="_boolToEnumConverter" />
-        <converters:InvertBooleanConverter x:Key="InvertBooleanConverter"></converters:InvertBooleanConverter>
+        <converters:InvertBooleanConverter x:Key="InvertBooleanConverter" />
     </UserControl.Resources>
 
     <Grid>
@@ -133,6 +133,7 @@
                                                  Converter={StaticResource _boolToEnumConverter},
                                                  ConverterParameter=ProxyWithAuth}" />
                 <TextBlock Grid.Row="3"
+                           Grid.Column="0"
                            Margin="2"
                            VerticalAlignment="Center"
                            IsEnabled="{Binding Path=IsChecked,
@@ -142,7 +143,10 @@
                          Grid.Column="1"
                          Margin="2"
                          IsEnabled="{Binding Path=IsChecked,
-                                             ElementName=_manualProxyConfigurationRadioButton}" />
+                                             ElementName=_manualProxyConfigurationRadioButton}"
+                         Text="{Binding Path=ProxySettings.ProxyAddress,
+                                        ValidatesOnExceptions=True,
+                                        ValidatesOnDataErrors=True}" />
                 <TextBlock Grid.Row="3"
                            Grid.Column="2"
                            Margin="2"
@@ -155,14 +159,17 @@
                                         Margin="2"
                                         HideUpDownButtons="True"
                                         IsEnabled="{Binding Path=IsChecked,
-                                                            ElementName=_manualProxyConfigurationRadioButton}" />
+                                                            ElementName=_manualProxyConfigurationRadioButton}"
+                                        Value="{Binding Path=ProxySettings.Port}" />
                 <CheckBox x:Name="_useDefaultCredentialCheckbox"
                           Grid.Row="4"
-                          Grid.ColumnSpan="2" Grid.Column="0"
+                          Grid.Column="0"
+                          Grid.ColumnSpan="2"
                           Content="Use Default Credential"
                           IsChecked="{Binding Path=ProxySettings.UseDefaultCredentials,
                                               Mode=TwoWay}" />
-                <TextBlock Grid.Row="5" Grid.Column="0"
+                <TextBlock Grid.Row="5"
+                           Grid.Column="0"
                            Margin="2"
                            VerticalAlignment="Center"
                            Text="Domain" />
@@ -170,35 +177,39 @@
                          Grid.Column="1"
                          Grid.ColumnSpan="3"
                          Margin="2"
-                         Text="{Binding ProxySettings.Domain}"
                          IsEnabled="{Binding Path=IsChecked,
-                                               ElementName=_useDefaultCredentialCheckbox,Converter={StaticResource InvertBooleanConverter}}" />
+                                             ElementName=_useDefaultCredentialCheckbox,
+                                             Converter={StaticResource InvertBooleanConverter}}"
+                         Text="{Binding ProxySettings.Domain}" />
 
-                <TextBlock Grid.Row="6" Grid.Column="0"
+                <TextBlock Grid.Row="6"
+                           Grid.Column="0"
                            Margin="2"
                            VerticalAlignment="Center"
-                          
                            Text="Username" />
                 <TextBox Grid.Row="6"
                          Grid.Column="1"
                          Grid.ColumnSpan="3"
                          Margin="2"
-                         Text="{Binding ProxySettings.UserName}"
                          IsEnabled="{Binding Path=IsChecked,
-                                               ElementName=_useDefaultCredentialCheckbox,Converter={StaticResource InvertBooleanConverter}}" />
-                <TextBlock Grid.Row="7" Grid.Column="0"
+                                             ElementName=_useDefaultCredentialCheckbox,
+                                             Converter={StaticResource InvertBooleanConverter}}"
+                         Text="{Binding ProxySettings.UserName}" />
+                <TextBlock Grid.Row="7"
+                           Grid.Column="0"
                            Margin="2"
                            VerticalAlignment="Center"
                            IsEnabled="{Binding Path=IsChecked,
                                                ElementName=_useDefaultCredentialCheckbox}"
                            Text="Password:" />
-                <PasswordBox Grid.Row="7"
-                             Grid.Column="1"
-                             Grid.ColumnSpan="3"
-                             Margin="2"
-                             controls:PasswordBoxHelper.CapsLockWarningToolTip="CAPSLOCK is on"
-                             IsEnabled="{Binding Path=IsChecked,
-                                               ElementName=_useDefaultCredentialCheckbox,Converter={StaticResource InvertBooleanConverter}}" />
+                <TextBox Grid.Row="7"
+                         Grid.Column="1"
+                         Grid.ColumnSpan="3"
+                         Margin="2"
+                         IsEnabled="{Binding Path=IsChecked,
+                                             ElementName=_useDefaultCredentialCheckbox,
+                                             Converter={StaticResource InvertBooleanConverter}}"
+                         Text="{Binding Path=ProxySettings.Password}" />
             </Grid>
         </GroupBox>
         <TextBlock Grid.Row="3"

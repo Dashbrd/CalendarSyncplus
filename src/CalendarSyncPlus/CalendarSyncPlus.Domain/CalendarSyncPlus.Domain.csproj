@@ -60,8 +60,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Shared\SharedAssemblyProperties.cs">
-      <Link>SharedAssemblyProperties.cs</Link>
+    <Compile Include="..\Shared\AssemblyInfo.cs">
+      <Link>AssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="File\Xml\IXmlSerializer.cs" />
     <Compile Include="File\Xml\XmlSerializer.cs" />

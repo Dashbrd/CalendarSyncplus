@@ -417,8 +417,10 @@ namespace CalendarSyncPlus.Application.ViewModels
 
                     if (!ProxySettings.UseDefaultCredentials)
                     {
-                        proxy.Credentials = new NetworkCredential(ProxySettings.UserName, ProxySettings.Password,
-                            ProxySettings.Domain);
+                        proxy.Credentials = string.IsNullOrEmpty(ProxySettings.Domain)
+                            ? new NetworkCredential(ProxySettings.UserName, ProxySettings.Password)
+                            : new NetworkCredential(ProxySettings.UserName, ProxySettings.Password,
+                                ProxySettings.Domain);
                     }
                     WebRequest.DefaultWebProxy = proxy;
                     break;
