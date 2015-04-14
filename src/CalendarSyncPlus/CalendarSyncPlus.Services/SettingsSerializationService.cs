@@ -25,6 +25,7 @@ using System.ComponentModel.Composition;
 using System.IO;
 using System.Threading.Tasks;
 using CalendarSyncPlus.Common.Log;
+using CalendarSyncPlus.Domain;
 using CalendarSyncPlus.Domain.File.Xml;
 using CalendarSyncPlus.Domain.Models;
 using CalendarSyncPlus.Services.Interfaces;
@@ -130,6 +131,12 @@ namespace CalendarSyncPlus.Services
                 return Settings.GetDefaultSettings();
             }
 
+            ValidateSettings(result);
+            return result;
+        }
+
+        private void ValidateSettings(Settings result)
+        {
             if (result.SyncProfiles == null)
             {
                 result.SyncProfiles = new ObservableCollection<CalendarSyncProfile>();
@@ -148,8 +155,18 @@ namespace CalendarSyncPlus.Services
                     syncProfile.SyncSettings.SyncFrequency = new HourlySyncFrequency();
                 }
             }
+            if (result.AppSettings == null)
+            {
+                result.AppSettings = new AppSettings();
+            }
 
-            return result;
+            if (result.AppSettings.ProxySettings == null)
+            {
+                result.AppSettings.ProxySettings = new ProxySetting()
+                {
+                    ProxyType = ProxyType.Auto
+                };
+            }
         }
 
         #endregion
