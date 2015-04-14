@@ -58,8 +58,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Shared\SharedAssemblyProperties.cs">
-      <Link>SharedAssemblyProperties.cs</Link>
+    <Compile Include="..\Shared\AssemblyInfo.cs">
+      <Link>AssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="DispatcherHelper.cs" />
     <Compile Include="ExtensionMethods.cs" />

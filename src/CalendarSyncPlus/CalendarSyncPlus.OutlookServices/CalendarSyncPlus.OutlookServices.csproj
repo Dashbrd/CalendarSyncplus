@@ -53,10 +53,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Shared\AssemblyInfo.cs">
+      <Link>AssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="Outlook\IOutlookCalendarService.cs" />
     <Compile Include="Outlook\OutlookCalendarService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SharedAssemblyProperties.cs" />
     <Compile Include="Utilities\CategoryHelper.cs" />
     <Compile Include="Utilities\ExtensionMethods.cs" />
   </ItemGroup>
