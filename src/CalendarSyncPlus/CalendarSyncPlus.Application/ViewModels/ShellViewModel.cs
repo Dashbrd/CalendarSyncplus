@@ -441,7 +441,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             }
         }
 
-        private const string CompareTimeFormat = "dd/MM/yy HH:mm:ss";
+        private const string CompareTimeFormat = "dd/MM/yy hh:mm:ss tt";
         private void SyncPeriodicHandler()
         {
             try

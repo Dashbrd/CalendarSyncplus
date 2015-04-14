@@ -128,6 +128,8 @@ namespace CalendarSyncPlus.Services
         {
             bool addDescription =
                 syncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Description);
+            bool addReminders =
+                syncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Reminders);
             var appointmentsToDelete = new List<Appointment>();
             foreach (Appointment destAppointment in destinationList)
             {
@@ -139,45 +141,9 @@ namespace CalendarSyncPlus.Services
                 bool isFound = false;
                 foreach (Appointment sourceAppointment in sourceList)
                 {
-                    bool isCopy = sourceAppointment.CompareSourceId(destAppointment) ||
-                                  destAppointment.CompareSourceId(sourceAppointment);
-                    //Check if destination entry is a copy of source entry
-                    //Or if source entry is a copy of destination entry
-
-                    //If both entries have same content
-                    if (destAppointment.Equals(sourceAppointment))
+                    if (CompareAppointments(syncProfile, destAppointment, sourceAppointment, addDescription,
+                        addReminders, out isFound))
                     {
-                        if (addDescription)
-                        {
-                            if (sourceAppointment.CompareDescription(destAppointment))
-                            {
-                                isFound = true;
-                            }
-                        }
-                        else
-                        {
-                            isFound = true;
-                        }
-                    }
-
-                    if (isFound)
-                    {
-                        break;
-                    }
-
-                    if (isCopy)
-                    {
-                        if (syncProfile.SyncSettings.SyncMode == SyncModeEnum.TwoWay &&
-                            syncProfile.SyncSettings.KeepLastModifiedVersion)
-                        {
-                            if (destAppointment.LastModified.HasValue && sourceAppointment.LastModified.HasValue)
-                            {
-                                if (destAppointment.LastModified.Value > sourceAppointment.LastModified.Value)
-                                {
-                                    isFound = true;
-                                }
-                            }
-                        }
                         break;
                     }
                 }
@@ -188,6 +154,83 @@ namespace CalendarSyncPlus.Services
                 }
             }
             return appointmentsToDelete;
+        }
+
+        private bool CompareAppointments(CalendarSyncProfile syncProfile, Appointment destAppointment,
+            Appointment sourceAppointment, bool addDescription, bool addReminders, out bool isFound)
+        {
+            isFound = false;
+            bool isMatch = false;
+            //If both entries have same content
+            if (destAppointment.Equals(sourceAppointment))
+            {
+                isFound = true;
+                isMatch = true;
+            }
+
+            if (isFound)
+            {
+                //If description flag is on, compare description
+                if (addDescription)
+                {
+                    if (!sourceAppointment.CompareDescription(destAppointment))
+                    {
+                        isFound = false;
+                    }
+                }
+            }
+
+            if (isFound)
+            {
+                //If reminder flag is on, compare reminder
+                if (addReminders)
+                {
+                    //Check if reminders match
+                    if (sourceAppointment.ReminderSet != destAppointment.ReminderSet)
+                    {
+                        isFound = false;
+                    }
+                    else if (sourceAppointment.ReminderSet)
+                    {
+                        if (sourceAppointment.ReminderMinutesBeforeStart !=
+                            destAppointment.ReminderMinutesBeforeStart)
+                        {
+                            isFound = false;
+                        }
+                    }
+                }
+            }
+
+            //Check if destination entry is a copy of source entry
+            //Or if source entry is a copy of destination entry
+            bool isCopy = sourceAppointment.CompareSourceId(destAppointment) ||
+                          destAppointment.CompareSourceId(sourceAppointment);
+
+            //If the appointment doesn't match, but it either is copy of the other, means it was modified
+            // If the flag to keep last modified is present, change is found to true
+            if (!isFound && isCopy)
+            {
+                isMatch = true;
+                if (syncProfile.SyncSettings.SyncMode == SyncModeEnum.TwoWay &&
+                    syncProfile.SyncSettings.KeepLastModifiedVersion)
+                {
+                    if (destAppointment.LastModified.HasValue && sourceAppointment.LastModified.HasValue)
+                    {
+                        if (destAppointment.LastModified.Value > sourceAppointment.LastModified.Value)
+                        {
+                            isFound = true;
+                        }
+                    }
+                }
+            }
+
+            //If the appointment was found, or its contents do not match, do not proceed further for comparison
+            if (isFound || isMatch)
+            {
+                return true;
+            }
+
+            return false;
         }
 
         /// <summary>
@@ -204,29 +247,17 @@ namespace CalendarSyncPlus.Services
             {
                 bool addDescription =
                     syncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Description);
+                bool addReminders =
+                syncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Reminders);
+
                 var appointmentsToAdd = new List<Appointment>();
                 foreach (Appointment sourceAppointment in sourceList)
                 {
                     bool isFound = false;
                     foreach (Appointment destAppointment in destinationList)
                     {
-                        //Check if both entries have same content
-                        if (destAppointment.Equals(sourceAppointment))
-                        {
-                            if (addDescription)
-                            {
-                                if (sourceAppointment.CompareDescription(destAppointment))
-                                {
-                                    isFound = true;
-                                }
-                            }
-                            else
-                            {
-                                isFound = true;
-                            }
-                        }
-
-                        if (isFound)
+                        if (CompareAppointments(syncProfile, destAppointment, sourceAppointment, addDescription,
+                        addReminders, out isFound))
                         {
                             break;
                         }
