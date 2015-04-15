@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
      xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension">
-  <Product Id="*" Name="Calendar Sync +" Language="1033" Version="1.3.1.2" 
-           Manufacturer="Ankesh Dave &amp; Akanksha Gaur"  
+  <Product Id="*" Name="Calendar Sync +" Language="1033" Version="1.3.1.2"
+           Manufacturer="Ankesh Dave &amp; Akanksha Gaur"
            UpgradeCode="6A7B72FC-ED9B-4951-B733-AB54B8D4AE94" >
-    
-    <Package InstallerVersion="405" Manufacturer="Ankesh Dave &amp; Akanksha Gaur" Platform="x86" 
+
+    <Package InstallerVersion="405" Manufacturer="Ankesh Dave &amp; Akanksha Gaur" Platform="x86"
              Compressed="yes" Description="A utility to synchronize Outlook to Google calendars, vice versa and bidirectional."/>
     <!--Upgrade Message-->
-    <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." 
+    <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed."
                    AllowSameVersionUpgrades="no" Schedule="afterInstallInitialize"/>
     <!--Do not create cab file separately-->
     <MediaTemplate EmbedCab="yes"/>
-    
+
     <!--Check for .Net framework 4.5-->
     <PropertyRef Id="NETFRAMEWORK45"/>
     <Condition Message="This application requires .NET Framework 4.5. Please install the .NET Framework then run this installer again. You can download it from https://www.microsoft.com/en-in/download/details.aspx?id=30653">
@@ -21,9 +21,9 @@
     <!--Packaging features-->
     <Feature Id="ProductFeature" Title="Calendar Sync +" Level="1">
       <ComponentGroupRef Id="ProductComponents" />
-      <ComponentRef Id="ApplicationShortcut" />
+      <ComponentGroupRef Id="ApplicationShortcuts" />
     </Feature>
-   
+
     <!--Custom Dialog Sequence-->
     <UI>
       <UIRef Id="WixUI_ErrorProgressText" />
@@ -43,23 +43,28 @@
         <Directory Id="ApplicationProgramsFolder" Name="Calendar Sync +"/>
       </Directory>
     </Directory>
-   
-    <DirectoryRef Id="ApplicationProgramsFolder">
-      <Component Id="ApplicationShortcut" Guid="591a8bd1-2779-4e97-808e-defb2ea6a595">
+
+
+    <ComponentGroup Id="ApplicationShortcuts"  Directory="ApplicationProgramsFolder">
+      <Component Id="ApplicationStartMenuShortcut" Guid="591a8bd1-2779-4e97-808e-defb2ea6a595">
         <Shortcut Id="ApplicationStartMenuShortcut"
                   Name="Calendar Sync +"
                   Description="A utility to synchronize Outlook to Google calendars, vice versa and bidirectional."
                   Target="[#CalendarSyncPlus.exe]"
                   WorkingDirectory="INSTALLFOLDER" Icon="icon.ico" />
         <Shortcut Id="UninstallProduct"
-                         Name="Uninstall Calendar Sync +"
-                         Description="Uninstalls Calendar Sync +"
-                         Target="[System64Folder]msiexec.exe"
-                         Arguments="/x [ProductCode]"/>
+                          Name="Uninstall Calendar Sync +"
+                          Description="Uninstalls Calendar Sync +"
+                          Target="[System64Folder]msiexec.exe"
+                          Arguments="/x [ProductCode]"/>
+
         <RemoveFolder Id="ApplicationProgramsFolder" On="uninstall"/>
-        <RegistryValue Root="HKCU" Key="Software\Ankesh Dave &amp; Akanksha Gaur\CalendarSyncPlus" Name="installed" Type="integer" Value="1" KeyPath="yes"/>
+        <RegistryValue Root="HKCU" Key="Software\Ankesh Dave &amp; Akanksha Gaur\CalendarSyncPlus" Name="installed" Type="integer" Value="00000001" KeyPath="yes"/>
       </Component>
-      
-    </DirectoryRef>
+      <Component Id="SecurityRegistryValue">
+        <RegistryValue Root="HKCU" Key="Software\Policies\Microsoft\Security" Name="CheckAdminSettings" Type="integer" Value="00000001" KeyPath="yes"/>
+      </Component>
+    </ComponentGroup>
+
   </Product>
 </Wix>
