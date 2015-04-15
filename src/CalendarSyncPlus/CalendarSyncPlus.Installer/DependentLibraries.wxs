@@ -70,6 +70,12 @@
 
       <!--Project Dependencies-->
       <Component>
+        <File Id="DataAnnotationsExtensions"
+          Name="DataAnnotationsExtensions.dll"
+          Source="$(var.ProjectDirectory)DataAnnotationsExtensions.dll"
+          KeyPath="yes" />
+      </Component>
+      <Component>
         <File Id="log4net"
           Name="log4net.dll"
           Source="$(var.ProjectDirectory)log4net.dll"
@@ -320,6 +326,12 @@
         <File Id="System.Net.Http.WebRequest"
           Name="System.Net.Http.WebRequest.dll"
           Source="$(var.Net45Directory)\System.Net.Http.WebRequest.dll"
+          KeyPath="yes" />
+      </Component>
+      <Component>
+        <File Id="System.ComponentModel.DataAnnotations"
+          Name="System.ComponentModel.DataAnnotations.dll"
+          Source="$(var.Net45Directory)\System.ComponentModel.DataAnnotations.dll"
           KeyPath="yes" />
       </Component>
       <Component>
