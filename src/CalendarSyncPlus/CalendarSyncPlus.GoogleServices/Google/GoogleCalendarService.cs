@@ -117,7 +117,10 @@ namespace CalendarSyncPlus.GoogleServices.Google
                     }
             };
 
-
+            if (EventCategory != null && !string.IsNullOrEmpty(EventCategory.ColorNumber))
+            {
+                googleEvent.ColorId = EventCategory.ColorNumber;
+            }
             //Add Start/End Time
             if (calenderAppointment.AllDayEvent)
             {
@@ -233,6 +236,16 @@ namespace CalendarSyncPlus.GoogleServices.Google
                     googleEvent.Start.DateTime, googleEvent.Id);
             }
 
+            if(googleEvent.Reminders != null)
+            {
+                if (googleEvent.Reminders.Overrides != null)
+                {
+                    appointment.ReminderSet = true;
+                    appointment.ReminderMinutesBeforeStart = 
+                        googleEvent.Reminders.Overrides.First().Minutes.GetValueOrDefault();
+                }
+            }
+            
             
             appointment.CalendarId = CalendarId;
             if (googleEvent.ExtendedProperties != null && googleEvent.ExtendedProperties.Private != null)
@@ -385,10 +398,6 @@ namespace CalendarSyncPlus.GoogleServices.Google
                         Event calendarEvent = CreateGoogleCalendarEvent(appointment, addDescription, addReminder,
                             attendeesToDescription,
                             addAttendees);
-                        if (EventCategory != null)
-                        {
-                            calendarEvent.ColorId = "1";
-                        }
                         EventsResource.InsertRequest insertRequest = calendarService.Events.Insert(calendarEvent,
                             CalendarId);
                         insertRequest.SendNotifications = false;

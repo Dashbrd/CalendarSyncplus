@@ -6,5 +6,6 @@
 
         public string CategoryName { get; set; }
 
+        public string ColorNumber { get; set; }
     }
 }

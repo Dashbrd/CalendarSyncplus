@@ -105,8 +105,6 @@
     <Compile Include="Google\GoogleCalendarService.cs" />
     <Compile Include="Google\IAccountAuthenticationService.cs" />
     <Compile Include="Google\IGoogleCalendarService.cs" />
-    <Compile Include="Google\Recurrence.cs" />
-    <Compile Include="Google\RecurrenceHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

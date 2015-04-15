@@ -63,38 +63,38 @@ namespace CalendarSyncPlus.OutlookServices.Utilities
 
         /// <summary>
         /// </summary>
-        private static readonly Dictionary<OlCategoryColor, string> CategoryColor;
+        private static readonly Dictionary<OlCategoryColor, KeyValuePair<string,string>> CategoryColor;
 
         static CategoryHelper()
         {
-            CategoryColor = new Dictionary<OlCategoryColor, string>
+            CategoryColor = new Dictionary<OlCategoryColor, KeyValuePair<string,string>>
             {
-                {OlCategoryColor.olCategoryColorNone, "#FFFFFF"},
-                {OlCategoryColor.olCategoryColorRed, "#E7A1A2"},
-                {OlCategoryColor.olCategoryColorOrange, "#F9BA89"},
-                {OlCategoryColor.olCategoryColorPeach, "#F7DD8F"},
-                {OlCategoryColor.olCategoryColorYellow, "#FCFA90"},
-                {OlCategoryColor.olCategoryColorGreen, "#78D168"},
-                {OlCategoryColor.olCategoryColorTeal, "#9FDCC9"},
-                {OlCategoryColor.olCategoryColorOlive, "#C6D2B0"},
-                {OlCategoryColor.olCategoryColorBlue, "#9DB7E8"},
-                {OlCategoryColor.olCategoryColorPurple, "#B5A1E2"},
-                {OlCategoryColor.olCategoryColorMaroon, "#daaec2"},
-                {OlCategoryColor.olCategoryColorSteel, "#dad9dc"},
-                {OlCategoryColor.olCategoryColorDarkSteel, "#6b7994"},
-                {OlCategoryColor.olCategoryColorGray, "#bfbfbf"},
-                {OlCategoryColor.olCategoryColorDarkGray, "#6f6f6f"},
-                {OlCategoryColor.olCategoryColorBlack, "#4f4f4f"},
-                {OlCategoryColor.olCategoryColorDarkRed, "#c11a25"},
-                {OlCategoryColor.olCategoryColorDarkOrange, "#e2620d"},
-                {OlCategoryColor.olCategoryColorDarkPeach, "#c79930"},
-                {OlCategoryColor.olCategoryColorDarkYellow, "#b9b300"},
-                {OlCategoryColor.olCategoryColorDarkGreen, "#368f2b"},
-                {OlCategoryColor.olCategoryColorDarkTeal, "#329b7a"},
-                {OlCategoryColor.olCategoryColorDarkOlive, "#778b45"},
-                {OlCategoryColor.olCategoryColorDarkBlue, "#2858a5"},
-                {OlCategoryColor.olCategoryColorDarkPurple, "#5c3fa3"},
-                {OlCategoryColor.olCategoryColorDarkMaroon, "#93446b"},
+                {OlCategoryColor.olCategoryColorNone, new KeyValuePair<string, string>("#FFFFFF","")},
+                {OlCategoryColor.olCategoryColorRed, new KeyValuePair<string, string>("#E7A1A2","7")},
+                {OlCategoryColor.olCategoryColorOrange,new KeyValuePair<string, string>( "#F9BA89","6")},
+                {OlCategoryColor.olCategoryColorPeach,new KeyValuePair<string, string>( "#F7DD8F","")},
+                {OlCategoryColor.olCategoryColorYellow,new KeyValuePair<string, string>( "#FCFA90","5")},
+                {OlCategoryColor.olCategoryColorGreen,new KeyValuePair<string, string>( "#78D168","3")},
+                {OlCategoryColor.olCategoryColorTeal, new KeyValuePair<string, string>("#9FDCC9","2")},
+                {OlCategoryColor.olCategoryColorOlive,new KeyValuePair<string, string>( "#C6D2B0","")},
+                {OlCategoryColor.olCategoryColorBlue, new KeyValuePair<string, string>("#9DB7E8","1")},
+                {OlCategoryColor.olCategoryColorPurple,new KeyValuePair<string, string>( "#B5A1E2","9")},
+                {OlCategoryColor.olCategoryColorMaroon,new KeyValuePair<string, string>( "#daaec2","")},
+                {OlCategoryColor.olCategoryColorSteel, new KeyValuePair<string, string>("#dad9dc","10")},
+                {OlCategoryColor.olCategoryColorDarkSteel,new KeyValuePair<string, string>( "#6b7994","10")},
+                {OlCategoryColor.olCategoryColorGray,new KeyValuePair<string, string>( "#bfbfbf","10")},
+                {OlCategoryColor.olCategoryColorDarkGray, new KeyValuePair<string, string>("#6f6f6f","10")},
+                {OlCategoryColor.olCategoryColorBlack, new KeyValuePair<string, string>("#4f4f4f","")},
+                {OlCategoryColor.olCategoryColorDarkRed, new KeyValuePair<string, string>("#c11a25","8")},
+                {OlCategoryColor.olCategoryColorDarkOrange, new KeyValuePair<string, string>("#e2620d","6")},
+                {OlCategoryColor.olCategoryColorDarkPeach, new KeyValuePair<string, string>("#c79930","7")},
+                {OlCategoryColor.olCategoryColorDarkYellow, new KeyValuePair<string, string>("#b9b300","5")},
+                {OlCategoryColor.olCategoryColorDarkGreen, new KeyValuePair<string, string>("#368f2b","4")},
+                {OlCategoryColor.olCategoryColorDarkTeal, new KeyValuePair<string, string>("#329b7a","4")},
+                {OlCategoryColor.olCategoryColorDarkOlive, new KeyValuePair<string, string>("#778b45","4")},
+                {OlCategoryColor.olCategoryColorDarkBlue, new KeyValuePair<string, string>("#2858a5","0")},
+                {OlCategoryColor.olCategoryColorDarkPurple, new KeyValuePair<string, string>("#5c3fa3","9")},
+                {OlCategoryColor.olCategoryColorDarkMaroon, new KeyValuePair<string, string>("#93446b","8")},
             };
         }
 
@@ -108,7 +108,8 @@ namespace CalendarSyncPlus.OutlookServices.Utilities
                     var category = new Category
                     {
                         CategoryName = outlookColor.Key.ToString().Remove(0, "olCategoryColor".Length),
-                        HexValue = outlookColor.Value,
+                        HexValue = outlookColor.Value.Key,
+                        ColorNumber = outlookColor.Value.Value,
                     };
                     categories.Add(category);
                 }
