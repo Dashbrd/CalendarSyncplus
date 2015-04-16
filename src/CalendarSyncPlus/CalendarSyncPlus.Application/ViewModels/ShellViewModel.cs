@@ -383,22 +383,6 @@ namespace CalendarSyncPlus.Application.ViewModels
             DispatcherHelper.CheckBeginInvokeOnUI(action);
         }
 
-        #endregion
-
-        #region Protected Methods
-
-        protected virtual void OnClosing(CancelEventArgs e)
-        {
-            if (Closing != null)
-            {
-                Closing(this, e);
-            }
-        }
-
-        #endregion
-
-        #region Private Methods
-
         private static readonly object lockerObject = new object();
         private void OnTimerElapsed(object sender, ElapsedEventArgs e)
         {
@@ -441,15 +425,17 @@ namespace CalendarSyncPlus.Application.ViewModels
             }
         }
 
-        private const string CompareTimeFormat = "dd/MM/yy hh:mm:ss tt";
         private void SyncPeriodicHandler()
         {
             try
             {
-                string dateTime = DateTime.Now.ToString(CompareTimeFormat);
+                DateTime dateTimeNow = DateTime.Now;
                 foreach (CalendarSyncProfile syncProfile in ScheduledSyncProfiles)
                 {
-                    if (syncProfile.NextSync.GetValueOrDefault().ToString(CompareTimeFormat).Equals(dateTime))
+                    DateTime nextSyncTime = syncProfile.NextSync.GetValueOrDefault();
+                    DateTime lastSyncTime = syncProfile.LastSync.GetValueOrDefault();
+                    if (dateTimeNow.Subtract(nextSyncTime).TotalSeconds < 20 &&
+                        dateTimeNow.Subtract(lastSyncTime).TotalMinutes > 4)
                     {
                         CalendarSyncProfile profile = syncProfile;
                         Task.Factory.StartNew(() => StartSyncTask(profile), TaskCreationOptions.None);
@@ -522,6 +508,18 @@ namespace CalendarSyncPlus.Application.ViewModels
 
             IsSyncInProgress = false;
             CheckForUpdates();
+        }
+
+        #endregion
+
+        #region Protected Methods
+
+        protected virtual void OnClosing(CancelEventArgs e)
+        {
+            if (Closing != null)
+            {
+                Closing(this, e);
+            }
         }
 
         #endregion
