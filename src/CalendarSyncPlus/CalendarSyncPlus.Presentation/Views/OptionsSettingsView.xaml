@@ -41,9 +41,12 @@
                     <RowDefinition />
                     <RowDefinition />
                 </Grid.RowDefinitions>
-                <StackPanel Orientation="Horizontal" Margin="2">
-                    <CheckBox Content="Set Category To Appointments (Outlook only)"
+                
+                    <CheckBox Content="Set Category To Appointments (Outlook Categories)" Margin="2"
                               IsChecked="{Binding SetCategory,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
+                <StackPanel Orientation="Horizontal"
+                            Margin="20,2,2,2" Grid.Row="1">
+                    <TextBlock Text="Outlook Categories" Margin="2" VerticalAlignment="Center"/>
                     <ComboBox IsEnabled="{Binding SetCategory,UpdateSourceTrigger=PropertyChanged}"
                               ItemsSource="{Binding Categories,UpdateSourceTrigger=PropertyChanged}"
                               SelectedValue="{Binding SelectedCategory,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
@@ -52,6 +55,26 @@
                         <ComboBox.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <WrapPanel ItemHeight="22" ItemWidth="22" MaxWidth="150" />
+                            </ItemsPanelTemplate>
+                        </ComboBox.ItemsPanel>
+                    </ComboBox>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal"
+                            Margin="20,2,2,2"
+                            Grid.Row="2">
+                    <TextBlock Text="Google Event Colors"
+                               Margin="2"
+                               VerticalAlignment="Center" />
+                    <ComboBox IsEnabled="{Binding SetCategory,UpdateSourceTrigger=PropertyChanged}"
+                              ItemsSource="{Binding Categories,UpdateSourceTrigger=PropertyChanged}"
+                              SelectedValue="{Binding SelectedCategory,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                              ItemTemplate="{StaticResource CategoryDataTemplate}"
+                              Margin="10,2,2,2">
+                        <ComboBox.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel ItemHeight="22"
+                                           ItemWidth="22"
+                                           MaxWidth="150" />
                             </ItemsPanelTemplate>
                         </ComboBox.ItemsPanel>
                     </ComboBox>
