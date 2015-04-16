@@ -4,7 +4,7 @@ $(function()
   function printRepoCount() 
   {
     var responseObj = JSON.parse(this.responseText);
-    var imgSrc = "https://img.shields.io/badge/Downloads "+responseObj.tag_name+"-"+responseObj.assets[0].download_count+"-blue.svg" 
+    var imgSrc = "https://img.shields.io/badge/Downloads-"+responseObj.assets[0].download_count+"-blue.svg" 
     $('#ResponseTag').attr("src", imgSrc);
   }
   var request = new XMLHttpRequest();
