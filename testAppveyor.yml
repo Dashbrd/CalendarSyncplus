@@ -1,7 +1,7 @@
 version: 1.3.2.{build}
 branches:
   only:
-  - test
+  - ciTest
 configuration: Release
 assembly_info:
   patch: true
