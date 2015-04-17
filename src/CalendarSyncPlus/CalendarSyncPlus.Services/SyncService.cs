@@ -35,7 +35,7 @@ using CalendarSyncPlus.Services.Utilities;
 
 namespace CalendarSyncPlus.Services
 {
-    [Export(typeof (ISyncService))]
+    [Export(typeof(ISyncService))]
     public class SyncService : Model, ISyncService
     {
         #region Fields
@@ -82,11 +82,11 @@ namespace CalendarSyncPlus.Services
             await Task.Delay(1000);
             if (_syncTimer == null)
             {
-                _syncTimer = new Timer(1000);
+                _syncTimer = new Timer(1000) { AutoReset = true };
+                _syncTimer.Elapsed += timerCallback;
             }
-
             _syncTimer.Start();
-            _syncTimer.Elapsed += timerCallback;
+
             return true;
         }
 
@@ -94,6 +94,7 @@ namespace CalendarSyncPlus.Services
         {
             _syncTimer.Stop();
             _syncTimer.Elapsed -= ElapsedEventHandler;
+            _syncTimer = null;
         }
 
         public string SyncNow(CalendarSyncProfile syncProfile, SyncCallback syncCallback)

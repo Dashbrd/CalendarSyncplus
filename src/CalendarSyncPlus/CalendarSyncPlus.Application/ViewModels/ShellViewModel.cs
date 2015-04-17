@@ -390,7 +390,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             {
                 if (Settings != null)
                 {
-                    SyncPeriodicHandler();
+                    SyncPeriodicHandler(e.SignalTime);
                 }
             });
         }
@@ -425,17 +425,28 @@ namespace CalendarSyncPlus.Application.ViewModels
             }
         }
 
-        private void SyncPeriodicHandler()
+        private void SyncPeriodicHandler(DateTime signalTime)
         {
             try
             {
-                DateTime dateTimeNow = DateTime.Now;
                 foreach (CalendarSyncProfile syncProfile in ScheduledSyncProfiles)
                 {
                     DateTime nextSyncTime = syncProfile.NextSync.GetValueOrDefault();
-                    DateTime lastSyncTime = syncProfile.LastSync.GetValueOrDefault();
-                    if (dateTimeNow.Subtract(nextSyncTime).TotalSeconds < 20 &&
-                        dateTimeNow.Subtract(lastSyncTime).TotalMinutes > 4)
+                    int compareResult = nextSyncTime.CompareTo(signalTime);
+                    if (compareResult < 0)
+                    {
+                        DateTime lastSynctime = syncProfile.NextSync.GetValueOrDefault();
+                        if (signalTime.Subtract(nextSyncTime).TotalSeconds < 20 && signalTime.Subtract(lastSynctime).TotalMinutes > 4)
+                        {
+                            CalendarSyncProfile profile = syncProfile;
+                            Task.Factory.StartNew(() => StartSyncTask(profile), TaskCreationOptions.None);
+                        }
+                        else
+                        {
+                            syncProfile.NextSync = syncProfile.SyncSettings.SyncFrequency.GetNextSyncTime(signalTime);
+                        }
+                    }
+                    else if (compareResult == 0)
                     {
                         CalendarSyncProfile profile = syncProfile;
                         Task.Factory.StartNew(() => StartSyncTask(profile), TaskCreationOptions.None);
