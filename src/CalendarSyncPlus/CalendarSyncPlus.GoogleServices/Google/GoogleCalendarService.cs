@@ -215,8 +215,11 @@ namespace CalendarSyncPlus.GoogleServices.Google
         private void InsertEventErrorMessage(Event content, RequestError error, int index, HttpResponseMessage message,
             Dictionary<KeyValuePair<int, Appointment>, HttpResponseMessage> eventListIndex)
         {
-            //var getKey = eventListIndex.FirstOrDefault(pair => pair.Key.Key == index);
-            // eventListIndex[getKey.Key] = message;
+            if (!message.IsSuccessStatusCode)
+            {
+                ApplicationLogger.LogWarn(String.Format("Id : {0}{2}Summary : {1}", content.Id, content.Summary,
+                    Environment.NewLine));
+            }
         }
 
         private Appointment CreateAppointment(Event googleEvent)

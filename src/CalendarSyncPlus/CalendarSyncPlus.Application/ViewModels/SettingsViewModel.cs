@@ -87,7 +87,8 @@ namespace CalendarSyncPlus.Application.ViewModels
         private Settings _settings;
         private bool _settingsSaved;
         private ObservableCollection<ProfileViewModel> _syncProfileList;
-        private ProxySetting _proxySettings;
+        private ProxySettingsDataModel _proxySettings;
+        private bool _isValid;
 
         #endregion
 
@@ -208,10 +209,16 @@ namespace CalendarSyncPlus.Application.ViewModels
             set { SetProperty(ref _hideSystemTrayTooltip, value); }
         }
 
-        public ProxySetting ProxySettings
+        public ProxySettingsDataModel ProxySettings
         {
             get { return _proxySettings; }
             set { SetProperty(ref _proxySettings, value); }
+        }
+
+        public bool IsValid
+        {
+            get { return _isValid; }
+            set { SetProperty(ref _isValid, value); }
         }
 
         private async void CreateProfile()
@@ -300,7 +307,17 @@ namespace CalendarSyncPlus.Application.ViewModels
             Settings.AppSettings.CheckForUpdates = CheckForUpdates;
             Settings.AppSettings.RunApplicationAtSystemStartup = RunApplicationAtSystemStartup;
             Settings.AppSettings.RememberPeriodicSyncOn = RememberPeriodicSyncOn;
-            Settings.AppSettings.ProxySettings = ProxySettings;
+            Settings.AppSettings.ProxySettings = new ProxySetting()
+            {
+                BypassOnLocal = ProxySettings.BypassOnLocal,
+                Domain = ProxySettings.Domain,
+                Password = ProxySettings.Password,
+                Port = ProxySettings.Port,
+                ProxyAddress = ProxySettings.ProxyAddress,
+                ProxyType = ProxySettings.ProxyType,
+                UseDefaultCredentials = ProxySettings.UseDefaultCredentials,
+                UserName = ProxySettings.UserName
+            };
             ApplyProxySettings();
             Settings.SyncProfiles.Clear();
             foreach (ProfileViewModel profileViewModel in SyncProfileList)
@@ -361,7 +378,17 @@ namespace CalendarSyncPlus.Application.ViewModels
             {
                 if (Settings != null)
                 {
-                    ProxySettings = Settings.AppSettings.ProxySettings;
+                    ProxySettings = new ProxySettingsDataModel()
+                    {
+                        BypassOnLocal = Settings.AppSettings.ProxySettings.BypassOnLocal,
+                        Domain = Settings.AppSettings.ProxySettings.Domain,
+                        Password = Settings.AppSettings.ProxySettings.Password,
+                        Port = Settings.AppSettings.ProxySettings.Port,
+                        ProxyAddress = Settings.AppSettings.ProxySettings.ProxyAddress,
+                        ProxyType = Settings.AppSettings.ProxySettings.ProxyType,
+                        UseDefaultCredentials = Settings.AppSettings.ProxySettings.UseDefaultCredentials,
+                        UserName = Settings.AppSettings.ProxySettings.UserName
+                    };
                     ApplyProxySettings();
                     MinimizeToSystemTray = Settings.AppSettings.MinimizeToSystemTray;
                     HideSystemTrayTooltip = Settings.AppSettings.HideSystemTrayTooltip;
@@ -403,31 +430,39 @@ namespace CalendarSyncPlus.Application.ViewModels
 
         private void ApplyProxySettings()
         {
-            IWebProxy proxy; 
-            switch (ProxySettings.ProxyType)
+            IWebProxy proxy;
+            try
             {
-                case ProxyType.NoProxy:
-                    WebRequest.DefaultWebProxy = null;
-                    break;
-                case ProxyType.ProxyWithAuth:
-                    proxy = new WebProxy(new Uri(string.Format("{0}:{1}",ProxySettings.ProxyAddress,ProxySettings.Port)),ProxySettings.BypassOnLocal)
-                    {
-                        UseDefaultCredentials= ProxySettings.UseDefaultCredentials
-                    };
+                switch (ProxySettings.ProxyType)
+                {
+                    case ProxyType.NoProxy:
+                        WebRequest.DefaultWebProxy = null;
+                        break;
+                    case ProxyType.ProxyWithAuth:
+                        proxy = new WebProxy(new Uri(string.Format("{0}:{1}", ProxySettings.ProxyAddress, ProxySettings.Port)), ProxySettings.BypassOnLocal)
+                        {
+                            UseDefaultCredentials = ProxySettings.UseDefaultCredentials
+                        };
 
-                    if (!ProxySettings.UseDefaultCredentials)
-                    {
-                        proxy.Credentials = string.IsNullOrEmpty(ProxySettings.Domain)
-                            ? new NetworkCredential(ProxySettings.UserName, ProxySettings.Password)
-                            : new NetworkCredential(ProxySettings.UserName, ProxySettings.Password,
-                                ProxySettings.Domain);
-                    }
-                    WebRequest.DefaultWebProxy = proxy;
-                    break;
-                default:
-                    proxy = WebRequest.GetSystemWebProxy();
-                    WebRequest.DefaultWebProxy = proxy;
-                    break;
+                        if (!ProxySettings.UseDefaultCredentials)
+                        {
+                            proxy.Credentials = string.IsNullOrEmpty(ProxySettings.Domain)
+                                ? new NetworkCredential(ProxySettings.UserName, ProxySettings.Password)
+                                : new NetworkCredential(ProxySettings.UserName, ProxySettings.Password,
+                                    ProxySettings.Domain);
+                        }
+                        WebRequest.DefaultWebProxy = proxy;
+                        break;
+                    default:
+                        proxy = WebRequest.GetSystemWebProxy();
+                        WebRequest.DefaultWebProxy = proxy;
+                        break;
+                }
+            }
+            catch (Exception exception)
+            {
+                ApplicationLogger.LogError(exception.ToString());
+                MessageService.ShowMessageAsync("Invlaid Proxy Settings. Proxy Settings not applied");
             }
         }
 

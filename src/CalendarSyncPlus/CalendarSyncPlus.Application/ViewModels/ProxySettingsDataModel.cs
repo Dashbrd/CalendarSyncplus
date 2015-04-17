@@ -1,32 +1,12 @@
-﻿#region File Header
-
-// /******************************************************************************
-//  * 
-//  *      Copyright (C) Ankesh Dave 2015 All Rights Reserved. Confidential
-//  * 
-//  ******************************************************************************
-//  * 
-//  *      Project:        CalendarSyncPlus
-//  *      SubProject:     CalendarSyncPlus.Domain
-//  *      Author:         Dave, Ankesh
-//  *      Created On:     13-04-2015 2:34 PM
-//  *      Modified On:    13-04-2015 2:34 PM
-//  *      FileName:       ProxySetting.cs
-//  * 
-//  *****************************************************************************/
-
-#endregion
-
-#region Imports
-
+﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.Waf.Foundation;
+using CalendarSyncPlus.Common.Attributes;
+using CalendarSyncPlus.Domain;
 
-#endregion
-
-namespace CalendarSyncPlus.Domain
+namespace CalendarSyncPlus.Application.ViewModels
 {
-    public class ProxySetting : Model
+    public class ProxySettingsDataModel : ValidatableModel
     {
         #region Fields
 
@@ -42,18 +22,20 @@ namespace CalendarSyncPlus.Domain
         #endregion
 
         #region Properties
+        [RegularExpression(@"^http(s?)\:\/\/[0-9a-zA-Z]([-.\w]*[0-9a-zA-Z])*(:(0-9)*)*(\/?)([a-zA-Z0-9\-\.\?\,\'\/\\\+&amp;%\$#_]*)?$", ErrorMessage = "Invalid URL")]
         public string ProxyAddress
         {
             get { return _proxyAddress; }
-            set { SetProperty(ref _proxyAddress, value); }
+            set { SetPropertyAndValidate(ref _proxyAddress, value); }
         }
+        [Range(0, 65535,ErrorMessage="Port should ne between {0}")]
         public int Port
         {
             get { return _port; }
-            set { SetProperty(ref _port, value); }
+            set { SetPropertyAndValidate(ref _port, value); }
         }
 
-        
+
         public ProxyType ProxyType
         {
             get { return _proxyType; }
