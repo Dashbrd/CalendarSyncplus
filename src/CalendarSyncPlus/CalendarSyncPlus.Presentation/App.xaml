@@ -80,6 +80,15 @@
                             </DataTrigger>
                         </DataTemplate.Triggers>
                     </DataTemplate>
+                    <DataTemplate x:Key="HelpButtonStyle">
+                        <Button>
+                            <Rectangle Fill="{StaticResource AccentSelectedColorBrush}">
+                                <Rectangle.OpacityMask>
+                                    <VisualBrush Visual="{StaticResource appbar_question}"/>
+                                </Rectangle.OpacityMask>
+                            </Rectangle>
+                        </Button>
+                    </DataTemplate>
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
             

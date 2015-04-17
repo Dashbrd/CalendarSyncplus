@@ -241,7 +241,7 @@ namespace CalendarSyncPlus.GoogleServices.Google
 
             if(googleEvent.Reminders != null)
             {
-                if (googleEvent.Reminders.Overrides != null)
+                if (!googleEvent.Reminders.UseDefault.GetValueOrDefault() && googleEvent.Reminders.Overrides != null)
                 {
                     appointment.ReminderSet = true;
                     appointment.ReminderMinutesBeforeStart = 
