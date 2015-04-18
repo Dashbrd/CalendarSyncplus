@@ -1,3 +1,5 @@
+using System.Threading;
+using System.Threading.Tasks;
 using Google.Apis.Calendar.v3;
 
 namespace CalendarSyncPlus.GoogleServices.Google
@@ -23,10 +25,13 @@ namespace CalendarSyncPlus.GoogleServices.Google
         /// <summary>
         ///     Default Authentication Method
         /// </summary>
+        /// <param name="accountName"></param>
         /// <returns></returns>
-        CalendarService AuthenticateCalenderOauth();
+        CalendarService AuthenticateCalenderOauth(string accountName);
+
+        Task<bool> AuthorizeGoogleAccount(string accountName, CancellationToken cancellationToken);
 
 
-        bool DisconnectGoogle();
+        bool DisconnectGoogle(string name);
     }
 }

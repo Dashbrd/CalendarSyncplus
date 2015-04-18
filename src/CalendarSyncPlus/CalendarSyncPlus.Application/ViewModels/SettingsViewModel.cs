@@ -25,6 +25,8 @@ using System.ComponentModel;
 using System.ComponentModel.Composition;
 using System.Linq;
 using System.Net;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Waf.Applications;
 using CalendarSyncPlus.Application.Views;
 using CalendarSyncPlus.Common.Log;
@@ -89,6 +91,9 @@ namespace CalendarSyncPlus.Application.ViewModels
         private ObservableCollection<ProfileViewModel> _syncProfileList;
         private ProxySettingsDataModel _proxySettings;
         private bool _isValid;
+        private DelegateCommand _addNewGoogleAccount;
+        private ObservableCollection<GoogleAccount> _googleAccounts;
+
 
         #endregion
 
@@ -290,6 +295,90 @@ namespace CalendarSyncPlus.Application.ViewModels
                 {
                     SyncProfileList.Move(index, index + 1);
                 }
+            }
+        }
+
+        public DelegateCommand AddNewGoogleAccount
+        {
+            get
+            {
+                return _addNewGoogleAccount = _addNewGoogleAccount ?? new DelegateCommand(AddNewGoogleAccountHandler);
+            }
+        }
+        public ObservableCollection<GoogleAccount> GoogleAccounts
+        {
+            get { return _googleAccounts; }
+            set { SetProperty(ref _googleAccounts, value); }
+        }
+
+        private async void AddNewGoogleAccountHandler()
+        {
+            //Accept Email Id
+            string accountName = await MessageService.ShowInput("Enter your Google Email", "Add Google Account");
+
+            if (string.IsNullOrEmpty(accountName))
+            {
+                return;
+            }
+
+            // Start progress controller
+            var progressDialogController =
+                await MessageService.ShowProgress("Authenticate and Authorize in the browser window", "Add Google Account");
+            //Delay for Prepradness
+            await Task.Delay(5000);
+
+            progressDialogController.SetIndeterminate();
+            progressDialogController.SetCancelable(true);
+
+            //Create cancellation token to support cancellation
+            CancellationTokenSource tokenSource = new CancellationTokenSource();
+            var token = tokenSource.Token;
+            var authorizeGoogleAccountTask = AccountAuthenticationService.AuthorizeGoogleAccount(accountName, token);
+
+            //Wait for 120 seconds
+            int timeInSeconds = 120;
+            while (timeInSeconds > 0)
+            {
+                progressDialogController.SetMessage(String.Format("Authenticate and Authorize in the browser window in {0} secs", timeInSeconds));
+
+                //cancel task if cancellation is requested
+                if (progressDialogController.IsCanceled)
+                {
+                    tokenSource.Cancel();
+                    break;
+                }
+
+                //break loop if task changes its status
+                if (authorizeGoogleAccountTask.IsCanceled || authorizeGoogleAccountTask.IsFaulted || authorizeGoogleAccountTask.IsCompleted)
+                {
+                    break;
+                }
+                timeInSeconds--;
+                await Task.Delay(1000);
+            }
+
+            if (timeInSeconds < 0)
+            {
+                tokenSource.Cancel();
+            }
+
+            await progressDialogController.CloseAsync();
+
+            if (authorizeGoogleAccountTask.IsCanceled || authorizeGoogleAccountTask.IsFaulted || token.IsCancellationRequested ||
+                progressDialogController.IsCanceled)
+            {
+                MessageService.ShowMessageAsync("Account Not Added, Authorization Interupted, Try Again");
+            }
+            else
+            {
+                var account = new GoogleAccount() { Name = accountName };
+                if (GoogleAccounts==null)
+                {
+                    GoogleAccounts= new ObservableCollection<GoogleAccount>();
+                }
+                GoogleAccounts.Add(account);
+                SelectedProfile.SelectedGoogleAccount = account;
+                SelectedProfile.GetGoogleCalendar();
             }
         }
 

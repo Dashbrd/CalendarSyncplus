@@ -290,7 +290,8 @@ namespace CalendarSyncPlus.Services
                 case CalendarServiceType.Google:
                     calendarSpecificData = new Dictionary<string, object> 
                     { 
-                        {"CalendarId", syncProfile.GoogleCalendar.Id}
+                        {"CalendarId", syncProfile.GoogleAccount.GoogleCalendar.Id},
+                        {"AccountName",syncProfile.GoogleAccount.Name}
                     };
                     break;
                 case CalendarServiceType.OutlookDesktop:

@@ -65,6 +65,7 @@
     <Compile Include="Models\AppSettings.cs" />
     <Compile Include="Models\Category.cs" />
     <Compile Include="Models\EWSCalendar.cs" />
+    <Compile Include="Models\GoogleAccount.cs" />
     <Compile Include="Models\LogSettings.cs" />
     <Compile Include="Models\Appointment.cs" />
     <Compile Include="Models\Calendar.cs" />

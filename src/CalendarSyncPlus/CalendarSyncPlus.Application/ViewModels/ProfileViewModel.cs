@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Waf.Applications;
 using System.Waf.Foundation;
@@ -47,7 +49,7 @@ namespace CalendarSyncPlus.Application.ViewModels
         private DelegateCommand _disconnectGoogleCommand;
         private DelegateCommand _getOutlookMailboxCommand;
         private DelegateCommand _getOutlookProfileLIstCommand;
-        private List<Calendar> _googleCalenders;
+        private List<GoogleCalendar> _googleCalenders;
         private bool _isDefault;
         private bool _isDefaultMailBox = true;
         private bool _isDefaultProfile = true;
@@ -64,7 +66,7 @@ namespace CalendarSyncPlus.Application.ViewModels
         private string _password;
         private DelegateCommand _resetGoogleCalendar;
         private DelegateCommand _resetOutlookCalendarCommand;
-        private Calendar _selectedCalendar;
+        private GoogleCalendar _selectedCalendar;
         private CalendarSyncDirectionEnum _selectedCalendarSyncDirection;
         private Category _selectedCategory;
         private OutlookCalendar _selectedExchangeCalendar;
@@ -74,6 +76,7 @@ namespace CalendarSyncPlus.Application.ViewModels
         private string _syncFrequency;
         private SyncFrequencyViewModel _syncFrequencyViewModel;
         private string _username;
+        private GoogleAccount _selectedGoogleAccount;
 
         public ProfileViewModel(CalendarSyncProfile syncProfile, IGoogleCalendarService googleCalendarService,
             IOutlookCalendarService outlookCalendarService,
@@ -225,13 +228,20 @@ namespace CalendarSyncPlus.Application.ViewModels
             set { SetProperty(ref _isExchangeWebServices, value); }
         }
 
-        public Calendar SelectedCalendar
+        public GoogleCalendar SelectedCalendar
         {
             get { return _selectedCalendar; }
-            set { SetProperty(ref _selectedCalendar, value); }
+            set
+            {
+                SetProperty(ref _selectedCalendar, value);
+                if (SelectedGoogleAccount != null)
+                {
+                    SelectedGoogleAccount.GoogleCalendar = SelectedCalendar;
+                }
+            }
         }
 
-        public List<Calendar> GoogleCalenders
+        public List<GoogleCalendar> GoogleCalenders
         {
             get { return _googleCalenders; }
             set { SetProperty(ref _googleCalenders, value); }
@@ -423,6 +433,14 @@ namespace CalendarSyncPlus.Application.ViewModels
             }
         }
 
+
+
+        public GoogleAccount SelectedGoogleAccount
+        {
+            get { return _selectedGoogleAccount; }
+            set { SetProperty(ref _selectedGoogleAccount, value); }
+        }
+
         #endregion
 
         #region Private Methods
@@ -473,7 +491,8 @@ namespace CalendarSyncPlus.Application.ViewModels
             KeepLastModifiedCopy = SyncProfile.SyncSettings.KeepLastModifiedVersion;
             SyncFrequency = SyncProfile.SyncSettings.SyncFrequency.Name;
             SetCategory = SyncProfile.SetCalendarCategory;
-            SelectedCalendar = SyncProfile.GoogleCalendar;
+            SelectedGoogleAccount = SyncProfile.GoogleAccount;
+            if (SelectedGoogleAccount != null) SelectedCalendar = SelectedGoogleAccount.GoogleCalendar;
 
             SelectedOutlookProfileName = SyncProfile.OutlookSettings.OutlookProfileName;
             SelectedOutlookMailBox = SyncProfile.OutlookSettings.OutlookMailBox;
@@ -545,7 +564,13 @@ namespace CalendarSyncPlus.Application.ViewModels
 
         private void DisconnectGoogleHandler()
         {
-            var result = AccountAuthenticationService.DisconnectGoogle();
+            if (SelectedGoogleAccount==null)
+            {
+                MessageService.ShowMessageAsync("No account selected");
+                return;
+            }
+
+            var result = AccountAuthenticationService.DisconnectGoogle(SelectedGoogleAccount.Name);
             if (result)
             {
                 GoogleCalenders = null;
@@ -558,8 +583,9 @@ namespace CalendarSyncPlus.Application.ViewModels
             }
         }
 
-        private async void GetGoogleCalendar()
+        internal async void GetGoogleCalendar()
         {
+            //TODO : Move this method to main setitngs view
             IsLoading = true;
             try
             {
@@ -588,13 +614,13 @@ namespace CalendarSyncPlus.Application.ViewModels
         {
             try
             {
-                List<Calendar> calendars =
-                        await GoogleCalendarService.GetAvailableCalendars(new Dictionary<string, object>());
+                List<GoogleCalendar> calendars =
+                        await GoogleCalendarService.GetAvailableCalendars(SelectedGoogleAccount.Name);
                 GoogleCalenders = calendars;
                 if (GoogleCalenders.Any())
                 {
-                    SelectedCalendar = SyncProfile != null && SyncProfile.GoogleCalendar != null
-                        ? GoogleCalenders.FirstOrDefault(t => t.Id.Equals(SyncProfile.GoogleCalendar.Id))
+                    SelectedCalendar = SyncProfile != null && SyncProfile.GoogleAccount != null && SyncProfile.GoogleAccount.GoogleCalendar !=null
+                        ? GoogleCalenders.FirstOrDefault(t => t.Id.Equals(SyncProfile.GoogleAccount.GoogleCalendar.Id))
                         : GoogleCalenders.First();
                 }
             }
@@ -741,7 +767,7 @@ namespace CalendarSyncPlus.Application.ViewModels
         public CalendarSyncProfile SaveCurrentSyncProfile()
         {
             SyncProfile.IsSyncEnabled = IsSyncEnabled;
-            SyncProfile.GoogleCalendar = SelectedCalendar;
+            SyncProfile.GoogleAccount = SelectedGoogleAccount;
             SyncProfile.DaysInFuture = DaysInFuture;
             SyncProfile.DaysInPast = DaysInPast;
             SyncProfile.SyncSettings.SyncFrequency = SyncFrequencyViewModel.GetFrequency();

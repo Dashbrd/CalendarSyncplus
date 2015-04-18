@@ -49,12 +49,14 @@ namespace CalendarSyncPlus.GoogleServices.Google
         #region Static and Constants
 
         private const string dictionaryKey_CalendarId = "CalendarId";
+        private const string dictionaryKey_AccountName = "AccountName";
 
         #endregion
 
         #region Fields
 
         private string calendarId;
+        private string accountName;
         private ApplicationLogger ApplicationLogger { get; set; }
 
         #endregion
@@ -86,6 +88,12 @@ namespace CalendarSyncPlus.GoogleServices.Google
         public string CalendarServiceName
         {
             get { return "Google"; }
+        }
+
+        private string AccountName
+        {
+            get { return accountName; }
+            set { accountName = value; }
         }
 
         #endregion
@@ -207,9 +215,9 @@ namespace CalendarSyncPlus.GoogleServices.Google
             }
         }
 
-        private CalendarService GetCalendarService()
+        private CalendarService GetCalendarService(string accountName)
         {
-            return AccountAuthenticationService.AuthenticateCalenderOauth();
+            return AccountAuthenticationService.AuthenticateCalenderOauth(accountName);
         }
 
         private void InsertEventErrorMessage(Event content, RequestError error, int index, HttpResponseMessage message,
@@ -304,7 +312,7 @@ namespace CalendarSyncPlus.GoogleServices.Google
         {
             CheckCalendarSpecificData(calendarSpecificData);
 
-            CalendarService calendarService = GetCalendarService();
+            CalendarService calendarService = GetCalendarService(AccountName);
 
             CalendarListEntry calendarListEntry = await calendarService.CalendarList.Get(CalendarId).ExecuteAsync();
 
@@ -313,6 +321,8 @@ namespace CalendarSyncPlus.GoogleServices.Google
             await calendarService.CalendarList.Update(calendarListEntry, calendarId).ExecuteAsync();
         }
 
+        /// <exception cref="ArgumentNullException"><paramref name="calendarSpecificData"/> is <see langword="null" />.</exception>
+        /// <exception cref="InvalidOperationException">If AccountName, CalendarId are do not have valid values.</exception>
         public void CheckCalendarSpecificData(IDictionary<string, object> calendarSpecificData)
         {
             if (calendarSpecificData == null)
@@ -320,15 +330,29 @@ namespace CalendarSyncPlus.GoogleServices.Google
                 throw new ArgumentNullException("calendarSpecificData", "Calendar Specific Data cannot be null");
             }
 
-            object keyValue;
-            if (!calendarSpecificData.TryGetValue(dictionaryKey_CalendarId, out keyValue))
+            object calendarIdValue;
+            if (!calendarSpecificData.TryGetValue(dictionaryKey_CalendarId, out calendarIdValue))
             {
                 throw new InvalidOperationException(string.Format("{0} is a required.", dictionaryKey_CalendarId));
             }
 
-            CalendarId = keyValue as string;
+            CalendarId = calendarIdValue as string;
 
             if (string.IsNullOrEmpty(calendarId))
+            {
+                throw new InvalidOperationException(string.Format("{0} cannot be null or empty.",
+                    dictionaryKey_CalendarId));
+            }
+
+            object accountNameValue;
+            if (!calendarSpecificData.TryGetValue(dictionaryKey_AccountName, out accountNameValue))
+            {
+                throw new InvalidOperationException(string.Format("{0} is a required.", dictionaryKey_AccountName));
+            }
+
+            AccountName = accountNameValue as string;
+
+            if (string.IsNullOrEmpty(accountName))
             {
                 throw new InvalidOperationException(string.Format("{0} cannot be null or empty.",
                     dictionaryKey_CalendarId));
@@ -345,16 +369,17 @@ namespace CalendarSyncPlus.GoogleServices.Google
             }
         }
 
-        public async Task<List<Calendar>> GetAvailableCalendars(IDictionary<string, object> calendarSpecificData)
+        public async Task<List<GoogleCalendar>> GetAvailableCalendars(string accountName)
         {
             //Get Calendar Service
-            CalendarService calendarService = GetCalendarService();
+            CalendarService calendarService = GetCalendarService(accountName);
 
             CalendarList calenderList = await calendarService.CalendarList.List().ExecuteAsync();
 
-            List<Calendar> localCalendarList =
+            List<GoogleCalendar> localCalendarList =
                 calenderList.Items.Select(
-                    calendarListEntry => new Calendar { Id = calendarListEntry.Id, Name = calendarListEntry.Summary })
+                    calendarListEntry =>
+                        new GoogleCalendar {Id = calendarListEntry.Id, Name = calendarListEntry.Summary})
                     .ToList();
             return localCalendarList;
         }
@@ -372,7 +397,7 @@ namespace CalendarSyncPlus.GoogleServices.Google
 
             var eventIndexList = new Dictionary<KeyValuePair<int, Appointment>, HttpResponseMessage>();
             //Get Calendar Service
-            CalendarService calendarService = GetCalendarService();
+            CalendarService calendarService = GetCalendarService(AccountName);
 
             if (calendarAppointments == null || string.IsNullOrEmpty(CalendarId))
             {
@@ -433,7 +458,7 @@ namespace CalendarSyncPlus.GoogleServices.Google
 
             var eventIndexList = new Dictionary<KeyValuePair<int, Appointment>, HttpResponseMessage>();
             //Get Calendar Service
-            CalendarService calendarService = GetCalendarService();
+            CalendarService calendarService = GetCalendarService(AccountName);
 
             if (calendarAppointments == null || string.IsNullOrEmpty(CalendarId))
             {
@@ -483,7 +508,7 @@ namespace CalendarSyncPlus.GoogleServices.Google
             CheckCalendarSpecificData(calendarSpecificData);
 
             //Get Calendar Service
-            CalendarService calendarService = GetCalendarService();
+            CalendarService calendarService = GetCalendarService(AccountName);
 
             var finalEventList = new List<Appointment>();
 

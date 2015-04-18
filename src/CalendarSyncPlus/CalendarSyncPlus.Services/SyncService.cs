@@ -101,7 +101,7 @@ namespace CalendarSyncPlus.Services
         {
             try
             {
-                if (syncProfile.GoogleCalendar == null || !syncProfile.ValidateOutlookSettings())
+                if (syncProfile.GoogleAccount == null || !syncProfile.ValidateOutlookSettings())
                 {
                     _messageService.ShowMessageAsync(
                         "Please configure Google and Outlook calendar in settings to continue.");

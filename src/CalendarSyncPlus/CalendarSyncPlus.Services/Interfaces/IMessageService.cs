@@ -53,7 +53,7 @@ namespace CalendarSyncPlus.Services.Interfaces
         Task<ProgressDialogController> ShowProgress(string message);
 
 
-        Task<string> ShowCustomDialog(string message, string title);
+        Task<string> ShowCustomDialog(string message, string title,int maxLength);
 
         Task<string> ShowCustomDialog(string message);
     }

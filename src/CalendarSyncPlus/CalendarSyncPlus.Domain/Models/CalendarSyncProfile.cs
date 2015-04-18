@@ -51,7 +51,7 @@ namespace CalendarSyncPlus.Domain.Models
             set { SetProperty(ref _syncSettings, value); }
         }
 
-        public Calendar GoogleCalendar { get; set; }
+        public GoogleAccount GoogleAccount { get; set; }
 
         public OutlookSettings OutlookSettings { get; set; }
 
