@@ -110,7 +110,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
             }
         }
 
-        private AppointmentListWrapper GetOutlookEntriesForSelectedTimeRange(int daysInPast, int daysInFuture)
+        private AppointmentListWrapper GetOutlookEntriesForSelectedTimeRange(DateTime startDate, DateTime endDate)
         {
             bool disposeOutlookInstances = false;
             Application application = null;
@@ -147,8 +147,8 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
                     outlookItems.Sort("[Start]", Type.Missing);
                     outlookItems.IncludeRecurrences = true;
 
-                    DateTime min = DateTime.Today.AddDays(-daysInPast);
-                    DateTime max = DateTime.Today.AddDays((daysInFuture + 1));
+                    DateTime min = startDate;
+                    DateTime max = endDate;
 
                     // create Final filter as string
                     //string filter = "[End] > '" + min.ToString("dd/MM/yyyy") + "' AND [Start] < '" + max.ToString("dd/MM/yyyy") + "'";
@@ -297,9 +297,9 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
             }
         }
 
-        private List<Appointment> GetAppointments(int daysInPast, int daysInFuture)
+        private List<Appointment> GetAppointments(DateTime startDate, DateTime endDate)
         {
-            AppointmentListWrapper list = GetOutlookEntriesForSelectedTimeRange(daysInPast, daysInFuture);
+            AppointmentListWrapper list = GetOutlookEntriesForSelectedTimeRange(startDate, endDate);
             if (!list.WaitForApplicationQuit)
             {
                 return list.Appointments;
@@ -578,7 +578,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
         }
 
 
-        public async Task<CalendarAppointments> GetCalendarEventsInRangeAsync(int daysInPast, int daysInFuture,
+        public async Task<CalendarAppointments> GetCalendarEventsInRangeAsync(DateTime startDate, DateTime endDate,
             IDictionary<string, object> calendarSpecificData)
         {
             CheckCalendarSpecificData(calendarSpecificData);
@@ -586,7 +586,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
             List<Appointment> appointmentList =
                 await
                     Task<List<Appointment>>.Factory.StartNew(
-                        () => GetAppointments(daysInPast, daysInFuture));
+                        () => GetAppointments(startDate, endDate));
             var calendarAppointments = new CalendarAppointments();
             if (OutlookCalendar != null)
             {
@@ -675,8 +675,10 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
 
         public async Task<bool> ResetCalendar(IDictionary<string, object> calendarSpecificData)
         {
+            DateTime startDate = DateTime.Today.AddDays(-(10*365));
+            DateTime endDate = DateTime.Today.AddDays(10*365);
             CalendarAppointments appointments =
-                await GetCalendarEventsInRangeAsync(10 * 365, 10 * 365, calendarSpecificData);
+                await GetCalendarEventsInRangeAsync(startDate,endDate, calendarSpecificData);
             if (appointments != null)
             {
                 bool success = await DeleteCalendarEvent(appointments, calendarSpecificData);

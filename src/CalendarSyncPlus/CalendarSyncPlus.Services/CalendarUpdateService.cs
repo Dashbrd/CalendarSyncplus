@@ -71,22 +71,23 @@ namespace CalendarSyncPlus.Services
 
         /// <summary>
         /// </summary>
-        /// <param name="daysInPast"></param>
-        /// <param name="daysInFuture"></param>
+        
+        /// <param name="endDate"></param>
         /// <param name="sourceCalendarSpecificData"></param>
         /// <param name="destinationCalendarSpecificData"></param>
+        /// <param name="startDate"></param>
         /// <returns></returns>
-        private bool LoadAppointments(int daysInPast, int daysInFuture,
-            IDictionary<string, object> sourceCalendarSpecificData,
+        private bool LoadAppointments(DateTime startDate,DateTime endDate, IDictionary<string, object> sourceCalendarSpecificData,
             IDictionary<string, object> destinationCalendarSpecificData)
         {
             //Update status
             SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
             SyncStatus = StatusHelper.GetMessage(SyncStateEnum.SourceAppointmentsReading,
                 SourceCalendarService.CalendarServiceName);
+            
             //Get source calendar
             SourceAppointments =
-                SourceCalendarService.GetCalendarEventsInRangeAsync(daysInPast, daysInFuture, sourceCalendarSpecificData)
+                SourceCalendarService.GetCalendarEventsInRangeAsync(startDate, endDate, sourceCalendarSpecificData)
                     .Result;
             if (SourceAppointments == null)
             {
@@ -102,7 +103,7 @@ namespace CalendarSyncPlus.Services
                 DestinationCalendarService.CalendarServiceName);
 
             //Get destination calendar
-            DestinationAppointments = DestinationCalendarService.GetCalendarEventsInRangeAsync(daysInPast, daysInFuture,
+            DestinationAppointments = DestinationCalendarService.GetCalendarEventsInRangeAsync(startDate, endDate,
                 destinationCalendarSpecificData).Result;
             if (DestinationAppointments == null)
             {
@@ -578,10 +579,12 @@ namespace CalendarSyncPlus.Services
                     DestinationCalendarService.CalendarServiceName,
                     syncProfile.SyncSettings.SyncMode == SyncModeEnum.TwoWay ? "<===>" : "===>");
                 SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
+                DateTime startDate, endDate;
+                GetDateRange(syncProfile,out startDate, out endDate);
                 //Add log for date range
                 SyncStatus = string.Format("Date Range : {0} - {1}",
-                    DateTime.Now.Subtract(new TimeSpan(syncProfile.DaysInPast, 0, 0, 0)).ToString("d"),
-                    DateTime.Now.Add(new TimeSpan(syncProfile.DaysInFuture, 0, 0, 0)).ToString("d"));
+                    startDate.ToString("d"),
+                    endDate.ToString("d"));
 
                 //Load calendar specific data
                 IDictionary<string, object> sourceCalendarSpecificData =
@@ -590,7 +593,7 @@ namespace CalendarSyncPlus.Services
                     GetCalendarSpecificData(syncProfile.SyncSettings.DestinationCalendar, syncProfile);
 
                 //Get source and destination appointments
-                isSuccess = LoadAppointments(syncProfile.DaysInPast, syncProfile.DaysInFuture,
+                isSuccess = LoadAppointments(startDate, endDate,
                     sourceCalendarSpecificData,
                     destinationCalendarSpecificData);
 
@@ -628,6 +631,22 @@ namespace CalendarSyncPlus.Services
             SourceCalendarService = null;
             DestinationCalendarService = null;
             return isSuccess;
+        }
+
+        private void GetDateRange(CalendarSyncProfile syncProfile,out DateTime startDate, out DateTime endDate)
+        {
+            startDate = syncProfile.SyncSettings.StartDate.Date;
+            endDate = syncProfile.SyncSettings.EndDate.Date;
+            if (syncProfile.SyncSettings.SyncRangeType == SyncRangeTypeEnum.SyncRangeInDays)
+            {
+                startDate = DateTime.Today.AddDays((-syncProfile.SyncSettings.DaysInPast));
+                endDate = DateTime.Today.AddDays((syncProfile.SyncSettings.DaysInFuture + 1));
+            }
+            else if (syncProfile.SyncSettings.SyncRangeType == SyncRangeTypeEnum.SyncEntireCalendar)
+            {
+                startDate = DateTime.Parse("1990/01/01 12:00:00 AM");
+                endDate = DateTime.Today.AddYears(10);
+            }
         }
 
         #endregion

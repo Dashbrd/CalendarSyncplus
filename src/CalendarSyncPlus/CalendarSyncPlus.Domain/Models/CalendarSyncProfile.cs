@@ -78,22 +78,7 @@ namespace CalendarSyncPlus.Domain.Models
         /// 
         /// </summary>
         public CalendarEntryOptionsEnum CalendarEntryOptions { get; set; }
-        
-        /// <summary>
-        /// 
-        /// </summary>
-        public bool SyncEntireCalendar { get; set; }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        public int DaysInPast { get; set; }
-        
-        /// <summary>
-        /// 
-        /// </summary>
-        public int DaysInFuture { get; set; }
-        
         /// <summary>
         /// 
         /// </summary>
@@ -180,13 +165,7 @@ namespace CalendarSyncPlus.Domain.Models
         {
             var syncProfile = new CalendarSyncProfile
             {
-                DaysInFuture = 120,
-                DaysInPast = 120,
-                SyncSettings =
-                {
-                    CalendarSyncDirection = CalendarSyncDirectionEnum.OutlookGoogleOneWay,
-                    SyncFrequency = new IntervalSyncFrequency()
-                },
+                SyncSettings = SyncSettings.GetDefault(),
                 OutlookSettings =
                 {
                     OutlookOptions = OutlookOptionsEnum.DefaultProfile |

@@ -158,9 +158,9 @@ namespace CalendarSyncPlus.Services
             foreach (CalendarSyncProfile syncProfile in result.SyncProfiles)
             {
                 syncProfile.SetCalendarTypes();
-                if (syncProfile.SyncSettings.SyncFrequency == null)
+                if (syncProfile.SyncSettings == null || syncProfile.SyncSettings.SyncFrequency == null)
                 {
-                    syncProfile.SyncSettings.SyncFrequency = new IntervalSyncFrequency();
+                    syncProfile.SyncSettings = SyncSettings.GetDefault();
                 }
             }
             if (result.AppSettings == null)

@@ -152,7 +152,7 @@
     <Compile Include="Controls\TimePickerControl.xaml.cs">
       <DependentUpon>TimePickerControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Converters\BoolToCalendarServiceTypeConverter.cs" />
+    <Compile Include="Converters\EnumToVisbilityConverter.cs" />
     <Compile Include="Converters\BoolToEnumConverter.cs" />
     <Compile Include="Converters\InvertBooleanToVisibilityConverter.cs" />
     <Compile Include="Converters\PercentageWidthConverter.cs" />

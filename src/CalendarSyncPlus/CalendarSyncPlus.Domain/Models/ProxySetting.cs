@@ -19,12 +19,11 @@
 
 #region Imports
 
-using System.ComponentModel.DataAnnotations;
 using System.Waf.Foundation;
 
 #endregion
 
-namespace CalendarSyncPlus.Domain
+namespace CalendarSyncPlus.Domain.Models
 {
     public class ProxySetting : Model
     {

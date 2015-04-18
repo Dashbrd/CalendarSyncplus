@@ -74,8 +74,11 @@ namespace CalendarSyncPlus.Application.ViewModels
         private string _syncFrequency;
         private SyncFrequencyViewModel _syncFrequencyViewModel;
         private string _username;
-        private bool _syncEntireCalendar;
+        private SyncRangeTypeEnum _selectedSyncRangeType;
         private bool _addAsAppointments;
+        private DateTime _startDate;
+        private DateTime _endDate;
+        private List<SyncRangeTypeEnum> _syncRangeTypes;
 
         public ProfileViewModel(CalendarSyncProfile syncProfile, IGoogleCalendarService googleCalendarService,
             IOutlookCalendarService outlookCalendarService,
@@ -244,17 +247,34 @@ namespace CalendarSyncPlus.Application.ViewModels
             get { return _daysInFuture; }
             set { SetProperty(ref _daysInFuture, value); }
         }
-
-        public bool SyncEntireCalendar
-        {
-            get { return _syncEntireCalendar; }
-            set { SetProperty(ref _syncEntireCalendar, value); }
-        }
-
         public int DaysInPast
         {
             get { return _daysInPast; }
             set { SetProperty(ref _daysInPast, value); }
+        }
+
+        public DateTime StartDate
+        {
+            get { return _startDate; }
+            set { SetProperty(ref _startDate, value); }
+        }
+
+        public DateTime EndDate
+        {
+            get { return _endDate; }
+            set { SetProperty(ref _endDate, value); }
+        }
+
+        public List<SyncRangeTypeEnum> SyncRangeTypes
+        {
+            get { return _syncRangeTypes; }
+            set { SetProperty(ref _syncRangeTypes, value); }
+        }
+
+        public SyncRangeTypeEnum SelectedSyncRangeType
+        {
+            get { return _selectedSyncRangeType; }
+            set { SetProperty(ref _selectedSyncRangeType, value); }
         }
 
         public List<string> SyncFrequencies
@@ -446,7 +466,12 @@ namespace CalendarSyncPlus.Application.ViewModels
             Name = SyncProfile.Name;
             IsSyncEnabled = SyncProfile.IsSyncEnabled;
             IsDefault = SyncProfile.IsDefault;
-
+            SyncRangeTypes = new List<SyncRangeTypeEnum>()
+            {
+                SyncRangeTypeEnum.SyncEntireCalendar,
+                SyncRangeTypeEnum.SyncFixedDateRange,
+                SyncRangeTypeEnum.SyncRangeInDays
+            };
             CalendarSyncModes = new List<CalendarSyncDirectionEnum>
             {
                 CalendarSyncDirectionEnum.OutlookGoogleOneWay,
@@ -462,9 +487,11 @@ namespace CalendarSyncPlus.Application.ViewModels
 
             SyncFrequency = "Interval";
             Categories = CategoryHelper.GetCategories();
-            SyncEntireCalendar = SyncProfile.SyncEntireCalendar;
-            DaysInPast = SyncProfile.DaysInPast;
-            DaysInFuture = SyncProfile.DaysInFuture;
+            SelectedSyncRangeType = SyncProfile.SyncSettings.SyncRangeType;
+            DaysInPast = SyncProfile.SyncSettings.DaysInPast;
+            DaysInFuture = SyncProfile.SyncSettings.DaysInFuture;
+            StartDate = SyncProfile.SyncSettings.StartDate;
+            EndDate = SyncProfile.SyncSettings.EndDate;
             AddAttendees = SyncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Attendees);
             if (AddAttendees)
             {
@@ -762,9 +789,11 @@ namespace CalendarSyncPlus.Application.ViewModels
         {
             SyncProfile.IsSyncEnabled = IsSyncEnabled;
             SyncProfile.GoogleCalendar = SelectedCalendar;
-            SyncProfile.DaysInFuture = DaysInFuture;
-            SyncProfile.DaysInPast = DaysInPast;
-            SyncProfile.SyncEntireCalendar = SyncEntireCalendar;
+            SyncProfile.SyncSettings.DaysInFuture = DaysInFuture;
+            SyncProfile.SyncSettings.DaysInPast = DaysInPast;
+            SyncProfile.SyncSettings.StartDate = StartDate;
+            SyncProfile.SyncSettings.EndDate = EndDate;
+            SyncProfile.SyncSettings.SyncRangeType = SelectedSyncRangeType;
             SyncProfile.SyncSettings.SyncFrequency = SyncFrequencyViewModel.GetFrequency();
             SyncProfile.UpdateEntryOptions(AddDescription, AddReminders, AddAttendees, AddAttendeesToDescription,
                 AddAttachments, AddAsAppointments);

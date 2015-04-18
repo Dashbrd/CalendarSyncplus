@@ -15,6 +15,7 @@
                 <ResourceDictionary Source="/Resources/Icons.xaml" />
                 <ResourceDictionary Source="Resources/OtherResources.xaml" />
                 <ResourceDictionary>
+                    
                     <DataTemplate DataType="{x:Type models:CalendarSyncDirectionEnum}"
                                   x:Key="CalendarEnumDataTemplate">
                         <Grid Height="{Binding Height,RelativeSource={RelativeSource AncestorType={x:Type ComboBox}}}">
@@ -126,6 +127,34 @@
                             </Setter.Value>
                         </Setter>
                     </Style>
+                    <DataTemplate DataType="{x:Type models:SyncRangeTypeEnum}"
+                                  x:Key="SyncRangeTypeEnumDataTemplate">
+                        <Grid Height="{Binding Height,RelativeSource={RelativeSource AncestorType={x:Type ComboBox}}}">
+                            <TextBlock Name="SyncRangeTextBlock"
+                                   VerticalAlignment="Center" />
+                        </Grid>
+                        <DataTemplate.Triggers>
+                            <DataTrigger Binding="{Binding}"
+                                         Value="{x:Static models:SyncRangeTypeEnum.SyncEntireCalendar}">
+                                <Setter TargetName="SyncRangeTextBlock"
+                                        Property="Text"
+                                        Value="Sync Full Calendar" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding}"
+                                         Value="{x:Static models:SyncRangeTypeEnum.SyncFixedDateRange}">
+
+                                <Setter TargetName="SyncRangeTextBlock"
+                                        Property="Text"
+                                        Value="Sync Fixed Date Range" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding}"
+                                         Value="{x:Static models:SyncRangeTypeEnum.SyncRangeInDays}">
+                                <Setter TargetName="SyncRangeTextBlock"
+                                        Property="Text"
+                                        Value="Sync Days in Range" />
+                            </DataTrigger>
+                        </DataTemplate.Triggers>
+                    </DataTemplate>
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
 
