@@ -61,6 +61,8 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
 
         private OutlookCalendar OutlookCalendar { get; set; }
 
+        public bool AddAsAppointments { get; set; }
+
         private string ProfileName { get; set; }
 
         private Category EventCategory { get; set; }
@@ -108,7 +110,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
             }
         }
 
-        private AppointmentListWrapper GetOutlookEntriesForSelectedTimeRange(int daysInPast, int daysInFuture)
+        private AppointmentListWrapper GetOutlookEntriesForSelectedTimeRange(DateTime startDate, DateTime endDate)
         {
             bool disposeOutlookInstances = false;
             Application application = null;
@@ -145,8 +147,8 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
                     outlookItems.Sort("[Start]", Type.Missing);
                     outlookItems.IncludeRecurrences = true;
 
-                    DateTime min = DateTime.Today.AddDays(-daysInPast);
-                    DateTime max = DateTime.Today.AddDays((daysInFuture + 1));
+                    DateTime min = startDate;
+                    DateTime max = endDate;
 
                     // create Final filter as string
                     //string filter = "[End] > '" + min.ToString("dd/MM/yyyy") + "' AND [Start] < '" + max.ToString("dd/MM/yyyy") + "'";
@@ -295,9 +297,9 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
             }
         }
 
-        private List<Appointment> GetAppointments(int daysInPast, int daysInFuture)
+        private List<Appointment> GetAppointments(DateTime startDate, DateTime endDate)
         {
-            AppointmentListWrapper list = GetOutlookEntriesForSelectedTimeRange(daysInPast, daysInFuture);
+            AppointmentListWrapper list = GetOutlookEntriesForSelectedTimeRange(startDate, endDate);
             if (!list.WaitForApplicationQuit)
             {
                 return list.Appointments;
@@ -576,7 +578,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
         }
 
 
-        public async Task<CalendarAppointments> GetCalendarEventsInRangeAsync(int daysInPast, int daysInFuture,
+        public async Task<CalendarAppointments> GetCalendarEventsInRangeAsync(DateTime startDate, DateTime endDate,
             IDictionary<string, object> calendarSpecificData)
         {
             CheckCalendarSpecificData(calendarSpecificData);
@@ -584,7 +586,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
             List<Appointment> appointmentList =
                 await
                     Task<List<Appointment>>.Factory.StartNew(
-                        () => GetAppointments(daysInPast, daysInFuture));
+                        () => GetAppointments(startDate, endDate));
             var calendarAppointments = new CalendarAppointments();
             if (OutlookCalendar != null)
             {
@@ -598,6 +600,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
             return calendarAppointments;
         }
 
+        /// <exception cref="InvalidOperationException">Essential parameters are not present.</exception>
         public void CheckCalendarSpecificData(IDictionary<string, object> calendarSpecificData)
         {
             if (calendarSpecificData == null)
@@ -607,17 +610,19 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
 
             object profileValue;
             object outlookCalendarValue;
+            object addAsAppointments;
             if (!(calendarSpecificData.TryGetValue("ProfileName", out profileValue) &&
-                  calendarSpecificData.TryGetValue("OutlookCalendar", out outlookCalendarValue)))
+                  calendarSpecificData.TryGetValue("OutlookCalendar", out outlookCalendarValue) &&
+                  calendarSpecificData.TryGetValue("AddAsAppointments", out addAsAppointments)))
             {
                 throw new InvalidOperationException(
                     string.Format(
-                        "{0} and {1}  keys should be present, both of them can be null in case Default Profile and Default Calendar will be used. {0} is or 'string' and {1} is of 'OutlookCalendar' type",
-                        "ProfileName", OutlookCalendar));
+                        "{0} {1} and {2}  keys should be present, both of them can be null in case Default Profile and Default Calendar will be used. {0} is of 'string' type, {1} is of 'OutlookCalendar' type and {2} is of bool type.",
+                        "ProfileName", "OutlookCalendar", "AddAsAppointments"));
             }
             ProfileName = profileValue as String;
             OutlookCalendar = outlookCalendarValue as OutlookCalendar;
-
+            AddAsAppointments = (bool) addAsAppointments;
             object eventCategory;
             if (calendarSpecificData.TryGetValue("EventCategory", out eventCategory))
             {
@@ -670,8 +675,10 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
 
         public async Task<bool> ResetCalendar(IDictionary<string, object> calendarSpecificData)
         {
+            DateTime startDate = DateTime.Today.AddDays(-(10*365));
+            DateTime endDate = DateTime.Today.AddDays(10*365);
             CalendarAppointments appointments =
-                await GetCalendarEventsInRangeAsync(10 * 365, 10 * 365, calendarSpecificData);
+                await GetCalendarEventsInRangeAsync(startDate,endDate, calendarSpecificData);
             if (appointments != null)
             {
                 bool success = await DeleteCalendarEvent(appointments, calendarSpecificData);
@@ -811,7 +818,16 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
             try
             {
                 appItem.Subject = calendarAppointment.Subject;
-                appItem.MeetingStatus = OlMeetingStatus.olMeeting;
+                if (!calendarAppointment.RequiredAttendees.Any() && !calendarAppointment.OptionalAttendees.Any()
+                    && AddAsAppointments)
+                {
+                    appItem.MeetingStatus = OlMeetingStatus.olNonMeeting;
+                }
+                else
+                {
+                    appItem.MeetingStatus = OlMeetingStatus.olMeeting;
+                }
+
                 appItem.Location = calendarAppointment.Location;
                 appItem.BusyStatus = calendarAppointment.GetOutlookBusyStatus();
                 recipients = appItem.Recipients;

@@ -29,7 +29,7 @@ namespace CalendarSyncPlus.Presentation.Converters
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            double width = 450;
+            double width = 500;
             if (value != null && parameter != null)
             {
                 double parentWidth;
@@ -37,9 +37,9 @@ namespace CalendarSyncPlus.Presentation.Converters
                 if (double.TryParse(value.ToString(), out parentWidth) && int.TryParse(parameter.ToString(), out percentage))
                 {
                     width = parentWidth * percentage / 100;
-                    if (width < 450)
+                    if (width < 500)
                     {
-                        width = 450;
+                        width = 500;
                     }
                 }
             }

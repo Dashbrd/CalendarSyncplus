@@ -17,6 +17,7 @@
 
 #endregion
 
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using CalendarSyncPlus.Domain.Models;
@@ -31,7 +32,7 @@ namespace CalendarSyncPlus.Services.Interfaces
         Task<bool> DeleteCalendarEvent(List<Appointment> calendarAppointments,
             IDictionary<string, object> calendarSpecificData);
 
-        Task<CalendarAppointments> GetCalendarEventsInRangeAsync(int daysInPast, int daysInFuture,
+        Task<CalendarAppointments> GetCalendarEventsInRangeAsync(DateTime startDate, DateTime endDate,
             IDictionary<string, object> calendarSpecificData);
 
         Task<bool> AddCalendarEvent(List<Appointment> calendarAppointments, bool addDescription,

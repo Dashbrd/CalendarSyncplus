@@ -26,25 +26,33 @@ namespace CalendarSyncPlus.Domain.Models
             IsSyncEnabled = true;
             IsDefault = true;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public string Name
         {
             get { return _name; }
             set { SetProperty(ref _name, value); }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public bool IsSyncEnabled
         {
             get { return _isSyncEnabled; }
             set { SetProperty(ref _isSyncEnabled, value); }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public bool IsDefault
         {
             get { return _isDefault; }
             set { SetProperty(ref _isDefault, value); }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public SyncSettings SyncSettings
         {
             get { return _syncSettings; }
@@ -53,9 +61,10 @@ namespace CalendarSyncPlus.Domain.Models
 
         public GoogleAccount GoogleAccount { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public OutlookSettings OutlookSettings { get; set; }
-
-        public string Category { get; set; }
 
         /// <summary>
         ///     To be implemented in future
@@ -63,19 +72,29 @@ namespace CalendarSyncPlus.Domain.Models
         [XmlIgnore]
         public ExchangeServerSettings ExchangeServerSettings { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public CalendarEntryOptionsEnum CalendarEntryOptions { get; set; }
 
-        public int DaysInPast { get; set; }
-
-        public int DaysInFuture { get; set; }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public LogSettings LogSettings { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public bool SetCalendarCategory { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public Category EventCategory { get; set; }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public DateTime? LastSync
         {
             get { return _lastSync; }
@@ -90,7 +109,9 @@ namespace CalendarSyncPlus.Domain.Models
             set { SetProperty(ref _nextSync, value); }
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public void SetCalendarTypes()
         {
             if (SyncSettings.CalendarSyncDirection == CalendarSyncDirectionEnum.OutlookGoogleOneWay)
@@ -134,19 +155,23 @@ namespace CalendarSyncPlus.Domain.Models
                 SyncSettings.SyncMode = SyncModeEnum.OneWay;
             }
         }
-
+        /// <summary>
+        /// Gets default calendar profile for the user
+        /// </summary>
+        /// <returns></returns>
         public static CalendarSyncProfile GetDefaultSyncProfile()
         {
             var syncProfile = new CalendarSyncProfile
             {
-                DaysInFuture = 7,
-                DaysInPast = 1,
+                SyncSettings = SyncSettings.GetDefault(),
+                OutlookSettings =
+                {
+                    OutlookOptions = OutlookOptionsEnum.DefaultProfile |
+                                     OutlookOptionsEnum.DefaultCalendar
+                },
+                CalendarEntryOptions = CalendarEntryOptionsEnum.Description | CalendarEntryOptionsEnum.Attendees |
+                                       CalendarEntryOptionsEnum.Reminders | CalendarEntryOptionsEnum.AsAppointments,
             };
-            syncProfile.SyncSettings.CalendarSyncDirection = CalendarSyncDirectionEnum.OutlookGoogleOneWay;
-            syncProfile.SyncSettings.SyncFrequency = new HourlySyncFrequency();
-            syncProfile.OutlookSettings.OutlookOptions = OutlookOptionsEnum.DefaultProfile |
-                                                         OutlookOptionsEnum.DefaultCalendar;
-            syncProfile.CalendarEntryOptions = CalendarEntryOptionsEnum.None;
             syncProfile.SetCalendarTypes();
             return syncProfile;
         }

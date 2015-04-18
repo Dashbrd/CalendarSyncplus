@@ -71,7 +71,7 @@
     <Compile Include="Models\Calendar.cs" />
     <Compile Include="Models\DailySyncFrequency.cs" />
     <Compile Include="Models\ExchangeServerSettings.cs" />
-    <Compile Include="Models\HourlySyncFrequency.cs" />
+    <Compile Include="Models\IntervalSyncFrequency.cs" />
     <Compile Include="Models\OutlookSettings.cs" />
     <Compile Include="Models\OutlookCalendar.cs" />
     <Compile Include="Models\OutlookMailBox.cs" />
@@ -83,8 +83,7 @@
     <Compile Include="Models\SyncSettings.cs" />
     <Compile Include="Models\WeeklySyncFrequency.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ProxySetting.cs" />
-    <Compile Include="ProxyType.cs" />
+    <Compile Include="Models\ProxySetting.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CalendarSyncPlus.Common\CalendarSyncPlus.Common.csproj">

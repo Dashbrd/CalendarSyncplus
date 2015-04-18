@@ -94,7 +94,7 @@
                     Grid.ColumnSpan="2"
                     HorizontalAlignment="Left"
                     Orientation="Horizontal">
-            <Button Margin="5"
+            <Button Margin="5" Visibility="{Binding Settings.AppSettings.IsManualSynchronization,Converter={StaticResource BooleanToVisibilityConverter},UpdateSourceTrigger=PropertyChanged}"
                     Command="{Binding StartSyncCommand}">
                 <Button.Style>
                     <Style BasedOn="{StaticResource {x:Type Button}}"

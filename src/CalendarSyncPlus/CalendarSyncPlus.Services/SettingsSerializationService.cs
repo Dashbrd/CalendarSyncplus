@@ -94,8 +94,16 @@ namespace CalendarSyncPlus.Services
                 _applicationLogger.LogInfo("Settings file does not exist");
                 return null;
             }
-            var serializer = new XmlSerializer<Settings>();
-            return serializer.DeserializeFromFile(SettingsFilePath);
+            try
+            {
+                var serializer = new XmlSerializer<Settings>();
+                return serializer.DeserializeFromFile(SettingsFilePath);
+            }
+            catch (Exception exception)
+            {
+                _applicationLogger.LogError(exception.ToString());
+                return null;
+            }
         }
 
         #endregion
@@ -150,9 +158,9 @@ namespace CalendarSyncPlus.Services
             foreach (CalendarSyncProfile syncProfile in result.SyncProfiles)
             {
                 syncProfile.SetCalendarTypes();
-                if (syncProfile.SyncSettings.SyncFrequency == null)
+                if (syncProfile.SyncSettings == null || syncProfile.SyncSettings.SyncFrequency == null)
                 {
-                    syncProfile.SyncSettings.SyncFrequency = new HourlySyncFrequency();
+                    syncProfile.SyncSettings = SyncSettings.GetDefault();
                 }
             }
             if (result.AppSettings == null)

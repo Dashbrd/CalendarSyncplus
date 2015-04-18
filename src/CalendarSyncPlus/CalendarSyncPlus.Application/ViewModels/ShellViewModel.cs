@@ -46,6 +46,8 @@ using MahApps.Metro.Controls.Dialogs;
 
 namespace CalendarSyncPlus.Application.ViewModels
 {
+    /// <summary>
+    /// </summary>
     [Export]
     public class ShellViewModel : ViewModel<IShellView>
     {
@@ -81,6 +83,17 @@ namespace CalendarSyncPlus.Application.ViewModels
 
         #region Constructors
 
+        /// <summary>
+        /// </summary>
+        /// <param name="view"></param>
+        /// <param name="shellService"></param>
+        /// <param name="syncStartService"></param>
+        /// <param name="guiInteractionService"></param>
+        /// <param name="settings"></param>
+        /// <param name="messageService"></param>
+        /// <param name="applicationLogger"></param>
+        /// <param name="applicationUpdateService"></param>
+        /// <param name="systemTrayNotifierViewModel"></param>
         [ImportingConstructor]
         public ShellViewModel(IShellView view, IShellService shellService,
             ISyncService syncStartService,
@@ -102,14 +115,6 @@ namespace CalendarSyncPlus.Application.ViewModels
             _statusBuilder = new StringBuilder();
             view.Closing += ViewClosing;
             view.Closed += ViewClosed;
-            //If no settings
-            if (Settings.ValidateSettings())
-            {
-                if (Settings.AppSettings.RememberPeriodicSyncOn && Settings.AppSettings.PeriodicSyncOn)
-                {
-                    StartPeriodicSync();
-                }
-            }
         }
 
         #endregion
@@ -205,6 +210,14 @@ namespace CalendarSyncPlus.Application.ViewModels
                 if (_settings != null)
                 {
                     ScheduledSyncProfiles = Settings.SyncProfiles.Where(t => t.IsSyncEnabled).ToList();
+                    if (!IsPeriodicSyncStarted)
+                    {
+                        if ((Settings.AppSettings.IsManualSynchronization && Settings.AppSettings.PeriodicSyncOn) ||
+                                !Settings.AppSettings.IsManualSynchronization)
+                        {
+                            StartPeriodicSync();
+                        }
+                    }
                 }
             }
         }
@@ -301,7 +314,7 @@ namespace CalendarSyncPlus.Application.ViewModels
                 SyncStartService.Stop(OnTimerElapsed);
                 IsPeriodicSyncStarted = false;
 
-                UpdateStatus(string.Format("Period Sync Stopped : {0}", DateTime.Now));
+                UpdateStatus(string.Format("Periodic Sync Stopped : {0}", DateTime.Now));
                 UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.LogSeparator));
             }
             else
@@ -318,7 +331,7 @@ namespace CalendarSyncPlus.Application.ViewModels
                     }
 
                     IsPeriodicSyncStarted = true;
-                    UpdateStatus(string.Format("Period Sync Started : {0}", DateTime.Now));
+                    UpdateStatus(string.Format("Periodic Sync Started : {0}", DateTime.Now));
                     UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.LogSeparator));
                 }
             }
@@ -425,6 +438,11 @@ namespace CalendarSyncPlus.Application.ViewModels
             }
         }
 
+        private const string CompareStringFormat = "yy-MM-dd hh:mm:ss tt";
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="signalTime"></param>
         private void SyncPeriodicHandler(DateTime signalTime)
         {
             try
@@ -432,24 +450,18 @@ namespace CalendarSyncPlus.Application.ViewModels
                 foreach (CalendarSyncProfile syncProfile in ScheduledSyncProfiles)
                 {
                     DateTime nextSyncTime = syncProfile.NextSync.GetValueOrDefault();
-                    int compareResult = nextSyncTime.CompareTo(signalTime);
-                    if (compareResult < 0)
+                    if (nextSyncTime.ToString(CompareStringFormat).Equals(signalTime.ToString(CompareStringFormat)))
                     {
-                        DateTime lastSynctime = syncProfile.NextSync.GetValueOrDefault();
-                        if (signalTime.Subtract(nextSyncTime).TotalSeconds < 20 && signalTime.Subtract(lastSynctime).TotalMinutes > 4)
+                        CalendarSyncProfile profile = syncProfile;
+                        Task.Factory.StartNew(() => StartSyncTask(profile), TaskCreationOptions.None);
+                    }
+                    else if (nextSyncTime.CompareTo(signalTime) < 0)
+                    {
+                        if (!IsSyncInProgress && (signalTime - nextSyncTime).TotalMinutes > 1)
                         {
                             CalendarSyncProfile profile = syncProfile;
                             Task.Factory.StartNew(() => StartSyncTask(profile), TaskCreationOptions.None);
                         }
-                        else
-                        {
-                            syncProfile.NextSync = syncProfile.SyncSettings.SyncFrequency.GetNextSyncTime(signalTime);
-                        }
-                    }
-                    else if (compareResult == 0)
-                    {
-                        CalendarSyncProfile profile = syncProfile;
-                        Task.Factory.StartNew(() => StartSyncTask(profile), TaskCreationOptions.None);
                     }
                 }
             }

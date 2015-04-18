@@ -502,7 +502,7 @@ namespace CalendarSyncPlus.GoogleServices.Google
             return true;
         }
 
-        public async Task<CalendarAppointments> GetCalendarEventsInRangeAsync(int daysInPast, int daysInFuture,
+        public async Task<CalendarAppointments> GetCalendarEventsInRangeAsync(DateTime startDate, DateTime endDate,
             IDictionary<string, object> calendarSpecificData)
         {
             CheckCalendarSpecificData(calendarSpecificData);
@@ -517,8 +517,8 @@ namespace CalendarSyncPlus.GoogleServices.Google
             EventsResource.ListRequest eventListRequest = calendarService.Events.List(CalendarId);
 
             // Add Filters to event List Request
-            eventListRequest.TimeMin = DateTime.Today.AddDays(-(daysInPast));
-            eventListRequest.TimeMax = DateTime.Today.AddDays((daysInFuture + 1));
+            eventListRequest.TimeMin = startDate;
+            eventListRequest.TimeMax = endDate;
             eventListRequest.MaxAttendees = 1000;
             
             try
@@ -543,8 +543,8 @@ namespace CalendarSyncPlus.GoogleServices.Google
                                     appointment.AppointmentId);
 
                                 // Add Filters to event List Request
-                                instancesRequest.TimeMin = DateTime.Today.AddDays(-(daysInPast));
-                                instancesRequest.TimeMax = DateTime.Today.AddDays((daysInFuture + 1));
+                                instancesRequest.TimeMin = startDate;
+                                instancesRequest.TimeMax = endDate;
                                 instancesRequest.MaxAttendees = 1000;
 
                                 var instanceResult = instancesRequest.Execute();
@@ -607,8 +607,11 @@ namespace CalendarSyncPlus.GoogleServices.Google
 
         public async Task<bool> ResetCalendar(IDictionary<string, object> calendarSpecificData)
         {
+            DateTime startDate = DateTime.Today.AddDays(-(10 * 365));
+            DateTime endDate = DateTime.Today.AddDays(10 * 365);
+            
             CalendarAppointments appointments =
-                await GetCalendarEventsInRangeAsync(10 * 365, 10 * 365, calendarSpecificData);
+                await GetCalendarEventsInRangeAsync(startDate,endDate, calendarSpecificData);
             if (appointments != null)
             {
                 bool success = await DeleteCalendarEvent(appointments, calendarSpecificData);

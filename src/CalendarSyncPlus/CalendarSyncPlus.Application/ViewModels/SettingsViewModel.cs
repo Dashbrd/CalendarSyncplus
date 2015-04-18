@@ -82,7 +82,7 @@ namespace CalendarSyncPlus.Application.ViewModels
         private bool _minimizeToSystemTray = true;
         private DelegateCommand _moveDownCommand;
         private DelegateCommand _moveUpCommand;
-        private bool _rememberPeriodicSyncOn = true;
+        private bool _isManualSynchronization = true;
         private bool _runApplicationAtSystemStartup = true;
         private DelegateCommand _saveCommand;
         private ProfileViewModel _selectedProfile;
@@ -190,10 +190,10 @@ namespace CalendarSyncPlus.Application.ViewModels
             set { SetProperty(ref _runApplicationAtSystemStartup, value); }
         }
 
-        public bool RememberPeriodicSyncOn
+        public bool IsManualSynchronization
         {
-            get { return _rememberPeriodicSyncOn; }
-            set { SetProperty(ref _rememberPeriodicSyncOn, value); }
+            get { return _isManualSynchronization; }
+            set { SetProperty(ref _isManualSynchronization, value); }
         }
 
         public bool SettingsSaved
@@ -395,7 +395,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             Settings.AppSettings.HideSystemTrayTooltip = HideSystemTrayTooltip;
             Settings.AppSettings.CheckForUpdates = CheckForUpdates;
             Settings.AppSettings.RunApplicationAtSystemStartup = RunApplicationAtSystemStartup;
-            Settings.AppSettings.RememberPeriodicSyncOn = RememberPeriodicSyncOn;
+            Settings.AppSettings.IsManualSynchronization = IsManualSynchronization;
             Settings.AppSettings.ProxySettings = new ProxySetting()
             {
                 BypassOnLocal = ProxySettings.BypassOnLocal,
@@ -483,7 +483,7 @@ namespace CalendarSyncPlus.Application.ViewModels
                     HideSystemTrayTooltip = Settings.AppSettings.HideSystemTrayTooltip;
                     CheckForUpdates = Settings.AppSettings.CheckForUpdates;
                     RunApplicationAtSystemStartup = Settings.AppSettings.RunApplicationAtSystemStartup;
-                    RememberPeriodicSyncOn = Settings.AppSettings.RememberPeriodicSyncOn;
+                    IsManualSynchronization = Settings.AppSettings.IsManualSynchronization;
                     var profileList = new ObservableCollection<ProfileViewModel>();
                     foreach (CalendarSyncProfile syncProfile in Settings.SyncProfiles)
                     {

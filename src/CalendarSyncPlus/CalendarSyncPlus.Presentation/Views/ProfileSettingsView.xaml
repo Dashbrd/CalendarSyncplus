@@ -3,18 +3,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:converters="clr-namespace:CalendarSyncPlus.Presentation.Converters"
-             xmlns:models="clr-namespace:CalendarSyncPlus.Domain.Models;assembly=CalendarSyncPlus.Domain"
-             xmlns:metaData="clr-namespace:CalendarSyncPlus.Common.MetaData;assembly=CalendarSyncPlus.Common"
              xmlns:views="clr-namespace:CalendarSyncPlus.Presentation.Views"
              xmlns:viewModels="clr-namespace:CalendarSyncPlus.Application.ViewModels;assembly=CalendarSyncPlus.Application"
              mc:Ignorable="d"
              d:DesignHeight="600" d:DesignWidth="500"
              d:DataContext="{d:DesignInstance viewModels:SettingsViewModel}">
-    <UserControl.Resources>
-        <converters:BoolToCalendarServiceTypeConverter x:Key="BoolToCalendarServiceTypeConverter" />
-        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
-    </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -32,49 +25,38 @@
                     <ColumnDefinition Width="3.5*" />
                 </Grid.ColumnDefinitions>
                 <TextBlock Text="Select Profile"
-                           VerticalAlignment="Center"
-                           Margin="2" />
+                           VerticalAlignment="Center"/>
                 <ComboBox Grid.Column="1"
                           DisplayMemberPath="Name"
                           ItemsSource="{Binding SyncProfileList}"
-                          SelectedItem="{Binding SelectedProfile,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                          Margin="2" />
-                <TextBlock Text="Calendar Sync Mode"
-                           VerticalAlignment="Center"
-                           Margin="2"
-                           Grid.Row="1" />
-                <ComboBox Grid.Column="1"
-                          Grid.Row="1"
-                          Margin="2"
-                          ItemsSource="{Binding SelectedProfile.CalendarSyncModes,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                          SelectedItem="{Binding SelectedProfile.SelectedCalendarSyncDirection,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                          ItemTemplate="{StaticResource CalendarEnumDataTemplate}" />
-                <TextBlock Text="Select Master Calendar"
-                           VerticalAlignment="Center"
-                           Margin="2"
-                           Grid.Row="2"
-                           Visibility="{Binding SelectedProfile.AllowMasterCalendarSelect,Mode=TwoWay,Converter={StaticResource BooleanToVisibilityConverter} }" />
-                <StackPanel Orientation="Horizontal"
-                            Grid.Row="2"
-                            Grid.Column="1"
-                            VerticalAlignment="Center"
-                            Margin="2,5,5,5"
-                            Visibility="{Binding SelectedProfile.AllowMasterCalendarSelect,Mode=TwoWay,Converter={StaticResource BooleanToVisibilityConverter} }">
-                    <RadioButton GroupName="MasterCalendar"
-                                 Margin="2"
-                                 Content="Outlook"
-                                 IsChecked="{Binding SelectedProfile.MasterCalendarServiceType,Mode=TwoWay,
-                                                    Converter={StaticResource BoolToCalendarServiceTypeConverter},
-                                        ConverterParameter={x:Static metaData:CalendarServiceType.OutlookDesktop}}" />
-                    <RadioButton GroupName="MasterCalendar"
-                                 Margin="20,2,2,2"
-                                 Content="Google"
-                                 IsChecked="{Binding SelectedProfile.MasterCalendarServiceType,
-                                                   Mode=TwoWay,Converter={StaticResource BoolToCalendarServiceTypeConverter},
-                                                 ConverterParameter={x:Static metaData:CalendarServiceType.Google}}" />
-                </StackPanel>
+                          SelectedItem="{Binding SelectedProfile,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
             </Grid>
         </GroupBox>
-        <views:CalendarSetttingsView Grid.Row="1" DataContext="{Binding SelectedProfile}" />
+        <TabControl Grid.Row="1">
+            <TabItem Header="Sync">
+                <ScrollViewer VerticalScrollBarVisibility="Auto"
+                              HorizontalScrollBarVisibility="Hidden">
+                    <views:SyncSettingsView DataContext="{Binding SelectedProfile}" />
+                </ScrollViewer>
+            </TabItem>
+            <TabItem Header="Outlook">
+                <ScrollViewer VerticalScrollBarVisibility="Auto"
+                              HorizontalScrollBarVisibility="Hidden">
+                    <views:OutlookSettingsView DataContext="{Binding SelectedProfile}" />
+                </ScrollViewer>
+            </TabItem>
+            <TabItem Header="Google">
+                <ScrollViewer VerticalScrollBarVisibility="Auto"
+                              HorizontalScrollBarVisibility="Hidden">
+                    <views:GoogleSettingsView DataContext="{Binding SelectedProfile}" />
+                </ScrollViewer>
+            </TabItem>
+            <TabItem Header="Options">
+                <ScrollViewer VerticalScrollBarVisibility="Auto"
+                              HorizontalScrollBarVisibility="Hidden">
+                    <views:OptionsSettingsView DataContext="{Binding SelectedProfile}" />
+                </ScrollViewer>
+            </TabItem>
+        </TabControl>
     </Grid>
 </UserControl>

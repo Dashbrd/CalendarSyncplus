@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Waf.Foundation;
 using CalendarSyncPlus.Common.Attributes;
 using CalendarSyncPlus.Domain;
+using CalendarSyncPlus.Domain.Models;
 
 namespace CalendarSyncPlus.Application.ViewModels
 {

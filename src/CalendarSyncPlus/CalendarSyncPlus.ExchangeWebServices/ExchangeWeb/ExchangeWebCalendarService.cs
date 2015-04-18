@@ -118,7 +118,7 @@ namespace CalendarSyncPlus.ExchangeWebServices.ExchangeWeb
             throw new NotImplementedException();
         }
 
-        public async Task<CalendarAppointments> GetCalendarEventsInRangeAsync(int daysInPast, int daysInFuture,
+        public async Task<CalendarAppointments> GetCalendarEventsInRangeAsync(DateTime startDate, DateTime endDate,
             IDictionary<string, object> calendarSpecificData)
         {
             //CheckCalendarSpecificData(calendarSpecificData);

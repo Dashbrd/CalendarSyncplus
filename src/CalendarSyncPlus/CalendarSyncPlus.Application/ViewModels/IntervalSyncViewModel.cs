@@ -3,19 +3,19 @@ using CalendarSyncPlus.Domain.Models;
 
 namespace CalendarSyncPlus.Application.ViewModels
 {
-    public class HourlySyncViewModel : SyncFrequencyViewModel
+    public class IntervalSyncViewModel : SyncFrequencyViewModel
     {
         private int _hours;
         private int _minutes;
-        private HourlySyncFrequency _syncFrequency;
+        private IntervalSyncFrequency _syncFrequency;
 
-        public HourlySyncViewModel()
+        public IntervalSyncViewModel()
         {
             Hours = 1;
             Minutes = 0;
         }
 
-        public HourlySyncViewModel(HourlySyncFrequency syncFrequency)
+        public IntervalSyncViewModel(IntervalSyncFrequency syncFrequency)
         {
             _syncFrequency = syncFrequency;
             Hours = syncFrequency.Hours;
@@ -71,7 +71,7 @@ namespace CalendarSyncPlus.Application.ViewModels
         {
             if (_syncFrequency == null)
             {
-                _syncFrequency = new HourlySyncFrequency();
+                _syncFrequency = new IntervalSyncFrequency();
             }
 
             if (IsModified)

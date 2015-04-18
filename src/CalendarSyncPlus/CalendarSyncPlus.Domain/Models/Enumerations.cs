@@ -2,6 +2,20 @@
 
 namespace CalendarSyncPlus.Domain.Models
 {
+    public enum ProxyType
+    {
+        Auto = 0,
+        NoProxy,
+        ProxyWithAuth
+    }
+
+    public enum SyncRangeTypeEnum
+    {
+        SyncRangeInDays = 0,
+        SyncEntireCalendar = 1,
+        SyncFixedDateRange = 2,
+    }
+
     public enum MeetingResponseStatusEnum
     {
         None,
@@ -41,6 +55,7 @@ namespace CalendarSyncPlus.Domain.Models
         AttendeesToDescription = 4,
         Reminders = 8,
         Attachments = 16,
+        AsAppointments = 32,
     }
 
     public enum CalendarSyncDirectionEnum
