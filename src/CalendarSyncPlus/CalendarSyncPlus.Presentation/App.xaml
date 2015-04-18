@@ -11,8 +11,7 @@
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colors.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml" />
-                <ResourceDictionary
-                    Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
                 <ResourceDictionary Source="/Resources/Icons.xaml" />
                 <ResourceDictionary Source="Resources/OtherResources.xaml" />
                 <ResourceDictionary>
@@ -80,20 +79,58 @@
                             </DataTrigger>
                         </DataTemplate.Triggers>
                     </DataTemplate>
-                    <DataTemplate x:Key="HelpButtonStyle">
-                        <Button>
-                            <Rectangle Fill="{StaticResource AccentSelectedColorBrush}">
+                    <DataTemplate x:Key="HelpButtonTemplate">
+                        <Button Style="{DynamicResource MetroCircleButtonStyle}"
+                                Height="28"
+                                Width="28"
+                                ToolTip="{TemplateBinding ToolTip}">
+                            <Rectangle  Height="10"
+                                        Width="10" Fill="{StaticResource AccentColorBrush}">
+                                        <!--Fill="{Binding Foreground,RelativeSource={RelativeSource AncestorType={x:Type Button},Mode=FindAncestor}}">-->
                                 <Rectangle.OpacityMask>
-                                    <VisualBrush Visual="{StaticResource appbar_question}"/>
+                                    <VisualBrush Visual="{StaticResource appbar_question}" />
                                 </Rectangle.OpacityMask>
                             </Rectangle>
+                            <!--<Button.Triggers>
+                                <EventTrigger RoutedEvent="Button.Click">
+                                    
+                                </EventTrigger>
+                            </Button.Triggers>-->
                         </Button>
                     </DataTemplate>
+                    <Style x:Key="{x:Type ToolTip}"
+                           TargetType="ToolTip">
+                        <Setter Property="OverridesDefaultStyle"
+                                Value="true" />
+                        <Setter Property="HasDropShadow"
+                                Value="True" />
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="ToolTip">
+                                        <Border Name="Border" MaxWidth="200"
+                                                Width="{TemplateBinding Width}"
+                                                Height="{TemplateBinding Height}"
+                                                MinWidth="100"
+                                                MinHeight="30"
+                                                Margin="0,0,0,50"
+                                                Background="White"
+                                                BorderBrush="Black"
+                                                BorderThickness="1">
+                                        <TextBlock Text="{Binding Content,RelativeSource={RelativeSource AncestorType={x:Type ToolTip},Mode=FindAncestor}}"
+                                                   Margin="4"
+                                                   VerticalAlignment="Top"
+                                                   HorizontalAlignment="Center"
+                                                   TextWrapping="Wrap" />
+                                        </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
-            
+
         </ResourceDictionary>
 
-       
+
     </Application.Resources>
 </Application>

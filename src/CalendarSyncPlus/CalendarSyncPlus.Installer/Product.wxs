@@ -61,9 +61,9 @@
         <RemoveFolder Id="ApplicationProgramsFolder" On="uninstall"/>
         <RegistryValue Root="HKCU" Key="Software\Ankesh Dave &amp; Akanksha Gaur\CalendarSyncPlus" Name="installed" Type="integer" Value="00000001" KeyPath="yes"/>
       </Component>
-      <Component Id="SecurityRegistryValue">
+      <!--<Component Id="SecurityRegistryValue">
         <RegistryValue Root="HKCU" Key="Software\Policies\Microsoft\Security" Name="CheckAdminSettings" Type="integer" Value="00000001" KeyPath="yes"/>
-      </Component>
+      </Component>-->
     </ComponentGroup>
 
   </Product>

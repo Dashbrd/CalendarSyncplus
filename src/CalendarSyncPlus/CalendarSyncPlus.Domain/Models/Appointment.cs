@@ -197,12 +197,7 @@ namespace CalendarSyncPlus.Domain.Models
             set { SetProperty(ref _isRecurring, value); }
         }
 
-        public List<Recipient> Recipients
-        {
-            get { return _recipients; }
-            set { SetProperty(ref _recipients, value); }
-        }
-
+        
         public DateTime? LastModified
         {
             get { return _lastModified; }

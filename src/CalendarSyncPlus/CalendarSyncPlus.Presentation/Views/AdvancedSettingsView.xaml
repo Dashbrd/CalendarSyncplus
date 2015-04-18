@@ -1,9 +1,9 @@
 ﻿<UserControl x:Class="CalendarSyncPlus.Presentation.Views.AdvancedSettingsView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:Converters="clr-namespace:CalendarSyncPlus.Presentation.Converters"
+             xmlns:converters="clr-namespace:CalendarSyncPlus.Presentation.Converters"
              xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
-             xmlns:converters="http://waf.codeplex.com/schemas"
+             xmlns:wafConverters="http://waf.codeplex.com/schemas"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:viewModels="clr-namespace:CalendarSyncPlus.Application.ViewModels;assembly=CalendarSyncPlus.Application"
@@ -11,11 +11,11 @@
              d:DesignHeight="500"
              d:DesignWidth="450"
              mc:Ignorable="d"
-             converters:ValidationHelper.IsEnabled="true"
-             converters:ValidationHelper.IsValid="{Binding IsValid, Mode=OneWayToSource}">
+             wafConverters:ValidationHelper.IsEnabled="true"
+             wafConverters:ValidationHelper.IsValid="{Binding IsValid, Mode=OneWayToSource}">
     <UserControl.Resources>
-        <Converters:BoolToEnumConverter x:Key="_boolToEnumConverter" />
-        <converters:InvertBooleanConverter x:Key="InvertBooleanConverter" />
+        <converters:BoolToEnumConverter x:Key="BootToEnumConverter" />
+        <wafConverters:InvertBooleanConverter x:Key="InvertBooleanConverter" />
     </UserControl.Resources>
 
     <Grid>
@@ -54,40 +54,67 @@
                     <RowDefinition />
                     <RowDefinition />
                 </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
                 <CheckBox Margin="2"
                           Content="Run CalendarSync+ when computer starts"
                           IsChecked="{Binding RunApplicationAtSystemStartup,
                                               Mode=TwoWay,
-                                              UpdateSourceTrigger=PropertyChanged}"
-                          ToolTip="Select this option to start CalendarSync+ when computer starts" />
+                                              UpdateSourceTrigger=PropertyChanged}"/>
+                <ContentControl ContentTemplate="{StaticResource HelpButtonTemplate}"
+                                Grid.Column="1"
+                                ToolTip="Select this option to start CalendarSync+ when computer starts" />
                 <CheckBox Grid.Row="1"
                           Margin="2"
                           Content="Close button minimizes to tray"
                           IsChecked="{Binding MinimizeToSystemTray,
                                               Mode=TwoWay,
                                               UpdateSourceTrigger=PropertyChanged}"
-                          ToolTip="Select this option to minimize to system tray on closing the window" />
+                          />
+                <ContentControl ContentTemplate="{StaticResource HelpButtonTemplate}"
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                ToolTip="Select this option to minimize to system tray on closing the window" />
                 <CheckBox Grid.Row="2"
-                          Margin="2"
-                          Content="Remember periodic sync start/stop status"
-                          IsChecked="{Binding RememberPeriodicSyncOn,
-                                              Mode=TwoWay,
-                                              UpdateSourceTrigger=PropertyChanged}"
-                          ToolTip="Select this option to remember the periodic sync status when application starts" />
-                <CheckBox Grid.Row="3"
                           Margin="2"
                           Content="Hide sync notification"
                           IsChecked="{Binding HideSystemTrayTooltip,
                                               Mode=TwoWay,
-                                              UpdateSourceTrigger=PropertyChanged}"
-                          ToolTip="Select this option to hide system tray tooltip" />
-                <CheckBox Grid.Row="4"
+                                              UpdateSourceTrigger=PropertyChanged}"/>
+                          
+                <ContentControl ContentTemplate="{StaticResource HelpButtonTemplate}"
+                                Grid.Row="2"
+                                Grid.Column="1"
+                                ToolTip="Select this option to hide system tray tooltip" />
+                <CheckBox Grid.Row="3"
                           Margin="2"
                           Content="Check For Updates"
                           IsChecked="{Binding CheckForUpdates,
                                               Mode=TwoWay,
                                               UpdateSourceTrigger=PropertyChanged}"
-                          ToolTip="Select this option to automatically check for latest version of this application" />
+                          />
+                <ContentControl ContentTemplate="{StaticResource HelpButtonTemplate}"
+                                Grid.Row="3"
+                                Grid.Column="1"
+                                ToolTip="Select this option to automatically check for latest version of this application"  />
+                <StackPanel Orientation="Horizontal" Grid.Row="4">
+                    <RadioButton Content="Auto Synchronization"
+                                 Margin="2"
+                                 IsChecked="{Binding IsManualSynchronization,
+                                              Mode=TwoWay,Converter={StaticResource InvertBooleanConverter},
+                                              UpdateSourceTrigger=PropertyChanged}" />
+                    <RadioButton Content="Manual Synchronization"
+                                 Margin="2"
+                                 IsChecked="{Binding IsManualSynchronization,
+                                              Mode=TwoWay,
+                                              UpdateSourceTrigger=PropertyChanged}" />
+                </StackPanel>
+                <ContentControl ContentTemplate="{StaticResource HelpButtonTemplate}"
+                                Grid.Row="4"
+                                Grid.Column="1"
+                                ToolTip="Select this option to automatically check for latest version of this application" />
             </Grid>
         </GroupBox>
         <GroupBox Grid.Row="2" Header="Proxy Settings">
@@ -114,7 +141,7 @@
                              Margin="2"
                              Content="Auto Detect"
                              IsChecked="{Binding Path=ProxySettings.ProxyType,
-                                                 Converter={StaticResource _boolToEnumConverter},
+                                                 Converter={StaticResource BootToEnumConverter},
                                                  ConverterParameter=Auto}" />
                 <RadioButton Grid.Row="1"
                              Grid.Column="0"
@@ -122,7 +149,7 @@
                              Margin="2"
                              Content="No Proxy"
                              IsChecked="{Binding Path=ProxySettings.ProxyType,
-                                                 Converter={StaticResource _boolToEnumConverter},
+                                                 Converter={StaticResource BootToEnumConverter},
                                                  ConverterParameter=NoProxy}" />
 
                 <RadioButton x:Name="_manualProxyConfigurationRadioButton"
@@ -132,7 +159,7 @@
                              Margin="2"
                              Content="Manual Proxy Configuration"
                              IsChecked="{Binding Path=ProxySettings.ProxyType,
-                                                 Converter={StaticResource _boolToEnumConverter},
+                                                 Converter={StaticResource BootToEnumConverter},
                                                  ConverterParameter=ProxyWithAuth}" />
                 <TextBlock Grid.Row="3"
                            Grid.Column="0"

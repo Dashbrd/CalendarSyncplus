@@ -2,17 +2,16 @@
 
 namespace CalendarSyncPlus.Domain.Models
 {
-    public class HourlySyncFrequency : SyncFrequency
+    public class IntervalSyncFrequency : SyncFrequency
     {
-        public HourlySyncFrequency()
+        public IntervalSyncFrequency()
         {
-            Name = "Hourly";
+            Name = "Interval";
             Hours = 1;
             Minutes = 0;
             StartTime = DateTime.Now;
             StartTime = StartTime.AddSeconds(-StartTime.Second);
         }
-
         public DateTime StartTime { get; set; }
 
         public int Hours { get; set; }

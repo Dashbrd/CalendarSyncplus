@@ -41,6 +41,7 @@ namespace CalendarSyncPlus.Domain.Models
         AttendeesToDescription = 4,
         Reminders = 8,
         Attachments = 16,
+        AsAppointments = 32,
     }
 
     public enum CalendarSyncDirectionEnum

@@ -61,6 +61,8 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
 
         private OutlookCalendar OutlookCalendar { get; set; }
 
+        public bool AddAsAppointments { get; set; }
+
         private string ProfileName { get; set; }
 
         private Category EventCategory { get; set; }
@@ -598,6 +600,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
             return calendarAppointments;
         }
 
+        /// <exception cref="InvalidOperationException">Essential parameters are not present.</exception>
         public void CheckCalendarSpecificData(IDictionary<string, object> calendarSpecificData)
         {
             if (calendarSpecificData == null)
@@ -607,17 +610,19 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
 
             object profileValue;
             object outlookCalendarValue;
+            object addAsAppointments;
             if (!(calendarSpecificData.TryGetValue("ProfileName", out profileValue) &&
-                  calendarSpecificData.TryGetValue("OutlookCalendar", out outlookCalendarValue)))
+                  calendarSpecificData.TryGetValue("OutlookCalendar", out outlookCalendarValue) &&
+                  calendarSpecificData.TryGetValue("AddAsAppointments", out addAsAppointments)))
             {
                 throw new InvalidOperationException(
                     string.Format(
-                        "{0} and {1}  keys should be present, both of them can be null in case Default Profile and Default Calendar will be used. {0} is or 'string' and {1} is of 'OutlookCalendar' type",
-                        "ProfileName", OutlookCalendar));
+                        "{0} {1} and {2}  keys should be present, both of them can be null in case Default Profile and Default Calendar will be used. {0} is of 'string' type, {1} is of 'OutlookCalendar' type and {2} is of bool type.",
+                        "ProfileName", "OutlookCalendar", "AddAsAppointments"));
             }
             ProfileName = profileValue as String;
             OutlookCalendar = outlookCalendarValue as OutlookCalendar;
-
+            AddAsAppointments = (bool) addAsAppointments;
             object eventCategory;
             if (calendarSpecificData.TryGetValue("EventCategory", out eventCategory))
             {
@@ -811,7 +816,16 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
             try
             {
                 appItem.Subject = calendarAppointment.Subject;
-                appItem.MeetingStatus = OlMeetingStatus.olMeeting;
+                if (!calendarAppointment.RequiredAttendees.Any() && !calendarAppointment.OptionalAttendees.Any()
+                    && AddAsAppointments)
+                {
+                    appItem.MeetingStatus = OlMeetingStatus.olNonMeeting;
+                }
+                else
+                {
+                    appItem.MeetingStatus = OlMeetingStatus.olMeeting;
+                }
+
                 appItem.Location = calendarAppointment.Location;
                 appItem.BusyStatus = calendarAppointment.GetOutlookBusyStatus();
                 recipients = appItem.Recipients;

@@ -102,7 +102,7 @@
     <Compile Include="ViewModels\AboutViewModel.cs" />
     <Compile Include="ViewModels\DailySyncViewModel.cs" />
     <Compile Include="ViewModels\HelpViewModel.cs" />
-    <Compile Include="ViewModels\HourlySyncViewModel.cs" />
+    <Compile Include="ViewModels\IntervalSyncViewModel.cs" />
     <Compile Include="ViewModels\ProfileViewModel.cs" />
     <Compile Include="ViewModels\ProxySettingsDataModel.cs" />
     <Compile Include="ViewModels\SyncFrequencyViewModel.cs" />

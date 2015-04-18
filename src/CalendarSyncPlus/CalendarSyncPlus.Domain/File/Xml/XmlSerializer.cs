@@ -103,12 +103,12 @@ namespace CalendarSyncPlus.Domain.File.Xml
             {
                 throw new FileNotFoundException("Cannot find XML file to deserialize", filename);
             }
-
+            
             // Create the stream writer with the specified encoding
             using (XmlReader reader = XmlReader.Create(filename, settings))
             {
-                var xmlSerializer = new XmlSerializer(typeof (T));
-                return (T) xmlSerializer.Deserialize(reader);
+                var xmlSerializer = new XmlSerializer(typeof(T));
+                return (T)xmlSerializer.Deserialize(reader);
             }
         }
 

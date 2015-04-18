@@ -74,6 +74,8 @@ namespace CalendarSyncPlus.Application.ViewModels
         private string _syncFrequency;
         private SyncFrequencyViewModel _syncFrequencyViewModel;
         private string _username;
+        private bool _syncEntireCalendar;
+        private bool _addAsAppointments;
 
         public ProfileViewModel(CalendarSyncProfile syncProfile, IGoogleCalendarService googleCalendarService,
             IOutlookCalendarService outlookCalendarService,
@@ -243,6 +245,12 @@ namespace CalendarSyncPlus.Application.ViewModels
             set { SetProperty(ref _daysInFuture, value); }
         }
 
+        public bool SyncEntireCalendar
+        {
+            get { return _syncEntireCalendar; }
+            set { SetProperty(ref _syncEntireCalendar, value); }
+        }
+
         public int DaysInPast
         {
             get { return _daysInPast; }
@@ -289,6 +297,12 @@ namespace CalendarSyncPlus.Application.ViewModels
                     AddAttendeesToDescription = false;
                 }
             }
+        }
+
+        public bool AddAsAppointments
+        {
+            get { return _addAsAppointments; }
+            set { SetProperty(ref _addAsAppointments, value); }
         }
 
         public bool AddReminders
@@ -441,14 +455,14 @@ namespace CalendarSyncPlus.Application.ViewModels
             };
             SyncFrequencies = new List<string>
             {
-                "Hourly",
+                "Interval",
                 "Daily",
                 "Weekly"
             };
 
-            SyncFrequency = "Hourly";
+            SyncFrequency = "Interval";
             Categories = CategoryHelper.GetCategories();
-
+            SyncEntireCalendar = SyncProfile.SyncEntireCalendar;
             DaysInPast = SyncProfile.DaysInPast;
             DaysInFuture = SyncProfile.DaysInFuture;
             AddAttendees = SyncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Attendees);
@@ -460,6 +474,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             AddDescription = SyncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Description);
             AddReminders = SyncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Reminders);
             AddAttachments = SyncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Attachments);
+            AddAsAppointments = SyncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.AsAppointments);
             IsDefaultProfile = SyncProfile.OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.DefaultProfile);
             IsDefaultMailBox =
                 SyncProfile.OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.DefaultCalendar);
@@ -675,7 +690,9 @@ namespace CalendarSyncPlus.Application.ViewModels
                 MessageService.ShowMessageAsync("Reset calendar failed.");
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         private void OnSyncFrequencyChanged()
         {
             if (SyncProfile != null && SyncProfile.SyncSettings.SyncFrequency != null &&
@@ -683,9 +700,9 @@ namespace CalendarSyncPlus.Application.ViewModels
             {
                 switch (SyncFrequency)
                 {
-                    case "Hourly":
+                    case "Interval":
                         SyncFrequencyViewModel
-                            = new HourlySyncViewModel(SyncProfile.SyncSettings.SyncFrequency as HourlySyncFrequency);
+                            = new IntervalSyncViewModel(SyncProfile.SyncSettings.SyncFrequency as IntervalSyncFrequency);
                         break;
                     case "Daily":
                         SyncFrequencyViewModel
@@ -701,8 +718,8 @@ namespace CalendarSyncPlus.Application.ViewModels
             {
                 switch (SyncFrequency)
                 {
-                    case "Hourly":
-                        SyncFrequencyViewModel = new HourlySyncViewModel();
+                    case "Interval":
+                        SyncFrequencyViewModel = new IntervalSyncViewModel();
                         break;
                     case "Daily":
                         SyncFrequencyViewModel = new DailySyncViewModel();
@@ -737,16 +754,20 @@ namespace CalendarSyncPlus.Application.ViewModels
             IsLoading = false;
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public CalendarSyncProfile SaveCurrentSyncProfile()
         {
             SyncProfile.IsSyncEnabled = IsSyncEnabled;
             SyncProfile.GoogleCalendar = SelectedCalendar;
             SyncProfile.DaysInFuture = DaysInFuture;
             SyncProfile.DaysInPast = DaysInPast;
+            SyncProfile.SyncEntireCalendar = SyncEntireCalendar;
             SyncProfile.SyncSettings.SyncFrequency = SyncFrequencyViewModel.GetFrequency();
             SyncProfile.UpdateEntryOptions(AddDescription, AddReminders, AddAttendees, AddAttendeesToDescription,
-                AddAttachments);
+                AddAttachments, AddAsAppointments);
             SyncProfile.OutlookSettings.OutlookMailBox = SelectedOutlookMailBox;
             SyncProfile.OutlookSettings.OutlookCalendar = SelectedOutlookCalendar;
             SyncProfile.OutlookSettings.OutlookProfileName = SelectedOutlookProfileName;
