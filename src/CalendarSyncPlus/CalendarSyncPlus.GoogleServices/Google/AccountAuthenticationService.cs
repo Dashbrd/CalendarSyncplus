@@ -41,7 +41,7 @@ namespace CalendarSyncPlus.GoogleServices.Google
         ///     <paramref name="fileDataStorePath" /> is completePath or Directory Name
         /// </param>
         /// <returns></returns>
-        public CalendarService AuthenticateCalenderOauth(string clientId, string clientSecret, string userName,
+        public CalendarService AuthenticateCalendarOauth(string clientId, string clientSecret, string userName,
             string fileDataStorePath, string applicationName, bool isFullPath = false)
         {
             try
@@ -90,13 +90,13 @@ namespace CalendarSyncPlus.GoogleServices.Google
         }
 
 
-        public CalendarService AuthenticateCalenderOauth(string accountName)
+        public CalendarService AuthenticateCalendarOauth(string accountName)
         {
             string applicationDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData,
                 Environment.SpecialFolderOption.None);
             string fullPath = applicationDataPath + @"\CalendarSyncPlus\" + Constants.AuthFolderPath;
 
-            return AuthenticateCalenderOauth(Constants.ClientId, Constants.ClientSecret,
+            return AuthenticateCalendarOauth(Constants.ClientId, Constants.ClientSecret,
                 accountName, fullPath, ApplicationInfo.ProductName, true);
         }
 

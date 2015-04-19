@@ -222,12 +222,11 @@ namespace CalendarSyncPlus.Presentation.Services
             {
                 await View.ShowMetroDialogAsync(dialog, metroDialogSettings);
 
-                await dialog.WaitForButtonPressAsync().ContinueWith((m) =>
+                return await dialog.WaitForButtonPressAsync().ContinueWith(m =>
                     {
                         InvokeOnCurrentDispatcher(() => View.HideMetroDialogAsync(dialog));
+                        return m.Result;
                     });
-
-                return dialog.Input;
             });
         }
 

@@ -458,11 +458,11 @@ namespace CalendarSyncPlus.Application.ViewModels
             {
                 return;
             }
-            LoadSettingsAndGetCalenders();
+            LoadSettingsAndGetCalendars();
             _isloaded = true;
         }
 
-        private void LoadSettingsAndGetCalenders()
+        private void LoadSettingsAndGetCalendars()
         {
             IsLoading = true;
             try
