@@ -221,12 +221,13 @@ namespace CalendarSyncPlus.GoogleServices.Google
         }
 
         private void InsertEventErrorMessage(Event content, RequestError error, int index, HttpResponseMessage message,
-            Dictionary<KeyValuePair<int, Appointment>, HttpResponseMessage> eventListIndex)
+            List<Appointment> eventList,Dictionary<int,Appointment> errorAppointments)
         {
             if (!message.IsSuccessStatusCode)
             {
-                ApplicationLogger.LogWarn(String.Format("Id : {0}{2}Summary : {1}", content.Id, content.Summary,
-                    Environment.NewLine));
+                var googleEvent = eventList[index];
+                errorAppointments.Add(index,googleEvent);
+                ApplicationLogger.LogError(googleEvent.ToString());
             }
         }
 
@@ -395,7 +396,7 @@ namespace CalendarSyncPlus.GoogleServices.Google
 
             CheckCalendarSpecificData(calendarSpecificData);
 
-            var eventIndexList = new Dictionary<KeyValuePair<int, Appointment>, HttpResponseMessage>();
+            var errorList = new Dictionary<int,Appointment>();
             //Get Calendar Service
             CalendarService calendarService = GetCalendarService(AccountName);
 
@@ -429,9 +430,10 @@ namespace CalendarSyncPlus.GoogleServices.Google
                         EventsResource.InsertRequest insertRequest = calendarService.Events.Insert(calendarEvent,
                             CalendarId);
                         insertRequest.SendNotifications = false;
+                        
                         batchRequest.Queue<Event>(insertRequest,
                             (content, error, index, message) =>
-                                InsertEventErrorMessage(content, error, index, message, eventIndexList));
+                                InsertEventErrorMessage(content, error, index, message, calendarAppointments, errorList));
                     }
 
                     await batchRequest.ExecuteAsync();
@@ -456,7 +458,7 @@ namespace CalendarSyncPlus.GoogleServices.Google
 
             CheckCalendarSpecificData(calendarSpecificData);
 
-            var eventIndexList = new Dictionary<KeyValuePair<int, Appointment>, HttpResponseMessage>();
+            var errorList = new Dictionary<int, Appointment>();
             //Get Calendar Service
             CalendarService calendarService = GetCalendarService(AccountName);
 
@@ -488,9 +490,8 @@ namespace CalendarSyncPlus.GoogleServices.Google
                             appointment.AppointmentId);
                         batchRequest.Queue<Event>(deleteRequest,
                             (content, error, index, message) =>
-                                InsertEventErrorMessage(content, error, index, message, eventIndexList));
+                                InsertEventErrorMessage(content, error, index, message, calendarAppointments, errorList));
                     }
-
                     await batchRequest.ExecuteAsync();
                 }
             }

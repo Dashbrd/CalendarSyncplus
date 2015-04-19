@@ -95,7 +95,6 @@ namespace CalendarSyncPlus.Application.ViewModels
             GoogleCalendarService = googleCalendarService;
             OutlookCalendarService = outlookCalendarService;
             MessageService = messageService;
-            Initialize();
         }
 
         public CalendarSyncProfile SyncProfile { get; set; }
@@ -472,14 +471,18 @@ namespace CalendarSyncPlus.Application.ViewModels
         public GoogleAccount SelectedGoogleAccount
         {
             get { return _selectedGoogleAccount; }
-            set { SetProperty(ref _selectedGoogleAccount, value); }
+            set
+            {
+                SetProperty(ref _selectedGoogleAccount, value);
+                GetGoogleCalendar();
+            }
         }
 
         #endregion
 
         #region Private Methods
 
-        private void Initialize()
+        internal void Initialize()
         {
             Name = SyncProfile.Name;
             IsSyncEnabled = SyncProfile.IsSyncEnabled;
@@ -533,9 +536,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             KeepLastModifiedCopy = SyncProfile.SyncSettings.KeepLastModifiedVersion;
             SyncFrequency = SyncProfile.SyncSettings.SyncFrequency.Name;
             SetCategory = SyncProfile.SetCalendarCategory;
-            SelectedGoogleAccount = SyncProfile.GoogleAccount;
             if (SelectedGoogleAccount != null) SelectedCalendar = SelectedGoogleAccount.GoogleCalendar;
-
             SelectedOutlookProfileName = SyncProfile.OutlookSettings.OutlookProfileName;
             SelectedOutlookMailBox = SyncProfile.OutlookSettings.OutlookMailBox;
             SelectedOutlookCalendar = SyncProfile.OutlookSettings.OutlookCalendar;
@@ -656,8 +657,12 @@ namespace CalendarSyncPlus.Application.ViewModels
         {
             try
             {
+                if (SelectedGoogleAccount.Name == null)
+                {
+                    return;
+                }
                 List<GoogleCalendar> calendars =
-                        await GoogleCalendarService.GetAvailableCalendars(SelectedGoogleAccount.Name);
+                    await GoogleCalendarService.GetAvailableCalendars(SelectedGoogleAccount.Name);
                 GoogleCalenders = calendars;
                 if (GoogleCalenders.Any())
                 {
@@ -818,13 +823,12 @@ namespace CalendarSyncPlus.Application.ViewModels
             {
                 SyncProfile.GoogleAccount= new GoogleAccount();
             }
-            SyncProfile.GoogleAccount.GoogleCalendar = SelectedCalendar;
+            SyncProfile.GoogleAccount = SelectedGoogleAccount;
             SyncProfile.SyncSettings.DaysInFuture = DaysInFuture;
             SyncProfile.SyncSettings.DaysInPast = DaysInPast;
             SyncProfile.SyncSettings.StartDate = StartDate;
             SyncProfile.SyncSettings.EndDate = EndDate;
             SyncProfile.SyncSettings.SyncRangeType = SelectedSyncRangeType;
-            SyncProfile.GoogleAccount = SelectedGoogleAccount;
             SyncProfile.SyncSettings.SyncFrequency = SyncFrequencyViewModel.GetFrequency();
             SyncProfile.UpdateEntryOptions(AddDescription, AddReminders, AddAttendees, AddAttendeesToDescription,
                 AddAttachments, AddAsAppointments);

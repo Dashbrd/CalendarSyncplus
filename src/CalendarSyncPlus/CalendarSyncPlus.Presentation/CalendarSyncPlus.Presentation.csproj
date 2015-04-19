@@ -158,6 +158,7 @@
     <Compile Include="Converters\PercentageWidthConverter.cs" />
     <Compile Include="Converters\StringToBrushConverter.cs" />
     <Compile Include="Helpers\Utilities.cs" />
+    <Compile Include="MarkupExtensions\ResourceBinding.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Services\MessageService.cs" />
     <Compile Include="Services\SingleInstance\ISingleInstanceApp.cs" />

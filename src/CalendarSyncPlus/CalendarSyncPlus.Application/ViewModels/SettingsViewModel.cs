@@ -390,12 +390,14 @@ namespace CalendarSyncPlus.Application.ViewModels
         {
             IsLoading = true;
             SettingsSaved = false;
+            Settings.GoogleAccounts = GoogleAccounts;
             Settings.AppSettings.IsFirstSave = false;
             Settings.AppSettings.MinimizeToSystemTray = MinimizeToSystemTray;
             Settings.AppSettings.HideSystemTrayTooltip = HideSystemTrayTooltip;
             Settings.AppSettings.CheckForUpdates = CheckForUpdates;
             Settings.AppSettings.RunApplicationAtSystemStartup = RunApplicationAtSystemStartup;
             Settings.AppSettings.IsManualSynchronization = IsManualSynchronization;
+            
             Settings.AppSettings.ProxySettings = new ProxySetting()
             {
                 BypassOnLocal = ProxySettings.BypassOnLocal,
@@ -479,6 +481,7 @@ namespace CalendarSyncPlus.Application.ViewModels
                         UserName = Settings.AppSettings.ProxySettings.UserName
                     };
                     ApplyProxySettings();
+                    GoogleAccounts = Settings.GoogleAccounts;
                     MinimizeToSystemTray = Settings.AppSettings.MinimizeToSystemTray;
                     HideSystemTrayTooltip = Settings.AppSettings.HideSystemTrayTooltip;
                     CheckForUpdates = Settings.AppSettings.CheckForUpdates;
@@ -490,6 +493,18 @@ namespace CalendarSyncPlus.Application.ViewModels
                         var viewModel = new ProfileViewModel(syncProfile, GoogleCalendarService, OutlookCalendarService,
                             MessageService,
                             ExchangeWebCalendarService, ApplicationLogger, AccountAuthenticationService);
+
+                        var googleAccount =
+                            GoogleAccounts.Any()
+                                ? GoogleAccounts.FirstOrDefault(
+                                    account => account.Name == syncProfile.GoogleAccount.Name)
+                                : null;
+                        if (googleAccount!=null)
+                        {
+                            googleAccount.GoogleCalendar = syncProfile.GoogleAccount.GoogleCalendar;
+                        }
+                        viewModel.SelectedGoogleAccount = googleAccount;
+                        viewModel.Initialize();
                         profileList.Add(viewModel);
                         PropertyChangedEventManager.AddHandler(viewModel, ProfilePropertyChangedHandler, "IsLoading");
                     }

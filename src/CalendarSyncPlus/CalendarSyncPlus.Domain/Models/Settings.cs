@@ -5,6 +5,7 @@ namespace CalendarSyncPlus.Domain.Models
     public class Settings
     {
         private AppSettings _appSettings;
+        public ObservableCollection<GoogleAccount> GoogleAccounts { get; set; }
         public ObservableCollection<CalendarSyncProfile> SyncProfiles { get; set; }
 
         public AppSettings AppSettings
@@ -33,7 +34,8 @@ namespace CalendarSyncPlus.Domain.Models
                 SyncProfiles = new ObservableCollection<CalendarSyncProfile>()
                 {
                     CalendarSyncProfile.GetDefaultSyncProfile()
-                }
+                },
+                GoogleAccounts=new ObservableCollection<GoogleAccount>()
             };
             return settings;
         }
