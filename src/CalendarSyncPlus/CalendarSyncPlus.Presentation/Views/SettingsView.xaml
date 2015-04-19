@@ -70,7 +70,7 @@
         </ContentControl>
         <TabControl Grid.Row="1"
                     IsEnabled="{Binding Path=IsLoading,Converter={StaticResource ResourceKey=InvertBooleanConverter}}">
-            <TabItem Header="Calendar Profiles">
+            <TabItem Header="Calendars">
                 <ScrollViewer VerticalScrollBarVisibility="Auto"
                               HorizontalScrollBarVisibility="Hidden">
                     <views:ProfileSettingsView DataContext="{Binding}" />

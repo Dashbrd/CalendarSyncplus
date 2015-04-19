@@ -6,11 +6,11 @@
            Manufacturer="Ankesh Dave &amp; Akanksha Gaur"
            UpgradeCode="6A7B72FC-ED9B-4951-B733-AB54B8D4AE94" >
 
-    <Package InstallerVersion="405" Manufacturer="Ankesh Dave &amp; Akanksha Gaur" Platform="x86"
+    <Package Id="*" InstallerVersion="405" Manufacturer="Ankesh Dave &amp; Akanksha Gaur" Platform="x86"
              Compressed="yes" Description="A utility to synchronize Outlook to Google calendars, vice versa and bidirectional."/>
     <!--Upgrade Message-->
     <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed."
-                   AllowSameVersionUpgrades="yes" Schedule="afterInstallInitialize"/>
+                   AllowSameVersionUpgrades="yes" MigrateFeatures="yes"  Schedule="afterInstallInitialize"/>
     <!--Do not create cab file separately-->
     <MediaTemplate EmbedCab="yes"/>
 

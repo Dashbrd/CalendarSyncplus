@@ -47,7 +47,6 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="1*" />
                     <ColumnDefinition Width="3*" />
-                    <ColumnDefinition Width=".5*" />
                 </Grid.ColumnDefinitions>
 
                 <TextBlock Text="Select Account"
@@ -59,55 +58,53 @@
                           DisplayMemberPath="Name"
                           ItemsSource="{Binding Path=DataContext.GoogleAccounts,UpdateSourceTrigger=PropertyChanged,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type views:ProfileSettingsView}}}"
                           SelectedItem="{Binding SelectedGoogleAccount,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
-
-                <Button Margin="2"
-                        Grid.Row="0"
-                        Grid.Column="2"
-                        Command="{Binding Path=DataContext.AddNewGoogleAccount,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type views:ProfileSettingsView}}}"
-                        VerticalAlignment="Center"
-                        Content="Add" />
+                <StackPanel Orientation="Horizontal"
+                            HorizontalAlignment="Right"
+                            Grid.Row="1"
+                            Grid.Column="1">
+                    <Button Margin="2"
+                            Width="150"
+                            Command="{Binding DisconnectGoogleCommand}"
+                            VerticalAlignment="Center"
+                            Content="Disconnect Account"
+                            HorizontalAlignment="Right" />
+                    <Button Margin="2"
+                            Width="150"
+                            Command="{Binding Path=DataContext.AddNewGoogleAccount,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type views:ProfileSettingsView}}}"
+                            VerticalAlignment="Center"
+                            Content="Add Google Account" />
+                </StackPanel>
+                
 
                 <TextBlock Text="Select Calendar"
                            VerticalAlignment="Center"
-                           Grid.Row="1"
+                           Grid.Row="2"
                            Grid.Column="0" />
                 <ComboBox Margin="2"
-                          Grid.Row="1"
+                          Grid.Row="2"
                           Grid.Column="1"
-                          Grid.ColumnSpan="2"
                           DisplayMemberPath="Name"
                           ItemsSource="{Binding GoogleCalenders,UpdateSourceTrigger=PropertyChanged}"
                           SelectedItem="{Binding SelectedCalendar,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
-
-                <Button Margin="2"
-                        Grid.Row="2"
-                        Grid.ColumnSpan="2"
-                        Grid.Column="1"
+                <StackPanel Orientation="Horizontal"
+                            HorizontalAlignment="Right"
+                            Grid.Row="3"
+                            Grid.Column="1">
+                    <Button Margin="2"
+                            Width="150"
+                            VerticalAlignment="Center"
+                            Content="Reset Google Calendar"
+                            Command="{Binding ResetGoogleCalendarCommand}"
+                            HorizontalAlignment="Right" />
+                    <Button Margin="2"
                         Width="150"
                         Command="{Binding GetGoogleCalendarCommand}"
                         VerticalAlignment="Center"
                         Content="Get Google Calendars"
                         HorizontalAlignment="Right" />
 
-                <Button Margin="2"
-                        Grid.Row="3"
-                        Grid.ColumnSpan="2"
-                        Grid.Column="1"
-                        Width="150"
-                        VerticalAlignment="Center"
-                        Content="Reset Google Calendar"
-                        Command="{Binding ResetGoogleCalendarCommand}"
-                        HorizontalAlignment="Right" />
-
-                <Button Margin="2"
-                        Grid.Row="4"
-                        Grid.ColumnSpan="2"
-                        Grid.Column="1"
-                        Width="150"
-                        Command="{Binding DisconnectGoogleCommand}"
-                        VerticalAlignment="Center"
-                        Content="Disconnect Google"
-                        HorizontalAlignment="Right" />
+                
+                </StackPanel>
             </Grid>
         </GroupBox>
     </Grid>
