@@ -19,7 +19,7 @@ namespace CalendarSyncPlus.GoogleServices.Google
         ///     <paramref name="fileDataStorePath" /> is completePath or Directory Name
         /// </param>
         /// <returns></returns>
-        CalendarService AuthenticateCalenderOauth(string clientId, string clientSecret, string userName,
+        CalendarService AuthenticateCalendarOauth(string clientId, string clientSecret, string userName,
             string fileDataStorePath, string applicationName, bool isFullPath);
 
         /// <summary>
@@ -27,7 +27,7 @@ namespace CalendarSyncPlus.GoogleServices.Google
         /// </summary>
         /// <param name="accountName"></param>
         /// <returns></returns>
-        CalendarService AuthenticateCalenderOauth(string accountName);
+        CalendarService AuthenticateCalendarOauth(string accountName);
 
         Task<bool> AuthorizeGoogleAccount(string accountName, CancellationToken cancellationToken);
 

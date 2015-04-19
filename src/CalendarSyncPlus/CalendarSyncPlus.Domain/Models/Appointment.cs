@@ -35,7 +35,7 @@ namespace CalendarSyncPlus.Domain.Models
         /// <summary>
         /// 
         /// </summary>
-        private Dictionary<string, object> _extendedProperties;
+        private Dictionary<string, string> _extendedProperties;
         /// <summary>
         /// 
         /// </summary>
@@ -71,7 +71,7 @@ namespace CalendarSyncPlus.Domain.Models
             _subject = subject;
             _endTime = endTime;
             _startTime = startTime;
-            ExtendedProperties = new Dictionary<string, object>();
+            ExtendedProperties = new Dictionary<string, string>();
             RequiredAttendees = new List<Recipient>();
             OptionalAttendees = new List<Recipient>();
         }
@@ -124,7 +124,7 @@ namespace CalendarSyncPlus.Domain.Models
             set { SetProperty(ref _calendarId, value); }
         }
 
-        public Dictionary<string, object> ExtendedProperties
+        public Dictionary<string, string> ExtendedProperties
         {
             get { return _extendedProperties; }
             set { SetProperty(ref _extendedProperties, value); }

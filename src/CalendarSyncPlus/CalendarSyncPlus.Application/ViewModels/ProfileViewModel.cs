@@ -49,7 +49,7 @@ namespace CalendarSyncPlus.Application.ViewModels
         private DelegateCommand _disconnectGoogleCommand;
         private DelegateCommand _getOutlookMailboxCommand;
         private DelegateCommand _getOutlookProfileLIstCommand;
-        private List<GoogleCalendar> _googleCalenders;
+        private List<GoogleCalendar> _googleCalendars;
         private bool _isDefault;
         private bool _isDefaultMailBox = true;
         private bool _isDefaultProfile = true;
@@ -246,10 +246,10 @@ namespace CalendarSyncPlus.Application.ViewModels
             }
         }
 
-        public List<GoogleCalendar> GoogleCalenders
+        public List<GoogleCalendar> GoogleCalendars
         {
-            get { return _googleCalenders; }
-            set { SetProperty(ref _googleCalenders, value); }
+            get { return _googleCalendars; }
+            set { SetProperty(ref _googleCalendars, value); }
         }
 
         public int DaysInFuture
@@ -615,7 +615,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             var result = AccountAuthenticationService.DisconnectGoogle(SelectedGoogleAccount.Name);
             if (result)
             {
-                GoogleCalenders = null;
+                GoogleCalendars = null;
                 SelectedCalendar = null;
                 MessageService.ShowMessageAsync("Google account successfully disconnected");
             }
@@ -658,12 +658,12 @@ namespace CalendarSyncPlus.Application.ViewModels
             {
                 List<GoogleCalendar> calendars =
                         await GoogleCalendarService.GetAvailableCalendars(SelectedGoogleAccount.Name);
-                GoogleCalenders = calendars;
-                if (GoogleCalenders.Any())
+                GoogleCalendars = calendars;
+                if (GoogleCalendars.Any())
                 {
                     SelectedCalendar = SyncProfile != null && SyncProfile.GoogleAccount != null && SyncProfile.GoogleAccount.GoogleCalendar !=null
-                        ? GoogleCalenders.FirstOrDefault(t => t.Id.Equals(SyncProfile.GoogleAccount.GoogleCalendar.Id))
-                        : GoogleCalenders.First();
+                        ? GoogleCalendars.FirstOrDefault(t => t.Id.Equals(SyncProfile.GoogleAccount.GoogleCalendar.Id))
+                        : GoogleCalendars.First();
                 }
             }
             catch (Exception exception)

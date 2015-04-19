@@ -78,7 +78,7 @@ namespace CalendarSyncPlus.Presentation.Views
                 if (e.Key == Key.Enter)
                 {
                     cleanUpHandlers();
-
+                    
                     tcs.TrySetResult(null);
                 }
             };
@@ -96,7 +96,7 @@ namespace CalendarSyncPlus.Presentation.Views
             negativeHandler = (sender, e) =>
             {
                 cleanUpHandlers();
-
+                
                 tcs.TrySetResult(null);
 
                 e.Handled = true;

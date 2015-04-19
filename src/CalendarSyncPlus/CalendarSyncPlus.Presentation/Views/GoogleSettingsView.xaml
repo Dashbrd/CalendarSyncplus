@@ -84,7 +84,7 @@
                           Grid.Row="2"
                           Grid.Column="1"
                           DisplayMemberPath="Name"
-                          ItemsSource="{Binding GoogleCalenders,UpdateSourceTrigger=PropertyChanged}"
+                          ItemsSource="{Binding GoogleCalendars,UpdateSourceTrigger=PropertyChanged}"
                           SelectedItem="{Binding SelectedCalendar,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
                 <StackPanel Orientation="Horizontal"
                             HorizontalAlignment="Right"
