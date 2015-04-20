@@ -474,8 +474,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             set
             {
                 SetProperty(ref _selectedGoogleAccount, value);
-                GetGoogleCalendar();
-        }
+            }
         }
 
         #endregion
@@ -540,7 +539,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             SelectedOutlookProfileName = SyncProfile.OutlookSettings.OutlookProfileName;
             SelectedOutlookMailBox = SyncProfile.OutlookSettings.OutlookMailBox;
             SelectedOutlookCalendar = SyncProfile.OutlookSettings.OutlookCalendar;
-
+            
             if (SyncProfile.EventCategory != null)
             {
                 SelectedCategory = Categories.First(t => t.CategoryName.Equals(SyncProfile.EventCategory.CategoryName));
@@ -632,6 +631,11 @@ namespace CalendarSyncPlus.Application.ViewModels
             IsLoading = true;
             try
             {
+                if (SelectedGoogleAccount == null)
+                {
+                    MessageService.ShowMessageAsync("Please select a Google account to get calendars");
+                    return;
+                }
                 ApplicationLogger.LogInfo("Loading Google calendars...");
                 await GetGoogleCalendarInternal();
                 ApplicationLogger.LogInfo("Google calendars loaded...");
@@ -805,8 +809,10 @@ namespace CalendarSyncPlus.Application.ViewModels
                     await GetOutlookMailBoxesInternal();
                 }
 
-
-                await GetGoogleCalendarInternal();
+                if (SelectedGoogleAccount != null && SelectedCalendar != null)
+                {
+                    await GetGoogleCalendarInternal();
+                }
 
             }
             IsLoading = false;

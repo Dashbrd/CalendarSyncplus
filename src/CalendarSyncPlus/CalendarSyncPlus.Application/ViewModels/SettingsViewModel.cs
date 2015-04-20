@@ -378,7 +378,6 @@ namespace CalendarSyncPlus.Application.ViewModels
                 }
                 GoogleAccounts.Add(account);
                 SelectedProfile.SelectedGoogleAccount = account;
-                SelectedProfile.GetGoogleCalendar();
             }
         }
 
