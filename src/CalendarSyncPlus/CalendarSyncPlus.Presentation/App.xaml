@@ -99,62 +99,6 @@
                             </Button.Triggers>-->
                         </Button>
                     </DataTemplate>
-                    <Style x:Key="{x:Type ToolTip}"
-                           TargetType="ToolTip">
-                        <Setter Property="OverridesDefaultStyle"
-                                Value="true" />
-                        <Setter Property="HasDropShadow"
-                                Value="True" />
-                        <Setter Property="Template">
-                            <Setter.Value>
-                                <ControlTemplate TargetType="ToolTip">
-                                        <Border Name="Border" MaxWidth="200"
-                                                Width="{TemplateBinding Width}"
-                                                Height="{TemplateBinding Height}"
-                                                MinWidth="100"
-                                                MinHeight="30"
-                                                Margin="0,0,0,50"
-                                                Background="White"
-                                                BorderBrush="Black"
-                                                BorderThickness="1">
-                                        <TextBlock Text="{Binding Content,RelativeSource={RelativeSource AncestorType={x:Type ToolTip},Mode=FindAncestor}}"
-                                                   Margin="4"
-                                                   VerticalAlignment="Top"
-                                                   HorizontalAlignment="Center"
-                                                   TextWrapping="Wrap" />
-                                        </Border>
-                                </ControlTemplate>
-                            </Setter.Value>
-                        </Setter>
-                    </Style>
-                    <DataTemplate DataType="{x:Type models:SyncRangeTypeEnum}"
-                                  x:Key="SyncRangeTypeEnumDataTemplate">
-                        <Grid Height="{Binding Height,RelativeSource={RelativeSource AncestorType={x:Type ComboBox}}}">
-                            <TextBlock Name="SyncRangeTextBlock"
-                                   VerticalAlignment="Center" />
-                        </Grid>
-                        <DataTemplate.Triggers>
-                            <DataTrigger Binding="{Binding}"
-                                         Value="{x:Static models:SyncRangeTypeEnum.SyncEntireCalendar}">
-                                <Setter TargetName="SyncRangeTextBlock"
-                                        Property="Text"
-                                        Value="Sync Full Calendar" />
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding}"
-                                         Value="{x:Static models:SyncRangeTypeEnum.SyncFixedDateRange}">
-
-                                <Setter TargetName="SyncRangeTextBlock"
-                                        Property="Text"
-                                        Value="Sync Fixed Date Range" />
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding}"
-                                         Value="{x:Static models:SyncRangeTypeEnum.SyncRangeInDays}">
-                                <Setter TargetName="SyncRangeTextBlock"
-                                        Property="Text"
-                                        Value="Sync Days in Range" />
-                            </DataTrigger>
-                        </DataTemplate.Triggers>
-                    </DataTemplate>
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
 

@@ -263,19 +263,37 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <ComboBox ItemsSource="{Binding SyncRangeTypes,UpdateSourceTrigger=PropertyChanged}"
+                <RadioButton Content="Sync Full Calendar"
+                             IsChecked="{Binding SelectedSyncRangeType,Mode=TwoWay,Converter={StaticResource BoolToEnumConverter},ConverterParameter=SyncEntireCalendar}"/>
+                <ContentControl ContentTemplate="{DynamicResource HelpButtonTemplate}"
+                                Grid.Column="1"
+                                ToolTip="Select the number of days in past for which you wish to sync calendar calendarAppointments" />
+                <RadioButton Content="Sync Days in Range" Grid.Row="1"
+                             IsChecked="{Binding SelectedSyncRangeType,Mode=TwoWay,Converter={StaticResource BoolToEnumConverter},ConverterParameter=SyncRangeInDays }" />
+                <ContentControl ContentTemplate="{DynamicResource HelpButtonTemplate}"
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                ToolTip="Select the number of days in past for which you wish to sync calendar calendarAppointments" />
+                <RadioButton Content="Sync Fixed Date Range " Grid.Row="2"
+                             IsChecked="{Binding SelectedSyncRangeType,Mode=TwoWay,Converter={StaticResource BoolToEnumConverter},ConverterParameter=SyncFixedDateRange }" />
+                <ContentControl ContentTemplate="{DynamicResource HelpButtonTemplate}"
+                                Grid.Column="1" Grid.Row="2"
+                                ToolTip="Select the number of days in past for which you wish to sync calendar calendarAppointments" />
+                <!--<ComboBox ItemsSource="{Binding SyncRangeTypes,UpdateSourceTrigger=PropertyChanged}"
                           SelectedItem="{Binding SelectedSyncRangeType,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                           ItemTemplate="{StaticResource SyncRangeTypeEnumDataTemplate}"/>
                 <ContentControl ContentTemplate="{DynamicResource HelpButtonTemplate}"
                                 Grid.Column="1"
-                                ToolTip="Select the number of days in past for which you wish to sync calendar calendarAppointments" />
+                                ToolTip="Select the number of days in past for which you wish to sync calendar calendarAppointments" />-->
                 
-                <Grid Grid.Row="1"
+                <Grid Grid.Row="3"
                       Grid.ColumnSpan="2"
                       Visibility="{Binding SelectedSyncRangeType,Converter={StaticResource EnumToVisbilityConverter},
                     ConverterParameter={x:Static models:SyncRangeTypeEnum.SyncRangeInDays} }">
@@ -320,7 +338,7 @@
                                     Grid.Column="2"
                                     ToolTip="Select the number of days in future for which you wish to sync calendar calendarAppointments" />
                 </Grid>
-                <Grid Grid.Row="1"
+                <Grid Grid.Row="3"
                       Grid.ColumnSpan="2"
                       Visibility="{Binding SelectedSyncRangeType,Converter={StaticResource EnumToVisbilityConverter},ConverterParameter={x:Static models:SyncRangeTypeEnum.SyncFixedDateRange} }">
                     <Grid.RowDefinitions>
