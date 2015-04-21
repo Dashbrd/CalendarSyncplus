@@ -64,7 +64,7 @@
                             Grid.Column="1">
                     <Button Margin="2"
                             Width="150"
-                            Command="{Binding DisconnectGoogleCommand}"
+                            Command="{Binding Path=DataContext.DisconnectGoogleCommand,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type views:ProfileSettingsView}}}"
                             VerticalAlignment="Center"
                             Content="Disconnect Account"
                             HorizontalAlignment="Right" />

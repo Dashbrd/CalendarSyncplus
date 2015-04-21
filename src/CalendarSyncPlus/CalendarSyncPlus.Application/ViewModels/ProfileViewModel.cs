@@ -46,7 +46,6 @@ namespace CalendarSyncPlus.Application.ViewModels
         private List<OutlookCalendar> _exchangeCalendarList;
         private string _exchangeServerUrl;
         private DelegateCommand _getGoogleCalendarCommand;
-        private DelegateCommand _disconnectGoogleCommand;
         private DelegateCommand _getOutlookMailboxCommand;
         private DelegateCommand _getOutlookProfileLIstCommand;
         private List<GoogleCalendar> _googleCalendars;
@@ -426,10 +425,6 @@ namespace CalendarSyncPlus.Application.ViewModels
             }
         }
 
-        public DelegateCommand DisconnectGoogleCommand
-        {
-            get { return _disconnectGoogleCommand ?? (_disconnectGoogleCommand = new DelegateCommand(DisconnectGoogleHandler)); }
-        }
 
 
         public DelegateCommand GetGoogleCalendarCommand
@@ -604,26 +599,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             OutlookProfileList = await OutlookCalendarService.GetOutLookProfieListAsync();
         }
 
-        private void DisconnectGoogleHandler()
-        {
-            if (SelectedGoogleAccount==null)
-            {
-                MessageService.ShowMessageAsync("No account selected");
-                return;
-            }
-
-            var result = AccountAuthenticationService.DisconnectGoogle(SelectedGoogleAccount.Name);
-            if (result)
-            {
-                GoogleCalendars = null;
-                SelectedCalendar = null;
-                MessageService.ShowMessageAsync("Google account successfully disconnected");
-            }
-            else
-            {
-                MessageService.ShowMessageAsync("Account wasn't authenticated earlier or disconnection failed.");
-            }
-        }
+        
 
         internal async void GetGoogleCalendar()
         {

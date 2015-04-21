@@ -93,7 +93,7 @@ namespace CalendarSyncPlus.Application.ViewModels
         private bool _isValid;
         private DelegateCommand _addNewGoogleAccount;
         private ObservableCollection<GoogleAccount> _googleAccounts;
-
+        private DelegateCommand _disconnectGoogleCommand;
 
         #endregion
 
@@ -133,6 +133,12 @@ namespace CalendarSyncPlus.Application.ViewModels
         {
             get { return _saveCommand ?? (_saveCommand = new DelegateCommand(SaveSettings)); }
         }
+
+        public DelegateCommand DisconnectGoogleCommand
+        {
+            get { return _disconnectGoogleCommand ?? (_disconnectGoogleCommand = new DelegateCommand(DisconnectGoogleHandler)); }
+        }
+
 
         public bool LogSyncInfo
         {
@@ -529,6 +535,39 @@ namespace CalendarSyncPlus.Application.ViewModels
                 MessageService.ShowMessageAsync(exception.Message);
             }
             IsLoading = false;
+        }
+
+        private void DisconnectGoogleHandler()
+        {
+            if (SelectedProfile.SelectedGoogleAccount == null)
+            {
+                MessageService.ShowMessageAsync("No account selected");
+                return;
+            }
+
+            MessageService.ShowConfirmMessageAsync();
+
+            var result = AccountAuthenticationService.DisconnectGoogle(SelectedProfile.SelectedGoogleAccount.Name);
+            if (result)
+            {
+                //Remove google account
+                var googleAccount =
+                    GoogleAccounts.FirstOrDefault(account => account.Name == SelectedProfile.SelectedGoogleAccount.Name);
+
+                if (googleAccount!=null)
+                {
+                    GoogleAccounts.Remove(googleAccount);
+                }
+
+                SelectedProfile.GoogleCalendars = null;
+                SelectedProfile.SelectedCalendar = null;
+                SaveSettings();
+                MessageService.ShowMessageAsync("Google account successfully disconnected");
+            }
+            else
+            {
+                MessageService.ShowMessageAsync("Account wasn't authenticated earlier or disconnection failed.");
+            }
         }
 
         private void ApplyProxySettings()
