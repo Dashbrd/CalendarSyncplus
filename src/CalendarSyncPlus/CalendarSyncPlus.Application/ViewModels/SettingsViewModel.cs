@@ -545,8 +545,6 @@ namespace CalendarSyncPlus.Application.ViewModels
                 return;
             }
 
-            MessageService.ShowConfirmMessageAsync();
-
             var result = AccountAuthenticationService.DisconnectGoogle(SelectedProfile.SelectedGoogleAccount.Name);
             if (result)
             {
