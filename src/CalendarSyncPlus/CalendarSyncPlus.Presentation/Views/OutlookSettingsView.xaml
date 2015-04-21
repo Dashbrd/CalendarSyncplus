@@ -1,23 +1,22 @@
-﻿<UserControl x:Class="CalendarSyncPlus.Presentation.Views.CalendarSetttingsView"
+﻿<UserControl x:Class="CalendarSyncPlus.Presentation.Views.OutlookSettingsView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
-             xmlns:converters="http://waf.codeplex.com/schemas"
-             xmlns:converters2="http://metro.mahapps.com/winfx/xaml/shared"
-             xmlns:converters1="clr-namespace:CalendarSyncPlus.Presentation.Converters"
-             xmlns:views="clr-namespace:CalendarSyncPlus.Presentation.Views"
              xmlns:viewModels="clr-namespace:CalendarSyncPlus.Application.ViewModels;assembly=CalendarSyncPlus.Application"
+             xmlns:converters="clr-namespace:CalendarSyncPlus.Presentation.Converters"
+             xmlns:wafConverters="http://waf.codeplex.com/schemas"
+             xmlns:metroConverters="http://metro.mahapps.com/winfx/xaml/shared"
              mc:Ignorable="d"
              d:DesignHeight="500"
              d:DesignWidth="500"
              d:DataContext="{d:DesignInstance viewModels:ProfileViewModel}">
     <UserControl.Resources>
-        <converters2:ToUpperConverter x:Key="ToUpperConverter" />
-        <converters1:InvertBooleanToVisibilityConverter x:Key="InvertBooleanToVisibilityConverter" />
+        <metroConverters:ToUpperConverter x:Key="ToUpperConverter"/>
+        <converters:InvertBooleanToVisibilityConverter x:Key="InvertBooleanToVisibilityConverter" />
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
-        <converters:InvertBooleanConverter x:Key="InvertBooleanConverter" />
+        <wafConverters:InvertBooleanConverter x:Key="InvertBooleanConverter" />
 
         <DataTemplate x:Key="ExchangeHeaderTemplate">
             <StackPanel Orientation="Horizontal"
@@ -49,26 +48,8 @@
                            Foreground="{DynamicResource AccentSelectedColorBrush}" />
             </StackPanel>
         </DataTemplate>
-        <DataTemplate x:Key="GoogleHeaderTemplate">
-            <StackPanel Orientation="Horizontal"
-                        VerticalAlignment="Center">
-                <Rectangle Width="18"
-                           Fill="{DynamicResource AccentSelectedColorBrush}">
-                    <Rectangle.OpacityMask>
-                        <VisualBrush Stretch="Fill"
-                                     Visual="{StaticResource appbar_google}" />
-                    </Rectangle.OpacityMask>
-                </Rectangle>
-                <TextBlock Margin="5,0,0,0"
-                           Text="{Binding Header,RelativeSource={RelativeSource AncestorType=GroupBox},Mode=OneWay,Converter={StaticResource ToUpperConverter}}"
-                           Foreground="{DynamicResource AccentSelectedColorBrush}" />
-            </StackPanel>
-        </DataTemplate>
     </UserControl.Resources>
     <Grid>
-        <TabControl>
-            <TabItem Header="Outlook">
-                <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition />
@@ -90,7 +71,7 @@
                                          GroupName="OutlookApplicationGroup"
                                          Grid.Column="1"
                                          Command="{Binding GetOutlookProfileListCommand}"
-                                         IsEnabled="False"/>
+                             IsEnabled="False" />
                         </Grid>
                     </GroupBox>
                     <GroupBox Grid.Row="1" 
@@ -266,77 +247,4 @@
                         </Grid>
                     </GroupBox>
                 </Grid>
-            </TabItem>
-            <TabItem Header="Google">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition />
-                    </Grid.RowDefinitions>
-                    <GroupBox Header="Select Google Calendar"
-                              HeaderTemplate="{StaticResource GoogleHeaderTemplate}">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition />
-                                <RowDefinition />
-                                <RowDefinition />
-                                <RowDefinition />
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="2*" />
-                                <ColumnDefinition Width="3.5*" />
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Text="Select Calendar"
-                                       VerticalAlignment="Center" />
-                            <ComboBox Margin="2"
-                                      Grid.Column="1"
-                                      DisplayMemberPath="Name"
-                                      ItemsSource="{Binding GoogleCalenders,UpdateSourceTrigger=PropertyChanged}"
-                                      SelectedItem="{Binding SelectedCalendar,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
-                            
-                            <Button Margin="2"
-                                        Grid.Row="1"
-                                        Grid.Column="1"
-                                        Width="150"
-                                    Command="{Binding GetGoogleCalendarCommand}"
-                                    VerticalAlignment="Center"
-                                    Content="Get Google Calendars"
-                                        HorizontalAlignment="Right" />
-                            
-                            <Button Margin="2"
-                                    Grid.Row="2"
-                                    Grid.Column="1"
-                                    Width="150"
-                                    VerticalAlignment="Center"
-                                    Content="Reset Google Calendar"
-                                    Command="{Binding ResetGoogleCalendarCommand}"
-                                    HorizontalAlignment="Right" />
-                            
-                            <Button Margin="2"
-                                    Grid.Row="3"
-                                    Grid.Column="1"
-                                    Width="150"
-                                    Command="{Binding DisconnectGoogleCommand}"
-                                    VerticalAlignment="Center"
-                                    Content="Disconnect Google"
-                                    HorizontalAlignment="Right" />
-                        </Grid>
-
-                    </GroupBox>
-                </Grid>
-            </TabItem>
-            <TabItem Header="Sync">
-                <ScrollViewer VerticalScrollBarVisibility="Auto"
-                              HorizontalScrollBarVisibility="Hidden">
-                    <views:SyncSettingsView DataContext="{Binding}" />
-                </ScrollViewer>
-            </TabItem>
-            <TabItem Header="Options">
-                <ScrollViewer VerticalScrollBarVisibility="Auto"
-                              HorizontalScrollBarVisibility="Hidden">
-                    <views:OptionsSettingsView DataContext="{Binding}" />
-                </ScrollViewer>
-            </TabItem>
-        </TabControl>
-    </Grid>
 </UserControl>

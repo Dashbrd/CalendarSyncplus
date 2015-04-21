@@ -14,10 +14,10 @@ namespace CalendarSyncPlus.Services.Utilities
         public static void LoadSourceId(this Appointment calendarAppointment, string sourceCalendarId)
         {
             string key = GetSourceEntryKey(sourceCalendarId);
-            object value;
+            string value;
             if (calendarAppointment.ExtendedProperties.TryGetValue(key, out value))
             {
-                calendarAppointment.SourceId = value.ToString();
+                calendarAppointment.SourceId = value;
             }
         }
 
@@ -40,13 +40,13 @@ namespace CalendarSyncPlus.Services.Utilities
             return calendarAppointment.AppointmentId.Equals(otherAppointment.SourceId);
         }
 
-        public static string GetDescriptionData(this Appointment calenderAppointment, bool addDescription,
+        public static string GetDescriptionData(this Appointment calendarAppointment, bool addDescription,
             bool addAttendees)
         {
             var additionDescription = new StringBuilder(string.Empty);
             if (addDescription)
             {
-                additionDescription.Append(calenderAppointment.Description);
+                additionDescription.Append(calendarAppointment.Description);
             }
 
             if (!addAttendees)
@@ -57,21 +57,21 @@ namespace CalendarSyncPlus.Services.Utilities
             //Start Header
             additionDescription.AppendLine(LineBreak);
             additionDescription.AppendLine(string.Empty);
-            if (calenderAppointment.Organizer != null)
+            if (calendarAppointment.Organizer != null)
             {
                 //Add Organiser
                 additionDescription.AppendLine("Organizer");
 
-                additionDescription.AppendLine(calenderAppointment.Organizer.GetDescription());
+                additionDescription.AppendLine(calendarAppointment.Organizer.GetDescription());
                 additionDescription.AppendLine(string.Empty);
                 hasData = true;
             }
             //Add Required Attendees
-            if (calenderAppointment.RequiredAttendees.Any())
+            if (calendarAppointment.RequiredAttendees.Any())
             {
                 additionDescription.AppendLine("Required Attendees:");
 
-                foreach (Recipient requiredAttendee in calenderAppointment.RequiredAttendees)
+                foreach (Recipient requiredAttendee in calendarAppointment.RequiredAttendees)
                 {
                     additionDescription.AppendLine(requiredAttendee.GetDescription());
                 }
@@ -81,10 +81,10 @@ namespace CalendarSyncPlus.Services.Utilities
             }
             //Add Optional Attendees
 
-            if (calenderAppointment.OptionalAttendees.Any())
+            if (calendarAppointment.OptionalAttendees.Any())
             {
                 additionDescription.AppendLine("Optional Attendees:");
-                foreach (Recipient requiredAttendee in calenderAppointment.OptionalAttendees)
+                foreach (Recipient requiredAttendee in calendarAppointment.OptionalAttendees)
                 {
                     additionDescription.AppendLine(requiredAttendee.GetDescription());
                 }

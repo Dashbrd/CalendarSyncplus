@@ -3,7 +3,7 @@ using System.Xml.Serialization;
 
 namespace CalendarSyncPlus.Domain.Models
 {
-    [XmlInclude(typeof (HourlySyncFrequency))]
+    [XmlInclude(typeof (IntervalSyncFrequency))]
     [XmlInclude(typeof (DailySyncFrequency))]
     [XmlInclude(typeof (WeeklySyncFrequency))]
     public class SyncFrequency

@@ -112,13 +112,13 @@ namespace CalendarSyncPlus.ExchangeWebServices.ExchangeWeb
             get { return "Exchange Server"; }
         }
 
-        public Task<bool> DeleteCalendarEvent(List<AppAppointment> calendarAppointments,
+        public Task<bool> DeleteCalendarEvents(List<AppAppointment> calendarAppointments,
             IDictionary<string, object> calendarSpecificData)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<CalendarAppointments> GetCalendarEventsInRangeAsync(int daysInPast, int daysInFuture,
+        public async Task<CalendarAppointments> GetCalendarEventsInRangeAsync(DateTime startDate, DateTime endDate,
             IDictionary<string, object> calendarSpecificData)
         {
             //CheckCalendarSpecificData(calendarSpecificData);
@@ -161,7 +161,7 @@ namespace CalendarSyncPlus.ExchangeWebServices.ExchangeWeb
             throw new NotImplementedException();
         }
 
-        public Task<bool> AddCalendarEvent(List<AppAppointment> calendarAppointments, bool addDescription,
+        public Task<bool> AddCalendarEvents(List<AppAppointment> calendarAppointments, bool addDescription,
             bool addReminder, bool addAttendees,
             bool attendeesToDescription, IDictionary<string, object> calendarSpecificData)
         {
@@ -294,6 +294,12 @@ namespace CalendarSyncPlus.ExchangeWebServices.ExchangeWeb
                 //Get Calendar MAPIFolders
                 GetCalendars(subFolder, ewsCalendars, view);
             }
+        }
+
+
+        public Task<bool> UpdateCalendarEvents(List<AppAppointment> calendarAppointments, bool addDescription, bool addReminder, bool addAttendees, bool attendeesToDescription, IDictionary<string, object> calendarSpecificData)
+        {
+            throw new NotImplementedException();
         }
     }
 }

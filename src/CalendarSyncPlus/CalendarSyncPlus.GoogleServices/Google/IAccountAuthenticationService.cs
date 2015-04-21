@@ -1,3 +1,5 @@
+using System.Threading;
+using System.Threading.Tasks;
 using Google.Apis.Calendar.v3;
 
 namespace CalendarSyncPlus.GoogleServices.Google
@@ -17,16 +19,19 @@ namespace CalendarSyncPlus.GoogleServices.Google
         ///     <paramref name="fileDataStorePath" /> is completePath or Directory Name
         /// </param>
         /// <returns></returns>
-        CalendarService AuthenticateCalenderOauth(string clientId, string clientSecret, string userName,
+        CalendarService AuthenticateCalendarOauth(string clientId, string clientSecret, string userName,
             string fileDataStorePath, string applicationName, bool isFullPath);
 
         /// <summary>
         ///     Default Authentication Method
         /// </summary>
+        /// <param name="accountName"></param>
         /// <returns></returns>
-        CalendarService AuthenticateCalenderOauth();
+        CalendarService AuthenticateCalendarOauth(string accountName);
+
+        Task<bool> AuthorizeGoogleAccount(string accountName, CancellationToken cancellationToken);
 
 
-        bool DisconnectGoogle();
+        bool DisconnectGoogle(string name);
     }
 }

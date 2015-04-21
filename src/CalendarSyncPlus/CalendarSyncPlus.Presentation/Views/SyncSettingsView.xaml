@@ -6,12 +6,19 @@
              xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
              xmlns:viewModels="clr-namespace:CalendarSyncPlus.Application.ViewModels;assembly=CalendarSyncPlus.Application"
              xmlns:controls1="clr-namespace:CalendarSyncPlus.Presentation.Controls"
+             xmlns:metaData="clr-namespace:CalendarSyncPlus.Common.MetaData;assembly=CalendarSyncPlus.Common"
+             xmlns:converters="clr-namespace:CalendarSyncPlus.Presentation.Converters"
+             xmlns:wafConverters="http://waf.codeplex.com/schemas"
+             xmlns:models="clr-namespace:CalendarSyncPlus.Domain.Models;assembly=CalendarSyncPlus.Domain"
              mc:Ignorable="d"
-             d:DesignHeight="300"
-             d:DesignWidth="300"
+             d:DesignHeight="500"
+             d:DesignWidth="450"
              d:DataContext="{d:DesignInstance viewModels:ProfileViewModel}">
     <UserControl.Resources>
-        <DataTemplate DataType="{x:Type viewModels:HourlySyncViewModel}">
+        <converters:BoolToEnumConverter x:Key="BoolToEnumConverter"/>
+        <converters:EnumToVisbilityConverter x:Key="EnumToVisbilityConverter" />
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+        <DataTemplate DataType="{x:Type viewModels:IntervalSyncViewModel}">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition />
@@ -20,6 +27,7 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="2*" />
                     <ColumnDefinition Width="3.5*" />
+                    <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <TextBlock Text="Hours"
                            VerticalAlignment="Center" />
@@ -30,6 +38,9 @@
                                         Maximum="23"
                                         Interval="1"
                                         Margin="2" />
+                <ContentControl ContentTemplate="{DynamicResource HelpButtonTemplate}"
+                                Grid.Column="2"
+                                ToolTip="Select the number of days in future for which you wish to sync calendar calendarAppointments" />
                 <TextBlock Text="Minutes"
                            VerticalAlignment="Center"
                            Grid.Row="1" />
@@ -41,6 +52,10 @@
                                         Maximum="59"
                                         Margin="2"
                                         Interval="1" />
+                <ContentControl ContentTemplate="{DynamicResource HelpButtonTemplate}"
+                                Grid.Row="1"
+                                Grid.Column="2"
+                                ToolTip="Select the number of days in future for which you wish to sync calendar calendarAppointments" />
             </Grid>
         </DataTemplate>
         <DataTemplate DataType="{x:Type viewModels:DailySyncViewModel}">
@@ -50,6 +65,10 @@
                     <RowDefinition />
                     <RowDefinition />
                 </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
                 <StackPanel Orientation="Horizontal"
                             VerticalAlignment="Center">
                     <RadioButton Content="Every"
@@ -85,6 +104,9 @@
                                                       TimeValue="{Binding TimeOfDay,
                                                     Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
                 </StackPanel>
+                <ContentControl ContentTemplate="{DynamicResource HelpButtonTemplate}"
+                                Grid.Column="1"
+                                ToolTip="Select the number of days in future for which you wish to sync calendar calendarAppointments" />
             </Grid>
         </DataTemplate>
         <DataTemplate DataType="{x:Type viewModels:WeeklySyncViewModel}">
@@ -94,6 +116,11 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                
                 <StackPanel Orientation="Horizontal"
                             VerticalAlignment="Center">
                     <TextBlock Text="Recur Every" Margin="2"
@@ -108,6 +135,9 @@
                     <TextBlock Text="week(s) on:" Margin="5"
                                VerticalAlignment="Center" />
                 </StackPanel>
+                <ContentControl ContentTemplate="{DynamicResource HelpButtonTemplate}"
+                                Grid.Column="1"
+                                ToolTip="Select the number of days in future for which you wish to sync calendar calendarAppointments" />
                 <StackPanel Orientation="Horizontal"
                             Grid.Row="1">
                     <ToggleButton Margin="2"
@@ -178,8 +208,9 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <GroupBox Header="Days In Range">
+        <GroupBox Header="Calendar Sync Direction">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -188,44 +219,186 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="2*" />
                     <ColumnDefinition Width="3.5*" />
+                    <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock Text="No of days in past"
-                           VerticalAlignment="Center"
-                           ToolTip="Select the number of days in past for which you wish to sync calendar calendarAppointments" />
-                <controls:NumericUpDown Grid.Row="0"
-                                        Grid.Column="1"
-                                        VerticalAlignment="Center"
-                                        Value="{Binding DaysInPast,Mode=TwoWay}"
-                                        Interval="1"
-                                        Margin="2"
-                                        Maximum="1825"
-                                        Minimum="0" />
-                <TextBlock Grid.Row="1"
-                           Grid.Column="0"
-                           Text="No of days in future"
-                           VerticalAlignment="Center"
-                           ToolTip="Select the number of days in future for which you wish to sync calendar calendarAppointments" />
-                <controls:NumericUpDown Grid.Row="1"
-                                        Grid.Column="1"
-                                        VerticalAlignment="Center"
-                                        Value="{Binding DaysInFuture,Mode=TwoWay}"
-                                        Interval="1"
-                                        Margin="2"
-                                        Maximum="1825"
-                                        Minimum="0" />
+                <TextBlock Text="Calendar Sync Mode"
+                       VerticalAlignment="Center"
+                       Margin="2" />
+            <ComboBox Grid.Column="1"
+                      Margin="2"
+                      ItemsSource="{Binding CalendarSyncModes,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                      SelectedItem="{Binding SelectedCalendarSyncDirection,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                      ItemTemplate="{StaticResource CalendarEnumDataTemplate}" />
+                <ContentControl ContentTemplate="{DynamicResource HelpButtonTemplate}"
+                                Grid.Column="2"
+                                ToolTip="" />
+                <TextBlock Text="Select Master Calendar"
+                       VerticalAlignment="Center"
+                       Margin="2"
+                       Grid.Row="1"
+                       Visibility="{Binding AllowMasterCalendarSelect,Mode=TwoWay,Converter={StaticResource BooleanToVisibilityConverter} }" />
+            <StackPanel Orientation="Horizontal"
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        VerticalAlignment="Center"
+                        Margin="2,5,5,5"
+                        Visibility="{Binding AllowMasterCalendarSelect,Mode=TwoWay,Converter={StaticResource BooleanToVisibilityConverter} }">
+                <RadioButton GroupName="MasterCalendar"
+                             Margin="2"
+                             Content="Outlook"
+                             IsChecked="{Binding MasterCalendarServiceType,Mode=TwoWay,
+                                                    Converter={StaticResource BoolToEnumConverter},
+                                        ConverterParameter=OutlookDesktop}" />
+                <RadioButton GroupName="MasterCalendar"
+                             Margin="20,2,2,2"
+                             Content="Google"
+                             IsChecked="{Binding MasterCalendarServiceType,
+                                                   Mode=TwoWay,Converter={StaticResource BoolToEnumConverter},
+                                                 ConverterParameter=Google}" />
+            </StackPanel>
+                </Grid>
+        </GroupBox>
+        <GroupBox Header="Sync Range" Grid.Row="1">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <RadioButton Content="Sync Full Calendar"
+                             IsChecked="{Binding SelectedSyncRangeType,Mode=TwoWay,Converter={StaticResource BoolToEnumConverter},ConverterParameter=SyncEntireCalendar}"/>
+                <ContentControl ContentTemplate="{DynamicResource HelpButtonTemplate}"
+                                Grid.Column="1"
+                                ToolTip="Select the number of days in past for which you wish to sync calendar calendarAppointments" />
+                <RadioButton Content="Sync Days in Range" Grid.Row="1"
+                             IsChecked="{Binding SelectedSyncRangeType,Mode=TwoWay,Converter={StaticResource BoolToEnumConverter},ConverterParameter=SyncRangeInDays }" />
+                <ContentControl ContentTemplate="{DynamicResource HelpButtonTemplate}"
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                ToolTip="Select the number of days in past for which you wish to sync calendar calendarAppointments" />
+                <RadioButton Content="Sync Fixed Date Range " Grid.Row="2"
+                             IsChecked="{Binding SelectedSyncRangeType,Mode=TwoWay,Converter={StaticResource BoolToEnumConverter},ConverterParameter=SyncFixedDateRange }" />
+                <ContentControl ContentTemplate="{DynamicResource HelpButtonTemplate}"
+                                Grid.Column="1" Grid.Row="2"
+                                ToolTip="Select the number of days in past for which you wish to sync calendar calendarAppointments" />
+                <!--<ComboBox ItemsSource="{Binding SyncRangeTypes,UpdateSourceTrigger=PropertyChanged}"
+                          SelectedItem="{Binding SelectedSyncRangeType,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                          ItemTemplate="{StaticResource SyncRangeTypeEnumDataTemplate}"/>
+                <ContentControl ContentTemplate="{DynamicResource HelpButtonTemplate}"
+                                Grid.Column="1"
+                                ToolTip="Select the number of days in past for which you wish to sync calendar calendarAppointments" />-->
+                
+                <Grid Grid.Row="3"
+                      Grid.ColumnSpan="2"
+                      Visibility="{Binding SelectedSyncRangeType,Converter={StaticResource EnumToVisbilityConverter},
+                    ConverterParameter={x:Static models:SyncRangeTypeEnum.SyncRangeInDays} }">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*" />
+                        <ColumnDefinition Width="3.5*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock  Text="No of days in past"
+                                VerticalAlignment="Center"
+                                Margin="2" />
+
+                    <controls:NumericUpDown Grid.Column="1"
+                                            VerticalAlignment="Center"
+                                            Value="{Binding DaysInPast,Mode=TwoWay}"
+                                            Interval="1"
+                                            Margin="2"
+                                            Maximum="1825"
+                                            Minimum="0"/>
+                    <ContentControl ContentTemplate="{DynamicResource HelpButtonTemplate}"
+                                    Grid.Column="2"
+                                    ToolTip="Select the number of days in past for which you wish to sync calendar calendarAppointments" />
+                    <TextBlock Grid.Row="1"
+                               Grid.Column="0"
+                               Margin="2"
+                               Text="No of days in future"
+                               VerticalAlignment="Center" />
+                    <controls:NumericUpDown Grid.Row="1"
+                                            Grid.Column="1"
+                                            VerticalAlignment="Center"
+                                            Value="{Binding DaysInFuture,Mode=TwoWay}"
+                                            Interval="1"
+                                            Margin="2"
+                                            Maximum="1825"
+                                            Minimum="0"/>
+                    <ContentControl ContentTemplate="{DynamicResource HelpButtonTemplate}"
+                                    Grid.Row="1"
+                                    Grid.Column="2"
+                                    ToolTip="Select the number of days in future for which you wish to sync calendar calendarAppointments" />
+                </Grid>
+                <Grid Grid.Row="3"
+                      Grid.ColumnSpan="2"
+                      Visibility="{Binding SelectedSyncRangeType,Converter={StaticResource EnumToVisbilityConverter},ConverterParameter={x:Static models:SyncRangeTypeEnum.SyncFixedDateRange} }">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*" />
+                        <ColumnDefinition Width="3.5*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock  Text="Select Start Date"
+                                VerticalAlignment="Center"
+                                Margin="2" />
+
+                    <DatePicker Grid.Column="1"
+                                            VerticalAlignment="Center"
+                                            SelectedDate="{Binding StartDate,Mode=TwoWay}"
+                                            Margin="2"/>
+                    <ContentControl ContentTemplate="{DynamicResource HelpButtonTemplate}"
+                                    Grid.Column="2"
+                                    ToolTip="Select the number of days in past for which you wish to sync calendar calendarAppointments" />
+                    <TextBlock Grid.Row="1"
+                               Grid.Column="0"
+                               Margin="2"
+                               Text="Select End date"
+                               VerticalAlignment="Center" />
+                    <DatePicker Grid.Row="1"
+                                            Grid.Column="1"
+                                            VerticalAlignment="Center"
+                                            SelectedDate="{Binding EndDate,Mode=TwoWay}"
+                                            Margin="2"/>
+                    <ContentControl ContentTemplate="{DynamicResource HelpButtonTemplate}"
+                                    Grid.Row="1"
+                                    Grid.Column="2"
+                                    ToolTip="Select the number of days in future for which you wish to sync calendar calendarAppointments" />
+                </Grid>
             </Grid>
         </GroupBox>
-        <GroupBox Grid.Row="1"
+        <GroupBox Grid.Row="2"
                   Header="Recurrence"
                   MinHeight="150">
-            <StackPanel Orientation="Vertical">
-                <ComboBox x:Name="SyncFrequencyComboBox"
+            <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <ComboBox x:Name="SyncFrequencyComboBox" 
                           ItemsSource="{Binding SyncFrequencies,UpdateSourceTrigger=PropertyChanged}"
                           SelectedItem="{Binding SyncFrequency,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
-                <ContentControl Margin="0,5,0,5"
+                <ContentControl ContentTemplate="{DynamicResource HelpButtonTemplate}"
+                                Grid.Column="1"
+                                ToolTip="Select the number of days in past for which you wish to sync calendar calendarAppointments" />
+              <ContentControl Margin="0,5,0,5" Grid.Row="1" Grid.ColumnSpan="2"
                                 Content="{Binding SyncFrequencyViewModel,UpdateSourceTrigger=PropertyChanged}" />
-            </StackPanel>
+            </Grid>
         </GroupBox>
-
     </Grid>
 </UserControl>

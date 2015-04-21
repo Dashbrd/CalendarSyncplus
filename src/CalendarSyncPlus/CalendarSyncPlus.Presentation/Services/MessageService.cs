@@ -185,10 +185,11 @@ namespace CalendarSyncPlus.Presentation.Services
                 AnimateShow = true,
                 ColorScheme = MetroDialogColorScheme.Accented
             };
+
             return await InvokeOnCurrentDispatcher(async () =>
             {
                 ProgressDialogController controller =
-                    await View.ShowProgressAsync(title, message, false, metroDialogSettings);
+                await View.ShowProgressAsync(title, message, false, metroDialogSettings);
                 return controller;
             });
         }
@@ -198,7 +199,7 @@ namespace CalendarSyncPlus.Presentation.Services
             return ShowProgress(message, ApplicationInfo.ProductName);
         }
 
-        public async Task<string> ShowCustomDialog(string message, string title)
+        public async Task<string> ShowCustomDialog(string message, string title,int maxLength=15)
         {
             var metroDialogSettings = new MetroDialogSettings()
             {
@@ -213,19 +214,19 @@ namespace CalendarSyncPlus.Presentation.Services
             {
                 Message = message,
                 Title = title,
-                Input = metroDialogSettings.DefaultText
+                Input = metroDialogSettings.DefaultText,
+                MaxInputLength=maxLength
             };
 
             return await InvokeOnCurrentDispatcher(async () =>
             {
                 await View.ShowMetroDialogAsync(dialog, metroDialogSettings);
 
-                await dialog.WaitForButtonPressAsync().ContinueWith((m) =>
+                return await dialog.WaitForButtonPressAsync().ContinueWith(m =>
                     {
                         InvokeOnCurrentDispatcher(() => View.HideMetroDialogAsync(dialog));
+                        return m.Result;
                     });
-
-                return dialog.Input;
             });
         }
 

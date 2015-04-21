@@ -28,6 +28,7 @@ using System.Globalization;
 using System.Reflection;
 using System.Waf.Applications;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Threading;
 using CalendarSyncPlus.Application.Controllers;
 using CalendarSyncPlus.Application.ViewModels;
@@ -64,6 +65,8 @@ namespace CalendarSyncPlus.Presentation
         static App()
         {
             DispatcherHelper.Initialize();
+            ToolTipService.ShowDurationProperty.OverrideMetadata(
+                        typeof(DependencyObject), new FrameworkPropertyMetadata(Int32.MaxValue));
         }
 
         public App(bool startMinimized = false)

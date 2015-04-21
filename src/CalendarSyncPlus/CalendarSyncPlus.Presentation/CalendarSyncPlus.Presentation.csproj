@@ -152,12 +152,13 @@
     <Compile Include="Controls\TimePickerControl.xaml.cs">
       <DependentUpon>TimePickerControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Converters\BoolToCalendarServiceTypeConverter.cs" />
+    <Compile Include="Converters\EnumToVisbilityConverter.cs" />
     <Compile Include="Converters\BoolToEnumConverter.cs" />
     <Compile Include="Converters\InvertBooleanToVisibilityConverter.cs" />
     <Compile Include="Converters\PercentageWidthConverter.cs" />
     <Compile Include="Converters\StringToBrushConverter.cs" />
     <Compile Include="Helpers\Utilities.cs" />
+    <Compile Include="MarkupExtensions\ResourceBinding.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Services\MessageService.cs" />
     <Compile Include="Services\SingleInstance\ISingleInstanceApp.cs" />
@@ -172,11 +173,11 @@
     <Compile Include="Views\AdvancedSettingsView.xaml.cs">
       <DependentUpon>AdvancedSettingsView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\CalendarSetttingsView.xaml.cs">
-      <DependentUpon>CalendarSetttingsView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\CustomInputDialog.xaml.cs">
       <DependentUpon>CustomInputDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\GoogleSettingsView.xaml.cs">
+      <DependentUpon>GoogleSettingsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\HelpView.xaml.cs">
       <DependentUpon>HelpView.xaml</DependentUpon>
@@ -189,6 +190,9 @@
     </Compile>
     <Compile Include="Views\ManageProfilesView.xaml.cs">
       <DependentUpon>ManageProfilesView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\OutlookSettingsView.xaml.cs">
+      <DependentUpon>OutlookSettingsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ProfileSettingsView.xaml.cs">
       <DependentUpon>ProfileSettingsView.xaml</DependentUpon>
@@ -228,11 +232,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\CalendarSetttingsView.xaml">
+    <Page Include="Views\CustomInputDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\CustomInputDialog.xaml">
+    <Page Include="Views\GoogleSettingsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -249,6 +253,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\ManageProfilesView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\OutlookSettingsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Waf.Applications;
@@ -39,7 +41,7 @@ namespace CalendarSyncPlus.GoogleServices.Google
         ///     <paramref name="fileDataStorePath" /> is completePath or Directory Name
         /// </param>
         /// <returns></returns>
-        public CalendarService AuthenticateCalenderOauth(string clientId, string clientSecret, string userName,
+        public CalendarService AuthenticateCalendarOauth(string clientId, string clientSecret, string userName,
             string fileDataStorePath, string applicationName, bool isFullPath = false)
         {
             try
@@ -47,7 +49,7 @@ namespace CalendarSyncPlus.GoogleServices.Google
                 var scopes = new[]
                 {
                     CalendarService.Scope.Calendar, // Manage your calendars
-                    CalendarService.Scope.CalendarReadonly // View your Calendars
+                    CalendarService.Scope.CalendarReadonly, // View your Calendars
                 };
 
                 var fileDataStore = new FileDataStore(fileDataStorePath, isFullPath);
@@ -57,7 +59,7 @@ namespace CalendarSyncPlus.GoogleServices.Google
                 Task<UserCredential> authTask = GoogleWebAuthorizationBroker.AuthorizeAsync(
                     new ClientSecrets {ClientId = clientId, ClientSecret = clientSecret}
                     , scopes
-                    , userName
+                    , String.Format("-{0}-googletoken", userName)
                     , cancellationToken
                     , fileDataStore);
                 authTask.Wait(30000);
@@ -88,17 +90,41 @@ namespace CalendarSyncPlus.GoogleServices.Google
         }
 
 
-        public CalendarService AuthenticateCalenderOauth()
+        public CalendarService AuthenticateCalendarOauth(string accountName)
         {
             string applicationDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData,
                 Environment.SpecialFolderOption.None);
             string fullPath = applicationDataPath + @"\CalendarSyncPlus\" + Constants.AuthFolderPath;
 
-            return AuthenticateCalenderOauth(Constants.ClientId, Constants.ClientSecret,
-                Constants.User, fullPath, ApplicationInfo.ProductName, true);
+            return AuthenticateCalendarOauth(Constants.ClientId, Constants.ClientSecret,
+                accountName, fullPath, ApplicationInfo.ProductName, true);
         }
 
-        public bool DisconnectGoogle()
+        public async Task<bool> AuthorizeGoogleAccount(string accountName,CancellationToken cancellationToken)
+        {
+            string applicationDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData,
+                Environment.SpecialFolderOption.None);
+            string fullPath = applicationDataPath + @"\CalendarSyncPlus\" + Constants.AuthFolderPath;
+            var fileDataStore = new FileDataStore(fullPath, true);
+
+            var scopes = new[]
+                {
+                    CalendarService.Scope.Calendar, // Manage your calendars
+                    CalendarService.Scope.CalendarReadonly, // View your Calendars
+                };
+
+            var auth =
+                await
+                    GoogleWebAuthorizationBroker.AuthorizeAsync(
+                        new ClientSecrets {ClientId = Constants.ClientId, ClientSecret = Constants.ClientSecret}
+                        , scopes
+                        , String.Format("-{0}-googletoken",accountName)
+                        , cancellationToken
+                        , fileDataStore);
+            return true;
+        }
+
+        public bool DisconnectGoogle(string name)
         {
             try
             {
@@ -108,7 +134,16 @@ namespace CalendarSyncPlus.GoogleServices.Google
 
                 if (Directory.Exists(fullPath))
                 {
-                    Directory.Delete(fullPath, true);
+                    var files = Directory.EnumerateFiles(fullPath, "*.*", SearchOption.AllDirectories);
+
+                    IEnumerable<string> filePaths = files as string[] ?? files.ToArray();
+
+                    if (!filePaths.Any()) return true;
+
+                    foreach (var filePath in filePaths.Where(s => s.Contains(name)))
+                    {
+                        File.Delete(filePath);
+                    }
                     return true;
                 }
                 return false;

@@ -4,17 +4,15 @@ namespace CalendarSyncPlus.Domain.Models
 {
     public class Settings
     {
-
-        public Settings()
-        {
-            SyncProfiles = new ObservableCollection<CalendarSyncProfile>();
-            AppSettings = new AppSettings();
-        }
-
+        private AppSettings _appSettings;
+        public ObservableCollection<GoogleAccount> GoogleAccounts { get; set; }
         public ObservableCollection<CalendarSyncProfile> SyncProfiles { get; set; }
 
-        public AppSettings AppSettings { get; set; }
-
+        public AppSettings AppSettings
+        {
+            get { return _appSettings; }
+            set { _appSettings = value; }
+        }
 
         public static Settings GetDefaultSettings()
         {
@@ -25,15 +23,20 @@ namespace CalendarSyncPlus.Domain.Models
                     IsFirstSave = true,
                     MinimizeToSystemTray = true,
                     CheckForUpdates = true,
-                    RememberPeriodicSyncOn = true,
+                    PeriodicSyncOn = true,
                     RunApplicationAtSystemStartup = true,
                     ProxySettings = new ProxySetting()
                     {
                         ProxyType = ProxyType.Auto
                     }
-                }
+                },
+
+                SyncProfiles = new ObservableCollection<CalendarSyncProfile>()
+                {
+                    CalendarSyncProfile.GetDefaultSyncProfile()
+                },
+                GoogleAccounts=new ObservableCollection<GoogleAccount>()
             };
-            settings.SyncProfiles.Add(CalendarSyncProfile.GetDefaultSyncProfile());
             return settings;
         }
     }

@@ -70,12 +70,6 @@
 
       <!--Project Dependencies-->
       <Component>
-        <File Id="DataAnnotationsExtensions"
-          Name="DataAnnotationsExtensions.dll"
-          Source="$(var.ProjectDirectory)DataAnnotationsExtensions.dll"
-          KeyPath="yes" />
-      </Component>
-      <Component>
         <File Id="log4net"
           Name="log4net.dll"
           Source="$(var.ProjectDirectory)log4net.dll"

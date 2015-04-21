@@ -22,7 +22,7 @@ namespace CalendarSyncPlus.Domain.Helpers
         public static bool ValidateSettings(this Settings settings)
         {
             if (settings == null || !settings.SyncProfiles.Any() ||
-                settings.SyncProfiles.All(t => !t.ValidateOutlookSettings() || t.GoogleCalendar == null))
+                settings.SyncProfiles.All(t => !t.ValidateOutlookSettings() || t.GoogleAccount == null))
             {
                 return false;
             }
@@ -49,7 +49,7 @@ namespace CalendarSyncPlus.Domain.Helpers
 
         public static void UpdateEntryOptions(this CalendarSyncProfile syncProfile, bool addDescription,
             bool addReminders,
-            bool addAttendees, bool addAttendeesToDescription, bool addAttachments)
+            bool addAttendees, bool addAttendeesToDescription, bool addAttachments,bool asAppointments)
         {
             syncProfile.CalendarEntryOptions = CalendarEntryOptionsEnum.None;
             if (addDescription)
@@ -77,6 +77,11 @@ namespace CalendarSyncPlus.Domain.Helpers
             {
                 syncProfile.CalendarEntryOptions = syncProfile.CalendarEntryOptions |
                                                    CalendarEntryOptionsEnum.Attachments;
+            }
+
+            if (asAppointments)
+            {
+                syncProfile.CalendarEntryOptions = syncProfile.CalendarEntryOptions | CalendarEntryOptionsEnum.AsAppointments;
             }
         }
 

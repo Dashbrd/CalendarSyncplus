@@ -41,9 +41,11 @@
                     <RowDefinition />
                     <RowDefinition />
                 </Grid.RowDefinitions>
-                <StackPanel Orientation="Horizontal" Margin="2">
-                    <CheckBox Content="Set Category To Appointments (Outlook only)"
+                <StackPanel Orientation="Horizontal"
+                            Margin="2">
+                    <CheckBox Content="Set Category To Appointments" Margin="2"
                               IsChecked="{Binding SetCategory,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
+                
                     <ComboBox IsEnabled="{Binding SetCategory,UpdateSourceTrigger=PropertyChanged}"
                               ItemsSource="{Binding Categories,UpdateSourceTrigger=PropertyChanged}"
                               SelectedValue="{Binding SelectedCategory,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
@@ -55,6 +57,8 @@
                             </ItemsPanelTemplate>
                         </ComboBox.ItemsPanel>
                     </ComboBox>
+                    
+                    <ContentControl ContentTemplate="{DynamicResource HelpButtonTemplate}" Margin="2" ToolTip="Help text here"/>
                 </StackPanel>
             </Grid>
         </GroupBox>
@@ -62,6 +66,7 @@
                   Header="Destination Calendar Entry Options">
             <Grid>
                 <Grid.RowDefinitions>
+                    <RowDefinition />
                     <RowDefinition />
                     <RowDefinition />
                     <RowDefinition />
@@ -81,7 +86,6 @@
                 <CheckBox Content="Add Attendees to Description "
                           Margin="20,2,2,2"
                           Grid.Row="2"
-                          Grid.Column="1"
                           IsChecked="{Binding AddAttendeesToDescription,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                           IsEnabled="{Binding AddAttendees, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                           ToolTip="Select this option to add attendees to appointment description instead of TO/CC/BCC fields" />
@@ -90,10 +94,15 @@
                           Grid.Row="3"
                           IsChecked="{Binding AddReminders,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                           ToolTip="Select this option to add reminders of the appointment. Note: Outlook gives default reminder messages for all calendarAppointments. To disable please go to your outlook settings." />
+                <CheckBox Content="Add events with no recipients as appointments"
+                          Grid.Row="4"
+                          Margin="2"
+                          IsChecked="{Binding AddAsAppointments,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                          ToolTip="Select this option to add events from Google without recipients as appointments in outlook." />
                 <CheckBox Content="Add Attachments"
                           Margin="2"
                           Visibility="Collapsed"
-                          Grid.Row="4"
+                          Grid.Row="5"
                           IsChecked="{Binding AddAttachments,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
             </Grid>
         </GroupBox>

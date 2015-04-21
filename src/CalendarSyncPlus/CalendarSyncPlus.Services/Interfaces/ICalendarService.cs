@@ -17,6 +17,7 @@
 
 #endregion
 
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using CalendarSyncPlus.Domain.Models;
@@ -28,20 +29,23 @@ namespace CalendarSyncPlus.Services.Interfaces
     {
         string CalendarServiceName { get; }
 
-        Task<bool> DeleteCalendarEvent(List<Appointment> calendarAppointments,
+        Task<bool> DeleteCalendarEvents(List<Appointment> calendarAppointments,
             IDictionary<string, object> calendarSpecificData);
 
-        Task<CalendarAppointments> GetCalendarEventsInRangeAsync(int daysInPast, int daysInFuture,
+        Task<CalendarAppointments> GetCalendarEventsInRangeAsync(DateTime startDate, DateTime endDate,
             IDictionary<string, object> calendarSpecificData);
 
-        Task<bool> AddCalendarEvent(List<Appointment> calendarAppointments, bool addDescription,
+        Task<bool> AddCalendarEvents(List<Appointment> calendarAppointments, bool addDescription,
             bool addReminder, bool addAttendees, bool attendeesToDescription,
             IDictionary<string, object> calendarSpecificData);
 
         void CheckCalendarSpecificData(IDictionary<string, object> calendarSpecificData);
 
-        Task<bool> ResetCalendar(IDictionary<string, object> calendarSpecificData);
+        Task<bool> UpdateCalendarEvents(List<Appointment> calendarAppointments, bool addDescription,
+            bool addReminder, bool addAttendees, bool attendeesToDescription,
+            IDictionary<string, object> calendarSpecificData);
 
-        void SetCalendarColor(Category background, IDictionary<string, object> calendarSpecificData);
+        Task<bool> ResetCalendar(IDictionary<string, object> calendarSpecificData);
+        
     }
 }

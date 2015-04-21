@@ -35,7 +35,7 @@ using CalendarSyncPlus.Services.Utilities;
 
 namespace CalendarSyncPlus.Services
 {
-    [Export(typeof (ISyncService))]
+    [Export(typeof(ISyncService))]
     public class SyncService : Model, ISyncService
     {
         #region Fields
@@ -73,20 +73,13 @@ namespace CalendarSyncPlus.Services
 
         public async Task<bool> Start(ElapsedEventHandler timerCallback)
         {
-            Settings settings = _settingsProvider.GetSettings();
-            if (!settings.ValidateSettings())
-            {
-                _messageService.ShowMessageAsync("Please configure Google and Outlook calendar in settings to continue.");
-                return false;
-            }
-            await Task.Delay(1000);
             if (_syncTimer == null)
             {
-                _syncTimer = new Timer(1000);
+                _syncTimer = new Timer(1000) { AutoReset = true };
+                _syncTimer.Elapsed += timerCallback;
             }
-
             _syncTimer.Start();
-            _syncTimer.Elapsed += timerCallback;
+
             return true;
         }
 
@@ -94,13 +87,14 @@ namespace CalendarSyncPlus.Services
         {
             _syncTimer.Stop();
             _syncTimer.Elapsed -= ElapsedEventHandler;
+            _syncTimer = null;
         }
 
         public string SyncNow(CalendarSyncProfile syncProfile, SyncCallback syncCallback)
         {
             try
             {
-                if (syncProfile.GoogleCalendar == null || !syncProfile.ValidateOutlookSettings())
+                if (syncProfile.GoogleAccount == null || syncProfile.GoogleAccount.GoogleCalendar==null || !syncProfile.ValidateOutlookSettings())
                 {
                     _messageService.ShowMessageAsync(
                         "Please configure Google and Outlook calendar in settings to continue.");
