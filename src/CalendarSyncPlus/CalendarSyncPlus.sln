@@ -40,6 +40,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CalendarSyncPlus.Presentati
 EndProject
 Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "CalendarSyncPlus.Installer", "CalendarSyncPlus.Installer\CalendarSyncPlus.Installer.wixproj", "{5DD77441-69EC-48E9-995C-9EED1217A67B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CalendarSyncPlus.SyncEngine", "CalendarSyncPlus.SyncEngine\CalendarSyncPlus.SyncEngine.csproj", "{88D95940-3181-4026-9ECF-560D54201D86}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -140,6 +142,16 @@ Global
 		{5DD77441-69EC-48E9-995C-9EED1217A67B}.Release|Mixed Platforms.Build.0 = Release|x86
 		{5DD77441-69EC-48E9-995C-9EED1217A67B}.Release|x86.ActiveCfg = Release|x86
 		{5DD77441-69EC-48E9-995C-9EED1217A67B}.Release|x86.Build.0 = Release|x86
+		{88D95940-3181-4026-9ECF-560D54201D86}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{88D95940-3181-4026-9ECF-560D54201D86}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{88D95940-3181-4026-9ECF-560D54201D86}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{88D95940-3181-4026-9ECF-560D54201D86}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{88D95940-3181-4026-9ECF-560D54201D86}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{88D95940-3181-4026-9ECF-560D54201D86}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{88D95940-3181-4026-9ECF-560D54201D86}.Release|Any CPU.Build.0 = Release|Any CPU
+		{88D95940-3181-4026-9ECF-560D54201D86}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{88D95940-3181-4026-9ECF-560D54201D86}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{88D95940-3181-4026-9ECF-560D54201D86}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
