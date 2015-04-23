@@ -148,6 +148,7 @@
     <Compile Include="..\Shared\AssemblyInfo.cs">
       <Link>AssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Behaviors\PasswordBoxHelper.cs" />
     <Compile Include="Behaviors\TextBoxScrollBehavior.cs" />
     <Compile Include="Controls\TimePickerControl.xaml.cs">
       <DependentUpon>TimePickerControl.xaml</DependentUpon>
