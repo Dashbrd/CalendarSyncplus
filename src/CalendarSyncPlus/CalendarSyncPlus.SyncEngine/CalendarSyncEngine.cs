@@ -86,7 +86,7 @@ namespace CalendarSyncPlus.SyncEngine
                     }
                     else
                     {
-                        //If mode is one way & user has disabled delete, do not remove this entry
+                        //If mode is one way & user has disabled delete, do not remove this entry, as this is an original entry in the calendar
                         //Else this entry is not a copy of any appointment in source calendar so delete it
                         if (!syncProfile.SyncSettings.DisableDelete)
                         {
@@ -106,6 +106,11 @@ namespace CalendarSyncPlus.SyncEngine
                             destAppointmentsToDelete.Add(destAppointment);
                         }
                     }
+                    else
+                    {
+                        //If parent entry isn't found
+                        destAppointmentsToDelete.Add(destAppointment);
+                    }
                 }
             }
             return destAppointmentsToDelete;
@@ -121,35 +126,30 @@ namespace CalendarSyncPlus.SyncEngine
         public List<Appointment> GetAppointmentsToAdd(CalendarSyncProfile syncProfile, List<Appointment> sourceList,
             List<Appointment> destinationList)
         {
-            if (destinationList.Any())
+            if (!destinationList.Any())
             {
-                bool addDescription =
-                    syncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Description);
-                bool addReminders =
-                syncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Reminders);
+                //All entries need to be added
+                return sourceList;
+            }
+            bool addDescription =
+                syncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Description);
+            bool addReminders =
+            syncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Reminders);
 
-                var appointmentsToAdd = new List<Appointment>();
-                foreach (Appointment sourceAppointment in sourceList)
+            var appointmentsToAdd = new List<Appointment>();
+            foreach (Appointment sourceAppointment in sourceList)
+            {
+                if (sourceAppointment.SourceId == null)
                 {
-                    bool isFound = false;
-                    foreach (Appointment destAppointment in destinationList)
-                    {
-                        if (CompareAppointments(destAppointment, sourceAppointment, addDescription,
-                        addReminders))
-                        {
-
-                        }
-                    }
-                    //Add the entry if no entry matching in destination is found
-                    if (!isFound)
+                    var destinationAppointment = destinationList.FirstOrDefault(t =>
+                                    CompareAppointments(sourceAppointment, t, addDescription, addReminders));
+                    if (destinationAppointment == null)
                     {
                         appointmentsToAdd.Add(sourceAppointment);
                     }
                 }
-
-                return appointmentsToAdd;
             }
-            return sourceList;
+            return appointmentsToAdd;
         }
 
 

@@ -328,10 +328,16 @@ namespace CalendarSyncPlus.Application.ViewModels
                 return;
             }
 
+            if (GoogleAccounts != null &&
+                GoogleAccounts.Any(t => t.Name.Equals(accountName, StringComparison.InvariantCultureIgnoreCase)))
+            {
+                MessageService.ShowMessageAsync("An account with the same email already exists. Please try again.");
+                return;
+            }
             // Start progress controller
             var progressDialogController =
                 await MessageService.ShowProgress("Authenticate and Authorize in the browser window", "Add Google Account");
-            //Delay for Prepradness
+            //Delay for Preparedness
             await Task.Delay(5000);
 
             progressDialogController.SetIndeterminate();
