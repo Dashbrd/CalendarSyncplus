@@ -5,6 +5,7 @@
              xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
              xmlns:converters="clr-namespace:CalendarSyncPlus.Presentation.Converters"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:viewModels="clr-namespace:CalendarSyncPlus.Application.ViewModels;assembly=CalendarSyncPlus.Application"
              xmlns:wafConverters="http://waf.codeplex.com/schemas"
@@ -238,8 +239,10 @@
                              Grid.Column="1"
                              Grid.ColumnSpan="3"
                              Margin="2"
-                             Behaviors:PasswordBoxHelper.BindPassword="True"
-                             Behaviors:PasswordBoxHelper.BoundPassword="{Binding Path=ProxySettings.Password}"
+                             Behaviors:PasswordHelper.Attach="True"
+                             Behaviors:PasswordHelper.Password="{Binding Path=ProxySettings.Password,
+                                                                         Mode=TwoWay,
+                                                                         UpdateSourceTrigger=PropertyChanged}"
                              IsEnabled="{Binding Path=IsChecked,
                                                  ElementName=_useDefaultCredentialCheckbox,
                                                  Converter={StaticResource InvertBooleanConverter}}"
