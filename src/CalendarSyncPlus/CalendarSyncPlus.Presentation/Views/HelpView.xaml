@@ -4,65 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              mc:Ignorable="d"
-             d:DesignHeight="600" d:DesignWidth="300">
-    <StackPanel VerticalAlignment="Top"
-                Orientation="Vertical"
-                Margin="20">
-        <TextBlock Text="Steps to Follow:"
-                   TextWrapping="Wrap" FontWeight="800"
-                   Margin="0,10,0,0" />
-        <TextBlock Text="1. Go to preferences."
-                   TextWrapping="Wrap"
-                   Margin="0,10,0,0" />
-        <TextBlock Text="2. Choose Calendar sync mode"
-                   TextWrapping="Wrap"
-                   Margin="0,10,0,0" />
-        <TextBlock Text="3. Setup your outlook calendar and google calendar."
-                   TextWrapping="Wrap"
-                   Margin="0,10,0,0" />
-        <TextBlock Text="4. Select the days in the past and days in future to sync calendar entries"
-                   TextWrapping="Wrap"
-                   Margin="0,10,0,0" />
-        <TextBlock Text="5. Setup periodic sync on Sync tab in preferences."
-                   TextWrapping="Wrap"
-                   Margin="0,10,0,0" />
-        <TextBlock Text="- Hourly sync will take place every hour at the given minutes offset. "
-                   TextWrapping="Wrap"
-                   Margin="10,10,0,0" />
-        <TextBlock Text="- Daily sync will take place at selected time on a day, recurring with given days gap"
-                   TextWrapping="Wrap"
-                   Margin="10,10,0,0" />
-        <TextBlock
-            Text="- Weekly sync will take place at selected time on the selected days, recurring with given weeks gap."
-            TextWrapping="Wrap"
-            Margin="10,10,0,0" />
-        <TextBlock Text="6. Select the data to be added in an entry"
-                   TextWrapping="Wrap"
-                   Margin="0,10,0,0" />
-        <TextBlock Text="7. Save preferences"
-                   TextWrapping="Wrap"
-                   Margin="0,10,0,0" />
-        <TextBlock Text="8. Click 'START PERIODIC SYNC' on Main screen"
-                   TextWrapping="Wrap"
-                   Margin="0,10,0,0" />
-
-        <TextBlock Text="Note:"
-                   TextWrapping="Wrap"
-                   Margin="0,10,0,0" FontWeight="800" />
-        <TextBlock Text="Please refer tooltips for more details on the option in Preferences."
-                   TextWrapping="Wrap" />
-        <TextBlock Text="Please keep a designated Google Calendar for Outlook to Google calendar sync"
-                   TextWrapping="Wrap" />
-        <TextBlock Text="For convenience, its recommended to choose the following in Advanced Tab of preferences "
-                   TextWrapping="Wrap"
-                   Margin="0,10,0,0" />
-        <TextBlock Text="- Run CalendarSync+ when computer starts"
-                   TextWrapping="Wrap" />
-        <TextBlock Text="- Close button minimizes to tray"
-                   TextWrapping="Wrap" />
-        <TextBlock Text="- Remember periodic sync start/stop status"
-                   TextWrapping="Wrap" />
-        <TextBlock Text="- Check For updates"
-                   TextWrapping="Wrap" />
-    </StackPanel>
+             d:DesignHeight="600" d:DesignWidth="450">
+    <DocumentViewer>
+        
+    </DocumentViewer>
 </UserControl>

@@ -36,7 +36,7 @@
     <ProductName>CalendarySyncPlus</ProductName>
     <PublisherName>Ankesh Dave &amp; Akanksha Gaur</PublisherName>
     <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <ApplicationVersion>1.0.0.0</ApplicationVersion>
     <UseApplicationTrust>true</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <BootstrapperEnabled>true</BootstrapperEnabled>
@@ -327,6 +327,7 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
+    <None Include="Resources\HowToUseGuide.oxps" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\btn_donate_SM.gif" />
