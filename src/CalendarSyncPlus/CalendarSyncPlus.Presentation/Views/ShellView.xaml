@@ -39,8 +39,6 @@
                                 MaxWidth="200"
                                 Width="{TemplateBinding Width}"
                                 Height="{TemplateBinding Height}"
-                                MinWidth="100"
-                                MinHeight="30"
                                 Margin="0,0,0,50"
                                 Background="White"
                                 BorderBrush="Black"
