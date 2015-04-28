@@ -41,9 +41,6 @@
                         <Border Name="Border"
                                 Width="{TemplateBinding Width}"
                                 Height="{TemplateBinding Height}"
-                                MinWidth="100"
-                                MinHeight="30"
-                                MaxWidth="200"
                                 Margin="0,0,0,50"
                                 Background="White"
                                 BorderBrush="Black"
@@ -78,38 +75,38 @@
                                              RelativeSource={RelativeSource AncestorType={x:Type views:ShellView}},
                                              Converter={StaticResource PercentageWidthConverter},
                                              ConverterParameter=75}"
-                             AnimateOnPositionChange="True"
-                             Content="{Binding Path=ShellService.SettingsView}"
-                             Header="Preferences"
-                             IsModal="True"
-                             IsOpen="{Binding IsSettingsVisible,
+                AnimateOnPositionChange="True"
+                Content="{Binding Path=ShellService.SettingsView}"
+                Header="Preferences"
+                IsModal="True"
+                IsOpen="{Binding IsSettingsVisible,
                                               Mode=TwoWay}"
-                             Position="Right"
-                             Theme="Adapt" />
+                Position="Right"
+                Theme="Adapt" />
             <controls:Flyout Width="{Binding Width,
                                              RelativeSource={RelativeSource AncestorType={x:Type views:ShellView}},
                                              Converter={StaticResource PercentageWidthConverter},
                                              ConverterParameter=75}"
-                             AnimateOnPositionChange="True"
-                             Content="{Binding Path=ShellService.AboutView}"
-                             Header="About"
-                             IsModal="True"
-                             IsOpen="{Binding IsAboutVisible,
+                AnimateOnPositionChange="True"
+                Content="{Binding Path=ShellService.AboutView}"
+                Header="About"
+                IsModal="True"
+                IsOpen="{Binding IsAboutVisible,
                                               Mode=TwoWay}"
-                             Position="Right"
-                             Theme="Adapt" />
+                Position="Right"
+                Theme="Adapt" />
             <controls:Flyout Width="{Binding Width,
                                              RelativeSource={RelativeSource AncestorType={x:Type views:ShellView}},
                                              Converter={StaticResource PercentageWidthConverter},
                                              ConverterParameter=75}"
-                             AnimateOnPositionChange="True"
-                             Content="{Binding Path=ShellService.HelpView}"
-                             Header="Help"
-                             IsModal="True"
-                             IsOpen="{Binding IsHelpVisible,
+                AnimateOnPositionChange="True"
+                Content="{Binding Path=ShellService.HelpView}"
+                Header="Help"
+                IsModal="True"
+                IsOpen="{Binding IsHelpVisible,
                                               Mode=TwoWay}"
-                             Position="Right"
-                             Theme="Adapt" />
+                Position="Right"
+                Theme="Adapt" />
         </controls:FlyoutsControl>
     </controls:MetroWindow.Flyouts>
 

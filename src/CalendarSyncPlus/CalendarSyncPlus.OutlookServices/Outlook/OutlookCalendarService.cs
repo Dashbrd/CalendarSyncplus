@@ -622,7 +622,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
             }
             ProfileName = profileValue as String;
             OutlookCalendar = outlookCalendarValue as OutlookCalendar;
-            AddAsAppointments = (bool) addAsAppointments;
+            AddAsAppointments = (bool)addAsAppointments;
             object eventCategory;
             if (calendarSpecificData.TryGetValue("EventCategory", out eventCategory))
             {
@@ -675,10 +675,10 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
 
         public async Task<bool> ResetCalendar(IDictionary<string, object> calendarSpecificData)
         {
-            DateTime startDate = DateTime.Today.AddDays(-(10*365));
-            DateTime endDate = DateTime.Today.AddDays(10*365);
+            DateTime startDate = DateTime.Today.AddDays(-(10 * 365));
+            DateTime endDate = DateTime.Today.AddDays(10 * 365);
             CalendarAppointments appointments =
-                await GetCalendarEventsInRangeAsync(startDate,endDate, calendarSpecificData);
+                await GetCalendarEventsInRangeAsync(startDate, endDate, calendarSpecificData);
             if (appointments != null)
             {
                 bool success = await DeleteCalendarEvents(appointments, calendarSpecificData);
@@ -808,7 +808,15 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
                 Success = true
             };
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="addDescription"></param>
+        /// <param name="addReminder"></param>
+        /// <param name="addAttendees"></param>
+        /// <param name="attendeesToDescription"></param>
+        /// <param name="appItem"></param>
+        /// <param name="calendarAppointment"></param>
         private void AddAppointment(bool addDescription, bool addReminder, bool addAttendees,
             bool attendeesToDescription, AppointmentItem appItem,
             Appointment calendarAppointment)
@@ -1018,7 +1026,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
                 Task.Delay(5000);
             }
             return wrapper.Success;
-            
+
         }
 
         /// <summary>
@@ -1049,7 +1057,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
                     : nameSpace.GetDefaultFolder(OlDefaultFolders.olFolderCalendar);
                 outlookItems = defaultOutlookCalendar.Items;
 
-                
+
                 foreach (Appointment calendarAppointment in calendarAppointments)
                 {
                     var appItem = nameSpace.GetItemFromID(calendarAppointment.AppointmentId) as AppointmentItem;
@@ -1188,7 +1196,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
                     {
                         UserProperty sourceProperty = userProperties.Add(extendedProperty.Key,
                             OlUserPropertyType.olText);
-                        sourceProperty.Value = extendedProperty.Value;    
+                        sourceProperty.Value = extendedProperty.Value;
                     }
                 }
                 appItem.Save();
@@ -1213,6 +1221,6 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
                 }
             }
         }
-        
+
     }
 }

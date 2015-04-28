@@ -534,7 +534,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             SelectedOutlookProfileName = SyncProfile.OutlookSettings.OutlookProfileName;
             SelectedOutlookMailBox = SyncProfile.OutlookSettings.OutlookMailBox;
             SelectedOutlookCalendar = SyncProfile.OutlookSettings.OutlookCalendar;
-            
+
             if (SyncProfile.EventCategory != null)
             {
                 SelectedCategory = Categories.First(t => t.CategoryName.Equals(SyncProfile.EventCategory.CategoryName));
@@ -599,7 +599,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             OutlookProfileList = await OutlookCalendarService.GetOutLookProfieListAsync();
         }
 
-        
+
 
         internal async void GetGoogleCalendar()
         {
@@ -646,7 +646,7 @@ namespace CalendarSyncPlus.Application.ViewModels
                 GoogleCalendars = calendars;
                 if (GoogleCalendars.Any())
                 {
-                    SelectedCalendar = SyncProfile != null && SyncProfile.GoogleAccount != null && SyncProfile.GoogleAccount.GoogleCalendar !=null
+                    SelectedCalendar = SyncProfile != null && SyncProfile.GoogleAccount != null && SyncProfile.GoogleAccount.GoogleCalendar != null
                         ? GoogleCalendars.FirstOrDefault(t => t.Id.Equals(SyncProfile.GoogleAccount.GoogleCalendar.Id))
                         : GoogleCalendars.First();
                 }
@@ -683,7 +683,11 @@ namespace CalendarSyncPlus.Application.ViewModels
                 return;
             }
 
-            var calendarSpecificData = new Dictionary<string, object> { { "CalendarId", SelectedCalendar.Id } };
+            var calendarSpecificData = new Dictionary<string, object>
+            {
+                { "CalendarId", SelectedCalendar.Id },
+                { "AccountName", SelectedGoogleAccount.Name }
+            };
             bool result = await GoogleCalendarService.ResetCalendar(calendarSpecificData);
             if (!result)
             {
@@ -801,9 +805,9 @@ namespace CalendarSyncPlus.Application.ViewModels
         public CalendarSyncProfile SaveCurrentSyncProfile()
         {
             SyncProfile.IsSyncEnabled = IsSyncEnabled;
-            if (SyncProfile.GoogleAccount==null)
+            if (SyncProfile.GoogleAccount == null)
             {
-                SyncProfile.GoogleAccount= new GoogleAccount();
+                SyncProfile.GoogleAccount = new GoogleAccount();
             }
             SyncProfile.GoogleAccount = SelectedGoogleAccount;
             SyncProfile.SyncSettings.DaysInFuture = DaysInFuture;
