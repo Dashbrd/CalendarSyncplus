@@ -388,4 +388,13 @@
   <data name="OutlookSettingsView_Button_OutlookProfileSettings_ResetOutlookCalendar_Text" xml:space="preserve">
     <value>Reset Outlook Calendar</value>
   </data>
+  <data name="SystemtrayNotifierView_TextBlock_TaskBarIcon_MaximizeMessage_ToolTip" xml:space="preserve">
+    <value>Double click to maximize the application.</value>
+  </data>
+  <data name="SystemtrayNotifierView_MenuItem_TaskBarIcon_ShowWindowMessage_Header" xml:space="preserve">
+    <value>Show Window</value>
+  </data>
+  <data name="SystemtrayNotifierView_MenuItem_TaskBarIcon_ExitApplicaiton_Header" xml:space="preserve">
+    <value>Exit</value>
+  </data>
 </root>

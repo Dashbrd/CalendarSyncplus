@@ -938,5 +938,32 @@ namespace CalendarSyncPlus.Common.Properties {
                 return ResourceManager.GetString("ShellView_Window_Title", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Exit.
+        /// </summary>
+        public static string SystemtrayNotifierView_MenuItem_TaskBarIcon_ExitApplicaiton_Header {
+            get {
+                return ResourceManager.GetString("SystemtrayNotifierView_MenuItem_TaskBarIcon_ExitApplicaiton_Header", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show Window.
+        /// </summary>
+        public static string SystemtrayNotifierView_MenuItem_TaskBarIcon_ShowWindowMessage_Header {
+            get {
+                return ResourceManager.GetString("SystemtrayNotifierView_MenuItem_TaskBarIcon_ShowWindowMessage_Header", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Double click to maximize the application..
+        /// </summary>
+        public static string SystemtrayNotifierView_TextBlock_TaskBarIcon_MaximizeMessage_ToolTip {
+            get {
+                return ResourceManager.GetString("SystemtrayNotifierView_TextBlock_TaskBarIcon_MaximizeMessage_ToolTip", resourceCulture);
+            }
+        }
     }
 }
