@@ -5,6 +5,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:viewModels="clr-namespace:CalendarSyncPlus.Application.ViewModels;assembly=CalendarSyncPlus.Application"
              xmlns:views="clr-namespace:CalendarSyncPlus.Presentation.Views"
+             xmlns:Properties="clr-namespace:CalendarSyncPlus.Common.Properties;assembly=CalendarSyncPlus.Common"
+             xmlns:localizeExtension="http://wpflocalizeextension.codeplex.com"
              d:DataContext="{d:DesignInstance viewModels:SettingsViewModel}"
              d:DesignHeight="600"
              d:DesignWidth="500"
@@ -14,7 +16,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <GroupBox Header="Select Sync Profile">
+        <GroupBox Header="{localizeExtension:LocText Key=ProfileSettingsView_GroupBox_SyncProfile_Header}">
             <Grid Margin="2">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -25,7 +27,7 @@
                     <ColumnDefinition Width="2*" />
                     <ColumnDefinition Width="3.5*" />
                 </Grid.ColumnDefinitions>
-                <TextBlock VerticalAlignment="Center" Text="Select Profile" />
+                <TextBlock VerticalAlignment="Center" Text="{localizeExtension:LocText Key=ProfileSettingsView_TextBlock_SelectProfile_Text}" />
                 <ComboBox Grid.Column="1"
                           DisplayMemberPath="Name"
                           ItemsSource="{Binding SyncProfileList}"
@@ -35,24 +37,23 @@
             </Grid>
         </GroupBox>
         <TabControl Grid.Row="1">
-            <TabItem Header="Sync">
+            <TabItem Header="{localizeExtension:LocText Key=ProfileSettingsView_TabItem_Sync_Header}">
                 <ScrollViewer HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto">
                     <views:SyncSettingsView DataContext="{Binding SelectedProfile}" />
                 </ScrollViewer>
             </TabItem>
-            <TabItem Header="Outlook">
+            <TabItem Header="{localizeExtension:LocText Key=ProfileSettingsView_TabItem_Outlook_Header}">
                 <ScrollViewer HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto">
                     <views:OutlookSettingsView DataContext="{Binding SelectedProfile}" />
                 </ScrollViewer>
             </TabItem>
-            <TabItem Header="Google">
+            <TabItem Header="{localizeExtension:LocText Key=ProfileSettingsView_TabItem_Google_Header}">
                 <ScrollViewer HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto">
                     <views:GoogleSettingsView DataContext="{Binding SelectedProfile}" />
                 </ScrollViewer>
             </TabItem>
-            <TabItem Height="39"
-                     VerticalAlignment="Top"
-                     Header="Options">
+            <TabItem VerticalAlignment="Top"
+                     Header="{localizeExtension:LocText Key=ProfileSettingsView_TabItem_Options_Header}">
                 <ScrollViewer HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto">
                     <views:OptionsSettingsView DataContext="{Binding SelectedProfile}" />
                 </ScrollViewer>

@@ -823,6 +823,96 @@ namespace CalendarSyncPlus.Common.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Select Sync Profile.
+        /// </summary>
+        public static string ProfileSettingsView_GroupBox_SyncProfile_Header {
+            get {
+                return ResourceManager.GetString("ProfileSettingsView_GroupBox_SyncProfile_Header", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Google.
+        /// </summary>
+        public static string ProfileSettingsView_TabItem_Google_Header {
+            get {
+                return ResourceManager.GetString("ProfileSettingsView_TabItem_Google_Header", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Options.
+        /// </summary>
+        public static string ProfileSettingsView_TabItem_Options_Header {
+            get {
+                return ResourceManager.GetString("ProfileSettingsView_TabItem_Options_Header", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Outlook.
+        /// </summary>
+        public static string ProfileSettingsView_TabItem_Outlook_Header {
+            get {
+                return ResourceManager.GetString("ProfileSettingsView_TabItem_Outlook_Header", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sync.
+        /// </summary>
+        public static string ProfileSettingsView_TabItem_Sync_Header {
+            get {
+                return ResourceManager.GetString("ProfileSettingsView_TabItem_Sync_Header", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select Profile.
+        /// </summary>
+        public static string ProfileSettingsView_TextBlock_SelectProfile_Text {
+            get {
+                return ResourceManager.GetString("ProfileSettingsView_TextBlock_SelectProfile_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SAVE.
+        /// </summary>
+        public static string SettingsView_Button_Save_Content {
+            get {
+                return ResourceManager.GetString("SettingsView_Button_Save_Content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Application.
+        /// </summary>
+        public static string SettingsView_TabItem_Application_Header {
+            get {
+                return ResourceManager.GetString("SettingsView_TabItem_Application_Header", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Calendars.
+        /// </summary>
+        public static string SettingsView_TabItem_Calendars_Header {
+            get {
+                return ResourceManager.GetString("SettingsView_TabItem_Calendars_Header", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Manage.
+        /// </summary>
+        public static string SettingsView_TabItem_Manage_Header {
+            get {
+                return ResourceManager.GetString("SettingsView_TabItem_Manage_Header", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to About.
         /// </summary>
         public static string ShellView_AboutButton_Content {
