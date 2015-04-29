@@ -15,7 +15,7 @@
             />
     </BootstrapperApplicationRef>
     <PayloadGroup Id="NetFx452RedistPayload">
-      <Payload Name="Net45Installer\dotNetFx45_Full_setup.exe"
+      <Payload Name="redist\dotNetFx45_Full_setup.exe"
                SourceFile="Net45Installer\dotNetFx45_Full_setup.exe"
                 Compressed="yes"/>
     </PayloadGroup>
