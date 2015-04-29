@@ -9,8 +9,7 @@
 
     <!--Dependent libraries-->
     <ComponentGroup Id="UserGuide" Directory="USERGUIDEFOLDER">
-      <Component >
-        <CreateFolder Directory="USERGUIDEFOLDER"/>
+      <Component>
         <File Id="HowToUseGuide"
             Name="HowToUseGuide.xps"
             Source="$(var.ProjectDirectory)UserGuide\HowToUseGuide.xps"
@@ -78,6 +77,18 @@
       </Component>
 
       <!--Project Dependencies-->
+      <Component>
+        <File Id="XAMLMarkupExtensions"
+          Name="XAMLMarkupExtensions.dll"
+          Source="$(var.ProjectDirectory)XAMLMarkupExtensions.dll"
+          KeyPath="yes" />
+      </Component>
+      <Component>
+        <File Id="WPFLocalizeExtension"
+          Name="WPFLocalizeExtension.dll"
+          Source="$(var.ProjectDirectory)WPFLocalizeExtension.dll"
+          KeyPath="yes" />
+      </Component>
       <Component>
         <File Id="ReachFramework"
           Name="ReachFramework.dll"
