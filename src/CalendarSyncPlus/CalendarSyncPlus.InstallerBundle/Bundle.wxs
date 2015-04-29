@@ -37,14 +37,5 @@
       </MsiPackage>
   </Chain>
     <WixVariable Id="WixStdBALanguageId" Value="1033"/>
-    
   </Bundle>
-  <!--<Fragment>
-    <PackageGroup Id="Netfx45FullPackage">
-      <ExePackage Id="Netfx45Full" Cache="no" Compressed="no" PerMachine="yes" Permanent="yes" Vital="yes" InstallCommand="/q"
-          SourceFile="Net45Installer\dotNetFx45_Full_setup.exe"
-          DetectCondition="(Netfx4FullVersion=&quot;4.5.50709&quot;) AND (NOT VersionNT64 OR (Netfx4x64FullVersion=&quot;4.5.50709&quot;))"
-          InstallCondition="(VersionNT >= v6.0 OR VersionNT64 >= v6.0) AND (NOT (Netfx4FullVersion=&quot;4.5.50709&quot; OR Netfx4x64FullVersion=&quot;4.5.50709&quot;))"/>
-    </PackageGroup>
-  </Fragment>-->
 </Wix>
