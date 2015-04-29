@@ -170,6 +170,7 @@
     <Compile Include="Helpers\Utilities.cs" />
     <Compile Include="MarkupExtensions\ResourceBinding.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="Services\LocalizationService.cs" />
     <Compile Include="Services\MessageService.cs" />
     <Compile Include="Services\SingleInstance\ISingleInstanceApp.cs" />
     <Compile Include="Services\SingleInstance\NativeMethods.cs" />

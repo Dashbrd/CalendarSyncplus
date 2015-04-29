@@ -61,6 +61,768 @@ namespace CalendarSyncPlus.Common.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Check For updates.
+        /// </summary>
+        public static string AboutView_Button_CheckForUpdate_Content {
+            get {
+                return ResourceManager.GetString("AboutView_Button_CheckForUpdate_Content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Download Now.
+        /// </summary>
+        public static string AboutView_Button_DownloadNow_Content {
+            get {
+                return ResourceManager.GetString("AboutView_Button_DownloadNow_Content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This is a free utility. To report issues/flaws or share appreciation, comments and further suggestions, Please go to the following link..
+        /// </summary>
+        public static string AboutView_Textblock_BugReportComment {
+            get {
+                return ResourceManager.GetString("AboutView_Textblock_BugReportComment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Contributors:.
+        /// </summary>
+        public static string AboutView_TextBlock_Contributers {
+            get {
+                return ResourceManager.GetString("AboutView_TextBlock_Contributers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Support Us: Buy us a coffee/beer.
+        /// </summary>
+        public static string AboutView_Textblock_SupportUsComment {
+            get {
+                return ResourceManager.GetString("AboutView_Textblock_SupportUsComment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please click on &apos;Help&apos; learn how to use this application..
+        /// </summary>
+        public static string AboutView_Textblock_UseHelpSuggestionComment {
+            get {
+                return ResourceManager.GetString("AboutView_Textblock_UseHelpSuggestionComment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Check For Updates.
+        /// </summary>
+        public static string AdvancedSettingsView_Checkbox_CheckForUpdates_Content {
+            get {
+                return ResourceManager.GetString("AdvancedSettingsView_Checkbox_CheckForUpdates_Content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Close button minimizes to tray.
+        /// </summary>
+        public static string AdvancedSettingsView_Checkbox_CloseToSystemTray_Content {
+            get {
+                return ResourceManager.GetString("AdvancedSettingsView_Checkbox_CloseToSystemTray_Content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hide sync notification.
+        /// </summary>
+        public static string AdvancedSettingsView_Checkbox_HideSystemTrayNotification_Content {
+            get {
+                return ResourceManager.GetString("AdvancedSettingsView_Checkbox_HideSystemTrayNotification_Content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use Default Credential.
+        /// </summary>
+        public static string AdvancedSettingsView_CheckBox_ProxySettings_UseDefaultCredentials_Content {
+            get {
+                return ResourceManager.GetString("AdvancedSettingsView_CheckBox_ProxySettings_UseDefaultCredentials_Content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Run CalendarSync+ when computer starts.
+        /// </summary>
+        public static string AdvancedSettingsView_Checkbox_RunAtStartup_Content {
+            get {
+                return ResourceManager.GetString("AdvancedSettingsView_Checkbox_RunAtStartup_Content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select this option to automatically check for latest version of this application.
+        /// </summary>
+        public static string AdvancedSettingsView_ContentControl_CheckForUpdates_Tooltip {
+            get {
+                return ResourceManager.GetString("AdvancedSettingsView_ContentControl_CheckForUpdates_Tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select this option to minimize to system tray on closing the window.
+        /// </summary>
+        public static string AdvancedSettingsView_ContentControl_HelpButtonCloseToSystray_Tooltip {
+            get {
+                return ResourceManager.GetString("AdvancedSettingsView_ContentControl_HelpButtonCloseToSystray_Tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select this option to hide system tray tooltip.
+        /// </summary>
+        public static string AdvancedSettingsView_ContentControl_HelpButtonHideSystrayNotification_Tooltip {
+            get {
+                return ResourceManager.GetString("AdvancedSettingsView_ContentControl_HelpButtonHideSystrayNotification_Tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select this option to start CalendarSync+ when computer starts.
+        /// </summary>
+        public static string AdvancedSettingsView_ContentControl_HelpButtonRunAtStartup_Tooltip {
+            get {
+                return ResourceManager.GetString("AdvancedSettingsView_ContentControl_HelpButtonRunAtStartup_Tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select this option to configure Synchronization Mode.
+        /// </summary>
+        public static string AdvancedSettingsView_ContentControl_HelpButtonSynchronizationMode_Tooltip {
+            get {
+                return ResourceManager.GetString("AdvancedSettingsView_ContentControl_HelpButtonSynchronizationMode_Tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Auto Detect.
+        /// </summary>
+        public static string AdvancedSettingsView_RadioButton_ProxySettings_AutoDetect_Content {
+            get {
+                return ResourceManager.GetString("AdvancedSettingsView_RadioButton_ProxySettings_AutoDetect_Content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Manual Proxy Configuration.
+        /// </summary>
+        public static string AdvancedSettingsView_RadioButton_ProxySettings_ManualProxy_Content {
+            get {
+                return ResourceManager.GetString("AdvancedSettingsView_RadioButton_ProxySettings_ManualProxy_Content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No Proxy.
+        /// </summary>
+        public static string AdvancedSettingsView_RadioButton_ProxySettings_NoProxy_Content {
+            get {
+                return ResourceManager.GetString("AdvancedSettingsView_RadioButton_ProxySettings_NoProxy_Content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Auto Synchronization.
+        /// </summary>
+        public static string AdvancedSettingsView_RadioButton_Synchronization_AutoSync_Content {
+            get {
+                return ResourceManager.GetString("AdvancedSettingsView_RadioButton_Synchronization_AutoSync_Content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Manual Synchronization.
+        /// </summary>
+        public static string AdvancedSettingsView_RadioButton_Synchronization_ManualSync_Content {
+            get {
+                return ResourceManager.GetString("AdvancedSettingsView_RadioButton_Synchronization_ManualSync_Content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to More advanced features are yet to come ;).
+        /// </summary>
+        public static string AdvancedSettingsView_TextBlock_MoreFeaturesNote_Content {
+            get {
+                return ResourceManager.GetString("AdvancedSettingsView_TextBlock_MoreFeaturesNote_Content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Domain.
+        /// </summary>
+        public static string AdvancedSettingsView_TextBlock_ProxySettings_Domain_Content {
+            get {
+                return ResourceManager.GetString("AdvancedSettingsView_TextBlock_ProxySettings_Domain_Content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Password.
+        /// </summary>
+        public static string AdvancedSettingsView_TextBlock_ProxySettings_Password_Content {
+            get {
+                return ResourceManager.GetString("AdvancedSettingsView_TextBlock_ProxySettings_Password_Content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Http Proxy:.
+        /// </summary>
+        public static string AdvancedSettingsView_TextBlock_ProxySettings_ProxyAddress_Content {
+            get {
+                return ResourceManager.GetString("AdvancedSettingsView_TextBlock_ProxySettings_ProxyAddress_Content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Port No:.
+        /// </summary>
+        public static string AdvancedSettingsView_TextBlock_ProxySettings_ProxyPort_Content {
+            get {
+                return ResourceManager.GetString("AdvancedSettingsView_TextBlock_ProxySettings_ProxyPort_Content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Username.
+        /// </summary>
+        public static string AdvancedSettingsView_TextBlock_ProxySettings_Username_Content {
+            get {
+                return ResourceManager.GetString("AdvancedSettingsView_TextBlock_ProxySettings_Username_Content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Disconnect Account.
+        /// </summary>
+        public static string GoogleSettingsView_Button_DisconnectAccount_Content {
+            get {
+                return ResourceManager.GetString("GoogleSettingsView_Button_DisconnectAccount_Content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Get Google Calendars.
+        /// </summary>
+        public static string GoogleSettingsView_Button_GetCalendar_Content {
+            get {
+                return ResourceManager.GetString("GoogleSettingsView_Button_GetCalendar_Content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add Google Account.
+        /// </summary>
+        public static string GoogleSettingsView_Button_NewtAccount_Content {
+            get {
+                return ResourceManager.GetString("GoogleSettingsView_Button_NewtAccount_Content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reset Google Calendar.
+        /// </summary>
+        public static string GoogleSettingsView_Button_ResetCalendar_Content {
+            get {
+                return ResourceManager.GetString("GoogleSettingsView_Button_ResetCalendar_Content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select Google Calendar.
+        /// </summary>
+        public static string GoogleSettingsView_GroupBox_Header {
+            get {
+                return ResourceManager.GetString("GoogleSettingsView_GroupBox_Header", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select Account.
+        /// </summary>
+        public static string GoogleSettingsView_TextBlock_SelectAccount_Text {
+            get {
+                return ResourceManager.GetString("GoogleSettingsView_TextBlock_SelectAccount_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select Calendar.
+        /// </summary>
+        public static string GoogleSettingsView_TextBlock_SelectCalendar_Text {
+            get {
+                return ResourceManager.GetString("GoogleSettingsView_TextBlock_SelectCalendar_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Start Periodic Sync.
+        /// </summary>
+        public static string HomeView_Button_StartSync_Content_Start {
+            get {
+                return ResourceManager.GetString("HomeView_Button_StartSync_Content_Start", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Stop Periodic Sync.
+        /// </summary>
+        public static string HomeView_Button_StartSync_Content_Stop {
+            get {
+                return ResourceManager.GetString("HomeView_Button_StartSync_Content_Stop", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sync Now.
+        /// </summary>
+        public static string HomeView_Button_SyncNow_Content {
+            get {
+                return ResourceManager.GetString("HomeView_Button_SyncNow_Content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to New.
+        /// </summary>
+        public static string ManageProfileView_Button_New_Content {
+            get {
+                return ResourceManager.GetString("ManageProfileView_Button_New_Content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete.
+        /// </summary>
+        public static string ManageProfileView_DataGrid_Column_DeleteColumn_Header {
+            get {
+                return ResourceManager.GetString("ManageProfileView_DataGrid_Column_DeleteColumn_Header", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Name.
+        /// </summary>
+        public static string ManageProfileView_DataGrid_Column_NameColumn_Header {
+            get {
+                return ResourceManager.GetString("ManageProfileView_DataGrid_Column_NameColumn_Header", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sync.
+        /// </summary>
+        public static string ManageProfileView_DataGrid_Column_SyncColumn_Header {
+            get {
+                return ResourceManager.GetString("ManageProfileView_DataGrid_Column_SyncColumn_Header", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Manage Calendar Profiles.
+        /// </summary>
+        public static string ManageProfileView_GroupBox_Header {
+            get {
+                return ResourceManager.GetString("ManageProfileView_GroupBox_Header", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Set Category To Appointments.
+        /// </summary>
+        public static string OptionsSettingsView_CheckBox_Category_Content {
+            get {
+                return ResourceManager.GetString("OptionsSettingsView_CheckBox_Category_Content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add Attachments.
+        /// </summary>
+        public static string OptionsSettingsView_CheckBox_DestinationCalendarOptions_AddAttachments_Content {
+            get {
+                return ResourceManager.GetString("OptionsSettingsView_CheckBox_DestinationCalendarOptions_AddAttachments_Content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add Attendees.
+        /// </summary>
+        public static string OptionsSettingsView_CheckBox_DestinationCalendarOptions_AddAttendees_Content {
+            get {
+                return ResourceManager.GetString("OptionsSettingsView_CheckBox_DestinationCalendarOptions_AddAttendees_Content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select this option to add attendees to appointment.
+        /// </summary>
+        public static string OptionsSettingsView_CheckBox_DestinationCalendarOptions_AddAttendees_ToolTip {
+            get {
+                return ResourceManager.GetString("OptionsSettingsView_CheckBox_DestinationCalendarOptions_AddAttendees_ToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add Attendees to Description.
+        /// </summary>
+        public static string OptionsSettingsView_CheckBox_DestinationCalendarOptions_AddAttendeesDescription_Content {
+            get {
+                return ResourceManager.GetString("OptionsSettingsView_CheckBox_DestinationCalendarOptions_AddAttendeesDescription_C" +
+                        "ontent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select this option to add attendees to appointment description instead of TO/CC/BCC fields.
+        /// </summary>
+        public static string OptionsSettingsView_CheckBox_DestinationCalendarOptions_AddAttendeesDescription_ToolTip {
+            get {
+                return ResourceManager.GetString("OptionsSettingsView_CheckBox_DestinationCalendarOptions_AddAttendeesDescription_T" +
+                        "oolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add Description.
+        /// </summary>
+        public static string OptionsSettingsView_CheckBox_DestinationCalendarOptions_AddDescription_Content {
+            get {
+                return ResourceManager.GetString("OptionsSettingsView_CheckBox_DestinationCalendarOptions_AddDescription_Content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select this option to add description to the calendarAppointments.
+        /// </summary>
+        public static string OptionsSettingsView_CheckBox_DestinationCalendarOptions_AddDescription_ToolTip {
+            get {
+                return ResourceManager.GetString("OptionsSettingsView_CheckBox_DestinationCalendarOptions_AddDescription_ToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add events with no recipients as appointments.
+        /// </summary>
+        public static string OptionsSettingsView_CheckBox_DestinationCalendarOptions_AddEventsAsAppointment_Content {
+            get {
+                return ResourceManager.GetString("OptionsSettingsView_CheckBox_DestinationCalendarOptions_AddEventsAsAppointment_Co" +
+                        "ntent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select this option to add events from Google without recipients as appointments in outlook..
+        /// </summary>
+        public static string OptionsSettingsView_CheckBox_DestinationCalendarOptions_AddEventsAsAppointment_ToolTip {
+            get {
+                return ResourceManager.GetString("OptionsSettingsView_CheckBox_DestinationCalendarOptions_AddEventsAsAppointment_To" +
+                        "olTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select this option to add reminders of the appointment. Note: Outlook gives default reminder messages for all calendarAppointments. To disable please go to your outlook settings..
+        /// </summary>
+        public static string OptionsSettingsView_CheckBox_DestinationCalendarOptions_AddReminder_ToolTip {
+            get {
+                return ResourceManager.GetString("OptionsSettingsView_CheckBox_DestinationCalendarOptions_AddReminder_ToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add Reminders.
+        /// </summary>
+        public static string OptionsSettingsView_CheckBox_DestinationCalendarOptions_AddReminders_Content {
+            get {
+                return ResourceManager.GetString("OptionsSettingsView_CheckBox_DestinationCalendarOptions_AddReminders_Content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Confirm on Delete.
+        /// </summary>
+        public static string OptionsSettingsView_CheckBox_OtherOptions_ConfirmDelete_Content {
+            get {
+                return ResourceManager.GetString("OptionsSettingsView_CheckBox_OtherOptions_ConfirmDelete_Content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Display Confirm Dialog before deleting an Appointement.
+        /// </summary>
+        public static string OptionsSettingsView_CheckBox_OtherOptions_ConfirmDelete_ToolTip {
+            get {
+                return ResourceManager.GetString("OptionsSettingsView_CheckBox_OtherOptions_ConfirmDelete_ToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Disable Delete.
+        /// </summary>
+        public static string OptionsSettingsView_CheckBox_OtherOptions_DisableDelete_Content {
+            get {
+                return ResourceManager.GetString("OptionsSettingsView_CheckBox_OtherOptions_DisableDelete_Content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Disable Delete when Syncing Calendars.
+        /// </summary>
+        public static string OptionsSettingsView_CheckBox_OtherOptions_DisableDelete_ToolTip {
+            get {
+                return ResourceManager.GetString("OptionsSettingsView_CheckBox_OtherOptions_DisableDelete_ToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Keep Last Modified Version (For Bidirectional only).
+        /// </summary>
+        public static string OptionsSettingsView_CheckBox_OtherOptions_KeepLastModified_Content {
+            get {
+                return ResourceManager.GetString("OptionsSettingsView_CheckBox_OtherOptions_KeepLastModified_Content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Category.
+        /// </summary>
+        public static string OptionsSettingsView_GroupBox_Category_Header {
+            get {
+                return ResourceManager.GetString("OptionsSettingsView_GroupBox_Category_Header", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Destination Calendar Entry Options.
+        /// </summary>
+        public static string OptionsSettingsView_GroupBox_DestinationCalendarOptions_Header {
+            get {
+                return ResourceManager.GetString("OptionsSettingsView_GroupBox_DestinationCalendarOptions_Header", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Other.
+        /// </summary>
+        public static string OptionsSettingsView_GroupBox_OtherOptions_Header {
+            get {
+                return ResourceManager.GetString("OptionsSettingsView_GroupBox_OtherOptions_Header", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Help text here.
+        /// </summary>
+        public static string OptionsSettingsView_HelpButton_Category_Tooltip {
+            get {
+                return ResourceManager.GetString("OptionsSettingsView_HelpButton_Category_Tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Detect Settings.
+        /// </summary>
+        public static string OutlookSettingsView_Button_ExchnageSettings_DetectSettings_Content {
+            get {
+                return ResourceManager.GetString("OutlookSettingsView_Button_ExchnageSettings_DetectSettings_Content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reset Exchange Calendar.
+        /// </summary>
+        public static string OutlookSettingsView_Button_ExchnageSettings_ResetExchangeCalendar_Content {
+            get {
+                return ResourceManager.GetString("OutlookSettingsView_Button_ExchnageSettings_ResetExchangeCalendar_Content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reset Outlook Calendar.
+        /// </summary>
+        public static string OutlookSettingsView_Button_OutlookProfileSettings_ResetOutlookCalendar_Text {
+            get {
+                return ResourceManager.GetString("OutlookSettingsView_Button_OutlookProfileSettings_ResetOutlookCalendar_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Exchange Web Services.
+        /// </summary>
+        public static string OutlookSettingsView_CheckBox_OutlookSettings_EWS_Content {
+            get {
+                return ResourceManager.GetString("OutlookSettingsView_CheckBox_OutlookSettings_EWS_Content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Outlook Application.
+        /// </summary>
+        public static string OutlookSettingsView_CheckBox_OutlookSettings_OutlookApplicaiton_Content {
+            get {
+                return ResourceManager.GetString("OutlookSettingsView_CheckBox_OutlookSettings_OutlookApplicaiton_Content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Exchange Server Settings.
+        /// </summary>
+        public static string OutlookSettingsView_GroupBox_ExchnageSettings_Header {
+            get {
+                return ResourceManager.GetString("OutlookSettingsView_GroupBox_ExchnageSettings_Header", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Profile &amp;amp; MailBox Settings.
+        /// </summary>
+        public static string OutlookSettingsView_GroupBox_OutlookProfileSettings_Header {
+            get {
+                return ResourceManager.GetString("OutlookSettingsView_GroupBox_OutlookProfileSettings_Header", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Outlook Settings.
+        /// </summary>
+        public static string OutlookSettingsView_GroupBox_OutlookSettings_Header {
+            get {
+                return ResourceManager.GetString("OutlookSettingsView_GroupBox_OutlookSettings_Header", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Choose Another MailBox.
+        /// </summary>
+        public static string OutlookSettingsView_RadioButton_OutlookProfileSettings_ChooseAnotherMailBox_Content {
+            get {
+                return ResourceManager.GetString("OutlookSettingsView_RadioButton_OutlookProfileSettings_ChooseAnotherMailBox_Conte" +
+                        "nt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Choose Profile.
+        /// </summary>
+        public static string OutlookSettingsView_RadioButton_OutlookProfileSettings_ChooseProfile_Content {
+            get {
+                return ResourceManager.GetString("OutlookSettingsView_RadioButton_OutlookProfileSettings_ChooseProfile_Content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Default MailBox and Calendar.
+        /// </summary>
+        public static string OutlookSettingsView_RadioButton_OutlookProfileSettings_DefaultMailnCalendar_Content {
+            get {
+                return ResourceManager.GetString("OutlookSettingsView_RadioButton_OutlookProfileSettings_DefaultMailnCalendar_Conte" +
+                        "nt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Default Profile.
+        /// </summary>
+        public static string OutlookSettingsView_RadioButton_OutlookProfileSettings_DefaultProfile_Content {
+            get {
+                return ResourceManager.GetString("OutlookSettingsView_RadioButton_OutlookProfileSettings_DefaultProfile_Content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select Profile.
+        /// </summary>
+        public static string OutlookSettingsView_RadioButton_OutlookProfileSettings_SelectProfile_Content {
+            get {
+                return ResourceManager.GetString("OutlookSettingsView_RadioButton_OutlookProfileSettings_SelectProfile_Content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Domain.
+        /// </summary>
+        public static string OutlookSettingsView_TextBlock_ExchnageSettings_Domain_Text {
+            get {
+                return ResourceManager.GetString("OutlookSettingsView_TextBlock_ExchnageSettings_Domain_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Password.
+        /// </summary>
+        public static string OutlookSettingsView_TextBlock_ExchnageSettings_Password_Text {
+            get {
+                return ResourceManager.GetString("OutlookSettingsView_TextBlock_ExchnageSettings_Password_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select Calendar.
+        /// </summary>
+        public static string OutlookSettingsView_TextBlock_ExchnageSettings_SelectCalendar_Content {
+            get {
+                return ResourceManager.GetString("OutlookSettingsView_TextBlock_ExchnageSettings_SelectCalendar_Content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Exchange Server Url.
+        /// </summary>
+        public static string OutlookSettingsView_TextBlock_ExchnageSettings_ServerUrl_Text {
+            get {
+                return ResourceManager.GetString("OutlookSettingsView_TextBlock_ExchnageSettings_ServerUrl_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Username.
+        /// </summary>
+        public static string OutlookSettingsView_TextBlock_ExchnageSettings_UserName_Text {
+            get {
+                return ResourceManager.GetString("OutlookSettingsView_TextBlock_ExchnageSettings_UserName_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select Profile.
+        /// </summary>
+        public static string OutlookSettingsView_TextBlock_OutlookProfileSettings_ChooseProfile_Text {
+            get {
+                return ResourceManager.GetString("OutlookSettingsView_TextBlock_OutlookProfileSettings_ChooseProfile_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select Calendar.
+        /// </summary>
+        public static string OutlookSettingsView_TextBlock_OutlookProfileSettings_SelectCalendar_Text {
+            get {
+                return ResourceManager.GetString("OutlookSettingsView_TextBlock_OutlookProfileSettings_SelectCalendar_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select MailBox.
+        /// </summary>
+        public static string OutlookSettingsView_TextBlock_OutlookProfileSettings_SelectMailBox_Text {
+            get {
+                return ResourceManager.GetString("OutlookSettingsView_TextBlock_OutlookProfileSettings_SelectMailBox_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to About.
         /// </summary>
         public static string ShellView_AboutButton_Content {
@@ -97,6 +859,33 @@ namespace CalendarSyncPlus.Common.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to About.
+        /// </summary>
+        public static string ShellView_Flyouts_About_Header {
+            get {
+                return ResourceManager.GetString("ShellView_Flyouts_About_Header", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Help.
+        /// </summary>
+        public static string ShellView_Flyouts_Help_Header {
+            get {
+                return ResourceManager.GetString("ShellView_Flyouts_Help_Header", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Preferences.
+        /// </summary>
+        public static string ShellView_Flyouts_Settings_Header {
+            get {
+                return ResourceManager.GetString("ShellView_Flyouts_Settings_Header", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Help.
         /// </summary>
         public static string ShellView_HelpButton_Content {
@@ -111,6 +900,15 @@ namespace CalendarSyncPlus.Common.Properties {
         public static string ShellView_HelpButton_ToolTip {
             get {
                 return ResourceManager.GetString("ShellView_HelpButton_ToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to New version available for download.
+        /// </summary>
+        public static string ShellView_RightWindowCommands_Download_Tooltip {
+            get {
+                return ResourceManager.GetString("ShellView_RightWindowCommands_Download_Tooltip", resourceCulture);
             }
         }
         
