@@ -1,82 +1,83 @@
 ﻿<UserControl x:Class="CalendarSyncPlus.Presentation.Views.AboutView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:Properties="clr-namespace:CalendarSyncPlus.Common.Properties;assembly=CalendarSyncPlus.Common"
              xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:localizeExtension="http://wpflocalizeextension.codeplex.com"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:viewModels="clr-namespace:CalendarSyncPlus.Application.ViewModels;assembly=CalendarSyncPlus.Application"
-             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance viewModels:AboutViewModel}"
              d:DesignHeight="600"
              d:DesignWidth="400"
-             d:DataContext="{d:DesignInstance viewModels:AboutViewModel}">
+             mc:Ignorable="d">
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
         <SolidColorBrush x:Key="AboutContentColor" Color="DimGray" />
     </UserControl.Resources>
-    <StackPanel VerticalAlignment="Top"
-                Orientation="Vertical"
-                Margin="20">
-        <TextBlock Text="{StaticResource ApplicationName}"
+    <StackPanel Margin="20"
+                VerticalAlignment="Top"
+                Orientation="Vertical">
+        <TextBlock HorizontalAlignment="Left"
                    VerticalAlignment="Center"
-                   HorizontalAlignment="Left"
-                   FontWeight="800"
                    FontSize="30"
-                   Foreground="{StaticResource AboutContentColor}" />
-        <TextBlock Text="{Binding ProductVersion,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
-        <TextBlock Text="Contributors:" FontWeight="800" Margin="0,10,0,0" />
+                   FontWeight="800"
+                   Foreground="{StaticResource AboutContentColor}"
+                   Text="{StaticResource ApplicationName}" />
+        <TextBlock Text="{Binding ProductVersion, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+        <TextBlock Margin="0,10,0,0"
+                   FontWeight="800"
+                   Text="{localizeExtension:LocText Key=AboutView_TextBlock_Contributers}" />
         <TextBlock Text="Ankesh Dave" />
         <TextBlock Text="Akanksha Gaur" />
-        <TextBlock Margin="0,10,0,0">Contact us :
-            <Hyperlink Command="{Binding UriCommand}"
-                       CommandParameter="mailto:calendarsyncplus@outlook.com">
-                mailto:calendarsyncplus@outlook.com
-            </Hyperlink>
-        </TextBlock>
-        <TextBlock
-            Text="This is a free utility. To report issues/flaws or share appreciation, comments and further suggestions, Please go to the following link."
-            TextWrapping="Wrap"
-            Margin="0,10,0,0" />
         <TextBlock Margin="0,10,0,0">
-            <Hyperlink Command="{Binding UriCommand}"
-                       CommandParameter="https://calendarsyncplus.codeplex.com/">
-                https://calendarsyncplus.codeplex.com/
-            </Hyperlink>
+            Contact us :
+            <Hyperlink Command="{Binding UriCommand}" CommandParameter="mailto:calendarsyncplus@outlook.com">mailto:calendarsyncplus@outlook.com</Hyperlink>
         </TextBlock>
-        <TextBlock Text="Support Us: Buy us a coffee/beer"
-                   Margin="0,10,0,0" />
+        <TextBlock Margin="0,10,0,0"
+                   Text="{localizeExtension:LocText Key=AboutView_Textblock_BugReportComment}"
+                   TextWrapping="Wrap" />
+        <TextBlock Margin="0,10,0,0">
+            <Hyperlink Command="{Binding UriCommand}" CommandParameter="https://calendarsyncplus.codeplex.com/">https://calendarsyncplus.codeplex.com/</Hyperlink>
+        </TextBlock>
+        <TextBlock Margin="0,10,0,0" Text="{localizeExtension:LocText Key=AboutView_Textblock_SupportUsComment}" />
         <TextBlock>
-            <Hyperlink  TextDecorations="None"
-                Command="{Binding UriCommand}"
-                       CommandParameter="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=PVGQVLQPDEZVY">
-                <Image Source="..\Resources/btn_donate_SM.gif"
-                   Height="25"
-                   HorizontalAlignment="Left"
-                       Margin="0,10,0,0" />
+            <Hyperlink Command="{Binding UriCommand}"
+                       CommandParameter="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=PVGQVLQPDEZVY"
+                       TextDecorations="None">
+                <Image Height="25"
+                       Margin="0,10,0,0"
+                       HorizontalAlignment="Left"
+                       Source="..\Resources/btn_donate_SM.gif" />
             </Hyperlink>
         </TextBlock>
-        <TextBlock Text="Please click on 'Help' learn how to use this application." TextWrapping="Wrap"
-                   Margin="0,10,0,0" />
+        <TextBlock Margin="0,10,0,0"
+                   Text="{localizeExtension:LocText Key=AboutView_Textblock_UseHelpSuggestionComment}"
+                   TextWrapping="Wrap" />
         <TextBlock Margin="0,10,0,0">
-            <Hyperlink Command="{Binding UriCommand}"
-                       CommandParameter="http://calendarsyncplus.codeplex.com/workitem/list/basic">
-                Report Issue/Bug/Defect on Codeplex
-            </Hyperlink>
+            <Hyperlink Command="{Binding UriCommand}" CommandParameter="http://calendarsyncplus.codeplex.com/workitem/list/basic">Report Issue/Bug/Defect on Codeplex</Hyperlink>
         </TextBlock>
 
-        <Button HorizontalAlignment="Left" Content="Check FOr updates" Margin="0,10,0,0"
-                Command="{Binding CheckForUpdatesCommand}"
-                Width="120" />
-        <controls:MetroProgressBar
-            Visibility="{Binding IsCheckInProgress, Converter={StaticResource BooleanToVisibilityConverter}}"
-            IsIndeterminate="True" Margin="5" />
-        <TextBlock Text="{Binding UpdateText}"
-                   Margin="0,10,0,0" FontSize="16" Foreground="LightSteelBlue" />
-        <Button HorizontalAlignment="Left"
-                Content="Download Now"
-                Width="120"
+        <Button Width="120"
                 Margin="0,10,0,0"
+                HorizontalAlignment="Left"
+                Command="{Binding CheckForUpdatesCommand}"
+                Content="{localizeExtension:LocText Key=AboutView_Button_CheckForUpdate_Content}" />
+        <controls:MetroProgressBar Margin="5"
+                                   IsIndeterminate="True"
+                                   Visibility="{Binding IsCheckInProgress,
+                                                        Converter={StaticResource BooleanToVisibilityConverter}}" />
+        <TextBlock Margin="0,10,0,0"
+                   FontSize="16"
+                   Foreground="LightSteelBlue"
+                   Text="{Binding UpdateText}" />
+        <Button Width="120"
+                Margin="0,10,0,0"
+                HorizontalAlignment="Left"
                 Command="{Binding DownloadCommand}"
-                Visibility="{Binding IsLatestVersionAvailable,Converter={StaticResource BooleanToVisibilityConverter}}" />
+                Content="{localizeExtension:LocText Key=AboutView_Button_DownloadNow_Content}"
+                Visibility="{Binding IsLatestVersionAvailable,
+                                     Converter={StaticResource BooleanToVisibilityConverter}}" />
 
     </StackPanel>
 </UserControl>

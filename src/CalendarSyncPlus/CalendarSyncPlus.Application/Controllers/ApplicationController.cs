@@ -23,6 +23,7 @@ using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
 using System.Waf.Applications;
 using CalendarSyncPlus.Application.ViewModels;
+using CalendarSyncPlus.Common;
 using CalendarSyncPlus.Domain.Models;
 using CalendarSyncPlus.GoogleServices.Google;
 using CalendarSyncPlus.Services;
@@ -33,6 +34,7 @@ namespace CalendarSyncPlus.Application.Controllers
     [Export(typeof(IApplicationController))]
     public class ApplicationController : IApplicationController
     {
+        public ILocalizationService LocalizationService { get; set; }
         private readonly AboutViewModel _aboutViewModel;
         private readonly DelegateCommand _exitCommand;
         private readonly IGuiInteractionService _guiInteractionService;
