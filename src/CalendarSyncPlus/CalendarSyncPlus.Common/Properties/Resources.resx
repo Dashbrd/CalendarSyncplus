@@ -418,4 +418,115 @@
   <data name="SettingsView_Button_Save_Content" xml:space="preserve">
     <value>SAVE</value>
   </data>
+  <data name="SyncSettingsView_GroupBox_CalendarSyncDirection_Header" xml:space="preserve">
+    <value>Calendar Sync Direction</value>
+  </data>
+  <data name="SyncSettingsView_GroupBox_SyncRange_Header" xml:space="preserve">
+    <value>Sync Range</value>
+  </data>
+  <data name="SyncSettingsView_GroupBox_Recurrence_Header" xml:space="preserve">
+    <value>Recurrence</value>
+  </data>
+  <data name="SyncSettingsView_ContentControl_SyncFrequencyHelp_Tooltip" xml:space="preserve">
+    <value>Sync frequency help text</value>
+  </data>
+  <data name="SyncSettingsView_RadioButton_SyncFullCalendar_Content" xml:space="preserve">
+    <value>Sync Full Calendar</value>
+  </data>
+  <data name="SyncSettingsView_RadioButton_SyncDaysInRange_Content" xml:space="preserve">
+    <value>Sync Days in Range</value>
+  </data>
+  <data name="SyncSettingsView_RadioButton_SyncFixedDateRange_Content" xml:space="preserve">
+    <value>Sync Fixed Date Range</value>
+  </data>
+  <data name="SyncSettingsView_TextBlock_DaysInPast_Text" xml:space="preserve">
+    <value>No of days in past</value>
+  </data>
+  <data name="SyncSettingsView_TextBlock_DaysInFuture_Text" xml:space="preserve">
+    <value>No of days in future</value>
+  </data>
+  <data name="SyncSettingsView_TextBlock_StartDate_Text" xml:space="preserve">
+    <value>Select Start Date</value>
+  </data>
+  <data name="SyncSettingsView_TextBlock_EndDate_Text" xml:space="preserve">
+    <value>Select End date</value>
+  </data>
+  <data name="SyncSettingsView_TextBlock_SelectMasterCalendar_Text" xml:space="preserve">
+    <value>Select Master Calendar</value>
+  </data>
+  <data name="SyncSettingsView_RadioButton_OutlookMaster_Content" xml:space="preserve">
+    <value>Outlook</value>
+  </data>
+  <data name="SyncSettingsView_RadioButton_GoogleMaster_Content" xml:space="preserve">
+    <value>Google</value>
+  </data>
+  <data name="SyncSettingsView_TextBlock_CalendarSyncMode_Text" xml:space="preserve">
+    <value>Calendar Sync Mode</value>
+  </data>
+  <data name="SyncSettingsView_ContentControl_HelpIntervalHours_Tooltip" xml:space="preserve">
+    <value>Select the number of days in future for which you wish to sync calendar calendarAppointments</value>
+  </data>
+  <data name="SyncSettingsView_ContentControl_HelpIntervalMinutes_Tooltip" xml:space="preserve">
+    <value>Select the number of days in future for which you wish to sync calendar calendarAppointments</value>
+  </data>
+  <data name="SyncSettingsView_ContentControl_HelpDailyTimeOfDay_Tooltip" xml:space="preserve">
+    <value>Select the number of days in future for which you wish to sync calendar calendarAppointments</value>
+  </data>
+  <data name="SyncSettingsView_ContentControl_HelpWeeklyRecurrence_Tooltip" xml:space="preserve">
+    <value>Select the number of days in future for which you wish to sync calendar calendarAppointments</value>
+  </data>
+  <data name="SyncSettingsView_ContentControl_HelpWeeklyTimeOfDay_Tooltip" xml:space="preserve">
+    <value>Weekly time of day help</value>
+  </data>
+  <data name="SyncSettingsView_TextBlock_IntervalHours_Text" xml:space="preserve">
+    <value>Hours</value>
+  </data>
+  <data name="SyncSettingsView_TextBlock_IntervalMinutes_Text" xml:space="preserve">
+    <value>Minutes</value>
+  </data>
+  <data name="SyncSettingsView_RadioButton_DailyEveryDay_Content" xml:space="preserve">
+    <value>Every</value>
+  </data>
+  <data name="SyncSettingsView_TextBlock_DailyDays_Text" xml:space="preserve">
+    <value>day(s)</value>
+  </data>
+  <data name="SyncSettingsView_RadioButto_DailyWeekday_Content" xml:space="preserve">
+    <value>Every Weekday</value>
+  </data>
+  <data name="SyncSettingsView_TextBlock_DailyTimeOfDay_Text" xml:space="preserve">
+    <value>Time of Day</value>
+  </data>
+  <data name="SyncSettingsView_TextBlock_WeeklyRecur_Text" xml:space="preserve">
+    <value>Recur Every</value>
+  </data>
+  <data name="SyncSettingsView_TextBlock_WeeklyWeekday_Text" xml:space="preserve">
+    <value>week(s) on:</value>
+  </data>
+  <data name="SyncSettingsView_TextBlock_WeeklyTimeOfDay_Text" xml:space="preserve">
+    <value>Time of Day</value>
+  </data>
+  <data name="SyncSettingsView_ContentControl_HelpCalendarSyncMode_Tooltip" xml:space="preserve">
+    <value> sync mode help</value>
+  </data>
+  <data name="SyncSettingsView_ContentControl_HelpSyncFullCalendar_Tooltip" xml:space="preserve">
+    <value>Select the number of days in past for which you wish to sync calendar calendarAppointments</value>
+  </data>
+  <data name="SyncSettingsView_ContentControl_HelpSyncDaysInRange_Tooltip" xml:space="preserve">
+    <value>Select the number of days in past for which you wish to sync calendar calendarAppointments</value>
+  </data>
+  <data name="SyncSettingsView_ContentControl_HelpSyncFixedDateRange_Tooltip" xml:space="preserve">
+    <value>Select the number of days in past for which you wish to sync calendar calendarAppointments</value>
+  </data>
+  <data name="SyncSettingsView_ContentControl_HelpDaysInPast_Tooltip" xml:space="preserve">
+    <value>Select the number of days in past for which you wish to sync calendar calendarAppointments</value>
+  </data>
+  <data name="SyncSettingsView_ContentControl_HelpDaysInFuture_Tooltip" xml:space="preserve">
+    <value>Select the number of days in future for which you wish to sync calendar calendarAppointments</value>
+  </data>
+  <data name="SyncSettingsView_ContentControl_HelpStartDate_Tooltip" xml:space="preserve">
+    <value>Select the number of days in past for which you wish to sync calendar calendarAppointments</value>
+  </data>
+  <data name="SyncSettingsView_ContentControl_HelpEndDate_Tooltip" xml:space="preserve">
+    <value>Select the number of days in future for which you wish to sync calendar calendarAppointments</value>
+  </data>
 </root>

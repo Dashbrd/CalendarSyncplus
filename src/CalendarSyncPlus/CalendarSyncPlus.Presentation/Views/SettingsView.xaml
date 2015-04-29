@@ -7,7 +7,6 @@
              xmlns:wafConverters="http://waf.codeplex.com/schemas"
              xmlns:views="clr-namespace:CalendarSyncPlus.Presentation.Views"
              xmlns:viewModels="clr-namespace:CalendarSyncPlus.Application.ViewModels;assembly=CalendarSyncPlus.Application"
-             xmlns:Properties="clr-namespace:CalendarSyncPlus.Common.Properties;assembly=CalendarSyncPlus.Common"
              xmlns:localizeExtension="http://wpflocalizeextension.codeplex.com"
              mc:Ignorable="d"
              d:DesignHeight="600"
