@@ -75,45 +75,45 @@
                                              RelativeSource={RelativeSource AncestorType={x:Type views:ShellView}},
                                              Converter={StaticResource PercentageWidthConverter},
                                              ConverterParameter=75}"
-                AnimateOnPositionChange="True"
-                Content="{Binding Path=ShellService.SettingsView}"
-                Header="Preferences"
-                IsModal="True"
-                IsOpen="{Binding IsSettingsVisible,
+                             AnimateOnPositionChange="True"
+                             Content="{Binding Path=ShellService.SettingsView}"
+                             Header="{localizeExtension:LocText Key=ShellView_Flyouts_Settings_Header}"
+                             IsModal="True"
+                             IsOpen="{Binding IsSettingsVisible,
                                               Mode=TwoWay}"
-                Position="Right"
-                Theme="Adapt" />
+                             Position="Right"
+                             Theme="Adapt" />
             <controls:Flyout Width="{Binding Width,
                                              RelativeSource={RelativeSource AncestorType={x:Type views:ShellView}},
                                              Converter={StaticResource PercentageWidthConverter},
                                              ConverterParameter=75}"
-                AnimateOnPositionChange="True"
-                Content="{Binding Path=ShellService.AboutView}"
-                Header="About"
-                IsModal="True"
-                IsOpen="{Binding IsAboutVisible,
+                             AnimateOnPositionChange="True"
+                             Content="{Binding Path=ShellService.AboutView}"
+                             Header="{localizeExtension:LocText Key=ShellView_Flyouts_About_Header}"
+                             IsModal="True"
+                             IsOpen="{Binding IsAboutVisible,
                                               Mode=TwoWay}"
-                Position="Right"
-                Theme="Adapt" />
+                             Position="Right"
+                             Theme="Adapt" />
             <controls:Flyout Width="{Binding Width,
                                              RelativeSource={RelativeSource AncestorType={x:Type views:ShellView}},
                                              Converter={StaticResource PercentageWidthConverter},
                                              ConverterParameter=75}"
-                AnimateOnPositionChange="True"
-                Content="{Binding Path=ShellService.HelpView}"
-                Header="Help"
-                IsModal="True"
-                IsOpen="{Binding IsHelpVisible,
+                             AnimateOnPositionChange="True"
+                             Content="{Binding Path=ShellService.HelpView}"
+                             Header="{localizeExtension:LocText Key=ShellView_Flyouts_Help_Header}"
+                             IsModal="True"
+                             IsOpen="{Binding IsHelpVisible,
                                               Mode=TwoWay}"
-                Position="Right"
-                Theme="Adapt" />
+                             Position="Right"
+                             Theme="Adapt" />
         </controls:FlyoutsControl>
     </controls:MetroWindow.Flyouts>
 
     <controls:MetroWindow.RightWindowCommands>
         <controls:WindowCommands>
             <Button Command="{Binding DownloadCommand}"
-                    ToolTip="New version available for download"
+                    ToolTip="{localizeExtension:LocText Key=ShellView_RightWindowCommands_Download_Tooltip}"
                     Visibility="{Binding IsLatestVersionAvailable,
                                          Converter={StaticResource BooleanToVisibilityConverter}}">
                 <StackPanel Orientation="Horizontal">

@@ -1,30 +1,32 @@
 ﻿<UserControl x:Class="CalendarSyncPlus.Presentation.Views.GoogleSettingsView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:viewModels="clr-namespace:CalendarSyncPlus.Application.ViewModels;assembly=CalendarSyncPlus.Application"
+             xmlns:Properties="clr-namespace:CalendarSyncPlus.Common.Properties;assembly=CalendarSyncPlus.Common"
              xmlns:converters="http://metro.mahapps.com/winfx/xaml/shared"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:localizeExtension="http://wpflocalizeextension.codeplex.com"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewModels="clr-namespace:CalendarSyncPlus.Application.ViewModels;assembly=CalendarSyncPlus.Application"
              xmlns:views="clr-namespace:CalendarSyncPlus.Presentation.Views"
-             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance viewModels:ProfileViewModel}"
              d:DesignHeight="500"
              d:DesignWidth="500"
-             d:DataContext="{d:DesignInstance viewModels:ProfileViewModel}">
+             mc:Ignorable="d">
     <UserControl.Resources>
-        <converters:ToUpperConverter x:Key="ToUpperConverter"/>
+        <converters:ToUpperConverter x:Key="ToUpperConverter" />
         <DataTemplate x:Key="GoogleHeaderTemplate">
-            <StackPanel Orientation="Horizontal"
-                        VerticalAlignment="Center">
-                <Rectangle Width="18"
-                           Fill="{DynamicResource AccentSelectedColorBrush}">
+            <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                <Rectangle Width="18" Fill="{DynamicResource AccentSelectedColorBrush}">
                     <Rectangle.OpacityMask>
-                        <VisualBrush Stretch="Fill"
-                                     Visual="{StaticResource appbar_google}" />
+                        <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_google}" />
                     </Rectangle.OpacityMask>
                 </Rectangle>
                 <TextBlock Margin="5,0,0,0"
-                           Text="{Binding Header,RelativeSource={RelativeSource AncestorType=GroupBox},Mode=OneWay,Converter={StaticResource ToUpperConverter}}"
-                           Foreground="{DynamicResource AccentSelectedColorBrush}" />
+                           Foreground="{DynamicResource AccentSelectedColorBrush}"
+                           Text="{Binding Header,
+                                          RelativeSource={RelativeSource AncestorType=GroupBox},
+                                          Mode=OneWay,
+                                          Converter={StaticResource ToUpperConverter}}" />
             </StackPanel>
         </DataTemplate>
     </UserControl.Resources>
@@ -33,12 +35,11 @@
             <RowDefinition Height="Auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
-        <GroupBox Header="Select Google Calendar"
-                  HeaderTemplate="{StaticResource GoogleHeaderTemplate}">
+        <GroupBox Header="{localizeExtension:LocText Key=GoogleSettingsView_GroupBox_Header}" HeaderTemplate="{StaticResource GoogleHeaderTemplate}">
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition></RowDefinition>
-                    <RowDefinition></RowDefinition>
+                    <RowDefinition />
+                    <RowDefinition />
                     <RowDefinition />
                     <RowDefinition />
                     <RowDefinition />
@@ -49,61 +50,73 @@
                     <ColumnDefinition Width="3*" />
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Text="Select Account"
+                <TextBlock Grid.Row="0"
                            VerticalAlignment="Center"
-                           Grid.Row="0" />
-                <ComboBox Margin="2"
-                          Grid.Row="0"
+                           Text="{localizeExtension:LocText Key=GoogleSettingsView_TextBlock_SelectAccount_Text}" />
+                <ComboBox Grid.Row="0"
                           Grid.Column="1"
+                          Margin="2"
                           DisplayMemberPath="Name"
-                          ItemsSource="{Binding Path=DataContext.GoogleAccounts,UpdateSourceTrigger=PropertyChanged,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type views:ProfileSettingsView}}}"
-                          SelectedItem="{Binding SelectedGoogleAccount,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
-                <StackPanel Orientation="Horizontal"
+                          ItemsSource="{Binding Path=DataContext.GoogleAccounts,
+                                                UpdateSourceTrigger=PropertyChanged,
+                                                RelativeSource={RelativeSource Mode=FindAncestor,
+                                                                               AncestorType={x:Type views:ProfileSettingsView}}}"
+                          SelectedItem="{Binding SelectedGoogleAccount,
+                                                 Mode=TwoWay,
+                                                 UpdateSourceTrigger=PropertyChanged}" />
+                <StackPanel Grid.Row="1"
+                            Grid.Column="1"
                             HorizontalAlignment="Right"
-                            Grid.Row="1"
-                            Grid.Column="1">
-                    <Button Margin="2"
-                            Width="150"
-                            Command="{Binding Path=DataContext.DisconnectGoogleCommand,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type views:ProfileSettingsView}}}"
+                            Orientation="Horizontal">
+                    <Button Width="150"
+                            Margin="2"
+                            HorizontalAlignment="Right"
                             VerticalAlignment="Center"
-                            Content="Disconnect Account"
-                            HorizontalAlignment="Right" />
-                    <Button Margin="2"
-                            Width="150"
-                            Command="{Binding Path=DataContext.AddNewGoogleAccount,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type views:ProfileSettingsView}}}"
+                            Command="{Binding Path=DataContext.DisconnectGoogleCommand,
+                                              RelativeSource={RelativeSource Mode=FindAncestor,
+                                                                             AncestorType={x:Type views:ProfileSettingsView}}}"
+                            Content="{localizeExtension:LocText Key=GoogleSettingsView_Button_DisconnectAccount_Content}" />
+                    <Button Width="150"
+                            Margin="2"
                             VerticalAlignment="Center"
-                            Content="Add Google Account" />
+                            Command="{Binding Path=DataContext.AddNewGoogleAccount,
+                                              RelativeSource={RelativeSource Mode=FindAncestor,
+                                                                             AncestorType={x:Type views:ProfileSettingsView}}}"
+                            Content="{localizeExtension:LocText Key=GoogleSettingsView_Button_NewtAccount_Content}" />
                 </StackPanel>
-                
 
-                <TextBlock Text="Select Calendar"
+
+                <TextBlock Grid.Row="2"
+                           Grid.Column="0"
                            VerticalAlignment="Center"
-                           Grid.Row="2"
-                           Grid.Column="0" />
-                <ComboBox Margin="2"
-                          Grid.Row="2"
+                           Text="{localizeExtension:LocText Key=GoogleSettingsView_TextBlock_SelectCalendar_Text}" />
+                <ComboBox Grid.Row="2"
                           Grid.Column="1"
+                          Margin="2"
                           DisplayMemberPath="Name"
-                          ItemsSource="{Binding GoogleCalendars,UpdateSourceTrigger=PropertyChanged}"
-                          SelectedItem="{Binding SelectedCalendar,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
-                <StackPanel Orientation="Horizontal"
+                          ItemsSource="{Binding GoogleCalendars,
+                                                UpdateSourceTrigger=PropertyChanged}"
+                          SelectedItem="{Binding SelectedCalendar,
+                                                 Mode=TwoWay,
+                                                 UpdateSourceTrigger=PropertyChanged}" />
+                <StackPanel Grid.Row="3"
+                            Grid.Column="1"
                             HorizontalAlignment="Right"
-                            Grid.Row="3"
-                            Grid.Column="1">
-                    <Button Margin="2"
-                            Width="150"
+                            Orientation="Horizontal">
+                    <Button Width="150"
+                            Margin="2"
+                            HorizontalAlignment="Right"
                             VerticalAlignment="Center"
-                            Content="Reset Google Calendar"
                             Command="{Binding ResetGoogleCalendarCommand}"
-                            HorizontalAlignment="Right" />
-                    <Button Margin="2"
-                        Width="150"
-                        Command="{Binding GetGoogleCalendarCommand}"
-                        VerticalAlignment="Center"
-                        Content="Get Google Calendars"
-                        HorizontalAlignment="Right" />
+                            Content="{localizeExtension:LocText Key=GoogleSettingsView_Button_ResetCalendar_Content}" />
+                    <Button Width="150"
+                            Margin="2"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
+                            Command="{Binding GetGoogleCalendarCommand}"
+                            Content="{localizeExtension:LocText Key=GoogleSettingsView_Button_GetCalendar_Content}" />
 
-                
+
                 </StackPanel>
             </Grid>
         </GroupBox>

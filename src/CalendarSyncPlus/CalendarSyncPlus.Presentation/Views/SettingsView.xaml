@@ -7,6 +7,7 @@
              xmlns:wafConverters="http://waf.codeplex.com/schemas"
              xmlns:views="clr-namespace:CalendarSyncPlus.Presentation.Views"
              xmlns:viewModels="clr-namespace:CalendarSyncPlus.Application.ViewModels;assembly=CalendarSyncPlus.Application"
+             xmlns:localizeExtension="http://wpflocalizeextension.codeplex.com"
              mc:Ignorable="d"
              d:DesignHeight="600"
              d:DesignWidth="500"
@@ -70,26 +71,26 @@
         </ContentControl>
         <TabControl Grid.Row="1"
                     IsEnabled="{Binding Path=IsLoading,Converter={StaticResource ResourceKey=InvertBooleanConverter}}">
-            <TabItem Header="Calendars">
+            <TabItem Header="{localizeExtension:LocText Key=SettingsView_TabItem_Calendars_Header}">
                 <ScrollViewer VerticalScrollBarVisibility="Auto"
                               HorizontalScrollBarVisibility="Hidden">
                     <views:ProfileSettingsView DataContext="{Binding}" />
                 </ScrollViewer>
             </TabItem>
-            <TabItem Header="Manage">
+            <TabItem Header="{localizeExtension:LocText Key=SettingsView_TabItem_Manage_Header}">
                 <ScrollViewer VerticalScrollBarVisibility="Auto"
                               HorizontalScrollBarVisibility="Hidden">
                     <views:ManageProfilesView DataContext="{Binding}" />
                 </ScrollViewer>
             </TabItem>
-            <TabItem Header="Application">
+            <TabItem Header="{localizeExtension:LocText Key=SettingsView_TabItem_Application_Header}">
                 <ScrollViewer VerticalScrollBarVisibility="Auto"
                               HorizontalScrollBarVisibility="Hidden">
                     <views:AdvancedSettingsView DataContext="{Binding}" />
                 </ScrollViewer>
             </TabItem>
         </TabControl>
-        <Button Content="SAVE"
+        <Button Content="{localizeExtension:LocText Key=SettingsView_Button_Save_Content}"
                 Grid.Column="0"
                 Grid.Row="2"
                 HorizontalAlignment="Left"
