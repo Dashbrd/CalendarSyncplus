@@ -13,10 +13,10 @@ assembly_info:
 before_build:
 - nuget restore src\CalendarSyncPlus\CalendarSyncPlus.sln
 build:
-  project: src\CalendarSyncPlus\CalendarSyncPlus.Installer\CalendarSyncPlus.Installer.wixproj
+  project: src\CalendarSyncPlus\CalendarSyncPlus.InstallerBundle\CalendarSyncPlus.InstallerBundle.wixproj
   verbosity: normal
 artifacts:
-- path: src\CalendarSyncPlus\CalendarSyncPlus.Installer\bin\Release\CalendarSyncPlus.msi
+- path: src\CalendarSyncPlus\CalendarSyncPlus.InstallerBundle\bin\Release\CalendarSyncPlus.exe
   name: Installer
 deploy:
 - provider: GitHub
@@ -25,7 +25,7 @@ deploy:
   description: Build with latest fixes ;)
   auth_token:
     secure: 1MDHqxV1YdXO142uyU6OQMdf71UjYVDKlFdAid/xLD5A8w+C/htueN8iTeAyqb5e
-  artifact: src\CalendarSyncPlus\CalendarSyncPlus.Installer\bin\Release\CalendarSyncPlus.msi
+  artifact: src\CalendarSyncPlus\CalendarSyncPlus.InstallerBundle\bin\Release\CalendarSyncPlus.exe
   draft: true
   prerelease: true
   on:
