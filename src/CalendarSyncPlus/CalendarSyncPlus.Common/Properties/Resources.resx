@@ -388,4 +388,34 @@
   <data name="OutlookSettingsView_Button_OutlookProfileSettings_ResetOutlookCalendar_Text" xml:space="preserve">
     <value>Reset Outlook Calendar</value>
   </data>
+  <data name="ProfileSettingsView_GroupBox_SyncProfile_Header" xml:space="preserve">
+    <value>Select Sync Profile</value>
+  </data>
+  <data name="ProfileSettingsView_TextBlock_SelectProfile_Text" xml:space="preserve">
+    <value>Select Profile</value>
+  </data>
+  <data name="ProfileSettingsView_TabItem_Sync_Header" xml:space="preserve">
+    <value>Sync</value>
+  </data>
+  <data name="ProfileSettingsView_TabItem_Outlook_Header" xml:space="preserve">
+    <value>Outlook</value>
+  </data>
+  <data name="ProfileSettingsView_TabItem_Google_Header" xml:space="preserve">
+    <value>Google</value>
+  </data>
+  <data name="ProfileSettingsView_TabItem_Options_Header" xml:space="preserve">
+    <value>Options</value>
+  </data>
+  <data name="SettingsView_TabItem_Calendars_Header" xml:space="preserve">
+    <value>Calendars</value>
+  </data>
+  <data name="SettingsView_TabItem_Manage_Header" xml:space="preserve">
+    <value>Manage</value>
+  </data>
+  <data name="SettingsView_TabItem_Application_Header" xml:space="preserve">
+    <value>Application</value>
+  </data>
+  <data name="SettingsView_Button_Save_Content" xml:space="preserve">
+    <value>SAVE</value>
+  </data>
 </root>
