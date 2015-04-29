@@ -2,6 +2,13 @@
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
      xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension">
     <?define VERSION="!(bind.FileVersion.CalendarSyncPlus.exe)"?>
+  <Bundle>
+    <BootstrapperApplicationRef Id="WixStandardBootstrapperApplication.RtfLicense"/>
+    <Chain>
+      <PackageGroupRef Id="NetFx45Web" />
+      <MsiPackage Id="CalendarSyncPlusMsi" SourceFile="$(var.MyApplicationSetup.TargetPath)"/>
+    </Chain>
+  </Bundle>
   <Product Id="*" Name="Calendar Sync +" Language="1033" Version="$(var.VERSION)"
            Manufacturer="Ankesh Dave &amp; Akanksha Gaur"
            UpgradeCode="6A7B72FC-ED9B-4951-B733-AB54B8D4AE94" >
