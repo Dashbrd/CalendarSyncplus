@@ -50,6 +50,10 @@
   <ItemGroup>
     <Content Include="icon.ico" />
     <Content Include="license.rtf" />
+    <Content Include="Net45Installer\dotNetFx45_Full_setup.exe" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Net45Installer" />
   </ItemGroup>
   <Import Project="$(WixTargetsPath)" />
   <!--

@@ -12,21 +12,33 @@
            LicenseFile="license.rtf"
            LogoFile="icon.ico"
            ShowVersion="yes"
-           SuppressOptionsUI="yes"
             />
     </BootstrapperApplicationRef>
     <Variable Name="LaunchTarget"
            Value="[ProgramFilesFolder]Calendar Sync +\CalendarSyncPlus.exe"/>
+    <Variable Name="InstallFolder" Type="string" Value="[ProgramFilesFolder]Calendar Sync +"/>
     <Chain>
-      <PackageGroupRef Id="NetFx45Web" />
+      <PackageGroupRef Id="Netfx45FullPackage" />
       <RollbackBoundary />
-      <MsiPackage Id="CalendarSyncPlusMsi" 
-                Compressed="yes" 
+      <MsiPackage Id="CalendarSyncPlusMsi"
+                Compressed="yes"
+                  EnableFeatureSelection="yes"
                 Description="A utility to synchronize Outlook to Google calendars, vice versa and bidirectional."
-                SourceFile="$(var.CalendarSyncPlus.Installer.TargetPath)" 
-                ForcePerMachine="yes" Vital="yes"/>
+                SourceFile="$(var.CalendarSyncPlus.Installer.TargetPath)"
+                ForcePerMachine="yes" 
+                  Vital="yes">
+        <MsiProperty Name="INSTALLLOCATION" Value="[InstallFolder]" />
+      </MsiPackage>
   </Chain>
     <WixVariable Id="WixStdBALanguageId" Value="1033"/>
     
   </Bundle>
+  <Fragment>
+    <PackageGroup Id="Netfx45FullPackage">
+      <ExePackage Id="Netfx45Full" Cache="no" Compressed="no" PerMachine="yes" Permanent="yes" Vital="yes" InstallCommand="/q"
+          SourceFile="Net45Installer\dotNetFx45_Full_setup.exe"
+          DetectCondition="(Netfx4FullVersion=&quot;4.5.50709&quot;) AND (NOT VersionNT64 OR (Netfx4x64FullVersion=&quot;4.5.50709&quot;))"
+          InstallCondition="(VersionNT >= v6.0 OR VersionNT64 >= v6.0) AND (NOT (Netfx4FullVersion=&quot;4.5.50709&quot; OR Netfx4x64FullVersion=&quot;4.5.50709&quot;))"/>
+    </PackageGroup>
+  </Fragment>
 </Wix>
