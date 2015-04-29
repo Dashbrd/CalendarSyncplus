@@ -11,8 +11,8 @@
 namespace CalendarSyncPlus.Common.Properties
 {
     using System;
-
-
+    
+    
     /// <summary>
     ///   A strongly-typed resource class, for looking up localized strings, etc.
     /// </summary>
@@ -25,16 +25,16 @@ namespace CalendarSyncPlus.Common.Properties
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources
     {
-
+        
         private static global::System.Resources.ResourceManager resourceMan;
-
+        
         private static global::System.Globalization.CultureInfo resourceCulture;
-
+        
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         internal Resources()
         {
         }
-
+        
         /// <summary>
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
@@ -51,7 +51,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return resourceMan;
             }
         }
-
+        
         /// <summary>
         ///   Overrides the current thread's CurrentUICulture property for all
         ///   resource lookups using this strongly typed resource class.
@@ -68,7 +68,7 @@ namespace CalendarSyncPlus.Common.Properties
                 resourceCulture = value;
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Check For updates.
         /// </summary>
@@ -79,7 +79,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("AboutView_Button_CheckForUpdate_Content", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Download Now.
         /// </summary>
@@ -90,7 +90,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("AboutView_Button_DownloadNow_Content", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to This is a free utility. To report issues/flaws or share appreciation, comments and further suggestions, Please go to the following link..
         /// </summary>
@@ -101,7 +101,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("AboutView_Textblock_BugReportComment", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Contributors:.
         /// </summary>
@@ -112,7 +112,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("AboutView_TextBlock_Contributers", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Support Us: Buy us a coffee/beer.
         /// </summary>
@@ -123,7 +123,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("AboutView_Textblock_SupportUsComment", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Please click on &apos;Help&apos; learn how to use this application..
         /// </summary>
@@ -134,7 +134,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("AboutView_Textblock_UseHelpSuggestionComment", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Check For Updates.
         /// </summary>
@@ -145,7 +145,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("AdvancedSettingsView_Checkbox_CheckForUpdates_Content", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Close button minimizes to tray.
         /// </summary>
@@ -156,7 +156,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("AdvancedSettingsView_Checkbox_CloseToSystemTray_Content", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Hide sync notification.
         /// </summary>
@@ -167,7 +167,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("AdvancedSettingsView_Checkbox_HideSystemTrayNotification_Content", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Use Default Credential.
         /// </summary>
@@ -178,7 +178,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("AdvancedSettingsView_CheckBox_ProxySettings_UseDefaultCredentials_Content", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Run CalendarSync+ when computer starts.
         /// </summary>
@@ -189,7 +189,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("AdvancedSettingsView_Checkbox_RunAtStartup_Content", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Select this option to automatically check for latest version of this application.
         /// </summary>
@@ -200,7 +200,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("AdvancedSettingsView_ContentControl_CheckForUpdates_Tooltip", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Select this option to minimize to system tray on closing the window.
         /// </summary>
@@ -211,7 +211,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("AdvancedSettingsView_ContentControl_HelpButtonCloseToSystray_Tooltip", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Select this option to hide system tray tooltip.
         /// </summary>
@@ -222,7 +222,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("AdvancedSettingsView_ContentControl_HelpButtonHideSystrayNotification_Tooltip", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Select this option to start CalendarSync+ when computer starts.
         /// </summary>
@@ -233,7 +233,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("AdvancedSettingsView_ContentControl_HelpButtonRunAtStartup_Tooltip", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Select this option to configure Synchronization Mode.
         /// </summary>
@@ -244,7 +244,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("AdvancedSettingsView_ContentControl_HelpButtonSynchronizationMode_Tooltip", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Auto Detect.
         /// </summary>
@@ -255,7 +255,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("AdvancedSettingsView_RadioButton_ProxySettings_AutoDetect_Content", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Manual Proxy Configuration.
         /// </summary>
@@ -266,7 +266,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("AdvancedSettingsView_RadioButton_ProxySettings_ManualProxy_Content", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to No Proxy.
         /// </summary>
@@ -277,7 +277,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("AdvancedSettingsView_RadioButton_ProxySettings_NoProxy_Content", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Auto Synchronization.
         /// </summary>
@@ -288,7 +288,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("AdvancedSettingsView_RadioButton_Synchronization_AutoSync_Content", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Manual Synchronization.
         /// </summary>
@@ -299,7 +299,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("AdvancedSettingsView_RadioButton_Synchronization_ManualSync_Content", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to More advanced features are yet to come ;).
         /// </summary>
@@ -310,7 +310,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("AdvancedSettingsView_TextBlock_MoreFeaturesNote_Content", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Domain.
         /// </summary>
@@ -321,7 +321,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("AdvancedSettingsView_TextBlock_ProxySettings_Domain_Content", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Password.
         /// </summary>
@@ -332,7 +332,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("AdvancedSettingsView_TextBlock_ProxySettings_Password_Content", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Http Proxy:.
         /// </summary>
@@ -343,7 +343,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("AdvancedSettingsView_TextBlock_ProxySettings_ProxyAddress_Content", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Port No:.
         /// </summary>
@@ -354,7 +354,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("AdvancedSettingsView_TextBlock_ProxySettings_ProxyPort_Content", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Username.
         /// </summary>
@@ -365,7 +365,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("AdvancedSettingsView_TextBlock_ProxySettings_Username_Content", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Disconnect Account.
         /// </summary>
@@ -376,7 +376,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("GoogleSettingsView_Button_DisconnectAccount_Content", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Get Google Calendars.
         /// </summary>
@@ -387,7 +387,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("GoogleSettingsView_Button_GetCalendar_Content", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Add Google Account.
         /// </summary>
@@ -398,7 +398,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("GoogleSettingsView_Button_NewtAccount_Content", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Reset Google Calendar.
         /// </summary>
@@ -409,7 +409,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("GoogleSettingsView_Button_ResetCalendar_Content", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Select Google Calendar.
         /// </summary>
@@ -420,7 +420,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("GoogleSettingsView_GroupBox_Header", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Select Account.
         /// </summary>
@@ -431,7 +431,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("GoogleSettingsView_TextBlock_SelectAccount_Text", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Select Calendar.
         /// </summary>
@@ -442,7 +442,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("GoogleSettingsView_TextBlock_SelectCalendar_Text", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Start Periodic Sync.
         /// </summary>
@@ -453,7 +453,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("HomeView_Button_StartSync_Content_Start", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Stop Periodic Sync.
         /// </summary>
@@ -464,7 +464,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("HomeView_Button_StartSync_Content_Stop", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Sync Now.
         /// </summary>
@@ -475,7 +475,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("HomeView_Button_SyncNow_Content", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to New.
         /// </summary>
@@ -486,7 +486,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("ManageProfileView_Button_New_Content", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Delete.
         /// </summary>
@@ -497,7 +497,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("ManageProfileView_DataGrid_Column_DeleteColumn_Header", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Name.
         /// </summary>
@@ -508,7 +508,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("ManageProfileView_DataGrid_Column_NameColumn_Header", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Sync.
         /// </summary>
@@ -519,7 +519,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("ManageProfileView_DataGrid_Column_SyncColumn_Header", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Manage Calendar Profiles.
         /// </summary>
@@ -530,7 +530,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("ManageProfileView_GroupBox_Header", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Set Category To Appointments.
         /// </summary>
@@ -541,7 +541,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("OptionsSettingsView_CheckBox_Category_Content", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Add Attachments.
         /// </summary>
@@ -552,7 +552,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("OptionsSettingsView_CheckBox_DestinationCalendarOptions_AddAttachments_Content", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Add Attendees.
         /// </summary>
@@ -563,7 +563,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("OptionsSettingsView_CheckBox_DestinationCalendarOptions_AddAttendees_Content", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Select this option to add attendees to appointment.
         /// </summary>
@@ -574,7 +574,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("OptionsSettingsView_CheckBox_DestinationCalendarOptions_AddAttendees_ToolTip", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Add Attendees to Description.
         /// </summary>
@@ -586,7 +586,7 @@ namespace CalendarSyncPlus.Common.Properties
                         "ontent", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Select this option to add attendees to appointment description instead of TO/CC/BCC fields.
         /// </summary>
@@ -598,7 +598,7 @@ namespace CalendarSyncPlus.Common.Properties
                         "oolTip", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Add Description.
         /// </summary>
@@ -609,7 +609,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("OptionsSettingsView_CheckBox_DestinationCalendarOptions_AddDescription_Content", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Select this option to add description to the calendarAppointments.
         /// </summary>
@@ -620,7 +620,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("OptionsSettingsView_CheckBox_DestinationCalendarOptions_AddDescription_ToolTip", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Add events with no recipients as appointments.
         /// </summary>
@@ -632,7 +632,7 @@ namespace CalendarSyncPlus.Common.Properties
                         "ntent", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Select this option to add events from Google without recipients as appointments in outlook..
         /// </summary>
@@ -644,7 +644,7 @@ namespace CalendarSyncPlus.Common.Properties
                         "olTip", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Select this option to add reminders of the appointment. Note: Outlook gives default reminder messages for all calendarAppointments. To disable please go to your outlook settings..
         /// </summary>
@@ -655,7 +655,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("OptionsSettingsView_CheckBox_DestinationCalendarOptions_AddReminder_ToolTip", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Add Reminders.
         /// </summary>
@@ -666,7 +666,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("OptionsSettingsView_CheckBox_DestinationCalendarOptions_AddReminders_Content", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Confirm on Delete.
         /// </summary>
@@ -677,7 +677,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("OptionsSettingsView_CheckBox_OtherOptions_ConfirmDelete_Content", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Display Confirm Dialog before deleting an Appointement.
         /// </summary>
@@ -688,7 +688,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("OptionsSettingsView_CheckBox_OtherOptions_ConfirmDelete_ToolTip", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Disable Delete.
         /// </summary>
@@ -699,7 +699,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("OptionsSettingsView_CheckBox_OtherOptions_DisableDelete_Content", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Disable Delete when Syncing Calendars.
         /// </summary>
@@ -710,7 +710,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("OptionsSettingsView_CheckBox_OtherOptions_DisableDelete_ToolTip", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Keep Last Modified Version (For Bidirectional only).
         /// </summary>
@@ -721,7 +721,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("OptionsSettingsView_CheckBox_OtherOptions_KeepLastModified_Content", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Category.
         /// </summary>
@@ -732,7 +732,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("OptionsSettingsView_GroupBox_Category_Header", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Destination Calendar Entry Options.
         /// </summary>
@@ -743,7 +743,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("OptionsSettingsView_GroupBox_DestinationCalendarOptions_Header", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Other.
         /// </summary>
@@ -754,7 +754,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("OptionsSettingsView_GroupBox_OtherOptions_Header", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Help text here.
         /// </summary>
@@ -765,7 +765,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("OptionsSettingsView_HelpButton_Category_Tooltip", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Detect Settings.
         /// </summary>
@@ -776,7 +776,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("OutlookSettingsView_Button_ExchnageSettings_DetectSettings_Content", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Reset Exchange Calendar.
         /// </summary>
@@ -787,7 +787,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("OutlookSettingsView_Button_ExchnageSettings_ResetExchangeCalendar_Content", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Reset Outlook Calendar.
         /// </summary>
@@ -798,7 +798,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("OutlookSettingsView_Button_OutlookProfileSettings_ResetOutlookCalendar_Text", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Exchange Web Services.
         /// </summary>
@@ -809,7 +809,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("OutlookSettingsView_CheckBox_OutlookSettings_EWS_Content", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Outlook Application.
         /// </summary>
@@ -820,7 +820,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("OutlookSettingsView_CheckBox_OutlookSettings_OutlookApplicaiton_Content", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Exchange Server Settings.
         /// </summary>
@@ -831,7 +831,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("OutlookSettingsView_GroupBox_ExchnageSettings_Header", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Profile &amp;amp; MailBox Settings.
         /// </summary>
@@ -842,7 +842,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("OutlookSettingsView_GroupBox_OutlookProfileSettings_Header", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Outlook Settings.
         /// </summary>
@@ -853,7 +853,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("OutlookSettingsView_GroupBox_OutlookSettings_Header", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Choose Another MailBox.
         /// </summary>
@@ -865,7 +865,7 @@ namespace CalendarSyncPlus.Common.Properties
                         "nt", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Choose Profile.
         /// </summary>
@@ -876,7 +876,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("OutlookSettingsView_RadioButton_OutlookProfileSettings_ChooseProfile_Content", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Default MailBox and Calendar.
         /// </summary>
@@ -888,7 +888,7 @@ namespace CalendarSyncPlus.Common.Properties
                         "nt", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Default Profile.
         /// </summary>
@@ -899,7 +899,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("OutlookSettingsView_RadioButton_OutlookProfileSettings_DefaultProfile_Content", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Select Profile.
         /// </summary>
@@ -910,7 +910,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("OutlookSettingsView_RadioButton_OutlookProfileSettings_SelectProfile_Content", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Domain.
         /// </summary>
@@ -921,7 +921,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("OutlookSettingsView_TextBlock_ExchnageSettings_Domain_Text", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Password.
         /// </summary>
@@ -932,7 +932,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("OutlookSettingsView_TextBlock_ExchnageSettings_Password_Text", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Select Calendar.
         /// </summary>
@@ -943,7 +943,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("OutlookSettingsView_TextBlock_ExchnageSettings_SelectCalendar_Content", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Exchange Server Url.
         /// </summary>
@@ -954,7 +954,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("OutlookSettingsView_TextBlock_ExchnageSettings_ServerUrl_Text", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Username.
         /// </summary>
@@ -965,7 +965,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("OutlookSettingsView_TextBlock_ExchnageSettings_UserName_Text", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Select Profile.
         /// </summary>
@@ -976,7 +976,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("OutlookSettingsView_TextBlock_OutlookProfileSettings_ChooseProfile_Text", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Select Calendar.
         /// </summary>
@@ -987,7 +987,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("OutlookSettingsView_TextBlock_OutlookProfileSettings_SelectCalendar_Text", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Select MailBox.
         /// </summary>
@@ -998,7 +998,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("OutlookSettingsView_TextBlock_OutlookProfileSettings_SelectMailBox_Text", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Select Sync Profile.
         /// </summary>
@@ -1009,7 +1009,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("ProfileSettingsView_GroupBox_SyncProfile_Header", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Google.
         /// </summary>
@@ -1020,7 +1020,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("ProfileSettingsView_TabItem_Google_Header", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Options.
         /// </summary>
@@ -1031,7 +1031,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("ProfileSettingsView_TabItem_Options_Header", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Outlook.
         /// </summary>
@@ -1042,7 +1042,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("ProfileSettingsView_TabItem_Outlook_Header", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Sync.
         /// </summary>
@@ -1053,7 +1053,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("ProfileSettingsView_TabItem_Sync_Header", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Select Profile.
         /// </summary>
@@ -1064,7 +1064,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("ProfileSettingsView_TextBlock_SelectProfile_Text", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to SAVE.
         /// </summary>
@@ -1075,7 +1075,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("SettingsView_Button_Save_Content", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Application.
         /// </summary>
@@ -1086,7 +1086,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("SettingsView_TabItem_Application_Header", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Calendars.
         /// </summary>
@@ -1097,7 +1097,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("SettingsView_TabItem_Calendars_Header", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Manage.
         /// </summary>
@@ -1108,7 +1108,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("SettingsView_TabItem_Manage_Header", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to About.
         /// </summary>
@@ -1119,7 +1119,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("ShellView_AboutButton_Content", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to About Calendar Sync +.
         /// </summary>
@@ -1130,7 +1130,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("ShellView_AboutButton_ToolTip", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Exit.
         /// </summary>
@@ -1141,7 +1141,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("ShellView_ExitButton_Content", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Exit Application.
         /// </summary>
@@ -1152,7 +1152,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("ShellView_ExitButton_ToolTip", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to About.
         /// </summary>
@@ -1163,7 +1163,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("ShellView_Flyouts_About_Header", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Help.
         /// </summary>
@@ -1174,7 +1174,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("ShellView_Flyouts_Help_Header", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Preferences.
         /// </summary>
@@ -1185,7 +1185,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("ShellView_Flyouts_Settings_Header", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Help.
         /// </summary>
@@ -1196,7 +1196,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("ShellView_HelpButton_Content", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Help.
         /// </summary>
@@ -1207,7 +1207,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("ShellView_HelpButton_ToolTip", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to New version available for download.
         /// </summary>
@@ -1218,7 +1218,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("ShellView_RightWindowCommands_Download_Tooltip", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Preferences.
         /// </summary>
@@ -1229,7 +1229,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("ShellView_SettingsButton_Content", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Configure Calendar Sync +.
         /// </summary>
@@ -1240,7 +1240,7 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("ShellView_SettingsButton_ToolTip", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Calendar Sync +.
         /// </summary>
@@ -1656,6 +1656,33 @@ namespace CalendarSyncPlus.Common.Properties
             get
             {
                 return ResourceManager.GetString("SyncSettingsView_TextBlock_WeeklyWeekday_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Exit.
+        /// </summary>
+        public static string SystemtrayNotifierView_MenuItem_TaskBarIcon_ExitApplicaiton_Header {
+            get {
+                return ResourceManager.GetString("SystemtrayNotifierView_MenuItem_TaskBarIcon_ExitApplicaiton_Header", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show Window.
+        /// </summary>
+        public static string SystemtrayNotifierView_MenuItem_TaskBarIcon_ShowWindowMessage_Header {
+            get {
+                return ResourceManager.GetString("SystemtrayNotifierView_MenuItem_TaskBarIcon_ShowWindowMessage_Header", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Double click to maximize the application..
+        /// </summary>
+        public static string SystemtrayNotifierView_TextBlock_TaskBarIcon_MaximizeMessage_ToolTip {
+            get {
+                return ResourceManager.GetString("SystemtrayNotifierView_TextBlock_TaskBarIcon_MaximizeMessage_ToolTip", resourceCulture);
             }
         }
     }
