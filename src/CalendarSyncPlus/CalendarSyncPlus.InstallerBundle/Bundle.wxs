@@ -11,33 +11,32 @@
       <bal:WixStandardBootstrapperApplication
            LicenseFile="license.rtf"
            LogoFile="icon.ico"
-           ShowVersion="yes"
+           ShowVersion="yes" LogoSideFile="icon.ico"
             />
     </BootstrapperApplicationRef>
-    <PayloadGroup Id="NetFx452RedistPayload">
+    <!--<PayloadGroup Id="NetFx452RedistPayload">
       <Payload Name="redist\dotNetFx45_Full_setup.exe"
                SourceFile="Net45Installer\dotNetFx45_Full_setup.exe"
                 Compressed="yes"/>
-    </PayloadGroup>
+    </PayloadGroup>-->
     
     <Variable Name="LaunchTarget"
            Value="[ProgramFilesFolder]Calendar Sync +\CalendarSyncPlus.exe"/>
     <Variable Name="InstallFolder" Type="string" Value="[ProgramFilesFolder]Calendar Sync +"/>
     <Chain>
-      <PackageGroupRef Id="NetFx45Web"/>
-      <RollbackBoundary />
+      <PackageGroupRef Id="NetFx451Web"/>
+      <RollbackBoundary  />
       <MsiPackage Id="CalendarSyncPlusMsi"
                 Compressed="yes"
                   EnableFeatureSelection="yes"
                 Description="A utility to synchronize Outlook to Google calendars, vice versa and bidirectional."
                 SourceFile="$(var.CalendarSyncPlus.Installer.TargetPath)"
-                ForcePerMachine="yes" 
+                ForcePerMachine="yes"  
                   Vital="yes">
         <MsiProperty Name="INSTALLLOCATION" Value="[InstallFolder]" />
       </MsiPackage>
   </Chain>
     <WixVariable Id="WixStdBALanguageId" Value="1033"/>
-    
   </Bundle>
   <!--<Fragment>
     <PackageGroup Id="Netfx45FullPackage">
