@@ -469,6 +469,10 @@ namespace CalendarSyncPlus.Application.ViewModels
             set
             {
                 SetProperty(ref _selectedGoogleAccount, value);
+                if (_selectedGoogleAccount != null)
+                {
+                    GetGoogleCalendar();
+                }
             }
         }
 
@@ -637,7 +641,7 @@ namespace CalendarSyncPlus.Application.ViewModels
         {
             try
             {
-                if (SelectedGoogleAccount.Name == null)
+                if (SelectedGoogleAccount == null || SelectedGoogleAccount.Name == null)
                 {
                     return;
                 }
@@ -646,9 +650,15 @@ namespace CalendarSyncPlus.Application.ViewModels
                 GoogleCalendars = calendars;
                 if (GoogleCalendars.Any())
                 {
-                    SelectedCalendar = SyncProfile != null && SyncProfile.GoogleAccount != null && SyncProfile.GoogleAccount.GoogleCalendar != null
-                        ? GoogleCalendars.FirstOrDefault(t => t.Id.Equals(SyncProfile.GoogleAccount.GoogleCalendar.Id))
-                        : GoogleCalendars.First();
+                    if (SyncProfile != null && SyncProfile.GoogleAccount != null && SyncProfile.GoogleAccount.GoogleCalendar != null)
+                    {
+                        SelectedCalendar = GoogleCalendars.FirstOrDefault(t => t.Id.Equals(SyncProfile.GoogleAccount.GoogleCalendar.Id));
+                    }
+
+                    if (SelectedCalendar == null)
+                    {
+                        SelectedCalendar = GoogleCalendars.First();
+                    }
                 }
             }
             catch (Exception exception)
