@@ -16,11 +16,11 @@
            ShowVersion="yes" LogoSideFile="icon.ico"
             />
     </BootstrapperApplicationRef>
-    <!--<PayloadGroup Id="NetFx452RedistPayload">
+    <PayloadGroup Id="NetFx45RedistPayload">
       <Payload Name="redist\dotNetFx45_Full_setup.exe"
                SourceFile="Net45Installer\dotNetFx45_Full_setup.exe"
                 Compressed="yes"/>
-    </PayloadGroup>-->
+    </PayloadGroup>
     
     <Variable Name="LaunchTarget"
            Value="[ProgramFilesFolder]Calendar Sync +\CalendarSyncPlus.exe"/>
