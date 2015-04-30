@@ -71,20 +71,20 @@ namespace CalendarSyncPlus.Services
 
         /// <summary>
         /// </summary>
-        
+
         /// <param name="endDate"></param>
         /// <param name="sourceCalendarSpecificData"></param>
         /// <param name="destinationCalendarSpecificData"></param>
         /// <param name="startDate"></param>
         /// <returns></returns>
-        private bool LoadAppointments(DateTime startDate,DateTime endDate, IDictionary<string, object> sourceCalendarSpecificData,
+        private bool LoadAppointments(DateTime startDate, DateTime endDate, IDictionary<string, object> sourceCalendarSpecificData,
             IDictionary<string, object> destinationCalendarSpecificData)
         {
             //Update status
             SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
             SyncStatus = StatusHelper.GetMessage(SyncStateEnum.SourceAppointmentsReading,
                 SourceCalendarService.CalendarServiceName);
-            
+
             //Get source calendar
             SourceAppointments =
                 SourceCalendarService.GetCalendarEventsInRangeAsync(startDate, endDate, sourceCalendarSpecificData)
@@ -145,7 +145,7 @@ namespace CalendarSyncPlus.Services
                         break;
                     }
 
-                    if(!isFound)
+                    if (!isFound)
                     {
                         //Check if destination entry is a copy of source entry
                         //Or if source entry is a copy of destination entry
@@ -225,7 +225,7 @@ namespace CalendarSyncPlus.Services
                     }
                 }
             }
-            
+
             return isMatch;
         }
 
@@ -563,6 +563,11 @@ namespace CalendarSyncPlus.Services
 
         public ICalendarService DestinationCalendarService { get; set; }
 
+        public ApplicationLogger ApplicationLogger
+        {
+            get { return _applicationLogger; }
+        }
+
         public bool SyncCalendar(CalendarSyncProfile syncProfile, SyncCallback syncCallback)
         {
             InitiatePreSyncSetup(syncProfile);
@@ -576,7 +581,7 @@ namespace CalendarSyncPlus.Services
                     syncProfile.SyncSettings.SyncMode == SyncModeEnum.TwoWay ? "<===>" : "===>");
                 SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
                 DateTime startDate, endDate;
-                GetDateRange(syncProfile,out startDate, out endDate);
+                GetDateRange(syncProfile, out startDate, out endDate);
                 //Add log for date range
                 SyncStatus = string.Format("Date Range : {0} - {1}",
                     startDate.ToString("d"),
@@ -629,7 +634,7 @@ namespace CalendarSyncPlus.Services
             return isSuccess;
         }
 
-        private void GetDateRange(CalendarSyncProfile syncProfile,out DateTime startDate, out DateTime endDate)
+        private void GetDateRange(CalendarSyncProfile syncProfile, out DateTime startDate, out DateTime endDate)
         {
             startDate = syncProfile.SyncSettings.StartDate.Date;
             endDate = syncProfile.SyncSettings.EndDate.Date;

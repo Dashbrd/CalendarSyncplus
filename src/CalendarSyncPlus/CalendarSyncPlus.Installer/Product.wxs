@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
      xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension">
-    <?define VERSION="!(bind.FileVersion.CalendarSyncPlus.exe)"?>
+  <?define VERSION="!(bind.FileVersion.CalendarSyncPlus.exe)"?>
   <Product Id="*" Name="Calendar Sync +" Language="1033" Version="$(var.VERSION)"
            Manufacturer="Ankesh Dave &amp; Akanksha Gaur"
            UpgradeCode="6A7B72FC-ED9B-4951-B733-AB54B8D4AE94" >
-
     <Package Id="*" InstallerVersion="405" Manufacturer="Ankesh Dave &amp; Akanksha Gaur" Platform="x86"
              Compressed="yes" Description="A utility to synchronize Outlook to Google calendars, vice versa and bidirectional."/>
     <!--Upgrade Message-->
@@ -22,14 +21,15 @@
     <!--Packaging features-->
     <Feature Id="ProductFeature" Title="Calendar Sync +" Level="1">
       <ComponentGroupRef Id="ProductComponents" />
+      <ComponentGroupRef Id="UserGuide" />
       <ComponentGroupRef Id="ApplicationShortcuts" />
     </Feature>
 
-    <!--Custom Dialog Sequence-->
+    <!--Custom Dialog Sequence--><!--
     <UI>
       <UIRef Id="WixUI_ErrorProgressText" />
       <UIRef Id="UISequence" />
-    </UI>
+    </UI>-->
 
     <Icon Id="icon.ico" SourceFile="..\CalendarSyncPlus.Presentation\icon.ico"/>
     <Property Id="ARPPRODUCTICON" Value="icon.ico" />
@@ -37,7 +37,9 @@
     <Directory Id="TARGETDIR" Name="SourceDir">
       <!--Install Directory structure-->
       <Directory Id="ProgramFilesFolder">
-        <Directory Id="INSTALLFOLDER" Name="Calendar Sync +" />
+        <Directory Id="INSTALLFOLDER" Name="Calendar Sync +" >
+          <Directory Id="USERGUIDEFOLDER" Name="UserGuide" />
+        </Directory>
       </Directory>
       <!--Shortcut Directory structure-->
       <Directory Id="ProgramMenuFolder">
@@ -68,4 +70,5 @@
     </ComponentGroup>
 
   </Product>
+  
 </Wix>

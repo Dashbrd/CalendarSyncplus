@@ -244,7 +244,7 @@ namespace CalendarSyncPlus.Application.ViewModels
 
             if (!string.IsNullOrEmpty(result))
             {
-                if (SyncProfileList.Any(t => t.Name.Equals(result)))
+                if (SyncProfileList.Any(t => !string.IsNullOrEmpty(t.Name) && t.Name.Equals(result)))
                 {
                     MessageService.ShowMessageAsync(
                         string.Format("A Profile with name '{0}' already exists. Please try again.", result));
@@ -257,6 +257,7 @@ namespace CalendarSyncPlus.Application.ViewModels
                 var viewModel = new ProfileViewModel(syncProfile, GoogleCalendarService, OutlookCalendarService,
                     MessageService,
                     ExchangeWebCalendarService, ApplicationLogger, AccountAuthenticationService);
+                viewModel.Initialize();
                 SyncProfileList.Add(viewModel);
                 PropertyChangedEventManager.AddHandler(viewModel, ProfilePropertyChangedHandler, "IsLoading");
             }
@@ -327,10 +328,16 @@ namespace CalendarSyncPlus.Application.ViewModels
                 return;
             }
 
+            if (GoogleAccounts != null &&
+                GoogleAccounts.Any(t => t.Name.Equals(accountName, StringComparison.InvariantCultureIgnoreCase)))
+            {
+                MessageService.ShowMessageAsync("An account with the same email already exists. Please try again.");
+                return;
+            }
             // Start progress controller
             var progressDialogController =
                 await MessageService.ShowProgress("Authenticate and Authorize in the browser window", "Add Google Account");
-            //Delay for Prepradness
+            //Delay for Preparedness
             await Task.Delay(5000);
 
             progressDialogController.SetIndeterminate();
@@ -378,9 +385,9 @@ namespace CalendarSyncPlus.Application.ViewModels
             else
             {
                 var account = new GoogleAccount() { Name = accountName };
-                if (GoogleAccounts==null)
+                if (GoogleAccounts == null)
                 {
-                    GoogleAccounts= new ObservableCollection<GoogleAccount>();
+                    GoogleAccounts = new ObservableCollection<GoogleAccount>();
                 }
                 GoogleAccounts.Add(account);
                 SelectedProfile.SelectedGoogleAccount = account;
@@ -402,7 +409,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             Settings.AppSettings.CheckForUpdates = CheckForUpdates;
             Settings.AppSettings.RunApplicationAtSystemStartup = RunApplicationAtSystemStartup;
             Settings.AppSettings.IsManualSynchronization = IsManualSynchronization;
-            
+
             Settings.AppSettings.ProxySettings = new ProxySetting()
             {
                 BypassOnLocal = ProxySettings.BypassOnLocal,
@@ -504,7 +511,7 @@ namespace CalendarSyncPlus.Application.ViewModels
                                 ? GoogleAccounts.FirstOrDefault(
                                     account => account.Name == syncProfile.GoogleAccount.Name)
                                 : null;
-                        if (googleAccount!=null)
+                        if (googleAccount != null)
                         {
                             googleAccount.GoogleCalendar = syncProfile.GoogleAccount.GoogleCalendar;
                         }
@@ -552,7 +559,7 @@ namespace CalendarSyncPlus.Application.ViewModels
                 var googleAccount =
                     GoogleAccounts.FirstOrDefault(account => account.Name == SelectedProfile.SelectedGoogleAccount.Name);
 
-                if (googleAccount!=null)
+                if (googleAccount != null)
                 {
                     GoogleAccounts.Remove(googleAccount);
                 }

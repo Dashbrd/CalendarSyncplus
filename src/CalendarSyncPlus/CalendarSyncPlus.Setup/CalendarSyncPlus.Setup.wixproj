@@ -4,13 +4,12 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProductVersion>3.9</ProductVersion>
-    <ProjectGuid>5dd77441-69ec-48e9-995c-9eed1217a67b</ProjectGuid>
+    <ProjectGuid>27cfe5c4-977f-44d5-b557-fa788c95d7a4</ProjectGuid>
     <SchemaVersion>2.0</SchemaVersion>
-    <OutputName>CalendarSyncPlus</OutputName>
+    <OutputName>CalendarSyncPlus.Setup</OutputName>
     <OutputType>Package</OutputType>
     <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' AND '$(MSBuildExtensionsPath32)' != '' ">$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath>
     <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' ">$(MSBuildExtensionsPath)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath>
-    <Name>CalendarSyncPlus.Installer</Name>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <OutputPath>bin\$(Configuration)\</OutputPath>
@@ -20,41 +19,9 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
-    <SuppressValidation>True</SuppressValidation>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="DependentLibraries.wxs" />
     <Compile Include="Product.wxs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="ReferenceBinaries\Microsoft.Office.Interop.Outlook.dll" />
-  </ItemGroup>
-  <ItemGroup>
-    <WixExtension Include="WixUtilExtension">
-      <HintPath>$(WixExtDir)\WixUtilExtension.dll</HintPath>
-      <Name>WixUtilExtension</Name>
-    </WixExtension>
-    <WixExtension Include="WixUIExtension">
-      <HintPath>$(WixExtDir)\WixUIExtension.dll</HintPath>
-      <Name>WixUIExtension</Name>
-    </WixExtension>
-    <WixExtension Include="WixNetFxExtension">
-      <HintPath>$(WixExtDir)\WixNetFxExtension.dll</HintPath>
-      <Name>WixNetFxExtension</Name>
-    </WixExtension>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="ReferenceBinaries" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\CalendarSyncPlus.Presentation\CalendarSyncPlus.Presentation.csproj">
-      <Name>CalendarSyncPlus.Presentation</Name>
-      <Project>{fd588ebb-eac6-4b5f-9644-fa9fa22268f7}</Project>
-      <Private>True</Private>
-      <DoNotHarvest>True</DoNotHarvest>
-      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
-      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(WixTargetsPath)" />
   <!--

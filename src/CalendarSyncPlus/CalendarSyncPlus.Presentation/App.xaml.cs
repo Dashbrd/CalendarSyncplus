@@ -43,6 +43,9 @@ using CalendarSyncPlus.Presentation.Services.SingleInstance;
 using CalendarSyncPlus.Services;
 using CalendarSyncPlus.Services.Interfaces;
 
+using WPFLocalizeExtension.Engine;
+using WPFLocalizeExtension.Providers;
+
 #endregion
 
 namespace CalendarSyncPlus.Presentation
@@ -67,6 +70,13 @@ namespace CalendarSyncPlus.Presentation
             DispatcherHelper.Initialize();
             ToolTipService.ShowDurationProperty.OverrideMetadata(
                         typeof(DependencyObject), new FrameworkPropertyMetadata(Int32.MaxValue));
+            LocalizationInit();
+        }
+
+        private static void LocalizationInit()
+        {
+            ResxLocalizationProvider.Instance.FallbackAssembly = "CalendarSyncPlus.Common";
+            ResxLocalizationProvider.Instance.FallbackDictionary = "Resources";
         }
 
         public App(bool startMinimized = false)

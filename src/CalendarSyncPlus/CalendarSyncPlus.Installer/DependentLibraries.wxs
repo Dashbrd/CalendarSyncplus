@@ -3,11 +3,19 @@
 	<Fragment>
     <!--Defined Directory Variables-->
     <?define ProjectDirectory = "$(var.CalendarSyncPlus.Presentation.TargetDir)"?>
-    <?define Net45Directory = "C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5"?>
-    <?define Net45FacadeDirectory = "$(var.Net45Directory)\Facades"?>
+    <?define Net45Directory = "C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\"?>
+    <?define Net45FacadeDirectory = "$(var.Net45Directory)\Facades\"?>
     
 
     <!--Dependent libraries-->
+    <ComponentGroup Id="UserGuide" Directory="USERGUIDEFOLDER">
+      <Component>
+        <File Id="HowToUseGuide"
+            Name="HowToUseGuide.xps"
+            Source="$(var.ProjectDirectory)UserGuide\HowToUseGuide.xps"
+            KeyPath="yes" />
+      </Component>
+    </ComponentGroup>
     <ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER" >
       <Component>
         <File Id="CalendarSyncPlus.Common"
@@ -69,6 +77,24 @@
       </Component>
 
       <!--Project Dependencies-->
+      <Component>
+        <File Id="XAMLMarkupExtensions"
+          Name="XAMLMarkupExtensions.dll"
+          Source="$(var.ProjectDirectory)XAMLMarkupExtensions.dll"
+          KeyPath="yes" />
+      </Component>
+      <Component>
+        <File Id="WPFLocalizeExtension"
+          Name="WPFLocalizeExtension.dll"
+          Source="$(var.ProjectDirectory)WPFLocalizeExtension.dll"
+          KeyPath="yes" />
+      </Component>
+      <Component>
+        <File Id="ReachFramework"
+          Name="ReachFramework.dll"
+          Source="$(var.Net45Directory)ReachFramework.dll"
+          KeyPath="yes" />
+      </Component>
       <Component>
         <File Id="log4net"
           Name="log4net.dll"
@@ -216,171 +242,171 @@
       <Component>
         <File Id="System.Collections.Concurrent"
           Name="System.Collections.Concurrent.dll"
-          Source="$(var.Net45FacadeDirectory)\System.Collections.Concurrent.dll"
+          Source="$(var.Net45FacadeDirectory)System.Collections.Concurrent.dll"
           KeyPath="yes" />
       </Component>
       <Component>
         <File Id="System.Collections"
           Name="System.Collections.dll"
-          Source="$(var.Net45FacadeDirectory)\System.Collections.dll"
+          Source="$(var.Net45FacadeDirectory)System.Collections.dll"
           KeyPath="yes" />
       </Component>
       <Component>
         <File Id="System.ComponentModel"
           Name="System.ComponentModel.dll"
-          Source="$(var.Net45FacadeDirectory)\System.ComponentModel.dll"
+          Source="$(var.Net45FacadeDirectory)System.ComponentModel.dll"
           KeyPath="yes" />
       </Component>
       <Component>
         <File Id="System.ComponentModel.Annotations"
           Name="System.ComponentModel.Annotations.dll"
-          Source="$(var.Net45FacadeDirectory)\System.ComponentModel.Annotations.dll"
+          Source="$(var.Net45FacadeDirectory)System.ComponentModel.Annotations.dll"
           KeyPath="yes" />
       </Component>
       <Component>
         <File Id="System.ComponentModel.EventBasedAsync"
           Name="System.ComponentModel.EventBasedAsync.dll"
-          Source="$(var.Net45FacadeDirectory)\System.ComponentModel.EventBasedAsync.dll"
+          Source="$(var.Net45FacadeDirectory)System.ComponentModel.EventBasedAsync.dll"
           KeyPath="yes" />
       </Component>
 
       <Component>
         <File Id="System.Diagnostics.Contracts"
           Name="System.Diagnostics.Contracts.dll"
-          Source="$(var.Net45FacadeDirectory)\System.Diagnostics.Contracts.dll"
+          Source="$(var.Net45FacadeDirectory)System.Diagnostics.Contracts.dll"
           KeyPath="yes" />
       </Component>
       <Component>
         <File Id="System.Diagnostics.Debug"
           Name="System.Diagnostics.Debug.dll"
-          Source="$(var.Net45FacadeDirectory)\System.Diagnostics.Debug.dll"
+          Source="$(var.Net45FacadeDirectory)System.Diagnostics.Debug.dll"
           KeyPath="yes" />
       </Component>
       <Component>
         <File Id="System.Diagnostics.Tools"
           Name="System.Diagnostics.Tools.dll"
-          Source="$(var.Net45FacadeDirectory)\System.Diagnostics.Tools.dll"
+          Source="$(var.Net45FacadeDirectory)System.Diagnostics.Tools.dll"
           KeyPath="yes" />
       </Component>
       <Component>
         <File Id="System.Diagnostics.Tracing"
           Name="System.Diagnostics.Tracing.dll"
-          Source="$(var.Net45FacadeDirectory)\System.Diagnostics.Tracing.dll"
+          Source="$(var.Net45FacadeDirectory)System.Diagnostics.Tracing.dll"
           KeyPath="yes" />
       </Component>
       <Component>
         <File Id="System.Dynamic.Runtime"
           Name="System.Dynamic.Runtime.dll"
-          Source="$(var.Net45FacadeDirectory)\System.Dynamic.Runtime.dll"
+          Source="$(var.Net45FacadeDirectory)System.Dynamic.Runtime.dll"
           KeyPath="yes" />
       </Component>
       <Component>
         <File Id="System.Globalization"
           Name="System.Globalization.dll"
-          Source="$(var.Net45FacadeDirectory)\System.Globalization.dll"
+          Source="$(var.Net45FacadeDirectory)System.Globalization.dll"
           KeyPath="yes" />
       </Component>
       <Component>
         <File Id="System.IO"
           Name="System.IO.dll"
-          Source="$(var.Net45FacadeDirectory)\System.IO.dll"
+          Source="$(var.Net45FacadeDirectory)System.IO.dll"
           KeyPath="yes" />
       </Component>
       <Component>
         <File Id="System.Linq"
           Name="System.Linq.dll"
-          Source="$(var.Net45FacadeDirectory)\System.Linq.dll"
+          Source="$(var.Net45FacadeDirectory)System.Linq.dll"
           KeyPath="yes" />
       </Component>
       <Component>
         <File Id="System.Linq.Expressions"
           Name="System.Linq.Expressions.dll"
-          Source="$(var.Net45FacadeDirectory)\System.Linq.Expressions.dll"
+          Source="$(var.Net45FacadeDirectory)System.Linq.Expressions.dll"
           KeyPath="yes" />
       </Component>
       <Component>
         <File Id="System.Linq.Parallel"
           Name="System.Linq.Parallel.dll"
-          Source="$(var.Net45FacadeDirectory)\System.Linq.Parallel.dll"
+          Source="$(var.Net45FacadeDirectory)System.Linq.Parallel.dll"
           KeyPath="yes" />
       </Component>
       <Component>
         <File Id="System.Linq.Queryable"
           Name="System.Linq.Queryable.dll"
-          Source="$(var.Net45FacadeDirectory)\System.Linq.Queryable.dll"
+          Source="$(var.Net45FacadeDirectory)System.Linq.Queryable.dll"
           KeyPath="yes" />
       </Component>
       <Component>
         <File Id="System.Net.Http"
           Name="System.Net.Http.dll"
-          Source="$(var.Net45Directory)\System.Net.Http.dll"
+          Source="$(var.Net45Directory)System.Net.Http.dll"
           KeyPath="yes" />
       </Component>
       <Component>
         <File Id="System.Net.Http.WebRequest"
           Name="System.Net.Http.WebRequest.dll"
-          Source="$(var.Net45Directory)\System.Net.Http.WebRequest.dll"
+          Source="$(var.Net45Directory)System.Net.Http.WebRequest.dll"
           KeyPath="yes" />
       </Component>
       <Component>
         <File Id="System.ComponentModel.DataAnnotations"
           Name="System.ComponentModel.DataAnnotations.dll"
-          Source="$(var.Net45Directory)\System.ComponentModel.DataAnnotations.dll"
+          Source="$(var.Net45Directory)System.ComponentModel.DataAnnotations.dll"
           KeyPath="yes" />
       </Component>
       <Component>
         <File Id="System.Net.NetworkInformation"
           Name="System.Net.NetworkInformation.dll"
-          Source="$(var.Net45FacadeDirectory)\System.Net.NetworkInformation.dll"
+          Source="$(var.Net45FacadeDirectory)System.Net.NetworkInformation.dll"
           KeyPath="yes" />
       </Component>
       <Component>
         <File Id="System.Net.Primitives"
           Name="System.Net.Primitives.dll"
-          Source="$(var.Net45FacadeDirectory)\System.Net.Primitives.dll"
+          Source="$(var.Net45FacadeDirectory)System.Net.Primitives.dll"
           KeyPath="yes" />
       </Component>
       <Component>
         <File Id="System.Net.Requests"
           Name="System.Net.Requests.dll"
-          Source="$(var.Net45FacadeDirectory)\System.Net.Requests.dll"
+          Source="$(var.Net45FacadeDirectory)System.Net.Requests.dll"
           KeyPath="yes" />
       </Component>
 
       <Component>
         <File Id="System.ObjectModel"
           Name="System.ObjectModel.dll"
-          Source="$(var.Net45FacadeDirectory)\System.ObjectModel.dll"
+          Source="$(var.Net45FacadeDirectory)System.ObjectModel.dll"
           KeyPath="yes" />
       </Component>
       <Component>
         <File Id="System.Reflection"
           Name="System.Reflection.dll"
-          Source="$(var.Net45FacadeDirectory)\System.Reflection.dll"
+          Source="$(var.Net45FacadeDirectory)System.Reflection.dll"
           KeyPath="yes" />
       </Component>
       <Component>
         <File Id="System.Reflection.Emit"
           Name="System.Reflection.Emit.dll"
-          Source="$(var.Net45FacadeDirectory)\System.Reflection.Emit.dll"
+          Source="$(var.Net45FacadeDirectory)System.Reflection.Emit.dll"
           KeyPath="yes" />
       </Component>
       <Component>
         <File Id="System.Reflection.Emit.ILGeneration"
           Name="System.Reflection.Emit.ILGeneration.dll"
-          Source="$(var.Net45FacadeDirectory)\System.Reflection.Emit.ILGeneration.dll"
+          Source="$(var.Net45FacadeDirectory)System.Reflection.Emit.ILGeneration.dll"
           KeyPath="yes" />
       </Component>
       <Component>
         <File Id="System.Reflection.Emit.Lightweight"
           Name="System.Reflection.Emit.Lightweight.dll"
-          Source="$(var.Net45FacadeDirectory)\System.Reflection.Emit.Lightweight.dll"
+          Source="$(var.Net45FacadeDirectory)System.Reflection.Emit.Lightweight.dll"
           KeyPath="yes" />
       </Component>
       <Component>
         <File Id="System.Reflection.Extensions"
           Name="System.Reflection.Extensions.dll"
-          Source="$(var.Net45FacadeDirectory)\System.Reflection.Extensions.dll"
+          Source="$(var.Net45FacadeDirectory)System.Reflection.Extensions.dll"
           KeyPath="yes" />
       </Component>
       <Component>
@@ -392,145 +418,145 @@
       <Component>
         <File Id="System.Resources.ResourceManager"
           Name="System.Resources.ResourceManager.dll"
-          Source="$(var.Net45FacadeDirectory)\System.Resources.ResourceManager.dll"
+          Source="$(var.Net45FacadeDirectory)System.Resources.ResourceManager.dll"
           KeyPath="yes" />
       </Component>
       <Component>
         <File Id="System.Runtime"
           Name="System.Runtime.dll"
-          Source="$(var.Net45FacadeDirectory)\System.Runtime.dll"
+          Source="$(var.Net45FacadeDirectory)System.Runtime.dll"
           KeyPath="yes" />
       </Component>
       <Component>
         <File Id="System.Runtime.Extensions"
           Name="System.Runtime.Extensions.dll"
-          Source="$(var.Net45FacadeDirectory)\System.Runtime.Extensions.dll"
+          Source="$(var.Net45FacadeDirectory)System.Runtime.Extensions.dll"
           KeyPath="yes" />
       </Component>
       <Component>
         <File Id="System.Runtime.InteropServices"
           Name="System.Runtime.InteropServices.dll"
-          Source="$(var.Net45FacadeDirectory)\System.Runtime.InteropServices.dll"
+          Source="$(var.Net45FacadeDirectory)System.Runtime.InteropServices.dll"
           KeyPath="yes" />
       </Component>
       <Component>
         <File Id="System.Runtime.InteropServices.WindowsRuntime"
           Name="System.Runtime.InteropServices.WindowsRuntime.dll"
-          Source="$(var.Net45FacadeDirectory)\System.Runtime.InteropServices.WindowsRuntime.dll"
+          Source="$(var.Net45FacadeDirectory)System.Runtime.InteropServices.WindowsRuntime.dll"
           KeyPath="yes" />
       </Component>
       <Component>
         <File Id="System.Runtime.Numerics"
           Name="System.Runtime.Numerics.dll"
-          Source="$(var.Net45FacadeDirectory)\System.Runtime.Numerics.dll"
+          Source="$(var.Net45FacadeDirectory)System.Runtime.Numerics.dll"
           KeyPath="yes" />
       </Component>
       <Component>
         <File Id="System.Runtime.Serialization.Json"
           Name="System.Runtime.Serialization.Json.dll"
-          Source="$(var.Net45FacadeDirectory)\System.Runtime.Serialization.Json.dll"
+          Source="$(var.Net45FacadeDirectory)System.Runtime.Serialization.Json.dll"
           KeyPath="yes" />
       </Component>
       <Component>
         <File Id="System.Runtime.Serialization.Primitives"
           Name="System.Runtime.Serialization.Primitives.dll"
-          Source="$(var.Net45FacadeDirectory)\System.Runtime.Serialization.Primitives.dll"
+          Source="$(var.Net45FacadeDirectory)System.Runtime.Serialization.Primitives.dll"
           KeyPath="yes" />
       </Component>
       <Component>
         <File Id="System.Runtime.Serialization.Xml"
           Name="System.Runtime.Serialization.Xml.dll"
-          Source="$(var.Net45FacadeDirectory)\System.Runtime.Serialization.Xml.dll"
+          Source="$(var.Net45FacadeDirectory)System.Runtime.Serialization.Xml.dll"
           KeyPath="yes" />
       </Component>
       <Component>
         <File Id="System.Security.Principal"
           Name="System.Security.Principal.dll"
-          Source="$(var.Net45FacadeDirectory)\System.Security.Principal.dll"
+          Source="$(var.Net45FacadeDirectory)System.Security.Principal.dll"
           KeyPath="yes" />
       </Component>
       <Component>
         <File Id="System.ServiceModel.Duplex"
           Name="System.ServiceModel.Duplex.dll"
-          Source="$(var.Net45FacadeDirectory)\System.ServiceModel.Duplex.dll"
+          Source="$(var.Net45FacadeDirectory)System.ServiceModel.Duplex.dll"
           KeyPath="yes" />
       </Component>
       <Component>
         <File Id="System.ServiceModel.Http"
           Name="System.ServiceModel.Http.dll"
-          Source="$(var.Net45FacadeDirectory)\System.ServiceModel.Http.dll"
+          Source="$(var.Net45FacadeDirectory)System.ServiceModel.Http.dll"
           KeyPath="yes" />
       </Component>
       <Component>
         <File Id="System.ServiceModel.NetTcp"
           Name="System.ServiceModel.NetTcp.dll"
-          Source="$(var.Net45FacadeDirectory)\System.ServiceModel.NetTcp.dll"
+          Source="$(var.Net45FacadeDirectory)System.ServiceModel.NetTcp.dll"
           KeyPath="yes" />
       </Component>
       <Component>
         <File Id="System.ServiceModel.Primitives"
           Name="System.ServiceModel.Primitives.dll"
-          Source="$(var.Net45FacadeDirectory)\System.ServiceModel.Primitives.dll"
+          Source="$(var.Net45FacadeDirectory)System.ServiceModel.Primitives.dll"
           KeyPath="yes" />
       </Component>
       <Component>
         <File Id="System.ServiceModel.Security"
           Name="System.ServiceModel.Security.dll"
-          Source="$(var.Net45FacadeDirectory)\System.ServiceModel.Security.dll"
+          Source="$(var.Net45FacadeDirectory)System.ServiceModel.Security.dll"
           KeyPath="yes" />
       </Component>
       <Component>
         <File Id="System.Text.Encoding"
           Name="System.Text.Encoding.dll"
-          Source="$(var.Net45FacadeDirectory)\System.Text.Encoding.dll"
+          Source="$(var.Net45FacadeDirectory)System.Text.Encoding.dll"
           KeyPath="yes" />
       </Component>
       <Component>
         <File Id="System.Text.Encoding.Extensions"
           Name="System.Text.Encoding.Extensions.dll"
-          Source="$(var.Net45FacadeDirectory)\System.Text.Encoding.Extensions.dll"
+          Source="$(var.Net45FacadeDirectory)System.Text.Encoding.Extensions.dll"
           KeyPath="yes" />
       </Component>
       <Component>
         <File Id="System.Text.RegularExpressions"
           Name="System.Text.RegularExpressions.dll"
-          Source="$(var.Net45FacadeDirectory)\System.Text.RegularExpressions.dll"
+          Source="$(var.Net45FacadeDirectory)System.Text.RegularExpressions.dll"
           KeyPath="yes" />
       </Component>
       <Component>
         <File Id="System.Threading"
           Name="System.Threading.dll"
-          Source="$(var.Net45FacadeDirectory)\System.Threading.dll"
+          Source="$(var.Net45FacadeDirectory)System.Threading.dll"
           KeyPath="yes" />
       </Component>
       <Component>
         <File Id="System.Threading.Tasks"
           Name="System.Threading.Tasks.dll"
-          Source="$(var.Net45FacadeDirectory)\System.Threading.Tasks.dll"
+          Source="$(var.Net45FacadeDirectory)System.Threading.Tasks.dll"
           KeyPath="yes" />
       </Component>
       <Component>
         <File Id="System.Threading.Tasks.Parallel"
           Name="System.Threading.Tasks.Parallel.dll"
-          Source="$(var.Net45FacadeDirectory)\System.Threading.Tasks.Parallel.dll"
+          Source="$(var.Net45FacadeDirectory)System.Threading.Tasks.Parallel.dll"
           KeyPath="yes" />
       </Component>
       <Component>
         <File Id="System.Xml.ReaderWriter"
           Name="System.Xml.ReaderWriter.dll"
-          Source="$(var.Net45FacadeDirectory)\System.Xml.ReaderWriter.dll"
+          Source="$(var.Net45FacadeDirectory)System.Xml.ReaderWriter.dll"
           KeyPath="yes" />
       </Component>
       <Component>
         <File Id="System.Xml.XDocument"
           Name="System.Xml.XDocument.dll"
-          Source="$(var.Net45FacadeDirectory)\System.Xml.XDocument.dll"
+          Source="$(var.Net45FacadeDirectory)System.Xml.XDocument.dll"
           KeyPath="yes" />
       </Component>
       <Component>
         <File Id="System.Xml.XmlSerializer"
           Name="System.Xml.XmlSerializer.dll"
-          Source="$(var.Net45FacadeDirectory)\System.Xml.XmlSerializer.dll"
+          Source="$(var.Net45FacadeDirectory)System.Xml.XmlSerializer.dll"
           KeyPath="yes" />
       </Component>
 
