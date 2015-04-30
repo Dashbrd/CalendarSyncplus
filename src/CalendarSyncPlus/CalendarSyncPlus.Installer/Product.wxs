@@ -59,7 +59,8 @@
                           Name="Uninstall Calendar Sync +"
                           Description="Uninstalls Calendar Sync +"
                           Target="[System64Folder]msiexec.exe"
-                          Arguments="/x [ProductCode]"/>
+                          Arguments="/x [ProductCode]"
+                          Icon="icon.ico" />
 
         <RemoveFolder Id="ApplicationProgramsFolder" On="uninstall"/>
         <RegistryValue Root="HKCU" Key="Software\Ankesh Dave &amp; Akanksha Gaur\CalendarSyncPlus" Name="installed" Type="integer" Value="00000001" KeyPath="yes"/>
