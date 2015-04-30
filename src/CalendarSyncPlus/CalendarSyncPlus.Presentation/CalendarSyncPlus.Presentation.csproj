@@ -329,6 +329,8 @@
     <None Include="app.config">
       <SubType>Designer</SubType>
     </None>
+    <None Include="Controls\U2UConsult.HtmlTextBlock.Sample.zip" />
+    <None Include="Controls\U2UConsult.WPF.Localization.Sample.zip" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
