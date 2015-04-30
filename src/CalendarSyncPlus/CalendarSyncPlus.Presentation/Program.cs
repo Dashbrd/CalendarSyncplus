@@ -47,7 +47,7 @@ namespace CalendarSyncPlus.Presentation
                     }
                     var application = new App(startMinimized);
                     application.InitializeComponent();
-                    application.Run();
+                    application.Run();  
                 }
                 finally
                 {
