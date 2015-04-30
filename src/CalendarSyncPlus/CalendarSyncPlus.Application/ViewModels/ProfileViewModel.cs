@@ -607,6 +607,8 @@ namespace CalendarSyncPlus.Application.ViewModels
 
         internal async void GetGoogleCalendar()
         {
+            if(IsLoading)
+                return;
             //TODO : Move this method to main setitngs view
             IsLoading = true;
             try
@@ -786,6 +788,8 @@ namespace CalendarSyncPlus.Application.ViewModels
 
         public async void LoadSyncProfile()
         {
+            if(IsLoading)
+                return;
             IsLoading = true;
             if (SyncProfile != null)
             {
