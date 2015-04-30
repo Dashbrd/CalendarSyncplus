@@ -6,7 +6,9 @@
           UpgradeCode="6A7B72FC-ED9B-4951-B733-AB54B8D4AE94" 
            Version="$(var.VERSION)"
           Manufacturer="Ankesh Dave &amp; Akanksha Gaur"
-          IconSourceFile="icon.ico">
+          IconSourceFile="icon.ico" 
+          AboutUrl="http://www.calendarsyncplus.codeplex.com"
+          >
     <BootstrapperApplicationRef Id="WixStandardBootstrapperApplication.RtfLicense" >
       <bal:WixStandardBootstrapperApplication
            LicenseFile="license.rtf"
@@ -32,8 +34,9 @@
                 Description="A utility to synchronize Outlook to Google calendars, vice versa and bidirectional."
                 SourceFile="$(var.CalendarSyncPlus.Installer.TargetPath)"
                 ForcePerMachine="yes"  
-                  Vital="yes">
+                  Vital="yes" >
         <MsiProperty Name="INSTALLLOCATION" Value="[InstallFolder]" />
+        
       </MsiPackage>
   </Chain>
     <WixVariable Id="WixStdBALanguageId" Value="1033"/>
