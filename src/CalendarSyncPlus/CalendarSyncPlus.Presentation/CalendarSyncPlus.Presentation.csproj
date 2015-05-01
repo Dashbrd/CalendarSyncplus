@@ -163,6 +163,19 @@
     </Compile>
     <Compile Include="Behaviors\PasswordBoxHelper.cs" />
     <Compile Include="Behaviors\TextBoxScrollBehavior.cs" />
+    <Compile Include="Controls\HtmlXamlConversion\htmlcssparser.cs" />
+    <Compile Include="Controls\HtmlXamlConversion\htmlfromxamlconverter.cs" />
+    <Compile Include="Controls\HtmlXamlConversion\htmllexicalanalyzer.cs" />
+    <Compile Include="Controls\HtmlXamlConversion\htmlparser.cs" />
+    <Compile Include="Controls\HtmlXamlConversion\htmlschema.cs" />
+    <Compile Include="Controls\HtmlXamlConversion\htmltokentype.cs" />
+    <Compile Include="Controls\HtmlXamlConversion\htmltoxamlconverter.cs" />
+    <Compile Include="Controls\RichTextBox\Formatters\HtmlFormatter.cs" />
+    <Compile Include="Controls\RichTextBox\Formatters\ITextFormatter.cs" />
+    <Compile Include="Controls\RichTextBox\Formatters\PlainTextFormatter.cs" />
+    <Compile Include="Controls\RichTextBox\Formatters\RtfFormatter.cs" />
+    <Compile Include="Controls\RichTextBox\Formatters\XamlFormatter.cs" />
+    <Compile Include="Controls\RichTextBox\BindableHtmlRichTextBox.cs" />
     <Compile Include="Controls\TimePickerControl.xaml.cs">
       <DependentUpon>TimePickerControl.xaml</DependentUpon>
     </Compile>
@@ -174,6 +187,7 @@
     <Compile Include="Helpers\Utilities.cs" />
     <Compile Include="MarkupExtensions\ResourceBinding.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="Services\ChildViewService.cs" />
     <Compile Include="Services\LocalizationService.cs" />
     <Compile Include="Services\MessageService.cs" />
     <Compile Include="Services\SingleInstance\ISingleInstanceApp.cs" />
@@ -187,6 +201,9 @@
     </Compile>
     <Compile Include="Views\AdvancedSettingsView.xaml.cs">
       <DependentUpon>AdvancedSettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ChildView.xaml.cs">
+      <DependentUpon>ChildView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\CustomInputDialog.xaml.cs">
       <DependentUpon>CustomInputDialog.xaml</DependentUpon>
@@ -227,6 +244,9 @@
     <Compile Include="Views\WelcomeView.xaml.cs">
       <DependentUpon>WelcomeView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\WhatsNewView.xaml.cs">
+      <DependentUpon>WhatsNewView.xaml</DependentUpon>
+    </Compile>
     <Page Include="Controls\TimePickerControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -244,6 +264,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\AdvancedSettingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ChildView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -311,6 +335,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\WhatsNewView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -333,8 +361,6 @@
     <None Include="app.config">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Controls\U2UConsult.HtmlTextBlock.Sample.zip" />
-    <None Include="Controls\U2UConsult.WPF.Localization.Sample.zip" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>

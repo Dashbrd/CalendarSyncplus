@@ -61,7 +61,6 @@ namespace CalendarSyncPlus.Application.Controllers
             _aboutViewModel = aboutViewModelLazy.Value;
             _helpViewModel = helpViewModelLazy.Value;
             _systemTrayNotifierViewModel = lazySystemTrayNotifierViewModel.Value;
-
             //Commands
             _shellViewModel.Closing += ShellViewModelClosing;
             _exitCommand = new DelegateCommand(Close);

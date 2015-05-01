@@ -64,6 +64,7 @@
     </Compile>
     <Compile Include="CalendarServiceFactory.cs" />
     <Compile Include="CalendarUpdateService.cs" />
+    <Compile Include="IChildViewService.cs" />
     <Compile Include="Interfaces\ICalendarServiceFactory.cs" />
     <Compile Include="Interfaces\ICalendarUpdateService.cs" />
     <Compile Include="Interfaces\ICalendarService.cs" />
