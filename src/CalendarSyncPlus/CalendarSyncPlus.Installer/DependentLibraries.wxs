@@ -23,6 +23,12 @@
             Source="$(var.ProjectDirectory)CalendarSyncPlus.Common.dll"
             KeyPath="yes" />
       </Component>
+      <Component>
+        <File Id="CalendarSyncPlus.SyncEngine"
+            Name="CalendarSyncPlus.SyncEngine.dll"
+            Source="$(var.ProjectDirectory)CalendarSyncPlus.SyncEngine.dll"
+            KeyPath="yes" />
+      </Component>
 
       <Component>
         <File Id="CalendarSyncPlus.Domain"

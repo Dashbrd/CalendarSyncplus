@@ -42,7 +42,7 @@ using CalendarSyncPlus.Presentation.Helpers;
 using CalendarSyncPlus.Presentation.Services.SingleInstance;
 using CalendarSyncPlus.Services;
 using CalendarSyncPlus.Services.Interfaces;
-
+using CalendarSyncPlus.SyncEngine.Interfaces;
 using WPFLocalizeExtension.Engine;
 using WPFLocalizeExtension.Providers;
 
@@ -146,7 +146,8 @@ namespace CalendarSyncPlus.Presentation
             catalog.Catalogs.Add(new AssemblyCatalog(typeof(IOutlookCalendarService).Assembly));
             //Add ExchangeWebServices assembly to catalog
             catalog.Catalogs.Add(new AssemblyCatalog(typeof(IExchangeWebCalendarService).Assembly));
-
+            //Add SyncEngine assembly to catalog
+            catalog.Catalogs.Add(new AssemblyCatalog(typeof(ICalendarSyncEngine).Assembly));
             //Composition Container
             container = new CompositionContainer(catalog, true);
             var batch = new CompositionBatch();

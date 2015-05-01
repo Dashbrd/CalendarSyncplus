@@ -31,6 +31,7 @@ using CalendarSyncPlus.Domain.Models;
 using CalendarSyncPlus.Services.Interfaces;
 using CalendarSyncPlus.Services.Utilities;
 using CalendarSyncPlus.Services.Wrappers;
+using CalendarSyncPlus.SyncEngine.Interfaces;
 
 #endregion
 
@@ -53,10 +54,12 @@ namespace CalendarSyncPlus.Services
         #region Constructors
 
         [ImportingConstructor]
-        public CalendarUpdateService(ICalendarServiceFactory calendarServiceFactory, ApplicationLogger applicationLogger)
+        public CalendarUpdateService(ICalendarServiceFactory calendarServiceFactory, ICalendarSyncEngine calendarSyncEngine,
+            ApplicationLogger applicationLogger)
         {
             _applicationLogger = applicationLogger;
             CalendarServiceFactory = calendarServiceFactory;
+            CalendarSyncEngine = calendarSyncEngine;
         }
 
         #endregion
@@ -64,6 +67,7 @@ namespace CalendarSyncPlus.Services
         #region Properties
 
         public ICalendarServiceFactory CalendarServiceFactory { get; set; }
+        public ICalendarSyncEngine CalendarSyncEngine { get; set; }
 
         #endregion
 

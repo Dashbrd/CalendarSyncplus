@@ -380,6 +380,10 @@
       <Project>{5af06073-c8b2-4e8d-85e9-c22c44e36a8f}</Project>
       <Name>CalendarSyncPlus.Domain</Name>
     </ProjectReference>
+    <ProjectReference Include="..\CalendarSyncPlus.SyncEngine\CalendarSyncPlus.SyncEngine.csproj">
+      <Project>{88d95940-3181-4026-9ecf-560d54201d86}</Project>
+      <Name>CalendarSyncPlus.SyncEngine</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="icon.ico" />
