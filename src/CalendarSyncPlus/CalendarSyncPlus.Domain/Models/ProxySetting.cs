@@ -29,7 +29,7 @@ namespace CalendarSyncPlus.Domain.Models
     {
         #region Fields
 
-        private bool _bypassOnLocal;
+        private bool _bypassOnLocal=true;
         private string _domain;
         private string _password;
         private int _port;

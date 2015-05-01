@@ -24,5 +24,6 @@ namespace CalendarSyncPlus.Application.Views
         void Show();
 
         void Close();
+        void ShowChildWindow(object childViewContent);
     }
 }

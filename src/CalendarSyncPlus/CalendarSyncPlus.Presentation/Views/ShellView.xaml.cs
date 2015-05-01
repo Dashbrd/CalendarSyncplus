@@ -3,6 +3,7 @@ using System.ComponentModel.Composition;
 using System.Windows;
 using CalendarSyncPlus.Application.Views;
 using CalendarSyncPlus.Presentation.Helpers;
+using MahApps.Metro.SimpleChildWindow;
 
 namespace CalendarSyncPlus.Presentation.Views
 {
@@ -34,6 +35,12 @@ namespace CalendarSyncPlus.Presentation.Views
                     WindowState = WindowState.Normal;
                 }
             }
+        }
+
+        public async void  ShowChildWindow(object childViewContent)
+        {
+            await
+                this.ShowChildWindowAsync(new ChildView() {ChildContentView = childViewContent},ChildWindowManager.OverlayFillBehavior.FullWindow);
         }
 
         #endregion
