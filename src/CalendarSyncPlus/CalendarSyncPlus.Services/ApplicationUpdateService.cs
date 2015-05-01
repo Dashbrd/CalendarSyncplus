@@ -103,6 +103,8 @@ namespace CalendarSyncPlus.Services
         /// <returns></returns>
         public Uri GetDownloadUri()
         {
+            return new Uri("http://calendarsyncplus.codeplex.com");
+            //Avoid for a while
             if (_downloadLink == null)
             {
                 return null;
