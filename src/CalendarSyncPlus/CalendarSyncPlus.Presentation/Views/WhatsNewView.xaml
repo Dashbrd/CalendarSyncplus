@@ -10,6 +10,6 @@
              d:DesignWidth="300"
              d:DataContext="{d:DesignInstance viewModels:WhatsNewViewModel}" >
     <Grid>
-        <richTextBox:BindableHtmlRichTextBox Text="{Binding HtmlText}" TextFormatterType="Rtf"></richTextBox:BindableHtmlRichTextBox>
+        <richTextBox:BindableHtmlRichTextBox Text="{Binding Text}" TextFormatterType="Rtf"></richTextBox:BindableHtmlRichTextBox>
     </Grid>
 </UserControl>
