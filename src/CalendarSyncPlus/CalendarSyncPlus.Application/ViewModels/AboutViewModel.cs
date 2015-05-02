@@ -63,7 +63,9 @@ namespace CalendarSyncPlus.Application.ViewModels
 
         private void LaunchMailToRequest(object address)
         {
-            var actualAddress = Environment.ExpandEnvironmentVariables((string) address);
+            var actualAddress = address as string;
+            if (string.IsNullOrEmpty(actualAddress)) return;
+            Environment.ExpandEnvironmentVariables(actualAddress);
             Process.Start(new ProcessStartInfo(actualAddress));
         }
 
