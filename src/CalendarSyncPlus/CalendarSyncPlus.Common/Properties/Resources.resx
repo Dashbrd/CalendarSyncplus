@@ -289,7 +289,7 @@
     <value>Set Category To Appointments</value>
   </data>
   <data name="OptionsSettingsView_HelpButton_Category_Tooltip" xml:space="preserve">
-    <value>Help text here</value>
+    <value>Set color to Outlook and Google Appointments</value>
   </data>
   <data name="OptionsSettingsView_GroupBox_DestinationCalendarOptions_Header" xml:space="preserve">
     <value>Destination Calendar Entry Options</value>
@@ -297,31 +297,31 @@
   <data name="OptionsSettingsView_CheckBox_DestinationCalendarOptions_AddDescription_Content" xml:space="preserve">
     <value>Add Description</value>
   </data>
-  <data name="OptionsSettingsView_CheckBox_DestinationCalendarOptions_AddDescription_ToolTip" xml:space="preserve">
+  <data name="OptionsSettingsView_ContentControl_DestinationCalendarOptions_AddDescription_ToolTip" xml:space="preserve">
     <value>Select this option to add description to the calendarAppointments</value>
   </data>
   <data name="OptionsSettingsView_CheckBox_DestinationCalendarOptions_AddAttendees_Content" xml:space="preserve">
     <value>Add Attendees</value>
   </data>
-  <data name="OptionsSettingsView_CheckBox_DestinationCalendarOptions_AddAttendees_ToolTip" xml:space="preserve">
+  <data name="OptionsSettingsView_ContentControl_DestinationCalendarOptions_AddAttendees_ToolTip" xml:space="preserve">
     <value>Select this option to add attendees to appointment</value>
   </data>
   <data name="OptionsSettingsView_CheckBox_DestinationCalendarOptions_AddAttendeesDescription_Content" xml:space="preserve">
     <value>Add Attendees to Description</value>
   </data>
-  <data name="OptionsSettingsView_CheckBox_DestinationCalendarOptions_AddAttendeesDescription_ToolTip" xml:space="preserve">
+  <data name="OptionsSettingsView_ContentControl_DestinationCalendarOptions_AddAttendeesDescription_ToolTip" xml:space="preserve">
     <value>Select this option to add attendees to appointment description instead of TO/CC/BCC fields</value>
   </data>
   <data name="OptionsSettingsView_CheckBox_DestinationCalendarOptions_AddReminders_Content" xml:space="preserve">
     <value>Add Reminders</value>
   </data>
-  <data name="OptionsSettingsView_CheckBox_DestinationCalendarOptions_AddReminder_ToolTip" xml:space="preserve">
+  <data name="OptionsSettingsView_ContentControl_DestinationCalendarOptions_AddReminder_ToolTip" xml:space="preserve">
     <value>Select this option to add reminders of the appointment. Note: Outlook gives default reminder messages for all calendarAppointments. To disable please go to your outlook settings.</value>
   </data>
   <data name="OptionsSettingsView_CheckBox_DestinationCalendarOptions_AddEventsAsAppointment_Content" xml:space="preserve">
     <value>Add events with no recipients as appointments</value>
   </data>
-  <data name="OptionsSettingsView_CheckBox_DestinationCalendarOptions_AddEventsAsAppointment_ToolTip" xml:space="preserve">
+  <data name="OptionsSettingsView_ContentControl_DestinationCalendarOptions_AddEventsAsAppointment_ToolTip" xml:space="preserve">
     <value>Select this option to add events from Google without recipients as appointments in outlook.</value>
   </data>
   <data name="OptionsSettingsView_CheckBox_DestinationCalendarOptions_AddAttachments_Content" xml:space="preserve">
@@ -333,13 +333,13 @@
   <data name="OptionsSettingsView_CheckBox_OtherOptions_DisableDelete_Content" xml:space="preserve">
     <value>Disable Delete</value>
   </data>
-  <data name="OptionsSettingsView_CheckBox_OtherOptions_DisableDelete_ToolTip" xml:space="preserve">
+  <data name="OptionsSettingsView_ContentControl_OtherOptions_DisableDelete_ToolTip" xml:space="preserve">
     <value>Disable Delete when Syncing Calendars</value>
   </data>
   <data name="OptionsSettingsView_CheckBox_OtherOptions_ConfirmDelete_Content" xml:space="preserve">
     <value>Confirm on Delete</value>
   </data>
-  <data name="OptionsSettingsView_CheckBox_OtherOptions_ConfirmDelete_ToolTip" xml:space="preserve">
+  <data name="OptionsSettingsView_ContentControl_OtherOptions_ConfirmDelete_ToolTip" xml:space="preserve">
     <value>Display Confirm Dialog before deleting an Appointement</value>
   </data>
   <data name="OptionsSettingsView_CheckBox_OtherOptions_KeepLastModified_Content" xml:space="preserve">
@@ -379,7 +379,7 @@
     <value>Reset Exchange Calendar</value>
   </data>
   <data name="OutlookSettingsView_GroupBox_OutlookProfileSettings_Header" xml:space="preserve">
-    <value>Profile &amp;amp; MailBox Settings</value>
+    <value>Profile &amp; MailBox Settings</value>
   </data>
   <data name="OutlookSettingsView_RadioButton_OutlookProfileSettings_DefaultProfile_Content" xml:space="preserve">
     <value>Default Profile</value>
@@ -448,7 +448,7 @@
     <value>Recurrence</value>
   </data>
   <data name="SyncSettingsView_ContentControl_SyncFrequencyHelp_Tooltip" xml:space="preserve">
-    <value>Sync frequency help text</value>
+    <value>Select Sync Frequecy</value>
   </data>
   <data name="SyncSettingsView_RadioButton_SyncFullCalendar_Content" xml:space="preserve">
     <value>Sync Full Calendar</value>
@@ -484,16 +484,16 @@
     <value>Calendar Sync Mode</value>
   </data>
   <data name="SyncSettingsView_ContentControl_HelpIntervalHours_Tooltip" xml:space="preserve">
-    <value>Select the number of days in future for which you wish to sync calendar calendarAppointments</value>
+    <value>Select number of hour after in which you need  to sync calendar</value>
   </data>
   <data name="SyncSettingsView_ContentControl_HelpIntervalMinutes_Tooltip" xml:space="preserve">
-    <value>Select the number of days in future for which you wish to sync calendar calendarAppointments</value>
+    <value>Select number of minutes after in which you need  to sync calendar</value>
   </data>
   <data name="SyncSettingsView_ContentControl_HelpDailyTimeOfDay_Tooltip" xml:space="preserve">
     <value>Set the time of day for daily sync for</value>
   </data>
   <data name="SyncSettingsView_ContentControl_HelpWeeklyRecurrence_Tooltip" xml:space="preserve">
-    <value>Select the number of days in future for which you wish to sync calendar calendarAppointments</value>
+    <value>Allow sync frequency to set on weekly basis</value>
   </data>
   <data name="SyncSettingsView_ContentControl_HelpWeeklyTimeOfDay_Tooltip" xml:space="preserve">
     <value>Weekly time of day help</value>
@@ -531,13 +531,13 @@ Select Outlook &lt;- Google, to sync your Google calendar to an Outlook calendar
 Select Outlook &lt;-&gt; Google, to sync our Outlook and Google calendar with each other</value>
   </data>
   <data name="SyncSettingsView_ContentControl_HelpSyncFullCalendar_Tooltip" xml:space="preserve">
-    <value>Select the number of days in past for which you wish to sync calendar calendarAppointments</value>
+    <value>Sync you Calendar from 1st Jan 1990 to 10 years from today</value>
   </data>
   <data name="SyncSettingsView_ContentControl_HelpSyncDaysInRange_Tooltip" xml:space="preserve">
-    <value>Select the number of days in past for which you wish to sync calendar calendarAppointments</value>
+    <value>Allow you to specify the number of days you need to sync in past and future. </value>
   </data>
   <data name="SyncSettingsView_ContentControl_HelpSyncFixedDateRange_Tooltip" xml:space="preserve">
-    <value>Select the number of days in past for which you wish to sync calendar calendarAppointments</value>
+    <value>Allows you specify a fixed date range to sync you calendar</value>
   </data>
   <data name="SyncSettingsView_ContentControl_HelpDaysInPast_Tooltip" xml:space="preserve">
     <value>Select the number of days in past for which you wish to sync calendar calendarAppointments</value>
@@ -546,10 +546,10 @@ Select Outlook &lt;-&gt; Google, to sync our Outlook and Google calendar with ea
     <value>Select the number of days in future for which you wish to sync calendar calendarAppointments</value>
   </data>
   <data name="SyncSettingsView_ContentControl_HelpStartDate_Tooltip" xml:space="preserve">
-    <value>Select the number of days in past for which you wish to sync calendar calendarAppointments</value>
+    <value>Select the start date from which you wish to sync calendar</value>
   </data>
   <data name="SyncSettingsView_ContentControl_HelpEndDate_Tooltip" xml:space="preserve">
-    <value>Select the number of days in future for which you wish to sync calendar calendarAppointments</value>
+    <value>Select the end date for which you wish to sync calendar</value>
   </data>
   <data name="SystemtrayNotifierView_TextBlock_TaskBarIcon_MaximizeMessage_ToolTip" xml:space="preserve">
     <value>Double click to maximize the application.</value>
@@ -559,5 +559,8 @@ Select Outlook &lt;-&gt; Google, to sync our Outlook and Google calendar with ea
   </data>
   <data name="SystemtrayNotifierView_MenuItem_TaskBarIcon_ExitApplicaiton_Header" xml:space="preserve">
     <value>Exit</value>
+  </data>
+  <data name="OptionsSettingsView_ContentControl_OtherOptions_KeepLastModified_Content" xml:space="preserve">
+    <value>In Bidirectional Sync keep the Latest copy of the appointment</value>
   </data>
 </root>
