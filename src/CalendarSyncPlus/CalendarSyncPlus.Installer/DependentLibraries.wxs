@@ -104,12 +104,6 @@
           KeyPath="yes" />
       </Component>
       <Component>
-        <File Id="ReachFramework"
-          Name="ReachFramework.dll"
-          Source="$(var.Net45Directory)ReachFramework.dll"
-          KeyPath="yes" />
-      </Component>
-      <Component>
         <File Id="log4net"
           Name="log4net.dll"
           Source="$(var.ProjectDirectory)log4net.dll"
@@ -247,8 +241,14 @@
           Source="ReferenceBinaries\Microsoft.Office.Interop.Outlook.dll"
           KeyPath="yes" />
       </Component>
-
+      
       <!--<Component>
+        <File Id="ReachFramework"
+          Name="ReachFramework.dll"
+          Source="$(var.Net45Directory)ReachFramework.dll"
+          KeyPath="yes" />
+      </Component>
+      <Component>
         <File Id="office"
           Name="office.dll"
           Source="$(var.GACDirectory)\office.dll"
@@ -260,7 +260,7 @@
           Source="$(var.GACstdoleDirectory)\stdole.dll"
           KeyPath="yes" />
       </Component>-->
-      <Component>
+      <!--<Component>
         <File Id="System.Collections.Concurrent"
           Name="System.Collections.Concurrent.dll"
           Source="$(var.Net45FacadeDirectory)System.Collections.Concurrent.dll"
@@ -579,7 +579,7 @@
           Name="System.Xml.XmlSerializer.dll"
           Source="$(var.Net45FacadeDirectory)System.Xml.XmlSerializer.dll"
           KeyPath="yes" />
-      </Component>
+      </Component>-->
 
     </ComponentGroup>
 	</Fragment>
