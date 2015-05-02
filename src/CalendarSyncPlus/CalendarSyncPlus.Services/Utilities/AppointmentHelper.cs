@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using CalendarSyncPlus.Domain.Helpers;
 using CalendarSyncPlus.Domain.Models;
 using Recipient = CalendarSyncPlus.Domain.Models.Recipient;
 
@@ -9,8 +10,6 @@ namespace CalendarSyncPlus.Services.Utilities
 {
     public static class AppointmentHelper
     {
-        public const string LineBreak = "==============================================";
-
         public static void LoadSourceId(this Appointment calendarAppointment, string sourceCalendarId)
         {
             string key = GetSourceEntryKey(sourceCalendarId);
@@ -30,123 +29,7 @@ namespace CalendarSyncPlus.Services.Utilities
         {
             return GetMD5Hash(sourceCalendarId);
         }
-
-        public static bool CompareSourceId(this Appointment calendarAppointment, Appointment otherAppointment)
-        {
-            if (otherAppointment.SourceId == null)
-            {
-                return false;
-            }
-            return calendarAppointment.AppointmentId.Equals(otherAppointment.SourceId);
-        }
-
-        public static string GetDescriptionData(this Appointment calendarAppointment, bool addDescription,
-            bool addAttendees)
-        {
-            var additionDescription = new StringBuilder(string.Empty);
-            if (addDescription)
-            {
-                additionDescription.Append(calendarAppointment.Description);
-            }
-
-            if (!addAttendees)
-            {
-                return additionDescription.ToString();
-            }
-            bool hasData = false;
-            //Start Header
-            additionDescription.AppendLine(LineBreak);
-            additionDescription.AppendLine(string.Empty);
-            if (calendarAppointment.Organizer != null)
-            {
-                //Add Organiser
-                additionDescription.AppendLine("Organizer");
-
-                additionDescription.AppendLine(calendarAppointment.Organizer.GetDescription());
-                additionDescription.AppendLine(string.Empty);
-                hasData = true;
-            }
-            //Add Required Attendees
-            if (calendarAppointment.RequiredAttendees.Any())
-            {
-                additionDescription.AppendLine("Required Attendees:");
-
-                foreach (Recipient requiredAttendee in calendarAppointment.RequiredAttendees)
-                {
-                    additionDescription.AppendLine(requiredAttendee.GetDescription());
-                }
-
-                additionDescription.AppendLine(string.Empty);
-                hasData = true;
-            }
-            //Add Optional Attendees
-
-            if (calendarAppointment.OptionalAttendees.Any())
-            {
-                additionDescription.AppendLine("Optional Attendees:");
-                foreach (Recipient requiredAttendee in calendarAppointment.OptionalAttendees)
-                {
-                    additionDescription.AppendLine(requiredAttendee.GetDescription());
-                }
-                additionDescription.AppendLine(string.Empty);
-                hasData = true;
-            }
-
-            //Close Header
-            additionDescription.AppendLine(LineBreak);
-
-            return hasData ? additionDescription.ToString() : string.Empty;
-        }
-
-        private static string GetDescription(this Recipient recipient)
-        {
-            return string.Format("{0} <{1}>", recipient.Name, recipient.Email);
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <param name="appointment"></param>
-        /// <param name="otherAppointment"></param>
-        /// <returns></returns>
-        public static bool CompareDescription(this Appointment appointment, Appointment otherAppointment)
-        {
-            if (string.IsNullOrEmpty(appointment.Description) && string.IsNullOrEmpty(otherAppointment.Description))
-            {
-                return true;
-            }
-
-            string description = ParseDescription(appointment);
-            string otherDescription = ParseDescription(otherAppointment);
-            if (description.Equals(otherDescription))
-            {
-                return true;
-            }
-            return false;
-        }
-
-        private static string ParseDescription(Appointment appointment)
-        {
-            if (appointment.Description == null)
-            {
-                return string.Empty;
-            }
-
-            string description = appointment.Description;
-            if (appointment.Description.Contains(LineBreak))
-            {
-                if (appointment.Description.IndexOf(LineBreak, StringComparison.Ordinal) > 1)
-                {
-                    description =
-                        appointment.Description.Split(new[] {LineBreak}, StringSplitOptions.RemoveEmptyEntries).First();
-                }
-                else
-                {
-                    description = string.Empty;
-                }
-            }
-            return description;
-        }
-
+        
         private static string GetMD5Hash(string stringToHash)
         {
             var sb = new StringBuilder();
@@ -161,6 +44,5 @@ namespace CalendarSyncPlus.Services.Utilities
             }
             return sb.ToString();
         }
-        
     }
 }

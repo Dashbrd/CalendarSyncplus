@@ -27,6 +27,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using CalendarSyncPlus.Common.Log;
 using CalendarSyncPlus.Common.MetaData;
+using CalendarSyncPlus.Domain.Helpers;
 using CalendarSyncPlus.Domain.Models;
 using CalendarSyncPlus.Services;
 using CalendarSyncPlus.Services.Interfaces;

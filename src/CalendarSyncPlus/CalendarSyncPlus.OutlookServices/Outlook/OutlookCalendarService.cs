@@ -28,6 +28,7 @@ using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using CalendarSyncPlus.Common.Log;
 using CalendarSyncPlus.Common.MetaData;
+using CalendarSyncPlus.Domain.Helpers;
 using CalendarSyncPlus.Domain.Models;
 using CalendarSyncPlus.OutlookServices.Utilities;
 using CalendarSyncPlus.Services;
