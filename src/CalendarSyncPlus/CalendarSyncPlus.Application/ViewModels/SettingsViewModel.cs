@@ -405,7 +405,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             IsLoading = true;
             SettingsSaved = false;
             Settings.GoogleAccounts = GoogleAccounts;
-            Settings.AppSettings.IsFirstSave = false;
+            Settings.SettingsVersion = ApplicationInfo.Version;
             Settings.AppSettings.MinimizeToSystemTray = MinimizeToSystemTray;
             Settings.AppSettings.HideSystemTrayTooltip = HideSystemTrayTooltip;
             Settings.AppSettings.CheckForUpdates = CheckForUpdates;

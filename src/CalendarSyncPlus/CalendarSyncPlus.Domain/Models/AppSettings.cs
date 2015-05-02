@@ -1,4 +1,5 @@
 ﻿using System.Waf.Foundation;
+using System.Xml.Serialization;
 
 namespace CalendarSyncPlus.Domain.Models
 {
@@ -7,9 +8,7 @@ namespace CalendarSyncPlus.Domain.Models
         private bool _isManualSynchronization;
 
         #region Properties
-
-        public bool IsFirstSave { get; set; }
-
+        
         public bool MinimizeToSystemTray { get; set; }
 
         public bool HideSystemTrayTooltip { get; set; }

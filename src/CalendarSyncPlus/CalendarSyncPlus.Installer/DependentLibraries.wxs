@@ -8,9 +8,9 @@
     
 
     <!--Dependent libraries-->
-    <ComponentGroup Id="ReleaseNotes" Directory="RELEASENOTESFOLDER">
+    <ComponentGroup Id="ReleaseNotesGroup" Directory="RELEASENOTESFOLDER">
       <Component>
-        <File Id="Release Notes"
+        <File Id="ReleaseNotes"
             Name="Release Notes.htm"
             Source="$(var.ProjectDirectory)ReleaseNotes\Release Notes.htm"
             KeyPath="yes" />

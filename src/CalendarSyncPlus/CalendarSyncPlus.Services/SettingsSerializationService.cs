@@ -24,6 +24,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel.Composition;
 using System.IO;
 using System.Threading.Tasks;
+using System.Waf.Applications;
 using CalendarSyncPlus.Common.Log;
 using CalendarSyncPlus.Domain;
 using CalendarSyncPlus.Domain.File.Xml;
@@ -137,6 +138,11 @@ namespace CalendarSyncPlus.Services
             if (result == null)
             {
                 return Settings.GetDefaultSettings();
+            }
+
+            if (string.IsNullOrEmpty(result.SettingsVersion) || !result.SettingsVersion.Equals(ApplicationInfo.Version))
+            {
+                result.IsFirstSave = true;
             }
 
             ValidateSettings(result);

@@ -19,6 +19,7 @@
 
 using System.ComponentModel;
 using System.ComponentModel.Composition;
+using System.Waf.Applications;
 using CalendarSyncPlus.Application.ViewModels;
 using CalendarSyncPlus.Common.Log;
 using CalendarSyncPlus.Services.Interfaces;
@@ -80,7 +81,7 @@ namespace CalendarSyncPlus.Application.Controllers
             SyncService.Shutdown();
 
             PropertyChangedEventManager.RemoveHandler(SyncService, SyncServiceNotificationHandler, "");
-
+            ShellViewModel.Settings.SettingsVersion = ApplicationInfo.Version;
             _settingsSerializationService.SerializeSettings(ShellViewModel.Settings);
             _systemTrayNotifierViewModel.Quit();
         }
