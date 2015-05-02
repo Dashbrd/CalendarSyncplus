@@ -45,6 +45,10 @@
                     <RowDefinition />
                     <RowDefinition />
                 </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
                 <StackPanel Margin="2" Orientation="Horizontal">
                     <CheckBox Margin="2"
                               Content="{localizeExtension:LocText Key=OptionsSettingsView_CheckBox_Category_Content}"
@@ -69,11 +73,11 @@
                             </ItemsPanelTemplate>
                         </ComboBox.ItemsPanel>
                     </ComboBox>
-
-                    <ContentControl Margin="2"
-                                    ContentTemplate="{DynamicResource HelpButtonTemplate}"
-                                    ToolTip="{localizeExtension:LocText Key=OptionsSettingsView_HelpButton_Category_Tooltip}" />
                 </StackPanel>
+                <ContentControl Margin="2"
+                                Grid.Column="1"
+                                ContentTemplate="{DynamicResource HelpButtonTemplate}"
+                                ToolTip="{localizeExtension:LocText Key=OptionsSettingsView_HelpButton_Category_Tooltip}" />
             </Grid>
         </GroupBox>
         <GroupBox Grid.Row="1" Header="{localizeExtension:LocText Key=OptionsSettingsView_GroupBox_DestinationCalendarOptions_Header}">
@@ -86,6 +90,10 @@
                     <RowDefinition />
                     <RowDefinition />
                 </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
 
                 <CheckBox Margin="2"
                           Content="{localizeExtension:LocText Key=OptionsSettingsView_CheckBox_DestinationCalendarOptions_AddDescription_Content}"
@@ -93,6 +101,10 @@
                                               Mode=TwoWay,
                                               UpdateSourceTrigger=PropertyChanged}"
                           ToolTip="{localizeExtension:LocText Key=OptionsSettingsView_CheckBox_DestinationCalendarOptions_AddDescription_ToolTip}" />
+                <ContentControl Margin="2"
+                                Grid.Column="1"
+                                ContentTemplate="{DynamicResource HelpButtonTemplate}"
+                                ToolTip="" />
                 <CheckBox Grid.Row="1"
                           Margin="2"
                           Content="{localizeExtension:LocText Key=OptionsSettingsView_CheckBox_DestinationCalendarOptions_AddAttendees_Content}"
@@ -100,6 +112,11 @@
                                               Mode=TwoWay,
                                               UpdateSourceTrigger=PropertyChanged}"
                           ToolTip="{localizeExtension:LocText Key=OptionsSettingsView_CheckBox_DestinationCalendarOptions_AddAttendees_ToolTip}" />
+                <ContentControl Margin="2"
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                ContentTemplate="{DynamicResource HelpButtonTemplate}"
+                                ToolTip="" />
                 <CheckBox Grid.Row="2"
                           Margin="20,2,2,2"
                           Content="{localizeExtension:LocText Key=OptionsSettingsView_CheckBox_DestinationCalendarOptions_AddAttendeesDescription_Content}"
@@ -110,6 +127,11 @@
                                               Mode=TwoWay,
                                               UpdateSourceTrigger=PropertyChanged}"
                           ToolTip="{localizeExtension:LocText Key=OptionsSettingsView_CheckBox_DestinationCalendarOptions_AddAttendeesDescription_ToolTip}" />
+                <ContentControl Margin="2"
+                                Grid.Row="2"
+                                Grid.Column="1"
+                                ContentTemplate="{DynamicResource HelpButtonTemplate}"
+                                ToolTip="" />
                 <CheckBox Grid.Row="3"
                           Margin="2"
                           Content="{localizeExtension:LocText Key=OptionsSettingsView_CheckBox_DestinationCalendarOptions_AddReminders_Content}"
@@ -117,6 +139,11 @@
                                               Mode=TwoWay,
                                               UpdateSourceTrigger=PropertyChanged}"
                           ToolTip="{localizeExtension:LocText Key=OptionsSettingsView_CheckBox_DestinationCalendarOptions_AddReminder_ToolTip}" />
+                <ContentControl Margin="2"
+                                Grid.Row="3"
+                                Grid.Column="1"
+                                ContentTemplate="{DynamicResource HelpButtonTemplate}"
+                                ToolTip="" />
                 <CheckBox Grid.Row="4"
                           Margin="2"
                           Content="{localizeExtension:LocText Key=OptionsSettingsView_CheckBox_DestinationCalendarOptions_AddEventsAsAppointment_Content}"
@@ -124,6 +151,11 @@
                                               Mode=TwoWay,
                                               UpdateSourceTrigger=PropertyChanged}"
                           ToolTip="{localizeExtension:LocText Key=OptionsSettingsView_CheckBox_DestinationCalendarOptions_AddEventsAsAppointment_ToolTip}" />
+                <ContentControl Margin="2"
+                                Grid.Row="4"
+                                Grid.Column="1"
+                                ContentTemplate="{DynamicResource HelpButtonTemplate}"
+                                ToolTip="" />
                 <CheckBox Grid.Row="5"
                           Margin="2"
                           Content="{localizeExtension:LocText Key=OptionsSettingsView_CheckBox_DestinationCalendarOptions_AddAttachments_Content}"
@@ -131,6 +163,12 @@
                                               Mode=TwoWay,
                                               UpdateSourceTrigger=PropertyChanged}"
                           Visibility="Collapsed" />
+                <ContentControl Margin="2"
+                                Grid.Row="4"
+                                Grid.Column="1"
+                                ContentTemplate="{DynamicResource HelpButtonTemplate}"
+                                ToolTip="" 
+                                Visibility="Collapsed"/>
             </Grid>
         </GroupBox>
         <GroupBox Grid.Row="2" Header="{localizeExtension:LocText Key=OptionsSettingsView_GroupBox_OtherOptions_Header}">
@@ -142,11 +180,19 @@
                     <RowDefinition />
                     <RowDefinition />
                 </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
                 <CheckBox Margin="2"
                           Content="{localizeExtension:LocText Key=OptionsSettingsView_CheckBox_OtherOptions_DisableDelete_Content}"
                           IsChecked="{Binding DisableDelete,
                                               Mode=TwoWay}"
                           ToolTip="{localizeExtension:LocText Key=OptionsSettingsView_CheckBox_OtherOptions_DisableDelete_ToolTip}" />
+                <ContentControl Margin="2"
+                                Grid.Column="1"
+                                ContentTemplate="{DynamicResource HelpButtonTemplate}"
+                                ToolTip="" />
                 <CheckBox Grid.Row="1"
                           Margin="2"
                           Content="{localizeExtension:LocText Key=OptionsSettingsView_CheckBox_OtherOptions_ConfirmDelete_Content}"
@@ -156,6 +202,11 @@
                                               Converter={StaticResource InvertBooleanConverter},
                                               UpdateSourceTrigger=PropertyChanged}"
                           ToolTip="{localizeExtension:LocText Key=OptionsSettingsView_CheckBox_OtherOptions_ConfirmDelete_ToolTip}" />
+                <ContentControl Margin="2"
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                ContentTemplate="{DynamicResource HelpButtonTemplate}"
+                                ToolTip="" />
                 <CheckBox Grid.Row="2"
                           Margin="2"
                           Content="{localizeExtension:LocText Key=OptionsSettingsView_CheckBox_OtherOptions_KeepLastModified_Content}"
@@ -164,6 +215,11 @@
                           IsEnabled="{Binding DisableDelete,
                                               Converter={StaticResource InvertBooleanConverter},
                                               UpdateSourceTrigger=PropertyChanged}" />
+                <ContentControl Margin="2"
+                                Grid.Row="2"
+                                Grid.Column="1"
+                                ContentTemplate="{DynamicResource HelpButtonTemplate}"
+                                ToolTip="" />
             </Grid>
         </GroupBox>
     </Grid>

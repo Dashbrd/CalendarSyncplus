@@ -11,8 +11,12 @@
         CloseButtonCommand="{Binding Path=CloseChildViewCommand}"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" Background="{DynamicResource WhiteColorBrush}">
-    <Grid>
-        <ContentControl Name="ChildViewContentHolder"></ContentControl>
+        mc:Ignorable="d" Background="{DynamicResource WhiteColorBrush}" >
+    <simpleChildWindow:ChildWindow.OverlayBrush>
+        <SolidColorBrush Color="{DynamicResource BlackColor}" Opacity=".55"/>
+    </simpleChildWindow:ChildWindow.OverlayBrush>
+    <Grid MaxWidth="400"
+          MaxHeight="600">
+        <ContentControl Name="ChildViewContentHolder"/>
     </Grid>
 </simpleChildWindow:ChildWindow>

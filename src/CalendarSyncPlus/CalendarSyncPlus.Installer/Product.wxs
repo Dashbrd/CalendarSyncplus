@@ -39,6 +39,7 @@
       <Directory Id="ProgramFilesFolder">
         <Directory Id="INSTALLFOLDER" Name="Calendar Sync +" >
           <Directory Id="USERGUIDEFOLDER" Name="UserGuide" />
+          <Directory Id="RELEASENOTESFOLDER" Name="ReleaseNotes"/>
         </Directory>
       </Directory>
       <!--Shortcut Directory structure-->

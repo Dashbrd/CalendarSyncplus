@@ -39,8 +39,7 @@ namespace CalendarSyncPlus.Presentation.Views
 
         public async void  ShowChildWindow(object childViewContent)
         {
-            await
-                this.ShowChildWindowAsync(new ChildView() {ChildContentView = childViewContent},ChildWindowManager.OverlayFillBehavior.FullWindow);
+            await this.ShowChildWindowAsync(new ChildView() {ChildContentView = childViewContent},ChildWindowManager.OverlayFillBehavior.FullWindow);
         }
 
         #endregion

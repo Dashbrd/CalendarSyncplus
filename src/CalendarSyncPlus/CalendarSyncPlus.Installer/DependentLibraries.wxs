@@ -8,6 +8,14 @@
     
 
     <!--Dependent libraries-->
+    <ComponentGroup Id="ReleaseNotes" Directory="RELEASENOTESFOLDER">
+      <Component>
+        <File Id="Release Notes"
+            Name="Release Notes.htm"
+            Source="$(var.ProjectDirectory)ReleaseNotes\Release Notes.htm"
+            KeyPath="yes" />
+      </Component>
+    </ComponentGroup>
     <ComponentGroup Id="UserGuide" Directory="USERGUIDEFOLDER">
       <Component>
         <File Id="HowToUseGuide"
@@ -21,6 +29,12 @@
         <File Id="CalendarSyncPlus.Common"
             Name="CalendarSyncPlus.Common.dll"
             Source="$(var.ProjectDirectory)CalendarSyncPlus.Common.dll"
+            KeyPath="yes" />
+      </Component>
+      <Component>
+        <File Id="CalendarSyncPlus.SyncEngine"
+            Name="CalendarSyncPlus.SyncEngine.dll"
+            Source="$(var.ProjectDirectory)CalendarSyncPlus.SyncEngine.dll"
             KeyPath="yes" />
       </Component>
 
