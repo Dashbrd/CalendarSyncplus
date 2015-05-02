@@ -39,9 +39,9 @@
         </TextBlock>
         <TextBlock>
             Report Error:
-            <Hyperlink Command="{Binding UriCommand}"
-                       CommandParameter="mailto:calendarsyncplus@outlook.com?subject=Error%20occurred%20in%20application&amp;body=Attached%20Log&amp;Attach='%APPDATA%\CalendarSyncPlus\Log\CalendarSyncPlus.log'"
-                       ToolTip="mailto:calendarsyncplus@outlook.com?subject=Error%20occurred%20in%20application&amp;body=Attached%20Log&amp;Attach='%APPDATA%\CalendarSyncPlus\Log\CalendarSyncPlus.log'">
+            <Hyperlink Command="{Binding MailToCommand}"
+                       CommandParameter="mailto:calendarsyncplus@outlook.com?subject=Error%20occurred%20in%20application&amp;body=Attached%20Log&amp;attachment='%APPDATA%\CalendarSyncPlus\Log\CalendarSyncPlus.log'"
+                       ToolTip="mailto:calendarsyncplus@outlook.com?subject=Error%20occurred%20in%20application&amp;body=Attached%20Log&amp;attachment='%APPDATA%\CalendarSyncPlus\Log\CalendarSyncPlus.log'">
                 Send Log
             </Hyperlink>
         </TextBlock>
