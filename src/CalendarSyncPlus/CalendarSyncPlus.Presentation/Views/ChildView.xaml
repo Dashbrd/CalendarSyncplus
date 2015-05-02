@@ -15,8 +15,8 @@
     <simpleChildWindow:ChildWindow.OverlayBrush>
         <SolidColorBrush Color="{DynamicResource BlackColor}" Opacity=".55"/>
     </simpleChildWindow:ChildWindow.OverlayBrush>
-    <Grid MaxWidth="400"
-          MaxHeight="600">
+    <Grid MaxWidth="500"
+          MaxHeight="650">
         <ContentControl Name="ChildViewContentHolder"/>
     </Grid>
 </simpleChildWindow:ChildWindow>
