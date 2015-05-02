@@ -27,6 +27,7 @@ using System.Threading.Tasks;
 using System.Waf.Foundation;
 using CalendarSyncPlus.Common.Log;
 using CalendarSyncPlus.Common.MetaData;
+using CalendarSyncPlus.Domain.Helpers;
 using CalendarSyncPlus.Domain.Models;
 using CalendarSyncPlus.Services.Interfaces;
 using CalendarSyncPlus.Services.Utilities;
@@ -135,6 +136,8 @@ namespace CalendarSyncPlus.Services
                 syncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Description);
             bool addReminders =
                 syncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Reminders);
+            bool addAttendeesToDescription =
+                syncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.AttendeesToDescription);
             var appointmentsToDelete = new List<Appointment>();
             foreach (Appointment destAppointment in destinationList)
             {
@@ -143,7 +146,7 @@ namespace CalendarSyncPlus.Services
                 foreach (Appointment sourceAppointment in sourceList)
                 {
                     isMatch = CompareAppointments(syncProfile, destAppointment, sourceAppointment, addDescription,
-                        addReminders, out isFound);
+                        addReminders,addAttendeesToDescription, out isFound);
                     if (isMatch)
                     {
                         break;
@@ -186,7 +189,7 @@ namespace CalendarSyncPlus.Services
         }
 
         private bool CompareAppointments(CalendarSyncProfile syncProfile, Appointment destAppointment,
-            Appointment sourceAppointment, bool addDescription, bool addReminders, out bool isFound)
+            Appointment sourceAppointment, bool addDescription, bool addReminders,bool addAttendeesToDescription, out bool isFound)
         {
             isFound = false;
             bool isMatch = false;
@@ -202,7 +205,7 @@ namespace CalendarSyncPlus.Services
                 //If description flag is on, compare description
                 if (addDescription)
                 {
-                    if (!sourceAppointment.CompareDescription(destAppointment))
+                    if (!sourceAppointment.CompareDescription(destAppointment, addAttendeesToDescription))
                     {
                         isFound = false;
                     }
@@ -249,7 +252,8 @@ namespace CalendarSyncPlus.Services
                     syncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Description);
                 bool addReminders =
                 syncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Reminders);
-
+                bool addAttendeesToDescription =
+                    syncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.AttendeesToDescription);
                 var appointmentsToAdd = new List<Appointment>();
                 foreach (Appointment sourceAppointment in sourceList)
                 {
@@ -257,7 +261,7 @@ namespace CalendarSyncPlus.Services
                     foreach (Appointment destAppointment in destinationList)
                     {
                         if (CompareAppointments(syncProfile, destAppointment, sourceAppointment, addDescription,
-                        addReminders, out isFound))
+                        addReminders,addAttendeesToDescription, out isFound))
                         {
                             break;
                         }
