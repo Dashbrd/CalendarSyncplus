@@ -11,7 +11,7 @@
     <ComponentGroup Id="ReleaseNotesGroup" Directory="RELEASENOTESFOLDER">
       <Component>
         <File Id="ReleaseNotes"
-            Name="Release Notes.htm"
+            Name="Release Notes.rtf"
             Source="$(var.ProjectDirectory)ReleaseNotes\Release Notes.rtf"
             KeyPath="yes" />
       </Component>
