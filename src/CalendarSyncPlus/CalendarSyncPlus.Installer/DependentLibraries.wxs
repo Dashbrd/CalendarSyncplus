@@ -8,6 +8,14 @@
     
 
     <!--Dependent libraries-->
+    <ComponentGroup Id="ReleaseNotes" Directory="RELEASENOTESFOLDER">
+      <Component>
+        <File Id="Release Notes"
+            Name="Release Notes.htm"
+            Source="$(var.ProjectDirectory)ReleaseNotes\Release Notes.htm"
+            KeyPath="yes" />
+      </Component>
+    </ComponentGroup>
     <ComponentGroup Id="UserGuide" Directory="USERGUIDEFOLDER">
       <Component>
         <File Id="HowToUseGuide"
