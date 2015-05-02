@@ -51,9 +51,11 @@
     <Content Include="icon.ico" />
     <Content Include="license.rtf" />
     <Content Include="Net45Installer\dotNetFx45_Full_setup.exe" />
+    <Content Include="Resources\BundleTheme.xml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Net45Installer" />
+    <Folder Include="Resources" />
   </ItemGroup>
   <Import Project="$(WixTargetsPath)" />
   <!--

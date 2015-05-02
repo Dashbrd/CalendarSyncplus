@@ -3,18 +3,18 @@
       xmlns:bal="http://schemas.microsoft.com/wix/BalExtension">
   <?define VERSION="!(bind.packageVersion.CalendarSyncPlusMsi)"?>
   <Bundle Name="Calendar Sync +" 
-          UpgradeCode="6A7B72FC-ED9B-4951-B733-AB54B8D4AE94" 
+          UpgradeCode="46e52120-a590-4388-80b1-a1b52ee251d3" 
            Version="$(var.VERSION)"
           Manufacturer="Ankesh Dave &amp; Akanksha Gaur"
           IconSourceFile="icon.ico" 
           AboutUrl="http://www.calendarsyncplus.codeplex.com"
           >
-    <BootstrapperApplicationRef Id="WixStandardBootstrapperApplication.RtfLicense" >
+    <BootstrapperApplicationRef Id="WixStandardBootstrapperApplication.RtfLicense"  >
       <bal:WixStandardBootstrapperApplication
            LicenseFile="license.rtf"
            LogoFile="icon.ico"
            ShowVersion="yes" LogoSideFile="icon.ico"
-            />
+           />
     </BootstrapperApplicationRef>
     <PayloadGroup Id="NetFx45RedistPayload">
       <Payload Name="redist\dotNetFx45_Full_setup.exe"
@@ -34,7 +34,7 @@
                 Description="A utility to synchronize Outlook to Google calendars, vice versa and bidirectional."
                 SourceFile="$(var.CalendarSyncPlus.Installer.TargetPath)"
                 ForcePerMachine="yes"  
-                  Vital="yes" >
+                  Vital="yes">
         <MsiProperty Name="INSTALLLOCATION" Value="[InstallFolder]" />
         
       </MsiPackage>
