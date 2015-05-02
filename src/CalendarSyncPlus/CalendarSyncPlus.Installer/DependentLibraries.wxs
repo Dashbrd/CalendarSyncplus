@@ -4,7 +4,7 @@
     <!--Defined Directory Variables-->
     <?define ProjectDirectory = "$(var.CalendarSyncPlus.Presentation.TargetDir)"?>
     <?define Net45Directory = "C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\"?>
-    <?define Net45FacadeDirectory = "$(var.Net45Directory)\Facades\"?>
+    <?define Net45FacadeDirectory = "$(var.Net45Directory)Facades\"?>
     
 
     <!--Dependent libraries-->
@@ -135,7 +135,14 @@
           Source="$(var.ProjectDirectory)MahApps.Metro.dll"
           KeyPath="yes" />
       </Component>
-
+      
+      <Component>
+        <File Id="MahApps.Metro.SimpleChildWindow"
+            Name="MahApps.Metro.SimpleChildWindow.dll"
+            Source="$(var.ProjectDirectory)MahApps.Metro.SimpleChildWindow.dll"
+            KeyPath="yes" />
+      </Component>
+      
       <Component>
         <File Id="System.Windows.Interactivity"
           Name="System.Windows.Interactivity.dll"
@@ -263,6 +270,12 @@
         <File Id="System.Collections"
           Name="System.Collections.dll"
           Source="$(var.Net45FacadeDirectory)System.Collections.dll"
+          KeyPath="yes" />
+      </Component>
+      <Component>
+        <File Id="System.ComponentModel.Composition"
+          Name="System.ComponentModel.Composition.dll"
+          Source="$(var.Net45Directory)System.ComponentModel.Composition.dll"
           KeyPath="yes" />
       </Component>
       <Component>
