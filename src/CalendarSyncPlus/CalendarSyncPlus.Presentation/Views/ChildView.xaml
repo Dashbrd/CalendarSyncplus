@@ -4,7 +4,7 @@
         xmlns:simpleChildWindow="clr-namespace:MahApps.Metro.SimpleChildWindow;assembly=MahApps.Metro.SimpleChildWindow"
         Title="What's New" 
         IsModal="True" 
-        AllowMove="True" 
+        AllowMove="False" 
         EnableDropShadow="False"
         ShowTitleBar="True" 
         ShowCloseButton="True" 
