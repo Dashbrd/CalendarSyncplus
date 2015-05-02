@@ -273,12 +273,6 @@
           KeyPath="yes" />
       </Component>
       <Component>
-        <File Id="System.ComponentModel.Composition"
-          Name="System.ComponentModel.Composition.dll"
-          Source="$(var.Net45Directory)System.ComponentModel.Composition.dll"
-          KeyPath="yes" />
-      </Component>
-      <Component>
         <File Id="System.ComponentModel"
           Name="System.ComponentModel.dll"
           Source="$(var.Net45FacadeDirectory)System.ComponentModel.dll"

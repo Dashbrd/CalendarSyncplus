@@ -43,5 +43,23 @@ namespace CalendarSyncPlus.Presentation.Views
             var childView = (ChildView) dependencyObject;
             childView.ChildViewContentHolder.Content = dependencyPropertyChangedEventArgs.NewValue;
         }
+
+
+
+        public string ChildContentTitle
+        {
+            get { return (string)GetValue(ChildContentTitleProperty); }
+            set { SetValue(ChildContentTitleProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for ChildContentTitle.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty ChildContentTitleProperty =
+            DependencyProperty.Register("ChildContentTitle", typeof(string), typeof(ChildView), new PropertyMetadata(string.Empty,OnChildContentChanged));
+
+        private static void OnChildContentChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs eventArgs)
+        {
+             var childView = (ChildView) dependencyObject;
+            childView.Title = (string) eventArgs.NewValue;
+        }
     }
 }
