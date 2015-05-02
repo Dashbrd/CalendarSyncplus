@@ -22,6 +22,7 @@
     <Feature Id="ProductFeature" Title="Calendar Sync +" Level="1">
       <ComponentGroupRef Id="ProductComponents" />
       <ComponentGroupRef Id="UserGuide" />
+      <ComponentGroupRef Id="ReleaseNotesGroup" />
       <ComponentGroupRef Id="ApplicationShortcuts" />
     </Feature>
 
@@ -67,6 +68,12 @@
       <!--<Component Id="SecurityRegistryValue">
         <RegistryValue Root="HKCU" Key="Software\Policies\Microsoft\Security" Name="CheckAdminSettings" Type="integer" Value="00000001" KeyPath="yes"/>
       </Component>-->
+      <Component Id="RunAtStartUpRegistry" >
+        <RegistryValue Root="HKCU" Key="SOFTWARE\Microsoft\Windows\CurrentVersion\Run" Name="CalendarSyncPlusStartup" Type="string" Value="[#CalendarSyncPlus.exe] /MINIMIZED" KeyPath="yes"/>
+      </Component>
+      <Component Id="FirstLaunchRegistry" >
+        <RegistryValue Root="HKCU" Key="Software\Ankesh Dave &amp; Akanksha Gaur\CalendarSyncPlus" Name="FirstLaunch" Type="integer" Value="00000001" KeyPath="yes"/>
+      </Component>
     </ComponentGroup>
 
   </Product>

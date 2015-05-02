@@ -1,26 +1,42 @@
 ﻿using System.Collections.ObjectModel;
+using System.Waf.Applications;
+using System.Xml.Serialization;
 
 namespace CalendarSyncPlus.Domain.Models
 {
     public class Settings
     {
-        private AppSettings _appSettings;
+        public string SettingsVersion { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
         public ObservableCollection<GoogleAccount> GoogleAccounts { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
         public ObservableCollection<CalendarSyncProfile> SyncProfiles { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public AppSettings AppSettings { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        [XmlIgnore]
+        public bool IsFirstSave { get; set; }
 
-        public AppSettings AppSettings
-        {
-            get { return _appSettings; }
-            set { _appSettings = value; }
-        }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public static Settings GetDefaultSettings()
         {
             var settings = new Settings
             {
+                IsFirstSave = true,
+                SettingsVersion = ApplicationInfo.Version,
                 AppSettings = new AppSettings
                 {
-                    IsFirstSave = true,
                     MinimizeToSystemTray = true,
                     CheckForUpdates = true,
                     PeriodicSyncOn = true,
