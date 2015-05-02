@@ -12,7 +12,7 @@
       <Component>
         <File Id="ReleaseNotes"
             Name="Release Notes.htm"
-            Source="$(var.ProjectDirectory)ReleaseNotes\Release Notes.htm"
+            Source="$(var.ProjectDirectory)ReleaseNotes\Release Notes.rtf"
             KeyPath="yes" />
       </Component>
     </ComponentGroup>

@@ -42,13 +42,7 @@ namespace CalendarSyncPlus.Presentation.Controls.RichTextBox
         /// </summary>
         public ITextFormatter TextFormatter
         {
-            get
-            {
-                if (_textFormatter == null)
-                    _textFormatter = new HtmlFormatter(); //default is rtf
-
-                return _textFormatter;
-            }
+            get { return _textFormatter ?? (_textFormatter = new RtfFormatter()); }
             set
             {
                 _textFormatter = value;
@@ -88,6 +82,47 @@ namespace CalendarSyncPlus.Presentation.Controls.RichTextBox
         }
 
         #endregion //Text
+
+
+
+        public TextFormatterType TextFormatterType
+        {
+            get { return (TextFormatterType)GetValue(TextFormatterTypeProperty); }
+            set { SetValue(TextFormatterTypeProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for TextFormatterType.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty TextFormatterTypeProperty =
+            DependencyProperty.Register("TextFormatterType", typeof (TextFormatterType),
+                typeof (BindableHtmlRichTextBox),
+                new FrameworkPropertyMetadata(TextFormatterType.Default,
+                    FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnTextFormatterTypeChanged));
+
+        private static void OnTextFormatterTypeChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs dependencyPropertyChangedEventArgs)
+        {
+            var textBox = (BindableHtmlRichTextBox) dependencyObject;
+
+            var formatterType = (TextFormatterType)dependencyPropertyChangedEventArgs.NewValue;
+            ITextFormatter formatter = new RtfFormatter();
+            switch (formatterType)
+            {
+                case TextFormatterType.Html:
+                    formatter = new HtmlFormatter();
+                    break;
+                case TextFormatterType.Rtf:
+                    formatter = new RtfFormatter();
+                    break;
+                case TextFormatterType.PlainText:
+                    formatter = new PlainTextFormatter();
+                    break;
+                case TextFormatterType.Xaml:
+                    formatter = new XamlFormatter();
+                    break;
+                case TextFormatterType.Default:
+                    break;
+            }
+            textBox.TextFormatter = formatter;
+        }
 
         #endregion //Properties
 

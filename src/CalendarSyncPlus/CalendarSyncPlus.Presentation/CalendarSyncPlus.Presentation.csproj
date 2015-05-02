@@ -176,6 +176,7 @@
     <Compile Include="Controls\RichTextBox\Formatters\RtfFormatter.cs" />
     <Compile Include="Controls\RichTextBox\Formatters\XamlFormatter.cs" />
     <Compile Include="Controls\RichTextBox\BindableHtmlRichTextBox.cs" />
+    <Compile Include="Controls\RichTextBox\TextFormatterType.cs" />
     <Compile Include="Controls\TimePickerControl.xaml.cs">
       <DependentUpon>TimePickerControl.xaml</DependentUpon>
     </Compile>
@@ -370,6 +371,7 @@
     </None>
     <AppDesigner Include="Properties\" />
     <None Include="Resources\HowToUseGuide.xps" />
+    <None Include="Resources\Release Notes.rtf" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\btn_donate_SM.gif" />
@@ -436,9 +438,6 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="Resources\Release Notes.htm" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
@@ -451,7 +450,7 @@
   <Import Project="..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets" Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" />
   <PropertyGroup>
     <PostBuildEvent>xcopy "$(ProjectDir)Resources\*.xps" "$(TargetDir)UserGuide\" /Y /I
-xcopy "$(ProjectDir)Resources\*.htm" "$(TargetDir)ReleaseNotes\" /Y /I
+xcopy "$(ProjectDir)Resources\*.rtf" "$(TargetDir)ReleaseNotes\" /Y /I
 </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
