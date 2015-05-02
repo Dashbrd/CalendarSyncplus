@@ -53,9 +53,6 @@ namespace CalendarSyncPlus.SyncEngine
             bool addAttendeesToDescription =
                 syncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.AttendeesToDescription);
 
-            //var destAppointmentsToDelete = new List<Appointment>();
-            //var sourceAppointmentsToUpdate = new List<Appointment>();
-
             foreach (Appointment destAppointment in destinationList)
             {
                 //If SourceId is null, it is not a copy of any entry from the selected source calendar

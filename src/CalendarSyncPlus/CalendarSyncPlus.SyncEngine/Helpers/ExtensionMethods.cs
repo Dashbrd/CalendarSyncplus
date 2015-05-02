@@ -8,10 +8,15 @@ using CalendarSyncPlus.Domain.Models;
 
 namespace CalendarSyncPlus.SyncEngine.Helpers
 {
-    public static class AppointmentHelper
+    public static class ExtensionMethods
     {
         public static bool CopyDetail(this Appointment appointment, Appointment otherAppointment, CalendarEntryOptionsEnum calendarEntryOptions)
         {
+            appointment.StartTime = otherAppointment.StartTime;
+            appointment.EndTime = otherAppointment.EndTime;
+            appointment.Subject = otherAppointment.Subject;
+            appointment.AllDayEvent = otherAppointment.AllDayEvent;
+            
             if (calendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Description))
             {
                 appointment.Description = otherAppointment.ParseDescription();
@@ -30,6 +35,7 @@ namespace CalendarSyncPlus.SyncEngine.Helpers
                 appointment.ReminderSet = otherAppointment.ReminderSet;
                 appointment.ReminderMinutesBeforeStart = otherAppointment.ReminderMinutesBeforeStart;
             }
+
             return true;
         }
     }
