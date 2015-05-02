@@ -99,6 +99,7 @@ namespace CalendarSyncPlus.Application.Controllers
         {
             //Perform Other assignments if required
             _shellViewModel.Show(startMinimized);
+            _settingsViewModel.ApplyProxySettings();
         }
 
         public void Shutdown()

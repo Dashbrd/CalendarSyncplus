@@ -41,6 +41,7 @@ using CalendarSyncPlus.GoogleServices.Google;
 using CalendarSyncPlus.Services.Interfaces;
 using CalendarSyncPlus.Services.Utilities;
 using MahApps.Metro.Controls.Dialogs;
+using Microsoft.Win32;
 
 #endregion
 
@@ -592,6 +593,35 @@ namespace CalendarSyncPlus.Application.ViewModels
             else
             {
                 ViewCore.Show();
+                ShowOnLaunch();
+            }
+        }
+
+        private void ShowOnLaunch()
+        {
+            ShowWhatsNewOnStartup();
+        }
+
+        private void ShowWhatsNewOnStartup()
+        {
+            var calendarSyncPlusKey = @"Software\Ankesh Dave & Akanksha Gaur\CalendarSyncPlus";
+
+            var key = Registry.CurrentUser.OpenSubKey(calendarSyncPlusKey,RegistryKeyPermissionCheck.ReadWriteSubTree);
+            try
+            {
+                if (key != null)
+                {
+                    int value = (int) key.GetValue("FirstLaunch",0);
+                    if (value==1)
+                    {
+                        ShowWhatsNew();
+                        key.SetValue("FirstLaunch",0,RegistryValueKind.DWord);
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                ApplicationLogger.LogError("First Launch Key Not found");
             }
         }
 

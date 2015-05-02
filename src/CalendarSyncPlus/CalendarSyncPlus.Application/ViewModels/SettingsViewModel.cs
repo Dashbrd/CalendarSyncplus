@@ -592,28 +592,29 @@ namespace CalendarSyncPlus.Application.ViewModels
             }
         }
 
-        private void ApplyProxySettings()
+        internal void ApplyProxySettings()
         {
             IWebProxy proxy;
             try
             {
-                switch (ProxySettings.ProxyType)
+                var proxySettings = Settings.AppSettings.ProxySettings;
+                switch (proxySettings.ProxyType)
                 {
                     case ProxyType.NoProxy:
                         WebRequest.DefaultWebProxy = null;
                         break;
                     case ProxyType.ProxyWithAuth:
-                        proxy = new WebProxy(new Uri(string.Format("{0}:{1}", ProxySettings.ProxyAddress, ProxySettings.Port)), ProxySettings.BypassOnLocal)
+                        proxy = new WebProxy(new Uri(string.Format("{0}:{1}", proxySettings.ProxyAddress, proxySettings.Port)), proxySettings.BypassOnLocal)
                         {
-                            UseDefaultCredentials = ProxySettings.UseDefaultCredentials
+                            UseDefaultCredentials = proxySettings.UseDefaultCredentials
                         };
 
-                        if (!ProxySettings.UseDefaultCredentials)
+                        if (!proxySettings.UseDefaultCredentials)
                         {
-                            proxy.Credentials = string.IsNullOrEmpty(ProxySettings.Domain)
-                                ? new NetworkCredential(ProxySettings.UserName, ProxySettings.Password)
-                                : new NetworkCredential(ProxySettings.UserName, ProxySettings.Password,
-                                    ProxySettings.Domain);
+                            proxy.Credentials = string.IsNullOrEmpty(proxySettings.Domain)
+                                ? new NetworkCredential(proxySettings.UserName, proxySettings.Password)
+                                : new NetworkCredential(proxySettings.UserName, proxySettings.Password,
+                                    proxySettings.Domain);
                         }
                         WebRequest.DefaultWebProxy = proxy;
                         break;
