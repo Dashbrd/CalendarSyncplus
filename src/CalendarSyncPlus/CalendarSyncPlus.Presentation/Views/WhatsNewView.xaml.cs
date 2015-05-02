@@ -14,6 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using CalendarSyncPlus.Application.Views;
+using CalendarSyncPlus.Presentation.Controls.RichTextBox.Formatters;
 
 namespace CalendarSyncPlus.Presentation.Views
 {

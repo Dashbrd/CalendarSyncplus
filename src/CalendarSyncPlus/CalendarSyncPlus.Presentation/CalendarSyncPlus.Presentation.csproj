@@ -176,6 +176,7 @@
     <Compile Include="Controls\RichTextBox\Formatters\RtfFormatter.cs" />
     <Compile Include="Controls\RichTextBox\Formatters\XamlFormatter.cs" />
     <Compile Include="Controls\RichTextBox\BindableHtmlRichTextBox.cs" />
+    <Compile Include="Controls\RichTextBox\TextFormatterType.cs" />
     <Compile Include="Controls\TimePickerControl.xaml.cs">
       <DependentUpon>TimePickerControl.xaml</DependentUpon>
     </Compile>

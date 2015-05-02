@@ -8,8 +8,8 @@
              mc:Ignorable="d"
              d:DesignHeight="300"
              d:DesignWidth="300"
-             d:DataContext="{d:DesignInstance viewModels:WhatsNewViewModel}">
+             d:DataContext="{d:DesignInstance viewModels:WhatsNewViewModel}" >
     <Grid>
-        <richTextBox:BindableHtmlRichTextBox Text="{Binding HtmlText}"></richTextBox:BindableHtmlRichTextBox>
+        <richTextBox:BindableHtmlRichTextBox Text="{Binding HtmlText}" TextFormatterType="Rtf"></richTextBox:BindableHtmlRichTextBox>
     </Grid>
 </UserControl>
