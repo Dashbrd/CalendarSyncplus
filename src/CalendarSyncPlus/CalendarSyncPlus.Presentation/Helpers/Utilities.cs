@@ -41,6 +41,7 @@ namespace CalendarSyncPlus.Presentation.Helpers
 
         public static void HideForeground(Window mainWindow)
         {
+            mainWindow.Show();
             mainWindow.WindowState = WindowState.Minimized;
             mainWindow.ShowInTaskbar = false;
             mainWindow.Hide();

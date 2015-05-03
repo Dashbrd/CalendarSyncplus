@@ -2,30 +2,32 @@
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
       xmlns:bal="http://schemas.microsoft.com/wix/BalExtension">
   <?define VERSION="!(bind.packageVersion.CalendarSyncPlusMsi)"?>
-  <Bundle Name="Calendar Sync +" 
-          UpgradeCode="6A7B72FC-ED9B-4951-B733-AB54B8D4AE94" 
+  <Bundle Name="Calendar Sync +"
+          UpgradeCode="6A7B72FC-ED9B-4951-B733-AB54B8D4AE94"
            Version="$(var.VERSION)"
           Manufacturer="Ankesh Dave &amp; Akanksha Gaur"
-          IconSourceFile="icon.ico">
-    <BootstrapperApplicationRef Id="WixStandardBootstrapperApplication.RtfLicense" >
+          IconSourceFile="icon.ico" 
+          AboutUrl="http://www.calendarsyncplus.codeplex.com">
+    <BootstrapperApplicationRef Id="WixStandardBootstrapperApplication.RtfLicense"  >
       <bal:WixStandardBootstrapperApplication
+          LicenseUrl="http://calendarsyncplus.codeplex.com/license"
            LicenseFile="license.rtf"
            LogoFile="icon.ico"
            ShowVersion="yes" LogoSideFile="icon.ico"
-            />
+           SuppressOptionsUI="yes"/>
     </BootstrapperApplicationRef>
-    <!--<PayloadGroup Id="NetFx452RedistPayload">
+   
+    <PayloadGroup Id="NetFx45RedistPayload">
       <Payload Name="redist\dotNetFx45_Full_setup.exe"
                SourceFile="Net45Installer\dotNetFx45_Full_setup.exe"
                 Compressed="yes"/>
-    </PayloadGroup>-->
+    </PayloadGroup>
     
     <Variable Name="LaunchTarget"
            Value="[ProgramFilesFolder]Calendar Sync +\CalendarSyncPlus.exe"/>
-    <Variable Name="InstallFolder" Type="string" Value="[ProgramFilesFolder]Calendar Sync +"/>
+    <Variable Name="InstallFolder" bal:Overridable="yes" Type="string" Value="[ProgramFilesFolder]Calendar Sync +"/>
     <Chain>
-      <PackageGroupRef Id="NetFx451Web"/>
-      <RollbackBoundary  />
+      <PackageGroupRef Id="NetFx45Web"/>
       <MsiPackage Id="CalendarSyncPlusMsi"
                 Compressed="yes"
                   EnableFeatureSelection="yes"

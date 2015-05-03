@@ -58,6 +58,7 @@
                     <views:OptionsSettingsView DataContext="{Binding SelectedProfile}" />
                 </ScrollViewer>
             </TabItem>
+            
         </TabControl>
     </Grid>
 </UserControl>

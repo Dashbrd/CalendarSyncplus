@@ -41,6 +41,7 @@ using CalendarSyncPlus.GoogleServices.Google;
 using CalendarSyncPlus.Services.Interfaces;
 using CalendarSyncPlus.Services.Utilities;
 using MahApps.Metro.Controls.Dialogs;
+using Microsoft.Win32;
 
 #endregion
 
@@ -72,7 +73,8 @@ namespace CalendarSyncPlus.Application.ViewModels
         private DelegateCommand _startSyncCommand;
         private DelegateCommand _syncNowCommand;
         private List<CalendarSyncProfile> _scheduledSyncProfiles;
-
+        private ChildViewContentType _childContentViewType;
+        private bool _showChildView;
         #endregion
 
         #region Events
@@ -101,7 +103,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             Settings settings,
             IMessageService messageService,
             ApplicationLogger applicationLogger, IApplicationUpdateService applicationUpdateService,
-            SystemTrayNotifierViewModel systemTrayNotifierViewModel)
+            SystemTrayNotifierViewModel systemTrayNotifierViewModel,ChildContentViewFactory childContentViewFactory)
             : base(view)
         {
             MessageService = messageService;
@@ -112,6 +114,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             Settings = settings;
             ApplicationLogger = applicationLogger;
             SystemTrayNotifierViewModel = systemTrayNotifierViewModel;
+            ChildContentViewFactory = childContentViewFactory;
             _statusBuilder = new StringBuilder();
             view.Closing += ViewClosing;
             view.Closed += ViewClosed;
@@ -125,6 +128,7 @@ namespace CalendarSyncPlus.Application.ViewModels
         public ISyncService SyncStartService { get; private set; }
         public ApplicationLogger ApplicationLogger { get; private set; }
         public SystemTrayNotifierViewModel SystemTrayNotifierViewModel { get; private set; }
+        public ChildContentViewFactory ChildContentViewFactory { get; set; }
         public IMessageService MessageService { get; set; }
         public IApplicationUpdateService ApplicationUpdateService { get; set; }
         public IShellService ShellService { get; set; }
@@ -248,6 +252,33 @@ namespace CalendarSyncPlus.Application.ViewModels
         {
             get { return _scheduledSyncProfiles; }
             set { SetProperty(ref _scheduledSyncProfiles, value); }
+        }
+
+        public ChildViewContentType ChildContentViewType
+        {
+            get { return _childContentViewType; }
+            set { SetProperty(ref _childContentViewType, value); }
+        }
+
+        public bool ShowChildView
+        {
+            get { return _showChildView; }
+            set { SetProperty(ref _showChildView, value); }
+        }
+
+        public DelegateCommand ShowWhatsNewCommand
+        {
+            get
+            {
+                return _showWhatsNewCommand ??
+                       (_showWhatsNewCommand = new DelegateCommand(ShowWhatsNew));
+            }
+        }
+
+        private void ShowWhatsNew()
+        {
+           var contentView = ChildContentViewFactory.GetChildContentViewModel(ChildViewContentType.WhatsNew);
+           ViewCore.ShowChildWindow(contentView.View);
         }
 
         #endregion
@@ -397,6 +428,8 @@ namespace CalendarSyncPlus.Application.ViewModels
         }
 
         private static readonly object lockerObject = new object();
+        private DelegateCommand _showWhatsNewCommand;
+
         private void OnTimerElapsed(object sender, ElapsedEventArgs e)
         {
             BeginInvokeOnCurrentDispatcher(() =>
@@ -560,6 +593,35 @@ namespace CalendarSyncPlus.Application.ViewModels
             else
             {
                 ViewCore.Show();
+                ShowOnLaunch();
+            }
+        }
+
+        private void ShowOnLaunch()
+        {
+            ShowWhatsNewOnStartup();
+        }
+
+        private void ShowWhatsNewOnStartup()
+        {
+            var calendarSyncPlusKey = @"Software\Ankesh Dave & Akanksha Gaur\CalendarSyncPlus";
+
+            var key = Registry.CurrentUser.OpenSubKey(calendarSyncPlusKey,RegistryKeyPermissionCheck.ReadWriteSubTree);
+            try
+            {
+                if (key != null)
+                {
+                    int value = (int) key.GetValue("FirstLaunch",0);
+                    if (value==1)
+                    {
+                        ShowWhatsNew();
+                        key.SetValue("FirstLaunch",0,RegistryValueKind.DWord);
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                ApplicationLogger.LogError("First Launch Key Not found");
             }
         }
 

@@ -1,18 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Composition;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CalendarSyncPlus.Domain.Helpers;
 using CalendarSyncPlus.Domain.Models;
 using CalendarSyncPlus.SyncEngine.Helpers;
 using CalendarSyncPlus.SyncEngine.Interfaces;
 
 namespace CalendarSyncPlus.SyncEngine
 {
+    [Export(typeof(ICalendarSyncEngine))]
     public class CalendarSyncEngine : ICalendarSyncEngine
     {
-
         public List<Appointment> SourceAppointmentsToUpdate { get; set; }
+
+        public List<Appointment> SourceOrphanEntries { get; set; }
 
         public List<Appointment> SourceAppointmentsToDelete { get; set; }
 
@@ -24,30 +28,30 @@ namespace CalendarSyncPlus.SyncEngine
 
         public List<Appointment> DestAppointmentsToAdd { get; set; }
 
+        public List<Appointment> DestOrphanEntries { get; set; }
 
-        public bool RunOptimizedAlgorithm(CalendarSyncProfile syncProfile,
-            List<Appointment> sourceList, List<Appointment> destinationList)
-        {
-            return true;
-        }
 
+        #region Private Methods
 
         /// <summary>
         /// </summary>
         /// <param name="syncProfile"></param>
         /// <param name="sourceList"></param>
         /// <param name="destinationList"></param>
+        /// <param name="destAppointmentsToDelete"></param>
+        /// <param name="sourceAppointmentsToUpdate"></param>
+        /// <param name="destOrphanEntries"></param>
         /// <returns></returns>
-        public List<Appointment> GetAppointmentsToDelete(CalendarSyncProfile syncProfile,
-            List<Appointment> sourceList, List<Appointment> destinationList)
+        void GetAppointmentsToDelete(CalendarSyncProfile syncProfile,
+            List<Appointment> sourceList, List<Appointment> destinationList, List<Appointment>  destAppointmentsToDelete, 
+            List<Appointment> sourceAppointmentsToUpdate, List<Appointment> destOrphanEntries)
         {
             bool addDescription =
                 syncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Description);
             bool addReminders =
                 syncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Reminders);
-
-            var destAppointmentsToDelete = new List<Appointment>();
-            var sourceAppointmentsToUpdate = new List<Appointment>();
+            bool addAttendeesToDescription =
+                syncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.AttendeesToDescription);
 
             foreach (Appointment destAppointment in destinationList)
             {
@@ -64,7 +68,7 @@ namespace CalendarSyncPlus.SyncEngine
                         {
                             //If any entry is found in source appointment and its contents are not equal to source appointment,
                             //If an entry is found and i same, ignore
-                            if (!CompareAppointments(destAppointment, sourceAppointment, addDescription, addReminders))
+                            if (!CompareAppointments(destAppointment, sourceAppointment, addDescription, addReminders,addAttendeesToDescription))
                             {
                                 if (syncProfile.SyncSettings.KeepLastModifiedVersion)
                                 {
@@ -88,10 +92,7 @@ namespace CalendarSyncPlus.SyncEngine
                     {
                         //If mode is one way & user has disabled delete, do not remove this entry, as this is an original entry in the calendar
                         //Else this entry is not a copy of any appointment in source calendar so delete it
-                        if (!syncProfile.SyncSettings.DisableDelete)
-                        {
-                            destAppointmentsToDelete.Add(destAppointment);
-                        }
+                        destOrphanEntries.Add(destAppointment);
                     }
                 }
                 else
@@ -101,7 +102,7 @@ namespace CalendarSyncPlus.SyncEngine
                     if (sourceAppointment != null)
                     {
                         //If any entry is found in source appointment and its contents are not equal to source appointment
-                        if (!CompareAppointments(destAppointment, sourceAppointment, addDescription, addReminders))
+                        if (!CompareAppointments(destAppointment, sourceAppointment, addDescription, addReminders, addAttendeesToDescription))
                         {
                             destAppointmentsToDelete.Add(destAppointment);
                         }
@@ -113,7 +114,6 @@ namespace CalendarSyncPlus.SyncEngine
                     }
                 }
             }
-            return destAppointmentsToDelete;
         }
 
         /// <summary>
@@ -122,39 +122,40 @@ namespace CalendarSyncPlus.SyncEngine
         /// <param name="syncProfile"></param>
         /// <param name="sourceList"></param>
         /// <param name="destinationList"></param>
+        /// <param name="appointmentsToAdd"></param>
         /// <returns></returns>
-        public List<Appointment> GetAppointmentsToAdd(CalendarSyncProfile syncProfile, List<Appointment> sourceList,
-            List<Appointment> destinationList)
+        void GetAppointmentsToAdd(CalendarSyncProfile syncProfile, List<Appointment> sourceList,
+            List<Appointment> destinationList, List<Appointment> appointmentsToAdd)
         {
             if (!destinationList.Any())
             {
+                appointmentsToAdd.AddRange(sourceList);
                 //All entries need to be added
-                return sourceList;
+                return;
             }
             bool addDescription =
                 syncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Description);
             bool addReminders =
             syncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Reminders);
-
-            var appointmentsToAdd = new List<Appointment>();
+            bool addAttendeesToDescription =
+            syncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.AttendeesToDescription);
             foreach (Appointment sourceAppointment in sourceList)
             {
                 if (sourceAppointment.SourceId == null)
                 {
                     var destinationAppointment = destinationList.FirstOrDefault(t =>
-                                    CompareAppointments(sourceAppointment, t, addDescription, addReminders));
+                                    CompareAppointments(sourceAppointment, t, addDescription, addReminders, addAttendeesToDescription));
                     if (destinationAppointment == null)
                     {
                         appointmentsToAdd.Add(sourceAppointment);
                     }
                 }
             }
-            return appointmentsToAdd;
         }
 
 
-        private bool CompareAppointments(Appointment destAppointment,
-          Appointment sourceAppointment, bool addDescription, bool addReminders)
+        bool CompareAppointments(Appointment destAppointment,
+          Appointment sourceAppointment, bool addDescription, bool addReminders, bool addAttendeesToDescription)
         {
             bool isFound = destAppointment.Equals(sourceAppointment);
             //If both entries have same content
@@ -164,7 +165,7 @@ namespace CalendarSyncPlus.SyncEngine
                 //If description flag is on, compare description
                 if (addDescription)
                 {
-                    if (!sourceAppointment.CompareDescription(destAppointment))
+                    if (!sourceAppointment.CompareDescription(destAppointment,addAttendeesToDescription))
                     {
                         isFound = false;
                     }
@@ -193,6 +194,40 @@ namespace CalendarSyncPlus.SyncEngine
             }
 
             return isFound;
+        }
+
+        
+        #endregion
+        public bool GetSourceEntriesToDelete(CalendarSyncProfile syncProfile, List<Appointment> sourceList, List<Appointment> destinationList)
+        {
+            SourceAppointmentsToDelete = new List<Appointment>();
+            SourceOrphanEntries = new List<Appointment>();
+            DestAppointmentsToUpdate = new List<Appointment>();
+            GetAppointmentsToDelete(syncProfile, destinationList, sourceList, SourceAppointmentsToDelete, DestAppointmentsToUpdate, SourceOrphanEntries);
+            return true;
+        }
+
+        public bool GetSourceEntriesToAdd(CalendarSyncProfile syncProfile, List<Appointment> sourceList, List<Appointment> destinationList)
+        {
+            SourceAppointmentsToAdd = new List<Appointment>();
+            GetAppointmentsToAdd(syncProfile, destinationList, sourceList, SourceAppointmentsToAdd);
+            return true;
+        }
+
+        public bool GetDestEntriesToDelete(CalendarSyncProfile syncProfile, List<Appointment> sourceList, List<Appointment> destinationList)
+        {
+            DestAppointmentsToDelete = new List<Appointment>();
+            DestOrphanEntries = new List<Appointment>();
+            SourceAppointmentsToUpdate = new List<Appointment>();
+            GetAppointmentsToDelete(syncProfile, sourceList, destinationList, DestAppointmentsToDelete, SourceAppointmentsToUpdate, DestOrphanEntries);
+            return true;
+        }
+
+        public bool GetDestEntriesToAdd(CalendarSyncProfile syncProfile, List<Appointment> sourceList, List<Appointment> destinationList)
+        {
+            DestAppointmentsToAdd = new List<Appointment>();
+            GetAppointmentsToAdd(syncProfile, sourceList,destinationList, DestAppointmentsToAdd);
+            return true;
         }
     }
 }

@@ -19,6 +19,7 @@ namespace CalendarSyncPlus.Application.ViewModels
         private string _productVersion;
         private string _updateText;
         private DelegateCommand _uriCommand;
+        private DelegateCommand _mailToCommand;
 
         [ImportingConstructor]
         public AboutViewModel(IAboutView aboutView, IApplicationUpdateService applicationUpdateService)
@@ -53,6 +54,19 @@ namespace CalendarSyncPlus.Application.ViewModels
         public DelegateCommand UriCommand
         {
             get { return _uriCommand = _uriCommand ?? new DelegateCommand(RequestNavigation); }
+        }
+
+        public DelegateCommand MailToCommand
+        {
+            get { return _mailToCommand = _mailToCommand ?? new DelegateCommand(LaunchMailToRequest); }
+        }
+
+        private void LaunchMailToRequest(object address)
+        {
+            var actualAddress = address as string;
+            if (string.IsNullOrEmpty(actualAddress)) return;
+            Environment.ExpandEnvironmentVariables(actualAddress);
+            Process.Start(new ProcessStartInfo(actualAddress));
         }
 
         public DelegateCommand CheckForUpdatesCommand

@@ -321,7 +321,7 @@ namespace CalendarSyncPlus.Application.ViewModels
         private async void AddNewGoogleAccountHandler()
         {
             //Accept Email Id
-            string accountName = await MessageService.ShowInput("Enter your Google Email", "Add Google Account");
+            string accountName = await MessageService.ShowInput("Enter your Google Email", "Adding Google Account");
 
             if (string.IsNullOrEmpty(accountName))
             {
@@ -380,7 +380,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             if (authorizeGoogleAccountTask.IsCanceled || authorizeGoogleAccountTask.IsFaulted || token.IsCancellationRequested ||
                 progressDialogController.IsCanceled)
             {
-                MessageService.ShowMessageAsync("Account Not Added, Authorization Interupted, Try Again");
+                MessageService.ShowMessageAsync("Account Not Added, Authorization Interrupted, Try Again");
             }
             else
             {
@@ -391,6 +391,8 @@ namespace CalendarSyncPlus.Application.ViewModels
                 }
                 GoogleAccounts.Add(account);
                 SelectedProfile.SelectedGoogleAccount = account;
+                SelectedProfile.GoogleCalendars = null;
+                SelectedProfile.GetGoogleCalendar();
             }
         }
 
@@ -403,7 +405,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             IsLoading = true;
             SettingsSaved = false;
             Settings.GoogleAccounts = GoogleAccounts;
-            Settings.AppSettings.IsFirstSave = false;
+            Settings.SettingsVersion = ApplicationInfo.Version;
             Settings.AppSettings.MinimizeToSystemTray = MinimizeToSystemTray;
             Settings.AppSettings.HideSystemTrayTooltip = HideSystemTrayTooltip;
             Settings.AppSettings.CheckForUpdates = CheckForUpdates;
@@ -499,29 +501,7 @@ namespace CalendarSyncPlus.Application.ViewModels
                     CheckForUpdates = Settings.AppSettings.CheckForUpdates;
                     RunApplicationAtSystemStartup = Settings.AppSettings.RunApplicationAtSystemStartup;
                     IsManualSynchronization = Settings.AppSettings.IsManualSynchronization;
-                    var profileList = new ObservableCollection<ProfileViewModel>();
-                    foreach (CalendarSyncProfile syncProfile in Settings.SyncProfiles)
-                    {
-                        var viewModel = new ProfileViewModel(syncProfile, GoogleCalendarService, OutlookCalendarService,
-                            MessageService,
-                            ExchangeWebCalendarService, ApplicationLogger, AccountAuthenticationService);
-
-                        var googleAccount =
-                            GoogleAccounts.Any()
-                                ? GoogleAccounts.FirstOrDefault(
-                                    account => account.Name == syncProfile.GoogleAccount.Name)
-                                : null;
-                        if (googleAccount != null)
-                        {
-                            googleAccount.GoogleCalendar = syncProfile.GoogleAccount.GoogleCalendar;
-                        }
-                        viewModel.SelectedGoogleAccount = googleAccount;
-                        viewModel.Initialize();
-                        profileList.Add(viewModel);
-                        PropertyChangedEventManager.AddHandler(viewModel, ProfilePropertyChangedHandler, "IsLoading");
-                    }
-                    SyncProfileList = profileList;
-                    SelectedProfile = SyncProfileList.FirstOrDefault();
+                    LoadProfiles();
                 }
                 else
                 {
@@ -544,11 +524,48 @@ namespace CalendarSyncPlus.Application.ViewModels
             IsLoading = false;
         }
 
-        private void DisconnectGoogleHandler()
+        private void LoadProfiles()
+        {
+            var profileList = new ObservableCollection<ProfileViewModel>();
+            foreach (CalendarSyncProfile syncProfile in Settings.SyncProfiles)
+            {
+                var viewModel = new ProfileViewModel(syncProfile, GoogleCalendarService, OutlookCalendarService,
+                    MessageService,
+                    ExchangeWebCalendarService, ApplicationLogger, AccountAuthenticationService);
+                GoogleAccount googleAccount = null;
+                if (syncProfile.GoogleAccount != null)
+                {
+                    if (GoogleAccounts.Any())
+                    {
+                        googleAccount = GoogleAccounts.FirstOrDefault(
+                            account => account.Name == syncProfile.GoogleAccount.Name);
+                    }
+                }
+
+                if (googleAccount != null)
+                {
+                    googleAccount.GoogleCalendar = syncProfile.GoogleAccount.GoogleCalendar;
+                }
+                viewModel.SelectedGoogleAccount = googleAccount;
+                viewModel.Initialize();
+                profileList.Add(viewModel);
+                PropertyChangedEventManager.AddHandler(viewModel, ProfilePropertyChangedHandler, "IsLoading");
+            }
+            SyncProfileList = profileList;
+            SelectedProfile = SyncProfileList.FirstOrDefault();
+        }
+
+        private async void DisconnectGoogleHandler()
         {
             if (SelectedProfile.SelectedGoogleAccount == null)
             {
                 MessageService.ShowMessageAsync("No account selected");
+                return;
+            }
+
+            var dialogResult = await MessageService.ShowConfirmMessage("Disconnection of Google account cannot be reverted.\nClick Yes to continue.");
+            if (dialogResult == MessageDialogResult.Negative)
+            {
                 return;
             }
 
@@ -566,8 +583,8 @@ namespace CalendarSyncPlus.Application.ViewModels
 
                 SelectedProfile.GoogleCalendars = null;
                 SelectedProfile.SelectedCalendar = null;
+                await MessageService.ShowMessage("Google account successfully disconnected");
                 SaveSettings();
-                MessageService.ShowMessageAsync("Google account successfully disconnected");
             }
             else
             {
@@ -575,28 +592,29 @@ namespace CalendarSyncPlus.Application.ViewModels
             }
         }
 
-        private void ApplyProxySettings()
+        internal void ApplyProxySettings()
         {
             IWebProxy proxy;
             try
             {
-                switch (ProxySettings.ProxyType)
+                var proxySettings = Settings.AppSettings.ProxySettings;
+                switch (proxySettings.ProxyType)
                 {
                     case ProxyType.NoProxy:
                         WebRequest.DefaultWebProxy = null;
                         break;
                     case ProxyType.ProxyWithAuth:
-                        proxy = new WebProxy(new Uri(string.Format("{0}:{1}", ProxySettings.ProxyAddress, ProxySettings.Port)), ProxySettings.BypassOnLocal)
+                        proxy = new WebProxy(new Uri(string.Format("{0}:{1}", proxySettings.ProxyAddress, proxySettings.Port)), proxySettings.BypassOnLocal)
                         {
-                            UseDefaultCredentials = ProxySettings.UseDefaultCredentials
+                            UseDefaultCredentials = proxySettings.UseDefaultCredentials
                         };
 
-                        if (!ProxySettings.UseDefaultCredentials)
+                        if (!proxySettings.UseDefaultCredentials)
                         {
-                            proxy.Credentials = string.IsNullOrEmpty(ProxySettings.Domain)
-                                ? new NetworkCredential(ProxySettings.UserName, ProxySettings.Password)
-                                : new NetworkCredential(ProxySettings.UserName, ProxySettings.Password,
-                                    ProxySettings.Domain);
+                            proxy.Credentials = string.IsNullOrEmpty(proxySettings.Domain)
+                                ? new NetworkCredential(proxySettings.UserName, proxySettings.Password)
+                                : new NetworkCredential(proxySettings.UserName, proxySettings.Password,
+                                    proxySettings.Domain);
                         }
                         WebRequest.DefaultWebProxy = proxy;
                         break;
@@ -609,7 +627,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             catch (Exception exception)
             {
                 ApplicationLogger.LogError(exception.ToString());
-                MessageService.ShowMessageAsync("Invlaid Proxy Settings. Proxy Settings not applied");
+                MessageService.ShowMessageAsync("Invalid Proxy Settings. Proxy settings cannot be applied");
             }
         }
 

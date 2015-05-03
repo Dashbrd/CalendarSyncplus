@@ -82,21 +82,17 @@
                     </DataTemplate>
                     <DataTemplate x:Key="HelpButtonTemplate">
                         <Button Style="{DynamicResource MetroCircleButtonStyle}"
-                                Height="28"
-                                Width="28"
-                                ToolTip="{TemplateBinding ToolTip}">
-                            <Rectangle  Height="10"
-                                        Width="10" Fill="{StaticResource AccentColorBrush}">
-                                        <!--Fill="{Binding Foreground,RelativeSource={RelativeSource AncestorType={x:Type Button},Mode=FindAncestor}}">-->
+                                Height="20"
+                                Width="20"
+                                Background="{DynamicResource GrayBrush9}"
+                                BorderThickness="1"
+                                ToolTip="{TemplateBinding ToolTip}" VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <Rectangle Margin="1,1,0,0" Height="6"
+                                        Width="6" Fill="{StaticResource BlackColorBrush}">
                                 <Rectangle.OpacityMask>
                                     <VisualBrush Visual="{StaticResource appbar_question}" />
                                 </Rectangle.OpacityMask>
                             </Rectangle>
-                            <!--<Button.Triggers>
-                                <EventTrigger RoutedEvent="Button.Click">
-                                    
-                                </EventTrigger>
-                            </Button.Triggers>-->
                         </Button>
                     </DataTemplate>
                 </ResourceDictionary>

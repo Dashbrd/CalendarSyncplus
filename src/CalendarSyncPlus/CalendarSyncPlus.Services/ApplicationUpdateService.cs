@@ -103,6 +103,7 @@ namespace CalendarSyncPlus.Services
         /// <returns></returns>
         public Uri GetDownloadUri()
         {
+            //Avoid for a while
             if (_downloadLink == null)
             {
                 return null;

@@ -4,10 +4,18 @@
     <!--Defined Directory Variables-->
     <?define ProjectDirectory = "$(var.CalendarSyncPlus.Presentation.TargetDir)"?>
     <?define Net45Directory = "C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\"?>
-    <?define Net45FacadeDirectory = "$(var.Net45Directory)\Facades\"?>
+    <?define Net45FacadeDirectory = "$(var.Net45Directory)Facades\"?>
     
 
     <!--Dependent libraries-->
+    <ComponentGroup Id="ReleaseNotesGroup" Directory="RELEASENOTESFOLDER">
+      <Component>
+        <File Id="ReleaseNotes"
+            Name="Release Notes.rtf"
+            Source="$(var.ProjectDirectory)ReleaseNotes\Release Notes.rtf"
+            KeyPath="yes" />
+      </Component>
+    </ComponentGroup>
     <ComponentGroup Id="UserGuide" Directory="USERGUIDEFOLDER">
       <Component>
         <File Id="HowToUseGuide"
@@ -21,6 +29,12 @@
         <File Id="CalendarSyncPlus.Common"
             Name="CalendarSyncPlus.Common.dll"
             Source="$(var.ProjectDirectory)CalendarSyncPlus.Common.dll"
+            KeyPath="yes" />
+      </Component>
+      <Component>
+        <File Id="CalendarSyncPlus.SyncEngine"
+            Name="CalendarSyncPlus.SyncEngine.dll"
+            Source="$(var.ProjectDirectory)CalendarSyncPlus.SyncEngine.dll"
             KeyPath="yes" />
       </Component>
 
@@ -90,12 +104,6 @@
           KeyPath="yes" />
       </Component>
       <Component>
-        <File Id="ReachFramework"
-          Name="ReachFramework.dll"
-          Source="$(var.Net45Directory)ReachFramework.dll"
-          KeyPath="yes" />
-      </Component>
-      <Component>
         <File Id="log4net"
           Name="log4net.dll"
           Source="$(var.ProjectDirectory)log4net.dll"
@@ -121,7 +129,14 @@
           Source="$(var.ProjectDirectory)MahApps.Metro.dll"
           KeyPath="yes" />
       </Component>
-
+      
+      <Component>
+        <File Id="MahApps.Metro.SimpleChildWindow"
+            Name="MahApps.Metro.SimpleChildWindow.dll"
+            Source="$(var.ProjectDirectory)MahApps.Metro.SimpleChildWindow.dll"
+            KeyPath="yes" />
+      </Component>
+      
       <Component>
         <File Id="System.Windows.Interactivity"
           Name="System.Windows.Interactivity.dll"
@@ -226,8 +241,14 @@
           Source="ReferenceBinaries\Microsoft.Office.Interop.Outlook.dll"
           KeyPath="yes" />
       </Component>
-
+      
       <!--<Component>
+        <File Id="ReachFramework"
+          Name="ReachFramework.dll"
+          Source="$(var.Net45Directory)ReachFramework.dll"
+          KeyPath="yes" />
+      </Component>
+      <Component>
         <File Id="office"
           Name="office.dll"
           Source="$(var.GACDirectory)\office.dll"
@@ -239,7 +260,7 @@
           Source="$(var.GACstdoleDirectory)\stdole.dll"
           KeyPath="yes" />
       </Component>-->
-      <Component>
+      <!--<Component>
         <File Id="System.Collections.Concurrent"
           Name="System.Collections.Concurrent.dll"
           Source="$(var.Net45FacadeDirectory)System.Collections.Concurrent.dll"
@@ -558,7 +579,7 @@
           Name="System.Xml.XmlSerializer.dll"
           Source="$(var.Net45FacadeDirectory)System.Xml.XmlSerializer.dll"
           KeyPath="yes" />
-      </Component>
+      </Component>-->
 
     </ComponentGroup>
 	</Fragment>
