@@ -549,6 +549,8 @@ namespace CalendarSyncPlus.Application.ViewModels
 
         private async void GetOutlookMailBoxes()
         {
+            if(IsDefaultMailBox || IsLoading)
+                return;
             IsLoading = true;
             await GetOutlookMailBoxesInternal();
             IsLoading = false;
@@ -593,6 +595,8 @@ namespace CalendarSyncPlus.Application.ViewModels
 
         private async void GetOutlookProfileList()
         {
+            if (IsDefaultProfile || IsLoading)
+                return;
             IsLoading = true;
 
             await GetOutlookProfileListInternal();
