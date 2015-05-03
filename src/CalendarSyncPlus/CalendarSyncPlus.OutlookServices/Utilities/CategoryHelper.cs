@@ -123,7 +123,7 @@ namespace CalendarSyncPlus.OutlookServices.Utilities
 
         public static OlCategoryColor GetOutlookColor(string hexValue)
         {
-            return CategoryColor.First(t => t.Value.Equals(hexValue)).Key;
+            return CategoryColor.First(t => t.Value.Key.Equals(hexValue)).Key;
         }
     }
 }

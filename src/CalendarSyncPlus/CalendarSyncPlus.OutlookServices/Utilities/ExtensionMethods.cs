@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CalendarSyncPlus.Domain.Models;
+using CalendarSyncPlus.Services.Utilities;
 using Microsoft.Office.Interop.Outlook;
 using Recipient = Microsoft.Office.Interop.Outlook.Recipient;
 
@@ -11,6 +12,33 @@ namespace CalendarSyncPlus.OutlookServices.Utilities
 {
     public static class ExtensionMethods
     {
+        public static bool GetEmailFromName(this Recipient recipient, out string name, out string email)
+        {
+            name = null;
+            email = null;
+            try
+            {
+                if (!string.IsNullOrEmpty(recipient.Name) && recipient.Name.Contains("<") && recipient.Name.Contains(">"))
+                {
+                    int startIndex = recipient.Name.LastIndexOf("<");
+                    int endIndex = recipient.Name.LastIndexOf(">");
+                    if (startIndex < endIndex)
+                    {
+                        email = recipient.Name.Substring(startIndex + 1, endIndex - startIndex - 1);
+                        if (email.IsValidEmailAddress())
+                        {
+                            name = recipient.Name.Substring(0, startIndex);
+                            return true;
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                return false;
+            }
+            return false;
+        }
         public static MeetingResponseStatusEnum GetMeetingResponseStatus(this Recipient recipient)
         {
             switch (recipient.MeetingResponseStatus)

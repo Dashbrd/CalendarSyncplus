@@ -106,16 +106,16 @@ namespace CalendarSyncPlus.Application.ViewModels
             SystemTrayNotifierViewModel systemTrayNotifierViewModel,ChildContentViewFactory childContentViewFactory)
             : base(view)
         {
+            _statusBuilder = new StringBuilder();
             MessageService = messageService;
+            ApplicationLogger = applicationLogger;
             ApplicationUpdateService = applicationUpdateService;
             ShellService = shellService;
             SyncStartService = syncStartService;
             GuiInteractionService = guiInteractionService;
             Settings = settings;
-            ApplicationLogger = applicationLogger;
             SystemTrayNotifierViewModel = systemTrayNotifierViewModel;
             ChildContentViewFactory = childContentViewFactory;
-            _statusBuilder = new StringBuilder();
             view.Closing += ViewClosing;
             view.Closed += ViewClosed;
         }
