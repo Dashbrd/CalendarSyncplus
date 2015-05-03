@@ -34,13 +34,13 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <WixExtension Include="WixUtilExtension">
-      <HintPath>$(WixExtDir)\WixUtilExtension.dll</HintPath>
-      <Name>WixUtilExtension</Name>
-    </WixExtension>
     <WixExtension Include="WixBalExtension">
       <HintPath>$(WixExtDir)\WixBalExtension.dll</HintPath>
       <Name>WixBalExtension</Name>
+    </WixExtension>
+    <WixExtension Include="WixUtilExtension">
+      <HintPath>$(WixExtDir)\WixUtilExtension.dll</HintPath>
+      <Name>WixUtilExtension</Name>
     </WixExtension>
     <WixExtension Include="WixNetFxExtension">
       <HintPath>$(WixExtDir)\WixNetFxExtension.dll</HintPath>
@@ -51,11 +51,9 @@
     <Content Include="icon.ico" />
     <Content Include="license.rtf" />
     <Content Include="Net45Installer\dotNetFx45_Full_setup.exe" />
-    <Content Include="Resources\BundleTheme.xml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Net45Installer" />
-    <Folder Include="Resources" />
   </ItemGroup>
   <Import Project="$(WixTargetsPath)" />
   <!--

@@ -17,7 +17,7 @@
              d:DesignWidth="450"
              d:DataContext="{d:DesignInstance viewModels:ProfileViewModel}">
     <UserControl.Resources>
-        <converters:BoolToEnumConverter x:Key="BoolToEnumConverter"/>
+        <converters:BoolToEnumConverter x:Key="BoolToEnumConverter" />
         <converters:EnumToVisbilityConverter x:Key="EnumToVisbilityConverter" />
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
         <DataTemplate DataType="{x:Type viewModels:IntervalSyncViewModel}">
@@ -29,7 +29,7 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="2*" />
                     <ColumnDefinition Width="3.5*" />
-                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <TextBlock Text="{localizeExtension:LocText Key=SyncSettingsView_TextBlock_IntervalHours_Text}"
                            VerticalAlignment="Center" />
@@ -68,8 +68,8 @@
                     <RowDefinition />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <StackPanel Orientation="Horizontal"
                             VerticalAlignment="Center">
@@ -99,14 +99,16 @@
                             VerticalAlignment="Center"
                             Grid.Row="2">
                     <TextBlock Text="{localizeExtension:LocText Key=SyncSettingsView_TextBlock_DailyTimeOfDay_Text}"
-                               VerticalAlignment="Center" Margin="2" />
+                               VerticalAlignment="Center"
+                               Margin="2" />
                     <controls1:TimePickerControl Margin="2"
-                                                      VerticalAlignment="Center"
-                                                      TimeFormat="hh:mm tt"
-                                                      TimeValue="{Binding TimeOfDay,
+                                                 VerticalAlignment="Center"
+                                                 TimeFormat="hh:mm tt"
+                                                 TimeValue="{Binding TimeOfDay,
                                                     Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
                 </StackPanel>
                 <ContentControl ContentTemplate="{DynamicResource HelpButtonTemplate}"
+                                Grid.Row="2"
                                 Grid.Column="1"
                                 ToolTip="{localizeExtension:LocText Key=SyncSettingsView_ContentControl_HelpDailyTimeOfDay_Tooltip}" />
             </Grid>
@@ -119,13 +121,14 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                
+
                 <StackPanel Orientation="Horizontal"
                             VerticalAlignment="Center">
-                    <TextBlock Text="{localizeExtension:LocText Key=SyncSettingsView_TextBlock_WeeklyRecur_Text}" Margin="2"
+                    <TextBlock Text="{localizeExtension:LocText Key=SyncSettingsView_TextBlock_WeeklyRecur_Text}"
+                               Margin="2"
                                VerticalAlignment="Center" />
                     <controls:NumericUpDown Width="80"
                                             Interval="1"
@@ -134,7 +137,8 @@
                                             VerticalAlignment="Center"
                                             Value="{Binding WeekRecurrence,
                                                     Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
-                    <TextBlock Text="{localizeExtension:LocText Key=SyncSettingsView_TextBlock_WeeklyWeekday_Text}" Margin="5"
+                    <TextBlock Text="{localizeExtension:LocText Key=SyncSettingsView_TextBlock_WeeklyWeekday_Text}"
+                               Margin="5"
                                VerticalAlignment="Center" />
                 </StackPanel>
                 <ContentControl ContentTemplate="{DynamicResource HelpButtonTemplate}"
@@ -195,12 +199,13 @@
                 <StackPanel Orientation="Horizontal"
                             VerticalAlignment="Center"
                             Grid.Row="2">
-                    <TextBlock Text="{localizeExtension:LocText Key=SyncSettingsView_TextBlock_WeeklyTimeOfDay_Text}" Margin="2"
+                    <TextBlock Text="{localizeExtension:LocText Key=SyncSettingsView_TextBlock_WeeklyTimeOfDay_Text}"
+                               Margin="2"
                                VerticalAlignment="Center" />
                     <controls1:TimePickerControl Margin="2"
-                                                      VerticalAlignment="Center"
-                                                      TimeFormat="hh:mm tt"
-                                                      TimeValue="{Binding TimeOfDay,
+                                                 VerticalAlignment="Center"
+                                                 TimeFormat="hh:mm tt"
+                                                 TimeValue="{Binding TimeOfDay,
                                                     Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
                 </StackPanel>
                 <ContentControl ContentTemplate="{DynamicResource HelpButtonTemplate}"
@@ -225,46 +230,47 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="2*" />
                     <ColumnDefinition Width="3.5*" />
-                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <TextBlock Text="{localizeExtension:LocText Key=SyncSettingsView_TextBlock_CalendarSyncMode_Text}"
-                       VerticalAlignment="Center"
-                       Margin="2" />
-            <ComboBox Grid.Column="1"
-                      Margin="2"
-                      ItemsSource="{Binding CalendarSyncModes,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                      SelectedItem="{Binding SelectedCalendarSyncDirection,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                      ItemTemplate="{StaticResource CalendarEnumDataTemplate}" />
+                           VerticalAlignment="Center"
+                           Margin="2" />
+                <ComboBox Grid.Column="1"
+                          Margin="2"
+                          ItemsSource="{Binding CalendarSyncModes,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                          SelectedItem="{Binding SelectedCalendarSyncDirection,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                          ItemTemplate="{StaticResource CalendarEnumDataTemplate}" />
                 <ContentControl ContentTemplate="{DynamicResource HelpButtonTemplate}"
                                 Grid.Column="2"
                                 ToolTip="{localizeExtension:LocText Key=SyncSettingsView_ContentControl_HelpCalendarSyncMode_Tooltip}" />
                 <TextBlock Text="{localizeExtension:LocText Key=SyncSettingsView_TextBlock_SelectMasterCalendar_Text}"
-                       VerticalAlignment="Center"
-                       Margin="2"
-                       Grid.Row="1"
-                       Visibility="{Binding AllowMasterCalendarSelect,Mode=TwoWay,Converter={StaticResource BooleanToVisibilityConverter} }" />
-            <StackPanel Orientation="Horizontal"
-                        Grid.Row="1"
-                        Grid.Column="1"
-                        VerticalAlignment="Center"
-                        Margin="2,5,5,5"
-                        Visibility="{Binding AllowMasterCalendarSelect,Mode=TwoWay,Converter={StaticResource BooleanToVisibilityConverter} }">
-                <RadioButton GroupName="MasterCalendar"
-                             Margin="2"
-                             Content="{localizeExtension:LocText Key=SyncSettingsView_RadioButton_OutlookMaster_Content}"
-                             IsChecked="{Binding MasterCalendarServiceType,Mode=TwoWay,
+                           VerticalAlignment="Center"
+                           Margin="2"
+                           Grid.Row="1"
+                           Visibility="{Binding AllowMasterCalendarSelect,Mode=TwoWay,Converter={StaticResource BooleanToVisibilityConverter} }" />
+                <StackPanel Orientation="Horizontal"
+                            Grid.Row="1"
+                            Grid.Column="1"
+                            VerticalAlignment="Center"
+                            Margin="2,5,5,5"
+                            Visibility="{Binding AllowMasterCalendarSelect,Mode=TwoWay,Converter={StaticResource BooleanToVisibilityConverter} }">
+                    <RadioButton GroupName="MasterCalendar"
+                                 Margin="2"
+                                 Content="{localizeExtension:LocText Key=SyncSettingsView_RadioButton_OutlookMaster_Content}"
+                                 IsChecked="{Binding MasterCalendarServiceType,Mode=TwoWay,
                                                     Converter={StaticResource BoolToEnumConverter},
                                         ConverterParameter=OutlookDesktop}" />
-                <RadioButton GroupName="MasterCalendar"
-                             Margin="20,2,2,2"
-                             Content="{localizeExtension:LocText Key=SyncSettingsView_RadioButton_GoogleMaster_Content}"
-                             IsChecked="{Binding MasterCalendarServiceType,
+                    <RadioButton GroupName="MasterCalendar"
+                                 Margin="20,2,2,2"
+                                 Content="{localizeExtension:LocText Key=SyncSettingsView_RadioButton_GoogleMaster_Content}"
+                                 IsChecked="{Binding MasterCalendarServiceType,
                                                    Mode=TwoWay,Converter={StaticResource BoolToEnumConverter},
                                                  ConverterParameter=Google}" />
-            </StackPanel>
-                </Grid>
+                </StackPanel>
+            </Grid>
         </GroupBox>
-        <GroupBox Header="{localizeExtension:LocText Key=SyncSettingsView_GroupBox_SyncRange_Header}" Grid.Row="1">
+        <GroupBox Header="{localizeExtension:LocText Key=SyncSettingsView_GroupBox_SyncRange_Header}"
+                  Grid.Row="1">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -277,20 +283,26 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <RadioButton Content="{localizeExtension:LocText Key=SyncSettingsView_RadioButton_SyncFullCalendar_Content}"
-                             IsChecked="{Binding SelectedSyncRangeType,Mode=TwoWay,Converter={StaticResource BoolToEnumConverter},ConverterParameter=SyncEntireCalendar}"/>
+                             Margin="2"
+                             IsChecked="{Binding SelectedSyncRangeType,Mode=TwoWay,Converter={StaticResource BoolToEnumConverter},ConverterParameter=SyncEntireCalendar}" />
                 <ContentControl ContentTemplate="{DynamicResource HelpButtonTemplate}"
                                 Grid.Column="1"
                                 ToolTip="{localizeExtension:LocText Key=SyncSettingsView_ContentControl_HelpSyncFullCalendar_Tooltip}" />
-                <RadioButton Content="{localizeExtension:LocText Key=SyncSettingsView_RadioButton_SyncDaysInRange_Content}" Grid.Row="1"
+                <RadioButton Content="{localizeExtension:LocText Key=SyncSettingsView_RadioButton_SyncDaysInRange_Content}"
+                             Grid.Row="1"
+                             Margin="2"
                              IsChecked="{Binding SelectedSyncRangeType,Mode=TwoWay,Converter={StaticResource BoolToEnumConverter},ConverterParameter=SyncRangeInDays }" />
                 <ContentControl ContentTemplate="{DynamicResource HelpButtonTemplate}"
                                 Grid.Row="1"
                                 Grid.Column="1"
                                 ToolTip="{localizeExtension:LocText Key=SyncSettingsView_ContentControl_HelpSyncDaysInRange_Tooltip}" />
-                <RadioButton Content="{localizeExtension:LocText Key=SyncSettingsView_RadioButton_SyncFixedDateRange_Content}" Grid.Row="2"
+                <RadioButton Content="{localizeExtension:LocText Key=SyncSettingsView_RadioButton_SyncFixedDateRange_Content}"
+                             Grid.Row="2"
+                             Margin="2"
                              IsChecked="{Binding SelectedSyncRangeType,Mode=TwoWay,Converter={StaticResource BoolToEnumConverter},ConverterParameter=SyncFixedDateRange }" />
                 <ContentControl ContentTemplate="{DynamicResource HelpButtonTemplate}"
-                                Grid.Column="1" Grid.Row="2"
+                                Grid.Column="1"
+                                Grid.Row="2"
                                 ToolTip="{localizeExtension:LocText Key=SyncSettingsView_ContentControl_HelpSyncFixedDateRange_Tooltip}" />
                 <!--<ComboBox ItemsSource="{Binding SyncRangeTypes,UpdateSourceTrigger=PropertyChanged}"
                           SelectedItem="{Binding SelectedSyncRangeType,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
@@ -298,7 +310,7 @@
                 <ContentControl ContentTemplate="{DynamicResource HelpButtonTemplate}"
                                 Grid.Column="1"
                                 ToolTip="Select the number of days in past for which you wish to sync calendar calendarAppointments" />-->
-                
+
                 <Grid Grid.Row="3"
                       Grid.ColumnSpan="2"
                       Visibility="{Binding SelectedSyncRangeType,Converter={StaticResource EnumToVisbilityConverter},
@@ -322,7 +334,7 @@
                                             Interval="1"
                                             Margin="2"
                                             Maximum="1825"
-                                            Minimum="0"/>
+                                            Minimum="0" />
                     <ContentControl ContentTemplate="{DynamicResource HelpButtonTemplate}"
                                     Grid.Column="2"
                                     ToolTip="{localizeExtension:LocText Key=SyncSettingsView_ContentControl_HelpDaysInPast_Tooltip}" />
@@ -338,7 +350,7 @@
                                             Interval="1"
                                             Margin="2"
                                             Maximum="1825"
-                                            Minimum="0"/>
+                                            Minimum="0" />
                     <ContentControl ContentTemplate="{DynamicResource HelpButtonTemplate}"
                                     Grid.Row="1"
                                     Grid.Column="2"
@@ -361,9 +373,9 @@
                                 Margin="2" />
 
                     <DatePicker Grid.Column="1"
-                                            VerticalAlignment="Center"
-                                            SelectedDate="{Binding StartDate,Mode=TwoWay}"
-                                            Margin="2"/>
+                                VerticalAlignment="Center"
+                                SelectedDate="{Binding StartDate,Mode=TwoWay}"
+                                Margin="2" />
                     <ContentControl ContentTemplate="{DynamicResource HelpButtonTemplate}"
                                     Grid.Column="2"
                                     ToolTip="{localizeExtension:LocText Key=SyncSettingsView_ContentControl_HelpStartDate_Tooltip}" />
@@ -373,10 +385,10 @@
                                Text="{localizeExtension:LocText Key=SyncSettingsView_TextBlock_EndDate_Text}"
                                VerticalAlignment="Center" />
                     <DatePicker Grid.Row="1"
-                                            Grid.Column="1"
-                                            VerticalAlignment="Center"
-                                            SelectedDate="{Binding EndDate,Mode=TwoWay}"
-                                            Margin="2"/>
+                                Grid.Column="1"
+                                VerticalAlignment="Center"
+                                SelectedDate="{Binding EndDate,Mode=TwoWay}"
+                                Margin="2" />
                     <ContentControl ContentTemplate="{DynamicResource HelpButtonTemplate}"
                                     Grid.Row="1"
                                     Grid.Column="2"
@@ -388,21 +400,23 @@
                   Header="{localizeExtension:LocText Key=SyncSettingsView_GroupBox_Recurrence_Header}"
                   MinHeight="150">
             <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-            <ComboBox x:Name="SyncFrequencyComboBox" 
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <ComboBox x:Name="SyncFrequencyComboBox"
                           ItemsSource="{Binding SyncFrequencies,UpdateSourceTrigger=PropertyChanged}"
                           SelectedItem="{Binding SyncFrequency,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
                 <ContentControl ContentTemplate="{DynamicResource HelpButtonTemplate}"
                                 Grid.Column="1"
                                 ToolTip="{localizeExtension:LocText Key=SyncSettingsView_ContentControl_SyncFrequencyHelp_Tooltip}" />
-              <ContentControl Margin="0,5,0,5" Grid.Row="1" Grid.ColumnSpan="2"
+                <ContentControl Margin="0,5,0,5"
+                                Grid.Row="1"
+                                Grid.ColumnSpan="2"
                                 Content="{Binding SyncFrequencyViewModel,UpdateSourceTrigger=PropertyChanged}" />
             </Grid>
         </GroupBox>

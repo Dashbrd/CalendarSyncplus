@@ -531,13 +531,13 @@ Select Outlook &lt;- Google, to sync your Google calendar to an Outlook calendar
 Select Outlook &lt;-&gt; Google, to sync our Outlook and Google calendar with each other</value>
   </data>
   <data name="SyncSettingsView_ContentControl_HelpSyncFullCalendar_Tooltip" xml:space="preserve">
-    <value>Sync you Calendar from 1st Jan 1990 to 10 years from today</value>
+    <value>Sync your calendar from 1st Jan'1990 to 10 years from today</value>
   </data>
   <data name="SyncSettingsView_ContentControl_HelpSyncDaysInRange_Tooltip" xml:space="preserve">
-    <value>Allow you to specify the number of days you need to sync in past and future. </value>
+    <value>Allows you to specify the number of days you need to sync in past and future. </value>
   </data>
   <data name="SyncSettingsView_ContentControl_HelpSyncFixedDateRange_Tooltip" xml:space="preserve">
-    <value>Allows you specify a fixed date range to sync you calendar</value>
+    <value>Allows you to specify a fixed date range to sync you calendar</value>
   </data>
   <data name="SyncSettingsView_ContentControl_HelpDaysInPast_Tooltip" xml:space="preserve">
     <value>Select the number of days in past for which you wish to sync calendar calendarAppointments</value>

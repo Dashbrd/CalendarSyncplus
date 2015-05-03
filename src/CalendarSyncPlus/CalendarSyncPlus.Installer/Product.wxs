@@ -4,8 +4,8 @@
   <?define VERSION="!(bind.FileVersion.CalendarSyncPlus.exe)"?>
   <Product Id="*" Name="Calendar Sync +" Language="1033" Version="$(var.VERSION)"
            Manufacturer="Ankesh Dave &amp; Akanksha Gaur"
-           UpgradeCode="6A7B72FC-ED9B-4951-B733-AB54B8D4AE94">
-    <Package Id="*" InstallerVersion="405" Manufacturer="Ankesh Dave &amp; Akanksha Gaur" Platform="x86" InstallPrivileges="elevated" InstallScope="perMachine"
+           UpgradeCode="46e52120-a590-4388-80b1-a1b52ee251d3" >
+    <Package Id="*" InstallerVersion="500" Manufacturer="Ankesh Dave &amp; Akanksha Gaur" Platform="x86" InstallPrivileges="elevated" InstallScope="perMachine"
              Compressed="yes" Description="A utility to synchronize Outlook to Google calendars, vice versa and bidirectional."/>
     <!--Upgrade Message-->
     <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed."
@@ -65,10 +65,11 @@
         <RemoveFolder Id="ApplicationProgramsFolder" On="uninstall"/>
         <RegistryValue Root="HKCU" Key="Software\Ankesh Dave &amp; Akanksha Gaur\CalendarSyncPlus" Name="installed" Type="integer" Value="00000001" KeyPath="yes"/>
       </Component>
+      
       <!--<Component Id="SecurityRegistryValue">
         <RegistryValue Root="HKCU" Key="Software\Policies\Microsoft\Security" Name="CheckAdminSettings" Type="integer" Value="00000001" KeyPath="yes"/>
       </Component>-->
-      <Component Id="RunAtStartUpRegistry" >
+      <Component Id="RunAtStartUpRegistry">
         <RegistryValue Root="HKCU" Key="SOFTWARE\Microsoft\Windows\CurrentVersion\Run" Name="CalendarSyncPlusStartup" Type="string" Value="[#CalendarSyncPlus.exe] /MINIMIZED" KeyPath="yes"/>
       </Component>
       <Component Id="FirstLaunchRegistry" >

@@ -35,6 +35,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition />
         </Grid.RowDefinitions>
         <GroupBox Header="{localizeExtension:LocText Key=OptionsSettingsView_GroupBox_Category_Header}">
             <Grid>

@@ -32,17 +32,24 @@ namespace CalendarSyncPlus.Services.Utilities
         
         private static string GetMD5Hash(string stringToHash)
         {
-            var sb = new StringBuilder();
-            using (MD5 md5 = MD5.Create())
+            try
             {
-                byte[] retVal = md5.ComputeHash(Encoding.Unicode.GetBytes(stringToHash));
-
-                foreach (byte byteval in retVal)
+                var sb = new StringBuilder();
+                using (MD5 md5 = MD5.Create())
                 {
-                    sb.Append(byteval.ToString("x2"));
+                    byte[] retVal = md5.ComputeHash(Encoding.Unicode.GetBytes(stringToHash));
+
+                    foreach (byte byteval in retVal)
+                    {
+                        sb.Append(byteval.ToString("x2"));
+                    }
                 }
+                return sb.ToString();
             }
-            return sb.ToString();
+            catch
+            {
+                return "CalendarSyncPlusCalendar";
+            }
         }
     }
 }
