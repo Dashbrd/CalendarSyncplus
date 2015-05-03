@@ -257,9 +257,10 @@ namespace CalendarSyncPlus.Application.ViewModels
                 var viewModel = new ProfileViewModel(syncProfile, GoogleCalendarService, OutlookCalendarService,
                     MessageService,
                     ExchangeWebCalendarService, ApplicationLogger, AccountAuthenticationService);
-                viewModel.Initialize();
-                SyncProfileList.Add(viewModel);
                 PropertyChangedEventManager.AddHandler(viewModel, ProfilePropertyChangedHandler, "IsLoading");
+                viewModel.Initialize(null);
+                SyncProfileList.Add(viewModel);
+               
             }
         }
 
@@ -478,7 +479,6 @@ namespace CalendarSyncPlus.Application.ViewModels
 
         private void LoadSettingsAndGetCalendars()
         {
-            IsLoading = true;
             try
             {
                 if (Settings != null)
@@ -521,7 +521,6 @@ namespace CalendarSyncPlus.Application.ViewModels
             {
                 MessageService.ShowMessageAsync(exception.Message);
             }
-            IsLoading = false;
         }
 
         private void LoadProfiles()
@@ -532,27 +531,33 @@ namespace CalendarSyncPlus.Application.ViewModels
                 var viewModel = new ProfileViewModel(syncProfile, GoogleCalendarService, OutlookCalendarService,
                     MessageService,
                     ExchangeWebCalendarService, ApplicationLogger, AccountAuthenticationService);
-                GoogleAccount googleAccount = null;
-                if (syncProfile.GoogleAccount != null)
-                {
-                    if (GoogleAccounts.Any())
-                    {
-                        googleAccount = GoogleAccounts.FirstOrDefault(
-                            account => account.Name == syncProfile.GoogleAccount.Name);
-                    }
-                }
-
-                if (googleAccount != null)
-                {
-                    googleAccount.GoogleCalendar = syncProfile.GoogleAccount.GoogleCalendar;
-                }
-                viewModel.SelectedGoogleAccount = googleAccount;
-                viewModel.Initialize();
-                profileList.Add(viewModel);
                 PropertyChangedEventManager.AddHandler(viewModel, ProfilePropertyChangedHandler, "IsLoading");
+                var googleAccount = GetGoogleAccount(syncProfile);
+
+                viewModel.Initialize(googleAccount);
+                profileList.Add(viewModel);
             }
             SyncProfileList = profileList;
             SelectedProfile = SyncProfileList.FirstOrDefault();
+        }
+
+        private GoogleAccount GetGoogleAccount(CalendarSyncProfile syncProfile)
+        {
+            GoogleAccount googleAccount = null;
+            if (syncProfile.GoogleAccount != null)
+            {
+                if (GoogleAccounts.Any())
+                {
+                    googleAccount = GoogleAccounts.FirstOrDefault(
+                        account => account.Name == syncProfile.GoogleAccount.Name);
+                }
+            }
+
+            if (googleAccount != null)
+            {
+                googleAccount.GoogleCalendar = syncProfile.GoogleAccount.GoogleCalendar;
+            }
+            return googleAccount;
         }
 
         private async void DisconnectGoogleHandler()

@@ -480,7 +480,7 @@ namespace CalendarSyncPlus.Application.ViewModels
 
         #region Private Methods
 
-        internal void Initialize()
+        internal void Initialize(GoogleAccount googleAccount)
         {
             Name = SyncProfile.Name;
             IsSyncEnabled = SyncProfile.IsSyncEnabled;
@@ -534,11 +534,13 @@ namespace CalendarSyncPlus.Application.ViewModels
             KeepLastModifiedCopy = SyncProfile.SyncSettings.KeepLastModifiedVersion;
             SyncFrequency = SyncProfile.SyncSettings.SyncFrequency.Name;
             SetCategory = SyncProfile.SetCalendarCategory;
-            if (SelectedGoogleAccount != null) SelectedCalendar = SelectedGoogleAccount.GoogleCalendar;
+            _selectedGoogleAccount = googleAccount;
+            if (_selectedGoogleAccount != null) 
+                SelectedCalendar = SelectedGoogleAccount.GoogleCalendar;
             SelectedOutlookProfileName = SyncProfile.OutlookSettings.OutlookProfileName;
             SelectedOutlookMailBox = SyncProfile.OutlookSettings.OutlookMailBox;
             SelectedOutlookCalendar = SyncProfile.OutlookSettings.OutlookCalendar;
-
+            
             if (SyncProfile.EventCategory != null)
             {
                 SelectedCategory = Categories.First(t => t.CategoryName.Equals(SyncProfile.EventCategory.CategoryName));
@@ -547,6 +549,8 @@ namespace CalendarSyncPlus.Application.ViewModels
 
         private async void GetOutlookMailBoxes()
         {
+            if(IsDefaultMailBox || IsLoading)
+                return;
             IsLoading = true;
             await GetOutlookMailBoxesInternal();
             IsLoading = false;
@@ -591,6 +595,8 @@ namespace CalendarSyncPlus.Application.ViewModels
 
         private async void GetOutlookProfileList()
         {
+            if (IsDefaultProfile || IsLoading)
+                return;
             IsLoading = true;
 
             await GetOutlookProfileListInternal();
@@ -735,7 +741,8 @@ namespace CalendarSyncPlus.Application.ViewModels
             var calendarSpecificData = new Dictionary<string, object>
             {
                 {"ProfileName", SelectedOutlookProfileName},
-                {"OutlookCalendar", SelectedOutlookCalendar}
+                {"OutlookCalendar", SelectedOutlookCalendar},
+                {"AddAsAppointments",AddAsAppointments}
             };
 
             bool result = await OutlookCalendarService.ResetCalendar(calendarSpecificData);
@@ -788,8 +795,6 @@ namespace CalendarSyncPlus.Application.ViewModels
 
         public async void LoadSyncProfile()
         {
-            if(IsLoading)
-                return;
             IsLoading = true;
             if (SyncProfile != null)
             {

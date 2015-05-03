@@ -23,6 +23,7 @@ using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
+
 #endregion
 
 namespace CalendarSyncPlus.Services.Utilities
@@ -30,7 +31,7 @@ namespace CalendarSyncPlus.Services.Utilities
     public static class ExtensionMethods
     {
         #region Private Methods
-
+       
         public static bool IsValidEmailAddress(this string email)
         {
             if (string.IsNullOrEmpty(email))

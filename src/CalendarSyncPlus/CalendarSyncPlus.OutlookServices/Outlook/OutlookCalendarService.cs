@@ -246,13 +246,20 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
 
                     foreach (Recipient attendee in appointmentItem.Recipients)
                     {
-                        var recipient = new AppRecipient
+                        var recipient = new AppRecipient();
+                        string name, email;
+                        if (attendee.GetEmailFromName(out name, out email))
                         {
-                            Name = attendee.Name,
-                            Email = GetSMTPAddressForRecipients(attendee),
-                            MeetingResponseStatus = attendee.GetMeetingResponseStatus()
-                        };
-
+                            recipient.Name = name;
+                            recipient.Email = email;
+                        }
+                        else
+                        {
+                            recipient.Name = attendee.Name;
+                            recipient.Email = GetSMTPAddressForRecipients(attendee);
+                        }
+                        recipient.MeetingResponseStatus = attendee.GetMeetingResponseStatus();
+                        
                         if (appointmentItem.RequiredAttendees != null &&
                             appointmentItem.RequiredAttendees.Contains(recipient.Name))
                         {
@@ -297,7 +304,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
                 }
             }
         }
-
+        
         private List<Appointment> GetAppointments(DateTime startDate, DateTime endDate)
         {
             AppointmentListWrapper list = GetOutlookEntriesForSelectedTimeRange(startDate, endDate);
@@ -357,7 +364,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
             }
             catch (Exception exception)
             {
-                ApplicationLogger.LogInfo(string.Format("Unable to retrive Email for the User : {0}{1}{2}", recip.Name,
+                ApplicationLogger.LogInfo(string.Format("Unable to retrieve Email for the User : {0}{1}{2}", recip.Name,
                     Environment.NewLine, exception.Message));
             }
             return smtpAddress;
