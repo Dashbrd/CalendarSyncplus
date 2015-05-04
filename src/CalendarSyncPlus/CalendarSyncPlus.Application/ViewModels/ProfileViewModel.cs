@@ -739,11 +739,19 @@ namespace CalendarSyncPlus.Application.ViewModels
             }
 
             var calendarSpecificData = new Dictionary<string, object>
-            {
-                {"ProfileName", SelectedOutlookProfileName},
-                {"OutlookCalendar", SelectedOutlookCalendar},
-                {"AddAsAppointments",AddAsAppointments}
-            };
+                    {
+                        {
+                            "ProfileName", !IsDefaultProfile
+                                ? SelectedOutlookProfileName
+                                : null
+                        },
+                        {
+                            "OutlookCalendar", !IsDefaultMailBox
+                                ? SelectedOutlookCalendar
+                                : null
+                        },
+                        { "AddAsAppointments", AddAsAppointments }
+                    };
 
             bool result = await OutlookCalendarService.ResetCalendar(calendarSpecificData);
             if (!result)
@@ -837,9 +845,18 @@ namespace CalendarSyncPlus.Application.ViewModels
             SyncProfile.SyncSettings.SyncFrequency = SyncFrequencyViewModel.GetFrequency();
             SyncProfile.UpdateEntryOptions(AddDescription, AddReminders, AddAttendees, AddAttendeesToDescription,
                 AddAttachments, AddAsAppointments);
-            SyncProfile.OutlookSettings.OutlookMailBox = SelectedOutlookMailBox;
-            SyncProfile.OutlookSettings.OutlookCalendar = SelectedOutlookCalendar;
-            SyncProfile.OutlookSettings.OutlookProfileName = SelectedOutlookProfileName;
+
+            if (!IsDefaultMailBox)
+            {
+                SyncProfile.OutlookSettings.OutlookMailBox = SelectedOutlookMailBox;
+                SyncProfile.OutlookSettings.OutlookCalendar = SelectedOutlookCalendar;
+            }
+
+            if (!IsDefaultProfile)
+            {
+                SyncProfile.OutlookSettings.OutlookProfileName = SelectedOutlookProfileName;
+            }
+
             SyncProfile.OutlookSettings.UpdateOutlookOptions(IsDefaultProfile, IsDefaultMailBox,
                 IsExchangeWebServices);
             SyncProfile.ExchangeServerSettings.Username = Username;
@@ -853,6 +870,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             SyncProfile.SetCalendarTypes();
             SyncProfile.SetCalendarCategory = SetCategory;
             SyncProfile.EventCategory = SelectedCategory;
+
             return SyncProfile;
         }
 

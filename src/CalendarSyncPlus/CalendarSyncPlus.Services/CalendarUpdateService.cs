@@ -301,9 +301,18 @@ namespace CalendarSyncPlus.Services
                 case CalendarServiceType.OutlookDesktop:
                     calendarSpecificData = new Dictionary<string, object>
                     {
-                        {"ProfileName", syncProfile.OutlookSettings.OutlookProfileName},
-                        {"OutlookCalendar", syncProfile.OutlookSettings.OutlookCalendar},
-                        {"AddAsAppointments", syncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.AsAppointments)},
+                        {
+                            "ProfileName", !syncProfile.OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.DefaultProfile)
+                                ? syncProfile.OutlookSettings.OutlookProfileName
+                                : null
+                        },
+                        {
+                            "OutlookCalendar",
+                            !syncProfile.OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.DefaultCalendar)
+                                ? syncProfile.OutlookSettings.OutlookCalendar
+                                : null
+                        },
+                        { "AddAsAppointments", syncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.AsAppointments) }
                     };
                     break;
                 case CalendarServiceType.EWS:
