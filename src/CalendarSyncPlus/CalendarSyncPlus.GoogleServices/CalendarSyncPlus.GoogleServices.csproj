@@ -102,6 +102,7 @@
       <Link>AssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Google\AccountAuthenticationService.cs" />
+    <Compile Include="Google\CustomCodeReceiver.cs" />
     <Compile Include="Google\GoogleCalendarService.cs" />
     <Compile Include="Google\IAccountAuthenticationService.cs" />
     <Compile Include="Google\IGoogleCalendarService.cs" />

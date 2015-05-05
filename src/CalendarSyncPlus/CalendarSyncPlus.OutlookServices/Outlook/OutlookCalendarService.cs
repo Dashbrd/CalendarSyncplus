@@ -592,7 +592,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
             CheckCalendarSpecificData(calendarSpecificData);
             var calendarAppointments = new CalendarAppointments();
 
-            var rangeList = SplitDateRange(startDate, endDate, dayChunkSize: (365));
+            var rangeList = SplitDateRange(startDate, endDate, dayChunkSize: (1460));
 
             foreach (Tuple<DateTime, DateTime> rangeTuple in rangeList)
             {

@@ -335,6 +335,46 @@ namespace CalendarSyncPlus.Application.ViewModels
                 MessageService.ShowMessageAsync("An account with the same email already exists. Please try again.");
                 return;
             }
+
+            MessageDialogResult manualResult =
+                await MessageService.ShowConfirmMessage("Do you want to enter the authorization code manually?");
+
+            //Create cancellation token to support cancellation
+            CancellationTokenSource tokenSource = new CancellationTokenSource();
+            var token = tokenSource.Token;
+            if (manualResult == MessageDialogResult.Affirmative)
+            {
+                ManualAuthentication(accountName, tokenSource);
+            }
+            else
+            {
+                await AutomaticAuthentication(accountName,tokenSource);
+            }
+        }
+
+        private void ManualAuthentication(string accountName, CancellationTokenSource tokenSource)
+        {
+            var authResult = AccountAuthenticationService.ManualAccountAuthetication(accountName, tokenSource.Token);
+            if (!authResult.Result)
+            {
+                MessageService.ShowMessageAsync("Account Not Added, Authorization Interrupted, Try Again");
+            }
+            else
+            {
+                var account = new GoogleAccount() { Name = accountName };
+                if (GoogleAccounts == null)
+                {
+                    GoogleAccounts = new ObservableCollection<GoogleAccount>();
+                }
+                GoogleAccounts.Add(account);
+                SelectedProfile.SelectedGoogleAccount = account;
+                SelectedProfile.GoogleCalendars = null;
+                SelectedProfile.GetGoogleCalendar();
+            }
+        }
+
+        private async Task AutomaticAuthentication(string accountName, CancellationTokenSource tokenSource)
+        {
             // Start progress controller
             var progressDialogController =
                 await MessageService.ShowProgress("Authenticate and Authorize in the browser window", "Add Google Account");
@@ -344,16 +384,14 @@ namespace CalendarSyncPlus.Application.ViewModels
             progressDialogController.SetIndeterminate();
             progressDialogController.SetCancelable(true);
 
-            //Create cancellation token to support cancellation
-            CancellationTokenSource tokenSource = new CancellationTokenSource();
-            var token = tokenSource.Token;
-            var authorizeGoogleAccountTask = AccountAuthenticationService.AuthorizeGoogleAccount(accountName, token);
+            var authorizeGoogleAccountTask = AccountAuthenticationService.AuthorizeGoogleAccount(accountName, tokenSource.Token);
 
             //Wait for 120 seconds
             int timeInSeconds = 120;
             while (timeInSeconds > 0)
             {
-                progressDialogController.SetMessage(String.Format("Authenticate and Authorize in the browser window in {0} secs", timeInSeconds));
+                progressDialogController.SetMessage(String.Format("Authenticate and Authorize in the browser window in {0} secs",
+                    timeInSeconds));
 
                 //cancel task if cancellation is requested
                 if (progressDialogController.IsCanceled)
@@ -378,7 +416,7 @@ namespace CalendarSyncPlus.Application.ViewModels
 
             await progressDialogController.CloseAsync();
 
-            if (authorizeGoogleAccountTask.IsCanceled || authorizeGoogleAccountTask.IsFaulted || token.IsCancellationRequested ||
+            if (authorizeGoogleAccountTask.IsCanceled || authorizeGoogleAccountTask.IsFaulted || tokenSource.Token.IsCancellationRequested ||
                 progressDialogController.IsCanceled)
             {
                 MessageService.ShowMessageAsync("Account Not Added, Authorization Interrupted, Try Again");

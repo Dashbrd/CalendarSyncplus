@@ -7,22 +7,28 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Waf.Applications;
 using CalendarSyncPlus.Common.Log;
+using CalendarSyncPlus.Services.Interfaces;
 using CalendarSyncPlus.Services.Utilities;
 using Google.Apis.Auth.OAuth2;
+using Google.Apis.Auth.OAuth2.Flows;
 using Google.Apis.Calendar.v3;
 using Google.Apis.Services;
 using Google.Apis.Util.Store;
+
+using Newtonsoft.Json.Bson;
 
 namespace CalendarSyncPlus.GoogleServices.Google
 {
     [Export(typeof (IAccountAuthenticationService))]
     public class AccountAuthenticationService : IAccountAuthenticationService
     {
+        public IMessageService MessageService { get; set; }
         private readonly ApplicationLogger ApplicationLogger;
 
         [ImportingConstructor]
-        public AccountAuthenticationService(ApplicationLogger applicationLogger)
+        public AccountAuthenticationService(ApplicationLogger applicationLogger, IMessageService messageService)
         {
+            MessageService = messageService;
             ApplicationLogger = applicationLogger;
         }
 
@@ -68,7 +74,7 @@ namespace CalendarSyncPlus.GoogleServices.Google
                 {
                     return null;
                 }
-
+                
                 var service = new CalendarService(new BaseClientService.Initializer
                 {
                     HttpClientInitializer = authTask.Result,
@@ -154,6 +160,61 @@ namespace CalendarSyncPlus.GoogleServices.Google
                 return false;
             }
         }
+
+        public async Task<bool> ManualAccountAuthetication(string accountName, CancellationToken cancellationToken)
+        {
+            try
+            {
+                string applicationDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData,
+                    Environment.SpecialFolderOption.None);
+                string fullPath = applicationDataPath + @"\CalendarSyncPlus\" + Constants.AuthFolderPath;
+
+
+                var initializer = new GoogleAuthorizationCodeFlow.Initializer
+                {
+                    ClientSecrets =
+                        new ClientSecrets()
+                        {
+                            ClientId = Constants.ClientId,
+                            ClientSecret = Constants.ClientSecret
+                        },
+                    Scopes = new[]
+                    {
+                        CalendarService.Scope.Calendar, // Manage your calendars
+                        CalendarService.Scope.CalendarReadonly, // View your Calendars
+                    },
+                    DataStore = new FileDataStore(fullPath, true)
+
+                };
+
+                var authTask = await new AuthorizationCodeInstalledApp(
+                    new GoogleAuthorizationCodeFlow(initializer),
+                    new CustomCodeReceiver(LaunchPromptAndGetCode))
+                    .AuthorizeAsync(String.Format("-{0}-googletoken", accountName), cancellationToken);
+                
+                var service = new CalendarService(new BaseClientService.Initializer
+                {
+                    HttpClientInitializer = authTask,
+                    ApplicationName = ApplicationInfo.ProductName,
+                });
+                return true;
+            }
+            catch (AggregateException exception)
+            {
+                ApplicationLogger.LogError(exception.ToString());
+            }
+            catch (Exception exception)
+            {
+                ApplicationLogger.LogError(exception.ToString());
+            }
+            return false;
+        }
+
+        private string LaunchPromptAndGetCode()
+        {
+            return MessageService.ShowCustomDialog("Enter Google Auth Code").Result;
+        }
+
         #endregion
     }
 }
