@@ -219,7 +219,7 @@ namespace CalendarSyncPlus.Presentation.Services
             return ShowProgress(message, ApplicationInfo.ProductName);
         }
 
-        public async Task<string> ShowCustomDialog(string message, string title,int maxLength=15)
+        public Task<string> ShowCustomInput(string message, string title,int maxLength=15)
         {
             var metroDialogSettings = new MetroDialogSettings()
             {
@@ -238,11 +238,11 @@ namespace CalendarSyncPlus.Presentation.Services
                 MaxInputLength=maxLength
             };
 
-            return await InvokeOnCurrentDispatcher(async () =>
+            return InvokeOnCurrentDispatcher(() =>
             {
-                await View.ShowMetroDialogAsync(dialog, metroDialogSettings);
+                View.ShowMetroDialogAsync(dialog, metroDialogSettings);
 
-                return await dialog.WaitForButtonPressAsync().ContinueWith(m =>
+                return dialog.WaitForButtonPressAsync().ContinueWith(m =>
                     {
                         InvokeOnCurrentDispatcher(() => View.HideMetroDialogAsync(dialog));
                         return m.Result;
@@ -250,9 +250,9 @@ namespace CalendarSyncPlus.Presentation.Services
             });
         }
 
-        public Task<string> ShowCustomDialog(string message)
+        public Task<string> ShowCustomInput(string message)
         {
-            return ShowCustomDialog(message, ApplicationInfo.ProductName);
+            return ShowCustomInput(message, ApplicationInfo.ProductName);
         }
 
         #endregion
