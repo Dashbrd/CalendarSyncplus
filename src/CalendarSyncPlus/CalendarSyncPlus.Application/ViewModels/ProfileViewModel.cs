@@ -535,12 +535,12 @@ namespace CalendarSyncPlus.Application.ViewModels
             SyncFrequency = SyncProfile.SyncSettings.SyncFrequency.Name;
             SetCategory = SyncProfile.SetCalendarCategory;
             _selectedGoogleAccount = googleAccount;
-            if (_selectedGoogleAccount != null) 
+            if (_selectedGoogleAccount != null)
                 SelectedCalendar = SelectedGoogleAccount.GoogleCalendar;
             SelectedOutlookProfileName = SyncProfile.OutlookSettings.OutlookProfileName;
             SelectedOutlookMailBox = SyncProfile.OutlookSettings.OutlookMailBox;
             SelectedOutlookCalendar = SyncProfile.OutlookSettings.OutlookCalendar;
-            
+
             if (SyncProfile.EventCategory != null)
             {
                 SelectedCategory = Categories.First(t => t.CategoryName.Equals(SyncProfile.EventCategory.CategoryName));
@@ -549,7 +549,7 @@ namespace CalendarSyncPlus.Application.ViewModels
 
         private async void GetOutlookMailBoxes()
         {
-            if(IsDefaultMailBox || IsLoading)
+            if (IsDefaultMailBox || IsLoading)
                 return;
             IsLoading = true;
             await GetOutlookMailBoxesInternal();
@@ -613,7 +613,7 @@ namespace CalendarSyncPlus.Application.ViewModels
 
         internal async void GetGoogleCalendar()
         {
-            if(IsLoading)
+            if (IsLoading)
                 return;
             //TODO : Move this method to main setitngs view
             IsLoading = true;
@@ -851,11 +851,13 @@ namespace CalendarSyncPlus.Application.ViewModels
                 SyncProfile.OutlookSettings.OutlookMailBox = SelectedOutlookMailBox;
                 SyncProfile.OutlookSettings.OutlookCalendar = SelectedOutlookCalendar;
             }
-
-            if (!IsDefaultProfile)
+            else
             {
-                SyncProfile.OutlookSettings.OutlookProfileName = SelectedOutlookProfileName;
+                SyncProfile.OutlookSettings.OutlookMailBox = null;
+                SyncProfile.OutlookSettings.OutlookCalendar = null;
             }
+
+            SyncProfile.OutlookSettings.OutlookProfileName = !IsDefaultProfile ? SelectedOutlookProfileName : null;
 
             SyncProfile.OutlookSettings.UpdateOutlookOptions(IsDefaultProfile, IsDefaultMailBox,
                 IsExchangeWebServices);
