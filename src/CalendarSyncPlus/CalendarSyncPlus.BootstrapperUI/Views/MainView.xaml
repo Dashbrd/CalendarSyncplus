@@ -1,0 +1,41 @@
+﻿<controls:MetroWindow x:Class="CalendarSyncPlus.BootstrapperUI.MainView"
+                      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                      xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+                      mc:Ignorable="d"
+                      AllowsTransparency="True"
+                      BorderBrush="{DynamicResource AccentColorBrush}"
+                      GlowBrush="{DynamicResource AccentColorBrush}"
+                      Icon="Resources/icon.ico"
+                      NonActiveGlowBrush="Red"
+                      ResizeMode="CanMinimize"
+                      ShowIconOnTitleBar="True"
+                      ShowTitleBar="True"
+                      SnapsToDevicePixels="True"
+                      TitleCaps="False"
+                      WindowStartupLocation="CenterScreen"
+                      d:DesignHeight="300"
+                      d:DesignWidth="300">
+    <controls:MetroWindow.Resources>
+        <ResourceDictionary>
+        <ResourceDictionary.MergedDictionaries>
+            <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
+            <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
+            <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colors.xaml" />
+            <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml" />
+            <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
+            <ResourceDictionary Source="/Resources/Icons.xaml" />
+        </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </controls:MetroWindow.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+           <controls:TransitioningContentControl x:Name="TransitioningContentControl"/> 
+        
+    </Grid>
+</controls:MetroWindow>
