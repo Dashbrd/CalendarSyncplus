@@ -1,7 +1,6 @@
 ﻿<UserControl x:Class="CalendarSyncPlus.Presentation.Views.GoogleSettingsView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:Properties="clr-namespace:CalendarSyncPlus.Common.Properties;assembly=CalendarSyncPlus.Common"
              xmlns:converters="http://metro.mahapps.com/winfx/xaml/shared"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:localizeExtension="http://wpflocalizeextension.codeplex.com"
@@ -38,7 +37,6 @@
         <GroupBox Header="{localizeExtension:LocText Key=GoogleSettingsView_GroupBox_Header}" HeaderTemplate="{StaticResource GoogleHeaderTemplate}">
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition />
                     <RowDefinition />
                     <RowDefinition />
                     <RowDefinition />
@@ -84,13 +82,20 @@
                                                                              AncestorType={x:Type views:ProfileSettingsView}}}"
                             Content="{localizeExtension:LocText Key=GoogleSettingsView_Button_NewtAccount_Content}" />
                 </StackPanel>
+                <CheckBox Grid.Row="2"
+                          Grid.Column="1"
+                          Margin="2"
+                          HorizontalAlignment="Right"
+                          IsChecked="{Binding Path=DataContext.AllowManualGoogleAuth,
+                                              RelativeSource={RelativeSource Mode=FindAncestor,
+                                                                             AncestorType={x:Type views:ProfileSettingsView}}}"
+                          Content="{localizeExtension:LocText Key=GoogleSettingsView_CheckBox_ManualAuth_Content}"/>
 
-
-                <TextBlock Grid.Row="2"
+                <TextBlock Grid.Row="3"
                            Grid.Column="0"
                            VerticalAlignment="Center"
                            Text="{localizeExtension:LocText Key=GoogleSettingsView_TextBlock_SelectCalendar_Text}" />
-                <ComboBox Grid.Row="2"
+                <ComboBox Grid.Row="3"
                           Grid.Column="1"
                           Margin="2"
                           DisplayMemberPath="Name"
@@ -99,7 +104,7 @@
                           SelectedItem="{Binding SelectedCalendar,
                                                  Mode=TwoWay,
                                                  UpdateSourceTrigger=PropertyChanged}" />
-                <StackPanel Grid.Row="3"
+                <StackPanel Grid.Row="4"
                             Grid.Column="1"
                             HorizontalAlignment="Right"
                             Orientation="Horizontal">

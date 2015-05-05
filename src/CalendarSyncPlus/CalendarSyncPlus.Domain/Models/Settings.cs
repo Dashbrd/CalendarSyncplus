@@ -7,6 +7,7 @@ namespace CalendarSyncPlus.Domain.Models
     public class Settings
     {
         public string SettingsVersion { get; set; }
+        public bool AllowManualAuthentication { get; set; }
         /// <summary>
         /// 
         /// </summary>

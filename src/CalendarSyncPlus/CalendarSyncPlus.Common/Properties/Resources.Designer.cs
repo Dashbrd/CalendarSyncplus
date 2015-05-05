@@ -12,7 +12,7 @@ namespace CalendarSyncPlus.Common.Properties
 {
     using System;
     
-    
+     
     /// <summary>
     ///   A strongly-typed resource class, for looking up localized strings, etc.
     /// </summary>
@@ -409,7 +409,16 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("GoogleSettingsView_Button_ResetCalendar_Content", resourceCulture);
             }
         }
-        
+        /// <summary>
+        ///   Looks up a localized string similar to Enter Google Auth code manually.
+        /// </summary>
+        public static string GoogleSettingsView_CheckBox_ManualAuth_Content
+        {
+            get
+            {
+                return ResourceManager.GetString("GoogleSettingsView_CheckBox_ManualAuth_Content", resourceCulture);
+            }
+        }
         /// <summary>
         ///   Looks up a localized string similar to Select Google Calendar.
         /// </summary>
@@ -475,7 +484,27 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("HomeView_Button_SyncNow_Content", resourceCulture);
             }
         }
-        
+        /// <summary>
+        ///   Looks up a localized string similar to Next Scheduled.
+        /// </summary>
+        public static string HomeView_GroupBox_Schedules_Header
+        {
+            get
+            {
+                return ResourceManager.GetString("HomeView_GroupBox_Schedules_Header", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Status.
+        /// </summary>
+        public static string HomeView_GroupBox_Status_Header
+        {
+            get
+            {
+                return ResourceManager.GetString("HomeView_GroupBox_Status_Header", resourceCulture);
+            }
+        }
         /// <summary>
         ///   Looks up a localized string similar to New.
         /// </summary>

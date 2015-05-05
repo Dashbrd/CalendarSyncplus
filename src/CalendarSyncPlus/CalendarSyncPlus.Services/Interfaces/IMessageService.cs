@@ -44,6 +44,10 @@ namespace CalendarSyncPlus.Services.Interfaces
 
         Task<string> ShowInput(string message);
 
+        Task<string> ShowInputAsync(string message);
+
+        Task<string> ShowInputAsync(string message, string title);
+
         void ShowProgressAsync(string message, string title);
 
         void ShowProgressAsync(string message);

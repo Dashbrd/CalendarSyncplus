@@ -94,6 +94,7 @@ namespace CalendarSyncPlus.Application.ViewModels
         private DelegateCommand _addNewGoogleAccount;
         private ObservableCollection<GoogleAccount> _googleAccounts;
         private DelegateCommand _disconnectGoogleCommand;
+        private bool _allowManualGoogleAuth;
 
         #endregion
 
@@ -306,6 +307,12 @@ namespace CalendarSyncPlus.Application.ViewModels
             }
         }
 
+        public bool AllowManualGoogleAuth
+        {
+            get { return _allowManualGoogleAuth; }
+            set { SetProperty(ref _allowManualGoogleAuth, value); }
+        }
+
         public DelegateCommand AddNewGoogleAccount
         {
             get
@@ -335,14 +342,11 @@ namespace CalendarSyncPlus.Application.ViewModels
                 MessageService.ShowMessageAsync("An account with the same email already exists. Please try again.");
                 return;
             }
-
-            MessageDialogResult manualResult =
-                await MessageService.ShowConfirmMessage("Do you want to enter the authorization code manually?");
-
+            
             //Create cancellation token to support cancellation
             CancellationTokenSource tokenSource = new CancellationTokenSource();
             var token = tokenSource.Token;
-            if (manualResult == MessageDialogResult.Affirmative)
+            if (AllowManualGoogleAuth)
             {
                 ManualAuthentication(accountName, tokenSource);
             }
@@ -352,8 +356,10 @@ namespace CalendarSyncPlus.Application.ViewModels
             }
         }
 
-        private void ManualAuthentication(string accountName, CancellationTokenSource tokenSource)
+        private async void ManualAuthentication(string accountName, CancellationTokenSource tokenSource)
         {
+            //Delay for Preparedness
+            await Task.Delay(5000);
             var authResult = AccountAuthenticationService.ManualAccountAuthetication(accountName, tokenSource.Token);
             if (!authResult.Result)
             {
@@ -450,7 +456,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             Settings.AppSettings.CheckForUpdates = CheckForUpdates;
             Settings.AppSettings.RunApplicationAtSystemStartup = RunApplicationAtSystemStartup;
             Settings.AppSettings.IsManualSynchronization = IsManualSynchronization;
-
+            Settings.AllowManualAuthentication = AllowManualGoogleAuth;
             Settings.AppSettings.ProxySettings = new ProxySetting()
             {
                 BypassOnLocal = ProxySettings.BypassOnLocal,
@@ -533,6 +539,7 @@ namespace CalendarSyncPlus.Application.ViewModels
                         UserName = Settings.AppSettings.ProxySettings.UserName
                     };
                     ApplyProxySettings();
+                    AllowManualGoogleAuth = Settings.AllowManualAuthentication;
                     GoogleAccounts = Settings.GoogleAccounts;
                     MinimizeToSystemTray = Settings.AppSettings.MinimizeToSystemTray;
                     HideSystemTrayTooltip = Settings.AppSettings.HideSystemTrayTooltip;
