@@ -190,7 +190,7 @@ namespace CalendarSyncPlus.GoogleServices.Google
                 var authTask = await new AuthorizationCodeInstalledApp(
                     new GoogleAuthorizationCodeFlow(initializer),
                     new CustomCodeReceiver(LaunchPromptAndGetCode))
-                    .AuthorizeAsync(String.Format("-{0}-googletoken", accountName), cancellationToken);
+                    .AuthorizeAsync(String.Format("-{0}-googletoken", accountName),CancellationToken.None);
                 
                 var service = new CalendarService(new BaseClientService.Initializer
                 {
@@ -212,7 +212,7 @@ namespace CalendarSyncPlus.GoogleServices.Google
 
         private string LaunchPromptAndGetCode()
         {
-            return MessageService.ShowCustomDialog("Enter Google Auth Code").Result;
+            return MessageService.ShowInput("Enter Google Auth Code").Result;
         }
 
         #endregion

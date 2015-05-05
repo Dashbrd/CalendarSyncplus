@@ -348,96 +348,84 @@ namespace CalendarSyncPlus.Application.ViewModels
             var token = tokenSource.Token;
             if (AllowManualGoogleAuth)
             {
-                ManualAuthentication(accountName, tokenSource);
-            }
-            else
-            {
-                await AutomaticAuthentication(accountName,tokenSource);
-            }
-        }
-
-        private async void ManualAuthentication(string accountName, CancellationTokenSource tokenSource)
-        {
-            //Delay for Preparedness
-            await Task.Delay(5000);
-            var authResult = AccountAuthenticationService.ManualAccountAuthetication(accountName, tokenSource.Token);
-            if (!authResult.Result)
-            {
-                MessageService.ShowMessageAsync("Account Not Added, Authorization Interrupted, Try Again");
-            }
-            else
-            {
-                var account = new GoogleAccount() { Name = accountName };
-                if (GoogleAccounts == null)
+                var authResult = AccountAuthenticationService.ManualAccountAuthetication(accountName, tokenSource.Token);
+                if (!authResult.Result)
                 {
-                    GoogleAccounts = new ObservableCollection<GoogleAccount>();
+                    MessageService.ShowMessageAsync("Account Not Added, Authorization Interrupted, Try Again");
                 }
-                GoogleAccounts.Add(account);
-                SelectedProfile.SelectedGoogleAccount = account;
-                SelectedProfile.GoogleCalendars = null;
-                SelectedProfile.GetGoogleCalendar();
+                else
+                {
+                    var account = new GoogleAccount() { Name = accountName };
+                    if (GoogleAccounts == null)
+                    {
+                        GoogleAccounts = new ObservableCollection<GoogleAccount>();
+                    }
+                    GoogleAccounts.Add(account);
+                    SelectedProfile.SelectedGoogleAccount = account;
+                    SelectedProfile.GoogleCalendars = null;
+                    SelectedProfile.GetGoogleCalendar();
+                }
             }
-        }
-
-        private async Task AutomaticAuthentication(string accountName, CancellationTokenSource tokenSource)
-        {
-            // Start progress controller
-            var progressDialogController =
-                await MessageService.ShowProgress("Authenticate and Authorize in the browser window", "Add Google Account");
-            //Delay for Preparedness
-            await Task.Delay(5000);
-
-            progressDialogController.SetIndeterminate();
-            progressDialogController.SetCancelable(true);
-
-            var authorizeGoogleAccountTask = AccountAuthenticationService.AuthorizeGoogleAccount(accountName, tokenSource.Token);
-
-            //Wait for 120 seconds
-            int timeInSeconds = 120;
-            while (timeInSeconds > 0)
+            else
             {
-                progressDialogController.SetMessage(String.Format("Authenticate and Authorize in the browser window in {0} secs",
-                    timeInSeconds));
+                // Start progress controller
+                var progressDialogController =
+                    await MessageService.ShowProgress("Authenticate and Authorize in the browser window", "Add Google Account");
+                //Delay for Preparedness
+                await Task.Delay(5000);
 
-                //cancel task if cancellation is requested
-                if (progressDialogController.IsCanceled)
+                progressDialogController.SetIndeterminate();
+                progressDialogController.SetCancelable(true);
+
+                var authorizeGoogleAccountTask = AccountAuthenticationService.AuthorizeGoogleAccount(accountName, tokenSource.Token);
+
+                //Wait for 120 seconds
+                int timeInSeconds = 120;
+                while (timeInSeconds > 0)
+                {
+                    progressDialogController.SetMessage(String.Format("Authenticate and Authorize in the browser window in {0} secs",
+                        timeInSeconds));
+
+                    //cancel task if cancellation is requested
+                    if (progressDialogController.IsCanceled)
+                    {
+                        tokenSource.Cancel();
+                        break;
+                    }
+
+                    //break loop if task changes its status
+                    if (authorizeGoogleAccountTask.IsCanceled || authorizeGoogleAccountTask.IsFaulted || authorizeGoogleAccountTask.IsCompleted)
+                    {
+                        break;
+                    }
+                    timeInSeconds--;
+                    await Task.Delay(1000);
+                }
+
+                if (timeInSeconds < 0)
                 {
                     tokenSource.Cancel();
-                    break;
                 }
 
-                //break loop if task changes its status
-                if (authorizeGoogleAccountTask.IsCanceled || authorizeGoogleAccountTask.IsFaulted || authorizeGoogleAccountTask.IsCompleted)
+                await progressDialogController.CloseAsync();
+
+                if (authorizeGoogleAccountTask.IsCanceled || authorizeGoogleAccountTask.IsFaulted || tokenSource.Token.IsCancellationRequested ||
+                    progressDialogController.IsCanceled)
                 {
-                    break;
+                    MessageService.ShowMessageAsync("Account Not Added, Authorization Interrupted, Try Again");
                 }
-                timeInSeconds--;
-                await Task.Delay(1000);
-            }
-
-            if (timeInSeconds < 0)
-            {
-                tokenSource.Cancel();
-            }
-
-            await progressDialogController.CloseAsync();
-
-            if (authorizeGoogleAccountTask.IsCanceled || authorizeGoogleAccountTask.IsFaulted || tokenSource.Token.IsCancellationRequested ||
-                progressDialogController.IsCanceled)
-            {
-                MessageService.ShowMessageAsync("Account Not Added, Authorization Interrupted, Try Again");
-            }
-            else
-            {
-                var account = new GoogleAccount() { Name = accountName };
-                if (GoogleAccounts == null)
+                else
                 {
-                    GoogleAccounts = new ObservableCollection<GoogleAccount>();
+                    var account = new GoogleAccount() { Name = accountName };
+                    if (GoogleAccounts == null)
+                    {
+                        GoogleAccounts = new ObservableCollection<GoogleAccount>();
+                    }
+                    GoogleAccounts.Add(account);
+                    SelectedProfile.SelectedGoogleAccount = account;
+                    SelectedProfile.GoogleCalendars = null;
+                    SelectedProfile.GetGoogleCalendar();
                 }
-                GoogleAccounts.Add(account);
-                SelectedProfile.SelectedGoogleAccount = account;
-                SelectedProfile.GoogleCalendars = null;
-                SelectedProfile.GetGoogleCalendar();
             }
         }
 

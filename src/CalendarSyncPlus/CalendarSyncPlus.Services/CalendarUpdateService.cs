@@ -413,7 +413,7 @@ namespace CalendarSyncPlus.Services
 
             if (syncProfile.SyncSettings.ConfirmOnDelete && syncCallback != null)
             {
-                string message = string.Format("Are you sure you want to isDeleteOperation {0} items from {1}?",
+                string message = string.Format("Are you sure you want to delete {0} items from {1}?",
                     appointmentsToDelete.Count, DestinationCalendarService.CalendarServiceName);
                 var e = new SyncEventArgs(message, UserActionEnum.ConfirmDelete);
                 Task<bool> task = syncCallback(e);
@@ -515,7 +515,7 @@ namespace CalendarSyncPlus.Services
 
             if (syncProfile.SyncSettings.ConfirmOnDelete && syncCallback != null)
             {
-                string message = string.Format("Are you sure you want to isDeleteOperation {0} items from {1}?",
+                string message = string.Format("Are you sure you want to delete {0} items from {1}?",
                     appointmentsToDelete.Count, DestinationCalendarService.CalendarServiceName);
                 var e = new SyncEventArgs(message, UserActionEnum.ConfirmDelete);
                 Task<bool> task = syncCallback(e);

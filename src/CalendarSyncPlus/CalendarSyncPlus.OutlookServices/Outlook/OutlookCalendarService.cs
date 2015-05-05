@@ -591,24 +591,33 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
         {
             CheckCalendarSpecificData(calendarSpecificData);
             var calendarAppointments = new CalendarAppointments();
-
-            var rangeList = SplitDateRange(startDate, endDate, dayChunkSize: (1460));
-
-            foreach (Tuple<DateTime, DateTime> rangeTuple in rangeList)
-            {
-                //Get Outlook Entries
-                Tuple<DateTime, DateTime> tuple = rangeTuple;
-                List<Appointment> appointmentList =
+            
+            List<Appointment> appointmentList =
                     await
                         Task<List<Appointment>>.Factory.StartNew(
-                            () => GetAppointments(tuple.Item1, tuple.Item2));
-
-
-                if (appointmentList != null)
-                {
-                    calendarAppointments.AddRange(appointmentList);
-                }
+                            () => GetAppointments(startDate,endDate));
+            
+            if (appointmentList != null)
+            {
+                calendarAppointments.AddRange(appointmentList);
             }
+
+            //var rangeList = SplitDateRange(startDate, endDate, dayChunkSize: (1460));
+            //foreach (Tuple<DateTime, DateTime> rangeTuple in rangeList)
+            //{
+            //    //Get Outlook Entries
+            //    Tuple<DateTime, DateTime> tuple = rangeTuple;
+            //    List<Appointment> appointmentList =
+            //        await
+            //            Task<List<Appointment>>.Factory.StartNew(
+            //                () => GetAppointments(tuple.Item1, tuple.Item2));
+
+
+            //    if (appointmentList != null)
+            //    {
+            //        calendarAppointments.AddRange(appointmentList);
+            //    }
+            //}
 
             if (OutlookCalendar != null)
             {
