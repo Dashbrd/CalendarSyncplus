@@ -11,16 +11,16 @@ namespace CalendarSyncPlus.GoogleServices.Google
 {
     public class CustomCodeReceiver : ICodeReceiver
     {
-        public Func<string> GetCodeDeledateFunc { get; set; }
+        public Func<Task<string>> GetCodeDeledateFunc { get; set; }
         private string _redirectUri;
 
-        public CustomCodeReceiver(Func<string> getCodeDeledateFunc)
+        public CustomCodeReceiver(Func<Task<string>> getCodeDeledateFunc)
         {
             GetCodeDeledateFunc = getCodeDeledateFunc;
             _redirectUri = "urn:ietf:wg:oauth:2.0:oob";
         }
 
-        public Task<AuthorizationCodeResponseUrl> ReceiveCodeAsync(AuthorizationCodeRequestUrl url,
+        public async Task<AuthorizationCodeResponseUrl> ReceiveCodeAsync(AuthorizationCodeRequestUrl url,
             CancellationToken taskCancellationToken)
         {
             var completionSource =
@@ -33,13 +33,13 @@ namespace CalendarSyncPlus.GoogleServices.Google
             //{
             //    Console.WriteLine("Please enter code: ");
             //}
-            str = GetCodeDeledateFunc();
+            str = await GetCodeDeledateFunc();
 
             completionSource.SetResult(new AuthorizationCodeResponseUrl()
             {
                 Code = str
             });
-            return completionSource.Task;
+            return completionSource.Task.Result;
         }
 
         public string RedirectUri

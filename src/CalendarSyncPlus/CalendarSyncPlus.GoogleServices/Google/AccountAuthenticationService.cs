@@ -161,7 +161,7 @@ namespace CalendarSyncPlus.GoogleServices.Google
             }
         }
 
-        public async Task<bool> ManualAccountAuthetication(string accountName, CancellationToken cancellationToken)
+        public async Task<bool> ManualAccountAuthetication(string accountName, CancellationToken cancellationToken, Func<Task<string>> getCodeDeledateFunc)
         {
             try
             {
@@ -189,7 +189,7 @@ namespace CalendarSyncPlus.GoogleServices.Google
 
                 var authTask = await new AuthorizationCodeInstalledApp(
                     new GoogleAuthorizationCodeFlow(initializer),
-                    new CustomCodeReceiver(LaunchPromptAndGetCode))
+                    new CustomCodeReceiver(getCodeDeledateFunc))
                     .AuthorizeAsync(String.Format("-{0}-googletoken", accountName),CancellationToken.None);
                 
                 var service = new CalendarService(new BaseClientService.Initializer
@@ -209,12 +209,6 @@ namespace CalendarSyncPlus.GoogleServices.Google
             }
             return false;
         }
-
-        private string LaunchPromptAndGetCode()
-        {
-            return MessageService.ShowInput("Enter Google Auth Code").Result;
-        }
-
         #endregion
     }
 }

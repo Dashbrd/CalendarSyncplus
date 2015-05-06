@@ -95,6 +95,8 @@ namespace CalendarSyncPlus.Application.ViewModels
         private ObservableCollection<GoogleAccount> _googleAccounts;
         private DelegateCommand _disconnectGoogleCommand;
         private bool _allowManualGoogleAuth;
+        private string _googleAuthCode;
+        private bool _isAuthCodeAvailable;
 
         #endregion
 
@@ -326,6 +328,18 @@ namespace CalendarSyncPlus.Application.ViewModels
             set { SetProperty(ref _googleAccounts, value); }
         }
 
+        public string GoogleAuthCode
+        {
+            get { return _googleAuthCode; }
+            set { SetProperty(ref _googleAuthCode, value); }
+        }
+
+        public bool IsAuthCodeAvailable
+        {
+            get { return _isAuthCodeAvailable; }
+            set { SetProperty(ref _isAuthCodeAvailable, value); }
+        }
+
         private async void AddNewGoogleAccountHandler()
         {
             //Accept Email Id
@@ -344,26 +358,20 @@ namespace CalendarSyncPlus.Application.ViewModels
             }
             
             //Create cancellation token to support cancellation
-            CancellationTokenSource tokenSource = new CancellationTokenSource();
+            var tokenSource = new CancellationTokenSource();
             var token = tokenSource.Token;
+
             if (AllowManualGoogleAuth)
             {
-                var authResult = AccountAuthenticationService.ManualAccountAuthetication(accountName, tokenSource.Token);
-                if (!authResult.Result)
+                var authResult = await AccountAuthenticationService.ManualAccountAuthetication(accountName, tokenSource.Token, GetGoogleAuthCode);
+
+                if (!authResult)
                 {
                     MessageService.ShowMessageAsync("Account Not Added, Authorization Interrupted, Try Again");
                 }
                 else
                 {
-                    var account = new GoogleAccount() { Name = accountName };
-                    if (GoogleAccounts == null)
-                    {
-                        GoogleAccounts = new ObservableCollection<GoogleAccount>();
-                    }
-                    GoogleAccounts.Add(account);
-                    SelectedProfile.SelectedGoogleAccount = account;
-                    SelectedProfile.GoogleCalendars = null;
-                    SelectedProfile.GetGoogleCalendar();
+                    AddGoogleAccountDetailsToApplication(accountName);
                 }
             }
             else
@@ -399,7 +407,7 @@ namespace CalendarSyncPlus.Application.ViewModels
                         break;
                     }
                     timeInSeconds--;
-                    await Task.Delay(1000);
+                    await Task.Delay(1000, tokenSource.Token);
                 }
 
                 if (timeInSeconds < 0)
@@ -416,17 +424,33 @@ namespace CalendarSyncPlus.Application.ViewModels
                 }
                 else
                 {
-                    var account = new GoogleAccount() { Name = accountName };
-                    if (GoogleAccounts == null)
-                    {
-                        GoogleAccounts = new ObservableCollection<GoogleAccount>();
-                    }
-                    GoogleAccounts.Add(account);
-                    SelectedProfile.SelectedGoogleAccount = account;
-                    SelectedProfile.GoogleCalendars = null;
-                    SelectedProfile.GetGoogleCalendar();
+                    AddGoogleAccountDetailsToApplication(accountName);
                 }
             }
+        }
+
+        private void AddGoogleAccountDetailsToApplication(string accountName)
+        {
+            var account = new GoogleAccount() { Name = accountName };
+            if (GoogleAccounts == null)
+            {
+                GoogleAccounts = new ObservableCollection<GoogleAccount>();
+            }
+            GoogleAccounts.Add(account);
+            SelectedProfile.SelectedGoogleAccount = account;
+            SelectedProfile.GoogleCalendars = null;
+            SelectedProfile.GetGoogleCalendar();
+        }
+
+        private async Task<string> GetGoogleAuthCode()
+        {
+            return await MessageService.ShowInput("Enter Auth Code after authorization in browser window", "Manual Authentication");
+        }
+
+        private void SetGoogleAuthCodeForContinuation(Task<string> googleAuthCode)
+        {
+            GoogleAuthCode = googleAuthCode.Result;
+            IsAuthCodeAvailable = true;
         }
 
         #endregion
