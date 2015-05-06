@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Google.Apis.Calendar.v3;
@@ -43,7 +44,8 @@ namespace CalendarSyncPlus.GoogleServices.Google
         /// </summary>
         /// <param name="accountName"></param>
         /// <param name="cancellationToken"></param>
+        /// <param name="getCodeDeledateFunc"></param>
         /// <returns></returns>
-        Task<bool> ManualAccountAuthetication(string accountName, CancellationToken cancellationToken);
+        Task<bool> ManualAccountAuthetication(string accountName, CancellationToken cancellationToken,Func<Task<string>> getCodeDeledateFunc);
     }
 }
