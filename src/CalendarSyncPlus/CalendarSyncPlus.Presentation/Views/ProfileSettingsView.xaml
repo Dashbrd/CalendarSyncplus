@@ -44,7 +44,7 @@
             </TabItem>
             <TabItem Header="{localizeExtension:LocText Key=ProfileSettingsView_TabItem_Outlook_Header}">
                 <ScrollViewer HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto">
-                    <views:OutlookSettingsView DataContext="{Binding SelectedProfile}" />
+                    <views:OutlookSettingsView DataContext="{Binding}" />
                 </ScrollViewer>
             </TabItem>
             <TabItem Header="{localizeExtension:LocText Key=ProfileSettingsView_TabItem_Google_Header}">
