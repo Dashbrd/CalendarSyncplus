@@ -263,7 +263,7 @@ namespace CalendarSyncPlus.Application.ViewModels
                 PropertyChangedEventManager.AddHandler(viewModel, ProfilePropertyChangedHandler, "IsLoading");
                 viewModel.Initialize(null);
                 SyncProfileList.Add(viewModel);
-               
+
             }
         }
 
@@ -356,7 +356,7 @@ namespace CalendarSyncPlus.Application.ViewModels
                 MessageService.ShowMessageAsync("An account with the same email already exists. Please try again.");
                 return;
             }
-            
+
             //Create cancellation token to support cancellation
             var tokenSource = new CancellationTokenSource();
             var token = tokenSource.Token;
@@ -640,13 +640,23 @@ namespace CalendarSyncPlus.Application.ViewModels
 
                 if (googleAccount != null)
                 {
+                    foreach (var profileViewModel in SyncProfileList)
+                    {
+                        if (profileViewModel.SelectedGoogleAccount != null &&
+                            profileViewModel.SelectedGoogleAccount.Name.Equals(googleAccount.Name))
+                        {
+                            profileViewModel.SelectedGoogleAccount = null;
+                            profileViewModel.GoogleCalendars = null;
+                            profileViewModel.SelectedCalendar = null;
+                        }
+                    }
+                    
                     GoogleAccounts.Remove(googleAccount);
-                }
 
-                SelectedProfile.GoogleCalendars = null;
-                SelectedProfile.SelectedCalendar = null;
-                await MessageService.ShowMessage("Google account successfully disconnected");
-                SaveSettings();
+                    await MessageService.ShowMessage("Google account successfully disconnected");
+
+                    SaveSettings();
+                }
             }
             else
             {
