@@ -451,13 +451,10 @@ namespace CalendarSyncPlus.Application.ViewModels
                     return;
                 }
 
-                foreach (CalendarSyncProfile syncProfile in Settings.SyncProfiles)
+                foreach (CalendarSyncProfile syncProfile in ScheduledSyncProfiles)
                 {
-                    if (syncProfile.IsSyncEnabled)
-                    {
-                        CalendarSyncProfile profile = syncProfile;
-                        Task.Factory.StartNew(() => StartSyncTask(profile));
-                    }
+                    CalendarSyncProfile profile = syncProfile;
+                    Task.Factory.StartNew(() => StartSyncTask(profile));
                 }
             }
             catch (AggregateException exception)
