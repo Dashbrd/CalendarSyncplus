@@ -563,4 +563,13 @@ Select Outlook &lt;-&gt; Google, to sync our Outlook and Google calendar with ea
   <data name="OptionsSettingsView_ContentControl_OtherOptions_KeepLastModified_Content" xml:space="preserve">
     <value>In Bidirectional Sync keep the Latest copy of the appointment</value>
   </data>
+  <data name="GoogleSettingsView_CheckBox_ManualAuth_Content" xml:space="preserve">
+    <value>Allow Manual Google Code Entry</value>
+  </data>
+  <data name="HomeView_GroupBox_Status_Header" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="HomeView_GroupBox_Schedules_Header" xml:space="preserve">
+    <value>Next Scheduled</value>
+  </data>
 </root>

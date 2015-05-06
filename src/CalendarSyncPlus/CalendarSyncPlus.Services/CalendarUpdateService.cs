@@ -301,9 +301,18 @@ namespace CalendarSyncPlus.Services
                 case CalendarServiceType.OutlookDesktop:
                     calendarSpecificData = new Dictionary<string, object>
                     {
-                        {"ProfileName", syncProfile.OutlookSettings.OutlookProfileName},
-                        {"OutlookCalendar", syncProfile.OutlookSettings.OutlookCalendar},
-                        {"AddAsAppointments", syncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.AsAppointments)},
+                        {
+                            "ProfileName", !syncProfile.OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.DefaultProfile)
+                                ? syncProfile.OutlookSettings.OutlookProfileName
+                                : null
+                        },
+                        {
+                            "OutlookCalendar",
+                            !syncProfile.OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.DefaultCalendar)
+                                ? syncProfile.OutlookSettings.OutlookCalendar
+                                : null
+                        },
+                        { "AddAsAppointments", syncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.AsAppointments) }
                     };
                     break;
                 case CalendarServiceType.EWS:
@@ -404,7 +413,7 @@ namespace CalendarSyncPlus.Services
 
             if (syncProfile.SyncSettings.ConfirmOnDelete && syncCallback != null)
             {
-                string message = string.Format("Are you sure you want to isDeleteOperation {0} items from {1}?",
+                string message = string.Format("Are you sure you want to delete {0} items from {1}?",
                     appointmentsToDelete.Count, DestinationCalendarService.CalendarServiceName);
                 var e = new SyncEventArgs(message, UserActionEnum.ConfirmDelete);
                 Task<bool> task = syncCallback(e);
@@ -506,7 +515,7 @@ namespace CalendarSyncPlus.Services
 
             if (syncProfile.SyncSettings.ConfirmOnDelete && syncCallback != null)
             {
-                string message = string.Format("Are you sure you want to isDeleteOperation {0} items from {1}?",
+                string message = string.Format("Are you sure you want to delete {0} items from {1}?",
                     appointmentsToDelete.Count, DestinationCalendarService.CalendarServiceName);
                 var e = new SyncEventArgs(message, UserActionEnum.ConfirmDelete);
                 Task<bool> task = syncCallback(e);

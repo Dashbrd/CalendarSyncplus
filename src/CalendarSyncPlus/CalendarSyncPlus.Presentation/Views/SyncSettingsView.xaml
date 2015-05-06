@@ -3,14 +3,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:metroControls="http://metro.mahapps.com/winfx/xaml/controls"
              xmlns:viewModels="clr-namespace:CalendarSyncPlus.Application.ViewModels;assembly=CalendarSyncPlus.Application"
              xmlns:controls1="clr-namespace:CalendarSyncPlus.Presentation.Controls"
-             xmlns:metaData="clr-namespace:CalendarSyncPlus.Common.MetaData;assembly=CalendarSyncPlus.Common"
              xmlns:converters="clr-namespace:CalendarSyncPlus.Presentation.Converters"
-             xmlns:wafConverters="http://waf.codeplex.com/schemas"
              xmlns:models="clr-namespace:CalendarSyncPlus.Domain.Models;assembly=CalendarSyncPlus.Domain"
-             xmlns:Properties="clr-namespace:CalendarSyncPlus.Common.Properties;assembly=CalendarSyncPlus.Common"
              xmlns:localizeExtension="http://wpflocalizeextension.codeplex.com"
              mc:Ignorable="d"
              d:DesignHeight="500"
@@ -33,7 +30,7 @@
                 </Grid.ColumnDefinitions>
                 <TextBlock Text="{localizeExtension:LocText Key=SyncSettingsView_TextBlock_IntervalHours_Text}"
                            VerticalAlignment="Center" />
-                <controls:NumericUpDown Grid.Column="1"
+                <metroControls:NumericUpDown Grid.Column="1"
                                         Value="{Binding Hours,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                         VerticalAlignment="Center"
                                         Minimum="0"
@@ -46,7 +43,7 @@
                 <TextBlock Text="{localizeExtension:LocText Key=SyncSettingsView_TextBlock_IntervalMinutes_Text}"
                            VerticalAlignment="Center"
                            Grid.Row="1" />
-                <controls:NumericUpDown Grid.Row="1"
+                <metroControls:NumericUpDown Grid.Row="1"
                                         Grid.Column="1"
                                         Value="{Binding Minutes,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                         VerticalAlignment="Center"
@@ -78,7 +75,7 @@
                                  GroupName="DailyFrequency"
                                  IsChecked="{Binding CustomDay,
                                                     Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
-                    <controls:NumericUpDown Width="80"
+                    <metroControls:NumericUpDown Width="80"
                                             Margin="2"
                                             Minimum="0"
                                             Maximum="30"
@@ -130,7 +127,7 @@
                     <TextBlock Text="{localizeExtension:LocText Key=SyncSettingsView_TextBlock_WeeklyRecur_Text}"
                                Margin="2"
                                VerticalAlignment="Center" />
-                    <controls:NumericUpDown Width="80"
+                    <metroControls:NumericUpDown Width="80"
                                             Interval="1"
                                             Margin="2"
                                             TextAlignment="Right"
@@ -328,7 +325,7 @@
                                 VerticalAlignment="Center"
                                 Margin="2" />
 
-                    <controls:NumericUpDown Grid.Column="1"
+                    <metroControls:NumericUpDown Grid.Column="1"
                                             VerticalAlignment="Center"
                                             Value="{Binding DaysInPast,Mode=TwoWay}"
                                             Interval="1"
@@ -343,7 +340,7 @@
                                Margin="2"
                                Text="{localizeExtension:LocText Key=SyncSettingsView_TextBlock_DaysInFuture_Text}"
                                VerticalAlignment="Center" />
-                    <controls:NumericUpDown Grid.Row="1"
+                    <metroControls:NumericUpDown Grid.Row="1"
                                             Grid.Column="1"
                                             VerticalAlignment="Center"
                                             Value="{Binding DaysInFuture,Mode=TwoWay}"
@@ -375,7 +372,7 @@
                     <DatePicker Grid.Column="1"
                                 VerticalAlignment="Center"
                                 SelectedDate="{Binding StartDate,Mode=TwoWay}"
-                                Margin="2" />
+                                Margin="2" DisplayDateStart="01-01-1990" DisplayDateEnd="1-01-2030"/>
                     <ContentControl ContentTemplate="{DynamicResource HelpButtonTemplate}"
                                     Grid.Column="2"
                                     ToolTip="{localizeExtension:LocText Key=SyncSettingsView_ContentControl_HelpStartDate_Tooltip}" />
@@ -388,7 +385,9 @@
                                 Grid.Column="1"
                                 VerticalAlignment="Center"
                                 SelectedDate="{Binding EndDate,Mode=TwoWay}"
-                                Margin="2" />
+                                Margin="2"
+                                DisplayDateStart="01-01-1990"
+                                DisplayDateEnd="1-01-2030" />
                     <ContentControl ContentTemplate="{DynamicResource HelpButtonTemplate}"
                                     Grid.Row="1"
                                     Grid.Column="2"

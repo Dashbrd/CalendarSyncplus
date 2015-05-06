@@ -590,22 +590,52 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
             IDictionary<string, object> calendarSpecificData)
         {
             CheckCalendarSpecificData(calendarSpecificData);
-            //Get Outlook Entries
-            List<Appointment> appointmentList =
-                await
-                    Task<List<Appointment>>.Factory.StartNew(
-                        () => GetAppointments(startDate, endDate));
             var calendarAppointments = new CalendarAppointments();
+            
+            List<Appointment> appointmentList =
+                    await
+                        Task<List<Appointment>>.Factory.StartNew(
+                            () => GetAppointments(startDate,endDate));
+            
+            if (appointmentList != null)
+            {
+                calendarAppointments.AddRange(appointmentList);
+            }
+
+            //var rangeList = SplitDateRange(startDate, endDate, dayChunkSize: (1460));
+            //foreach (Tuple<DateTime, DateTime> rangeTuple in rangeList)
+            //{
+            //    //Get Outlook Entries
+            //    Tuple<DateTime, DateTime> tuple = rangeTuple;
+            //    List<Appointment> appointmentList =
+            //        await
+            //            Task<List<Appointment>>.Factory.StartNew(
+            //                () => GetAppointments(tuple.Item1, tuple.Item2));
+
+
+            //    if (appointmentList != null)
+            //    {
+            //        calendarAppointments.AddRange(appointmentList);
+            //    }
+            //}
+
             if (OutlookCalendar != null)
             {
                 calendarAppointments.CalendarId = OutlookCalendar.EntryId;
             }
 
-            if (appointmentList != null)
-            {
-                calendarAppointments.AddRange(appointmentList);
-            }
             return calendarAppointments;
+        }
+
+        private IEnumerable<Tuple<DateTime, DateTime>> SplitDateRange(DateTime start, DateTime end, int dayChunkSize)
+        {
+            DateTime chunkEnd;
+            while ((chunkEnd = start.AddDays(dayChunkSize)) < end)
+            {
+                yield return Tuple.Create(start, chunkEnd);
+                start = chunkEnd;
+            }
+            yield return Tuple.Create(start, end);
         }
 
         /// <exception cref="InvalidOperationException">Essential parameters are not present.</exception>

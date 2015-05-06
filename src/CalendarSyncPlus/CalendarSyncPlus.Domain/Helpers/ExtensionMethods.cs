@@ -49,7 +49,7 @@ namespace CalendarSyncPlus.Domain.Helpers
 
         public static void UpdateEntryOptions(this CalendarSyncProfile syncProfile, bool addDescription,
             bool addReminders,
-            bool addAttendees, bool addAttendeesToDescription, bool addAttachments,bool asAppointments)
+            bool addAttendees, bool addAttendeesToDescription, bool addAttachments, bool asAppointments)
         {
             syncProfile.CalendarEntryOptions = CalendarEntryOptionsEnum.None;
             if (addDescription)
@@ -86,8 +86,8 @@ namespace CalendarSyncPlus.Domain.Helpers
         }
 
 
-        public static void UpdateOutlookOptions(this OutlookSettings settings, bool isDefaultProfile,
-            bool isDefaultMailBox, bool isExchangeWebServices)
+        public static void UpdateOutlookOptions(this OutlookSettings settings, OutlookOptionsEnum isDefaultProfile,
+            OutlookOptionsEnum isDefaultMailBox, bool isExchangeWebServices)
         {
             settings.OutlookOptions = OutlookOptionsEnum.None;
 
@@ -97,13 +97,8 @@ namespace CalendarSyncPlus.Domain.Helpers
             }
             else
             {
-                settings.OutlookOptions = !isDefaultProfile
-                    ? settings.OutlookOptions | OutlookOptionsEnum.AlternateProfile
-                    : settings.OutlookOptions | OutlookOptionsEnum.DefaultProfile;
-
-                settings.OutlookOptions = !isDefaultMailBox
-                    ? settings.OutlookOptions | OutlookOptionsEnum.AlternateCalendar
-                    : settings.OutlookOptions | OutlookOptionsEnum.DefaultCalendar;
+                settings.OutlookOptions = settings.OutlookOptions | isDefaultProfile;
+                settings.OutlookOptions = settings.OutlookOptions | isDefaultMailBox;
             }
         }
 

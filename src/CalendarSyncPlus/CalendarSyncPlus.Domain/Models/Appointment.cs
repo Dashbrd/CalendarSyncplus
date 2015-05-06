@@ -256,8 +256,7 @@ namespace CalendarSyncPlus.Domain.Models
 
         public override string ToString()
         {
-            return Rfc339FormatStartTime + ";" + Rfc339FormatStartTime + ";" + Subject + ";" + Location;
-            //return (AllDayEvent ? StartTime.Value.Date.Rfc339FFormat() : Rfc339FormatStartTime + ";" + Rfc339FormatStartTime)+ ";" + Subject + ";" + Location;
+            return Rfc339FormatStartTime + ";" + Rfc339FormatEndTime + ";" + Subject + ";" + Location;
         }
     }
 }

@@ -45,8 +45,8 @@
     <Reference Include="Google.Apis.Auth.PlatformServices">
       <HintPath>..\packages\Google.Apis.Auth.1.9.1\lib\net40\Google.Apis.Auth.PlatformServices.dll</HintPath>
     </Reference>
-    <Reference Include="Google.Apis.Calendar.v3, Version=1.9.0.122, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Google.Apis.Calendar.v3.1.9.0.1220\lib\portable-net40+sl50+win+wpa81+wp80\Google.Apis.Calendar.v3.dll</HintPath>
+    <Reference Include="Google.Apis.Calendar.v3, Version=1.9.0.124, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.Calendar.v3.1.9.0.1240\lib\portable-net40+sl50+win+wpa81+wp80\Google.Apis.Calendar.v3.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Google.Apis.Core">
@@ -102,6 +102,7 @@
       <Link>AssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Google\AccountAuthenticationService.cs" />
+    <Compile Include="Google\CustomCodeReceiver.cs" />
     <Compile Include="Google\GoogleCalendarService.cs" />
     <Compile Include="Google\IAccountAuthenticationService.cs" />
     <Compile Include="Google\IGoogleCalendarService.cs" />

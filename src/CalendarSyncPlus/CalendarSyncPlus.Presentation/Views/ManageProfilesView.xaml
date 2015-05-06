@@ -26,7 +26,7 @@
             </Grid.ColumnDefinitions>
             <DataGrid x:Name="ProfilesDataGrid"
                       Grid.Row="1"
-                      AlternatingRowBackground="{StaticResource AccentColorBrush}"
+                      AlternatingRowBackground="{StaticResource GrayBrush8}"
                       AutoGenerateColumns="False"
                       CanUserAddRows="False"
                       CanUserDeleteRows="False"

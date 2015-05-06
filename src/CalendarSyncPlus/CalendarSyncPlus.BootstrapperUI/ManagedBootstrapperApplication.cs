@@ -20,7 +20,7 @@ namespace CalendarSyncPlus.BootstrapperUI
 
             MainViewModel viewModel = new MainViewModel(this);
             viewModel.Bootstrapper.Engine.Detect();
-
+            
             MainView view = new MainView();
             view.DataContext = viewModel;
             view.Closed += (sender, e) => BootstrapperDispatcher.InvokeShutdown();

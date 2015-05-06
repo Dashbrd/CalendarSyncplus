@@ -10,6 +10,10 @@ namespace CalendarSyncPlus.Domain.Models
         /// <summary>
         /// 
         /// </summary>
+        public bool AllowManualAuthentication { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
         public ObservableCollection<GoogleAccount> GoogleAccounts { get; set; }
         /// <summary>
         /// 

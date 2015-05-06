@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Google.Apis.Calendar.v3;
@@ -31,7 +32,20 @@ namespace CalendarSyncPlus.GoogleServices.Google
 
         Task<bool> AuthorizeGoogleAccount(string accountName, CancellationToken cancellationToken);
 
-
+        /// <summary>
+        /// Disconnects google account by deleting the auth token
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
         bool DisconnectGoogle(string name);
+
+        /// <summary>
+        /// Allows user to authenticate Google by manually entering the authorization code
+        /// </summary>
+        /// <param name="accountName"></param>
+        /// <param name="cancellationToken"></param>
+        /// <param name="getCodeDeledateFunc"></param>
+        /// <returns></returns>
+        Task<bool> ManualAccountAuthetication(string accountName, CancellationToken cancellationToken,Func<Task<string>> getCodeDeledateFunc);
     }
 }

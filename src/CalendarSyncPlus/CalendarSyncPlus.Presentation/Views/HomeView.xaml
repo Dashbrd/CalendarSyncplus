@@ -70,7 +70,7 @@
 
         <!--  Sync Schedule  -->
         <Expander Grid.Row="1"
-                  Header="Schedules"
+                  Header="{localizeExtension:LocText Key=HomeView_GroupBox_Schedules_Header}"
                   IsExpanded="True"
                   Visibility="{Binding IsPeriodicSyncStarted,
                                        Converter={StaticResource BooleanToVisibilityConverter}}">
@@ -88,7 +88,8 @@
         </Expander>
 
         <!--  Status  -->
-        <GroupBox Grid.Row="2" Header="Status">
+        <GroupBox Grid.Row="2"
+                  Header="{localizeExtension:LocText Key=HomeView_GroupBox_Status_Header}">
             <TextBox IsReadOnly="True"
                      IsReadOnlyCaretVisible="False"
                      IsUndoEnabled="False"

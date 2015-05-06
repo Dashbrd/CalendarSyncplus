@@ -128,10 +128,10 @@ namespace CalendarSyncPlus.Presentation.Views
             }
         }
 
-        public static readonly DependencyProperty MessageProperty = DependencyProperty.Register("Message", typeof(string), typeof(InputDialog), new PropertyMetadata(default(string)));
-        public static readonly DependencyProperty InputProperty = DependencyProperty.Register("Input", typeof(string), typeof(InputDialog), new PropertyMetadata(default(string)));
-        public static readonly DependencyProperty AffirmativeButtonTextProperty = DependencyProperty.Register("AffirmativeButtonText", typeof(string), typeof(InputDialog), new PropertyMetadata("OK"));
-        public static readonly DependencyProperty NegativeButtonTextProperty = DependencyProperty.Register("NegativeButtonText", typeof(string), typeof(InputDialog), new PropertyMetadata("Cancel"));
+        public static readonly DependencyProperty MessageProperty = DependencyProperty.Register("Message", typeof(string), typeof(CustomInputDialog), new PropertyMetadata(default(string)));
+        public static readonly DependencyProperty InputProperty = DependencyProperty.Register("Input", typeof(string), typeof(CustomInputDialog), new PropertyMetadata(default(string)));
+        public static readonly DependencyProperty AffirmativeButtonTextProperty = DependencyProperty.Register("AffirmativeButtonText", typeof(string), typeof(CustomInputDialog), new PropertyMetadata("OK"));
+        public static readonly DependencyProperty NegativeButtonTextProperty = DependencyProperty.Register("NegativeButtonText", typeof(string), typeof(CustomInputDialog), new PropertyMetadata("Cancel"));
         public static readonly DependencyProperty MaxInputLengthProperty = DependencyProperty.Register("MaxInputLength", typeof(int), typeof(CustomInputDialog), new PropertyMetadata(15));
         public string Message
         {

@@ -52,13 +52,13 @@ namespace CalendarSyncPlus.Domain.Models
         {
             return new SyncSettings()
                 {
-                    SyncRangeType = SyncRangeTypeEnum.SyncEntireCalendar,
+                    SyncRangeType = SyncRangeTypeEnum.SyncRangeInDays,
                     DaysInFuture = 120,
                     DaysInPast = 120,
                     StartDate = DateTime.Today.AddDays(-(120)),
                     EndDate = DateTime.Today.AddDays(120),
                     CalendarSyncDirection = CalendarSyncDirectionEnum.OutlookGoogleOneWay,
-                    SyncFrequency = new IntervalSyncFrequency() { Hours = 0, Minutes = 5, StartTime = DateTime.Now}
+                    SyncFrequency = new IntervalSyncFrequency() { Hours = 1, Minutes = 0, StartTime = DateTime.Now}
                 };
         }
     }

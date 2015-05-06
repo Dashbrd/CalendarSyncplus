@@ -94,6 +94,9 @@ namespace CalendarSyncPlus.Application.ViewModels
         private DelegateCommand _addNewGoogleAccount;
         private ObservableCollection<GoogleAccount> _googleAccounts;
         private DelegateCommand _disconnectGoogleCommand;
+        private bool _allowManualGoogleAuth;
+        private string _googleAuthCode;
+        private bool _isAuthCodeAvailable;
 
         #endregion
 
@@ -240,7 +243,7 @@ namespace CalendarSyncPlus.Application.ViewModels
                 return;
             }
 
-            string result = await MessageService.ShowCustomDialog("Please enter profile name.");
+            string result = await MessageService.ShowInput("Please enter profile name.");
 
             if (!string.IsNullOrEmpty(result))
             {
@@ -260,7 +263,7 @@ namespace CalendarSyncPlus.Application.ViewModels
                 PropertyChangedEventManager.AddHandler(viewModel, ProfilePropertyChangedHandler, "IsLoading");
                 viewModel.Initialize(null);
                 SyncProfileList.Add(viewModel);
-               
+
             }
         }
 
@@ -306,6 +309,12 @@ namespace CalendarSyncPlus.Application.ViewModels
             }
         }
 
+        public bool AllowManualGoogleAuth
+        {
+            get { return _allowManualGoogleAuth; }
+            set { SetProperty(ref _allowManualGoogleAuth, value); }
+        }
+
         public DelegateCommand AddNewGoogleAccount
         {
             get
@@ -318,7 +327,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             get { return _googleAccounts; }
             set { SetProperty(ref _googleAccounts, value); }
         }
-
+        
         private async void AddNewGoogleAccountHandler()
         {
             //Accept Email Id
@@ -335,68 +344,101 @@ namespace CalendarSyncPlus.Application.ViewModels
                 MessageService.ShowMessageAsync("An account with the same email already exists. Please try again.");
                 return;
             }
-            // Start progress controller
-            var progressDialogController =
-                await MessageService.ShowProgress("Authenticate and Authorize in the browser window", "Add Google Account");
-            //Delay for Preparedness
-            await Task.Delay(5000);
-
-            progressDialogController.SetIndeterminate();
-            progressDialogController.SetCancelable(true);
 
             //Create cancellation token to support cancellation
-            CancellationTokenSource tokenSource = new CancellationTokenSource();
+            var tokenSource = new CancellationTokenSource();
             var token = tokenSource.Token;
-            var authorizeGoogleAccountTask = AccountAuthenticationService.AuthorizeGoogleAccount(accountName, token);
 
-            //Wait for 120 seconds
-            int timeInSeconds = 120;
-            while (timeInSeconds > 0)
+            if (AllowManualGoogleAuth)
             {
-                progressDialogController.SetMessage(String.Format("Authenticate and Authorize in the browser window in {0} secs", timeInSeconds));
+                var authResult = await AccountAuthenticationService.ManualAccountAuthetication(accountName, tokenSource.Token, GetGoogleAuthCode);
 
-                //cancel task if cancellation is requested
-                if (progressDialogController.IsCanceled)
+                if (!authResult)
                 {
-                    tokenSource.Cancel();
-                    break;
+                    MessageService.ShowMessageAsync("Account Not Added, Authorization Interrupted, Try Again");
                 }
-
-                //break loop if task changes its status
-                if (authorizeGoogleAccountTask.IsCanceled || authorizeGoogleAccountTask.IsFaulted || authorizeGoogleAccountTask.IsCompleted)
+                else
                 {
-                    break;
+                    AddGoogleAccountDetailsToApplication(accountName);
                 }
-                timeInSeconds--;
-                await Task.Delay(1000);
-            }
-
-            if (timeInSeconds < 0)
-            {
-                tokenSource.Cancel();
-            }
-
-            await progressDialogController.CloseAsync();
-
-            if (authorizeGoogleAccountTask.IsCanceled || authorizeGoogleAccountTask.IsFaulted || token.IsCancellationRequested ||
-                progressDialogController.IsCanceled)
-            {
-                MessageService.ShowMessageAsync("Account Not Added, Authorization Interrupted, Try Again");
             }
             else
             {
-                var account = new GoogleAccount() { Name = accountName };
-                if (GoogleAccounts == null)
+                // Start progress controller
+                var progressDialogController =
+                    await MessageService.ShowProgress("Authenticate and Authorize in the browser window", "Add Google Account");
+                //Delay for Preparedness
+                await Task.Delay(5000);
+
+                progressDialogController.SetIndeterminate();
+                progressDialogController.SetCancelable(true);
+
+                var authorizeGoogleAccountTask = AccountAuthenticationService.AuthorizeGoogleAccount(accountName, tokenSource.Token);
+
+                //Wait for 120 seconds
+                int timeInSeconds = 120;
+                while (timeInSeconds > 0)
                 {
-                    GoogleAccounts = new ObservableCollection<GoogleAccount>();
+                    progressDialogController.SetMessage(String.Format("Authenticate and Authorize in the browser window in {0} secs",
+                        timeInSeconds));
+
+                    //cancel task if cancellation is requested
+                    if (progressDialogController.IsCanceled)
+                    {
+                        tokenSource.Cancel();
+                        break;
+                    }
+
+                    //break loop if task changes its status
+                    if (authorizeGoogleAccountTask.IsCanceled || authorizeGoogleAccountTask.IsFaulted || authorizeGoogleAccountTask.IsCompleted)
+                    {
+                        break;
+                    }
+                    timeInSeconds--;
+                    await Task.Delay(1000, tokenSource.Token);
                 }
-                GoogleAccounts.Add(account);
-                SelectedProfile.SelectedGoogleAccount = account;
-                SelectedProfile.GoogleCalendars = null;
-                SelectedProfile.GetGoogleCalendar();
+
+                if (timeInSeconds < 0)
+                {
+                    tokenSource.Cancel();
+                }
+
+                await progressDialogController.CloseAsync();
+
+                if (authorizeGoogleAccountTask.IsCanceled || authorizeGoogleAccountTask.IsFaulted || tokenSource.Token.IsCancellationRequested ||
+                    progressDialogController.IsCanceled)
+                {
+                    MessageService.ShowMessageAsync("Account Not Added, Authorization Interrupted, Try Again");
+                }
+                else
+                {
+                    AddGoogleAccountDetailsToApplication(accountName);
+                }
             }
         }
 
+        private async void AddGoogleAccountDetailsToApplication(string accountName)
+        {
+            var account = new GoogleAccount() { Name = accountName };
+            if (GoogleAccounts == null)
+            {
+                GoogleAccounts = new ObservableCollection<GoogleAccount>();
+            }
+            GoogleAccounts.Add(account);
+            SelectedProfile.SelectedGoogleAccount = account;
+            SelectedProfile.GoogleCalendars = null;
+            SelectedProfile.GetGoogleCalendar();
+
+            Settings.GoogleAccounts = GoogleAccounts;
+
+            await SettingsSerializationService.SerializeSettingsAsync(Settings);
+        }
+
+        private async Task<string> GetGoogleAuthCode()
+        {
+            return await MessageService.ShowInput("Enter Auth Code after authorization in browser window", "Manual Authentication");
+        }
+        
         #endregion
 
         #region Private Methods
@@ -412,7 +454,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             Settings.AppSettings.CheckForUpdates = CheckForUpdates;
             Settings.AppSettings.RunApplicationAtSystemStartup = RunApplicationAtSystemStartup;
             Settings.AppSettings.IsManualSynchronization = IsManualSynchronization;
-
+            Settings.AllowManualAuthentication = AllowManualGoogleAuth;
             Settings.AppSettings.ProxySettings = new ProxySetting()
             {
                 BypassOnLocal = ProxySettings.BypassOnLocal,
@@ -495,6 +537,7 @@ namespace CalendarSyncPlus.Application.ViewModels
                         UserName = Settings.AppSettings.ProxySettings.UserName
                     };
                     ApplyProxySettings();
+                    AllowManualGoogleAuth = Settings.AllowManualAuthentication;
                     GoogleAccounts = Settings.GoogleAccounts;
                     MinimizeToSystemTray = Settings.AppSettings.MinimizeToSystemTray;
                     HideSystemTrayTooltip = Settings.AppSettings.HideSystemTrayTooltip;
@@ -583,13 +626,32 @@ namespace CalendarSyncPlus.Application.ViewModels
 
                 if (googleAccount != null)
                 {
+                    foreach (var profileViewModel in SyncProfileList)
+                    {
+                        if (profileViewModel.SelectedGoogleAccount != null &&
+                            profileViewModel.SelectedGoogleAccount.Name.Equals(googleAccount.Name))
+                        {
+                            profileViewModel.SelectedGoogleAccount = null;
+                            profileViewModel.GoogleCalendars = null;
+                            profileViewModel.SelectedCalendar = null;
+                        }
+                    }
+                    
                     GoogleAccounts.Remove(googleAccount);
-                }
 
-                SelectedProfile.GoogleCalendars = null;
-                SelectedProfile.SelectedCalendar = null;
-                await MessageService.ShowMessage("Google account successfully disconnected");
-                SaveSettings();
+                    await MessageService.ShowMessage("Google account successfully disconnected");
+
+                    foreach (var calendarSyncProfile in Settings.SyncProfiles)
+                    {
+                        if (calendarSyncProfile.GoogleAccount != null &&
+                            calendarSyncProfile.GoogleAccount.Name.Equals(googleAccount.Name))
+                        {
+                            calendarSyncProfile.GoogleAccount = null;
+                        }
+                    }
+
+                    await SettingsSerializationService.SerializeSettingsAsync(Settings);
+                }
             }
             else
             {
