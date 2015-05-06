@@ -214,9 +214,7 @@
                              Margin="2"
                              Content="{localizeExtension:LocText Key=OutlookSettingsView_RadioButton_OutlookProfileSettings_DefaultMailnCalendar_Content}"
                              GroupName="OutlookMailBoxGroup"
-                             IsChecked="{Binding IsDefaultMailBox,
-                                                 Mode=TwoWay,
-                                                 UpdateSourceTrigger=PropertyChanged}" />
+                             IsChecked="{Binding IsDefaultMailBox, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
                 <RadioButton Name="MailBoxRadioButton"
                              Grid.Row="4"
                              Grid.Column="0"
@@ -225,7 +223,7 @@
                              Command="{Binding GetOutlookMailBoxesCommand}"
                              Content="{localizeExtension:LocText Key=OutlookSettingsView_RadioButton_OutlookProfileSettings_ChooseAnotherMailBox_Content}"
                              GroupName="OutlookMailBoxGroup"
-                             IsChecked="{Binding IsDefaultMailBox,
+                             IsChecked="{Binding IsDefaultMailBox, Mode=TwoWay,
                                                  Converter={StaticResource ResourceKey=InvertBooleanConverter}}" />
                 <TextBlock Grid.Row="5"
                            Grid.Column="0"

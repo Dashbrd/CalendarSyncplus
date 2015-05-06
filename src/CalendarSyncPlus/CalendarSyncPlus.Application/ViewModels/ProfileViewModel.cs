@@ -535,8 +535,12 @@ namespace CalendarSyncPlus.Application.ViewModels
             SyncFrequency = SyncProfile.SyncSettings.SyncFrequency.Name;
             SetCategory = SyncProfile.SetCalendarCategory;
             _selectedGoogleAccount = googleAccount;
+
             if (_selectedGoogleAccount != null)
+            {
                 SelectedCalendar = SelectedGoogleAccount.GoogleCalendar;
+            }
+
             SelectedOutlookProfileName = SyncProfile.OutlookSettings.OutlookProfileName;
             SelectedOutlookMailBox = SyncProfile.OutlookSettings.OutlookMailBox;
             SelectedOutlookCalendar = SyncProfile.OutlookSettings.OutlookCalendar;
@@ -560,19 +564,24 @@ namespace CalendarSyncPlus.Application.ViewModels
         {
             try
             {
-                OutlookMailBoxes = await Task<List<OutlookMailBox>>.Factory.StartNew(GetOutlookMailBox);
-                if (SyncProfile.OutlookSettings.OutlookMailBox != null)
+                var mailBoxes = await Task<List<OutlookMailBox>>.Factory.StartNew(GetOutlookMailBox);
+                if (SelectedOutlookMailBox != null)
                 {
-                    SelectedOutlookMailBox =
+                    if (SelectedOutlookMailBox != null)
+                    {
+                        SelectedOutlookMailBox =
                         OutlookMailBoxes.FirstOrDefault(
-                            t => t.EntryId.Equals(SyncProfile.OutlookSettings.OutlookMailBox.EntryId));
-                    if (SyncProfile.OutlookSettings.OutlookCalendar != null && SelectedOutlookMailBox != null)
+                            t => t.EntryId.Equals(SelectedOutlookMailBox.EntryId));
+                    }
+
+                    if (SelectedOutlookCalendar != null && SelectedOutlookMailBox != null)
                     {
                         SelectedOutlookCalendar =
                             SelectedOutlookMailBox.Calendars.FirstOrDefault(
-                                t => t.EntryId.Equals(SyncProfile.OutlookSettings.OutlookCalendar.EntryId));
+                                t => t.EntryId.Equals(SelectedOutlookCalendar.EntryId));
                     }
                 }
+                OutlookMailBoxes = mailBoxes;
             }
             catch (Exception aggregateException)
             {
@@ -655,19 +664,20 @@ namespace CalendarSyncPlus.Application.ViewModels
                 }
                 List<GoogleCalendar> calendars =
                         await GoogleCalendarService.GetAvailableCalendars(SelectedGoogleAccount.Name);
-                GoogleCalendars = calendars;
-                if (GoogleCalendars.Any())
+
+                if (calendars.Any())
                 {
-                    if (SyncProfile != null && SyncProfile.GoogleAccount != null && SyncProfile.GoogleAccount.GoogleCalendar != null)
+                    if (SelectedCalendar != null)
                     {
-                        SelectedCalendar = GoogleCalendars.FirstOrDefault(t => t.Id.Equals(SyncProfile.GoogleAccount.GoogleCalendar.Id));
+                        SelectedCalendar = calendars.FirstOrDefault(t => t.Id.Equals(SelectedCalendar.Id));
                     }
 
                     if (SelectedCalendar == null)
                     {
-                        SelectedCalendar = GoogleCalendars.First();
+                        SelectedCalendar = calendars.First();
                     }
                 }
+                GoogleCalendars = calendars;
             }
             catch (Exception exception)
             {
