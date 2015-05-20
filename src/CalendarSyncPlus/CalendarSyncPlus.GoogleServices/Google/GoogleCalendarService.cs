@@ -36,6 +36,7 @@ using CalendarSyncPlus.Services.Wrappers;
 using Google;
 using Google.Apis.Calendar.v3;
 using Google.Apis.Calendar.v3.Data;
+using Google.Apis.Discovery;
 using Google.Apis.Requests;
 using Calendar = CalendarSyncPlus.Domain.Models.Calendar;
 
@@ -323,10 +324,12 @@ namespace CalendarSyncPlus.GoogleServices.Google
         private void InsertEventErrorMessage(Event content, RequestError error, int index, HttpResponseMessage message,
             List<Appointment> eventList, Dictionary<int, Appointment> errorAppointments)
         {
+            var phrase = message.ReasonPhrase;
             if (!message.IsSuccessStatusCode)
             {
                 var googleEvent = eventList[index];
                 errorAppointments.Add(index, googleEvent);
+                ApplicationLogger.LogError(string.Format("Event : {0}, will be added without attendees", googleEvent.Subject));
                 ApplicationLogger.LogError(googleEvent.ToString());
             }
         }
@@ -509,38 +512,22 @@ namespace CalendarSyncPlus.GoogleServices.Google
 
                 if (calendarAppointments.Any())
                 {
-                    //Create a Batch Request
-                    var batchRequest = new BatchRequest(calendarService);
+                    
 
                     //Split the list of calendarAppointments by 1000 per list
 
-                    //Iterate over each appointment to create a event and batch it 
-                    for (int i = 0; i < calendarAppointments.Count; i++)
-                    {
-                        if (i != 0 && i % 999 == 0)
-                        {
-                            await batchRequest.ExecuteAsync();
-                            batchRequest = new BatchRequest(calendarService);
-                        }
-
-                        Appointment appointment = calendarAppointments[i];
-                        Event calendarEvent = CreateGoogleCalendarEvent(appointment, addDescription, addReminder,
-                            addAttendees,
-                            attendeesToDescription);
-                        EventsResource.InsertRequest insertRequest = calendarService.Events.Insert(calendarEvent,
-                            CalendarId);
-                        insertRequest.SendNotifications = false;
-                        insertRequest.MaxAttendees = 10000;
-                        batchRequest.Queue<Event>(insertRequest,
-                            (content, error, index, message) =>
-                                InsertEventErrorMessage(content, error, index, message, calendarAppointments, errorList));
-                    }
-
-                    await batchRequest.ExecuteAsync();
+                    await
+                        AddCalendarEventsInternal(calendarAppointments, addDescription, addReminder, addAttendees,
+                            attendeesToDescription, calendarService, errorList);
+                    
 
                     if (errorList.Count > 0)
                     {
-                        //TODO
+                        var remaningList = errorList.Select(CreateAppointmentWithoutAttendees).ToList();
+                        errorList.Clear();
+
+                        await AddCalendarEventsInternal(remaningList, addDescription, addReminder, addAttendees,
+                            attendeesToDescription, calendarService, errorList);
                     }
                 }
             }
@@ -552,6 +539,46 @@ namespace CalendarSyncPlus.GoogleServices.Google
             return true;
         }
 
+        private Appointment CreateAppointmentWithoutAttendees(KeyValuePair<int, Appointment> arg)
+        {
+            var appointment = arg.Value;
+            appointment.RequiredAttendees.Clear();
+            appointment.OptionalAttendees.Clear();
+            return appointment;
+        }
+
+        private async Task AddCalendarEventsInternal(List<Appointment> calendarAppointments, bool addDescription, bool addReminder,
+            bool addAttendees,
+            bool attendeesToDescription,CalendarService calendarService,
+            Dictionary<int, Appointment> errorList)
+        {
+            //Create a Batch Request
+            var batchRequest = new BatchRequest(calendarService);
+
+            for (int i = 0; i < calendarAppointments.Count; i++)
+            {
+                if (i != 0 && i % 999 == 0)
+                {
+                    await batchRequest.ExecuteAsync();
+                    batchRequest = new BatchRequest(calendarService);
+                   
+                }
+
+                Appointment appointment = calendarAppointments[i];
+                Event calendarEvent = CreateGoogleCalendarEvent(appointment, addDescription, addReminder,
+                    addAttendees,
+                    attendeesToDescription);
+                EventsResource.InsertRequest insertRequest = calendarService.Events.Insert(calendarEvent,
+                    CalendarId);
+                insertRequest.SendNotifications = false;
+                insertRequest.MaxAttendees = 10000;
+                batchRequest.Queue<Event>(insertRequest,
+                    (content, error, index, message) =>
+                        InsertEventErrorMessage(content, error, index, message, calendarAppointments, errorList));
+            }
+
+            await batchRequest.ExecuteAsync();
+        }
 
         public async Task<bool> DeleteCalendarEvents(List<Appointment> calendarAppointments,
             IDictionary<string, object> calendarSpecificData)
