@@ -102,7 +102,7 @@ namespace CalendarSyncPlus.Domain.Helpers
 
             string description = ParseDescription(appointment);
             string otherDescription = ParseDescription(otherAppointment);
-            if (description.Equals(otherDescription))
+            if (description.Trim().Equals(otherDescription.Trim()))
             {
                 return true;
             }

@@ -597,10 +597,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
                         Task<List<Appointment>>.Factory.StartNew(
                             () => GetAppointments(startDate,endDate));
             
-            if (appointmentList != null)
-            {
-                calendarAppointments.AddRange(appointmentList);
-            }
+            
 
             //var rangeList = SplitDateRange(startDate, endDate, dayChunkSize: (1460));
             //foreach (Tuple<DateTime, DateTime> rangeTuple in rangeList)
@@ -619,11 +616,18 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
             //    }
             //}
 
+            if (appointmentList == null)
+            {
+                return null;
+            }
+
             if (OutlookCalendar != null)
             {
                 calendarAppointments.CalendarId = OutlookCalendar.EntryId;
             }
-
+            
+            calendarAppointments.AddRange(appointmentList);
+            
             return calendarAppointments;
         }
 

@@ -1,0 +1,59 @@
+﻿<controls:MetroWindow x:Class="CalendarSyncPlus.BootstrapperUI.Views.SplashScreen"
+                      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                      xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+                      mc:Ignorable="d"
+                      AllowsTransparency="True"
+                      BorderBrush="{DynamicResource AccentColorBrush}"
+                      GlowBrush="{DynamicResource AccentColorBrush}"
+                      NonActiveGlowBrush="Red"
+                      ResizeMode="CanMinimize"
+                      ShowIconOnTitleBar="True"
+                      ShowTitleBar="True"
+                      SnapsToDevicePixels="True"
+                      TitleCaps="False"
+                      WindowStyle="None"
+                      WindowStartupLocation="CenterScreen"
+                      Height="200"
+                      Width="500">
+    <controls:MetroWindow.Resources>
+        <ResourceDictionary>
+        <ResourceDictionary.MergedDictionaries>
+            <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
+            <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
+            <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colors.xaml" />
+            <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml" />
+            <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
+            <ResourceDictionary Source="/Resources/Icons.xaml" />
+        </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </controls:MetroWindow.Resources>
+    <Border Background="{DynamicResource AccentColorBrush}">
+    <Grid>
+       <Grid.ColumnDefinitions>
+           <ColumnDefinition Width="Auto"/>
+           <ColumnDefinition />
+       </Grid.ColumnDefinitions>
+          <Rectangle Fill="{DynamicResource WhiteBrush}" Height="100" Width="100" Margin="10">
+              <Rectangle.OpacityMask>
+                <VisualBrush Visual="{DynamicResource appbar_refresh}"/>
+              </Rectangle.OpacityMask>
+                <Rectangle.Triggers>
+                    <EventTrigger RoutedEvent="Loaded">
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetProperty="(Rectangle.RenderTransform).(RotateTransform.Angle)"
+                                                 To="-360"
+                                                 Duration="0:0:1"
+                                                 RepeatBehavior="Forever" />
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                </Rectangle.Triggers>
+            </Rectangle>
+        <TextBlock VerticalAlignment="Center" Text="Calendar Sync +" Grid.Column="1" Margin="5" Foreground="{DynamicResource WhiteBrush}" FontSize="48" FontWeight="600"/>
+    </Grid>
+    </Border>
+</controls:MetroWindow>
