@@ -31,7 +31,7 @@ namespace CalendarSyncPlus.Services.Utilities
 
     public class StatusHelper
     {
-        private const string LineConstant =         "--------------------------------------------------------------------------";
+        private const string LineConstant = "--------------------------------------------------------------------------";
 
         private const string LogSeparatorConstant = "**************************************************************************";
 
@@ -50,13 +50,13 @@ namespace CalendarSyncPlus.Services.Utilities
             StatusDictionary.Add(SyncStateEnum.DestAppointmentReading, "Reading {0} calendar...");
             StatusDictionary.Add(SyncStateEnum.DestAppointmentRead, "{0} entries read : {1}");
             StatusDictionary.Add(SyncStateEnum.DestAppointmentReadFailed, "Read failed.");
-            StatusDictionary.Add(SyncStateEnum.ReadingEntriesToDelete, "Getting entries to be deleted...");
+            StatusDictionary.Add(SyncStateEnum.ReadingEntriesToDelete, "Getting {0} entries to be deleted...");
             StatusDictionary.Add(SyncStateEnum.EntriesToDelete, "Found {0} entries to delete");
             StatusDictionary.Add(SyncStateEnum.SkipDelete, "Skipping Delete.");
             StatusDictionary.Add(SyncStateEnum.DeletingEntries, "Deleting {0} entries...");
             StatusDictionary.Add(SyncStateEnum.DeletingEntriesComplete, "Delete Complete.");
             StatusDictionary.Add(SyncStateEnum.DeletingEntriesFailed, "Delete Failed.");
-            StatusDictionary.Add(SyncStateEnum.ReadingEntriesToAdd, "Getting entries to be added...");
+            StatusDictionary.Add(SyncStateEnum.ReadingEntriesToAdd, "Getting {0} entries to be added...");
             StatusDictionary.Add(SyncStateEnum.EntriesToAdd, "Found {0} entries to add");
             StatusDictionary.Add(SyncStateEnum.AddingEntries, "Adding {0} entries...");
             StatusDictionary.Add(SyncStateEnum.AddEntriesComplete, "Add Complete.");

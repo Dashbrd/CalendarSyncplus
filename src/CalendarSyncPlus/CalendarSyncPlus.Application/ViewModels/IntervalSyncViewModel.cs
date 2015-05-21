@@ -53,7 +53,7 @@ namespace CalendarSyncPlus.Application.ViewModels
 
         private void ValidateMinutes()
         {
-            if (Minutes == 0 && Hours == 0)
+            if (Minutes < 15 && Hours == 0)
             {
                 Hours = 1;
             }
@@ -61,9 +61,9 @@ namespace CalendarSyncPlus.Application.ViewModels
 
         private void ValidateHours()
         {
-            if (Hours == 0 && Minutes == 0)
+            if (Hours == 0 && Minutes < 15)
             {
-                Minutes = 5;
+                Minutes = 15;
             }
         }
 

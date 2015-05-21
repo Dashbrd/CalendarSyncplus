@@ -1,14 +1,13 @@
-﻿using System.Windows;
-using MahApps.Metro.Controls;
+﻿using MahApps.Metro.Controls;
 
 namespace CalendarSyncPlus.BootstrapperUI.Views
 {
     /// <summary>
     /// Interaction logic for MainView.xaml
     /// </summary>
-    public partial class MainView : MetroWindow
+    public partial class SplashScreen : MetroWindow
     {
-        public MainView()
+        public SplashScreen()
         {
             InitializeComponent();
         }

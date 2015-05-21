@@ -46,6 +46,12 @@ Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "CalendarSyncPlus.InstallerB
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CalendarSyncPlus.BootstrapperUI", "CalendarSyncPlus.BootstrapperUI\CalendarSyncPlus.BootstrapperUI.csproj", "{495A3351-7314-47C1-BE0D-514E524845D5}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{2F6B0B33-44F6-40B5-BF03-D9C4E16C7964}"
+	ProjectSection(SolutionItems) = preProject
+		Libraries\WixBalExtensionExt.dll = Libraries\WixBalExtensionExt.dll
+		Libraries\WpfApplicationFramework.dll = Libraries\WpfApplicationFramework.dll
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

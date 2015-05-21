@@ -35,7 +35,7 @@ namespace CalendarSyncPlus.Services.Interfaces
         Task<CalendarAppointments> GetCalendarEventsInRangeAsync(DateTime startDate, DateTime endDate,
             IDictionary<string, object> calendarSpecificData);
 
-        Task<bool> AddCalendarEvents(List<Appointment> calendarAppointments, bool addDescription,
+        Task<CalendarAppointments> AddCalendarEvents(List<Appointment> calendarAppointments, bool addDescription,
             bool addReminder, bool addAttendees, bool attendeesToDescription,
             IDictionary<string, object> calendarSpecificData);
 
@@ -46,6 +46,6 @@ namespace CalendarSyncPlus.Services.Interfaces
             IDictionary<string, object> calendarSpecificData);
 
         Task<bool> ResetCalendar(IDictionary<string, object> calendarSpecificData);
-        
+
     }
 }

@@ -839,11 +839,13 @@ namespace CalendarSyncPlus.Application.ViewModels
         public CalendarSyncProfile SaveCurrentSyncProfile()
         {
             SyncProfile.IsSyncEnabled = IsSyncEnabled;
-            if (SyncProfile.GoogleAccount == null)
+
+            SyncProfile.GoogleAccount = new GoogleAccount()
             {
-                SyncProfile.GoogleAccount = new GoogleAccount();
-            }
-            SyncProfile.GoogleAccount = SelectedGoogleAccount;
+                GoogleCalendar = SelectedCalendar,
+                Name = SelectedGoogleAccount == null ? null : SelectedGoogleAccount.Name,
+            };
+
             SyncProfile.SyncSettings.DaysInFuture = DaysInFuture;
             SyncProfile.SyncSettings.DaysInPast = DaysInPast;
             SyncProfile.SyncSettings.StartDate = StartDate;
@@ -868,7 +870,7 @@ namespace CalendarSyncPlus.Application.ViewModels
 
             SyncProfile.OutlookSettings.UpdateOutlookOptions(IsDefaultProfile, IsDefaultMailBox,
                 IsExchangeWebServices);
-            SyncProfile.ExchangeServerSettings.Username = Username;
+            SyncProfile.ExchangeServerSettings.EmailId = Username;
             SyncProfile.ExchangeServerSettings.Password = Password;
             SyncProfile.ExchangeServerSettings.ExchangeServerUrl = ExchangeServerUrl;
             SyncProfile.SyncSettings.CalendarSyncDirection = SelectedCalendarSyncDirection;

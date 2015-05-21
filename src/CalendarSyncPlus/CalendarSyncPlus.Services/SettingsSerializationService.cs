@@ -168,7 +168,14 @@ namespace CalendarSyncPlus.Services
                 {
                     syncProfile.SyncSettings = SyncSettings.GetDefault();
                 }
+                else if (syncProfile.SyncSettings.SyncRangeType == SyncRangeTypeEnum.SyncEntireCalendar)
+                {
+                    syncProfile.SyncSettings.SyncRangeType = SyncRangeTypeEnum.SyncRangeInDays;
+                    syncProfile.SyncSettings.DaysInPast = 120;
+                    syncProfile.SyncSettings.DaysInFuture = 120;
+                }
             }
+
             if (result.AppSettings == null)
             {
                 result.AppSettings = new AppSettings();
@@ -181,6 +188,8 @@ namespace CalendarSyncPlus.Services
                     ProxyType = ProxyType.Auto
                 };
             }
+
+            
         }
 
         #endregion

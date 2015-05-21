@@ -19,7 +19,7 @@ namespace CalendarSyncPlus.Domain.Helpers
         public static string GetDescriptionData(this Appointment calendarAppointment, bool addDescription,
             bool addAttendees)
         {
-            var additionDescription = new StringBuilder(String.Empty);
+            var additionDescription = new StringBuilder(string.Empty);
             if (addDescription)
             {
                 additionDescription.Append(calendarAppointment.Description);
@@ -31,7 +31,6 @@ namespace CalendarSyncPlus.Domain.Helpers
             }
             bool hasData = false;
             //Start Header
-            additionDescription.AppendLine(LineBreak);
             var attendeesDescription = calendarAppointment.GetAttendeesData();
             if (!String.IsNullOrEmpty(attendeesDescription))
             {
@@ -46,14 +45,14 @@ namespace CalendarSyncPlus.Domain.Helpers
             StringBuilder attendeesDescription = new StringBuilder();
             //Start Header
             attendeesDescription.AppendLine(LineBreak);
-            attendeesDescription.AppendLine(String.Empty);
+            attendeesDescription.AppendLine(string.Empty);
             if (calendarAppointment.Organizer != null)
             {
                 //Add Organiser
                 attendeesDescription.AppendLine("Organizer");
 
                 attendeesDescription.AppendLine(calendarAppointment.Organizer.GetDescription());
-                attendeesDescription.AppendLine(String.Empty);
+                attendeesDescription.AppendLine(string.Empty);
                 hasData = true;
             }
             //Add Required Attendees
@@ -66,7 +65,7 @@ namespace CalendarSyncPlus.Domain.Helpers
                     attendeesDescription.AppendLine(requiredAttendee.GetDescription());
                 }
 
-                attendeesDescription.AppendLine(String.Empty);
+                attendeesDescription.AppendLine(string.Empty);
                 hasData = true;
             }
             //Add Optional Attendees
@@ -78,12 +77,12 @@ namespace CalendarSyncPlus.Domain.Helpers
                 {
                     attendeesDescription.AppendLine(requiredAttendee.GetDescription());
                 }
-                attendeesDescription.AppendLine(String.Empty);
+                attendeesDescription.AppendLine(string.Empty);
                 hasData = true;
             }
 
             //Close Header
-            return hasData ? attendeesDescription.ToString() : String.Empty;
+            return hasData ? attendeesDescription.ToString() : string.Empty;
         }
 
 
@@ -102,7 +101,7 @@ namespace CalendarSyncPlus.Domain.Helpers
 
             string description = ParseDescription(appointment);
             string otherDescription = ParseDescription(otherAppointment);
-            if (description.Equals(otherDescription))
+            if (description.Trim().Equals(otherDescription.Trim()))
             {
                 return true;
             }
@@ -130,7 +129,7 @@ namespace CalendarSyncPlus.Domain.Helpers
             }
             return description;
         }
-        
+
         public static string ParseDescription(this Appointment appointment)
         {
             if (appointment.Description == null)
