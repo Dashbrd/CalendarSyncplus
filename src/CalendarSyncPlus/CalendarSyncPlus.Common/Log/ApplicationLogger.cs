@@ -34,6 +34,9 @@ namespace CalendarSyncPlus.Common.Log
                 AppendToFile = true,
                 MaximumFileSize = "1MB",
                 File = LogFilePath,
+                PreserveLogFileNameExtension = true,
+                MaxSizeRollBackups = 10,
+                RollingStyle = RollingFileAppender.RollingMode.Size,
                 Layout = patternLayout,
             };
             roller.ActivateOptions();

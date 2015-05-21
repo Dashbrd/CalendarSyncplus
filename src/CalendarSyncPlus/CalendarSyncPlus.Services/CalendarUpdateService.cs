@@ -130,6 +130,20 @@ namespace CalendarSyncPlus.Services
                 CalendarServiceFactory.GetCalendarService(syncProfile.SyncSettings.DestinationCalendar);
         }
 
+        private string GetCalendarName(CalendarSyncProfile syncProfile, CalendarServiceType calendarServiceType)
+        {
+            switch (calendarServiceType)
+            {
+                case CalendarServiceType.Google:
+                    return string.Format("{0} - {1}", syncProfile.GoogleAccount.Name,
+                        syncProfile.GoogleAccount.GoogleCalendar.Name);
+                case CalendarServiceType.OutlookDesktop:
+                    return syncProfile.OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.DefaultCalendar) ? "Default Calendar" :
+                        string.Format("{0} - {1}", syncProfile.OutlookSettings.OutlookMailBox.Name, syncProfile.OutlookSettings.OutlookCalendar.Name);
+            }
+            return string.Empty;
+        }
+
         private IDictionary<string, object> GetCalendarSpecificData(CalendarServiceType serviceType,
             CalendarSyncProfile syncProfile)
         {
@@ -451,6 +465,12 @@ namespace CalendarSyncPlus.Services
                 SyncStatus = string.Format("Calendar Sync : {0} {2} {1}", SourceCalendarService.CalendarServiceName,
                     DestinationCalendarService.CalendarServiceName,
                     syncProfile.SyncSettings.SyncMode == SyncModeEnum.TwoWay ? "<===>" : "===>");
+                SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
+                SyncStatus = string.Format("Source Calendar : {0}",
+                    GetCalendarName(syncProfile, syncProfile.SyncSettings.SourceCalendar));
+                SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
+                SyncStatus = string.Format("Destination Calendar : {0}",
+                    GetCalendarName(syncProfile, syncProfile.SyncSettings.DestinationCalendar));
                 SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
                 DateTime startDate, endDate;
                 GetDateRange(syncProfile, out startDate, out endDate);
