@@ -200,34 +200,41 @@ namespace CalendarSyncPlus.SyncEngine
         #endregion
         public bool GetSourceEntriesToDelete(CalendarSyncProfile syncProfile, List<Appointment> sourceList, List<Appointment> destinationList)
         {
-            SourceAppointmentsToDelete = new List<Appointment>();
-            SourceOrphanEntries = new List<Appointment>();
-            DestAppointmentsToUpdate = new List<Appointment>();
             GetAppointmentsToDelete(syncProfile, destinationList, sourceList, SourceAppointmentsToDelete, DestAppointmentsToUpdate, SourceOrphanEntries);
             return true;
         }
 
         public bool GetSourceEntriesToAdd(CalendarSyncProfile syncProfile, List<Appointment> sourceList, List<Appointment> destinationList)
         {
-            SourceAppointmentsToAdd = new List<Appointment>();
             GetAppointmentsToAdd(syncProfile, destinationList, sourceList, SourceAppointmentsToAdd);
             return true;
         }
 
         public bool GetDestEntriesToDelete(CalendarSyncProfile syncProfile, List<Appointment> sourceList, List<Appointment> destinationList)
         {
-            DestAppointmentsToDelete = new List<Appointment>();
-            DestOrphanEntries = new List<Appointment>();
-            SourceAppointmentsToUpdate = new List<Appointment>();
             GetAppointmentsToDelete(syncProfile, sourceList, destinationList, DestAppointmentsToDelete, SourceAppointmentsToUpdate, DestOrphanEntries);
             return true;
         }
 
         public bool GetDestEntriesToAdd(CalendarSyncProfile syncProfile, List<Appointment> sourceList, List<Appointment> destinationList)
         {
-            DestAppointmentsToAdd = new List<Appointment>();
             GetAppointmentsToAdd(syncProfile, sourceList,destinationList, DestAppointmentsToAdd);
             return true;
+        }
+
+        public void Clear()
+        {
+            SourceAppointmentsToAdd = new List<Appointment>();
+            DestAppointmentsToAdd = new List<Appointment>();
+
+            SourceAppointmentsToDelete = new List<Appointment>();
+            DestAppointmentsToDelete = new List<Appointment>();
+
+            SourceAppointmentsToUpdate = new List<Appointment>();
+            DestAppointmentsToUpdate = new List<Appointment>();
+
+            SourceOrphanEntries = new List<Appointment>();
+            DestOrphanEntries = new List<Appointment>();
         }
     }
 }

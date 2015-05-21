@@ -44,5 +44,6 @@ namespace CalendarSyncPlus.SyncEngine.Interfaces
         bool GetDestEntriesToAdd(CalendarSyncProfile syncProfile, List<Appointment> sourceList,
             List<Appointment> destinationList);
 
+        void Clear();
     }
 }

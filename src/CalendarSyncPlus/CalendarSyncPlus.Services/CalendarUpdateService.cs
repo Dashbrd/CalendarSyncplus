@@ -123,161 +123,6 @@ namespace CalendarSyncPlus.Services
             return true;
         }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="syncProfile"></param>
-        /// <param name="sourceList"></param>
-        /// <param name="destinationList"></param>
-        /// <returns></returns>
-        private List<Appointment> GetAppointmentsToDelete(CalendarSyncProfile syncProfile,
-            List<Appointment> sourceList, List<Appointment> destinationList)
-        {
-            bool addDescription =
-                syncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Description);
-            bool addReminders =
-                syncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Reminders);
-            bool addAttendeesToDescription =
-                syncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.AttendeesToDescription);
-            var appointmentsToDelete = new List<Appointment>();
-            foreach (Appointment destAppointment in destinationList)
-            {
-                bool isFound = false;
-                bool isMatch = false;
-                foreach (Appointment sourceAppointment in sourceList)
-                {
-                    isMatch = CompareAppointments(syncProfile, destAppointment, sourceAppointment, addDescription,
-                        addReminders,addAttendeesToDescription, out isFound);
-                    if (isMatch)
-                    {
-                        break;
-                    }
-
-                    if (!isFound)
-                    {
-                        //Check if destination entry is a copy of source entry
-                        //Or if source entry is a copy of destination entry
-                        bool isCopy = sourceAppointment.CompareSourceId(destAppointment) ||
-                                      destAppointment.CompareSourceId(sourceAppointment);
-                        if (isCopy)
-                        {
-                            if (syncProfile.SyncSettings.SyncMode == SyncModeEnum.TwoWay &&
-                                syncProfile.SyncSettings.KeepLastModifiedVersion)
-                            {
-                                //If the appointment doesn't match, but it either is copy of the other, means it was modified
-                                // If the flag to keep last modified is present, change is found to true
-                                if (destAppointment.LastModified.HasValue && sourceAppointment.LastModified.HasValue)
-                                {
-                                    isFound = destAppointment.LastModified.Value <= sourceAppointment.LastModified.Value;
-                                }
-                            }
-                        }
-                    }
-                }
-
-                if (!isMatch && syncProfile.SyncSettings.SyncMode == SyncModeEnum.TwoWay && destAppointment.SourceId == null)
-                {
-                    continue;
-                }
-
-                //If no entry is found in source, isDeleteOperation the entries in the destination
-                if (!isFound)
-                {
-                    appointmentsToDelete.Add(destAppointment);
-                }
-            }
-            return appointmentsToDelete;
-        }
-
-        private bool CompareAppointments(CalendarSyncProfile syncProfile, Appointment destAppointment,
-            Appointment sourceAppointment, bool addDescription, bool addReminders,bool addAttendeesToDescription, out bool isFound)
-        {
-            isFound = false;
-            bool isMatch = false;
-            //If both entries have same content
-            if (destAppointment.Equals(sourceAppointment))
-            {
-                isFound = true;
-                isMatch = true;
-            }
-
-            if (isFound)
-            {
-                //If description flag is on, compare description
-                if (addDescription)
-                {
-                    if (!sourceAppointment.CompareDescription(destAppointment, addAttendeesToDescription))
-                    {
-                        isFound = false;
-                    }
-                }
-            }
-
-            if (isFound)
-            {
-                //If reminder flag is on, compare reminder
-                if (addReminders)
-                {
-                    //Check if reminders match
-                    if (sourceAppointment.ReminderSet != destAppointment.ReminderSet)
-                    {
-                        isFound = false;
-                    }
-                    else if (sourceAppointment.ReminderSet)
-                    {
-                        if (sourceAppointment.ReminderMinutesBeforeStart !=
-                            destAppointment.ReminderMinutesBeforeStart)
-                        {
-                            isFound = false;
-                        }
-                    }
-                }
-            }
-
-            return isMatch;
-        }
-
-        /// <summary>
-        ///     Gets appointments to add in the destination calendar
-        /// </summary>
-        /// <param name="syncProfile"></param>
-        /// <param name="sourceList"></param>
-        /// <param name="destinationList"></param>
-        /// <returns></returns>
-        private List<Appointment> GetAppointmentsToAdd(CalendarSyncProfile syncProfile, List<Appointment> sourceList,
-            List<Appointment> destinationList)
-        {
-            if (destinationList.Any())
-            {
-                bool addDescription =
-                    syncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Description);
-                bool addReminders =
-                syncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Reminders);
-                bool addAttendeesToDescription =
-                    syncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.AttendeesToDescription);
-                var appointmentsToAdd = new List<Appointment>();
-                foreach (Appointment sourceAppointment in sourceList)
-                {
-                    bool isFound = false;
-                    foreach (Appointment destAppointment in destinationList)
-                    {
-                        if (CompareAppointments(syncProfile, destAppointment, sourceAppointment, addDescription,
-                        addReminders,addAttendeesToDescription, out isFound))
-                        {
-                            break;
-                        }
-                    }
-                    //Add the entry if no entry matching in destination is found
-                    if (!isFound)
-                    {
-                        appointmentsToAdd.Add(sourceAppointment);
-                    }
-                }
-
-                return appointmentsToAdd;
-            }
-            return sourceList;
-        }
-
         private void InitiatePreSyncSetup(CalendarSyncProfile syncProfile)
         {
             SourceCalendarService = CalendarServiceFactory.GetCalendarService(syncProfile.SyncSettings.SourceCalendar);
@@ -358,8 +203,9 @@ namespace CalendarSyncPlus.Services
             //Update status for reading entries to add
             SyncStatus = StatusHelper.GetMessage(SyncStateEnum.ReadingEntriesToAdd);
             //Get entries to add
-            List<Appointment> appointmentsToAdd = GetAppointmentsToAdd(syncProfile, SourceAppointments,
+            CalendarSyncEngine.GetDestEntriesToAdd(syncProfile, SourceAppointments,
                 DestinationAppointments);
+            List<Appointment> appointmentsToAdd = CalendarSyncEngine.DestAppointmentsToAdd;
             SyncStatus = StatusHelper.GetMessage(SyncStateEnum.EntriesToAdd, appointmentsToAdd.Count);
             if (appointmentsToAdd.Count == 0)
             {
@@ -400,8 +246,11 @@ namespace CalendarSyncPlus.Services
             SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
             SyncStatus = StatusHelper.GetMessage(SyncStateEnum.ReadingEntriesToDelete);
             //Getting appointments to isDeleteOperation
-            List<Appointment> appointmentsToDelete = GetAppointmentsToDelete(syncProfile, SourceAppointments,
-                DestinationAppointments);
+            //List<Appointment> appointmentsToDelete = GetAppointmentsToDelete(syncProfile, SourceAppointments,
+            //    DestinationAppointments);
+            bool result = CalendarSyncEngine.GetDestEntriesToDelete(syncProfile,
+                SourceAppointments, DestinationAppointments);
+            List<Appointment> appointmentsToDelete = CalendarSyncEngine.DestAppointmentsToDelete;
             //Updating Get entry isDeleteOperation status
             SyncStatus = StatusHelper.GetMessage(SyncStateEnum.EntriesToDelete, appointmentsToDelete.Count);
 
@@ -460,8 +309,9 @@ namespace CalendarSyncPlus.Services
             //Update status for reading entries to add
             SyncStatus = StatusHelper.GetMessage(SyncStateEnum.ReadingEntriesToAdd);
             //Get entries to add
-            List<Appointment> appointmentsToAdd = GetAppointmentsToAdd(syncProfile, DestinationAppointments,
+            CalendarSyncEngine.GetSourceEntriesToAdd(syncProfile, DestinationAppointments,
                 SourceAppointments);
+            List<Appointment> appointmentsToAdd = CalendarSyncEngine.SourceAppointmentsToAdd;
             SyncStatus = StatusHelper.GetMessage(SyncStateEnum.EntriesToAdd, appointmentsToAdd.Count);
             if (appointmentsToAdd.Count == 0)
             {
@@ -503,8 +353,9 @@ namespace CalendarSyncPlus.Services
             SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
             SyncStatus = StatusHelper.GetMessage(SyncStateEnum.ReadingEntriesToDelete);
             //Getting appointments to isDeleteOperation
-            List<Appointment> appointmentsToDelete = GetAppointmentsToDelete(syncProfile, DestinationAppointments,
+             CalendarSyncEngine.GetSourceEntriesToDelete(syncProfile, DestinationAppointments,
                 SourceAppointments);
+            List<Appointment> appointmentsToDelete = CalendarSyncEngine.SourceAppointmentsToDelete;
             //Updating Get entry isDeleteOperation status
             SyncStatus = StatusHelper.GetMessage(SyncStateEnum.EntriesToDelete, appointmentsToDelete.Count);
             if (appointmentsToDelete.Count == 0)
@@ -592,6 +443,7 @@ namespace CalendarSyncPlus.Services
             bool isSuccess = false;
             if (syncProfile != null)
             {
+                CalendarSyncEngine.Clear();
                 //Add log for sync mode
                 SyncStatus = string.Format("Calendar Sync : {0} {2} {1}", SourceCalendarService.CalendarServiceName,
                     DestinationCalendarService.CalendarServiceName,
