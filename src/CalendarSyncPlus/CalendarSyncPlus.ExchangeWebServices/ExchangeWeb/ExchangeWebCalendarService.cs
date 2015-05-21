@@ -161,7 +161,7 @@ namespace CalendarSyncPlus.ExchangeWebServices.ExchangeWeb
             throw new NotImplementedException();
         }
 
-        public Task<bool> AddCalendarEvents(List<AppAppointment> calendarAppointments, bool addDescription,
+        public Task<CalendarAppointments> AddCalendarEvents(List<AppAppointment> calendarAppointments, bool addDescription,
             bool addReminder, bool addAttendees,
             bool attendeesToDescription, IDictionary<string, object> calendarSpecificData)
         {
@@ -219,7 +219,7 @@ namespace CalendarSyncPlus.ExchangeWebServices.ExchangeWeb
             return service;
         }
 
-        public ExchangeServerSettings GetBestSuitedExchangeServerData(string domain,string emailId,string password,bool usingCorporateNetwork = false)
+        public ExchangeServerSettings GetBestSuitedExchangeServerData(string domain, string emailId, string password, bool usingCorporateNetwork = false)
         {
             ExchangeServerSettings exchangeServerSettings = null;
             IEnumerable<ExchangeVersion> enumList =

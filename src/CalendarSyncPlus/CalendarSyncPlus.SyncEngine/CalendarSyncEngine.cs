@@ -43,7 +43,7 @@ namespace CalendarSyncPlus.SyncEngine
         /// <param name="destOrphanEntries"></param>
         /// <returns></returns>
         void GetAppointmentsToDelete(CalendarSyncProfile syncProfile,
-            List<Appointment> sourceList, List<Appointment> destinationList, List<Appointment>  destAppointmentsToDelete, 
+            List<Appointment> sourceList, List<Appointment> destinationList, List<Appointment> destAppointmentsToDelete,
             List<Appointment> sourceAppointmentsToUpdate, List<Appointment> destOrphanEntries)
         {
             bool addDescription =
@@ -68,7 +68,7 @@ namespace CalendarSyncPlus.SyncEngine
                         {
                             //If any entry is found in source appointment and its contents are not equal to source appointment,
                             //If an entry is found and i same, ignore
-                            if (!CompareAppointments(destAppointment, sourceAppointment, addDescription, addReminders,addAttendeesToDescription))
+                            if (!CompareAppointments(destAppointment, sourceAppointment, addDescription, addReminders, addAttendeesToDescription))
                             {
                                 if (syncProfile.SyncSettings.KeepLastModifiedVersion)
                                 {
@@ -139,6 +139,7 @@ namespace CalendarSyncPlus.SyncEngine
             syncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Reminders);
             bool addAttendeesToDescription =
             syncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.AttendeesToDescription);
+
             foreach (Appointment sourceAppointment in sourceList)
             {
                 if (sourceAppointment.SourceId == null)
@@ -165,7 +166,7 @@ namespace CalendarSyncPlus.SyncEngine
                 //If description flag is on, compare description
                 if (addDescription)
                 {
-                    if (!sourceAppointment.CompareDescription(destAppointment,addAttendeesToDescription))
+                    if (!sourceAppointment.CompareDescription(destAppointment, addAttendeesToDescription))
                     {
                         isFound = false;
                     }
@@ -196,7 +197,7 @@ namespace CalendarSyncPlus.SyncEngine
             return isFound;
         }
 
-        
+
         #endregion
         public bool GetSourceEntriesToDelete(CalendarSyncProfile syncProfile, List<Appointment> sourceList, List<Appointment> destinationList)
         {
@@ -218,7 +219,7 @@ namespace CalendarSyncPlus.SyncEngine
 
         public bool GetDestEntriesToAdd(CalendarSyncProfile syncProfile, List<Appointment> sourceList, List<Appointment> destinationList)
         {
-            GetAppointmentsToAdd(syncProfile, sourceList,destinationList, DestAppointmentsToAdd);
+            GetAppointmentsToAdd(syncProfile, sourceList, destinationList, DestAppointmentsToAdd);
             return true;
         }
 

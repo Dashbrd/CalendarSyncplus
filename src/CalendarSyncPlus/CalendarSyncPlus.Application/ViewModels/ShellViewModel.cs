@@ -103,7 +103,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             Settings settings,
             IMessageService messageService,
             ApplicationLogger applicationLogger, IApplicationUpdateService applicationUpdateService,
-            SystemTrayNotifierViewModel systemTrayNotifierViewModel,ChildContentViewFactory childContentViewFactory)
+            SystemTrayNotifierViewModel systemTrayNotifierViewModel, ChildContentViewFactory childContentViewFactory)
             : base(view)
         {
             _statusBuilder = new StringBuilder();
@@ -277,8 +277,8 @@ namespace CalendarSyncPlus.Application.ViewModels
 
         private void ShowWhatsNew()
         {
-           var contentView = ChildContentViewFactory.GetChildContentViewModel(ChildViewContentType.WhatsNew);
-           ViewCore.ShowChildWindow(contentView.View);
+            var contentView = ChildContentViewFactory.GetChildContentViewModel(ChildViewContentType.WhatsNew);
+            ViewCore.ShowChildWindow(contentView.View);
         }
 
         #endregion
@@ -376,9 +376,12 @@ namespace CalendarSyncPlus.Application.ViewModels
                 {
                     if (ApplicationUpdateService.IsNewVersionAvailable())
                     {
-                        LatestVersion = ApplicationUpdateService.GetNewAvailableVersion();
-                        IsLatestVersionAvailable = true;
-                        SystemTrayNotifierViewModel.ShowBalloon("New Update Available!", 5000);
+                        var version = ApplicationUpdateService.GetNewAvailableVersion();
+                        if (string.IsNullOrEmpty(LatestVersion) || !version.Equals(LatestVersion))
+                        {
+                            IsLatestVersionAvailable = true;
+                            SystemTrayNotifierViewModel.ShowBalloon(string.Format("New Update {0} Available!", version), 5000);
+                        }
                     }
                     _lastCheckDateTime = DateTime.Now;
                 }
@@ -603,16 +606,16 @@ namespace CalendarSyncPlus.Application.ViewModels
         {
             var calendarSyncPlusKey = @"Software\Ankesh Dave & Akanksha Gaur\CalendarSyncPlus";
 
-            var key = Registry.CurrentUser.OpenSubKey(calendarSyncPlusKey,RegistryKeyPermissionCheck.ReadWriteSubTree);
+            var key = Registry.CurrentUser.OpenSubKey(calendarSyncPlusKey, RegistryKeyPermissionCheck.ReadWriteSubTree);
             try
             {
                 if (key != null)
                 {
-                    int value = (int) key.GetValue("FirstLaunch",0);
-                    if (value==1)
+                    int value = (int)key.GetValue("FirstLaunch", 0);
+                    if (value == 1)
                     {
                         ShowWhatsNew();
-                        key.SetValue("FirstLaunch",0,RegistryValueKind.DWord);
+                        key.SetValue("FirstLaunch", 0, RegistryValueKind.DWord);
                     }
                 }
             }
@@ -641,7 +644,7 @@ namespace CalendarSyncPlus.Application.ViewModels
         {
             if (Settings.AppSettings.CheckForUpdates)
             {
-                if (!IsLatestVersionAvailable && _lastCheckDateTime == null &&
+                if (_lastCheckDateTime == null ||
                     DateTime.Now.Subtract(_lastCheckDateTime.GetValueOrDefault()).TotalHours > 6)
                 {
                     Task<string>.Factory.StartNew(() => ApplicationUpdateService.GetLatestReleaseFromServer())

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.Composition;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Waf.Applications;
 using CalendarSyncPlus.Common.Log;
@@ -11,7 +12,7 @@ namespace CalendarSyncPlus.Services
 {
     /// <summary>
     /// </summary>
-    [Export(typeof (IApplicationUpdateService))]
+    [Export(typeof(IApplicationUpdateService))]
     public class ApplicationUpdateService : IApplicationUpdateService
     {
         /// <summary>
@@ -60,7 +61,20 @@ namespace CalendarSyncPlus.Services
                 dynamic obj = JsonConvert.DeserializeObject(result);
                 _version = obj.tag_name;
 
-                _downloadLink = obj.assets[0].browser_download_url;
+                string body = obj.body;
+                if (body.Contains("[link]"))
+                {
+                    body = body.Split(new[] { "[link]" }, StringSplitOptions.RemoveEmptyEntries).Last();
+                    if (body.Contains("(") && body.Contains(")"))
+                    {
+                        _downloadLink = body.Split(new[] { "(", ")" }, StringSplitOptions.RemoveEmptyEntries).FirstOrDefault();
+                    }
+                }
+
+                if (_downloadLink == null)
+                {
+                    _downloadLink = obj.assets[0].browser_download_url;
+                }
             }
             catch (Exception exception)
             {
