@@ -130,6 +130,20 @@ namespace CalendarSyncPlus.Services
                 CalendarServiceFactory.GetCalendarService(syncProfile.SyncSettings.DestinationCalendar);
         }
 
+        private string GetCalendarName(CalendarSyncProfile syncProfile, CalendarServiceType calendarServiceType)
+        {
+            switch (calendarServiceType)
+            {
+                case CalendarServiceType.Google:
+                    return string.Format("{0} - {1}", syncProfile.GoogleAccount.Name,
+                        syncProfile.GoogleAccount.GoogleCalendar.Name);
+                case CalendarServiceType.OutlookDesktop:
+                    return syncProfile.OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.DefaultCalendar) ? "Default Calendar" :
+                        string.Format("{0} - {1}", syncProfile.OutlookSettings.OutlookMailBox.Name, syncProfile.OutlookSettings.OutlookCalendar.Name);
+            }
+            return string.Empty;
+        }
+
         private IDictionary<string, object> GetCalendarSpecificData(CalendarServiceType serviceType,
             CalendarSyncProfile syncProfile)
         {
@@ -201,7 +215,7 @@ namespace CalendarSyncPlus.Services
             IDictionary<string, object> destinationCalendarSpecificData)
         {
             //Update status for reading entries to add
-            SyncStatus = StatusHelper.GetMessage(SyncStateEnum.ReadingEntriesToAdd);
+            SyncStatus = StatusHelper.GetMessage(SyncStateEnum.ReadingEntriesToAdd, DestinationCalendarService.CalendarServiceName);
             //Get entries to add
             CalendarSyncEngine.GetDestEntriesToAdd(syncProfile, SourceAppointments,
                 DestinationAppointments);
@@ -249,15 +263,30 @@ namespace CalendarSyncPlus.Services
             }
             //Updating entry isDeleteOperation status
             SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
-            SyncStatus = StatusHelper.GetMessage(SyncStateEnum.ReadingEntriesToDelete);
+            SyncStatus = StatusHelper.GetMessage(SyncStateEnum.ReadingEntriesToDelete, DestinationCalendarService.CalendarServiceName);
             //Getting appointments to isDeleteOperation
-            //List<Appointment> appointmentsToDelete = GetAppointmentsToDelete(syncProfile, SourceAppointments,
-            //    DestinationAppointments);
-            bool result = CalendarSyncEngine.GetDestEntriesToDelete(syncProfile,
+            CalendarSyncEngine.GetDestEntriesToDelete(syncProfile,
                 SourceAppointments, DestinationAppointments);
             List<Appointment> appointmentsToDelete = CalendarSyncEngine.DestAppointmentsToDelete;
-            //Updating Get entry isDeleteOperation status
-            SyncStatus = StatusHelper.GetMessage(SyncStateEnum.EntriesToDelete, appointmentsToDelete.Count);
+
+            if (syncProfile.SyncSettings.SyncMode == SyncModeEnum.OneWay)
+            {
+                if (syncProfile.SyncSettings.ConfirmOnDelete && syncCallback != null)
+                {
+                    string message = string.Format("Are you sure you want to delete {0} orphan entries from {1}?",
+                        appointmentsToDelete.Count, DestinationCalendarService.CalendarServiceName);
+                    var e = new SyncEventArgs(message, UserActionEnum.ConfirmDelete);
+                    Task<bool> task = syncCallback(e);
+                    if (task.Result)
+                    {
+                        appointmentsToDelete.AddRange(CalendarSyncEngine.DestOrphanEntries);
+                    }
+                }
+                else if (!syncProfile.SyncSettings.DisableDelete)
+                {
+                    appointmentsToDelete.AddRange(CalendarSyncEngine.DestOrphanEntries);
+                }
+            }
 
             if (appointmentsToDelete.Count == 0)
             {
@@ -265,18 +294,9 @@ namespace CalendarSyncPlus.Services
                 return true;
             }
 
-            if (syncProfile.SyncSettings.ConfirmOnDelete && syncCallback != null)
-            {
-                string message = string.Format("Are you sure you want to delete {0} items from {1}?",
-                    appointmentsToDelete.Count, DestinationCalendarService.CalendarServiceName);
-                var e = new SyncEventArgs(message, UserActionEnum.ConfirmDelete);
-                Task<bool> task = syncCallback(e);
-                if (!task.Result)
-                {
-                    SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
-                    return true;
-                }
-            }
+            //Updating Get entry isDeleteOperation status
+            SyncStatus = StatusHelper.GetMessage(SyncStateEnum.EntriesToDelete, appointmentsToDelete.Count);
+
 
             //Updating isDeleteOperation status
             SyncStatus = StatusHelper.GetMessage(SyncStateEnum.DeletingEntries,
@@ -312,7 +332,7 @@ namespace CalendarSyncPlus.Services
             IDictionary<string, object> sourceCalendarSpecificData)
         {
             //Update status for reading entries to add
-            SyncStatus = StatusHelper.GetMessage(SyncStateEnum.ReadingEntriesToAdd);
+            SyncStatus = StatusHelper.GetMessage(SyncStateEnum.ReadingEntriesToAdd, SourceCalendarService.CalendarServiceName);
             //Get entries to add
             CalendarSyncEngine.GetSourceEntriesToAdd(syncProfile, SourceAppointments, DestinationAppointments);
             List<Appointment> appointmentsToAdd = CalendarSyncEngine.SourceAppointmentsToAdd;
@@ -351,6 +371,7 @@ namespace CalendarSyncPlus.Services
         /// </summary>
         /// <param name="syncProfile"></param>
         /// <param name="sourceCalendarSpecificData"></param>
+        /// <param name="syncCallback"></param>
         /// <returns></returns>
         private bool DeleteSourceAppointments(CalendarSyncProfile syncProfile,
             IDictionary<string, object> sourceCalendarSpecificData, SyncCallback syncCallback)
@@ -361,9 +382,9 @@ namespace CalendarSyncPlus.Services
             }
             //Updating entry isDeleteOperation status
             SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
-            SyncStatus = StatusHelper.GetMessage(SyncStateEnum.ReadingEntriesToDelete);
+            SyncStatus = StatusHelper.GetMessage(SyncStateEnum.ReadingEntriesToDelete, SourceCalendarService.CalendarServiceName);
             //Getting appointments to isDeleteOperation
-            CalendarSyncEngine.GetSourceEntriesToDelete(syncProfile,SourceAppointments, DestinationAppointments);
+            CalendarSyncEngine.GetSourceEntriesToDelete(syncProfile, SourceAppointments, DestinationAppointments);
             List<Appointment> appointmentsToDelete = CalendarSyncEngine.SourceAppointmentsToDelete;
             //Updating Get entry isDeleteOperation status
             SyncStatus = StatusHelper.GetMessage(SyncStateEnum.EntriesToDelete, appointmentsToDelete.Count);
@@ -373,19 +394,6 @@ namespace CalendarSyncPlus.Services
                 return true;
             }
 
-            if (syncProfile.SyncSettings.ConfirmOnDelete && syncCallback != null)
-            {
-                string message = string.Format("Are you sure you want to delete {0} items from {1}?",
-                    appointmentsToDelete.Count, DestinationCalendarService.CalendarServiceName);
-                var e = new SyncEventArgs(message, UserActionEnum.ConfirmDelete);
-                Task<bool> task = syncCallback(e);
-                if (!task.Result)
-                {
-                    SyncStatus = StatusHelper.GetMessage(SyncStateEnum.SkipDelete);
-                    SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
-                    return true;
-                }
-            }
             //Updating isDeleteOperation status
             SyncStatus = StatusHelper.GetMessage(SyncStateEnum.DeletingEntries,
                 SourceCalendarService.CalendarServiceName);
@@ -457,6 +465,12 @@ namespace CalendarSyncPlus.Services
                 SyncStatus = string.Format("Calendar Sync : {0} {2} {1}", SourceCalendarService.CalendarServiceName,
                     DestinationCalendarService.CalendarServiceName,
                     syncProfile.SyncSettings.SyncMode == SyncModeEnum.TwoWay ? "<===>" : "===>");
+                SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
+                SyncStatus = string.Format("Source Calendar : {0}",
+                    GetCalendarName(syncProfile, syncProfile.SyncSettings.SourceCalendar));
+                SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
+                SyncStatus = string.Format("Destination Calendar : {0}",
+                    GetCalendarName(syncProfile, syncProfile.SyncSettings.DestinationCalendar));
                 SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
                 DateTime startDate, endDate;
                 GetDateRange(syncProfile, out startDate, out endDate);
