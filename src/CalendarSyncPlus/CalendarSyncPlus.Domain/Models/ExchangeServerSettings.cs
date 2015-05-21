@@ -14,7 +14,7 @@ namespace CalendarSyncPlus.Domain.Models
         private string _exchangeServerUrl;
         private string _exchangeVersion;
         private string _password;
-        private string _username;
+        private string _emailId;
         private bool _usingCorporateNetwork;
 
         #endregion
@@ -27,10 +27,10 @@ namespace CalendarSyncPlus.Domain.Models
             set { SetProperty(ref _exchangeVersion, value); }
         }
 
-        public string Username
+        public string EmailId
         {
-            get { return _username; }
-            set { SetProperty(ref _username, value); }
+            get { return _emailId; }
+            set { SetProperty(ref _emailId, value); }
         }
 
         public string Password

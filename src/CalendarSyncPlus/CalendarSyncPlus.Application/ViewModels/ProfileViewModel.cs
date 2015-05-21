@@ -868,7 +868,7 @@ namespace CalendarSyncPlus.Application.ViewModels
 
             SyncProfile.OutlookSettings.UpdateOutlookOptions(IsDefaultProfile, IsDefaultMailBox,
                 IsExchangeWebServices);
-            SyncProfile.ExchangeServerSettings.Username = Username;
+            SyncProfile.ExchangeServerSettings.EmailId = Username;
             SyncProfile.ExchangeServerSettings.Password = Password;
             SyncProfile.ExchangeServerSettings.ExchangeServerUrl = ExchangeServerUrl;
             SyncProfile.SyncSettings.CalendarSyncDirection = SelectedCalendarSyncDirection;
