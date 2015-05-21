@@ -228,7 +228,12 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
                 WaitForApplicationQuit = disposeOutlookInstances
             };
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="appointmentItem"></param>
+        /// <returns></returns>
         private Appointment GetAppointmentFromItem(string id, AppointmentItem appointmentItem)
         {
             var app = new Appointment(appointmentItem.Body, appointmentItem.Location,
@@ -247,6 +252,37 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
                 MeetingStatus = appointmentItem.GetMeetingStatus()
             };
 
+            GetRecipients(appointmentItem, app);
+
+            app.Created = appointmentItem.CreationTime;
+            app.LastModified = appointmentItem.LastModificationTime;
+            app.SetBusyStatus(appointmentItem.BusyStatus);
+
+            UserProperties userProperties = appointmentItem.UserProperties;
+            if (userProperties
+                != null)
+            {
+                foreach (UserProperty userProperty in userProperties)
+                {
+                    if(!app.ExtendedProperties.ContainsKey(userProperty.Name))
+                    {
+                        app.ExtendedProperties.Add(userProperty.Name,
+                        userProperty.Value);
+                    }
+                }
+
+                Marshal.FinalReleaseComObject(userProperties);
+            }
+            app.CalendarId = id;
+            return app;
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="appointmentItem"></param>
+        /// <param name="app"></param>
+        private void GetRecipients(AppointmentItem appointmentItem, Appointment app)
+        {
             foreach (Recipient attendee in appointmentItem.Recipients)
             {
                 var recipient = new AppRecipient();
@@ -286,24 +322,6 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
                     app.Organizer = recipient;
                 }
             }
-            app.Created = appointmentItem.CreationTime;
-            app.LastModified = appointmentItem.LastModificationTime;
-            app.SetBusyStatus(appointmentItem.BusyStatus);
-
-            UserProperties userProperties = appointmentItem.UserProperties;
-            if (userProperties
-                != null)
-            {
-                foreach (UserProperty userProperty in userProperties)
-                {
-                    app.ExtendedProperties.Add(userProperty.Name,
-                        userProperty.Value);
-                }
-
-                Marshal.FinalReleaseComObject(userProperties);
-            }
-            app.CalendarId = id;
-            return app;
         }
 
         private List<Appointment> GetAppointments(DateTime startDate, DateTime endDate)
