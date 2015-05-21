@@ -380,6 +380,7 @@ namespace CalendarSyncPlus.Application.ViewModels
                         if (string.IsNullOrEmpty(LatestVersion) || !version.Equals(LatestVersion))
                         {
                             IsLatestVersionAvailable = true;
+                            LatestVersion = version;
                             SystemTrayNotifierViewModel.ShowBalloon(string.Format("New Update {0} Available!", version), 5000);
                         }
                     }

@@ -24,14 +24,15 @@ namespace CalendarSyncPlus.Common.Log
                     "CalendarSyncPlus", "Log");
             LogFilePath = Path.Combine(applicationDataDirectory, "CalendarSyncPlus.log");
 
-            var hierarchy = (Hierarchy) LogManager.GetRepository();
+            var hierarchy = (Hierarchy)LogManager.GetRepository();
 
-            var patternLayout = new PatternLayout {ConversionPattern = "%date [%thread] %-5level %message%newline"};
+            var patternLayout = new PatternLayout { ConversionPattern = "%date [%thread] %-5level %message%newline" };
             patternLayout.ActivateOptions();
 
-            var roller = new FileAppender
+            var roller = new RollingFileAppender()
             {
                 AppendToFile = true,
+                MaximumFileSize = "1MB",
                 File = LogFilePath,
                 Layout = patternLayout,
             };
@@ -46,7 +47,7 @@ namespace CalendarSyncPlus.Common.Log
             hierarchy.Configured = true;
 
             BasicConfigurator.Configure();
-            _logger = LogManager.GetLogger(typeof (ApplicationLogger));
+            _logger = LogManager.GetLogger(typeof(ApplicationLogger));
         }
 
 
