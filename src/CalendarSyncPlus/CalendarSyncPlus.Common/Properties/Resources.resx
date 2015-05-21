@@ -331,13 +331,13 @@
     <value>Other</value>
   </data>
   <data name="OptionsSettingsView_CheckBox_OtherOptions_DisableDelete_Content" xml:space="preserve">
-    <value>Disable Delete</value>
+    <value>Disable delete for Orphan Source Entries (One way only)</value>
   </data>
   <data name="OptionsSettingsView_ContentControl_OtherOptions_DisableDelete_ToolTip" xml:space="preserve">
     <value>Disable Delete when Syncing Calendars</value>
   </data>
   <data name="OptionsSettingsView_CheckBox_OtherOptions_ConfirmDelete_Content" xml:space="preserve">
-    <value>Confirm on Delete</value>
+    <value>Confirm delete for Orphan Source Entries (One way only)</value>
   </data>
   <data name="OptionsSettingsView_ContentControl_OtherOptions_ConfirmDelete_ToolTip" xml:space="preserve">
     <value>Display Confirm Dialog before deleting an Appointement</value>

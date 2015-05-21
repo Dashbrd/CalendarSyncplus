@@ -169,7 +169,7 @@ namespace CalendarSyncPlus.Domain.Models
                     OutlookOptions = OutlookOptionsEnum.DefaultProfile |
                                      OutlookOptionsEnum.DefaultCalendar
                 },
-                CalendarEntryOptions = CalendarEntryOptionsEnum.Description | CalendarEntryOptionsEnum.Attendees |
+                CalendarEntryOptions = CalendarEntryOptionsEnum.Description | CalendarEntryOptionsEnum.Attendees| CalendarEntryOptionsEnum.AttendeesToDescription |
                                        CalendarEntryOptionsEnum.Reminders | CalendarEntryOptionsEnum.AsAppointments,
             };
             syncProfile.SetCalendarTypes();
