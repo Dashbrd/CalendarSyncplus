@@ -37,14 +37,6 @@
                        ToolTip="mailto:calendarsyncplus@outlook.com">mailto:calendarsyncplus@outlook.com</Hyperlink>
             
         </TextBlock>
-        <TextBlock>
-            Report Error:
-            <Hyperlink Command="{Binding MailToCommand}"
-                       CommandParameter="mailto:calendarsyncplus@outlook.com?subject=Error%20occurred%20in%20application&amp;body=Attached%20Log&amp;attachment='%APPDATA%\CalendarSyncPlus\Log\CalendarSyncPlus.log'"
-                       ToolTip="mailto:calendarsyncplus@outlook.com?subject=Error%20occurred%20in%20application&amp;body=Attached%20Log&amp;attachment='%APPDATA%\CalendarSyncPlus\Log\CalendarSyncPlus.log'">
-                Send Log
-            </Hyperlink>
-        </TextBlock>
         <TextBlock Margin="0,10,0,0"
                    Text="{localizeExtension:LocText Key=AboutView_Textblock_BugReportComment}"
                    TextWrapping="Wrap" />

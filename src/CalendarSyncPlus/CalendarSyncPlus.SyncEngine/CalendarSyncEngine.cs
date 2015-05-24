@@ -87,6 +87,15 @@ namespace CalendarSyncPlus.SyncEngine
                                 destAppointmentsToDelete.Add(destAppointment);
                             }
                         }
+                        else
+                        {
+                            sourceAppointment = sourceList.FirstOrDefault(t => CompareAppointments(destAppointment,t,addDescription,addReminders,addAttendeesToDescription));
+                            if (sourceAppointment == null)
+                            {
+                                //Destination Calendar Entry is not Matching its Source Calendar Entry, Delete it
+                                destAppointmentsToDelete.Add(destAppointment);
+                            }
+                        }
                     }
                     else
                     {
@@ -109,8 +118,12 @@ namespace CalendarSyncPlus.SyncEngine
                     }
                     else
                     {
-                        //If parent entry isn't found
-                        destAppointmentsToDelete.Add(destAppointment);
+                        sourceAppointment = sourceList.FirstOrDefault(t => CompareAppointments(destAppointment,t,addDescription,addReminders,addAttendeesToDescription));
+                        if (sourceAppointment == null)
+                        {
+                            //If parent entry isn't found
+                            destAppointmentsToDelete.Add(destAppointment);
+                        }
                     }
                 }
             }
@@ -154,7 +167,15 @@ namespace CalendarSyncPlus.SyncEngine
             }
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="destAppointment"></param>
+        /// <param name="sourceAppointment"></param>
+        /// <param name="addDescription"></param>
+        /// <param name="addReminders"></param>
+        /// <param name="addAttendeesToDescription"></param>
+        /// <returns></returns>
         bool CompareAppointments(Appointment destAppointment,
           Appointment sourceAppointment, bool addDescription, bool addReminders, bool addAttendeesToDescription)
         {
@@ -222,7 +243,9 @@ namespace CalendarSyncPlus.SyncEngine
             GetAppointmentsToAdd(syncProfile, sourceList, destinationList, DestAppointmentsToAdd);
             return true;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public void Clear()
         {
             SourceAppointmentsToAdd = new List<Appointment>();
