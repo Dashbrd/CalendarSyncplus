@@ -210,7 +210,6 @@
                                 ToolTip="{localizeExtension:LocText Key=OptionsSettingsView_ContentControl_OtherOptions_ConfirmDelete_ToolTip}"  />
                 <CheckBox Grid.Row="2"
                           Margin="2"
-                          Visibility="Collapsed"
                           Content="{localizeExtension:LocText Key=OptionsSettingsView_CheckBox_OtherOptions_KeepLastModified_Content}"
                           IsChecked="{Binding KeepLastModifiedCopy,
                                               Mode=TwoWay}"

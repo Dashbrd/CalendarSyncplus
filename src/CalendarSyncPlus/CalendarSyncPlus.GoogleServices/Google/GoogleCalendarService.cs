@@ -814,8 +814,7 @@ namespace CalendarSyncPlus.GoogleServices.Google
 
                         Appointment appointment = calendarAppointments[i];
                         Event calendarEvent = CreateUpdatedGoogleCalendarEvent(appointment, addDescription, addReminder,
-                            attendeesToDescription,
-                            addAttendees);
+                            addAttendees, attendeesToDescription);
                         EventsResource.UpdateRequest updateRequest = calendarService.Events.Update(calendarEvent,
                             CalendarId, calendarEvent.Id);
                         updateRequest.SendNotifications = false;

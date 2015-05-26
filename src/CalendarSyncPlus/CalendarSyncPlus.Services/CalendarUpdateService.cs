@@ -318,6 +318,7 @@ namespace CalendarSyncPlus.Services
                     DestinationAppointments.Remove(appointmentsToDelete[index]);
                 }
             }
+
             return isSuccess;
         }
 
@@ -510,11 +511,16 @@ namespace CalendarSyncPlus.Services
                 {
                     //Delete destination appointments
                     isSuccess = DeleteSourceAppointments(syncProfile, sourceCalendarSpecificData, syncCallback);
-
                     if (isSuccess)
                     {
                         //If sync mode is two way... add events to source
                         isSuccess = AddSourceAppointments(syncProfile, sourceCalendarSpecificData);
+                    }
+
+
+                    if (isSuccess)
+                    {
+                        isSuccess = UpdateEntries(syncProfile, sourceCalendarSpecificData, destinationCalendarSpecificData);
                     }
                 }
             }
@@ -522,6 +528,45 @@ namespace CalendarSyncPlus.Services
             DestinationAppointments = null;
             SourceCalendarService = null;
             DestinationCalendarService = null;
+            return isSuccess;
+        }
+
+        private bool UpdateEntries(CalendarSyncProfile syncProfile, IDictionary<string, object> sourceCalendarSpecificData,
+            IDictionary<string, object> destinationCalendarSpecificData)
+        {
+            bool isSuccess = true;
+            if (CalendarSyncEngine.SourceAppointmentsToUpdate.Any())
+            {
+                SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
+                //Update status for reading entries to update
+                SyncStatus = StatusHelper.GetMessage(SyncStateEnum.EntriesToUpdate, CalendarSyncEngine.SourceAppointmentsToUpdate.Count,
+                    SourceCalendarService.CalendarServiceName);
+                isSuccess = SourceCalendarService.UpdateCalendarEvents(CalendarSyncEngine.SourceAppointmentsToUpdate,
+                    syncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Description),
+                    syncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Reminders),
+                    syncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Attendees),
+                    syncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.AttendeesToDescription),
+                    sourceCalendarSpecificData).Result;
+                SyncStatus = StatusHelper.GetMessage(isSuccess ? SyncStateEnum.UpdateEntriesSuccess : SyncStateEnum.UpdateEntriesFailed);
+                SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
+            }
+
+            if (CalendarSyncEngine.DestAppointmentsToUpdate.Any())
+            {
+                SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
+                //Update status for reading entries to update
+                SyncStatus = StatusHelper.GetMessage(SyncStateEnum.EntriesToUpdate, CalendarSyncEngine.DestAppointmentsToUpdate.Count,
+                    DestinationCalendarService.CalendarServiceName);
+                isSuccess = DestinationCalendarService.UpdateCalendarEvents(CalendarSyncEngine.DestAppointmentsToUpdate,
+                    syncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Description),
+                    syncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Reminders),
+                    syncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Attendees),
+                    syncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.AttendeesToDescription),
+                    destinationCalendarSpecificData).Result;
+                SyncStatus = StatusHelper.GetMessage(isSuccess ? SyncStateEnum.UpdateEntriesSuccess : SyncStateEnum.UpdateEntriesFailed);
+                SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
+            }
+
             return isSuccess;
         }
 

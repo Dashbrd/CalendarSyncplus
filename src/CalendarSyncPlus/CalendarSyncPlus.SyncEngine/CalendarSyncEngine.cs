@@ -58,39 +58,7 @@ namespace CalendarSyncPlus.SyncEngine
                 //If SourceId is null, it is not a copy of any entry from the selected source calendar
                 if (destAppointment.SourceId == null)
                 {
-                    //If the mode is two way, look for its parent copy in Source calendar
-                    if (syncProfile.SyncSettings.SyncMode == SyncModeEnum.TwoWay)
-                    {
-                        if (syncProfile.SyncSettings.KeepLastModifiedVersion)
-                        {
-                            //If no entry was found, it is original entry of the calendar, Ignore
-                            //If a child entry is found in source calendar, compare
-                            var sourceAppointment = sourceList.FirstOrDefault(t => destAppointment.CompareSourceId(t));
-                            if (sourceAppointment != null)
-                            {
-                                //If any entry is found in source appointment and its contents are not equal to source appointment,
-                                //If an entry is found and i same, ignore
-                                if (!CompareAppointments(destAppointment, sourceAppointment, addDescription,
-                                        addReminders, addAttendeesToDescription))
-                                {
-                                    if (destAppointment.LastModified.HasValue && sourceAppointment.LastModified.HasValue)
-                                    {
-                                        if (destAppointment.LastModified.GetValueOrDefault() >
-                                            sourceAppointment.LastModified.GetValueOrDefault())
-                                        {
-                                            sourceAppointment.CopyDetail(destAppointment,
-                                                syncProfile.CalendarEntryOptions);
-                                            sourceAppointmentsToUpdate.Add(sourceAppointment);
-                                            continue;
-                                        }
-                                    }
-                                    //Destination Calendar Entry is not Matching its Source Calendar Entry, Delete it
-                                    destAppointmentsToDelete.Add(destAppointment);
-                                }
-                            }
-                        }
-                    }
-                    else
+                    if (syncProfile.SyncSettings.SyncMode == SyncModeEnum.OneWay)
                     {
                         //If mode is one way & user has disabled delete, do not remove this entry, as this is an original entry in the calendar
                         //Else this entry is not a copy of any appointment in source calendar so delete it
@@ -99,25 +67,62 @@ namespace CalendarSyncPlus.SyncEngine
                 }
                 else
                 {
+                    //If the mode is two way, look for its parent copy in Source calendar
+                    Appointment sourceAppointment;
+                    if (syncProfile.SyncSettings.SyncMode == SyncModeEnum.TwoWay
+                        && syncProfile.SyncSettings.KeepLastModifiedVersion)
+                    {
+                        //If no entry was found, it is original entry of the calendar, Ignore
+                        //If a child entry is found in source calendar, compare
+                        sourceAppointment = sourceList.FirstOrDefault(t => t.CompareSourceId(destAppointment));
+                        if (sourceAppointment != null)
+                        {
+                            //If any entry is found in source appointment and its contents are not equal to source appointment,
+                            //If an entry is found and i same, ignore
+                            if (!CompareAppointments(destAppointment, sourceAppointment, addDescription,
+                                addReminders, addAttendeesToDescription))
+                            {
+                                if (sourceAppointment.LastModified.HasValue && destAppointment.LastModified.HasValue)
+                                {
+                                    if (destAppointment.LastModified.GetValueOrDefault() >
+                                        sourceAppointment.LastModified.GetValueOrDefault())
+                                    {
+                                        sourceAppointment.CopyDetail(destAppointment,
+                                            syncProfile.CalendarEntryOptions);
+                                        sourceAppointmentsToUpdate.Add(sourceAppointment);
+                                        continue;
+                                    }
+                                }
+                                //Destination Calendar Entry is not Matching its Source Calendar Entry, Delete it
+                                destAppointmentsToDelete.Add(destAppointment);
+                                continue;
+                            }
+                        }
+                    }
+
                     //If source appointment is not null, means it is a copy of an existing entry in Source calendar
-                    var sourceAppointment = sourceList.FirstOrDefault(t => t.CompareSourceId(destAppointment));
+                    sourceAppointment = sourceList.FirstOrDefault(t => t.CompareSourceId(destAppointment));
                     if (sourceAppointment != null)
                     {
                         //If any entry is found in source appointment and its contents are not equal to source appointment
-                        if (!CompareAppointments(destAppointment, sourceAppointment, addDescription, addReminders, addAttendeesToDescription))
+                        if (!CompareAppointments(destAppointment, sourceAppointment, addDescription, addReminders,
+                                addAttendeesToDescription))
                         {
                             destAppointmentsToDelete.Add(destAppointment);
                         }
                     }
                     else
                     {
-                        sourceAppointment = sourceList.FirstOrDefault(t => CompareAppointments(destAppointment, t, addDescription, addReminders, addAttendeesToDescription));
+                        sourceAppointment = sourceList.FirstOrDefault(t =>
+                                    CompareAppointments(destAppointment, t, addDescription, addReminders,
+                                        addAttendeesToDescription));
                         if (sourceAppointment == null)
                         {
                             //If parent entry isn't found
                             destAppointmentsToDelete.Add(destAppointment);
                         }
                     }
+
                 }
             }
         }

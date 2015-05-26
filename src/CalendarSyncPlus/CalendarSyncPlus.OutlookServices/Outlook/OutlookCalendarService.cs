@@ -23,6 +23,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
@@ -1065,20 +1066,27 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
                 {
                     try
                     {
-                        string id = calendarAppointment.AppointmentId;
+                        AppointmentItem appointmentItem = null;
                         if (calendarAppointment.IsRecurring)
                         {
-                            id =
-                                calendarAppointment.AppointmentId.Split(new[] { "_" },
-                                    StringSplitOptions.RemoveEmptyEntries).FirstOrDefault();
+                            var idArray = calendarAppointment.AppointmentId.Split(new[] { "_" }, StringSplitOptions.RemoveEmptyEntries);
+                            var parentAppointment = nameSpace.GetItemFromID(idArray.FirstOrDefault()) as AppointmentItem;
+                            if (parentAppointment != null)
+                            {
+                                RecurrencePattern pattern = parentAppointment.GetRecurrencePattern();
+                                appointmentItem = pattern.GetOccurrence(DateTime.Parse(idArray[1]));
+                            }
+                        }
+                        else
+                        {
+                            appointmentItem = nameSpace.GetItemFromID(calendarAppointment.AppointmentId) as AppointmentItem;
                         }
 
-                        var appointmentItem = nameSpace.GetItemFromID(id);
-                        if (appointmentItem is AppointmentItem)
+                        if (appointmentItem != null)
                         {
                             appointmentItem.Delete();
+                            Marshal.FinalReleaseComObject(appointmentItem);
                         }
-                        Marshal.FinalReleaseComObject(appointmentItem);
                     }
                     catch (Exception exception)
                     {
@@ -1192,13 +1200,33 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
 
                 foreach (Appointment calendarAppointment in calendarAppointments)
                 {
-                    var appItem = nameSpace.GetItemFromID(calendarAppointment.AppointmentId) as AppointmentItem;
-                    if (appItem == null)
+                    try
                     {
-                        continue;
+                        AppointmentItem appItem = null;
+                        if (calendarAppointment.IsRecurring)
+                        {
+                            var idArray = calendarAppointment.AppointmentId.Split(new[] { "_" }, StringSplitOptions.RemoveEmptyEntries);
+                            var parentAppointment = nameSpace.GetItemFromID(idArray.FirstOrDefault()) as AppointmentItem;
+                            RecurrencePattern pattern = parentAppointment.GetRecurrencePattern();
+                            string time = string.Format("{0} {1}", idArray[1], parentAppointment.Start.ToString("hh:mm tt"));
+                            appItem = pattern.GetOccurrence(DateTime.ParseExact(time, "yy-MM-dd hh:mm tt", CultureInfo.InvariantCulture.DateTimeFormat));
+                        }
+                        else
+                        {
+                            appItem = nameSpace.GetItemFromID(calendarAppointment.AppointmentId) as AppointmentItem;
+                        }
+
+                        if (appItem == null)
+                        {
+                            continue;
+                        }
+                        UpdateAppointment(addDescription, addReminder, addAttendees, attendeesToDescription, appItem,
+                            calendarAppointment);
                     }
-                    UpdateAppointment(addDescription, addReminder, addAttendees, attendeesToDescription, appItem,
-                        calendarAppointment);
+                    catch (Exception exception)
+                    {
+                        ApplicationLogger.LogError(exception.ToString());
+                    }
                 }
             }
             catch (Exception exception)

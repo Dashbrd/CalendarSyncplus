@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using CalendarSyncPlus.Domain.Helpers;
 using CalendarSyncPlus.Domain.Models;
 
@@ -16,7 +12,7 @@ namespace CalendarSyncPlus.SyncEngine.Helpers
             appointment.EndTime = otherAppointment.EndTime;
             appointment.Subject = otherAppointment.Subject;
             appointment.AllDayEvent = otherAppointment.AllDayEvent;
-            
+
             if (calendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Description))
             {
                 appointment.Description = otherAppointment.ParseDescription();
