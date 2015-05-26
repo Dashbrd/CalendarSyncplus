@@ -288,15 +288,14 @@ namespace CalendarSyncPlus.Services
                 }
             }
 
+            //Updating Get entry isDeleteOperation status
+            SyncStatus = StatusHelper.GetMessage(SyncStateEnum.EntriesToDelete, appointmentsToDelete.Count);
+
             if (appointmentsToDelete.Count == 0)
             {
                 SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
                 return true;
             }
-
-            //Updating Get entry isDeleteOperation status
-            SyncStatus = StatusHelper.GetMessage(SyncStateEnum.EntriesToDelete, appointmentsToDelete.Count);
-
 
             //Updating isDeleteOperation status
             SyncStatus = StatusHelper.GetMessage(SyncStateEnum.DeletingEntries,
