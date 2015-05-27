@@ -93,7 +93,7 @@ namespace CalendarSyncPlus.Application.ViewModels
 
         private bool CanShowApplication(object canShowApplication)
         {
-            return canShowApplication == null || (bool) canShowApplication;
+            return canShowApplication == null || (bool)canShowApplication;
         }
 
         #endregion
@@ -107,6 +107,12 @@ namespace CalendarSyncPlus.Application.ViewModels
         {
             ToolTipText = tooltipText;
             DispatcherHelper.CheckBeginInvokeOnUI(() => ViewCore.ShowCustomBalloon());
+        }
+
+
+        public void UpdateBalloonText(string tooltipText)
+        {
+            ToolTipText = tooltipText;
         }
 
         /// <summary>

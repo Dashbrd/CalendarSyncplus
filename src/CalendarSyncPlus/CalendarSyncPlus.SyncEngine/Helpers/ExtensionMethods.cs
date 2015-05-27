@@ -8,6 +8,7 @@ namespace CalendarSyncPlus.SyncEngine.Helpers
     {
         public static bool CopyDetail(this Appointment appointment, Appointment otherAppointment, CalendarEntryOptionsEnum calendarEntryOptions)
         {
+            appointment.OldStartTime = appointment.StartTime;
             appointment.StartTime = otherAppointment.StartTime;
             appointment.EndTime = otherAppointment.EndTime;
             appointment.Subject = otherAppointment.Subject;

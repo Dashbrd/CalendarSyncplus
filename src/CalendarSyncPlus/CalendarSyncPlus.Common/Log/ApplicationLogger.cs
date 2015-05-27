@@ -85,6 +85,27 @@ namespace CalendarSyncPlus.Common.Log
             }
         }
 
+        public void LogError(string message, Exception exception, [CallerFilePath] string filePath = null,
+            [CallerMemberName] string methodName = null)
+        {
+            if (_logger != null && exception != null)
+            {
+                string className = Path.GetFileNameWithoutExtension(filePath);
+                _logger.Error(string.Format("{0} - {1} - {2} : {3}", className, methodName, message, exception));
+            }
+        }
+
+        public void LogError(Exception exception, [CallerFilePath] string filePath = null,
+            [CallerMemberName] string methodName = null)
+        {
+            if (_logger != null && exception != null)
+            {
+                string className = Path.GetFileNameWithoutExtension(filePath);
+                _logger.Error(string.Format("{0} - {1} - {2}", className, methodName, exception));
+            }
+        }
+
+
         public void LogError(string message, [CallerFilePath] string filePath = null,
             [CallerMemberName] string methodName = null)
         {

@@ -165,6 +165,105 @@ namespace CalendarSyncPlus.SyncEngine
             }
         }
 
+
+        /// <summary>
+        /// </summary>
+        /// <param name="syncProfile"></param>
+        /// <param name="sourceList"></param>
+        /// <param name="destinationList"></param>
+        /// <param name="destAppointmentsToDelete"></param>
+        /// <param name="destAppointmentsToUpdate"></param>
+        /// <param name="sourceAppointmentsToUpdate"></param>
+        /// <param name="destOrphanEntries"></param>
+        /// <returns></returns>
+        void GetAppointmentsToDelete(CalendarSyncProfile syncProfile,
+            List<Appointment> sourceList, List<Appointment> destinationList, List<Appointment> destAppointmentsToDelete,
+            List<Appointment> destAppointmentsToUpdate, List<Appointment> sourceAppointmentsToUpdate, List<Appointment> destOrphanEntries)
+        {
+            bool addDescription =
+                syncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Description);
+            bool addReminders =
+                syncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Reminders);
+            bool addAttendeesToDescription =
+                syncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.AttendeesToDescription);
+
+            foreach (Appointment destAppointment in destinationList)
+            {
+                //If SourceId is null, it is not a copy of any entry from the selected source calendar
+                if (destAppointment.SourceId == null)
+                {
+                    if (syncProfile.SyncSettings.SyncMode == SyncModeEnum.OneWay)
+                    {
+                        //If mode is one way & user has disabled delete, do not remove this entry, as this is an original entry in the calendar
+                        //Else this entry is not a copy of any appointment in source calendar so delete it
+                        destOrphanEntries.Add(destAppointment);
+                    }
+                }
+                else
+                {
+                    //If the mode is two way, look for its parent copy in Source calendar
+                    Appointment sourceAppointment;
+                    if (syncProfile.SyncSettings.SyncMode == SyncModeEnum.TwoWay
+                        && syncProfile.SyncSettings.KeepLastModifiedVersion)
+                    {
+                        //If no entry was found, it is original entry of the calendar, Ignore
+                        //If a child entry is found in source calendar, compare
+                        sourceAppointment = sourceList.FirstOrDefault(t => t.CompareSourceId(destAppointment));
+                        if (sourceAppointment != null)
+                        {
+                            //If any entry is found in source appointment and its contents are not equal to source appointment,
+                            //If an entry is found and i same, ignore
+                            if (!CompareAppointments(destAppointment, sourceAppointment, addDescription,
+                                addReminders, addAttendeesToDescription))
+                            {
+                                if (sourceAppointment.LastModified.HasValue && destAppointment.LastModified.HasValue)
+                                {
+                                    if (destAppointment.LastModified.GetValueOrDefault() >
+                                        sourceAppointment.LastModified.GetValueOrDefault())
+                                    {
+                                        sourceAppointment.CopyDetail(destAppointment,
+                                            syncProfile.CalendarEntryOptions);
+                                        sourceAppointmentsToUpdate.Add(sourceAppointment);
+                                        continue;
+                                    }
+                                }
+                                //Destination Calendar Entry is not Matching its Source Calendar Entry, Update it
+                                destAppointment.CopyDetail(sourceAppointment, syncProfile.CalendarEntryOptions);
+                                destAppointmentsToUpdate.Add(destAppointment);
+                                continue;
+                            }
+                        }
+                    }
+
+                    //If source appointment is not null, means it is a copy of an existing entry in Source calendar
+                    sourceAppointment = sourceList.FirstOrDefault(t => t.CompareSourceId(destAppointment));
+                    if (sourceAppointment != null)
+                    {
+                        //If any entry is found in source appointment and its contents are not equal to source appointment
+                        if (!CompareAppointments(destAppointment, sourceAppointment, addDescription, addReminders,
+                                addAttendeesToDescription))
+                        {
+                            destAppointment.CopyDetail(sourceAppointment, syncProfile.CalendarEntryOptions);
+                            destAppointmentsToUpdate.Add(destAppointment);
+                        }
+                    }
+                    else
+                    {
+                        //No parent entry is found, delete it
+                        sourceAppointment = sourceList.FirstOrDefault(t =>
+                                    CompareAppointments(destAppointment, t, addDescription, addReminders,
+                                        addAttendeesToDescription));
+                        if (sourceAppointment == null)
+                        {
+                            //If parent entry isn't found
+                            destAppointmentsToDelete.Add(destAppointment);
+                        }
+                    }
+
+                }
+            }
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -221,7 +320,16 @@ namespace CalendarSyncPlus.SyncEngine
 
         public bool GetSourceEntriesToDelete(CalendarSyncProfile syncProfile, List<Appointment> sourceList, List<Appointment> destinationList)
         {
-            GetAppointmentsToDelete(syncProfile, destinationList, sourceList, SourceAppointmentsToDelete, DestAppointmentsToUpdate, SourceOrphanEntries);
+            if (syncProfile.SyncSettings.MergeExistingEntries)
+            {
+                GetAppointmentsToDelete(syncProfile, destinationList, sourceList, SourceAppointmentsToDelete,
+                   SourceAppointmentsToUpdate, DestAppointmentsToUpdate, SourceOrphanEntries);
+            }
+            else
+            {
+                GetAppointmentsToDelete(syncProfile, destinationList, sourceList, SourceAppointmentsToDelete,
+                    DestAppointmentsToUpdate, SourceOrphanEntries);
+            }
             return true;
         }
 
@@ -233,7 +341,16 @@ namespace CalendarSyncPlus.SyncEngine
 
         public bool GetDestEntriesToDelete(CalendarSyncProfile syncProfile, List<Appointment> sourceList, List<Appointment> destinationList)
         {
-            GetAppointmentsToDelete(syncProfile, sourceList, destinationList, DestAppointmentsToDelete, SourceAppointmentsToUpdate, DestOrphanEntries);
+            if (syncProfile.SyncSettings.MergeExistingEntries)
+            {
+                GetAppointmentsToDelete(syncProfile, destinationList, sourceList, SourceAppointmentsToDelete,
+                    DestAppointmentsToUpdate, SourceAppointmentsToUpdate, SourceOrphanEntries);
+            }
+            else
+            {
+                GetAppointmentsToDelete(syncProfile, sourceList, destinationList, DestAppointmentsToDelete,
+                    SourceAppointmentsToUpdate, DestOrphanEntries);
+            }
             return true;
         }
 

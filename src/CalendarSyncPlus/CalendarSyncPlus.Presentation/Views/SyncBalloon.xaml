@@ -9,11 +9,12 @@
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance viewModels:SystemTrayNotifierViewModel}">
     <Border Background="White"
-            Width="Auto"
-            Height="Auto">
+            Width="200"
+            MaxHeight="100">
+        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
         <Grid Margin="2">
             <Grid.RowDefinitions>
-                <RowDefinition />
+                <RowDefinition Height="Auto"/>
                 <RowDefinition />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
@@ -28,10 +29,11 @@
                 </Rectangle.OpacityMask>
             </Rectangle>
             <TextBlock Text="Calendar Sync +" Grid.Column="1" VerticalAlignment="Center"
-                       FontWeight="800" Margin="2" />
+                       FontWeight="600" FontSize="14" Margin="2" />
             <TextBlock Text="{Binding ToolTipText}" Margin="2"
-                       Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" />
+                       TextWrapping="Wrap"
+                       Grid.Row="1" Grid.ColumnSpan="2" VerticalAlignment="Top" />
         </Grid>
+        </ScrollViewer>
     </Border>
-
 </UserControl>

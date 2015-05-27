@@ -1208,8 +1208,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
                             var idArray = calendarAppointment.AppointmentId.Split(new[] { "_" }, StringSplitOptions.RemoveEmptyEntries);
                             var parentAppointment = nameSpace.GetItemFromID(idArray.FirstOrDefault()) as AppointmentItem;
                             RecurrencePattern pattern = parentAppointment.GetRecurrencePattern();
-                            string time = string.Format("{0} {1}", idArray[1], parentAppointment.Start.ToString("hh:mm tt"));
-                            appItem = pattern.GetOccurrence(DateTime.ParseExact(time, "yy-MM-dd hh:mm tt", CultureInfo.InvariantCulture.DateTimeFormat));
+                            appItem = pattern.GetOccurrence(calendarAppointment.OldStartTime.GetValueOrDefault());
                         }
                         else
                         {
@@ -1225,13 +1224,13 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
                     }
                     catch (Exception exception)
                     {
-                        ApplicationLogger.LogError(exception.ToString());
+                        ApplicationLogger.LogError(exception);
                     }
                 }
             }
             catch (Exception exception)
             {
-                ApplicationLogger.LogError(exception.ToString());
+                ApplicationLogger.LogError(exception);
                 return new AppointmentListWrapper
                 {
                     WaitForApplicationQuit = disposeOutlookInstances,
