@@ -8,32 +8,35 @@
              MaxHeight="100"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance viewModels:SystemTrayNotifierViewModel}">
+   
     <Border Background="White"
-            Width="200"
-            MaxHeight="100">
-        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-        <Grid Margin="2">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition />
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition />
-            </Grid.ColumnDefinitions>
-            <Rectangle Grid.Row="0" Grid.Column="0" Height="20" Width="20" Margin="2"
-                       Fill="{StaticResource AccentColorBrush}">
+            BorderBrush="{StaticResource AccentColorBrush}"
+            BorderThickness="1">
+    <Grid Width="180" Height="80">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Horizontal" Background="{StaticResource AccentColorBrush}">
+            <Rectangle Width="18" Height="18" Margin="4"
+                       Fill="White">
                 <Rectangle.OpacityMask>
                     <VisualBrush Stretch="Fill"
                                  Visual="{StaticResource appbar_refresh}" />
                 </Rectangle.OpacityMask>
             </Rectangle>
-            <TextBlock Text="Calendar Sync +" Grid.Column="1" VerticalAlignment="Center"
-                       FontWeight="600" FontSize="14" Margin="2" />
-            <TextBlock Text="{Binding ToolTipText}" Margin="2"
+            <TextBlock Text="CALENDAR SYNC +" FontWeight="600" Margin="2" 
+                       Foreground="White"
+                       VerticalAlignment="Center"/>
+        </StackPanel>
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto"
+                      HorizontalScrollBarVisibility="Disabled">
+            <TextBlock Text="{Binding ToolTipText}"
+                       Margin="4"
                        TextWrapping="Wrap"
-                       Grid.Row="1" Grid.ColumnSpan="2" VerticalAlignment="Top" />
-        </Grid>
+                       VerticalAlignment="Top" />
         </ScrollViewer>
+        </Grid>
     </Border>
+   
 </UserControl>

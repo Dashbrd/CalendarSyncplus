@@ -99,7 +99,7 @@ namespace CalendarSyncPlus.Domain.Helpers
 
             string description = ParseDescription(appointment);
             string otherDescription = ParseDescription(otherAppointment);
-            if (description.Trim().Equals(otherDescription.Trim()))
+            if (description.Equals(otherDescription))
             {
                 return true;
             }
@@ -165,7 +165,7 @@ namespace CalendarSyncPlus.Domain.Helpers
                     description = String.Empty;
                 }
             }
-            return description;
+            return description.Trim();
         }
 
         public static bool CompareSourceId(this Appointment calendarAppointment, Appointment otherAppointment)

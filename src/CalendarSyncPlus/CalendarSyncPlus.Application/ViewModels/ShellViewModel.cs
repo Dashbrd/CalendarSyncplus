@@ -398,7 +398,10 @@ namespace CalendarSyncPlus.Application.ViewModels
         {
             BeginInvokeOnCurrentDispatcher(() =>
             {
-                UpdateNotification(text);
+                if (!text.Equals(StatusHelper.LineConstant))
+                {
+                    UpdateNotification(text);    
+                }
                 _statusBuilder.AppendLine(text);
                 ApplicationLogger.LogInfo(text);
                 RaisePropertyChanged("SyncLog");
