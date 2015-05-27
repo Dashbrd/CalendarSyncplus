@@ -398,7 +398,7 @@ namespace CalendarSyncPlus.Application.ViewModels
         {
             BeginInvokeOnCurrentDispatcher(() =>
             {
-                if (!text.Equals(StatusHelper.LineConstant))
+                if (IsSyncInProgress && !text.Equals(StatusHelper.LineConstant))
                 {
                     UpdateNotification(text);    
                 }
