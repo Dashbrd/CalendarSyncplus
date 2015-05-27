@@ -23,6 +23,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
@@ -166,8 +167,19 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
                             string id = defaultOutlookCalendar.EntryID;
                             foreach (AppointmentItem appointmentItem in appointmentItems)
                             {
-                                var app = GetAppointmentFromItem(id, appointmentItem);
-                                outlookAppointments.Add(app);
+                                try
+                                {
+                                    var app = GetAppointmentFromItem(id, appointmentItem);
+                                    outlookAppointments.Add(app);
+                                }
+                                catch (Exception exception)
+                                {
+                                    ApplicationLogger.LogError(exception.ToString());
+                                }
+                                finally
+                                {
+                                    Marshal.FinalReleaseComObject(appointmentItem);
+                                }
                             }
                         }
                     }
@@ -258,24 +270,43 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
             app.LastModified = appointmentItem.LastModificationTime;
             app.SetBusyStatus(appointmentItem.BusyStatus);
 
-            UserProperties userProperties = appointmentItem.UserProperties;
-            if (userProperties
-                != null)
-            {
-                foreach (UserProperty userProperty in userProperties)
-                {
-                    if(!app.ExtendedProperties.ContainsKey(userProperty.Name))
-                    {
-                        app.ExtendedProperties.Add(userProperty.Name,
-                        userProperty.Value);
-                    }
-                }
-
-                Marshal.FinalReleaseComObject(userProperties);
-            }
+            GetExtendedProperties(appointmentItem, app);
             app.CalendarId = id;
             return app;
         }
+
+        private void GetExtendedProperties(AppointmentItem appointmentItem, Appointment app)
+        {
+            app.ExtendedProperties = new Dictionary<string, string>();
+            UserProperties userProperties = appointmentItem.UserProperties;
+            try
+            {
+                if (userProperties != null)
+                {
+                    foreach (UserProperty userProperty in userProperties)
+                    {
+                        if (userProperty != null && !app.ExtendedProperties.ContainsKey(userProperty.Name)
+                            && userProperty.Value != null)
+                        {
+                            app.ExtendedProperties.Add(userProperty.Name,
+                                userProperty.Value.ToString());
+                        }
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                ApplicationLogger.LogError(exception.ToString());
+            }
+            finally
+            {
+                if (userProperties != null)
+                {
+                    Marshal.FinalReleaseComObject(userProperties);
+                }
+            }
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -391,31 +422,46 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
 
         private void GetCalendars(MAPIFolder searchFolder, List<OutlookCalendar> outlookCalendars)
         {
-            if (searchFolder == null)
+            try
             {
-                return;
-            }
-
-            if (searchFolder.DefaultMessageClass == "IPM.Appointment" &&
-                searchFolder.DefaultItemType == OlItemType.olAppointmentItem)
-            {
-                //Add Calendar MAPIFolder to List
-                outlookCalendars.Add(new OutlookCalendar
+                if (searchFolder == null)
                 {
-                    Name = searchFolder.Name,
-                    EntryId = searchFolder.EntryID,
-                    StoreId = searchFolder.EntryID
-                });
-            }
-            //Walk through all subFolders in MAPIFolder
-            //Walk through all subFolders in MAPIFolder
-            foreach (MAPIFolder subFolder in searchFolder.Folders)
-            {
-                //Get Calendar MAPIFolders
-                GetCalendars(subFolder, outlookCalendars);
-            }
+                    return;
+                }
 
-            Marshal.FinalReleaseComObject(searchFolder);
+                if (searchFolder.DefaultMessageClass == "IPM.Appointment" &&
+                    searchFolder.DefaultItemType == OlItemType.olAppointmentItem)
+                {
+                    //Add Calendar MAPIFolder to List
+                    outlookCalendars.Add(new OutlookCalendar
+                    {
+                        Name = searchFolder.Name,
+                        EntryId = searchFolder.EntryID,
+                        StoreId = searchFolder.EntryID
+                    });
+                }
+
+                if (searchFolder.Folders != null && searchFolder.Folders.Count > 0)
+                {
+                    //Walk through all subFolders in MAPIFolder
+                    foreach (MAPIFolder subFolder in searchFolder.Folders)
+                    {
+                        //Get Calendar MAPIFolders
+                        GetCalendars(subFolder, outlookCalendars);
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                ApplicationLogger.LogError(exception.ToString());
+            }
+            finally
+            {
+                if (searchFolder != null)
+                {
+                    Marshal.FinalReleaseComObject(searchFolder);
+                }
+            }
         }
 
         private List<string> GetOutlookProfileList()
@@ -824,6 +870,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
                     var newAppointment = AddAppointment(addDescription, addReminder, addAttendees, attendeesToDescription, appItem,
                         calendarAppointment);
                     addedAppointment.Add(newAppointment);
+                    Marshal.FinalReleaseComObject(appItem);
                 }
             }
             catch (Exception exception)
@@ -1019,20 +1066,27 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
                 {
                     try
                     {
-                        string id = calendarAppointment.AppointmentId;
+                        AppointmentItem appointmentItem = null;
                         if (calendarAppointment.IsRecurring)
                         {
-                            id =
-                                calendarAppointment.AppointmentId.Split(new[] { "_" },
-                                    StringSplitOptions.RemoveEmptyEntries).FirstOrDefault();
+                            var idArray = calendarAppointment.AppointmentId.Split(new[] { "_" }, StringSplitOptions.RemoveEmptyEntries);
+                            var parentAppointment = nameSpace.GetItemFromID(idArray.FirstOrDefault()) as AppointmentItem;
+                            if (parentAppointment != null)
+                            {
+                                RecurrencePattern pattern = parentAppointment.GetRecurrencePattern();
+                                appointmentItem = pattern.GetOccurrence(DateTime.Parse(idArray[1]));
+                            }
+                        }
+                        else
+                        {
+                            appointmentItem = nameSpace.GetItemFromID(calendarAppointment.AppointmentId) as AppointmentItem;
                         }
 
-                        var appointmentItem = nameSpace.GetItemFromID(id);
-                        if (appointmentItem is AppointmentItem)
+                        if (appointmentItem != null)
                         {
                             appointmentItem.Delete();
+                            Marshal.FinalReleaseComObject(appointmentItem);
                         }
-                        Marshal.FinalReleaseComObject(appointmentItem);
                     }
                     catch (Exception exception)
                     {
@@ -1146,18 +1200,37 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
 
                 foreach (Appointment calendarAppointment in calendarAppointments)
                 {
-                    var appItem = nameSpace.GetItemFromID(calendarAppointment.AppointmentId) as AppointmentItem;
-                    if (appItem == null)
+                    try
                     {
-                        continue;
+                        AppointmentItem appItem = null;
+                        if (calendarAppointment.IsRecurring)
+                        {
+                            var idArray = calendarAppointment.AppointmentId.Split(new[] { "_" }, StringSplitOptions.RemoveEmptyEntries);
+                            var parentAppointment = nameSpace.GetItemFromID(idArray.FirstOrDefault()) as AppointmentItem;
+                            RecurrencePattern pattern = parentAppointment.GetRecurrencePattern();
+                            appItem = pattern.GetOccurrence(calendarAppointment.OldStartTime.GetValueOrDefault());
+                        }
+                        else
+                        {
+                            appItem = nameSpace.GetItemFromID(calendarAppointment.AppointmentId) as AppointmentItem;
+                        }
+
+                        if (appItem == null)
+                        {
+                            continue;
+                        }
+                        UpdateAppointment(addDescription, addReminder, addAttendees, attendeesToDescription, appItem,
+                            calendarAppointment);
                     }
-                    UpdateAppointment(addDescription, addReminder, addAttendees, attendeesToDescription, appItem,
-                        calendarAppointment);
+                    catch (Exception exception)
+                    {
+                        ApplicationLogger.LogError(exception);
+                    }
                 }
             }
             catch (Exception exception)
             {
-                ApplicationLogger.LogError(exception.ToString());
+                ApplicationLogger.LogError(exception);
                 return new AppointmentListWrapper
                 {
                     WaitForApplicationQuit = disposeOutlookInstances,

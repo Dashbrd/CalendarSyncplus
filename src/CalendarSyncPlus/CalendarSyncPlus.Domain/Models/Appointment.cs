@@ -56,6 +56,7 @@ namespace CalendarSyncPlus.Domain.Models
         private DateTime? _startTime;
         private string _subject;
         private MeetingStatusEnum _meetingStatus;
+        private DateTime? _oldStartTime;
 
         public Appointment(string description, string location, string subject, DateTime? endTime, DateTime? startTime,
             string appointmentId)
@@ -74,6 +75,12 @@ namespace CalendarSyncPlus.Domain.Models
             ExtendedProperties = new Dictionary<string, string>();
             RequiredAttendees = new List<Recipient>();
             OptionalAttendees = new List<Recipient>();
+        }
+
+        public DateTime? OldStartTime
+        {
+            get { return _oldStartTime; }
+            set { SetProperty(ref _oldStartTime, value); }
         }
 
         public DateTime? StartTime
@@ -197,7 +204,7 @@ namespace CalendarSyncPlus.Domain.Models
             set { SetProperty(ref _isRecurring, value); }
         }
 
-        
+
         public DateTime? LastModified
         {
             get { return _lastModified; }

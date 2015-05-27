@@ -398,6 +398,10 @@ namespace CalendarSyncPlus.Application.ViewModels
         {
             BeginInvokeOnCurrentDispatcher(() =>
             {
+                if (IsSyncInProgress && !text.Equals(StatusHelper.LineConstant))
+                {
+                    UpdateNotification(text);    
+                }
                 _statusBuilder.AppendLine(text);
                 ApplicationLogger.LogInfo(text);
                 RaisePropertyChanged("SyncLog");
@@ -422,6 +426,21 @@ namespace CalendarSyncPlus.Application.ViewModels
                 catch (Exception exception)
                 {
                     ApplicationLogger.LogError(exception.Message);
+                }
+            }
+        }
+
+        private void UpdateNotification(string popupText)
+        {
+            if (!Settings.AppSettings.HideSystemTrayTooltip)
+            {
+                try
+                {
+                    SystemTrayNotifierViewModel.UpdateBalloonText(popupText);
+                }
+                catch (Exception exception)
+                {
+                    ApplicationLogger.LogError("Updating status in balloon", exception);
                 }
             }
         }
@@ -459,6 +478,7 @@ namespace CalendarSyncPlus.Application.ViewModels
                 {
                     CalendarSyncProfile profile = syncProfile;
                     Task.Factory.StartNew(() => StartSyncTask(profile));
+                    Task.Delay(1000);
                 }
             }
             catch (AggregateException exception)
@@ -472,7 +492,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             }
         }
 
-        private const string CompareStringFormat = "yy-MM-dd hh:mm:ss tt";
+
         /// <summary>
         /// 
         /// </summary>
@@ -484,7 +504,7 @@ namespace CalendarSyncPlus.Application.ViewModels
                 foreach (CalendarSyncProfile syncProfile in ScheduledSyncProfiles)
                 {
                     DateTime nextSyncTime = syncProfile.NextSync.GetValueOrDefault();
-                    if (nextSyncTime.ToString(CompareStringFormat).Equals(signalTime.ToString(CompareStringFormat)))
+                    if (nextSyncTime.ToString(Constants.CompareStringFormat).Equals(signalTime.ToString(Constants.CompareStringFormat)))
                     {
                         CalendarSyncProfile profile = syncProfile;
                         Task.Factory.StartNew(() => StartSyncTask(profile), TaskCreationOptions.None);

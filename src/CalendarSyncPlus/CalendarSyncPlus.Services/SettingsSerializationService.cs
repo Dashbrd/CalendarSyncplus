@@ -35,7 +35,7 @@ using CalendarSyncPlus.Services.Interfaces;
 
 namespace CalendarSyncPlus.Services
 {
-    [Export(typeof (ISettingsSerializationService))]
+    [Export(typeof(ISettingsSerializationService))]
     public class SettingsSerializationService : ISettingsSerializationService
     {
         private readonly ApplicationLogger _applicationLogger;
@@ -145,6 +145,11 @@ namespace CalendarSyncPlus.Services
                 result.IsFirstSave = true;
             }
 
+            if (!result.SettingsVersion.Equals(ApplicationInfo.Version))
+            {
+                return Settings.GetDefaultSettings();
+            }
+
             ValidateSettings(result);
             return result;
         }
@@ -188,8 +193,6 @@ namespace CalendarSyncPlus.Services
                     ProxyType = ProxyType.Auto
                 };
             }
-
-            
         }
 
         #endregion

@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using CalendarSyncPlus.Domain.Models;
 
 namespace CalendarSyncPlus.Domain.Helpers
@@ -101,10 +99,27 @@ namespace CalendarSyncPlus.Domain.Helpers
 
             string description = ParseDescription(appointment);
             string otherDescription = ParseDescription(otherAppointment);
-            if (description.Trim().Equals(otherDescription.Trim()))
+            if (description.Equals(otherDescription))
             {
                 return true;
             }
+
+            if (description.Length > 8000 && description.Length > otherDescription.Length)
+            {
+                if (description.Contains(otherDescription))
+                {
+                    return true;
+                }
+            }
+
+            if (otherDescription.Length > 8000 && otherDescription.Length > description.Length)
+            {
+                if (otherDescription.Contains(description))
+                {
+                    return true;
+                }
+            }
+
             return false;
         }
         public static string ParseAttendees(this Appointment appointment)
@@ -150,7 +165,7 @@ namespace CalendarSyncPlus.Domain.Helpers
                     description = String.Empty;
                 }
             }
-            return description;
+            return description.Trim();
         }
 
         public static bool CompareSourceId(this Appointment calendarAppointment, Appointment otherAppointment)

@@ -210,7 +210,6 @@
                                 ToolTip="{localizeExtension:LocText Key=OptionsSettingsView_ContentControl_OtherOptions_ConfirmDelete_ToolTip}"  />
                 <CheckBox Grid.Row="2"
                           Margin="2"
-                          Visibility="Collapsed"
                           Content="{localizeExtension:LocText Key=OptionsSettingsView_CheckBox_OtherOptions_KeepLastModified_Content}"
                           IsChecked="{Binding KeepLastModifiedCopy,
                                               Mode=TwoWay}"
@@ -219,10 +218,22 @@
                                               UpdateSourceTrigger=PropertyChanged}" />
                 <ContentControl Margin="2"
                                 Grid.Row="2"
-                                Visibility="Collapsed"
                                 Grid.Column="1"
                                 ContentTemplate="{DynamicResource HelpButtonTemplate}"
                                 ToolTip="{localizeExtension:LocText Key=OptionsSettingsView_ContentControl_OtherOptions_KeepLastModified_Content}" />
+                <CheckBox Grid.Row="3"
+                          Margin="2"
+                          Content="{localizeExtension:LocText Key=OptionsSettingsView_CheckBox_OtherOptions_MergeExistingEntries_Content}"
+                          IsChecked="{Binding MergeExistingEntries,
+                                              Mode=TwoWay}"
+                          IsEnabled="{Binding DisableDelete,
+                                              Converter={StaticResource InvertBooleanConverter},
+                                              UpdateSourceTrigger=PropertyChanged}" />
+                <ContentControl Margin="2"
+                                Grid.Row="3"
+                                Grid.Column="1"
+                                ContentTemplate="{DynamicResource HelpButtonTemplate}"
+                                ToolTip="{localizeExtension:LocText Key=OptionsSettingsView_ContentControl_OtherOptions_MergeExistingEntries_Content}" />
             </Grid>
         </GroupBox>
     </Grid>

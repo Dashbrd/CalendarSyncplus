@@ -81,6 +81,7 @@ namespace CalendarSyncPlus.Application.ViewModels
         private DateTime _endDate;
         private List<SyncRangeTypeEnum> _syncRangeTypes;
         private GoogleAccount _selectedGoogleAccount;
+        private bool _mergeExistingEntries;
 
         public ProfileViewModel(CalendarSyncProfile syncProfile, IGoogleCalendarService googleCalendarService,
             IOutlookCalendarService outlookCalendarService,
@@ -135,6 +136,12 @@ namespace CalendarSyncPlus.Application.ViewModels
         {
             get { return _confirmOnDelete; }
             set { SetProperty(ref _confirmOnDelete, value); }
+        }
+
+        public bool MergeExistingEntries
+        {
+            get { return _mergeExistingEntries; }
+            set { SetProperty(ref _mergeExistingEntries, value); }
         }
 
         public bool KeepLastModifiedCopy
@@ -533,6 +540,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             DisableDelete = SyncProfile.SyncSettings.DisableDelete;
             ConfirmOnDelete = SyncProfile.SyncSettings.ConfirmOnDelete;
             KeepLastModifiedCopy = SyncProfile.SyncSettings.KeepLastModifiedVersion;
+            MergeExistingEntries = SyncProfile.SyncSettings.MergeExistingEntries;
             SyncFrequency = SyncProfile.SyncSettings.SyncFrequency.Name;
             SetCategory = SyncProfile.SetCalendarCategory;
             _selectedGoogleAccount = googleAccount;
@@ -878,6 +886,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             SyncProfile.SyncSettings.DisableDelete = DisableDelete;
             SyncProfile.SyncSettings.ConfirmOnDelete = ConfirmOnDelete;
             SyncProfile.SyncSettings.KeepLastModifiedVersion = KeepLastModifiedCopy;
+            SyncProfile.SyncSettings.MergeExistingEntries = MergeExistingEntries;
             SyncProfile.SetCalendarTypes();
             SyncProfile.SetCalendarCategory = SetCategory;
             SyncProfile.EventCategory = SelectedCategory;

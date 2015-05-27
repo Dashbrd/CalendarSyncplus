@@ -17,5 +17,7 @@
         public const string Minimized = "/MINIMIZED";
 
         public const string UserPropertyName = "CalendarAppointmentId";
+
+        public const string CompareStringFormat = "yy-MM-dd hh:mm:ss tt";
     }
 }

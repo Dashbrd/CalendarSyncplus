@@ -25,15 +25,19 @@ namespace CalendarSyncPlus.Services.Utilities
         AddingEntries,
         AddEntriesComplete,
         AddEntriesFailed,
+        EntriesToUpdate,
+        UpdatingEntries,
+        UpdateEntriesSuccess,
+        UpdateEntriesFailed,
         SyncSuccess,
         SyncFailed,
     }
 
     public class StatusHelper
     {
-        private const string LineConstant = "--------------------------------------------------------------------------";
+        public const string LineConstant = "--------------------------------------------------------------------------";
 
-        private const string LogSeparatorConstant = "**************************************************************************";
+        public const string LogSeparatorConstant = "**************************************************************************";
 
         private static readonly Dictionary<SyncStateEnum, string> StatusDictionary =
             new Dictionary<SyncStateEnum, string>();
@@ -49,18 +53,22 @@ namespace CalendarSyncPlus.Services.Utilities
             StatusDictionary.Add(SyncStateEnum.SourceAppointmentsReadFailed, "Read failed.");
             StatusDictionary.Add(SyncStateEnum.DestAppointmentReading, "Reading {0} calendar...");
             StatusDictionary.Add(SyncStateEnum.DestAppointmentRead, "{0} entries read : {1}");
-            StatusDictionary.Add(SyncStateEnum.DestAppointmentReadFailed, "Read failed.");
-            StatusDictionary.Add(SyncStateEnum.ReadingEntriesToDelete, "Getting {0} entries to be deleted...");
+            StatusDictionary.Add(SyncStateEnum.DestAppointmentReadFailed, "Read failed");
+            StatusDictionary.Add(SyncStateEnum.ReadingEntriesToDelete, "Getting {0} entries to delete...");
             StatusDictionary.Add(SyncStateEnum.EntriesToDelete, "Found {0} entries to delete");
-            StatusDictionary.Add(SyncStateEnum.SkipDelete, "Skipping Delete.");
+            StatusDictionary.Add(SyncStateEnum.SkipDelete, "Skipping Delete");
             StatusDictionary.Add(SyncStateEnum.DeletingEntries, "Deleting {0} entries...");
-            StatusDictionary.Add(SyncStateEnum.DeletingEntriesComplete, "Delete Complete.");
-            StatusDictionary.Add(SyncStateEnum.DeletingEntriesFailed, "Delete Failed.");
-            StatusDictionary.Add(SyncStateEnum.ReadingEntriesToAdd, "Getting {0} entries to be added...");
+            StatusDictionary.Add(SyncStateEnum.DeletingEntriesComplete, "Delete Complete");
+            StatusDictionary.Add(SyncStateEnum.DeletingEntriesFailed, "Delete Failed");
+            StatusDictionary.Add(SyncStateEnum.ReadingEntriesToAdd, "Getting {0} entries to add...");
             StatusDictionary.Add(SyncStateEnum.EntriesToAdd, "Found {0} entries to add");
             StatusDictionary.Add(SyncStateEnum.AddingEntries, "Adding {0} entries...");
             StatusDictionary.Add(SyncStateEnum.AddEntriesComplete, "Add Complete.");
             StatusDictionary.Add(SyncStateEnum.AddEntriesFailed, "Add Failed.");
+            StatusDictionary.Add(SyncStateEnum.EntriesToUpdate, "Found {0} entries to update in {1}");
+            StatusDictionary.Add(SyncStateEnum.UpdatingEntries, "Updating entries...");
+            StatusDictionary.Add(SyncStateEnum.UpdateEntriesSuccess, "Update Complete");
+            StatusDictionary.Add(SyncStateEnum.UpdateEntriesFailed, "Update Failed");
             StatusDictionary.Add(SyncStateEnum.SyncSuccess, "Sync completed");
             StatusDictionary.Add(SyncStateEnum.SyncFailed, "Sync failed : {0}");
         }
