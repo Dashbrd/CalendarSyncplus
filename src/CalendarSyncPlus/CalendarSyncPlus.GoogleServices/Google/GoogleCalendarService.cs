@@ -52,6 +52,7 @@ namespace CalendarSyncPlus.GoogleServices.Google
 
         private const string dictionaryKey_CalendarId = "CalendarId";
         private const string dictionaryKey_AccountName = "AccountName";
+        private const int maxAttendees = 200;
 
         #endregion
 
@@ -293,7 +294,7 @@ namespace CalendarSyncPlus.GoogleServices.Google
 
         private void AddEventAttendees(IEnumerable<Recipient> recipients, Event googleEvent, bool optional)
         {
-            IEnumerable<Recipient> recipeintList = recipients as IList<Recipient> ?? recipients.ToList();
+            IEnumerable<Recipient> recipeintList = recipients as IList<Recipient> ?? recipients.Take(maxAttendees).ToList();
             if (!recipeintList.Any() && googleEvent == null)
             {
                 return;
