@@ -391,7 +391,14 @@ namespace CalendarSyncPlus.Application.ViewModels
 
         private void Download(object o)
         {
-            Process.Start(new ProcessStartInfo(ApplicationUpdateService.GetDownloadUri().AbsoluteUri));
+            try
+            {
+                Process.Start(new ProcessStartInfo(ApplicationUpdateService.GetDownloadUri().AbsoluteUri));
+            }
+            catch (Exception exception)
+            {
+                ApplicationLogger.LogError(exception);
+            }
         }
 
         private void UpdateStatus(string text)
@@ -400,7 +407,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             {
                 if (IsSyncInProgress && !text.Equals(StatusHelper.LineConstant))
                 {
-                    UpdateNotification(text);    
+                    UpdateNotification(text);
                 }
                 _statusBuilder.AppendLine(text);
                 ApplicationLogger.LogInfo(text);

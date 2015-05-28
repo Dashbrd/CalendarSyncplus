@@ -51,12 +51,15 @@ namespace CalendarSyncPlus.Services
                 request.UnsafeAuthenticatedConnectionSharing = true;
                 request.UserAgent = ApplicationInfo.ProductName;
                 request.KeepAlive = false;
-                string result;
+                string result = null;
                 using (var resp = request.GetResponse() as HttpWebResponse)
                 {
-                    var reader =
-                        new StreamReader(resp.GetResponseStream());
-                    result = reader.ReadToEnd();
+                    if (resp != null)
+                    {
+                        var reader =
+                            new StreamReader(resp.GetResponseStream());
+                        result = reader.ReadToEnd();
+                    }
                 }
                 dynamic obj = JsonConvert.DeserializeObject(result);
                 _version = obj.tag_name;
@@ -67,11 +70,12 @@ namespace CalendarSyncPlus.Services
                     body = body.Split(new[] { "[link]" }, StringSplitOptions.RemoveEmptyEntries).Last();
                     if (body.Contains("(") && body.Contains(")"))
                     {
-                        _downloadLink = body.Split(new[] { "(", ")" }, StringSplitOptions.RemoveEmptyEntries).FirstOrDefault();
+                        var arrayValues = body.Split(new string[] { "(", ")" }, StringSplitOptions.RemoveEmptyEntries);
+                        _downloadLink = arrayValues.FirstOrDefault(t => !string.IsNullOrEmpty(t.Trim()));
                     }
                 }
 
-                if (_downloadLink == null)
+                if (_downloadLink == null || string.IsNullOrEmpty(_downloadLink.Trim()))
                 {
                     _downloadLink = obj.assets[0].browser_download_url;
                 }
