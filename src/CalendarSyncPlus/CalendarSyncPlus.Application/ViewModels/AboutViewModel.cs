@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Waf.Applications;
 using CalendarSyncPlus.Application.Views;
 using CalendarSyncPlus.Common.Log;
+using CalendarSyncPlus.Domain.Models;
 using CalendarSyncPlus.Services.Interfaces;
 
 namespace CalendarSyncPlus.Application.ViewModels
@@ -112,7 +113,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             IsLatestVersionAvailable = false;
             UpdateText = string.Empty;
             TaskScheduler scheduler = TaskScheduler.FromCurrentSynchronizationContext();
-            Task<string>.Factory.StartNew(() => _applicationUpdateService.GetLatestReleaseFromServer())
+            Task<string>.Factory.StartNew(() => _applicationUpdateService.GetLatestReleaseFromServer(true))
                 .ContinueWith(CheckForUpdatesComplete, scheduler);
         }
 

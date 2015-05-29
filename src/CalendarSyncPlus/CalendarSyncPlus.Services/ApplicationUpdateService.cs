@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Waf.Applications;
+using CalendarSyncPlus.Common;
 using CalendarSyncPlus.Common.Log;
 using CalendarSyncPlus.Services.Interfaces;
 using Newtonsoft.Json;
@@ -35,34 +36,13 @@ namespace CalendarSyncPlus.Services
 
         /// <summary>
         /// </summary>
-        public string GetLatestReleaseFromServer()
+        public string GetLatestReleaseFromServer(bool includeAlpha)
         {
             _version = null;
             _downloadLink = null;
             try
             {
-                var request =
-                    WebRequest.Create(new Uri("https://api.github.com/repos/ankeshdave/calendarsyncplus/releases/latest"))
-                        as HttpWebRequest;
-                request.Method = "GET";
-                request.ProtocolVersion = HttpVersion.Version11;
-                request.ContentType = "application/json";
-                request.ServicePoint.Expect100Continue = false;
-                request.UnsafeAuthenticatedConnectionSharing = true;
-                request.UserAgent = ApplicationInfo.ProductName;
-                request.KeepAlive = false;
-                string result = null;
-                using (var resp = request.GetResponse() as HttpWebResponse)
-                {
-                    if (resp != null)
-                    {
-                        var reader =
-                            new StreamReader(resp.GetResponseStream());
-                        result = reader.ReadToEnd();
-                    }
-                }
-                dynamic obj = JsonConvert.DeserializeObject(result);
-                _version = obj.tag_name;
+                var obj = includeAlpha ? GetLatestTag() : GetLatestReleaseTag();
 
                 string body = obj.body;
                 if (body.Contains("[link]"))
@@ -86,6 +66,60 @@ namespace CalendarSyncPlus.Services
                 return exception.Message;
             }
             return null;
+        }
+
+        private dynamic GetLatestReleaseTag()
+        {
+            HttpWebRequest request =
+                WebRequest.Create(new Uri("https://api.github.com/repos/ankeshdave/calendarsyncplus/releases/latest"))
+                    as HttpWebRequest;
+            request.Method = "GET";
+            request.ProtocolVersion = HttpVersion.Version11;
+            request.ContentType = "application/json";
+            request.ServicePoint.Expect100Continue = false;
+            request.UnsafeAuthenticatedConnectionSharing = true;
+            request.UserAgent = ApplicationInfo.ProductName;
+            request.KeepAlive = false;
+            string result = null;
+            using (var resp = request.GetResponse() as HttpWebResponse)
+            {
+                if (resp != null)
+                {
+                    var reader =
+                        new StreamReader(resp.GetResponseStream());
+                    result = reader.ReadToEnd();
+                }
+            }
+            dynamic obj = JsonConvert.DeserializeObject(result);
+            _version = obj.tag_name;
+            return obj;
+        }
+
+        private dynamic GetLatestTag()
+        {
+            HttpWebRequest request =
+                WebRequest.Create(new Uri("https://api.github.com/repos/ankeshdave/calendarsyncplus/releases"))
+                    as HttpWebRequest;
+            request.Method = "GET";
+            request.ProtocolVersion = HttpVersion.Version11;
+            request.ContentType = "application/json";
+            request.ServicePoint.Expect100Continue = false;
+            request.UnsafeAuthenticatedConnectionSharing = true;
+            request.UserAgent = ApplicationInfo.ProductName;
+            request.KeepAlive = false;
+            string result = null;
+            using (var resp = request.GetResponse() as HttpWebResponse)
+            {
+                if (resp != null)
+                {
+                    var reader =
+                        new StreamReader(resp.GetResponseStream());
+                    result = reader.ReadToEnd();
+                }
+            }
+            dynamic obj = JsonConvert.DeserializeObject(result);
+            _version = obj[0].tag_name;
+            return obj[0];
         }
 
         /// <summary>

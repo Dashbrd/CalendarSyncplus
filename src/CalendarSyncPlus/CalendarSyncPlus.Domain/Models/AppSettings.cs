@@ -8,12 +8,14 @@ namespace CalendarSyncPlus.Domain.Models
         private bool _isManualSynchronization;
 
         #region Properties
-        
+
         public bool MinimizeToSystemTray { get; set; }
 
         public bool HideSystemTrayTooltip { get; set; }
 
         public bool CheckForUpdates { get; set; }
+
+        public bool CheckForAlphaReleases { get; set; }
 
         public bool IsManualSynchronization
         {

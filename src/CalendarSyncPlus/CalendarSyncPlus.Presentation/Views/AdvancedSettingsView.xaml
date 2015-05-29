@@ -99,7 +99,21 @@
                                 Grid.Column="1"
                                 ContentTemplate="{StaticResource HelpButtonTemplate}"
                                 ToolTip="{localizeExtension:LocText Key=AdvancedSettingsView_ContentControl_CheckForUpdates_Tooltip}" />
-                <StackPanel Grid.Row="4" Orientation="Horizontal">
+
+
+                <CheckBox Grid.Row="4"
+                          Margin="20,2,2,2"
+                          Content="{localizeExtension:LocText Key=AdvancedSettingsView_Checkbox_AlphaCheckForUpdates_Content}"
+                          IsEnabled="{Binding CheckForUpdates}"
+                          IsChecked="{Binding CheckForAlphaReleases,
+                                              Mode=TwoWay,
+                                              UpdateSourceTrigger=PropertyChanged}" />
+                <ContentControl Grid.Row="4"
+                                Grid.Column="1"
+                                ContentTemplate="{StaticResource HelpButtonTemplate}"
+                                ToolTip="{localizeExtension:LocText Key=AdvancedSettingsView_ContentControl_AlphaCheckForUpdates_Tooltip}" />
+
+                <StackPanel Grid.Row="5" Orientation="Horizontal">
                     <RadioButton Margin="2"
                                  Content="{localizeExtension:LocText Key=AdvancedSettingsView_RadioButton_Synchronization_AutoSync_Content}"
                                  IsChecked="{Binding IsManualSynchronization,
@@ -112,7 +126,7 @@
                                                      Mode=TwoWay,
                                                      UpdateSourceTrigger=PropertyChanged}" />
                 </StackPanel>
-                <ContentControl Grid.Row="4"
+                <ContentControl Grid.Row="5"
                                 Grid.Column="1"
                                 ContentTemplate="{StaticResource HelpButtonTemplate}"
                                 ToolTip="{localizeExtension:LocText Key=AdvancedSettingsView_ContentControl_HelpButtonSynchronizationMode_Tooltip}" />

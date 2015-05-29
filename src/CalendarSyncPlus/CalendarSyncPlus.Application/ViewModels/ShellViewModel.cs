@@ -675,7 +675,7 @@ namespace CalendarSyncPlus.Application.ViewModels
                 if (_lastCheckDateTime == null ||
                     DateTime.Now.Subtract(_lastCheckDateTime.GetValueOrDefault()).TotalHours > 6)
                 {
-                    Task<string>.Factory.StartNew(() => ApplicationUpdateService.GetLatestReleaseFromServer())
+                    Task<string>.Factory.StartNew(() => ApplicationUpdateService.GetLatestReleaseFromServer(Settings.AppSettings.CheckForAlphaReleases))
                         .ContinueWith(UpdateContinuationAction);
                 }
             }

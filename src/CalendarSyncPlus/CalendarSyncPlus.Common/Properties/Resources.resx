@@ -573,9 +573,15 @@ Select Outlook &lt;-&gt; Google, to sync our Outlook and Google calendar with ea
     <value>Next Scheduled</value>
   </data>
   <data name="OptionsSettingsView_CheckBox_OtherOptions_MergeExistingEntries_Content" xml:space="preserve">
-    <value>Merge into Existing Entries</value>
+    <value>Update Existing Entries</value>
   </data>
   <data name="OptionsSettingsView_ContentControl_OtherOptions_MergeExistingEntries_Content" xml:space="preserve">
     <value>Update existing entries for any changes, instead of adding and deleting for updation</value>
+  </data>
+  <data name="AdvancedSettingsView_Checkbox_AlphaCheckForUpdates_Content" xml:space="preserve">
+    <value>Include Alpha Releases</value>
+  </data>
+  <data name="AdvancedSettingsView_ContentControl_AlphaCheckForUpdates_Tooltip" xml:space="preserve">
+    <value>Check for alpha releases of the application</value>
   </data>
 </root>
