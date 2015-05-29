@@ -19,6 +19,10 @@ namespace CalendarSyncPlus.Services
         /// <summary>
         /// </summary>
         private string _downloadLink;
+        /// <summary>
+        /// 
+        /// </summary>
+        private bool _isAlpha;
 
         /// <summary>
         /// </summary>
@@ -40,9 +44,18 @@ namespace CalendarSyncPlus.Services
         {
             _version = null;
             _downloadLink = null;
+            _isAlpha = false;
             try
             {
-                var obj = includeAlpha ? GetLatestTag() : GetLatestReleaseTag();
+                var obj = GetLatestReleaseTag();
+                if (includeAlpha)
+                {
+                    string version1 = obj.tag_name;
+                    obj = GetLatestTag();
+                    string version2 = obj.tag_name;
+                    _isAlpha = IsAlpha(version1,version2);
+                    _version = version2;
+                }
 
                 string body = obj.body;
                 if (body.Contains("[link]"))
@@ -68,6 +81,17 @@ namespace CalendarSyncPlus.Services
             return null;
         }
 
+        bool IsAlpha(string version1, string version2)
+        {
+            version1 = version1.Contains("-") ? version1.Remove(version1.IndexOf("-",StringComparison.InvariantCultureIgnoreCase)) : version1;
+            version2 = version2.Contains("-") ? version2.Remove(version2.IndexOf("-", StringComparison.InvariantCultureIgnoreCase)) : version2;
+            var version = new Version(version1.Substring(1));
+            if (version > new Version(version2.Substring(1)))
+            {
+                return true;
+            }
+            return false;
+        }
         private dynamic GetLatestReleaseTag()
         {
             HttpWebRequest request =
@@ -91,7 +115,6 @@ namespace CalendarSyncPlus.Services
                 }
             }
             dynamic obj = JsonConvert.DeserializeObject(result);
-            _version = obj.tag_name;
             return obj;
         }
 
@@ -118,7 +141,6 @@ namespace CalendarSyncPlus.Services
                 }
             }
             dynamic obj = JsonConvert.DeserializeObject(result);
-            _version = obj[0].tag_name;
             return obj[0];
         }
 
@@ -147,6 +169,8 @@ namespace CalendarSyncPlus.Services
         /// <returns></returns>
         public string GetNewAvailableVersion()
         {
+            if (_isAlpha)
+                return string.Format("{0}-alpha", _version);
             return _version;
         }
 
