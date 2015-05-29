@@ -48,14 +48,16 @@ namespace CalendarSyncPlus.Services
             try
             {
                 var obj = GetLatestReleaseTag();
+                
                 if (includeAlpha)
                 {
                     string version1 = obj.tag_name;
                     obj = GetLatestTag();
                     string version2 = obj.tag_name;
                     _isAlpha = IsAlpha(version1,version2);
-                    _version = version2;
                 }
+
+                _version = obj.tag_name;
 
                 string body = obj.body;
                 if (body.Contains("[link]"))
@@ -169,8 +171,15 @@ namespace CalendarSyncPlus.Services
         /// <returns></returns>
         public string GetNewAvailableVersion()
         {
-            if (_isAlpha)
-                return string.Format("{0}-alpha", _version);
+            try
+            {
+                if (_isAlpha && !_version.Contains("-"))
+                    return string.Format("{0}-alpha", _version);
+            }
+            catch (Exception exception)
+            {
+                ApplicationLogger.LogError(exception);
+            }
             return _version;
         }
 
