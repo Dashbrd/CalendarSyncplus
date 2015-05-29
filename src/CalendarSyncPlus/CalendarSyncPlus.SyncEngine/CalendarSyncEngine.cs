@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CalendarSyncPlus.Domain.Helpers;
 using CalendarSyncPlus.Domain.Models;
 using CalendarSyncPlus.SyncEngine.Helpers;
@@ -388,8 +385,8 @@ namespace CalendarSyncPlus.SyncEngine
         {
             if (syncProfile.SyncSettings.MergeExistingEntries)
             {
-                GetAppointmentsToDeleteWithMergeEntries(syncProfile, destinationList, sourceList, SourceAppointmentsToDelete,
-                    DestAppointmentsToUpdate, SourceAppointmentsToUpdate, SourceOrphanEntries);
+                GetAppointmentsToDeleteWithMergeEntries(syncProfile, sourceList, destinationList, DestAppointmentsToDelete,
+                    DestAppointmentsToUpdate, SourceAppointmentsToUpdate, DestOrphanEntries);
             }
             else
             {

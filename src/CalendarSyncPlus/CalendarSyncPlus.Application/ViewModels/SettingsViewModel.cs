@@ -97,6 +97,7 @@ namespace CalendarSyncPlus.Application.ViewModels
         private bool _allowManualGoogleAuth;
         private string _googleAuthCode;
         private bool _isAuthCodeAvailable;
+        private bool _checkForAlphaReleases;
 
         #endregion
 
@@ -186,11 +187,23 @@ namespace CalendarSyncPlus.Application.ViewModels
             set { SetProperty(ref _isLoading, value); }
         }
 
+        public bool CheckForAlphaReleases
+        {
+            get { return _checkForAlphaReleases; }
+            set { SetProperty(ref _checkForAlphaReleases, value); }
+        }
 
         public bool CheckForUpdates
         {
             get { return _checkForUpdates; }
-            set { SetProperty(ref _checkForUpdates, value); }
+            set
+            {
+                SetProperty(ref _checkForUpdates, value);
+                if (!_checkForUpdates)
+                {
+                    CheckForAlphaReleases = false;
+                }
+            }
         }
 
         public bool RunApplicationAtSystemStartup
@@ -327,7 +340,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             get { return _googleAccounts; }
             set { SetProperty(ref _googleAccounts, value); }
         }
-        
+
         private async void AddNewGoogleAccountHandler()
         {
             //Accept Email Id
@@ -438,7 +451,7 @@ namespace CalendarSyncPlus.Application.ViewModels
         {
             return await MessageService.ShowInput("Enter Auth Code after authorization in browser window", "Manual Authentication");
         }
-        
+
         #endregion
 
         #region Private Methods
@@ -452,6 +465,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             Settings.AppSettings.MinimizeToSystemTray = MinimizeToSystemTray;
             Settings.AppSettings.HideSystemTrayTooltip = HideSystemTrayTooltip;
             Settings.AppSettings.CheckForUpdates = CheckForUpdates;
+            Settings.AppSettings.CheckForAlphaReleases = CheckForAlphaReleases;
             Settings.AppSettings.RunApplicationAtSystemStartup = RunApplicationAtSystemStartup;
             Settings.AppSettings.IsManualSynchronization = IsManualSynchronization;
             Settings.AllowManualAuthentication = AllowManualGoogleAuth;
@@ -542,6 +556,7 @@ namespace CalendarSyncPlus.Application.ViewModels
                     MinimizeToSystemTray = Settings.AppSettings.MinimizeToSystemTray;
                     HideSystemTrayTooltip = Settings.AppSettings.HideSystemTrayTooltip;
                     CheckForUpdates = Settings.AppSettings.CheckForUpdates;
+                    CheckForAlphaReleases = Settings.AppSettings.CheckForAlphaReleases;
                     RunApplicationAtSystemStartup = Settings.AppSettings.RunApplicationAtSystemStartup;
                     IsManualSynchronization = Settings.AppSettings.IsManualSynchronization;
                     LoadProfiles();
@@ -636,7 +651,7 @@ namespace CalendarSyncPlus.Application.ViewModels
                             profileViewModel.SelectedCalendar = null;
                         }
                     }
-                    
+
                     GoogleAccounts.Remove(googleAccount);
 
                     await MessageService.ShowMessage("Google account successfully disconnected");

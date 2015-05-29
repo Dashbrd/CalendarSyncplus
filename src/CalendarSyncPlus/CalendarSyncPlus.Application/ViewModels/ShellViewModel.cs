@@ -275,6 +275,21 @@ namespace CalendarSyncPlus.Application.ViewModels
             }
         }
 
+        public DelegateCommand ClearLogCommand
+        {
+            get
+            {
+                return _clearLogCommand ??
+                       (_clearLogCommand = new DelegateCommand(ClearLog));
+            }
+        }
+
+        private void ClearLog()
+        {
+            _statusBuilder.Clear();
+            RaisePropertyChanged("SyncLog");
+        }
+
         private void ShowWhatsNew()
         {
             var contentView = ChildContentViewFactory.GetChildContentViewModel(ChildViewContentType.WhatsNew);
@@ -391,7 +406,14 @@ namespace CalendarSyncPlus.Application.ViewModels
 
         private void Download(object o)
         {
-            Process.Start(new ProcessStartInfo(ApplicationUpdateService.GetDownloadUri().AbsoluteUri));
+            try
+            {
+                Process.Start(new ProcessStartInfo(ApplicationUpdateService.GetDownloadUri().AbsoluteUri));
+            }
+            catch (Exception exception)
+            {
+                ApplicationLogger.LogError(exception);
+            }
         }
 
         private void UpdateStatus(string text)
@@ -400,7 +422,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             {
                 if (IsSyncInProgress && !text.Equals(StatusHelper.LineConstant))
                 {
-                    UpdateNotification(text);    
+                    UpdateNotification(text);
                 }
                 _statusBuilder.AppendLine(text);
                 ApplicationLogger.LogInfo(text);
@@ -452,6 +474,7 @@ namespace CalendarSyncPlus.Application.ViewModels
 
         private static readonly object lockerObject = new object();
         private DelegateCommand _showWhatsNewCommand;
+        private DelegateCommand _clearLogCommand;
 
         private void OnTimerElapsed(object sender, ElapsedEventArgs e)
         {
@@ -668,7 +691,7 @@ namespace CalendarSyncPlus.Application.ViewModels
                 if (_lastCheckDateTime == null ||
                     DateTime.Now.Subtract(_lastCheckDateTime.GetValueOrDefault()).TotalHours > 6)
                 {
-                    Task<string>.Factory.StartNew(() => ApplicationUpdateService.GetLatestReleaseFromServer())
+                    Task<string>.Factory.StartNew(() => ApplicationUpdateService.GetLatestReleaseFromServer(Settings.AppSettings.CheckForAlphaReleases))
                         .ContinueWith(UpdateContinuationAction);
                 }
             }

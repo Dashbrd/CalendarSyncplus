@@ -4,6 +4,8 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Waf.Applications;
 using CalendarSyncPlus.Application.Views;
+using CalendarSyncPlus.Common.Log;
+using CalendarSyncPlus.Domain.Models;
 using CalendarSyncPlus.Services.Interfaces;
 
 namespace CalendarSyncPlus.Application.ViewModels
@@ -11,6 +13,7 @@ namespace CalendarSyncPlus.Application.ViewModels
     [Export]
     public class AboutViewModel : ViewModel<IAboutView>
     {
+        public ApplicationLogger ApplicationLogger { get; set; }
         private readonly IApplicationUpdateService _applicationUpdateService;
         private DelegateCommand _checkForUpdatesCommand;
         private DelegateCommand _downloadCommand;
@@ -22,9 +25,11 @@ namespace CalendarSyncPlus.Application.ViewModels
         private DelegateCommand _mailToCommand;
 
         [ImportingConstructor]
-        public AboutViewModel(IAboutView aboutView, IApplicationUpdateService applicationUpdateService)
+        public AboutViewModel(IAboutView aboutView, IApplicationUpdateService applicationUpdateService,
+            ApplicationLogger applicationLogger)
             : base(aboutView)
         {
+            ApplicationLogger = applicationLogger;
             _applicationUpdateService = applicationUpdateService;
             ProductVersion = ApplicationInfo.Version;
         }
@@ -87,12 +92,19 @@ namespace CalendarSyncPlus.Application.ViewModels
 
         private void DownloadNewVersion()
         {
-            Process.Start(new ProcessStartInfo(_applicationUpdateService.GetDownloadUri().AbsoluteUri));
+            try
+            {
+                Process.Start(new ProcessStartInfo(_applicationUpdateService.GetDownloadUri().AbsoluteUri));
+            }
+            catch (Exception exception)
+            {
+                ApplicationLogger.LogError(exception);
+            }
         }
 
         private void CheckForUpdates()
         {
-            if (IsCheckInProgress || IsLatestVersionAvailable)
+            if (IsCheckInProgress)
             {
                 return;
             }
@@ -101,7 +113,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             IsLatestVersionAvailable = false;
             UpdateText = string.Empty;
             TaskScheduler scheduler = TaskScheduler.FromCurrentSynchronizationContext();
-            Task<string>.Factory.StartNew(() => _applicationUpdateService.GetLatestReleaseFromServer())
+            Task<string>.Factory.StartNew(() => _applicationUpdateService.GetLatestReleaseFromServer(true))
                 .ContinueWith(CheckForUpdatesComplete, scheduler);
         }
 

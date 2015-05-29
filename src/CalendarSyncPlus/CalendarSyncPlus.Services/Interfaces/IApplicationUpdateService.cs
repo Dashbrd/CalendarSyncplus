@@ -4,7 +4,7 @@ namespace CalendarSyncPlus.Services.Interfaces
 {
     public interface IApplicationUpdateService
     {
-        string GetLatestReleaseFromServer();
+        string GetLatestReleaseFromServer(bool includeAlpha);
 
         bool IsNewVersionAvailable();
 

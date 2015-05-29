@@ -48,6 +48,7 @@
     </WixExtension>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Logo.png" />
     <Content Include="icon.ico" />
     <Content Include="license.rtf" />
     <Content Include="Net45Installer\dotNetFx45_Full_setup.exe" />

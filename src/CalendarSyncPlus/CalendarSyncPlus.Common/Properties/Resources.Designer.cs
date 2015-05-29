@@ -148,6 +148,17 @@ namespace CalendarSyncPlus.Common.Properties
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Check For Updates.
+        /// </summary>
+        public static string AdvancedSettingsView_Checkbox_AlphaCheckForUpdates_Content
+        {
+            get
+            {
+                return ResourceManager.GetString("AdvancedSettingsView_Checkbox_AlphaCheckForUpdates_Content", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Close button minimizes to tray.
         /// </summary>
         public static string AdvancedSettingsView_Checkbox_CloseToSystemTray_Content
@@ -199,6 +210,17 @@ namespace CalendarSyncPlus.Common.Properties
             get
             {
                 return ResourceManager.GetString("AdvancedSettingsView_ContentControl_CheckForUpdates_Tooltip", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Select this option to automatically check for latest version of this application.
+        /// </summary>
+        public static string AdvancedSettingsView_ContentControl_AlphaCheckForUpdates_Tooltip
+        {
+            get
+            {
+                return ResourceManager.GetString("AdvancedSettingsView_ContentControl_AlphaCheckForUpdates_Tooltip", resourceCulture);
             }
         }
 
