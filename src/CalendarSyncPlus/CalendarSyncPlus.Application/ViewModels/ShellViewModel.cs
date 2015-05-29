@@ -275,6 +275,21 @@ namespace CalendarSyncPlus.Application.ViewModels
             }
         }
 
+        public DelegateCommand ClearLogCommand
+        {
+            get
+            {
+                return _clearLogCommand ??
+                       (_clearLogCommand = new DelegateCommand(ClearLog));
+            }
+        }
+
+        private void ClearLog()
+        {
+            _statusBuilder.Clear();
+            RaisePropertyChanged("SyncLog");
+        }
+
         private void ShowWhatsNew()
         {
             var contentView = ChildContentViewFactory.GetChildContentViewModel(ChildViewContentType.WhatsNew);
@@ -459,6 +474,7 @@ namespace CalendarSyncPlus.Application.ViewModels
 
         private static readonly object lockerObject = new object();
         private DelegateCommand _showWhatsNewCommand;
+        private DelegateCommand _clearLogCommand;
 
         private void OnTimerElapsed(object sender, ElapsedEventArgs e)
         {

@@ -584,4 +584,7 @@ Select Outlook &lt;-&gt; Google, to sync our Outlook and Google calendar with ea
   <data name="AdvancedSettingsView_ContentControl_AlphaCheckForUpdates_Tooltip" xml:space="preserve">
     <value>Check for alpha releases of the application</value>
   </data>
+  <data name="HomeView_Button_ClearLog_Content" xml:space="preserve">
+    <value>Clear Log</value>
+  </data>
 </root>

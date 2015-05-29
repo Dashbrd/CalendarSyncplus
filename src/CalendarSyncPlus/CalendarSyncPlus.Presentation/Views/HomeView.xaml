@@ -9,6 +9,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:models="clr-namespace:CalendarSyncPlus.Domain.Models;assembly=CalendarSyncPlus.Domain"
              xmlns:viewModels="clr-namespace:CalendarSyncPlus.Application.ViewModels;assembly=CalendarSyncPlus.Application"
+             xmlns:Properties="clr-namespace:CalendarSyncPlus.Common.Properties;assembly=CalendarSyncPlus.Common"
              d:DataContext="{d:DesignInstance viewModels:ShellViewModel}"
              d:DesignHeight="300"
              d:DesignWidth="300"
@@ -126,6 +127,9 @@
             <Button Margin="5"
                     Command="{Binding SyncNowCommand}"
                     Content="{localizeExtension:LocText Key=HomeView_Button_SyncNow_Content}" />
+            <Button Margin="5"
+                    Command="{Binding ClearLogCommand}"
+                    Content="{localizeExtension:LocText Key=HomeView_Button_ClearLog_Content}" />
         </StackPanel>
 
     </Grid>
