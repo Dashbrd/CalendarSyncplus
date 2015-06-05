@@ -30,7 +30,7 @@ namespace CalendarSyncPlus.Presentation.Services
             }
             catch (Exception ex)
             {
-                ApplicationLogger.LogError(ex.ToString());
+                ApplicationLogger.LogError(ex.ToString(), typeof(WindowsStartupService));
             }
         }
 
@@ -42,7 +42,7 @@ namespace CalendarSyncPlus.Presentation.Services
             }
             catch (Exception ex)
             {
-                ApplicationLogger.LogError(ex.ToString());
+                ApplicationLogger.LogError(ex.ToString(), typeof(WindowsStartupService));
             }
         }
 
@@ -104,12 +104,12 @@ namespace CalendarSyncPlus.Presentation.Services
             catch (UnauthorizedAccessException ex)
             {
                 isAdmin = false;
-                ApplicationLogger.LogError(ex.ToString());
+                ApplicationLogger.LogError(ex.ToString(), typeof(WindowsStartupService));
             }
             catch (Exception ex)
             {
                 isAdmin = false;
-                ApplicationLogger.LogError(ex.ToString());
+                ApplicationLogger.LogError(ex.ToString(),typeof(WindowsStartupService));
             }
             return isAdmin;
         }

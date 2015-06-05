@@ -114,7 +114,7 @@ namespace CalendarSyncPlus.Presentation
                 MessageBox.Show(string.Format(CultureInfo.CurrentCulture,
                     "Unknown Error Occurred:{1}{0}", exception, Environment.NewLine)
                     , ApplicationInfo.ProductName, MessageBoxButton.OK, MessageBoxImage.Error);
-                _applicationLogger.LogInfo(exception.ToString());
+                _applicationLogger.LogInfo(exception.ToString(), typeof(App));
             }
         }
 

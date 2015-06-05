@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.IO;
 using System.Runtime.CompilerServices;
@@ -14,26 +15,42 @@ namespace CalendarSyncPlus.Common.Log
     [Export]
     public class ApplicationLogger
     {
-        private static ILog _logger;
-        private string LogFilePath;
+        private string _logFilePath;
+        readonly Dictionary<string, ILog> _logDictionary = new Dictionary<string, ILog>();
+        private ILog GetLogger(Type type)
+        {
+            string className = type.Name;
+            ILog logger = null;
+            if (_logDictionary.ContainsKey(className))
+            {
+                logger = _logDictionary[className];
+            }
+            else
+            {
+                logger = LogManager.GetLogger(type);
+                _logDictionary.Add(className, logger);
+            }
+            return logger;
+        }
+
 
         public void Setup()
         {
             string applicationDataDirectory =
                 Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
                     "CalendarSyncPlus", "Log");
-            LogFilePath = Path.Combine(applicationDataDirectory, "CalendarSyncPlus.log");
+            _logFilePath = Path.Combine(applicationDataDirectory, "CalSyncPlusLog.xml");
 
             var hierarchy = (Hierarchy)LogManager.GetRepository();
 
-            var patternLayout = new PatternLayout { ConversionPattern = "%date [%thread] %-5level %message%newline" };
+            var patternLayout = new XmlLayout();
             patternLayout.ActivateOptions();
 
             var roller = new RollingFileAppender()
             {
                 AppendToFile = true,
                 MaximumFileSize = "1MB",
-                File = LogFilePath,
+                File = _logFilePath,
                 PreserveLogFileNameExtension = true,
                 MaxSizeRollBackups = 10,
                 RollingStyle = RollingFileAppender.RollingMode.Size,
@@ -49,80 +66,79 @@ namespace CalendarSyncPlus.Common.Log
             hierarchy.Root.Level = Level.Info;
             hierarchy.Configured = true;
 
-            BasicConfigurator.Configure();
-            _logger = LogManager.GetLogger(typeof(ApplicationLogger));
+            XmlConfigurator.Configure(hierarchy);
         }
 
 
-        public void LogDebug(string message, [CallerFilePath] string filePath = null,
+        public void LogDebug(string message, Type type,
             [CallerMemberName] string methodName = null)
         {
-            if (_logger != null)
+            ILog logger = GetLogger(type);
+            if (logger != null)
             {
-                string className = Path.GetFileNameWithoutExtension(filePath);
-                _logger.Debug(string.Format("{0} - {1} - {2}", className, methodName, message));
+                logger.Debug(string.Format("{0} - {1}", methodName, message));
             }
         }
 
-        public void LogInfo(string message, [CallerFilePath] string filePath = null,
+        public void LogInfo(string message, Type type,
             [CallerMemberName] string methodName = null)
         {
-            if (_logger != null)
+            ILog logger = GetLogger(type);
+            if (logger != null)
             {
-                string className = Path.GetFileNameWithoutExtension(filePath);
-                _logger.Info(string.Format("{0} - {1} - {2}", className, methodName, message));
-            }
-        }
-
-
-        public void LogWarn(string message, [CallerFilePath] string filePath = null,
-            [CallerMemberName] string methodName = null)
-        {
-            if (_logger != null)
-            {
-                string className = Path.GetFileNameWithoutExtension(filePath);
-                _logger.Warn(string.Format("{0} - {1} - {2}", className, methodName, message));
-            }
-        }
-
-        public void LogError(string message, Exception exception, [CallerFilePath] string filePath = null,
-            [CallerMemberName] string methodName = null)
-        {
-            if (_logger != null && exception != null)
-            {
-                string className = Path.GetFileNameWithoutExtension(filePath);
-                _logger.Error(string.Format("{0} - {1} - {2} : {3}", className, methodName, message, exception));
-            }
-        }
-
-        public void LogError(Exception exception, [CallerFilePath] string filePath = null,
-            [CallerMemberName] string methodName = null)
-        {
-            if (_logger != null && exception != null)
-            {
-                string className = Path.GetFileNameWithoutExtension(filePath);
-                _logger.Error(string.Format("{0} - {1} - {2}", className, methodName, exception));
+                logger.Info(string.Format("{0} - {1}", methodName, message));
             }
         }
 
 
-        public void LogError(string message, [CallerFilePath] string filePath = null,
+        public void LogWarn(string message, Type type,
             [CallerMemberName] string methodName = null)
         {
-            if (_logger != null)
+            ILog logger = GetLogger(type);
+            if (logger != null)
             {
-                string className = Path.GetFileNameWithoutExtension(filePath);
-                _logger.Error(string.Format("{0} - {1} - {2}", className, methodName, message));
+                logger.Warn(string.Format("{0} - {1}", methodName, message));
             }
         }
 
-        public void LogFatal(string message, [CallerFilePath] string filePath = null,
+        public void LogError(string message, Exception exception, Type type,
             [CallerMemberName] string methodName = null)
         {
-            if (_logger != null)
+            ILog logger = GetLogger(type);
+            if (logger != null && exception != null)
             {
-                string className = Path.GetFileNameWithoutExtension(filePath);
-                _logger.Fatal(string.Format("{0} - {1} - {2}", className, methodName, message));
+                logger.Error(string.Format("{0} - {1} : {2}", methodName, message, exception));
+            }
+        }
+
+        public void LogError(Exception exception, Type type,
+            [CallerMemberName] string methodName = null)
+        {
+            ILog logger = GetLogger(type);
+            if (logger != null && exception != null)
+            {
+                logger.Error(string.Format("{0} - {1}", methodName, exception));
+            }
+        }
+
+
+        public void LogError(string message, Type type,
+            [CallerMemberName] string methodName = null)
+        {
+            ILog logger = GetLogger(type);
+            if (logger != null)
+            {
+                logger.Error(string.Format("{0} - {1}", methodName, message));
+            }
+        }
+
+        public void LogFatal(string message, Type type,
+            [CallerMemberName] string methodName = null)
+        {
+            ILog logger = GetLogger(type);
+            if (logger != null)
+            {
+                logger.Fatal(string.Format("{0} - {1}", methodName, message));
             }
         }
     }

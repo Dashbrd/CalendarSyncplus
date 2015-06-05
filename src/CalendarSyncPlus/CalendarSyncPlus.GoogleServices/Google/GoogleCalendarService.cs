@@ -330,7 +330,7 @@ namespace CalendarSyncPlus.GoogleServices.Google
             {
                 var googleEvent = eventList[index];
                 errorAppointments.Add(index, googleEvent);
-                ApplicationLogger.LogError(googleEvent.ToString());
+                ApplicationLogger.LogError(googleEvent.ToString(), typeof(GoogleCalendarService));
             }
         }
 
@@ -343,8 +343,8 @@ namespace CalendarSyncPlus.GoogleServices.Google
             {
                 var googleEvent = eventList[index];
                 errorAppointments.Add(index, googleEvent);
-                ApplicationLogger.LogError(string.Format("Event : {0}, will be added without attendees", googleEvent.Subject));
-                ApplicationLogger.LogError(googleEvent.ToString());
+                ApplicationLogger.LogError(string.Format("Event : {0}, will be added without attendees", googleEvent.Subject), typeof(GoogleCalendarService));
+                ApplicationLogger.LogError(googleEvent.ToString(), typeof(GoogleCalendarService));
             }
             else
             {
@@ -549,7 +549,7 @@ namespace CalendarSyncPlus.GoogleServices.Google
             }
             catch (Exception exception)
             {
-                ApplicationLogger.LogError(exception.ToString());
+                ApplicationLogger.LogError(exception.ToString(), typeof(GoogleCalendarService));
                 addedAppointments.IsSuccess = false;
                 return addedAppointments;
             }
@@ -650,7 +650,7 @@ namespace CalendarSyncPlus.GoogleServices.Google
             }
             catch (Exception exception)
             {
-                ApplicationLogger.LogError(exception.ToString());
+                ApplicationLogger.LogError(exception.ToString(), typeof(GoogleCalendarService));
                 return false;
             }
             return true;
@@ -745,12 +745,12 @@ namespace CalendarSyncPlus.GoogleServices.Google
             }
             catch (GoogleApiException exception)
             {
-                ApplicationLogger.LogError(exception.ToString());
+                ApplicationLogger.LogError(exception.ToString(), typeof(GoogleCalendarService));
                 return null;
             }
             catch (Exception exception)
             {
-                ApplicationLogger.LogError(exception.ToString());
+                ApplicationLogger.LogError(exception.ToString(), typeof(GoogleCalendarService));
                 return null;
             }
 
@@ -829,7 +829,7 @@ namespace CalendarSyncPlus.GoogleServices.Google
             }
             catch (Exception exception)
             {
-                ApplicationLogger.LogError(exception.ToString());
+                ApplicationLogger.LogError(exception.ToString(), typeof(GoogleCalendarService));
                 return false;
             }
             return true;

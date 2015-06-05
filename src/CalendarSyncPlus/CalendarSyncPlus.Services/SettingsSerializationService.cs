@@ -92,7 +92,7 @@ namespace CalendarSyncPlus.Services
         {
             if (!File.Exists(SettingsFilePath))
             {
-                _applicationLogger.LogInfo("Settings file does not exist");
+                _applicationLogger.LogInfo("Settings file does not exist", typeof(SettingsSerializationService));
                 return null;
             }
             try
@@ -102,7 +102,7 @@ namespace CalendarSyncPlus.Services
             }
             catch (Exception exception)
             {
-                _applicationLogger.LogError(exception.ToString());
+                _applicationLogger.LogError(exception.ToString(), typeof(SettingsSerializationService));
                 return null;
             }
         }

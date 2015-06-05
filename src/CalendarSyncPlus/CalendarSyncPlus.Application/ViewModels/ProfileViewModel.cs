@@ -593,7 +593,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             catch (Exception aggregateException)
             {
                 string exception = aggregateException.ToString();
-                ApplicationLogger.LogError(exception);
+                ApplicationLogger.LogError(exception, typeof(ProfileViewModel));
             }
         }
 
@@ -640,20 +640,20 @@ namespace CalendarSyncPlus.Application.ViewModels
                     MessageService.ShowMessageAsync("Please select a Google account to get calendars");
                     return;
                 }
-                ApplicationLogger.LogInfo("Loading Google calendars...");
+                ApplicationLogger.LogInfo("Loading Google calendars...", typeof(ProfileViewModel));
                 await GetGoogleCalendarInternal();
-                ApplicationLogger.LogInfo("Google calendars loaded...");
+                ApplicationLogger.LogInfo("Google calendars loaded...", typeof(ProfileViewModel));
             }
             catch (AggregateException exception)
             {
                 AggregateException flattenException = exception.Flatten();
                 MessageService.ShowMessageAsync(flattenException.Message);
-                ApplicationLogger.LogError(flattenException.ToString());
+                ApplicationLogger.LogError(flattenException.ToString(), typeof(ProfileViewModel));
             }
             catch (Exception exception)
             {
                 MessageService.ShowMessageAsync(exception.Message);
-                ApplicationLogger.LogError(exception.ToString());
+                ApplicationLogger.LogError(exception.ToString(), typeof(ProfileViewModel));
             }
             finally
             {
@@ -689,7 +689,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             catch (Exception exception)
             {
                 MessageService.ShowMessageAsync("Unable to get Google calendars.");
-                ApplicationLogger.LogError(exception.ToString());
+                ApplicationLogger.LogError(exception.ToString(), typeof(ProfileViewModel));
             }
         }
 

@@ -278,7 +278,7 @@ namespace CalendarSyncPlus.ExchangeWebServices.ExchangeWeb
                 }
                 catch (Exception exception)
                 {
-                    ApplicationLogger.LogError(exception.ToString());
+                    ApplicationLogger.LogError(exception.ToString(), typeof(ExchangeWebCalendarService));
                 }
             }
             return exchangeServerSettings;
