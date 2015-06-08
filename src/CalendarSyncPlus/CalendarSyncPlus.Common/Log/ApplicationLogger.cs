@@ -20,6 +20,7 @@ namespace CalendarSyncPlus.Common.Log
         private ILog GetLogger(Type type)
         {
             string className = type.Name;
+            
             ILog logger = null;
             if (_logDictionary.ContainsKey(className))
             {
@@ -43,7 +44,7 @@ namespace CalendarSyncPlus.Common.Log
 
             var hierarchy = (Hierarchy)LogManager.GetRepository();
 
-            var patternLayout = new XmlLayout();
+            var patternLayout = new XmlLayoutSchemaLog4j();
             patternLayout.ActivateOptions();
 
             var roller = new RollingFileAppender()

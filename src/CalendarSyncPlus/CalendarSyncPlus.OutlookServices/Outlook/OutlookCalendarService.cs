@@ -1262,7 +1262,6 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
             Appointment calendarAppointment)
         {
             Recipients recipients = null;
-            UserProperties userProperties = null;
             try
             {
                 appItem.Subject = calendarAppointment.Subject;
@@ -1323,22 +1322,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
                     appItem.ReminderMinutesBeforeStart = calendarAppointment.ReminderMinutesBeforeStart;
                     appItem.ReminderSet = calendarAppointment.ReminderSet;
                 }
-
-                userProperties = appItem.UserProperties;
-                if (userProperties != null)
-                {
-                    for (int i = 0; i < userProperties.Count; i++)
-                    {
-                        userProperties.Remove(i);
-                    }
-
-                    foreach (var extendedProperty in calendarAppointment.ExtendedProperties)
-                    {
-                        UserProperty sourceProperty = userProperties.Add(extendedProperty.Key,
-                            OlUserPropertyType.olText);
-                        sourceProperty.Value = extendedProperty.Value;
-                    }
-                }
+                
                 appItem.Save();
             }
             catch (Exception exception)
@@ -1347,10 +1331,6 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
             }
             finally
             {
-                if (userProperties != null)
-                {
-                    Marshal.ReleaseComObject(userProperties);
-                }
                 if (recipients != null)
                 {
                     Marshal.ReleaseComObject(recipients);
@@ -1361,6 +1341,6 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
                 }
             }
         }
-
+        
     }
 }
