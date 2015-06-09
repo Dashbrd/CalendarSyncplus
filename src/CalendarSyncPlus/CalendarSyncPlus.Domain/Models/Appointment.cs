@@ -248,7 +248,7 @@ namespace CalendarSyncPlus.Domain.Models
                 return false;
             }
             // Instances are considered equal if the ToString matches.
-            return ToString() == appointment.ToString();
+            return this.ToString().Equals(appointment.ToString());
         }
 
 

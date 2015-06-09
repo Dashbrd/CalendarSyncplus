@@ -516,12 +516,11 @@ namespace CalendarSyncPlus.Services
                         //If sync mode is two way... add events to source
                         isSuccess = AddSourceAppointments(syncProfile, sourceCalendarSpecificData);
                     }
+                }
 
-
-                    if (isSuccess)
-                    {
-                        isSuccess = UpdateEntries(syncProfile, sourceCalendarSpecificData, destinationCalendarSpecificData);
-                    }
+                if (isSuccess)
+                {
+                    isSuccess = UpdateEntries(syncProfile, sourceCalendarSpecificData, destinationCalendarSpecificData);
                 }
             }
             SourceAppointments = null;
