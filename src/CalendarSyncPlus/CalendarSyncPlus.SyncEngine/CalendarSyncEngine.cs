@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
+using System.Security.Cryptography;
 using CalendarSyncPlus.Domain.Helpers;
 using CalendarSyncPlus.Domain.Models;
 using CalendarSyncPlus.SyncEngine.Helpers;
@@ -36,11 +37,13 @@ namespace CalendarSyncPlus.SyncEngine
         /// <param name="sourceList"></param>
         /// <param name="destinationList"></param>
         /// <param name="destAppointmentsToDelete"></param>
+        /// <param name="destAppointmentsToUpdate"></param>
         /// <param name="sourceAppointmentsToUpdate"></param>
         /// <param name="destOrphanEntries"></param>
         /// <returns></returns>
         void GetAppointmentsToDelete(CalendarSyncProfile syncProfile,
             List<Appointment> sourceList, List<Appointment> destinationList, List<Appointment> destAppointmentsToDelete,
+            List<Appointment> destAppointmentsToUpdate,
             List<Appointment> sourceAppointmentsToUpdate, List<Appointment> destOrphanEntries)
         {
             bool addDescription =
@@ -60,6 +63,31 @@ namespace CalendarSyncPlus.SyncEngine
                         //If mode is one way & user has disabled delete, do not remove this entry, as this is an original entry in the calendar
                         //Else this entry is not a copy of any appointment in source calendar so delete it
                         destOrphanEntries.Add(destAppointment);
+                    }
+                    else
+                    {
+                        if (destAppointment.ChildId == null)
+                        {
+                            var childAppointment = sourceList.FirstOrDefault(t => destAppointment.CompareSourceId(t));
+                            if (childAppointment != null)
+                            {
+                                destAppointment.ChildId = childAppointment.AppointmentId;
+                                string key = childAppointment.GetChildEntryKey();
+                                if (!destAppointment.ExtendedProperties.ContainsKey(key))
+                                {
+                                    destAppointment.ExtendedProperties.Add(key, childAppointment.AppointmentId);
+                                    destAppointmentsToUpdate.Add(destAppointment);
+                                }
+                            }
+                        }
+                        else if (syncProfile.SyncSettings.KeepLastModifiedVersion)
+                        {
+                            var childAppointment = sourceList.FirstOrDefault(t => t.AppointmentId.Equals(destAppointment.ChildId));
+                            if (childAppointment == null)
+                            {
+                                destAppointmentsToDelete.Add(destAppointment);
+                            }
+                        }
                     }
                 }
                 else
@@ -148,15 +176,36 @@ namespace CalendarSyncPlus.SyncEngine
             bool addAttendeesToDescription =
             syncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.AttendeesToDescription);
 
-            foreach (Appointment sourceAppointment in sourceList)
+            if (syncProfile.SyncSettings.SyncMode == SyncModeEnum.TwoWay &&
+                syncProfile.SyncSettings.KeepLastModifiedVersion)
             {
-                if (sourceAppointment.SourceId == null)
+                foreach (Appointment sourceAppointment in sourceList)
                 {
-                    var destinationAppointment = destinationList.FirstOrDefault(t =>
-                                    CompareAppointments(sourceAppointment, t, addDescription, addReminders, addAttendeesToDescription));
-                    if (destinationAppointment == null)
+                    if (sourceAppointment.SourceId == null && sourceAppointment.ChildId == null)
                     {
-                        appointmentsToAdd.Add(sourceAppointment);
+                        var destinationAppointment = destinationList.FirstOrDefault(t =>
+                            CompareAppointments(sourceAppointment, t, addDescription, addReminders,
+                                addAttendeesToDescription));
+                        if (destinationAppointment == null)
+                        {
+                            appointmentsToAdd.Add(sourceAppointment);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                foreach (Appointment sourceAppointment in sourceList)
+                {
+                    if (sourceAppointment.SourceId == null)
+                    {
+                        var destinationAppointment = destinationList.FirstOrDefault(t =>
+                            CompareAppointments(sourceAppointment, t, addDescription, addReminders,
+                                addAttendeesToDescription));
+                        if (destinationAppointment == null)
+                        {
+                            appointmentsToAdd.Add(sourceAppointment);
+                        }
                     }
                 }
             }
@@ -194,6 +243,31 @@ namespace CalendarSyncPlus.SyncEngine
                         //If mode is one way & user has disabled delete, do not remove this entry, as this is an original entry in the calendar
                         //Else this entry is not a copy of any appointment in source calendar so delete it
                         destOrphanEntries.Add(destAppointment);
+                    }
+                    else
+                    {
+                        if (destAppointment.ChildId == null)
+                        {
+                            var childAppointment = sourceList.FirstOrDefault(t => destAppointment.CompareSourceId(t));
+                            if (childAppointment != null)
+                            {
+                                destAppointment.ChildId = childAppointment.AppointmentId;
+                                string key = childAppointment.GetChildEntryKey();
+                                if (!destAppointment.ExtendedProperties.ContainsKey(key))
+                                {
+                                    destAppointment.ExtendedProperties.Add(key, childAppointment.AppointmentId);
+                                    destAppointmentsToUpdate.Add(destAppointment);
+                                }
+                            }
+                        }
+                        else if (syncProfile.SyncSettings.KeepLastModifiedVersion)
+                        {
+                            var childAppointment = sourceList.FirstOrDefault(t => t.AppointmentId.Equals(destAppointment.ChildId));
+                            if (childAppointment == null)
+                            {
+                                destAppointmentsToDelete.Add(destAppointment);
+                            }
+                        }
                     }
                 }
                 else
@@ -278,22 +352,34 @@ namespace CalendarSyncPlus.SyncEngine
                 //All entries need to be added
                 return;
             }
-            bool addDescription =
-                syncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Description);
-            bool addReminders =
-            syncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Reminders);
-            bool addAttendeesToDescription =
-            syncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.AttendeesToDescription);
-
-            foreach (Appointment sourceAppointment in sourceList)
+            if (syncProfile.SyncSettings.SyncMode == SyncModeEnum.TwoWay &&
+                syncProfile.SyncSettings.KeepLastModifiedVersion)
             {
-                if (sourceAppointment.SourceId == null)
+                foreach (Appointment sourceAppointment in sourceList)
                 {
-                    var destinationAppointment = destinationList.FirstOrDefault(t =>
-                                    t.Equals(sourceAppointment));
-                    if (destinationAppointment == null)
+                    if (sourceAppointment.SourceId == null && sourceAppointment.ChildId == null)
                     {
-                        appointmentsToAdd.Add(sourceAppointment);
+                        var destinationAppointment = destinationList.FirstOrDefault(t =>
+                            t.Equals(sourceAppointment));
+                        if (destinationAppointment == null)
+                        {
+                            appointmentsToAdd.Add(sourceAppointment);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                foreach (Appointment sourceAppointment in sourceList)
+                {
+                    if (sourceAppointment.SourceId == null)
+                    {
+                        var destinationAppointment = destinationList.FirstOrDefault(t =>
+                            t.Equals(sourceAppointment));
+                        if (destinationAppointment == null)
+                        {
+                            appointmentsToAdd.Add(sourceAppointment);
+                        }
                     }
                 }
             }
@@ -363,7 +449,7 @@ namespace CalendarSyncPlus.SyncEngine
             else
             {
                 GetAppointmentsToDelete(syncProfile, destinationList, sourceList, SourceAppointmentsToDelete,
-                    DestAppointmentsToUpdate, SourceOrphanEntries);
+                    SourceAppointmentsToUpdate, DestAppointmentsToUpdate, SourceOrphanEntries);
             }
             return true;
         }
@@ -391,7 +477,7 @@ namespace CalendarSyncPlus.SyncEngine
             else
             {
                 GetAppointmentsToDelete(syncProfile, sourceList, destinationList, DestAppointmentsToDelete,
-                    SourceAppointmentsToUpdate, DestOrphanEntries);
+                    DestAppointmentsToUpdate, SourceAppointmentsToUpdate, DestOrphanEntries);
             }
             return true;
         }

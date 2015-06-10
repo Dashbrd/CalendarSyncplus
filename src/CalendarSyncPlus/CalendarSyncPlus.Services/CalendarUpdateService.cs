@@ -184,23 +184,14 @@ namespace CalendarSyncPlus.Services
             return calendarSpecificData;
         }
 
-        private void LoadSourceId()
+        private void LoadSourceId(List<Appointment> appointmentList, string calendarId)
         {
-            if (SourceAppointments.Any())
+            if (appointmentList.Any())
             {
-                string calendarId = DestinationAppointments.CalendarId;
-                foreach (Appointment sourceAppointment in SourceAppointments)
+                foreach (Appointment sourceAppointment in appointmentList)
                 {
                     sourceAppointment.LoadSourceId(calendarId);
-                }
-            }
-
-            if (DestinationAppointments.Any())
-            {
-                string calendarId = SourceAppointments.CalendarId;
-                foreach (Appointment destAppointment in DestinationAppointments)
-                {
-                    destAppointment.LoadSourceId(calendarId);
+                    sourceAppointment.LoadChildId(calendarId);
                 }
             }
         }
@@ -243,7 +234,26 @@ namespace CalendarSyncPlus.Services
             SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
             if (isSuccess)
             {
+                LoadSourceId(appointmentsToAdd, SourceAppointments.CalendarId);
                 DestinationAppointments.AddRange(appointmentsToAdd);
+
+                //Add appointments to update
+                var updateSourceList = new List<Appointment>();
+                foreach (var appointment in appointmentsToAdd)
+                {
+                    var sourceApp = SourceAppointments.FirstOrDefault(t => t.CompareSourceId(appointment));
+                    if (sourceApp != null)
+                    {
+                        string childKey = appointment.GetChildEntryKey();
+                        if (!sourceApp.ExtendedProperties.ContainsKey(childKey))
+                        {
+                            sourceApp.ExtendedProperties.Add(childKey, appointment.AppointmentId);
+                            updateSourceList.Add(sourceApp);
+                        }
+                    }
+                }
+
+                CalendarSyncEngine.SourceAppointmentsToUpdate.AddRange(updateSourceList);
             }
             return isSuccess;
         }
@@ -253,6 +263,7 @@ namespace CalendarSyncPlus.Services
         /// </summary>
         /// <param name="syncProfile"></param>
         /// <param name="destinationCalendarSpecificData"></param>
+        /// <param name="syncCallback"></param>
         /// <returns></returns>
         private bool DeleteDestinationAppointments(CalendarSyncProfile syncProfile,
             IDictionary<string, object> destinationCalendarSpecificData, SyncCallback syncCallback)
@@ -360,7 +371,25 @@ namespace CalendarSyncPlus.Services
 
             if (isSuccess)
             {
+                LoadSourceId(addedAppointments, DestinationAppointments.CalendarId);
                 SourceAppointments.AddRange(addedAppointments);
+
+                //Add appointments to update
+                var updateDestList = new List<Appointment>();
+                foreach (var appointment in addedAppointments)
+                {
+                    var destApp = DestinationAppointments.FirstOrDefault(t => t.CompareSourceId(appointment));
+                    if (destApp != null)
+                    {
+                        var childKey = appointment.GetChildEntryKey();
+                        if (!destApp.ExtendedProperties.ContainsKey(childKey))
+                        {
+                            destApp.ExtendedProperties.Add(childKey, appointment.AppointmentId);
+                            updateDestList.Add(destApp);
+                        }
+                    }
+                }
+                CalendarSyncEngine.DestAppointmentsToUpdate.AddRange(updateDestList);
             }
 
             return isSuccess;
@@ -492,7 +521,8 @@ namespace CalendarSyncPlus.Services
 
                 if (isSuccess)
                 {
-                    LoadSourceId();
+                    LoadSourceId(DestinationAppointments, SourceAppointments.CalendarId);
+                    LoadSourceId(SourceAppointments, DestinationAppointments.CalendarId);
                 }
 
                 if (isSuccess)

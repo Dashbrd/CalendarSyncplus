@@ -83,7 +83,6 @@
     <Compile Include="SettingsSerializationService.cs" />
     <Compile Include="ShellService.cs" />
     <Compile Include="SyncService.cs" />
-    <Compile Include="Utilities\AppointmentHelper.cs" />
     <Compile Include="Utilities\Constants.cs" />
     <Compile Include="Utilities\Delegates.cs" />
     <Compile Include="Utilities\ExtensionMethods.cs" />

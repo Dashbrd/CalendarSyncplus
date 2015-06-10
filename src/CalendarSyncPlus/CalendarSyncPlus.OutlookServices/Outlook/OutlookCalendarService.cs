@@ -661,7 +661,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
                     await
                         Task<List<Appointment>>.Factory.StartNew(
                             () => GetAppointments(startDate, endDate));
-            
+
             if (appointmentList == null)
             {
                 return null;
@@ -1000,15 +1000,15 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
             {
                 if (userProperties != null)
                 {
-                    Marshal.ReleaseComObject(userProperties);
+                    Marshal.FinalReleaseComObject(userProperties);
                 }
                 if (recipients != null)
                 {
-                    Marshal.ReleaseComObject(recipients);
+                    Marshal.FinalReleaseComObject(recipients);
                 }
                 if (appItem != null)
                 {
-                    Marshal.ReleaseComObject(appItem);
+                    Marshal.FinalReleaseComObject(appItem);
                 }
             }
             return createdAppointment;
@@ -1055,7 +1055,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
                             if (parentAppointment != null)
                             {
                                 RecurrencePattern pattern = parentAppointment.GetRecurrencePattern();
-                                appointmentItem = pattern.GetOccurrence(DateTime.Parse(idArray[1]));
+                                appointmentItem = pattern.GetOccurrence(calendarAppointment.StartTime.GetValueOrDefault());
                             }
                         }
                         else
@@ -1189,7 +1189,10 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
                             var idArray = calendarAppointment.AppointmentId.Split(new[] { "_" }, StringSplitOptions.RemoveEmptyEntries);
                             var parentAppointment = nameSpace.GetItemFromID(idArray.FirstOrDefault()) as AppointmentItem;
                             RecurrencePattern pattern = parentAppointment.GetRecurrencePattern();
-                            appItem = pattern.GetOccurrence(calendarAppointment.OldStartTime.GetValueOrDefault());
+                            DateTime startTime = calendarAppointment.OldStartTime == null
+                                ? calendarAppointment.StartTime.GetValueOrDefault()
+                                : calendarAppointment.OldStartTime.GetValueOrDefault();
+                            appItem = pattern.GetOccurrence(startTime);
                         }
                         else
                         {
@@ -1262,6 +1265,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
             Appointment calendarAppointment)
         {
             Recipients recipients = null;
+            UserProperties userProperties = null;
             try
             {
                 appItem.Subject = calendarAppointment.Subject;
@@ -1322,7 +1326,33 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
                     appItem.ReminderMinutesBeforeStart = calendarAppointment.ReminderMinutesBeforeStart;
                     appItem.ReminderSet = calendarAppointment.ReminderSet;
                 }
-                
+
+                userProperties = appItem.UserProperties;
+                if (userProperties != null)
+                {
+                    if (userProperties.Count != calendarAppointment.ExtendedProperties.Count)
+                    {
+                        foreach (var extendedProperty in calendarAppointment.ExtendedProperties)
+                        {
+                            bool isFound = false;
+                            foreach (UserProperty userProperty in userProperties)
+                            {
+                                if (userProperty.Name.Equals(extendedProperty.Key))
+                                {
+                                    isFound = true;
+                                }
+                            }
+
+                            if (!isFound)
+                            {
+                                UserProperty sourceProperty = userProperties.Add(extendedProperty.Key,
+                                    OlUserPropertyType.olText);
+                                sourceProperty.Value = extendedProperty.Value;
+                            }
+                        }
+                    }
+                }
+
                 appItem.Save();
             }
             catch (Exception exception)
@@ -1333,14 +1363,18 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
             {
                 if (recipients != null)
                 {
-                    Marshal.ReleaseComObject(recipients);
+                    Marshal.FinalReleaseComObject(recipients);
+                }
+                if (userProperties != null)
+                {
+                    Marshal.FinalReleaseComObject(userProperties);
                 }
                 if (appItem != null)
                 {
-                    Marshal.ReleaseComObject(appItem);
+                    Marshal.FinalReleaseComObject(appItem);
                 }
             }
         }
-        
+
     }
 }
