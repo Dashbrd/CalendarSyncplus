@@ -8,11 +8,20 @@ namespace CalendarSyncPlus.SyncEngine.Helpers
     {
         public static bool CopyDetail(this Appointment appointment, Appointment otherAppointment, CalendarEntryOptionsEnum calendarEntryOptions)
         {
+            //Copy basic information
             appointment.OldStartTime = appointment.StartTime;
             appointment.StartTime = otherAppointment.StartTime;
             appointment.EndTime = otherAppointment.EndTime;
             appointment.Subject = otherAppointment.Subject;
             appointment.AllDayEvent = otherAppointment.AllDayEvent;
+            appointment.Location = otherAppointment.Location;
+            appointment.IsRecurring = otherAppointment.IsRecurring;
+
+            //Copy status
+            appointment.BusyStatus = otherAppointment.BusyStatus;
+            appointment.Privacy = otherAppointment.Privacy;
+            appointment.MeetingStatus = otherAppointment.MeetingStatus;
+
 
             if (calendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Description))
             {

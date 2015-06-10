@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using CalendarSyncPlus.Common.Log;
 using CalendarSyncPlus.Common.MetaData;
 using CalendarSyncPlus.Domain.Models;
+using CalendarSyncPlus.Domain.Wrappers;
 using CalendarSyncPlus.Services;
 using CalendarSyncPlus.Services.Interfaces;
 using CalendarSyncPlus.Services.Wrappers;
@@ -46,7 +47,7 @@ namespace CalendarSyncPlus.ExchangeWebServices.ExchangeWeb
 
         public List<EWSCalendar> GetCalendarsAsync(int maxFoldersToRetrive)
         {
-            
+
             ExchangeService service = GetExchangeService(null);
 
             // Create a new folder view, and pass in the maximum number of folders to return.
@@ -102,7 +103,7 @@ namespace CalendarSyncPlus.ExchangeWebServices.ExchangeWeb
 
 
             ExchangeService service = GetExchangeService(ExchangeServerSettings);
-            
+
             var calendarview = new CalendarView(startDate, endDate);
 
             // Get Default Calendar
@@ -202,7 +203,8 @@ namespace CalendarSyncPlus.ExchangeWebServices.ExchangeWeb
         {
             return attendeeCollection.Select(attendee => new Recipient
             {
-                Name = attendee.Name, Email = attendee.Address
+                Name = attendee.Name,
+                Email = attendee.Address
             }).ToList();
         }
 
@@ -229,7 +231,7 @@ namespace CalendarSyncPlus.ExchangeWebServices.ExchangeWeb
                         exchangeServerSettings.Domain);
                 }
                 //service.Credentials = new WebCredentials("user1@contoso.com", "password");
-                return service; 
+                return service;
             }
             return null;
         }
@@ -278,7 +280,7 @@ namespace CalendarSyncPlus.ExchangeWebServices.ExchangeWeb
                 }
                 catch (Exception exception)
                 {
-                    ApplicationLogger.LogError(exception.ToString());
+                    ApplicationLogger.LogError(exception.ToString(), typeof(ExchangeWebCalendarService));
                 }
             }
             return exchangeServerSettings;

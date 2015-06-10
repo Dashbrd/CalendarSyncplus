@@ -29,6 +29,7 @@ using CalendarSyncPlus.Common.Log;
 using CalendarSyncPlus.Common.MetaData;
 using CalendarSyncPlus.Domain.Helpers;
 using CalendarSyncPlus.Domain.Models;
+using CalendarSyncPlus.Domain.Wrappers;
 using CalendarSyncPlus.Services.Interfaces;
 using CalendarSyncPlus.Services.Utilities;
 using CalendarSyncPlus.Services.Wrappers;
@@ -184,23 +185,14 @@ namespace CalendarSyncPlus.Services
             return calendarSpecificData;
         }
 
-        private void LoadSourceId()
+        private void LoadSourceId(List<Appointment> appointmentList, string calendarId)
         {
-            if (SourceAppointments.Any())
+            if (appointmentList.Any())
             {
-                string calendarId = DestinationAppointments.CalendarId;
-                foreach (Appointment sourceAppointment in SourceAppointments)
+                foreach (Appointment sourceAppointment in appointmentList)
                 {
                     sourceAppointment.LoadSourceId(calendarId);
-                }
-            }
-
-            if (DestinationAppointments.Any())
-            {
-                string calendarId = SourceAppointments.CalendarId;
-                foreach (Appointment destAppointment in DestinationAppointments)
-                {
-                    destAppointment.LoadSourceId(calendarId);
+                    sourceAppointment.LoadChildId(calendarId);
                 }
             }
         }
@@ -243,7 +235,12 @@ namespace CalendarSyncPlus.Services
             SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
             if (isSuccess)
             {
-                DestinationAppointments.AddRange(appointmentsToAdd);
+                LoadSourceId(addedAppointments, SourceAppointments.CalendarId);
+                DestinationAppointments.AddRange(addedAppointments);
+
+                //Add appointments to update
+                var updateSourceList = UpdateWithChildId(addedAppointments, SourceAppointments);
+                CalendarSyncEngine.SourceAppointmentsToUpdate.AddRange(updateSourceList);
             }
             return isSuccess;
         }
@@ -253,6 +250,7 @@ namespace CalendarSyncPlus.Services
         /// </summary>
         /// <param name="syncProfile"></param>
         /// <param name="destinationCalendarSpecificData"></param>
+        /// <param name="syncCallback"></param>
         /// <returns></returns>
         private bool DeleteDestinationAppointments(CalendarSyncProfile syncProfile,
             IDictionary<string, object> destinationCalendarSpecificData, SyncCallback syncCallback)
@@ -360,10 +358,38 @@ namespace CalendarSyncPlus.Services
 
             if (isSuccess)
             {
+                LoadSourceId(addedAppointments, DestinationAppointments.CalendarId);
                 SourceAppointments.AddRange(addedAppointments);
+
+                var updateDestList = UpdateWithChildId(addedAppointments, DestinationAppointments);
+                CalendarSyncEngine.DestAppointmentsToUpdate.AddRange(updateDestList);
             }
 
             return isSuccess;
+        }
+
+        private List<Appointment> UpdateWithChildId(CalendarAppointments addedAppointments, CalendarAppointments existingAppointments)
+        {
+            //Add appointments to update
+            var updateList = new List<Appointment>();
+            foreach (var appointment in addedAppointments)
+            {
+                var presentAppointment = existingAppointments.FirstOrDefault(t => t.CompareSourceId(appointment));
+                if (presentAppointment != null)
+                {
+                    var childKey = appointment.GetChildEntryKey();
+                    if (!presentAppointment.ExtendedProperties.ContainsKey(childKey))
+                    {
+                        presentAppointment.ExtendedProperties.Add(childKey, appointment.AppointmentId);
+                    }
+                    else
+                    {
+                        presentAppointment.ExtendedProperties[childKey] = appointment.AppointmentId;
+                    }
+                    updateList.Add(presentAppointment);
+                }
+            }
+            return updateList;
         }
 
         /// <summary>
@@ -492,7 +518,8 @@ namespace CalendarSyncPlus.Services
 
                 if (isSuccess)
                 {
-                    LoadSourceId();
+                    LoadSourceId(DestinationAppointments, SourceAppointments.CalendarId);
+                    LoadSourceId(SourceAppointments, DestinationAppointments.CalendarId);
                 }
 
                 if (isSuccess)
@@ -516,12 +543,11 @@ namespace CalendarSyncPlus.Services
                         //If sync mode is two way... add events to source
                         isSuccess = AddSourceAppointments(syncProfile, sourceCalendarSpecificData);
                     }
+                }
 
-
-                    if (isSuccess)
-                    {
-                        isSuccess = UpdateEntries(syncProfile, sourceCalendarSpecificData, destinationCalendarSpecificData);
-                    }
+                if (isSuccess)
+                {
+                    isSuccess = UpdateEntries(syncProfile, sourceCalendarSpecificData, destinationCalendarSpecificData);
                 }
             }
             SourceAppointments = null;

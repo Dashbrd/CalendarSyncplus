@@ -108,13 +108,13 @@ namespace CalendarSyncPlus.Services
             {
                 AggregateException flattenException = exception.Flatten();
                 _messageService.ShowMessageAsync(flattenException.Message);
-                _applicationLogger.LogError(exception.ToString());
+                _applicationLogger.LogError(exception.ToString(), typeof(SyncService));
                 return flattenException.Message;
             }
             catch (Exception exception)
             {
                 _messageService.ShowMessageAsync(exception.Message);
-                _applicationLogger.LogError(exception.ToString());
+                _applicationLogger.LogError(exception.ToString(), typeof(SyncService));
                 return exception.Message;
             }
         }

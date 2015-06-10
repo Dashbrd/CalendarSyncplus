@@ -223,6 +223,7 @@
                                 ToolTip="{localizeExtension:LocText Key=OptionsSettingsView_ContentControl_OtherOptions_KeepLastModified_Content}" />
                 <CheckBox Grid.Row="3"
                           Margin="2"
+                          Visibility="Collapsed"
                           Content="{localizeExtension:LocText Key=OptionsSettingsView_CheckBox_OtherOptions_MergeExistingEntries_Content}"
                           IsChecked="{Binding MergeExistingEntries,
                                               Mode=TwoWay}"
@@ -232,6 +233,7 @@
                 <ContentControl Margin="2"
                                 Grid.Row="3"
                                 Grid.Column="1"
+                                Visibility="Collapsed"
                                 ContentTemplate="{DynamicResource HelpButtonTemplate}"
                                 ToolTip="{localizeExtension:LocText Key=OptionsSettingsView_ContentControl_OtherOptions_MergeExistingEntries_Content}" />
             </Grid>

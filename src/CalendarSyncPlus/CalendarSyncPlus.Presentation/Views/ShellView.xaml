@@ -111,8 +111,38 @@
 
     <controls:MetroWindow.RightWindowCommands>
         <controls:WindowCommands>
-            <Button Command="{Binding ShowWhatsNewCommand}"
-                    Content="What's New"/>
+            <Button Command="{Binding ExitCommand}"
+                    ToolTip="{localizeExtension:LocText Key=ShellView_ExitButton_ToolTip}">
+                <!--Content="{localizeExtension:LocText Key=ShellView_ExitButton_Content}"-->
+                <StackPanel Orientation="Horizontal">
+                    <Rectangle Width="20"
+                               Height="20"
+                               Margin="2"
+                               VerticalAlignment="Center"
+                               Fill="{Binding RelativeSource={RelativeSource AncestorType=Button},
+                                              Path=Foreground}">
+                        <Rectangle.OpacityMask>
+                            <VisualBrush Stretch="Fill"
+                                         Visual="{StaticResource appbar_door_leave}" />
+                        </Rectangle.OpacityMask>
+                    </Rectangle>
+                </StackPanel>
+            </Button>
+            <Button Command="{Binding ShowWhatsNewCommand}" ToolTip="What's New in this version">
+                <StackPanel Orientation="Horizontal">
+                    <Rectangle Width="30"
+                               Height="18"
+                               Margin="2"
+                               VerticalAlignment="Center"
+                               Fill="{Binding RelativeSource={RelativeSource AncestorType=Button},
+                                              Path=Foreground}">
+                        <Rectangle.OpacityMask>
+                            <VisualBrush Stretch="Fill"
+                                         Visual="{StaticResource appbar_newspaper}" />
+                        </Rectangle.OpacityMask>
+                    </Rectangle>
+                </StackPanel>
+            </Button>
 
             <Button Command="{Binding DownloadCommand}"
                     ToolTip="{localizeExtension:LocText Key=ShellView_RightWindowCommands_Download_Tooltip}"
@@ -132,26 +162,65 @@
                     <TextBlock Margin="4 0 0 0"
                                VerticalAlignment="Center"
                                FontWeight="800"
-                               Foreground="GreenYellow"
+                               Foreground="LawnGreen"
                                Text="{Binding LatestVersion,
                                               UpdateSourceTrigger=PropertyChanged,
                                               StringFormat='{}{0}'}" />
                 </StackPanel>
             </Button>
-            <Button Command="{Binding ExitCommand}"
-                    Content="{localizeExtension:LocText Key=ShellView_ExitButton_Content}"
-                    ToolTip="{localizeExtension:LocText Key=ShellView_ExitButton_ToolTip}" />
             <Button Command="{Binding LaunchSettings}"
-                    Content="{localizeExtension:LocText Key=ShellView_SettingsButton_Content}"
                     IsEnabled="{Binding IsSyncInProgress,
                                         Converter={StaticResource InvertBooleanConverter}}"
-                    ToolTip="{localizeExtension:LocText Key=ShellView_SettingsButton_ToolTip}" />
+                    ToolTip="{localizeExtension:LocText Key=ShellView_SettingsButton_ToolTip}">
+                <!--Content="{localizeExtension:LocText Key=ShellView_SettingsButton_Content}"-->
+                <StackPanel Orientation="Horizontal">
+                    <Rectangle Width="20"
+                               Height="20"
+                               Margin="2"
+                               VerticalAlignment="Center"
+                               Fill="{Binding RelativeSource={RelativeSource AncestorType=Button},
+                                              Path=Foreground}">
+                        <Rectangle.OpacityMask>
+                            <VisualBrush Stretch="Fill"
+                                         Visual="{StaticResource appbar_settings}" />
+                        </Rectangle.OpacityMask>
+                    </Rectangle>
+                </StackPanel>
+            </Button>
             <Button Command="{Binding LaunchAbout}"
-                    Content="{localizeExtension:LocText Key=ShellView_AboutButton_Content}"
-                    ToolTip="{localizeExtension:LocText Key=ShellView_AboutButton_ToolTip}" />
+                    ToolTip="{localizeExtension:LocText Key=ShellView_AboutButton_ToolTip}">
+                <!--Content="{localizeExtension:LocText Key=ShellView_AboutButton_Content}"-->
+                <StackPanel Orientation="Horizontal">
+                    <Rectangle Width="20"
+                               Height="20"
+                               Margin="2"
+                               VerticalAlignment="Center"
+                               Fill="{Binding RelativeSource={RelativeSource AncestorType=Button},
+                                              Path=Foreground}">
+                        <Rectangle.OpacityMask>
+                            <VisualBrush Stretch="Fill"
+                                         Visual="{StaticResource appbar_information_circle}" />
+                        </Rectangle.OpacityMask>
+                    </Rectangle>
+                </StackPanel>
+            </Button>
             <Button Command="{Binding LaunchHelp}"
-                    Content="{localizeExtension:LocText Key=ShellView_HelpButton_Content}"
-                    ToolTip="{localizeExtension:LocText Key=ShellView_HelpButton_ToolTip}" />
+                    ToolTip="{localizeExtension:LocText Key=ShellView_HelpButton_ToolTip}">
+                <!--Content="{localizeExtension:LocText Key=ShellView_HelpButton_Content}"-->
+                <StackPanel Orientation="Horizontal">
+                    <Rectangle Width="20"
+                               Height="20"
+                               Margin="2"
+                               VerticalAlignment="Center"
+                               Fill="{Binding RelativeSource={RelativeSource AncestorType=Button},
+                                              Path=Foreground}">
+                        <Rectangle.OpacityMask>
+                            <VisualBrush Stretch="Fill"
+                                         Visual="{StaticResource appbar_book_perspective_help}" />
+                        </Rectangle.OpacityMask>
+                    </Rectangle>
+                </StackPanel>
+            </Button>
         </controls:WindowCommands>
     </controls:MetroWindow.RightWindowCommands>
     <views:HomeView DataContext="{Binding}" />

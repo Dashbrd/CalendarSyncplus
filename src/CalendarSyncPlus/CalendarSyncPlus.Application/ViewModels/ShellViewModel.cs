@@ -412,7 +412,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             }
             catch (Exception exception)
             {
-                ApplicationLogger.LogError(exception);
+                ApplicationLogger.LogError(exception, typeof(ShellViewModel));
             }
         }
 
@@ -425,7 +425,7 @@ namespace CalendarSyncPlus.Application.ViewModels
                     UpdateNotification(text);
                 }
                 _statusBuilder.AppendLine(text);
-                ApplicationLogger.LogInfo(text);
+                ApplicationLogger.LogInfo(text, typeof(ShellViewModel));
                 RaisePropertyChanged("SyncLog");
             });
         }
@@ -447,7 +447,7 @@ namespace CalendarSyncPlus.Application.ViewModels
                 }
                 catch (Exception exception)
                 {
-                    ApplicationLogger.LogError(exception.Message);
+                    ApplicationLogger.LogError(exception.Message, typeof(ShellViewModel));
                 }
             }
         }
@@ -462,7 +462,7 @@ namespace CalendarSyncPlus.Application.ViewModels
                 }
                 catch (Exception exception)
                 {
-                    ApplicationLogger.LogError("Updating status in balloon", exception);
+                    ApplicationLogger.LogError("Updating status in balloon", exception, typeof(ShellViewModel));
                 }
             }
         }
@@ -665,7 +665,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             }
             catch (Exception exception)
             {
-                ApplicationLogger.LogError("First Launch Key Not found");
+                ApplicationLogger.LogError("First Launch Key Not found", typeof(ShellViewModel));
             }
         }
 

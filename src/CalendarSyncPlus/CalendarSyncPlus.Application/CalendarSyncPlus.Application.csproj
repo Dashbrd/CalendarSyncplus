@@ -107,6 +107,7 @@
     <Compile Include="ViewModels\IChildContentViewModel.cs" />
     <Compile Include="ViewModels\IChildContentViewModelMetaData.cs" />
     <Compile Include="ViewModels\IntervalSyncViewModel.cs" />
+    <Compile Include="ViewModels\LogViewModel.cs" />
     <Compile Include="ViewModels\ProfileViewModel.cs" />
     <Compile Include="ViewModels\ProxySettingsDataModel.cs" />
     <Compile Include="ViewModels\SyncFrequencyViewModel.cs" />
@@ -115,6 +116,7 @@
     <Compile Include="ViewModels\WhatsNewViewModel.cs" />
     <Compile Include="Views\IAboutView.cs" />
     <Compile Include="Views\IHelpView.cs" />
+    <Compile Include="Views\ILogView.cs" />
     <Compile Include="Views\ISettingsView.cs" />
     <Compile Include="Views\IShellView.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />

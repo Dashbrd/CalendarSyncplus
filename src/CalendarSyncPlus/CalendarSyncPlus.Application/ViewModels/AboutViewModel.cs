@@ -98,7 +98,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             }
             catch (Exception exception)
             {
-                ApplicationLogger.LogError(exception);
+                ApplicationLogger.LogError(exception, typeof(AboutViewModel));
             }
         }
 

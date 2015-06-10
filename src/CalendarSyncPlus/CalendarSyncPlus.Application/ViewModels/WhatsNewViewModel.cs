@@ -28,7 +28,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             if (!File.Exists(releaseNotesPath))
             {
                 Logger.LogError(String.Format("Release Notes Not Found  at the location {0}{1}", Environment.NewLine,
-                    releaseNotesPath));
+                    releaseNotesPath), typeof(WhatsNewViewModel));
                 Text = @"<h1>No Release Notes Found. Report Error to Developers</h1>";
             }
             var notes=File.ReadAllText(releaseNotesPath);

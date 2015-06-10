@@ -77,7 +77,7 @@ namespace CalendarSyncPlus.Services
             }
             catch (Exception exception)
             {
-                ApplicationLogger.LogError(exception.ToString());
+                ApplicationLogger.LogError(exception.ToString(), typeof(ApplicationUpdateService));
                 return exception.Message;
             }
             return null;
@@ -161,7 +161,7 @@ namespace CalendarSyncPlus.Services
             }
             catch (Exception exception)
             {
-                ApplicationLogger.LogError(exception.ToString());
+                ApplicationLogger.LogError(exception.ToString(), typeof(ApplicationUpdateService));
             }
             return false;
         }
@@ -178,7 +178,7 @@ namespace CalendarSyncPlus.Services
             }
             catch (Exception exception)
             {
-                ApplicationLogger.LogError(exception);
+                ApplicationLogger.LogError(exception, typeof(ApplicationUpdateService));
             }
             return _version;
         }

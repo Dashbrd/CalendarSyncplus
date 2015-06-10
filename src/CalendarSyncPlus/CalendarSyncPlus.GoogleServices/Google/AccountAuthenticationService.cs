@@ -85,12 +85,12 @@ namespace CalendarSyncPlus.GoogleServices.Google
             }
             catch (AggregateException exception)
             {
-                ApplicationLogger.LogError(exception.ToString());
+                ApplicationLogger.LogError(exception.ToString(), typeof(AccountAuthenticationService));
                 return null;
             }
             catch (Exception exception)
             {
-                ApplicationLogger.LogError(exception.ToString());
+                ApplicationLogger.LogError(exception.ToString(), typeof(AccountAuthenticationService));
                 return null;
             }
         }
@@ -156,7 +156,7 @@ namespace CalendarSyncPlus.GoogleServices.Google
             }
             catch (Exception exception)
             {
-                ApplicationLogger.LogError(exception.ToString());
+                ApplicationLogger.LogError(exception.ToString(), typeof(AccountAuthenticationService));
                 return false;
             }
         }
@@ -201,11 +201,11 @@ namespace CalendarSyncPlus.GoogleServices.Google
             }
             catch (AggregateException exception)
             {
-                ApplicationLogger.LogError(exception.ToString());
+                ApplicationLogger.LogError(exception.ToString(), typeof(AccountAuthenticationService));
             }
             catch (Exception exception)
             {
-                ApplicationLogger.LogError(exception.ToString());
+                ApplicationLogger.LogError(exception.ToString(), typeof(AccountAuthenticationService));
             }
             return false;
         }

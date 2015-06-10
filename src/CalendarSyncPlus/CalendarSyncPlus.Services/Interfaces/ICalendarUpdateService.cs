@@ -21,6 +21,7 @@
 
 using System.ComponentModel;
 using CalendarSyncPlus.Domain.Models;
+using CalendarSyncPlus.Domain.Wrappers;
 using CalendarSyncPlus.Services.Utilities;
 using CalendarSyncPlus.Services.Wrappers;
 

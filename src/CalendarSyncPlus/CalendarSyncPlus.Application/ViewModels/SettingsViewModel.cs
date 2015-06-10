@@ -708,7 +708,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             }
             catch (Exception exception)
             {
-                ApplicationLogger.LogError(exception.ToString());
+                ApplicationLogger.LogError(exception.ToString(), typeof(SettingsViewModel));
                 MessageService.ShowMessageAsync("Invalid Proxy Settings. Proxy settings cannot be applied");
             }
         }

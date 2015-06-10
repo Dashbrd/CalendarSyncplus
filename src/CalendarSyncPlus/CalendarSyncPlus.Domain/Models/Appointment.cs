@@ -53,6 +53,7 @@ namespace CalendarSyncPlus.Domain.Models
         private bool _reminderSet;
         private List<Recipient> _requiredAttendees;
         private string _sourceId;
+        private string _childId;
         private DateTime? _startTime;
         private string _subject;
         private MeetingStatusEnum _meetingStatus;
@@ -123,6 +124,12 @@ namespace CalendarSyncPlus.Domain.Models
         {
             get { return _sourceId; }
             set { SetProperty(ref _sourceId, value); }
+        }
+
+        public string ChildId
+        {
+            get { return _childId; }
+            set { SetProperty(ref _childId, value); }
         }
 
         public string CalendarId
@@ -248,7 +255,7 @@ namespace CalendarSyncPlus.Domain.Models
                 return false;
             }
             // Instances are considered equal if the ToString matches.
-            return ToString() == appointment.ToString();
+            return this.ToString().Equals(appointment.ToString());
         }
 
 

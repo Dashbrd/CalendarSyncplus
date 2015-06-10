@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CalendarSyncPlus.Domain.Models;
+using CalendarSyncPlus.Domain.Wrappers;
 
 namespace CalendarSyncPlus.SyncEngine.Interfaces
 {
@@ -51,8 +52,8 @@ namespace CalendarSyncPlus.SyncEngine.Interfaces
         /// <param name="sourceList"></param>
         /// <param name="destinationList"></param>
         /// <returns></returns>
-        bool GetSourceEntriesToDelete(CalendarSyncProfile syncProfile, List<Appointment> sourceList,
-            List<Appointment> destinationList);
+        bool GetSourceEntriesToDelete(CalendarSyncProfile syncProfile, CalendarAppointments sourceList,
+            CalendarAppointments destinationList);
         /// <summary>
         /// 
         /// </summary>
@@ -60,8 +61,8 @@ namespace CalendarSyncPlus.SyncEngine.Interfaces
         /// <param name="sourceList"></param>
         /// <param name="destinationList"></param>
         /// <returns></returns>
-        bool GetSourceEntriesToAdd(CalendarSyncProfile syncProfile, List<Appointment> sourceList,
-            List<Appointment> destinationList);
+        bool GetSourceEntriesToAdd(CalendarSyncProfile syncProfile, CalendarAppointments sourceList,
+            CalendarAppointments destinationList);
         /// <summary>
         /// 
         /// </summary>
@@ -69,8 +70,8 @@ namespace CalendarSyncPlus.SyncEngine.Interfaces
         /// <param name="sourceList"></param>
         /// <param name="destinationList"></param>
         /// <returns></returns>
-        bool GetDestEntriesToDelete(CalendarSyncProfile syncProfile, List<Appointment> sourceList,
-            List<Appointment> destinationList);
+        bool GetDestEntriesToDelete(CalendarSyncProfile syncProfile, CalendarAppointments sourceList,
+            CalendarAppointments destinationList);
         /// <summary>
         /// 
         /// </summary>
@@ -78,8 +79,8 @@ namespace CalendarSyncPlus.SyncEngine.Interfaces
         /// <param name="sourceList"></param>
         /// <param name="destinationList"></param>
         /// <returns></returns>
-        bool GetDestEntriesToAdd(CalendarSyncProfile syncProfile, List<Appointment> sourceList,
-            List<Appointment> destinationList);
+        bool GetDestEntriesToAdd(CalendarSyncProfile syncProfile, CalendarAppointments sourceList,
+            CalendarAppointments destinationList);
         /// <summary>
         /// 
         /// </summary>

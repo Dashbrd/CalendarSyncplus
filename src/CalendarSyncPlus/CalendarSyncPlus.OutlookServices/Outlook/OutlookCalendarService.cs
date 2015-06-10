@@ -31,6 +31,7 @@ using CalendarSyncPlus.Common.Log;
 using CalendarSyncPlus.Common.MetaData;
 using CalendarSyncPlus.Domain.Helpers;
 using CalendarSyncPlus.Domain.Models;
+using CalendarSyncPlus.Domain.Wrappers;
 using CalendarSyncPlus.OutlookServices.Utilities;
 using CalendarSyncPlus.Services;
 using CalendarSyncPlus.Services.Interfaces;
@@ -174,7 +175,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
                                 }
                                 catch (Exception exception)
                                 {
-                                    ApplicationLogger.LogError(exception.ToString());
+                                    ApplicationLogger.LogError(exception.ToString(), typeof(OutlookCalendarService));
                                 }
                                 finally
                                 {
@@ -187,7 +188,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
             }
             catch (Exception exception)
             {
-                ApplicationLogger.LogError(exception.Message);
+                ApplicationLogger.LogError(exception.Message, typeof(OutlookCalendarService));
                 return new AppointmentListWrapper
                 {
                     Appointments = null,
@@ -296,7 +297,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
             }
             catch (Exception exception)
             {
-                ApplicationLogger.LogError(exception.ToString());
+                ApplicationLogger.LogError(exception.ToString(), typeof(OutlookCalendarService));
             }
             finally
             {
@@ -415,7 +416,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
             catch (Exception exception)
             {
                 ApplicationLogger.LogInfo(string.Format("Unable to retrieve Email for the User : {0}{1}{2}", recip.Name,
-                    Environment.NewLine, exception.Message));
+                    Environment.NewLine, exception.Message), typeof(OutlookCalendarService));
             }
             return smtpAddress;
         }
@@ -453,7 +454,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
             }
             catch (Exception exception)
             {
-                ApplicationLogger.LogError(exception.ToString());
+                ApplicationLogger.LogError(exception.ToString(), typeof(OutlookCalendarService));
             }
             finally
             {
@@ -540,7 +541,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
             }
             catch (Exception exception)
             {
-                ApplicationLogger.LogError(exception.Message);
+                ApplicationLogger.LogError(exception.Message, typeof(OutlookCalendarService));
                 return new AppointmentListWrapper
                 {
                     Appointments = null,
@@ -605,7 +606,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
             }
             catch (Exception exception)
             {
-                ApplicationLogger.LogError(exception.ToString());
+                ApplicationLogger.LogError(exception.ToString(), typeof(OutlookCalendarService));
             }
             finally
             {
@@ -661,7 +662,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
                     await
                         Task<List<Appointment>>.Factory.StartNew(
                             () => GetAppointments(startDate, endDate));
-            
+
             if (appointmentList == null)
             {
                 return null;
@@ -856,7 +857,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
             }
             catch (Exception exception)
             {
-                ApplicationLogger.LogError(exception.ToString());
+                ApplicationLogger.LogError(exception.ToString(), typeof(OutlookCalendarService));
                 return new AppointmentListWrapper
                 {
                     WaitForApplicationQuit = disposeOutlookInstances,
@@ -994,21 +995,21 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
             }
             catch (Exception exception)
             {
-                ApplicationLogger.LogError(exception.Message);
+                ApplicationLogger.LogError(exception.Message, typeof(OutlookCalendarService));
             }
             finally
             {
                 if (userProperties != null)
                 {
-                    Marshal.ReleaseComObject(userProperties);
+                    Marshal.FinalReleaseComObject(userProperties);
                 }
                 if (recipients != null)
                 {
-                    Marshal.ReleaseComObject(recipients);
+                    Marshal.FinalReleaseComObject(recipients);
                 }
                 if (appItem != null)
                 {
-                    Marshal.ReleaseComObject(appItem);
+                    Marshal.FinalReleaseComObject(appItem);
                 }
             }
             return createdAppointment;
@@ -1055,7 +1056,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
                             if (parentAppointment != null)
                             {
                                 RecurrencePattern pattern = parentAppointment.GetRecurrencePattern();
-                                appointmentItem = pattern.GetOccurrence(DateTime.Parse(idArray[1]));
+                                appointmentItem = pattern.GetOccurrence(calendarAppointment.StartTime.GetValueOrDefault());
                             }
                         }
                         else
@@ -1071,13 +1072,13 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
                     }
                     catch (Exception exception)
                     {
-                        ApplicationLogger.LogError(exception.ToString());
+                        ApplicationLogger.LogError(exception.ToString(), typeof(OutlookCalendarService));
                     }
                 }
             }
             catch (Exception exception)
             {
-                ApplicationLogger.LogError(exception.ToString());
+                ApplicationLogger.LogError(exception.ToString(), typeof(OutlookCalendarService));
                 return new AppointmentListWrapper
                 {
                     WaitForApplicationQuit = disposeOutlookInstances,
@@ -1189,7 +1190,10 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
                             var idArray = calendarAppointment.AppointmentId.Split(new[] { "_" }, StringSplitOptions.RemoveEmptyEntries);
                             var parentAppointment = nameSpace.GetItemFromID(idArray.FirstOrDefault()) as AppointmentItem;
                             RecurrencePattern pattern = parentAppointment.GetRecurrencePattern();
-                            appItem = pattern.GetOccurrence(calendarAppointment.OldStartTime.GetValueOrDefault());
+                            DateTime startTime = calendarAppointment.OldStartTime == null
+                                ? calendarAppointment.StartTime.GetValueOrDefault()
+                                : calendarAppointment.OldStartTime.GetValueOrDefault();
+                            appItem = pattern.GetOccurrence(startTime);
                         }
                         else
                         {
@@ -1205,13 +1209,13 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
                     }
                     catch (Exception exception)
                     {
-                        ApplicationLogger.LogError(exception);
+                        ApplicationLogger.LogError(exception, typeof(OutlookCalendarService));
                     }
                 }
             }
             catch (Exception exception)
             {
-                ApplicationLogger.LogError(exception);
+                ApplicationLogger.LogError(exception, typeof(OutlookCalendarService));
                 return new AppointmentListWrapper
                 {
                     WaitForApplicationQuit = disposeOutlookInstances,
@@ -1329,35 +1333,37 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
                 {
                     for (int i = 0; i < userProperties.Count; i++)
                     {
-                        userProperties.Remove(i);
+                        userProperties.Remove(i+1);
                     }
 
                     foreach (var extendedProperty in calendarAppointment.ExtendedProperties)
                     {
                         UserProperty sourceProperty = userProperties.Add(extendedProperty.Key,
-                            OlUserPropertyType.olText);
+                                OlUserPropertyType.olText);
                         sourceProperty.Value = extendedProperty.Value;
                     }
+
                 }
+
                 appItem.Save();
             }
             catch (Exception exception)
             {
-                ApplicationLogger.LogError(exception.Message);
+                ApplicationLogger.LogError(exception.Message, typeof(OutlookCalendarService));
             }
             finally
             {
-                if (userProperties != null)
-                {
-                    Marshal.ReleaseComObject(userProperties);
-                }
                 if (recipients != null)
                 {
-                    Marshal.ReleaseComObject(recipients);
+                    Marshal.FinalReleaseComObject(recipients);
+                }
+                if (userProperties != null)
+                {
+                    Marshal.FinalReleaseComObject(userProperties);
                 }
                 if (appItem != null)
                 {
-                    Marshal.ReleaseComObject(appItem);
+                    Marshal.FinalReleaseComObject(appItem);
                 }
             }
         }
