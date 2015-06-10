@@ -234,25 +234,11 @@ namespace CalendarSyncPlus.Services
             SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
             if (isSuccess)
             {
-                LoadSourceId(appointmentsToAdd, SourceAppointments.CalendarId);
-                DestinationAppointments.AddRange(appointmentsToAdd);
+                LoadSourceId(addedAppointments, SourceAppointments.CalendarId);
+                DestinationAppointments.AddRange(addedAppointments);
 
                 //Add appointments to update
-                var updateSourceList = new List<Appointment>();
-                foreach (var appointment in appointmentsToAdd)
-                {
-                    var sourceApp = SourceAppointments.FirstOrDefault(t => t.CompareSourceId(appointment));
-                    if (sourceApp != null)
-                    {
-                        string childKey = appointment.GetChildEntryKey();
-                        if (!sourceApp.ExtendedProperties.ContainsKey(childKey))
-                        {
-                            sourceApp.ExtendedProperties.Add(childKey, appointment.AppointmentId);
-                            updateSourceList.Add(sourceApp);
-                        }
-                    }
-                }
-
+                var updateSourceList = UpdateWithChildId(addedAppointments, SourceAppointments);
                 CalendarSyncEngine.SourceAppointmentsToUpdate.AddRange(updateSourceList);
             }
             return isSuccess;
@@ -374,25 +360,35 @@ namespace CalendarSyncPlus.Services
                 LoadSourceId(addedAppointments, DestinationAppointments.CalendarId);
                 SourceAppointments.AddRange(addedAppointments);
 
-                //Add appointments to update
-                var updateDestList = new List<Appointment>();
-                foreach (var appointment in addedAppointments)
-                {
-                    var destApp = DestinationAppointments.FirstOrDefault(t => t.CompareSourceId(appointment));
-                    if (destApp != null)
-                    {
-                        var childKey = appointment.GetChildEntryKey();
-                        if (!destApp.ExtendedProperties.ContainsKey(childKey))
-                        {
-                            destApp.ExtendedProperties.Add(childKey, appointment.AppointmentId);
-                            updateDestList.Add(destApp);
-                        }
-                    }
-                }
+                var updateDestList = UpdateWithChildId(addedAppointments, DestinationAppointments);
                 CalendarSyncEngine.DestAppointmentsToUpdate.AddRange(updateDestList);
             }
 
             return isSuccess;
+        }
+
+        private List<Appointment> UpdateWithChildId(CalendarAppointments addedAppointments, CalendarAppointments existingAppointments)
+        {
+            //Add appointments to update
+            var updateList = new List<Appointment>();
+            foreach (var appointment in addedAppointments)
+            {
+                var presentAppointment = existingAppointments.FirstOrDefault(t => t.CompareSourceId(appointment));
+                if (presentAppointment != null)
+                {
+                    var childKey = appointment.GetChildEntryKey();
+                    if (!presentAppointment.ExtendedProperties.ContainsKey(childKey))
+                    {
+                        presentAppointment.ExtendedProperties.Add(childKey, appointment.AppointmentId);
+                    }
+                    else
+                    {
+                        presentAppointment.ExtendedProperties[childKey] = appointment.AppointmentId;
+                    }
+                    updateList.Add(presentAppointment);
+                }
+            }
+            return updateList;
         }
 
         /// <summary>

@@ -73,8 +73,12 @@ namespace CalendarSyncPlus.SyncEngine
                                 if (!destAppointment.ExtendedProperties.ContainsKey(key))
                                 {
                                     destAppointment.ExtendedProperties.Add(key, childAppointment.AppointmentId);
-                                    destAppointmentsToUpdate.Add(destAppointment);
                                 }
+                                else
+                                {
+                                    destAppointment.ExtendedProperties[key] = childAppointment.AppointmentId;
+                                }
+                                destAppointmentsToUpdate.Add(destAppointment);
                             }
                         }
                         else if (syncProfile.SyncSettings.KeepLastModifiedVersion)

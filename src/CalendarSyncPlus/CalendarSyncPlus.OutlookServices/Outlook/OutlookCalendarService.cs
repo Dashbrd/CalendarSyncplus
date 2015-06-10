@@ -1339,7 +1339,9 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
                             {
                                 if (userProperty.Name.Equals(extendedProperty.Key))
                                 {
+                                    userProperty.Value = extendedProperty.Value;
                                     isFound = true;
+                                    break;
                                 }
                             }
 
