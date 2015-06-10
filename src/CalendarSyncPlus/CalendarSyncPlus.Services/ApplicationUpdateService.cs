@@ -88,7 +88,7 @@ namespace CalendarSyncPlus.Services
             version1 = version1.Contains("-") ? version1.Remove(version1.IndexOf("-",StringComparison.InvariantCultureIgnoreCase)) : version1;
             version2 = version2.Contains("-") ? version2.Remove(version2.IndexOf("-", StringComparison.InvariantCultureIgnoreCase)) : version2;
             var version = new Version(version1.Substring(1));
-            if (version > new Version(version2.Substring(1)))
+            if (version < new Version(version2.Substring(1)))
             {
                 return true;
             }
@@ -153,7 +153,8 @@ namespace CalendarSyncPlus.Services
         {
             try
             {
-                var version = new Version(_version.Substring(1));
+                string versionString = _version.Contains("-") ? _version.Remove(_version.IndexOf("-", StringComparison.InvariantCultureIgnoreCase)) : _version;
+                var version = new Version(versionString.Substring(1));
                 if (version > new Version(ApplicationInfo.Version))
                 {
                     return true;
