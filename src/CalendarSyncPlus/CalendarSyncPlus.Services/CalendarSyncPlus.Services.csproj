@@ -89,7 +89,6 @@
     <Compile Include="Utilities\StatusHelper.cs" />
     <Compile Include="Utilities\SyncEventArgs.cs" />
     <Compile Include="Wrappers\AppointmentListWrapper.cs" />
-    <Compile Include="Wrappers\CalendarAppointments.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

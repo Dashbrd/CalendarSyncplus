@@ -31,6 +31,7 @@ using CalendarSyncPlus.Common.Log;
 using CalendarSyncPlus.Common.MetaData;
 using CalendarSyncPlus.Domain.Helpers;
 using CalendarSyncPlus.Domain.Models;
+using CalendarSyncPlus.Domain.Wrappers;
 using CalendarSyncPlus.OutlookServices.Utilities;
 using CalendarSyncPlus.Services;
 using CalendarSyncPlus.Services.Interfaces;
@@ -1330,29 +1331,18 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
                 userProperties = appItem.UserProperties;
                 if (userProperties != null)
                 {
-                    if (userProperties.Count != calendarAppointment.ExtendedProperties.Count)
+                    for (int i = 0; i < userProperties.Count; i++)
                     {
-                        foreach (var extendedProperty in calendarAppointment.ExtendedProperties)
-                        {
-                            bool isFound = false;
-                            foreach (UserProperty userProperty in userProperties)
-                            {
-                                if (userProperty.Name.Equals(extendedProperty.Key))
-                                {
-                                    userProperty.Value = extendedProperty.Value;
-                                    isFound = true;
-                                    break;
-                                }
-                            }
-
-                            if (!isFound)
-                            {
-                                UserProperty sourceProperty = userProperties.Add(extendedProperty.Key,
-                                    OlUserPropertyType.olText);
-                                sourceProperty.Value = extendedProperty.Value;
-                            }
-                        }
+                        userProperties.Remove(i+1);
                     }
+
+                    foreach (var extendedProperty in calendarAppointment.ExtendedProperties)
+                    {
+                        UserProperty sourceProperty = userProperties.Add(extendedProperty.Key,
+                                OlUserPropertyType.olText);
+                        sourceProperty.Value = extendedProperty.Value;
+                    }
+
                 }
 
                 appItem.Save();

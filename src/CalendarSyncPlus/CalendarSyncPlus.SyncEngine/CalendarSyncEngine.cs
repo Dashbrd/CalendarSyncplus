@@ -3,6 +3,7 @@ using System.ComponentModel.Composition;
 using System.Linq;
 using CalendarSyncPlus.Domain.Helpers;
 using CalendarSyncPlus.Domain.Models;
+using CalendarSyncPlus.Domain.Wrappers;
 using CalendarSyncPlus.SyncEngine.Helpers;
 using CalendarSyncPlus.SyncEngine.Interfaces;
 
@@ -40,7 +41,7 @@ namespace CalendarSyncPlus.SyncEngine
         /// <param name="destOrphanEntries"></param>
         /// <returns></returns>
         void GetAppointmentsToDeleteWithMergeEntries(CalendarSyncProfile syncProfile,
-            List<Appointment> sourceList, List<Appointment> destinationList, List<Appointment> destAppointmentsToDelete,
+            CalendarAppointments sourceList, CalendarAppointments destinationList, List<Appointment> destAppointmentsToDelete,
             List<Appointment> destAppointmentsToUpdate, List<Appointment> sourceAppointmentsToUpdate, List<Appointment> destOrphanEntries)
         {
             bool addDescription =
@@ -49,6 +50,23 @@ namespace CalendarSyncPlus.SyncEngine
                 syncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Reminders);
             bool addAttendeesToDescription =
                 syncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.AttendeesToDescription);
+
+            if (!destinationList.Any())
+            {
+                foreach (var appointment in sourceList)
+                {
+                    if (appointment.ChildId != null)
+                    {
+                        string key = AppointmentHelper.GetChildEntryKey(sourceList.CalendarId);
+                        if (!appointment.ExtendedProperties.ContainsKey(key))
+                        {
+                            appointment.ExtendedProperties.Remove(key);
+                        }
+                        SourceAppointmentsToUpdate.Add(appointment);
+                    }
+                }
+                return;
+            }
 
             foreach (Appointment destAppointment in destinationList)
             {
@@ -260,27 +278,27 @@ namespace CalendarSyncPlus.SyncEngine
 
         #endregion
 
-        public bool GetSourceEntriesToDelete(CalendarSyncProfile syncProfile, List<Appointment> sourceList, List<Appointment> destinationList)
+        public bool GetSourceEntriesToDelete(CalendarSyncProfile syncProfile, CalendarAppointments sourceList, CalendarAppointments destinationList)
         {
             GetAppointmentsToDeleteWithMergeEntries(syncProfile, destinationList, sourceList, SourceAppointmentsToDelete,
                    SourceAppointmentsToUpdate, DestAppointmentsToUpdate, SourceOrphanEntries);
             return true;
         }
 
-        public bool GetSourceEntriesToAdd(CalendarSyncProfile syncProfile, List<Appointment> sourceList, List<Appointment> destinationList)
+        public bool GetSourceEntriesToAdd(CalendarSyncProfile syncProfile, CalendarAppointments sourceList, CalendarAppointments destinationList)
         {
             GetAppointmentsToAddWithMergeEntries(syncProfile, destinationList, sourceList, SourceAppointmentsToAdd);
             return true;
         }
 
-        public bool GetDestEntriesToDelete(CalendarSyncProfile syncProfile, List<Appointment> sourceList, List<Appointment> destinationList)
+        public bool GetDestEntriesToDelete(CalendarSyncProfile syncProfile, CalendarAppointments sourceList, CalendarAppointments destinationList)
         {
             GetAppointmentsToDeleteWithMergeEntries(syncProfile, sourceList, destinationList, DestAppointmentsToDelete,
                     DestAppointmentsToUpdate, SourceAppointmentsToUpdate, DestOrphanEntries);
             return true;
         }
 
-        public bool GetDestEntriesToAdd(CalendarSyncProfile syncProfile, List<Appointment> sourceList, List<Appointment> destinationList)
+        public bool GetDestEntriesToAdd(CalendarSyncProfile syncProfile, CalendarAppointments sourceList, CalendarAppointments destinationList)
         {
             GetAppointmentsToAddWithMergeEntries(syncProfile, sourceList, destinationList, DestAppointmentsToAdd);
             return true;
