@@ -56,7 +56,7 @@
             <RowDefinition />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <StackPanel Orientation="Horizontal">
+        <StackPanel Orientation="Horizontal" Visibility="Collapsed">
             <Rectangle Width="30"
                        Height="30"
                        Margin="10,0,10,0"

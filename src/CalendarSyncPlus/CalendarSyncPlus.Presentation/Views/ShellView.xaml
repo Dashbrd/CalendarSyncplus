@@ -99,7 +99,9 @@
                                               Mode=TwoWay}"
                              Position="Right"
                              Theme="Adapt"
-                             IsPinned="False" />
+                             IsPinned="False"
+                             TitleVisibility="Collapsed"
+                             CloseButtonVisibility="Collapsed" />
             <controls:Flyout Width="{Binding Width,
                                              RelativeSource={RelativeSource AncestorType={x:Type views:ShellView}},
                                              Converter={StaticResource PercentageWidthConverter},
@@ -112,7 +114,9 @@
                                               Mode=TwoWay}"
                              Position="Right"
                              Theme="Adapt"
-                             IsPinned="False" />
+                             IsPinned="False"
+                             TitleVisibility="Collapsed"
+                             CloseButtonVisibility="Collapsed" />
         </controls:FlyoutsControl>
     </controls:MetroWindow.Flyouts>
 
