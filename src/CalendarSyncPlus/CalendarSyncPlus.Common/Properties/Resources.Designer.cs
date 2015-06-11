@@ -1248,7 +1248,16 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("ShellView_HelpButton_Content", resourceCulture);
             }
         }
-
+        /// <summary>
+        ///   Looks up a localized string similar to What&apos;s New.
+        /// </summary>
+        public static string ShellView_WhatsNewButton_Content
+        {
+            get
+            {
+                return ResourceManager.GetString("ShellView_WhatsNewButton_Content", resourceCulture);
+            }
+        }
         /// <summary>
         ///   Looks up a localized string similar to Help.
         /// </summary>

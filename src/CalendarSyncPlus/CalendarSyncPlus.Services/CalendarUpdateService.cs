@@ -237,10 +237,12 @@ namespace CalendarSyncPlus.Services
             {
                 LoadSourceId(addedAppointments, SourceAppointments.CalendarId);
                 DestinationAppointments.AddRange(addedAppointments);
-
-                //Add appointments to update
-                var updateSourceList = UpdateWithChildId(addedAppointments, SourceAppointments);
-                CalendarSyncEngine.SourceAppointmentsToUpdate.AddRange(updateSourceList);
+                if (syncProfile.SyncSettings.SyncMode == SyncModeEnum.TwoWay)
+                {
+                    //Add appointments to update
+                    var updateSourceList = UpdateWithChildId(addedAppointments, SourceAppointments);
+                    CalendarSyncEngine.SourceAppointmentsToUpdate.AddRange(updateSourceList);
+                }
             }
             return isSuccess;
         }
@@ -360,9 +362,11 @@ namespace CalendarSyncPlus.Services
             {
                 LoadSourceId(addedAppointments, DestinationAppointments.CalendarId);
                 SourceAppointments.AddRange(addedAppointments);
-
-                var updateDestList = UpdateWithChildId(addedAppointments, DestinationAppointments);
-                CalendarSyncEngine.DestAppointmentsToUpdate.AddRange(updateDestList);
+                if (syncProfile.SyncSettings.SyncMode == SyncModeEnum.TwoWay)
+                {
+                    var updateDestList = UpdateWithChildId(addedAppointments, DestinationAppointments);
+                    CalendarSyncEngine.DestAppointmentsToUpdate.AddRange(updateDestList);
+                }
             }
 
             return isSuccess;

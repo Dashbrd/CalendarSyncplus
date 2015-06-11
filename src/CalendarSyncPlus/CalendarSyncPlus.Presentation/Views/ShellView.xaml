@@ -22,13 +22,14 @@
                       ShowIconOnTitleBar="True"
                       ShowTitleBar="True"
                       SnapsToDevicePixels="True"
+                      TitlebarHeight="45"
                       TitleCaps="False"
                       WindowStartupLocation="CenterScreen"
                       d:DataContext="{d:DesignInstance viewModels:ShellViewModel}"
                       localizeExtension:LocalizeDictionary.DesignCulture="en"
                       localizeExtension:ResxLocalizationProvider.DefaultAssembly="CalendarSyncPlus.Common"
                       localizeExtension:ResxLocalizationProvider.DefaultDictionary="Resources"
-                      mc:Ignorable="d">
+                      mc:Ignorable="d" RightWindowCommandsOverlayBehavior="HiddenTitleBar">
 
     <controls:MetroWindow.Resources>
         <Style x:Key="{x:Type ToolTip}" TargetType="ToolTip">
@@ -61,7 +62,7 @@
         <wafConverters:InvertBooleanConverter x:Key="InvertBooleanConverter" />
         <converters:PercentageWidthConverter x:Key="PercentageWidthConverter" />
         <DataTemplate x:Key="IconTemplate">
-            <Rectangle Fill="{DynamicResource AccentSelectedColorBrush}">
+            <Rectangle Fill="{DynamicResource AccentSelectedColorBrush}" Height="30" Width="30">
                 <Rectangle.OpacityMask>
                     <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_refresh}" />
                 </Rectangle.OpacityMask>
@@ -81,7 +82,11 @@
                              IsOpen="{Binding IsSettingsVisible,
                                               Mode=TwoWay}"
                              Position="Right"
-                             Theme="Adapt" />
+                             Theme="Adapt"
+                             IsPinned="False"
+                             TitleVisibility="Collapsed"
+                             CloseButtonVisibility="Collapsed"
+                             />
             <controls:Flyout Width="{Binding Width,
                                              RelativeSource={RelativeSource AncestorType={x:Type views:ShellView}},
                                              Converter={StaticResource PercentageWidthConverter},
@@ -93,7 +98,8 @@
                              IsOpen="{Binding IsAboutVisible,
                                               Mode=TwoWay}"
                              Position="Right"
-                             Theme="Adapt" />
+                             Theme="Adapt"
+                             IsPinned="False" />
             <controls:Flyout Width="{Binding Width,
                                              RelativeSource={RelativeSource AncestorType={x:Type views:ShellView}},
                                              Converter={StaticResource PercentageWidthConverter},
@@ -105,7 +111,8 @@
                              IsOpen="{Binding IsHelpVisible,
                                               Mode=TwoWay}"
                              Position="Right"
-                             Theme="Adapt" />
+                             Theme="Adapt"
+                             IsPinned="False" />
         </controls:FlyoutsControl>
     </controls:MetroWindow.Flyouts>
 
@@ -113,8 +120,7 @@
         <controls:WindowCommands>
             <Button Command="{Binding ExitCommand}"
                     ToolTip="{localizeExtension:LocText Key=ShellView_ExitButton_ToolTip}">
-                <!--Content="{localizeExtension:LocText Key=ShellView_ExitButton_Content}"-->
-                <StackPanel Orientation="Horizontal">
+                <StackPanel Orientation="Vertical">
                     <Rectangle Width="20"
                                Height="20"
                                Margin="2"
@@ -126,10 +132,13 @@
                                          Visual="{StaticResource appbar_door_leave}" />
                         </Rectangle.OpacityMask>
                     </Rectangle>
+                    <TextBlock Margin="2"
+                               VerticalAlignment="Center"
+                               Text="{localizeExtension:LocText Key=ShellView_ExitButton_Content}" />
                 </StackPanel>
             </Button>
             <Button Command="{Binding ShowWhatsNewCommand}" ToolTip="What's New in this version">
-                <StackPanel Orientation="Horizontal">
+                <StackPanel Orientation="Vertical">
                     <Rectangle Width="30"
                                Height="18"
                                Margin="2"
@@ -141,6 +150,9 @@
                                          Visual="{StaticResource appbar_newspaper}" />
                         </Rectangle.OpacityMask>
                     </Rectangle>
+                    <TextBlock Margin="2"
+                               VerticalAlignment="Center"
+                               Text="{localizeExtension:LocText Key=ShellView_WhatsNewButton_Content}" />
                 </StackPanel>
             </Button>
 
@@ -148,7 +160,7 @@
                     ToolTip="{localizeExtension:LocText Key=ShellView_RightWindowCommands_Download_Tooltip}"
                     Visibility="{Binding IsLatestVersionAvailable,
                                          Converter={StaticResource BooleanToVisibilityConverter}}">
-                <StackPanel Orientation="Horizontal">
+                <StackPanel Orientation="Vertical">
                     <Rectangle Width="30"
                                Height="18"
                                Margin="2"
@@ -172,8 +184,7 @@
                     IsEnabled="{Binding IsSyncInProgress,
                                         Converter={StaticResource InvertBooleanConverter}}"
                     ToolTip="{localizeExtension:LocText Key=ShellView_SettingsButton_ToolTip}">
-                <!--Content="{localizeExtension:LocText Key=ShellView_SettingsButton_Content}"-->
-                <StackPanel Orientation="Horizontal">
+                <StackPanel Orientation="Vertical">
                     <Rectangle Width="20"
                                Height="20"
                                Margin="2"
@@ -185,12 +196,14 @@
                                          Visual="{StaticResource appbar_settings}" />
                         </Rectangle.OpacityMask>
                     </Rectangle>
+                    <TextBlock Margin="2"
+                               VerticalAlignment="Center"
+                               Text="{localizeExtension:LocText Key=ShellView_SettingsButton_Content}" />
                 </StackPanel>
             </Button>
             <Button Command="{Binding LaunchAbout}"
                     ToolTip="{localizeExtension:LocText Key=ShellView_AboutButton_ToolTip}">
-                <!--Content="{localizeExtension:LocText Key=ShellView_AboutButton_Content}"-->
-                <StackPanel Orientation="Horizontal">
+                <StackPanel Orientation="Vertical">
                     <Rectangle Width="20"
                                Height="20"
                                Margin="2"
@@ -202,12 +215,14 @@
                                          Visual="{StaticResource appbar_information_circle}" />
                         </Rectangle.OpacityMask>
                     </Rectangle>
+                    <TextBlock Margin="2"
+                               VerticalAlignment="Center"
+                               Text="{localizeExtension:LocText Key=ShellView_AboutButton_Content}" />
                 </StackPanel>
             </Button>
             <Button Command="{Binding LaunchHelp}"
                     ToolTip="{localizeExtension:LocText Key=ShellView_HelpButton_ToolTip}">
-                <!--Content="{localizeExtension:LocText Key=ShellView_HelpButton_Content}"-->
-                <StackPanel Orientation="Horizontal">
+                <StackPanel Orientation="Vertical">
                     <Rectangle Width="20"
                                Height="20"
                                Margin="2"
@@ -219,6 +234,9 @@
                                          Visual="{StaticResource appbar_book_perspective_help}" />
                         </Rectangle.OpacityMask>
                     </Rectangle>
+                    <TextBlock Margin="2"
+                               VerticalAlignment="Center"
+                               Text="{localizeExtension:LocText Key=ShellView_HelpButton_Content}"/>
                 </StackPanel>
             </Button>
         </controls:WindowCommands>

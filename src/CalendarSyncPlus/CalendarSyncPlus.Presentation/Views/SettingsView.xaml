@@ -8,6 +8,7 @@
              xmlns:views="clr-namespace:CalendarSyncPlus.Presentation.Views"
              xmlns:viewModels="clr-namespace:CalendarSyncPlus.Application.ViewModels;assembly=CalendarSyncPlus.Application"
              xmlns:localizeExtension="http://wpflocalizeextension.codeplex.com"
+             xmlns:converters="http://metro.mahapps.com/winfx/xaml/shared"
              mc:Ignorable="d"
              d:DesignHeight="600"
              d:DesignWidth="500"
@@ -25,7 +26,7 @@
                 </Setter.Value>
             </Setter>
         </Style>
-
+        <converters:ToUpperConverter x:Key="ToUpperConverter"/>
         <wafConverters:InvertBooleanConverter x:Key="InvertBooleanConverter" />
         <DataTemplate x:Key="ProgressBarDataTemplate">
             <controls:MetroProgressBar Minimum="0"
@@ -50,11 +51,27 @@
     </UserControl.Resources>
     <Grid Margin="10">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="2" />
             <RowDefinition />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <ContentControl Grid.ColumnSpan="2">
+        <StackPanel Orientation="Horizontal">
+            <Rectangle Width="30"
+                       Height="30"
+                       Margin="10,0,10,0"
+                       VerticalAlignment="Center"
+                       Fill="DarkGray">
+                <Rectangle.OpacityMask>
+                    <VisualBrush Stretch="Fill"
+                                 Visual="{StaticResource appbar_settings}" />
+                </Rectangle.OpacityMask>
+            </Rectangle>
+            <TextBlock Margin="2"
+                       VerticalAlignment="Center" FontSize="20" Foreground="Gray"
+                       Text="{localizeExtension:LocText Key=ShellView_SettingsButton_Content}" />
+        </StackPanel>
+        <ContentControl Grid.ColumnSpan="2" Grid.Row="1">
             <ContentControl.Style>
                 <Style TargetType="ContentControl">
                     <Setter Property="ContentTemplate"
@@ -69,7 +86,7 @@
                 </Style>
             </ContentControl.Style>
         </ContentControl>
-        <TabControl Grid.Row="1"
+        <TabControl Grid.Row="2"
                     IsEnabled="{Binding Path=IsLoading,Converter={StaticResource ResourceKey=InvertBooleanConverter}}">
             <TabItem Header="{localizeExtension:LocText Key=SettingsView_TabItem_Calendars_Header}">
                 <ScrollViewer VerticalScrollBarVisibility="Auto"
@@ -92,7 +109,7 @@
         </TabControl>
         <Button Content="{localizeExtension:LocText Key=SettingsView_Button_Save_Content}"
                 Grid.Column="0"
-                Grid.Row="2"
+                Grid.Row="3"
                 HorizontalAlignment="Left"
                 Width="100"
                 Margin="5"
