@@ -17,12 +17,11 @@
                       GlowBrush="{DynamicResource AccentColorBrush}"
                       Icon="../Resources/icon.ico"
                       IconTemplate="{DynamicResource IconTemplate}"
-                      NonActiveGlowBrush="Red"
+                      NonActiveGlowBrush="{DynamicResource GrayBrush9}"
                       ResizeMode="CanMinimize"
                       ShowIconOnTitleBar="True"
                       ShowTitleBar="True"
                       SnapsToDevicePixels="True"
-                      TitlebarHeight="45"
                       TitleCaps="False"
                       WindowStartupLocation="CenterScreen"
                       d:DataContext="{d:DesignInstance viewModels:ShellViewModel}"
@@ -62,11 +61,12 @@
         <wafConverters:InvertBooleanConverter x:Key="InvertBooleanConverter" />
         <converters:PercentageWidthConverter x:Key="PercentageWidthConverter" />
         <DataTemplate x:Key="IconTemplate">
-            <Rectangle Fill="{DynamicResource AccentSelectedColorBrush}" Height="30" Width="30">
+            <Rectangle Fill="{DynamicResource AccentSelectedColorBrush}" Height="25" Width="25" Margin="5,0,5,0">
                 <Rectangle.OpacityMask>
                     <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_refresh}" />
                 </Rectangle.OpacityMask>
             </Rectangle>
+            
         </DataTemplate>
     </controls:MetroWindow.Resources>
     <controls:MetroWindow.Flyouts>
@@ -83,9 +83,6 @@
                                               Mode=TwoWay}"
                              Position="Right"
                              Theme="Adapt"
-                             IsPinned="False"
-                             TitleVisibility="Collapsed"
-                             CloseButtonVisibility="Collapsed"
                              />
             <controls:Flyout Width="{Binding Width,
                                              RelativeSource={RelativeSource AncestorType={x:Type views:ShellView}},
@@ -98,10 +95,7 @@
                              IsOpen="{Binding IsAboutVisible,
                                               Mode=TwoWay}"
                              Position="Right"
-                             Theme="Adapt"
-                             IsPinned="False"
-                             TitleVisibility="Collapsed"
-                             CloseButtonVisibility="Collapsed" />
+                             Theme="Adapt"/>
             <controls:Flyout Width="{Binding Width,
                                              RelativeSource={RelativeSource AncestorType={x:Type views:ShellView}},
                                              Converter={StaticResource PercentageWidthConverter},
@@ -113,14 +107,11 @@
                              IsOpen="{Binding IsHelpVisible,
                                               Mode=TwoWay}"
                              Position="Right"
-                             Theme="Adapt"
-                             IsPinned="False"
-                             TitleVisibility="Collapsed"
-                             CloseButtonVisibility="Collapsed" />
+                             Theme="Adapt"/>
         </controls:FlyoutsControl>
     </controls:MetroWindow.Flyouts>
 
-    <controls:MetroWindow.RightWindowCommands>
+    <!--<controls:MetroWindow.RightWindowCommands>
         <controls:WindowCommands>
             <Button Command="{Binding ExitCommand}"
                     ToolTip="{localizeExtension:LocText Key=ShellView_ExitButton_ToolTip}">
@@ -244,7 +235,7 @@
                 </StackPanel>
             </Button>
         </controls:WindowCommands>
-    </controls:MetroWindow.RightWindowCommands>
+    </controls:MetroWindow.RightWindowCommands>-->
     <views:HomeView DataContext="{Binding}" />
 
 </controls:MetroWindow>
