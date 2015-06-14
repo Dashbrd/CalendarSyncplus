@@ -38,6 +38,7 @@ namespace CalendarSyncPlus.Application.Controllers
         private readonly AboutViewModel _aboutViewModel;
         private readonly DelegateCommand _exitCommand;
         private readonly IGuiInteractionService _guiInteractionService;
+        private readonly ILogController _logController;
         private readonly HelpViewModel _helpViewModel;
         private readonly SettingsViewModel _settingsViewModel;
         private readonly IShellController _shellController;
@@ -45,21 +46,23 @@ namespace CalendarSyncPlus.Application.Controllers
         private readonly ShellViewModel _shellViewModel;
         private readonly SystemTrayNotifierViewModel _systemTrayNotifierViewModel;
         private bool _isApplicationExiting;
+        private LogViewModel _logViewModel;
 
         [ImportingConstructor]
         public ApplicationController(Lazy<ShellViewModel> shellViewModelLazy,
             Lazy<SettingsViewModel> settingsViewModelLazy,
-            Lazy<AboutViewModel> aboutViewModelLazy, Lazy<HelpViewModel> helpViewModelLazy,
+            Lazy<AboutViewModel> aboutViewModelLazy, Lazy<HelpViewModel> helpViewModelLazy,Lazy<LogViewModel> logViewModelLazy,
             Lazy<ShellService> shellServiceLazy, CompositionContainer compositionContainer,
             Lazy<IAccountAuthenticationService> accountAuthenticationServiceLazy, IShellController shellController,
             Lazy<SystemTrayNotifierViewModel> lazySystemTrayNotifierViewModel,
-            IGuiInteractionService guiInteractionService)
+            IGuiInteractionService guiInteractionService,ILogController logController)
         {
             //ViewModels
             _shellViewModel = shellViewModelLazy.Value;
             _settingsViewModel = settingsViewModelLazy.Value;
             _aboutViewModel = aboutViewModelLazy.Value;
             _helpViewModel = helpViewModelLazy.Value;
+            _logViewModel = logViewModelLazy.Value;
             _systemTrayNotifierViewModel = lazySystemTrayNotifierViewModel.Value;
             //Commands
             _shellViewModel.Closing += ShellViewModelClosing;
@@ -73,8 +76,10 @@ namespace CalendarSyncPlus.Application.Controllers
             _shellService.SettingsView = _settingsViewModel.View;
             _shellService.AboutView = _aboutViewModel.View;
             _shellService.HelpView = _helpViewModel.View;
+            _shellService.LogView = _logViewModel.View;
             _shellController = shellController;
             _guiInteractionService = guiInteractionService;
+            _logController = logController;
             if (_shellViewModel.IsSettingsVisible)
             {
                 _settingsViewModel.Load();
@@ -91,12 +96,14 @@ namespace CalendarSyncPlus.Application.Controllers
             _systemTrayNotifierViewModel.ExitCommand = _exitCommand;
             //Initialize Other Controllers if Any
             _shellController.Initialize();
+            _logController.Initialize();
             PropertyChangedEventManager.AddHandler(_settingsViewModel, SettingsChangedHandler, "");
             PropertyChangedEventManager.AddHandler(_shellViewModel, ShellViewUpdatedHandler, "");
         }
 
         public void Run(bool startMinimized)
         {
+            _logController.Run(startMinimized);
             //Perform Other assignments if required
             _shellViewModel.Show(startMinimized);
             _settingsViewModel.ApplyProxySettings();
@@ -105,6 +112,7 @@ namespace CalendarSyncPlus.Application.Controllers
         public void Shutdown()
         {
             //Close All controllers if required
+            _logController.Shutdown();
             _shellController.Shutdown();
             _settingsViewModel.Shutdown();
             PropertyChangedEventManager.RemoveHandler(_settingsViewModel, SettingsChangedHandler, "");

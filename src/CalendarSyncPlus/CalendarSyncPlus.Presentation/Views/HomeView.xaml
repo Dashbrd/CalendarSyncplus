@@ -10,6 +10,7 @@
              xmlns:models="clr-namespace:CalendarSyncPlus.Domain.Models;assembly=CalendarSyncPlus.Domain"
              xmlns:viewModels="clr-namespace:CalendarSyncPlus.Application.ViewModels;assembly=CalendarSyncPlus.Application"
              xmlns:wafConverters="http://waf.codeplex.com/schemas"
+             xmlns:logViewer="clr-namespace:CalendarSyncPlus.Presentation.Controls.LogViewer"
              d:DataContext="{d:DesignInstance viewModels:ShellViewModel}"
              d:DesignHeight="300"
              d:DesignWidth="300"
@@ -339,23 +340,32 @@
             </StackPanel>
         </Expander>
 
-        <!--  Status  -->
-        <GroupBox Grid.Row="2"
-                  Grid.Column="1"
-                  Margin="10,5,10,0"
-                  Header="{localizeExtension:LocText Key=HomeView_GroupBox_Status_Header}">
-            <TextBox IsReadOnly="True"
-                     IsReadOnlyCaretVisible="False"
-                     IsUndoEnabled="False"
-                     Text="{Binding SyncLog,
+        <TabControl Grid.Row="2"
+                    Grid.Column="1">
+            <TabItem Header="Status">
+
+                <!--  Status  -->
+                <GroupBox Grid.Row="2"
+                          Grid.Column="1"
+                          Margin="10,5,10,0"
+                          Header="{localizeExtension:LocText Key=HomeView_GroupBox_Status_Header}">
+                    <TextBox IsReadOnly="True"
+                             IsReadOnlyCaretVisible="False"
+                             IsUndoEnabled="False"
+                             Text="{Binding SyncLog,
                                     Mode=OneWay}"
-                     TextWrapping="Wrap"
-                     VerticalScrollBarVisibility="Visible">
-                <i:Interaction.Behaviors>
-                    <behaviors:TextBoxScrollBehavior />
-                </i:Interaction.Behaviors>
-            </TextBox>
-        </GroupBox>
+                             TextWrapping="Wrap"
+                             VerticalScrollBarVisibility="Visible">
+                        <i:Interaction.Behaviors>
+                            <behaviors:TextBoxScrollBehavior />
+                        </i:Interaction.Behaviors>
+                    </TextBox>
+                </GroupBox>
+            </TabItem>
+             <TabItem Header="Log">
+                <ContentControl Content="{Binding Path=ShellService.LogView}"></ContentControl>
+             </TabItem>
+        </TabControl>
 
         <StackPanel Grid.Row="3"
                     Grid.Column="1"
