@@ -65,7 +65,7 @@
                             <ContentPresenter />
                         </Border>
                         <ControlTemplate.Triggers>
-                            <Trigger Property="IsChecked"
+                            <Trigger Property="IsMouseOver"
                                      Value="True">
                                 <Setter Property="Opacity"
                                         Value="1" />
@@ -73,20 +73,17 @@
                                         Value="{DynamicResource AccentColorBrush3}" />
                             </Trigger>
                             <Trigger Property="IsChecked"
-                                     Value="False">
-                                <Setter Property="Opacity"
-                                        Value="0.5" />
-                            </Trigger>
-                            <DataTrigger Binding="{Binding IsChecked,ElementName=MenuToggleButton}"
                                          Value="True">
+                                <Setter Property="Opacity"
+                                        Value="1" />
                                 <Setter Property="Width"
                                         Value="130" />
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding IsChecked,ElementName=MenuToggleButton}"
+                            </Trigger>
+                            <Trigger Property="IsChecked"
                                          Value="False">
                                 <Setter Property="Width"
-                                        Value="30" />
-                            </DataTrigger>
+                                        Value="35" />
+                            </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
@@ -99,6 +96,8 @@
                     Value="{DynamicResource AccentSelectedColorBrush}" />
             <Setter Property="Background"
                     Value="Transparent" />
+            <Setter Property="Opacity"
+                    Value="0.5" />
         </Style>
         <Style x:Key="MenuButtonStyle"
                TargetType="Button"
@@ -120,20 +119,8 @@
                                 <Setter Property="Background"
                                         Value="{DynamicResource AccentColorBrush3}" />
                             </Trigger>
-                            <Trigger Property="IsMouseOver"
-                                     Value="False">
-                                <Setter Property="Opacity"
-                                        Value="0.5" />
-                            </Trigger>
-                            <DataTrigger Binding="{Binding IsChecked,ElementName=MenuToggleButton}"
-                                         Value="True">
-                                <Setter Property="Width"
-                                        Value="Auto" />
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding IsChecked,ElementName=MenuToggleButton}"
-                                         Value="False">
-                                <Setter Property="Width"
-                                        Value="35" />
+                            <DataTrigger Binding="{Binding IsChecked,ElementName=MenuToggleButton}" Value="False">
+                                <Setter Property="Width" Value="35"/>
                             </DataTrigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -147,6 +134,10 @@
                     Value="{DynamicResource AccentSelectedColorBrush}" />
             <Setter Property="Background"
                     Value="Transparent" />
+            <Setter Property="Width"
+                    Value="Auto" />
+            <Setter Property="Opacity"
+                    Value="0.5" />
         </Style>
         <Style x:Key="ToggleMenuRectangleStyle"
                TargetType="Rectangle">
@@ -155,7 +146,7 @@
             <Setter Property="Width"
                     Value="25" />
             <Setter Property="Margin"
-                    Value="3" />
+                    Value="5,10,5,10" />
             <Setter Property="Fill"
                     Value="{Binding RelativeSource={RelativeSource AncestorType=ToggleButton},
                                               Path=Foreground}" />
@@ -179,7 +170,9 @@
             <Setter Property="Margin"
                     Value="0,0,5,0" />
             <Setter Property="FontSize"
-                    Value="14" />
+                    Value="{StaticResource MenuFontSize}" />
+            <Setter Property="FontFamily"
+                    Value="Segoe UI" />
         </Style>
     </UserControl.Resources>
     <Grid>
@@ -204,8 +197,22 @@
         
         <!--  Menu buttons  -->
         <StackPanel Orientation="Vertical"
-                    Grid.RowSpan="4"
-                    Background="{StaticResource AccentColorBrush}">
+                    Grid.RowSpan="4">
+            <StackPanel.Resources>
+                <Style TargetType="StackPanel">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsActive,RelativeSource={RelativeSource AncestorType={x:Type controls:MetroWindow},Mode=FindAncestor}}" Value="True">
+                            <Setter Property="Background"
+                                    Value="{Binding WindowTitleBrush,RelativeSource={RelativeSource AncestorType={x:Type controls:MetroWindow},Mode=FindAncestor}}"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding IsActive,RelativeSource={RelativeSource AncestorType={x:Type controls:MetroWindow},Mode=FindAncestor}}"
+                                     Value="False">
+                            <Setter Property="Background"
+                                    Value="{Binding NonActiveWindowTitleBrush,RelativeSource={RelativeSource AncestorType={x:Type controls:MetroWindow},Mode=FindAncestor}}" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </StackPanel.Resources>
             <ToggleButton Name="MenuToggleButton"
                           Style="{StaticResource ToggleMenuButtonStyle}"
                           ToolTip="Expand Menu">
@@ -237,7 +244,6 @@
                 </StackPanel>
             </Button>
 
-
             <Button Command="{Binding LaunchSettings}"
                     Style="{StaticResource MenuButtonStyle}"
                     IsEnabled="{Binding IsSyncInProgress,
@@ -254,6 +260,7 @@
                                Text="{localizeExtension:LocText Key=ShellView_SettingsButton_Content}" />
                 </StackPanel>
             </Button>
+
             <Button Command="{Binding LaunchAbout}"
                     Style="{StaticResource MenuButtonStyle}"
                     ToolTip="{localizeExtension:LocText Key=ShellView_AboutButton_ToolTip}">
@@ -268,6 +275,7 @@
                                Text="{localizeExtension:LocText Key=ShellView_AboutButton_Content}" />
                 </StackPanel>
             </Button>
+            
             <Button Command="{Binding LaunchHelp}"
                     Style="{StaticResource MenuButtonStyle}"
                     ToolTip="{localizeExtension:LocText Key=ShellView_HelpButton_ToolTip}">
@@ -282,6 +290,7 @@
                                Text="{localizeExtension:LocText Key=ShellView_HelpButton_Content}" />
                 </StackPanel>
             </Button>
+            
             <Button Command="{Binding DownloadCommand}"
                     Style="{StaticResource MenuButtonStyle}"
                     ToolTip="{localizeExtension:LocText Key=ShellView_RightWindowCommands_Download_Tooltip}"
@@ -291,7 +300,7 @@
                     <Rectangle Style="{StaticResource MenuRectangleStyle}">
                         <Rectangle.OpacityMask>
                             <VisualBrush Stretch="Fill"
-                                         Visual="{StaticResource appbar_cloud_download}" />
+                                         Visual="{StaticResource appbar_download}" />
                         </Rectangle.OpacityMask>
                     </Rectangle>
                     <TextBlock Style="{StaticResource MenuTextBlockStyle}"
@@ -301,6 +310,7 @@
                                               StringFormat='{}{0}'}" />
                 </StackPanel>
             </Button>
+            
             <Button Command="{Binding ExitCommand}"
                     Style="{StaticResource MenuButtonStyle}"
                     ToolTip="{localizeExtension:LocText Key=ShellView_ExitButton_ToolTip}">
