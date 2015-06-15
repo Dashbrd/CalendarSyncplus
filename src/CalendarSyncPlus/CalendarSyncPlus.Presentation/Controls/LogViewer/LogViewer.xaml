@@ -4,6 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:viewModels="clr-namespace:CalendarSyncPlus.Application.ViewModels;assembly=CalendarSyncPlus.Application"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:behaviors="clr-namespace:CalendarSyncPlus.Presentation.Behaviors"
              mc:Ignorable="d"
              d:DesignHeight="300"
              d:DesignWidth="300"
@@ -57,8 +59,8 @@
             </ItemsControl>
             <Button Grid.Column="2" HorizontalAlignment="Right" Command="{Binding Path=LoadLogCommand}">Refresh</Button>
         </Grid>
-        <DataGrid Grid.Row="2" 
-                  ItemsSource="{Binding Path=LogItems}"
+        <DataGrid Grid.Row="2"
+                  ItemsSource="{Binding Path=FilteredLogItemsView}"
                   SelectedItem="{Binding Path=SelectedLogItem,Mode=TwoWay}"
                   AlternatingRowBackground="{StaticResource GrayBrush8}"
                   AutoGenerateColumns="False"
@@ -73,6 +75,9 @@
                   SelectionMode="Single"
                   TextOptions.TextFormattingMode="Display"
                   >
+            <i:Interaction.Behaviors>
+                <behaviors:ScrollIntoViewForDataGrid />
+            </i:Interaction.Behaviors>
             <DataGrid.Columns>
                 <DataGridTemplateColumn Header="S.No">
                     <DataGridTemplateColumn.CellTemplate>
