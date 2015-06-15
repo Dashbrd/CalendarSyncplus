@@ -40,6 +40,7 @@ using CalendarSyncPlus.Domain.Models;
 using CalendarSyncPlus.GoogleServices.Google;
 using CalendarSyncPlus.Services.Interfaces;
 using CalendarSyncPlus.Services.Utilities;
+using log4net;
 using MahApps.Metro.Controls.Dialogs;
 using Microsoft.Win32;
 
@@ -108,7 +109,7 @@ namespace CalendarSyncPlus.Application.ViewModels
         {
             _statusBuilder = new StringBuilder();
             MessageService = messageService;
-            ApplicationLogger = applicationLogger;
+            ApplicationLogger = applicationLogger.GetLogger(this.GetType());
             ApplicationUpdateService = applicationUpdateService;
             ShellService = shellService;
             SyncStartService = syncStartService;
@@ -126,7 +127,7 @@ namespace CalendarSyncPlus.Application.ViewModels
 
         public IGuiInteractionService GuiInteractionService { get; set; }
         public ISyncService SyncStartService { get; private set; }
-        public ApplicationLogger ApplicationLogger { get; private set; }
+        public ILog ApplicationLogger { get; private set; }
         public SystemTrayNotifierViewModel SystemTrayNotifierViewModel { get; private set; }
         public ChildContentViewFactory ChildContentViewFactory { get; set; }
         public IMessageService MessageService { get; set; }
@@ -412,12 +413,13 @@ namespace CalendarSyncPlus.Application.ViewModels
             }
             catch (Exception exception)
             {
-                ApplicationLogger.LogError(exception, typeof(ShellViewModel));
+                ApplicationLogger.Error(exception);
             }
         }
 
         private void UpdateStatus(string text)
         {
+            ApplicationLogger.Info(text);
             BeginInvokeOnCurrentDispatcher(() =>
             {
                 if (IsSyncInProgress && !text.Equals(StatusHelper.LineConstant))
@@ -425,7 +427,6 @@ namespace CalendarSyncPlus.Application.ViewModels
                     UpdateNotification(text);
                 }
                 _statusBuilder.AppendLine(text);
-                ApplicationLogger.LogInfo(text, typeof(ShellViewModel));
                 RaisePropertyChanged("SyncLog");
             });
         }
@@ -447,7 +448,7 @@ namespace CalendarSyncPlus.Application.ViewModels
                 }
                 catch (Exception exception)
                 {
-                    ApplicationLogger.LogError(exception.Message, typeof(ShellViewModel));
+                    ApplicationLogger.Error(exception);
                 }
             }
         }
@@ -462,7 +463,7 @@ namespace CalendarSyncPlus.Application.ViewModels
                 }
                 catch (Exception exception)
                 {
-                    ApplicationLogger.LogError("Updating status in balloon", exception, typeof(ShellViewModel));
+                    ApplicationLogger.Error("Updating status in balloon", exception);
                 }
             }
         }
@@ -665,7 +666,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             }
             catch (Exception exception)
             {
-                ApplicationLogger.LogError("First Launch Key Not found", typeof(ShellViewModel));
+                ApplicationLogger.Error("First Launch Key Not found", exception);
             }
         }
 

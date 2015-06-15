@@ -4,6 +4,7 @@ using System.IO;
 using System.Waf.Applications;
 using CalendarSyncPlus.Application.Views;
 using CalendarSyncPlus.Common.Log;
+using log4net;
 
 namespace CalendarSyncPlus.Application.ViewModels
 {
@@ -11,13 +12,13 @@ namespace CalendarSyncPlus.Application.ViewModels
     [ExportMetadata("ChildViewContentType", ChildViewContentType.WhatsNew)]
     public class WhatsNewViewModel : ViewModel<IWhatsNewView>, IChildContentViewModel
     {
-        public ApplicationLogger Logger { get; set; }
+        public ILog Logger { get; set; }
         private string _text;
 
         [ImportingConstructor]
-        public WhatsNewViewModel(IWhatsNewView view,ApplicationLogger logger) : base(view)
+        public WhatsNewViewModel(IWhatsNewView view,ApplicationLogger applicationLogger) : base(view)
         {
-            Logger = logger;
+            Logger = applicationLogger.GetLogger(this.GetType());
             GetReleaseNotes();
         }
 
@@ -27,8 +28,8 @@ namespace CalendarSyncPlus.Application.ViewModels
 
             if (!File.Exists(releaseNotesPath))
             {
-                Logger.LogError(String.Format("Release Notes Not Found  at the location {0}{1}", Environment.NewLine,
-                    releaseNotesPath), typeof(WhatsNewViewModel));
+                Logger.Error(String.Format("Release Notes Not Found  at the location {0}{1}", Environment.NewLine,
+                    releaseNotesPath));
                 Text = @"<h1>No Release Notes Found. Report Error to Developers</h1>";
             }
             var notes=File.ReadAllText(releaseNotesPath);

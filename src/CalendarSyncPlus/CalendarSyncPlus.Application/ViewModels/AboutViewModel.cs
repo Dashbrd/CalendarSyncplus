@@ -7,13 +7,14 @@ using CalendarSyncPlus.Application.Views;
 using CalendarSyncPlus.Common.Log;
 using CalendarSyncPlus.Domain.Models;
 using CalendarSyncPlus.Services.Interfaces;
+using log4net;
 
 namespace CalendarSyncPlus.Application.ViewModels
 {
     [Export]
     public class AboutViewModel : ViewModel<IAboutView>
     {
-        public ApplicationLogger ApplicationLogger { get; set; }
+        public ILog ApplicationLogger { get; set; }
         private readonly IApplicationUpdateService _applicationUpdateService;
         private DelegateCommand _checkForUpdatesCommand;
         private DelegateCommand _downloadCommand;
@@ -29,7 +30,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             ApplicationLogger applicationLogger)
             : base(aboutView)
         {
-            ApplicationLogger = applicationLogger;
+            ApplicationLogger = applicationLogger.GetLogger(this.GetType());
             _applicationUpdateService = applicationUpdateService;
             ProductVersion = ApplicationInfo.Version;
         }
@@ -98,7 +99,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             }
             catch (Exception exception)
             {
-                ApplicationLogger.LogError(exception, typeof(AboutViewModel));
+                ApplicationLogger.Error(exception);
             }
         }
 

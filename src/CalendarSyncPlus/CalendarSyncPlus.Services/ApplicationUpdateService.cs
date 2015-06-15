@@ -7,6 +7,7 @@ using System.Waf.Applications;
 using CalendarSyncPlus.Common;
 using CalendarSyncPlus.Common.Log;
 using CalendarSyncPlus.Services.Interfaces;
+using log4net;
 using Newtonsoft.Json;
 
 namespace CalendarSyncPlus.Services
@@ -31,10 +32,10 @@ namespace CalendarSyncPlus.Services
         [ImportingConstructor]
         public ApplicationUpdateService(ApplicationLogger applicationLogger)
         {
-            ApplicationLogger = applicationLogger;
+            ApplicationLogger = applicationLogger.GetLogger(this.GetType());
         }
 
-        public ApplicationLogger ApplicationLogger { get; set; }
+        public ILog ApplicationLogger { get; set; }
 
         #region IApplicationUpdateService Members
 
@@ -77,7 +78,7 @@ namespace CalendarSyncPlus.Services
             }
             catch (Exception exception)
             {
-                ApplicationLogger.LogError(exception.ToString(), typeof(ApplicationUpdateService));
+                ApplicationLogger.Error(exception);
                 return exception.Message;
             }
             return null;
@@ -162,7 +163,7 @@ namespace CalendarSyncPlus.Services
             }
             catch (Exception exception)
             {
-                ApplicationLogger.LogError(exception.ToString(), typeof(ApplicationUpdateService));
+                ApplicationLogger.Error(exception);
             }
             return false;
         }
@@ -179,7 +180,7 @@ namespace CalendarSyncPlus.Services
             }
             catch (Exception exception)
             {
-                ApplicationLogger.LogError(exception, typeof(ApplicationUpdateService));
+                ApplicationLogger.Error(exception);
             }
             return _version;
         }

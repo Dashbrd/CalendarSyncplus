@@ -5,6 +5,7 @@ using System.Security.Principal;
 using CalendarSyncPlus.Common.Log;
 using CalendarSyncPlus.Services.Interfaces;
 using CalendarSyncPlus.Services.Utilities;
+using log4net;
 using Microsoft.Win32;
 
 namespace CalendarSyncPlus.Presentation.Services
@@ -15,10 +16,10 @@ namespace CalendarSyncPlus.Presentation.Services
         [ImportingConstructor]
         public WindowsStartupService(ApplicationLogger applicationLogger)
         {
-            ApplicationLogger = applicationLogger;
+            ApplicationLogger = applicationLogger.GetLogger(this.GetType());
         }
 
-        public ApplicationLogger ApplicationLogger { get; set; }
+        public ILog ApplicationLogger { get; set; }
 
         #region IWindowsStartupService Members
 
@@ -30,7 +31,7 @@ namespace CalendarSyncPlus.Presentation.Services
             }
             catch (Exception ex)
             {
-                ApplicationLogger.LogError(ex.ToString(), typeof(WindowsStartupService));
+                ApplicationLogger.Error(ex);
             }
         }
 
@@ -42,7 +43,7 @@ namespace CalendarSyncPlus.Presentation.Services
             }
             catch (Exception ex)
             {
-                ApplicationLogger.LogError(ex.ToString(), typeof(WindowsStartupService));
+                ApplicationLogger.Error(ex);
             }
         }
 
@@ -104,12 +105,12 @@ namespace CalendarSyncPlus.Presentation.Services
             catch (UnauthorizedAccessException ex)
             {
                 isAdmin = false;
-                ApplicationLogger.LogError(ex.ToString(), typeof(WindowsStartupService));
+                ApplicationLogger.Error(ex);
             }
             catch (Exception ex)
             {
                 isAdmin = false;
-                ApplicationLogger.LogError(ex.ToString(),typeof(WindowsStartupService));
+                ApplicationLogger.Error(ex);
             }
             return isAdmin;
         }
