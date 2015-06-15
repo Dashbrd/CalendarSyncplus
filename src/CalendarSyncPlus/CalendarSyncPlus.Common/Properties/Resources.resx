@@ -567,7 +567,7 @@ Select Outlook &lt;-&gt; Google, to sync our Outlook and Google calendar with ea
     <value>Allow Manual Google Code Entry</value>
   </data>
   <data name="HomeView_GroupBox_Status_Header" xml:space="preserve">
-    <value>Status</value>
+    <value>Sync Status</value>
   </data>
   <data name="HomeView_GroupBox_Schedules_Header" xml:space="preserve">
     <value>Next Scheduled</value>
@@ -585,7 +585,7 @@ Select Outlook &lt;-&gt; Google, to sync our Outlook and Google calendar with ea
     <value>Check for alpha releases of the application</value>
   </data>
   <data name="HomeView_Button_ClearLog_Content" xml:space="preserve">
-    <value>Clear Log</value>
+    <value>Clear Sync Status</value>
   </data>
   <data name="ShellView_WhatsNewButton_Content" xml:space="preserve">
     <value>What's New</value>

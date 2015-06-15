@@ -84,7 +84,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             set { SetProperty(ref _logFilters, value); }
         }
 
-        public DelegateCommand ModifyFitlerCommand
+        public DelegateCommand ModifyFilterCommand
         {
             get { return _modifyFitlerCommand ?? new DelegateCommand(ModifyFilter); }
         }

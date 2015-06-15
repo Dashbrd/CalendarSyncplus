@@ -9,7 +9,8 @@
              mc:Ignorable="d"
              d:DesignHeight="300"
              d:DesignWidth="300"
-             d:DataContext="{d:DesignInstance viewModels:LogViewModel}" Name="LogViewerUserControl">
+             d:DataContext="{d:DesignInstance viewModels:LogViewModel}"
+             Name="LogViewerUserControl">
     <Grid>
         <Grid.Resources>
             <DataTemplate x:Key="ProgressBarDataTemplate">
@@ -44,25 +45,37 @@
                 <ColumnDefinition Width="Auto"></ColumnDefinition>
                 <ColumnDefinition></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <TextBlock VerticalAlignment="Center">Filters :</TextBlock>
-            <ItemsControl Grid.Column="1" ItemsSource="{Binding LogFilters}">
+            <TextBlock VerticalAlignment="Center"
+                       Text="Filters :"/>
+            <ItemsControl Grid.Column="1"
+                          ItemsSource="{Binding LogFilters}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <ToggleButton Content="{Binding Path=FilterType}" IsChecked="{Binding Path=IsSelected}" Command="{Binding Path=DataContext.ModifyFitlerCommand,ElementName=LogViewerUserControl}" CommandParameter="{Binding Path=.}"></ToggleButton>
+                        <ToggleButton Content="{Binding Path=FilterType}"
+                                      IsChecked="{Binding Path=IsSelected}"
+                                      Command="{Binding Path=DataContext.ModifyFilterCommand,ElementName=LogViewerUserControl}"
+                                      CommandParameter="{Binding Path=.}"
+                                      Width="60"
+                                      Margin="4"/>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
                 <ItemsControl.ItemsPanel>
-                   <ItemsPanelTemplate>
-                       <StackPanel Orientation="Horizontal"></StackPanel>
-                   </ItemsPanelTemplate>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal"></StackPanel>
+                    </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
             </ItemsControl>
-            <Button Grid.Column="2" HorizontalAlignment="Right" Command="{Binding Path=LoadLogCommand}">Refresh</Button>
+            <Button Grid.Column="2"
+                    HorizontalAlignment="Right"
+                    Command="{Binding Path=LoadLogCommand}"
+                    Content="Reload" 
+                    VerticalAlignment="Center"
+                    Margin="4"/>
         </Grid>
         <DataGrid Grid.Row="2"
                   ItemsSource="{Binding Path=FilteredLogItemsView}"
                   SelectedItem="{Binding Path=SelectedLogItem,Mode=TwoWay}"
-                  AlternatingRowBackground="{StaticResource GrayBrush8}"
+                  AlternatingRowBackground="{StaticResource GrayBrush7}"
                   AutoGenerateColumns="False"
                   CanUserAddRows="False"
                   CanUserDeleteRows="False"
@@ -73,19 +86,18 @@
                   GridLinesVisibility="Horizontal"
                   RenderOptions.ClearTypeHint="Enabled"
                   SelectionMode="Single"
-                  TextOptions.TextFormattingMode="Display"
-                  >
+                  TextOptions.TextFormattingMode="Display">
             <i:Interaction.Behaviors>
                 <behaviors:ScrollIntoViewForDataGrid />
             </i:Interaction.Behaviors>
             <DataGrid.Columns>
-                <DataGridTemplateColumn Header="S.No">
+                <!--<DataGridTemplateColumn Header="S.No">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding Path=Index}"></TextBlock>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
+                </DataGridTemplateColumn>-->
                 <DataGridTemplateColumn Header="Time">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>

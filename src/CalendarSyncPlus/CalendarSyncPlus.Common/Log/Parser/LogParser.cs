@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Security;
 using System.Xml;
 
@@ -120,7 +121,7 @@ namespace CalendarSyncPlus.Common.Log.Parser
                                             }
                                             case ("log4j:locationInfo"):
                                             {
-                                                logItem.Class = xmlReader.GetAttribute("class");
+                                                logItem.Class = ParseClassName(xmlReader.GetAttribute("class"));
                                                 logItem.Method = xmlReader.GetAttribute("method");
                                                 logItem.File = xmlReader.GetAttribute("file");
                                                 logItem.Line = xmlReader.GetAttribute("line");
@@ -144,6 +145,18 @@ namespace CalendarSyncPlus.Common.Log.Parser
                 }
             }
             return logItems;
+        }
+
+        string ParseClassName(string attributeValue)
+        {
+            if (!string.IsNullOrEmpty(attributeValue))
+            {
+                if (attributeValue.Contains("."))
+                {
+                    return attributeValue.Split(new string[] {"."}, StringSplitOptions.RemoveEmptyEntries).Last();
+                }
+            }
+            return attributeValue;
         }
 
         private LogLevel ReadLogLevel(XmlTextReader xmlReader)
@@ -174,7 +187,7 @@ namespace CalendarSyncPlus.Common.Log.Parser
         private DateTime ReadLogTimeStamp(XmlTextReader xmlReader)
         {
             var seconds = Convert.ToDouble(xmlReader.GetAttribute("timestamp"));
-            var date = new DateTime(1970, 1, 1, 0, 0, 0, 0).AddMilliseconds(seconds);
+            var date = new DateTime(1970, 1, 1, 0, 0, 0, 0).AddMilliseconds(seconds).ToLocalTime();
             return date;
         }
 

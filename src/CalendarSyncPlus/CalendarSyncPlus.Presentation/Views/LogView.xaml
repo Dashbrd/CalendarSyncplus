@@ -3,9 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:lex="http://wpflocalizeextension.codeplex.com"
              xmlns:viewModels="clr-namespace:CalendarSyncPlus.Application.ViewModels;assembly=CalendarSyncPlus.Application"
-             xmlns:converters="clr-namespace:CalendarSyncPlus.Presentation.Converters"
              xmlns:logViewer="clr-namespace:CalendarSyncPlus.Presentation.Controls.LogViewer"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300"
@@ -19,9 +17,7 @@
             <ColumnDefinition/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <!--<TextBlock Text="Select Log Level"/>-->
-        <!--<ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{Binding LogLevels}" SelectedItem="{Binding SelectedLogLevel}"/>-->
         <logViewer:LogViewer Grid.Row="1"
-                             Grid.ColumnSpan="2" Grid.Column="0"></logViewer:LogViewer>
+                             Grid.ColumnSpan="2" Grid.Column="0"/>
     </Grid>
 </UserControl>

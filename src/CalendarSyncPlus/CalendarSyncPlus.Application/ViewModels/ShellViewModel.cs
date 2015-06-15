@@ -419,7 +419,6 @@ namespace CalendarSyncPlus.Application.ViewModels
 
         private void UpdateStatus(string text)
         {
-            ApplicationLogger.Info(text);
             BeginInvokeOnCurrentDispatcher(() =>
             {
                 if (IsSyncInProgress && !text.Equals(StatusHelper.LineConstant))
@@ -429,6 +428,7 @@ namespace CalendarSyncPlus.Application.ViewModels
                 _statusBuilder.AppendLine(text);
                 RaisePropertyChanged("SyncLog");
             });
+            ApplicationLogger.Info(text);
         }
 
         private void ShowNotification(bool showHide, string popupText = "Syncing...")
