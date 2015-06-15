@@ -162,6 +162,7 @@
       <Link>AssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Behaviors\PasswordBoxHelper.cs" />
+    <Compile Include="Behaviors\ScrollInToViewForDataGrid.cs" />
     <Compile Include="Behaviors\TextBoxScrollBehavior.cs" />
     <Compile Include="Controls\HtmlXamlConversion\htmlcssparser.cs" />
     <Compile Include="Controls\HtmlXamlConversion\htmlfromxamlconverter.cs" />

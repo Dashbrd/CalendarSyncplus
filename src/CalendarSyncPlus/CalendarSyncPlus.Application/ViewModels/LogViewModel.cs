@@ -7,7 +7,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Waf.Applications;
 using System.Waf.Foundation;
+using System.Windows.Data;
 using CalendarSyncPlus.Application.Views;
+using CalendarSyncPlus.Common;
 using CalendarSyncPlus.Common.Log.Parser;
 using log4net.Core;
 
@@ -17,6 +19,8 @@ namespace CalendarSyncPlus.Application.ViewModels
     public class LogViewModel : ViewModel<ILogView>
     {
         private ObservableCollection<LogItem> _logItems=new ObservableCollection<LogItem>();
+        private ObservableCollection<LogItem> _filteredLogItemsView= new ObservableCollection<LogItem>();
+
         private ObservableCollection<LogFilter> _logFilters = new ObservableCollection<LogFilter>();
         private ObservableCollection<LogFilter> _appliedFilterList = new ObservableCollection<LogFilter>(); 
         private LogItem _selectedLogItem;
@@ -30,6 +34,18 @@ namespace CalendarSyncPlus.Application.ViewModels
             : base(view)
         {
             CreateFilters();
+            CreateDefaultFilter();
+        }
+
+        private void CreateDefaultFilter()
+        {
+           var uiFilter =  LogFilters.FirstOrDefault(filter => filter.FilterType == LogLevel.Error);
+            if (uiFilter!=null)
+            {
+                uiFilter.IsSelected = true;
+                AppliedFilterList.Add(uiFilter);
+
+            }
         }
 
         private void CreateFilters()
@@ -84,6 +100,13 @@ namespace CalendarSyncPlus.Application.ViewModels
             get { return _loadLogCommand ?? new DelegateCommand(LoadLog); }
         }
 
+        public ObservableCollection<LogItem> FilteredLogItemsView
+        {
+            get { return _filteredLogItemsView; }
+            set { SetProperty(ref _filteredLogItemsView, value); }
+        }
+
+
         private void LoadLog()
         {
             IsLoading = true;
@@ -126,7 +149,20 @@ namespace CalendarSyncPlus.Application.ViewModels
 
         public void ApplyFilters()
         {
+            DispatcherHelper.CheckBeginInvokeOnUI(() =>
+            {
+                FilteredLogItemsView.Clear();
+                FilteredLogItemsView = new ObservableCollection<LogItem>(LogItems.Where(GetFilteredItem));
+                if (FilteredLogItemsView.Any())
+                {
+                    SelectedLogItem = FilteredLogItemsView.Last();
+                }
+            });
+        }
 
+        private bool GetFilteredItem(LogItem logItem)
+        {
+            return AppliedFilterList.Any(filter => filter.FilterType == logItem.Level);
         }
     }
 

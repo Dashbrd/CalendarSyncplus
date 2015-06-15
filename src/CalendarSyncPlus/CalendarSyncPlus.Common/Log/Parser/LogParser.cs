@@ -174,7 +174,7 @@ namespace CalendarSyncPlus.Common.Log.Parser
         private DateTime ReadLogTimeStamp(XmlTextReader xmlReader)
         {
             var seconds = Convert.ToDouble(xmlReader.GetAttribute("timestamp"));
-            var date = new DateTime().AddMilliseconds(seconds);
+            var date = new DateTime(1970, 1, 1, 0, 0, 0, 0).AddMilliseconds(seconds);
             return date;
         }
 
