@@ -416,7 +416,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
             }
             catch (Exception exception)
             {
-                ApplicationLogger.Info(string.Format("Unable to retrieve Email for the User : {0}{1}{2}", recip.Name,
+                ApplicationLogger.Error(string.Format("Unable to retrieve Email for the User : {0}{1}{2}", recip.Name,
                     Environment.NewLine, exception.Message));
             }
             return smtpAddress;
@@ -1334,7 +1334,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
                 {
                     for (int i = 0; i < userProperties.Count; i++)
                     {
-                        userProperties.Remove(i+1);
+                        userProperties.Remove(i + 1);
                     }
 
                     foreach (var extendedProperty in calendarAppointment.ExtendedProperties)
