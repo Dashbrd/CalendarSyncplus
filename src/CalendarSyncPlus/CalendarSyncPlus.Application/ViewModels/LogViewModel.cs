@@ -18,11 +18,11 @@ namespace CalendarSyncPlus.Application.ViewModels
     [Export]
     public class LogViewModel : ViewModel<ILogView>
     {
-        private ObservableCollection<LogItem> _logItems=new ObservableCollection<LogItem>();
-        private ObservableCollection<LogItem> _filteredLogItemsView= new ObservableCollection<LogItem>();
+        private ObservableCollection<LogItem> _logItems = new ObservableCollection<LogItem>();
+        private ObservableCollection<LogItem> _filteredLogItemsView = new ObservableCollection<LogItem>();
 
         private ObservableCollection<LogFilter> _logFilters = new ObservableCollection<LogFilter>();
-        private ObservableCollection<LogFilter> _appliedFilterList = new ObservableCollection<LogFilter>(); 
+        private ObservableCollection<LogFilter> _appliedFilterList = new ObservableCollection<LogFilter>();
         private LogItem _selectedLogItem;
         private bool _isLoading;
         private DelegateCommand _modifyFitlerCommand;
@@ -39,12 +39,18 @@ namespace CalendarSyncPlus.Application.ViewModels
 
         private void CreateDefaultFilter()
         {
-           var uiFilter =  LogFilters.FirstOrDefault(filter => filter.FilterType == LogLevel.Error);
-            if (uiFilter!=null)
+            var uiFilter = LogFilters.FirstOrDefault(filter => filter.FilterType == LogLevel.Error);
+            if (uiFilter != null)
             {
                 uiFilter.IsSelected = true;
                 AppliedFilterList.Add(uiFilter);
+            }
 
+            uiFilter = LogFilters.FirstOrDefault(filter => filter.FilterType == LogLevel.Fatal);
+            if (uiFilter != null)
+            {
+                uiFilter.IsSelected = true;
+                AppliedFilterList.Add(uiFilter);
             }
         }
 
@@ -54,8 +60,8 @@ namespace CalendarSyncPlus.Application.ViewModels
             {
                 LogFilters.Add(new LogFilter
                 {
-                    FilterType=logLevel,
-                    IsEnabled=true
+                    FilterType = logLevel,
+                    IsEnabled = true
                 });
             }
         }
@@ -131,7 +137,7 @@ namespace CalendarSyncPlus.Application.ViewModels
         private void ModifyFilter(object selectedFilter)
         {
             var filter = selectedFilter as LogFilter;
-            if (filter ==null)
+            if (filter == null)
             {
                 return;
             }
