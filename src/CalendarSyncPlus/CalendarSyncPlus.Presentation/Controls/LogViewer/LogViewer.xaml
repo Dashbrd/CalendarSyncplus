@@ -43,7 +43,7 @@
         </ContentControl>
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                <ColumnDefinition Width="50"></ColumnDefinition>
                 <ColumnDefinition Width="Auto"></ColumnDefinition>
                 <ColumnDefinition></ColumnDefinition>
             </Grid.ColumnDefinitions>
@@ -83,48 +83,58 @@
                   CanUserDeleteRows="False"
                   CanUserReorderColumns="False"
                   CanUserResizeColumns="True"
-                  CanUserResizeRows="False"
+                  CanUserResizeRows="True"
                   CanUserSortColumns="False"
                   GridLinesVisibility="Horizontal"
                   RenderOptions.ClearTypeHint="Enabled"
-                  SelectionMode="Single"
-                  TextOptions.TextFormattingMode="Display">
+                  SelectionMode="Extended"
+                  TextOptions.TextFormattingMode="Display"
+                  ClipboardCopyMode="ExcludeHeader">
             <i:Interaction.Behaviors>
                 <behaviors:ScrollIntoViewForDataGrid />
             </i:Interaction.Behaviors>
             <DataGrid.Columns>
-                <DataGridTemplateColumn Header="Time">
+                <DataGridTemplateColumn Header="Time" ClipboardContentBinding="{Binding TimeStamp}">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding Path=TimeStamp}"></TextBlock>
+                            <TextBlock Text="{Binding Path=TimeStamp}"
+                                       ToolTip="{Binding Path=TimeStamp}"/> 
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn Header="Level">
+                <DataGridTemplateColumn Header="Level"
+                                        ClipboardContentBinding="{Binding Level}">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding Path=Level}"></TextBlock>
+                            <TextBlock Text="{Binding Path=Level}"
+                                       ToolTip="{Binding Path=Level}" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn Header="Message">
+                <DataGridTemplateColumn Header="Message"
+                                        ClipboardContentBinding="{Binding Message}">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding Path=Message}"></TextBlock>
+                            <TextBlock Text="{Binding Path=Message}"
+                                       ToolTip="{Binding Path=Message}" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn Header="Class">
+                <DataGridTemplateColumn Header="Class"
+                                        ClipboardContentBinding="{Binding Class}">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding Path=Class}"></TextBlock>
+                            <TextBlock Text="{Binding Path=Class}"
+                                       ToolTip="{Binding Path=Class}"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn Header="Method">
+                <DataGridTemplateColumn Header="Method"
+                                        ClipboardContentBinding="{Binding Method}">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding Path=Method}"></TextBlock>
+                            <TextBlock Text="{Binding Path=Method}"
+                                       ToolTip="{Binding Path=Method}"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>

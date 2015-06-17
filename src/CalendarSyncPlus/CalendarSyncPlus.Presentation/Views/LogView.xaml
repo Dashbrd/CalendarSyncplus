@@ -12,26 +12,17 @@
              d:DesignHeight="300" d:DesignWidth="300"
              d:DataContext="{d:DesignInstance viewModels:LogViewModel}">
     <Grid>
-        <Grid.Resources>
-            <Converters:InvertBooleanConverter x:Key="InvertBooleanConverter"></Converters:InvertBooleanConverter>
-        </Grid.Resources>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
+            <ColumnDefinition Width="50"/>
+            <ColumnDefinition />
+            <ColumnDefinition Width="60" />
         </Grid.ColumnDefinitions>
-        <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition />
-                <ColumnDefinition Width="60" />
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition />
-            </Grid.RowDefinitions>
-            <TextBox Text="{Binding Path=CurrentFileName}"
+        <TextBlock Text="Log File :" VerticalAlignment="Center"/>
+        <TextBox Grid.Column="1" Text="{Binding Path=CurrentFileName}"
                      VerticalAlignment="Center"
                      Margin="4" IsReadOnly="True">
                 <i:Interaction.Triggers>
@@ -41,13 +32,12 @@
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
             </TextBox>
-            <Button Grid.Column="1"
+            <Button Grid.Column="2"
                     Command="{Binding Path=LoadLogCommand}"
                     Content="Load"
                     VerticalAlignment="Center"
                     Margin="4" IsEnabled="{Binding Path=IsCurrentFileNew}" />
-        </Grid>
         <logViewer:LogViewer Grid.Row="1"
-                             Grid.ColumnSpan="2" Grid.Column="0"/>
+                             Grid.ColumnSpan="3" Grid.Column="0"/>
     </Grid>
 </UserControl>

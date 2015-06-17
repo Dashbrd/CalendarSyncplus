@@ -590,4 +590,7 @@ Select Outlook &lt;-&gt; Google, to sync our Outlook and Google calendar with ea
   <data name="ShellView_WhatsNewButton_Content" xml:space="preserve">
     <value>What's New</value>
   </data>
+  <data name="HomeView_Button_DeleteLog_Content" xml:space="preserve">
+    <value>Delete Application Log</value>
+  </data>
 </root>
