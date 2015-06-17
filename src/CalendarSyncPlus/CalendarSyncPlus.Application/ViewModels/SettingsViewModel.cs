@@ -36,6 +36,7 @@ using CalendarSyncPlus.ExchangeWebServices.ExchangeWeb;
 using CalendarSyncPlus.GoogleServices.Google;
 using CalendarSyncPlus.OutlookServices.Outlook;
 using CalendarSyncPlus.Services.Interfaces;
+using log4net;
 using MahApps.Metro.Controls.Dialogs;
 
 #endregion
@@ -59,6 +60,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             Settings = settings;
             ExchangeWebCalendarService = exchangeWebCalendarService;
             ApplicationLogger = applicationLogger;
+            Logger = applicationLogger.GetLogger(this.GetType());
             WindowsStartupService = windowsStartupService;
             AccountAuthenticationService = accountAuthenticationService;
             GoogleCalendarService = googleCalendarService;
@@ -108,7 +110,8 @@ namespace CalendarSyncPlus.Application.ViewModels
         public IOutlookCalendarService OutlookCalendarService { get; set; }
         public IMessageService MessageService { get; set; }
         public IExchangeWebCalendarService ExchangeWebCalendarService { get; private set; }
-        public ApplicationLogger ApplicationLogger { get; private set; }
+        public ILog Logger { get; private set; }
+        public ApplicationLogger ApplicationLogger { get; set; }
         public IWindowsStartupService WindowsStartupService { get; set; }
         public IAccountAuthenticationService AccountAuthenticationService { get; set; }
 
@@ -708,7 +711,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             }
             catch (Exception exception)
             {
-                ApplicationLogger.LogError(exception.ToString(), typeof(SettingsViewModel));
+                Logger.Error(exception);
                 MessageService.ShowMessageAsync("Invalid Proxy Settings. Proxy settings cannot be applied");
             }
         }

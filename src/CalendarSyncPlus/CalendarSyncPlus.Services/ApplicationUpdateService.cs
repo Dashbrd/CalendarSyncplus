@@ -7,6 +7,7 @@ using System.Waf.Applications;
 using CalendarSyncPlus.Common;
 using CalendarSyncPlus.Common.Log;
 using CalendarSyncPlus.Services.Interfaces;
+using log4net;
 using Newtonsoft.Json;
 
 namespace CalendarSyncPlus.Services
@@ -31,10 +32,10 @@ namespace CalendarSyncPlus.Services
         [ImportingConstructor]
         public ApplicationUpdateService(ApplicationLogger applicationLogger)
         {
-            ApplicationLogger = applicationLogger;
+            ApplicationLogger = applicationLogger.GetLogger(this.GetType());
         }
 
-        public ApplicationLogger ApplicationLogger { get; set; }
+        public ILog ApplicationLogger { get; set; }
 
         #region IApplicationUpdateService Members
 
@@ -77,7 +78,7 @@ namespace CalendarSyncPlus.Services
             }
             catch (Exception exception)
             {
-                ApplicationLogger.LogError(exception.ToString(), typeof(ApplicationUpdateService));
+                ApplicationLogger.Error(exception);
                 return exception.Message;
             }
             return null;
@@ -88,7 +89,7 @@ namespace CalendarSyncPlus.Services
             version1 = version1.Contains("-") ? version1.Remove(version1.IndexOf("-",StringComparison.InvariantCultureIgnoreCase)) : version1;
             version2 = version2.Contains("-") ? version2.Remove(version2.IndexOf("-", StringComparison.InvariantCultureIgnoreCase)) : version2;
             var version = new Version(version1.Substring(1));
-            if (version > new Version(version2.Substring(1)))
+            if (version < new Version(version2.Substring(1)))
             {
                 return true;
             }
@@ -153,7 +154,8 @@ namespace CalendarSyncPlus.Services
         {
             try
             {
-                var version = new Version(_version.Substring(1));
+                string versionString = _version.Contains("-") ? _version.Remove(_version.IndexOf("-", StringComparison.InvariantCultureIgnoreCase)) : _version;
+                var version = new Version(versionString.Substring(1));
                 if (version > new Version(ApplicationInfo.Version))
                 {
                     return true;
@@ -161,7 +163,7 @@ namespace CalendarSyncPlus.Services
             }
             catch (Exception exception)
             {
-                ApplicationLogger.LogError(exception.ToString(), typeof(ApplicationUpdateService));
+                ApplicationLogger.Error(exception);
             }
             return false;
         }
@@ -178,7 +180,7 @@ namespace CalendarSyncPlus.Services
             }
             catch (Exception exception)
             {
-                ApplicationLogger.LogError(exception, typeof(ApplicationUpdateService));
+                ApplicationLogger.Error(exception);
             }
             return _version;
         }

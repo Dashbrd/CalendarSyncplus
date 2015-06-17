@@ -11,6 +11,7 @@ using CalendarSyncPlus.Domain.Wrappers;
 using CalendarSyncPlus.Services;
 using CalendarSyncPlus.Services.Interfaces;
 using CalendarSyncPlus.Services.Wrappers;
+using log4net;
 using Microsoft.Exchange.WebServices.Data;
 using AppAppointment = CalendarSyncPlus.Domain.Models.Appointment;
 using Appointment = Microsoft.Exchange.WebServices.Data.Appointment;
@@ -31,10 +32,10 @@ namespace CalendarSyncPlus.ExchangeWebServices.ExchangeWeb
         [ImportingConstructor]
         public ExchangeWebCalendarService(ApplicationLogger applicationLogger)
         {
-            ApplicationLogger = applicationLogger;
+            ApplicationLogger = applicationLogger.GetLogger(this.GetType());
         }
 
-        public ApplicationLogger ApplicationLogger { get; set; }
+        public ILog ApplicationLogger { get; set; }
 
         #region IExchangeWebCalendarService Members
 
@@ -280,7 +281,7 @@ namespace CalendarSyncPlus.ExchangeWebServices.ExchangeWeb
                 }
                 catch (Exception exception)
                 {
-                    ApplicationLogger.LogError(exception.ToString(), typeof(ExchangeWebCalendarService));
+                    ApplicationLogger.Error(exception);
                 }
             }
             return exchangeServerSettings;

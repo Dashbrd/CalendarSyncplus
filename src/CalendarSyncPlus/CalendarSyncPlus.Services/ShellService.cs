@@ -36,6 +36,7 @@ namespace CalendarSyncPlus.Services
         private object _helpView;
         private object _settingsView;
         private object _shellView;
+        private object _logView;
 
         #endregion
 
@@ -63,6 +64,12 @@ namespace CalendarSyncPlus.Services
         {
             get { return _aboutView; }
             set { SetProperty(ref _aboutView, value); }
+        }
+
+        public object LogView
+        {
+            get { return _logView; }
+            set { SetProperty(ref _logView, value); }
         }
 
         #endregion

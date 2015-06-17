@@ -30,6 +30,7 @@ using CalendarSyncPlus.Domain.Helpers;
 using CalendarSyncPlus.Domain.Models;
 using CalendarSyncPlus.Services.Interfaces;
 using CalendarSyncPlus.Services.Utilities;
+using log4net;
 
 #endregion
 
@@ -40,7 +41,7 @@ namespace CalendarSyncPlus.Services
     {
         #region Fields
 
-        private readonly ApplicationLogger _applicationLogger;
+        private readonly ILog _applicationLogger;
         private readonly ICalendarUpdateService _calendarUpdateService;
         private readonly IMessageService _messageService;
         private readonly ISettingsProvider _settingsProvider;
@@ -58,7 +59,7 @@ namespace CalendarSyncPlus.Services
             _settingsProvider = settingsProvider;
             _calendarUpdateService = calendarUpdateService;
             _messageService = messageService;
-            _applicationLogger = applicationLogger;
+            _applicationLogger = applicationLogger.GetLogger(this.GetType());
         }
 
         #endregion
@@ -108,13 +109,13 @@ namespace CalendarSyncPlus.Services
             {
                 AggregateException flattenException = exception.Flatten();
                 _messageService.ShowMessageAsync(flattenException.Message);
-                _applicationLogger.LogError(exception.ToString(), typeof(SyncService));
+                _applicationLogger.Error(exception);
                 return flattenException.Message;
             }
             catch (Exception exception)
             {
                 _messageService.ShowMessageAsync(exception.Message);
-                _applicationLogger.LogError(exception.ToString(), typeof(SyncService));
+                _applicationLogger.Error(exception);
                 return exception.Message;
             }
         }

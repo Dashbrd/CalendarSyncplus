@@ -507,6 +507,18 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("HomeView_Button_SyncNow_Content", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Delete Application Log.
+        /// </summary>
+        public static string HomeView_Button_DeleteLog_Content
+        {
+            get
+            {
+                return ResourceManager.GetString("HomeView_Button_DeleteLog_Content", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to Next Scheduled.
         /// </summary>
@@ -1248,7 +1260,16 @@ namespace CalendarSyncPlus.Common.Properties
                 return ResourceManager.GetString("ShellView_HelpButton_Content", resourceCulture);
             }
         }
-
+        /// <summary>
+        ///   Looks up a localized string similar to What&apos;s New.
+        /// </summary>
+        public static string ShellView_WhatsNewButton_Content
+        {
+            get
+            {
+                return ResourceManager.GetString("ShellView_WhatsNewButton_Content", resourceCulture);
+            }
+        }
         /// <summary>
         ///   Looks up a localized string similar to Help.
         /// </summary>

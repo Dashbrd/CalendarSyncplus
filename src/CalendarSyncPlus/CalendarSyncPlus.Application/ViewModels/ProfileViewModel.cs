@@ -15,6 +15,7 @@ using CalendarSyncPlus.GoogleServices.Google;
 using CalendarSyncPlus.OutlookServices.Outlook;
 using CalendarSyncPlus.OutlookServices.Utilities;
 using CalendarSyncPlus.Services.Interfaces;
+using log4net;
 using MahApps.Metro.Controls.Dialogs;
 
 namespace CalendarSyncPlus.Application.ViewModels
@@ -90,7 +91,7 @@ namespace CalendarSyncPlus.Application.ViewModels
         {
             SyncProfile = syncProfile;
             ExchangeWebCalendarService = exchangeWebCalendarService;
-            ApplicationLogger = applicationLogger;
+            ApplicationLogger = applicationLogger.GetLogger(this.GetType());
             AccountAuthenticationService = accountAuthenticationService;
             GoogleCalendarService = googleCalendarService;
             OutlookCalendarService = outlookCalendarService;
@@ -102,7 +103,7 @@ namespace CalendarSyncPlus.Application.ViewModels
         public IOutlookCalendarService OutlookCalendarService { get; set; }
         public IMessageService MessageService { get; set; }
         public IExchangeWebCalendarService ExchangeWebCalendarService { get; private set; }
-        public ApplicationLogger ApplicationLogger { get; private set; }
+        public ILog ApplicationLogger { get; private set; }
         public IAccountAuthenticationService AccountAuthenticationService { get; set; }
 
         #region Properties
@@ -593,7 +594,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             catch (Exception aggregateException)
             {
                 string exception = aggregateException.ToString();
-                ApplicationLogger.LogError(exception, typeof(ProfileViewModel));
+                ApplicationLogger.Error(exception);
             }
         }
 
@@ -640,20 +641,20 @@ namespace CalendarSyncPlus.Application.ViewModels
                     MessageService.ShowMessageAsync("Please select a Google account to get calendars");
                     return;
                 }
-                ApplicationLogger.LogInfo("Loading Google calendars...", typeof(ProfileViewModel));
+                ApplicationLogger.Info("Loading Google calendars...");
                 await GetGoogleCalendarInternal();
-                ApplicationLogger.LogInfo("Google calendars loaded...", typeof(ProfileViewModel));
+                ApplicationLogger.Info("Google calendars loaded...");
             }
             catch (AggregateException exception)
             {
                 AggregateException flattenException = exception.Flatten();
                 MessageService.ShowMessageAsync(flattenException.Message);
-                ApplicationLogger.LogError(flattenException.ToString(), typeof(ProfileViewModel));
+                ApplicationLogger.Error(flattenException);
             }
             catch (Exception exception)
             {
                 MessageService.ShowMessageAsync(exception.Message);
-                ApplicationLogger.LogError(exception.ToString(), typeof(ProfileViewModel));
+                ApplicationLogger.Error(exception);
             }
             finally
             {
@@ -689,7 +690,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             catch (Exception exception)
             {
                 MessageService.ShowMessageAsync("Unable to get Google calendars.");
-                ApplicationLogger.LogError(exception.ToString(), typeof(ProfileViewModel));
+                ApplicationLogger.Error(exception);
             }
         }
 

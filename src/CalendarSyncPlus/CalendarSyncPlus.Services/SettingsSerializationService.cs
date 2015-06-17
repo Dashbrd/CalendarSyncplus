@@ -30,6 +30,7 @@ using CalendarSyncPlus.Domain;
 using CalendarSyncPlus.Domain.File.Xml;
 using CalendarSyncPlus.Domain.Models;
 using CalendarSyncPlus.Services.Interfaces;
+using log4net;
 
 #endregion
 
@@ -38,7 +39,7 @@ namespace CalendarSyncPlus.Services
     [Export(typeof(ISettingsSerializationService))]
     public class SettingsSerializationService : ISettingsSerializationService
     {
-        private readonly ApplicationLogger _applicationLogger;
+        private readonly ILog _applicationLogger;
 
         #region Fields
 
@@ -52,7 +53,7 @@ namespace CalendarSyncPlus.Services
         [ImportingConstructor]
         public SettingsSerializationService(ApplicationLogger applicationLogger)
         {
-            _applicationLogger = applicationLogger;
+            _applicationLogger = applicationLogger.GetLogger(this.GetType());
             applicationDataDirectory =
                 Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
                     "CalendarSyncPlus");
@@ -92,7 +93,7 @@ namespace CalendarSyncPlus.Services
         {
             if (!File.Exists(SettingsFilePath))
             {
-                _applicationLogger.LogInfo("Settings file does not exist", typeof(SettingsSerializationService));
+                _applicationLogger.Info("Settings file does not exist");
                 return null;
             }
             try
@@ -102,7 +103,7 @@ namespace CalendarSyncPlus.Services
             }
             catch (Exception exception)
             {
-                _applicationLogger.LogError(exception.ToString(), typeof(SettingsSerializationService));
+                _applicationLogger.Error(exception);
                 return null;
             }
         }

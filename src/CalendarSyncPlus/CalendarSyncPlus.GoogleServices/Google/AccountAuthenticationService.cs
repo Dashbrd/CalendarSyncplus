@@ -14,7 +14,7 @@ using Google.Apis.Auth.OAuth2.Flows;
 using Google.Apis.Calendar.v3;
 using Google.Apis.Services;
 using Google.Apis.Util.Store;
-
+using log4net;
 using Newtonsoft.Json.Bson;
 
 namespace CalendarSyncPlus.GoogleServices.Google
@@ -23,13 +23,13 @@ namespace CalendarSyncPlus.GoogleServices.Google
     public class AccountAuthenticationService : IAccountAuthenticationService
     {
         public IMessageService MessageService { get; set; }
-        private readonly ApplicationLogger ApplicationLogger;
+        private readonly ILog ApplicationLogger;
 
         [ImportingConstructor]
         public AccountAuthenticationService(ApplicationLogger applicationLogger, IMessageService messageService)
         {
             MessageService = messageService;
-            ApplicationLogger = applicationLogger;
+            ApplicationLogger = applicationLogger.GetLogger(this.GetType());
         }
 
         #region IAccountAuthenticationService Members
@@ -85,12 +85,12 @@ namespace CalendarSyncPlus.GoogleServices.Google
             }
             catch (AggregateException exception)
             {
-                ApplicationLogger.LogError(exception.ToString(), typeof(AccountAuthenticationService));
+                ApplicationLogger.Error(exception);
                 return null;
             }
             catch (Exception exception)
             {
-                ApplicationLogger.LogError(exception.ToString(), typeof(AccountAuthenticationService));
+                ApplicationLogger.Error(exception);
                 return null;
             }
         }
@@ -156,7 +156,7 @@ namespace CalendarSyncPlus.GoogleServices.Google
             }
             catch (Exception exception)
             {
-                ApplicationLogger.LogError(exception.ToString(), typeof(AccountAuthenticationService));
+                ApplicationLogger.Error(exception);
                 return false;
             }
         }
@@ -201,11 +201,11 @@ namespace CalendarSyncPlus.GoogleServices.Google
             }
             catch (AggregateException exception)
             {
-                ApplicationLogger.LogError(exception.ToString(), typeof(AccountAuthenticationService));
+                ApplicationLogger.Error(exception);
             }
             catch (Exception exception)
             {
-                ApplicationLogger.LogError(exception.ToString(), typeof(AccountAuthenticationService));
+                ApplicationLogger.Error(exception);
             }
             return false;
         }

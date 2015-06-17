@@ -3,9 +3,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:lex="http://wpflocalizeextension.codeplex.com"
              xmlns:viewModels="clr-namespace:CalendarSyncPlus.Application.ViewModels;assembly=CalendarSyncPlus.Application"
-             xmlns:converters="clr-namespace:CalendarSyncPlus.Presentation.Converters"
+             xmlns:logViewer="clr-namespace:CalendarSyncPlus.Presentation.Controls.LogViewer"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:Behaviors="clr-namespace:CalendarSyncPlus.Presentation.Behaviors"
+             xmlns:Converters="http://waf.codeplex.com/schemas"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300"
              d:DataContext="{d:DesignInstance viewModels:LogViewModel}">
@@ -15,67 +17,27 @@
             <RowDefinition />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
+            <ColumnDefinition Width="50"/>
+            <ColumnDefinition />
+            <ColumnDefinition Width="60" />
         </Grid.ColumnDefinitions>
-        <TextBlock Text="Select Log Level"/>
-        <ComboBox Grid.Column="1" ItemsSource="{Binding LogLevels}" SelectedItem="{Binding SelectedLogLevel}"/>
-        <DataGrid x:Name="ProfilesDataGrid"
-                  Grid.Row="1"
-                  Grid.ColumnSpan="2"
-                  AlternatingRowBackground="{StaticResource GrayBrush8}"
-                  AutoGenerateColumns="False"
-                  CanUserAddRows="False"
-                  CanUserDeleteRows="False"
-                  CanUserReorderColumns="False"
-                  CanUserResizeColumns="True"
-                  CanUserResizeRows="False"
-                  CanUserSortColumns="False"
-                  GridLinesVisibility="Horizontal"
-                  ItemsSource="{Binding Path=SyncProfileList}"
-                  RenderOptions.ClearTypeHint="Enabled"
-                  SelectionMode="Single"
-                  TextOptions.TextFormattingMode="Display">
-            <DataGrid.Columns>
-                <DataGridTextColumn Width="150"
-                                    Binding="{Binding Name}"
-                                    Header="{lex:LocText Key=ManageProfileView_DataGrid_Column_NameColumn_Header}" />
-                <DataGridCheckBoxColumn Width="100"
-                                        Binding="{Binding IsSyncEnabled,
-                                                              Mode=TwoWay,
-                                                              UpdateSourceTrigger=PropertyChanged}"
-                                        EditingElementStyle="{DynamicResource MetroDataGridCheckBox}"
-                                        ElementStyle="{DynamicResource MetroDataGridCheckBox}"
-                                        Header="{lex:LocText Key=ManageProfileView_DataGrid_Column_SyncColumn_Header}" />
-                <DataGridTemplateColumn Width="80"
-                                        Header="{lex:LocText Key=ManageProfileView_DataGrid_Column_DeleteColumn_Header}">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <Button Width="20"
-                                    Height="20"
-                                    Margin="2"
-                                    BorderThickness="0"
-                                    Command="{Binding DataContext.DeleteProfileCommand,
-                                                          ElementName=ProfilesDataGrid}"
-                                    CommandParameter="{Binding}"
-                                    IsEnabled="{Binding IsDefault,
-                                                            Converter={StaticResource InvertBooleanConverter},
-                                                            UpdateSourceTrigger=PropertyChanged}"
-                                    Style="{DynamicResource MetroCircleButtonStyle}">
-                                <Rectangle Width="12"
-                                           Height="12"
-                                           Fill="{Binding Path=Foreground,
-                                                              RelativeSource={RelativeSource FindAncestor,
-                                                                                             AncestorType={x:Type Button}}}">
-                                    <Rectangle.OpacityMask>
-                                        <VisualBrush Visual="{StaticResource appbar_delete}" />
-                                    </Rectangle.OpacityMask>
-                                </Rectangle>
-                            </Button>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-            </DataGrid.Columns>
-        </DataGrid>
+        <TextBlock Text="Log File :" VerticalAlignment="Center"/>
+        <TextBox Grid.Column="1" Text="{Binding Path=CurrentFileName}"
+                     VerticalAlignment="Center"
+                     Margin="4" IsReadOnly="True">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="MouseDoubleClick">
+                        <Behaviors:EventToCommand Command="{Binding Path=SelectLogFileCommand}"
+                                             />
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </TextBox>
+            <Button Grid.Column="2"
+                    Command="{Binding Path=LoadLogCommand}"
+                    Content="Load"
+                    VerticalAlignment="Center"
+                    Margin="4" IsEnabled="{Binding Path=IsCurrentFileNew}" />
+        <logViewer:LogViewer Grid.Row="1"
+                             Grid.ColumnSpan="3" Grid.Column="0"/>
     </Grid>
 </UserControl>

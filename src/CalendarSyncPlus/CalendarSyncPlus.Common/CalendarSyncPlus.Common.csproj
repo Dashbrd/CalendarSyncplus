@@ -66,6 +66,9 @@
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="ILocalizationService.cs" />
     <Compile Include="Log\ApplicationLogger.cs" />
+    <Compile Include="Log\Parser\LogItem.cs" />
+    <Compile Include="Log\Parser\LogLevel.cs" />
+    <Compile Include="Log\Parser\LogParser.cs" />
     <Compile Include="MetaData\CalendarServiceType.cs" />
     <Compile Include="MetaData\ICalendarServiceMetaData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

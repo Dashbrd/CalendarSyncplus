@@ -37,6 +37,7 @@ using CalendarSyncPlus.Services;
 using CalendarSyncPlus.Services.Interfaces;
 using CalendarSyncPlus.Services.Utilities;
 using CalendarSyncPlus.Services.Wrappers;
+using log4net;
 using Microsoft.Office.Interop.Outlook;
 using Microsoft.Win32;
 using AppRecipient = CalendarSyncPlus.Domain.Models.Recipient;
@@ -55,12 +56,12 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
         [ImportingConstructor]
         public OutlookCalendarService(ApplicationLogger applicationLogger)
         {
-            ApplicationLogger = applicationLogger;
+            ApplicationLogger = applicationLogger.GetLogger(this.GetType());
         }
 
         #region Properties
 
-        public ApplicationLogger ApplicationLogger { get; set; }
+        public ILog ApplicationLogger { get; set; }
 
         private OutlookCalendar OutlookCalendar { get; set; }
 
@@ -175,7 +176,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
                                 }
                                 catch (Exception exception)
                                 {
-                                    ApplicationLogger.LogError(exception.ToString(), typeof(OutlookCalendarService));
+                                    ApplicationLogger.Error(exception);
                                 }
                                 finally
                                 {
@@ -188,7 +189,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
             }
             catch (Exception exception)
             {
-                ApplicationLogger.LogError(exception.Message, typeof(OutlookCalendarService));
+                ApplicationLogger.Error(exception);
                 return new AppointmentListWrapper
                 {
                     Appointments = null,
@@ -297,7 +298,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
             }
             catch (Exception exception)
             {
-                ApplicationLogger.LogError(exception.ToString(), typeof(OutlookCalendarService));
+                ApplicationLogger.Error(exception);
             }
             finally
             {
@@ -415,8 +416,8 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
             }
             catch (Exception exception)
             {
-                ApplicationLogger.LogInfo(string.Format("Unable to retrieve Email for the User : {0}{1}{2}", recip.Name,
-                    Environment.NewLine, exception.Message), typeof(OutlookCalendarService));
+                ApplicationLogger.Error(string.Format("Unable to retrieve Email for the User : {0}{1}{2}", recip.Name,
+                    Environment.NewLine, exception.Message));
             }
             return smtpAddress;
         }
@@ -454,7 +455,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
             }
             catch (Exception exception)
             {
-                ApplicationLogger.LogError(exception.ToString(), typeof(OutlookCalendarService));
+                ApplicationLogger.Error(exception);
             }
             finally
             {
@@ -541,7 +542,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
             }
             catch (Exception exception)
             {
-                ApplicationLogger.LogError(exception.Message, typeof(OutlookCalendarService));
+                ApplicationLogger.Error(exception);
                 return new AppointmentListWrapper
                 {
                     Appointments = null,
@@ -606,7 +607,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
             }
             catch (Exception exception)
             {
-                ApplicationLogger.LogError(exception.ToString(), typeof(OutlookCalendarService));
+                ApplicationLogger.Error(exception);
             }
             finally
             {
@@ -857,7 +858,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
             }
             catch (Exception exception)
             {
-                ApplicationLogger.LogError(exception.ToString(), typeof(OutlookCalendarService));
+                ApplicationLogger.Error(exception);
                 return new AppointmentListWrapper
                 {
                     WaitForApplicationQuit = disposeOutlookInstances,
@@ -995,7 +996,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
             }
             catch (Exception exception)
             {
-                ApplicationLogger.LogError(exception.Message, typeof(OutlookCalendarService));
+                ApplicationLogger.Error(exception);
             }
             finally
             {
@@ -1072,13 +1073,13 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
                     }
                     catch (Exception exception)
                     {
-                        ApplicationLogger.LogError(exception.ToString(), typeof(OutlookCalendarService));
+                        ApplicationLogger.Error(exception);
                     }
                 }
             }
             catch (Exception exception)
             {
-                ApplicationLogger.LogError(exception.ToString(), typeof(OutlookCalendarService));
+                ApplicationLogger.Error(exception);
                 return new AppointmentListWrapper
                 {
                     WaitForApplicationQuit = disposeOutlookInstances,
@@ -1209,13 +1210,13 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
                     }
                     catch (Exception exception)
                     {
-                        ApplicationLogger.LogError(exception, typeof(OutlookCalendarService));
+                        ApplicationLogger.Error(exception);
                     }
                 }
             }
             catch (Exception exception)
             {
-                ApplicationLogger.LogError(exception, typeof(OutlookCalendarService));
+                ApplicationLogger.Error(exception);
                 return new AppointmentListWrapper
                 {
                     WaitForApplicationQuit = disposeOutlookInstances,
@@ -1333,7 +1334,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
                 {
                     for (int i = 0; i < userProperties.Count; i++)
                     {
-                        userProperties.Remove(i+1);
+                        userProperties.Remove(i + 1);
                     }
 
                     foreach (var extendedProperty in calendarAppointment.ExtendedProperties)
@@ -1349,7 +1350,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
             }
             catch (Exception exception)
             {
-                ApplicationLogger.LogError(exception.Message, typeof(OutlookCalendarService));
+                ApplicationLogger.Error(exception);
             }
             finally
             {

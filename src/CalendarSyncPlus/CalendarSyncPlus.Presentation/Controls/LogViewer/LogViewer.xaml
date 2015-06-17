@@ -1,0 +1,144 @@
+﻿<UserControl x:Class="CalendarSyncPlus.Presentation.Controls.LogViewer.LogViewer"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:viewModels="clr-namespace:CalendarSyncPlus.Application.ViewModels;assembly=CalendarSyncPlus.Application"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:behaviors="clr-namespace:CalendarSyncPlus.Presentation.Behaviors"
+             xmlns:converters="http://metro.mahapps.com/winfx/xaml/shared"
+             mc:Ignorable="d"
+             d:DesignHeight="300"
+             d:DesignWidth="300"
+             d:DataContext="{d:DesignInstance viewModels:LogViewModel}"
+             Name="LogViewerUserControl">
+    <Grid>
+        <Grid.Resources>
+            <converters:ToUpperConverter x:Key="ToUpperConverter"/>
+            <DataTemplate x:Key="ProgressBarDataTemplate">
+                <ProgressBar IsIndeterminate="True"
+                             Height="4"/>
+            </DataTemplate>
+        </Grid.Resources>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+        </Grid.RowDefinitions>
+        <ContentControl Grid.Row="2">
+            <ContentControl.Style>
+                <Style TargetType="ContentControl">
+                    <Setter Property="ContentTemplate"
+                            Value="{x:Null}" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsLoading,UpdateSourceTrigger=PropertyChanged}"
+                                     Value="True">
+                            <Setter Property="ContentTemplate"
+                                    Value="{StaticResource ProgressBarDataTemplate}" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </ContentControl.Style>
+        </ContentControl>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="50"></ColumnDefinition>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <TextBlock VerticalAlignment="Center"
+                       Text="Filters :"/>
+            <ItemsControl Grid.Column="1"
+                          ItemsSource="{Binding LogFilters}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <ToggleButton Content="{Binding Path=FilterType,Converter={StaticResource ToUpperConverter}}"
+                                      IsChecked="{Binding Path=IsSelected}"
+                                      Command="{Binding Path=DataContext.ModifyFilterCommand,ElementName=LogViewerUserControl}"
+                                      CommandParameter="{Binding Path=.}"
+                                      Width="60"
+                                      Margin="4"/>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal"></StackPanel>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
+            <Button Grid.Column="2"
+                    HorizontalAlignment="Right"
+                    Command="{Binding Path=LoadLogCommand}"
+                    Content="Reload" 
+                    VerticalAlignment="Center"
+                    Margin="4"/>
+        </Grid>
+        <DataGrid Grid.Row="2"
+                  ItemsSource="{Binding Path=FilteredLogItemsView}"
+                  SelectedItem="{Binding Path=SelectedLogItem,Mode=TwoWay}"
+                  AlternatingRowBackground="{StaticResource GrayBrush6}"
+                  AutoGenerateColumns="False"
+                  CanUserAddRows="False"
+                  CanUserDeleteRows="False"
+                  CanUserReorderColumns="False"
+                  CanUserResizeColumns="True"
+                  CanUserResizeRows="True"
+                  CanUserSortColumns="False"
+                  GridLinesVisibility="Horizontal"
+                  RenderOptions.ClearTypeHint="Enabled"
+                  SelectionMode="Extended"
+                  TextOptions.TextFormattingMode="Display"
+                  ClipboardCopyMode="ExcludeHeader">
+            <i:Interaction.Behaviors>
+                <behaviors:ScrollIntoViewForDataGrid />
+            </i:Interaction.Behaviors>
+            <DataGrid.Columns>
+                <DataGridTemplateColumn Header="Time" ClipboardContentBinding="{Binding TimeStamp}">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Path=TimeStamp}"
+                                       ToolTip="{Binding Path=TimeStamp}"/> 
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Level"
+                                        ClipboardContentBinding="{Binding Level}">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Path=Level}"
+                                       ToolTip="{Binding Path=Level}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Message"
+                                        ClipboardContentBinding="{Binding Message}">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Path=Message}"
+                                       ToolTip="{Binding Path=Message}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Class"
+                                        ClipboardContentBinding="{Binding Class}">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Path=Class}"
+                                       ToolTip="{Binding Path=Class}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Method"
+                                        ClipboardContentBinding="{Binding Method}">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Path=Method}"
+                                       ToolTip="{Binding Path=Method}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</UserControl>

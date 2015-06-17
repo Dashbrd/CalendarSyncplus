@@ -161,7 +161,9 @@
     <Compile Include="..\Shared\AssemblyInfo.cs">
       <Link>AssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Behaviors\EventToCommand.cs" />
     <Compile Include="Behaviors\PasswordBoxHelper.cs" />
+    <Compile Include="Behaviors\ScrollInToViewForDataGrid.cs" />
     <Compile Include="Behaviors\TextBoxScrollBehavior.cs" />
     <Compile Include="Controls\HtmlXamlConversion\htmlcssparser.cs" />
     <Compile Include="Controls\HtmlXamlConversion\htmlfromxamlconverter.cs" />
@@ -170,6 +172,9 @@
     <Compile Include="Controls\HtmlXamlConversion\htmlschema.cs" />
     <Compile Include="Controls\HtmlXamlConversion\htmltokentype.cs" />
     <Compile Include="Controls\HtmlXamlConversion\htmltoxamlconverter.cs" />
+    <Compile Include="Controls\LogViewer\LogViewer.xaml.cs">
+      <DependentUpon>LogViewer.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\RichTextBox\Formatters\HtmlFormatter.cs" />
     <Compile Include="Controls\RichTextBox\Formatters\ITextFormatter.cs" />
     <Compile Include="Controls\RichTextBox\Formatters\PlainTextFormatter.cs" />
@@ -190,6 +195,7 @@
     <Compile Include="MarkupExtensions\ResourceBinding.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Services\ChildViewService.cs" />
+    <Compile Include="Services\FileDialogService.cs" />
     <Compile Include="Services\LocalizationService.cs" />
     <Compile Include="Services\MessageService.cs" />
     <Compile Include="Services\SingleInstance\ISingleInstanceApp.cs" />
@@ -252,6 +258,10 @@
     <Compile Include="Views\WhatsNewView.xaml.cs">
       <DependentUpon>WhatsNewView.xaml</DependentUpon>
     </Compile>
+    <Page Include="Controls\LogViewer\LogViewer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\TimePickerControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -376,7 +386,9 @@
     <Resource Include="Resources\btn_donate_SM.gif" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\icon.ico" />
+    <Resource Include="Resources\icon.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CalendarSyncPlus.ExchangeWebServices\CalendarSyncPlus.ExchangeWebServices.csproj">
