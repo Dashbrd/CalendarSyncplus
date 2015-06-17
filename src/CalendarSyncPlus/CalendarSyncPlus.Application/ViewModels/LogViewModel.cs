@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel.Composition;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Waf.Applications;
+using System.Waf.Applications.Services;
 using System.Waf.Foundation;
 using System.Windows.Data;
 using CalendarSyncPlus.Application.Views;
@@ -13,11 +15,14 @@ using CalendarSyncPlus.Common;
 using CalendarSyncPlus.Common.Log.Parser;
 using log4net.Core;
 
+using IFileDialogService = CalendarSyncPlus.Services.Interfaces.IFileDialogService;
+
 namespace CalendarSyncPlus.Application.ViewModels
 {
     [Export]
     public class LogViewModel : ViewModel<ILogView>
     {
+        public IFileDialogService FileDialogService { get; set; }
         private ObservableCollection<LogItem> _logItems=new ObservableCollection<LogItem>();
         private ObservableCollection<LogItem> _filteredLogItemsView= new ObservableCollection<LogItem>();
 
@@ -27,12 +32,15 @@ namespace CalendarSyncPlus.Application.ViewModels
         private bool _isLoading;
         private DelegateCommand _modifyFitlerCommand;
         private DelegateCommand _loadLogCommand;
-
+        private DelegateCommand _selectLogFileCommand;
+        private bool _isCurrentFileNew;
+        private string currentFileName = @"%APPDATA%\CalendarSyncPlus\Log\CalSyncPlusLog.xml";
 
         [ImportingConstructor]
-        public LogViewModel(ILogView view)
+        public LogViewModel(ILogView view,IFileDialogService fileDialogService)
             : base(view)
         {
+            FileDialogService = fileDialogService;
             CreateFilters();
             CreateDefaultFilter();
         }
@@ -89,6 +97,22 @@ namespace CalendarSyncPlus.Application.ViewModels
             get { return _modifyFitlerCommand ?? new DelegateCommand(ModifyFilter); }
         }
 
+        public DelegateCommand SelectLogFileCommand
+        {
+            get { return _selectLogFileCommand ?? new DelegateCommand(SelectLogFile); }
+        }
+
+        private void SelectLogFile()
+        {
+            var result = FileDialogService.ShowOpenFileDialog(new[] { new FileType("Log4j Xml Schema File", ".xml") },
+                new FileType("Log4j Xml Schema File", ".xml"), CurrentFileName);
+            if (result.IsValid)
+            {
+                CurrentFileName = result.FileName;
+                IsCurrentFileNew = true;
+            }
+        }
+
         public ObservableCollection<LogFilter> AppliedFilterList
         {
             get { return _appliedFilterList; }
@@ -106,6 +130,17 @@ namespace CalendarSyncPlus.Application.ViewModels
             set { SetProperty(ref _filteredLogItemsView, value); }
         }
 
+        public bool IsCurrentFileNew
+        {
+            get { return _isCurrentFileNew; }
+            set { SetProperty(ref _isCurrentFileNew, value); }
+        }
+
+        public string CurrentFileName
+        {
+            get { return currentFileName; }
+            set { SetProperty(ref currentFileName, value); }
+        }
 
         private void LoadLog()
         {
@@ -117,6 +152,10 @@ namespace CalendarSyncPlus.Application.ViewModels
         {
             LogItems = new ObservableCollection<LogItem>(task.Result);
             ApplyFilters();
+            if (IsCurrentFileNew)
+            {
+                IsCurrentFileNew = false;
+            }
             IsLoading = false;
         }
 
@@ -124,7 +163,7 @@ namespace CalendarSyncPlus.Application.ViewModels
         {
             var parser = new LogParser();
             var items =
-                parser.Parse(Environment.ExpandEnvironmentVariables(@"%APPDATA%\CalendarSyncPlus\Log\CalSyncPlusLog.xml"));
+                parser.Parse(Environment.ExpandEnvironmentVariables(CurrentFileName));
             return items;
         }
 

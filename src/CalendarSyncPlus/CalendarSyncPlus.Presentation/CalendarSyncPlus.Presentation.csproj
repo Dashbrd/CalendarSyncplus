@@ -161,6 +161,7 @@
     <Compile Include="..\Shared\AssemblyInfo.cs">
       <Link>AssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Behaviors\EventToCommand.cs" />
     <Compile Include="Behaviors\PasswordBoxHelper.cs" />
     <Compile Include="Behaviors\ScrollInToViewForDataGrid.cs" />
     <Compile Include="Behaviors\TextBoxScrollBehavior.cs" />
@@ -194,6 +195,7 @@
     <Compile Include="MarkupExtensions\ResourceBinding.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Services\ChildViewService.cs" />
+    <Compile Include="Services\FileDialogService.cs" />
     <Compile Include="Services\LocalizationService.cs" />
     <Compile Include="Services\MessageService.cs" />
     <Compile Include="Services\SingleInstance\ISingleInstanceApp.cs" />
