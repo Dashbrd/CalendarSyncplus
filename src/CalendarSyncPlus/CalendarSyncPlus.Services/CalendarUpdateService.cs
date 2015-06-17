@@ -34,6 +34,7 @@ using CalendarSyncPlus.Services.Interfaces;
 using CalendarSyncPlus.Services.Utilities;
 using CalendarSyncPlus.Services.Wrappers;
 using CalendarSyncPlus.SyncEngine.Interfaces;
+using log4net;
 
 #endregion
 
@@ -43,9 +44,7 @@ namespace CalendarSyncPlus.Services
     public class CalendarUpdateService : Model, ICalendarUpdateService
     {
         #region Fields
-
-        private readonly ApplicationLogger _applicationLogger;
-
+        
         private Appointment _currentAppointment;
         private CalendarAppointments _destinationAppointments;
         private CalendarAppointments _sourceAppointments;
@@ -59,7 +58,7 @@ namespace CalendarSyncPlus.Services
         public CalendarUpdateService(ICalendarServiceFactory calendarServiceFactory, ICalendarSyncEngine calendarSyncEngine,
             ApplicationLogger applicationLogger)
         {
-            _applicationLogger = applicationLogger;
+            ApplicationLogger = applicationLogger.GetLogger(this.GetType());
             CalendarServiceFactory = calendarServiceFactory;
             CalendarSyncEngine = calendarSyncEngine;
         }
@@ -273,9 +272,15 @@ namespace CalendarSyncPlus.Services
             {
                 if (syncProfile.SyncSettings.ConfirmOnDelete && syncCallback != null)
                 {
-                    string message = string.Format("Are you sure you want to delete {0} orphan entries from {1}?",
-                        appointmentsToDelete.Count, DestinationCalendarService.CalendarServiceName);
+                    string orphanEntries = Environment.NewLine + string.Join(Environment.NewLine, CalendarSyncEngine.DestOrphanEntries );
+                    //Log Orphan Entries
+                    ApplicationLogger.Info("Orphan entries to delete: " + orphanEntries);
+
+                    string message = string.Format("Are you sure you want to delete {0} orphan entries from {1}?{2}",
+                        appointmentsToDelete.Count, DestinationCalendarService.CalendarServiceName, 
+                         orphanEntries);
                     var e = new SyncEventArgs(message, UserActionEnum.ConfirmDelete);
+                    
                     Task<bool> task = syncCallback(e);
                     if (task.Result)
                     {
@@ -478,10 +483,7 @@ namespace CalendarSyncPlus.Services
 
         public ICalendarService DestinationCalendarService { get; set; }
 
-        public ApplicationLogger ApplicationLogger
-        {
-            get { return _applicationLogger; }
-        }
+        public ILog ApplicationLogger { get; set; }
 
         public bool SyncCalendar(CalendarSyncProfile syncProfile, SyncCallback syncCallback)
         {

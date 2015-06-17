@@ -6,6 +6,7 @@
              xmlns:viewModels="clr-namespace:CalendarSyncPlus.Application.ViewModels;assembly=CalendarSyncPlus.Application"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:behaviors="clr-namespace:CalendarSyncPlus.Presentation.Behaviors"
+             xmlns:converters="http://metro.mahapps.com/winfx/xaml/shared"
              mc:Ignorable="d"
              d:DesignHeight="300"
              d:DesignWidth="300"
@@ -13,9 +14,10 @@
              Name="LogViewerUserControl">
     <Grid>
         <Grid.Resources>
+            <converters:ToUpperConverter x:Key="ToUpperConverter"/>
             <DataTemplate x:Key="ProgressBarDataTemplate">
                 <ProgressBar IsIndeterminate="True"
-                             Height="4"></ProgressBar>
+                             Height="4"/>
             </DataTemplate>
         </Grid.Resources>
         <Grid.RowDefinitions>
@@ -51,7 +53,7 @@
                           ItemsSource="{Binding LogFilters}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <ToggleButton Content="{Binding Path=FilterType}"
+                        <ToggleButton Content="{Binding Path=FilterType,Converter={StaticResource ToUpperConverter}}"
                                       IsChecked="{Binding Path=IsSelected}"
                                       Command="{Binding Path=DataContext.ModifyFilterCommand,ElementName=LogViewerUserControl}"
                                       CommandParameter="{Binding Path=.}"
@@ -75,7 +77,7 @@
         <DataGrid Grid.Row="2"
                   ItemsSource="{Binding Path=FilteredLogItemsView}"
                   SelectedItem="{Binding Path=SelectedLogItem,Mode=TwoWay}"
-                  AlternatingRowBackground="{StaticResource GrayBrush7}"
+                  AlternatingRowBackground="{StaticResource GrayBrush6}"
                   AutoGenerateColumns="False"
                   CanUserAddRows="False"
                   CanUserDeleteRows="False"
@@ -91,13 +93,6 @@
                 <behaviors:ScrollIntoViewForDataGrid />
             </i:Interaction.Behaviors>
             <DataGrid.Columns>
-                <!--<DataGridTemplateColumn Header="S.No">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding Path=Index}"></TextBlock>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>-->
                 <DataGridTemplateColumn Header="Time">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>

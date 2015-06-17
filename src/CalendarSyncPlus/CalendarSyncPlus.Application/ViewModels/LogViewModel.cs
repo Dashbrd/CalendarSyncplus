@@ -47,12 +47,18 @@ namespace CalendarSyncPlus.Application.ViewModels
 
         private void CreateDefaultFilter()
         {
-           var uiFilter =  LogFilters.FirstOrDefault(filter => filter.FilterType == LogLevel.Error);
-            if (uiFilter!=null)
+            var uiFilter = LogFilters.FirstOrDefault(filter => filter.FilterType == LogLevel.Error);
+            if (uiFilter != null)
             {
                 uiFilter.IsSelected = true;
                 AppliedFilterList.Add(uiFilter);
+            }
 
+            uiFilter = LogFilters.FirstOrDefault(filter => filter.FilterType == LogLevel.Fatal);
+            if (uiFilter != null)
+            {
+                uiFilter.IsSelected = true;
+                AppliedFilterList.Add(uiFilter);
             }
         }
 
@@ -62,8 +68,8 @@ namespace CalendarSyncPlus.Application.ViewModels
             {
                 LogFilters.Add(new LogFilter
                 {
-                    FilterType=logLevel,
-                    IsEnabled=true
+                    FilterType = logLevel,
+                    IsEnabled = true
                 });
             }
         }
@@ -170,7 +176,7 @@ namespace CalendarSyncPlus.Application.ViewModels
         private void ModifyFilter(object selectedFilter)
         {
             var filter = selectedFilter as LogFilter;
-            if (filter ==null)
+            if (filter == null)
             {
                 return;
             }
