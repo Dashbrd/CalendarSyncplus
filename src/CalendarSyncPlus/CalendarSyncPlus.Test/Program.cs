@@ -24,16 +24,13 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows;
-
+using CalendarSyncPlus.Common.Log;
+using CalendarSyncPlus.ExchangeWebServices.ExchangeWeb;
 using Microsoft.Office.Interop.Outlook;
 using Microsoft.Win32;
 
-using OutlookGoogleSyncRefresh.Application.Services.ExchangeWeb;
-using OutlookGoogleSyncRefresh.Common.Log;
-using OutlookGoogleSyncRefresh.Domain.Models;
-
-using Test.Model;
-using Test.Services;
+//using Test.Model;
+//using Test.Services;
 
 namespace Test
 {
@@ -50,7 +47,7 @@ namespace Test
 
             var service = new ExchangeWebCalendarService(new ApplicationLogger());
 
-            var calendars = service.GetCalendarsAsync();
+            var calendars = service.GetCalendarsAsync(100);
             service.GetAppointmentsAsync(7, 7, "", calendars[0]);
 
 
@@ -64,7 +61,7 @@ namespace Test
 
         }
 
-       
+
 
         public static List<string> GetOutlookProfileList()
         {
@@ -101,6 +98,6 @@ namespace Test
 
             return profileList;
         }
-        
+
     }
 }
