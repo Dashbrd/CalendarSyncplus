@@ -166,6 +166,10 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CalendarSyncPlus.Analytics\CalendarSyncPlus.Analytics.csproj">
+      <Project>{4015c300-5771-470b-967d-0dae419a45c7}</Project>
+      <Name>CalendarSyncPlus.Analytics</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CalendarSyncPlus.Application\CalendarSyncPlus.Application.csproj">
       <Project>{9aef8039-a3e2-452d-a73a-4af458fda0f7}</Project>
       <Name>OutlookGoogleSyncRefresh.Application</Name>

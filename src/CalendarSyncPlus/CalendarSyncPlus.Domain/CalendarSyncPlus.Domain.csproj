@@ -81,6 +81,7 @@
     <Compile Include="Models\CalendarSyncProfile.cs" />
     <Compile Include="Models\SyncFrequency.cs" />
     <Compile Include="Models\Settings.cs" />
+    <Compile Include="Models\SyncMetric.cs" />
     <Compile Include="Models\SyncSettings.cs" />
     <Compile Include="Models\WeeklySyncFrequency.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

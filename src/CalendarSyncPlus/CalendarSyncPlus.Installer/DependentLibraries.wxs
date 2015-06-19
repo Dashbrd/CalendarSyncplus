@@ -52,6 +52,12 @@
             KeyPath="yes" />
       </Component>
       <Component>
+        <File Id="CalendarSyncPlus.Analytics"
+            Name="CalendarSyncPlus.Analytics.dll"
+            Source="$(var.ProjectDirectory)CalendarSyncPlus.Analytics.dll"
+            KeyPath="yes" />
+      </Component>
+      <Component>
         <File Id="CalendarSyncPlus.OutlookServices"
             Name="CalendarSyncPlus.OutlookServices.dll"
             Source="$(var.ProjectDirectory)CalendarSyncPlus.OutlookServices.dll"

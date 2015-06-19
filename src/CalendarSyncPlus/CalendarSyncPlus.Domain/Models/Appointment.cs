@@ -146,13 +146,27 @@ namespace CalendarSyncPlus.Domain.Models
 
         public string Rfc339FormatStartTime
         {
-            get { return StartTime.Value.Rfc339FFormat(); }
+            get
+            {
+                if (StartTime != null)
+                {
+                    return StartTime.Value.Rfc339FFormat();
+                }
+                return "";
+            }
         }
 
 
         public string Rfc339FormatEndTime
         {
-            get { return EndTime.Value.Rfc339FFormat(); }
+            get
+            {
+                if (EndTime != null)
+                {
+                    return EndTime.Value.Rfc339FFormat();
+                }
+                return "";
+            }
         }
 
         public bool AllDayEvent
@@ -210,7 +224,6 @@ namespace CalendarSyncPlus.Domain.Models
             get { return _isRecurring; }
             set { SetProperty(ref _isRecurring, value); }
         }
-
 
         public DateTime? LastModified
         {

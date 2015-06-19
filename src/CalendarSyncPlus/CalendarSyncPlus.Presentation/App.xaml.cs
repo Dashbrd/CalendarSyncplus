@@ -30,6 +30,7 @@ using System.Waf.Applications;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
+using CalendarSyncPlus.Analytics.Interfaces;
 using CalendarSyncPlus.Application.Controllers;
 using CalendarSyncPlus.Application.ViewModels;
 using CalendarSyncPlus.Common;
@@ -151,6 +152,8 @@ namespace CalendarSyncPlus.Presentation
             catalog.Catalogs.Add(new AssemblyCatalog(typeof(IExchangeWebCalendarService).Assembly));
             //Add SyncEngine assembly to catalog
             catalog.Catalogs.Add(new AssemblyCatalog(typeof(ICalendarSyncEngine).Assembly));
+            //Add Analytics assembly to catalog
+            catalog.Catalogs.Add(new AssemblyCatalog(typeof(IAnalyticsService).Assembly));
             //Composition Container
             container = new CompositionContainer(catalog, true);
             var batch = new CompositionBatch();
