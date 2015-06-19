@@ -593,4 +593,10 @@ Select Outlook &lt;-&gt; Google, to sync our Outlook and Google calendar with ea
   <data name="HomeView_Button_DeleteLog_Content" xml:space="preserve">
     <value>Delete Application Log</value>
   </data>
+  <data name="AdvancedSettingsView_Checkbox_StartMinimized_Content" xml:space="preserve">
+    <value>Start minimized</value>
+  </data>
+  <data name="AdvancedSettingsView_ContentControl_HelpButtonStartMinimized_Tooltip" xml:space="preserve">
+    <value>Always starts application in the minimized to tray state.</value>
+  </data>
 </root>

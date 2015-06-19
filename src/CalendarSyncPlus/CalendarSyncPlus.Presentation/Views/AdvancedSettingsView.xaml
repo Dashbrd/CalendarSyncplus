@@ -55,6 +55,7 @@
                     <RowDefinition />
                     <RowDefinition />
                     <RowDefinition />
+                    <RowDefinition />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
@@ -68,52 +69,60 @@
                 <ContentControl Grid.Column="1"
                                 ContentTemplate="{StaticResource HelpButtonTemplate}"
                                 ToolTip="{localizeExtension:LocText Key=AdvancedSettingsView_ContentControl_HelpButtonRunAtStartup_Tooltip}" />
-                <CheckBox Grid.Row="1"
+                <CheckBox Grid.Row="1" Margin="2"
+                          Content="{localizeExtension:LocText Key=AdvancedSettingsView_Checkbox_StartMinimized_Content}"
+                          IsChecked="{Binding StartMinimized,
+                                              Mode=TwoWay,
+                                              UpdateSourceTrigger=PropertyChanged}" />
+                <ContentControl  Grid.Row="1" Grid.Column="1"
+                                ContentTemplate="{StaticResource HelpButtonTemplate}"
+                                ToolTip="{localizeExtension:LocText Key=AdvancedSettingsView_ContentControl_HelpButtonStartMinimized_Tooltip}" />
+                <CheckBox Grid.Row="2"
                           Margin="2"
                           Content="{localizeExtension:LocText Key=AdvancedSettingsView_Checkbox_CloseToSystemTray_Content}"
                           IsChecked="{Binding MinimizeToSystemTray,
                                               Mode=TwoWay,
                                               UpdateSourceTrigger=PropertyChanged}" />
-                <ContentControl Grid.Row="1"
+                <ContentControl Grid.Row="2"
                                 Grid.Column="1"
                                 ContentTemplate="{StaticResource HelpButtonTemplate}"
                                 ToolTip="{localizeExtension:LocText Key=AdvancedSettingsView_ContentControl_HelpButtonCloseToSystray_Tooltip}" />
-                <CheckBox Grid.Row="2"
+                <CheckBox Grid.Row="3"
                           Margin="2"
                           Content="{localizeExtension:LocText Key=AdvancedSettingsView_Checkbox_HideSystemTrayNotification_Content}"
                           IsChecked="{Binding HideSystemTrayTooltip,
                                               Mode=TwoWay,
                                               UpdateSourceTrigger=PropertyChanged}" />
 
-                <ContentControl Grid.Row="2"
+                <ContentControl Grid.Row="3"
                                 Grid.Column="1"
                                 ContentTemplate="{StaticResource HelpButtonTemplate}"
                                 ToolTip="{localizeExtension:LocText Key=AdvancedSettingsView_ContentControl_HelpButtonHideSystrayNotification_Tooltip}" />
-                <CheckBox Grid.Row="3"
+                <CheckBox Grid.Row="4"
                           Margin="2"
                           Content="{localizeExtension:LocText Key=AdvancedSettingsView_Checkbox_CheckForUpdates_Content}"
                           IsChecked="{Binding CheckForUpdates,
                                               Mode=TwoWay,
                                               UpdateSourceTrigger=PropertyChanged}" />
-                <ContentControl Grid.Row="3"
+                <ContentControl Grid.Row="4"
                                 Grid.Column="1"
                                 ContentTemplate="{StaticResource HelpButtonTemplate}"
                                 ToolTip="{localizeExtension:LocText Key=AdvancedSettingsView_ContentControl_CheckForUpdates_Tooltip}" />
 
 
-                <CheckBox Grid.Row="4"
+                <CheckBox Grid.Row="5"
                           Margin="20,2,2,2"
                           Content="{localizeExtension:LocText Key=AdvancedSettingsView_Checkbox_AlphaCheckForUpdates_Content}"
                           IsEnabled="{Binding CheckForUpdates}"
                           IsChecked="{Binding CheckForAlphaReleases,
                                               Mode=TwoWay,
                                               UpdateSourceTrigger=PropertyChanged}" />
-                <ContentControl Grid.Row="4"
+                <ContentControl Grid.Row="5"
                                 Grid.Column="1"
                                 ContentTemplate="{StaticResource HelpButtonTemplate}"
                                 ToolTip="{localizeExtension:LocText Key=AdvancedSettingsView_ContentControl_AlphaCheckForUpdates_Tooltip}" />
 
-                <StackPanel Grid.Row="5" Orientation="Horizontal">
+                <StackPanel Grid.Row="6" Orientation="Horizontal">
                     <RadioButton Margin="2"
                                  Content="{localizeExtension:LocText Key=AdvancedSettingsView_RadioButton_Synchronization_AutoSync_Content}"
                                  IsChecked="{Binding IsManualSynchronization,
@@ -126,7 +135,7 @@
                                                      Mode=TwoWay,
                                                      UpdateSourceTrigger=PropertyChanged}" />
                 </StackPanel>
-                <ContentControl Grid.Row="5"
+                <ContentControl Grid.Row="6"
                                 Grid.Column="1"
                                 ContentTemplate="{StaticResource HelpButtonTemplate}"
                                 ToolTip="{localizeExtension:LocText Key=AdvancedSettingsView_ContentControl_HelpButtonSynchronizationMode_Tooltip}" />

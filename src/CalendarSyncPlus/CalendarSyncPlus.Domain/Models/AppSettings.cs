@@ -23,6 +23,8 @@ namespace CalendarSyncPlus.Domain.Models
             set { SetProperty(ref _isManualSynchronization, value); }
         }
 
+        public bool StartMinimized { get; set; }
+
         public bool PeriodicSyncOn { get; set; }
 
         public bool RunApplicationAtSystemStartup { get; set; }

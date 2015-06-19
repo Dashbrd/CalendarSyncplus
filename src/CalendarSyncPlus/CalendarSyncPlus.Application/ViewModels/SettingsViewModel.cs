@@ -100,6 +100,7 @@ namespace CalendarSyncPlus.Application.ViewModels
         private string _googleAuthCode;
         private bool _isAuthCodeAvailable;
         private bool _checkForAlphaReleases;
+        private bool _startMinimized;
 
         #endregion
 
@@ -207,6 +208,12 @@ namespace CalendarSyncPlus.Application.ViewModels
                     CheckForAlphaReleases = false;
                 }
             }
+        }
+
+        public bool StartMinimized
+        {
+            get { return _startMinimized; }
+            set { SetProperty(ref _startMinimized, value); }
         }
 
         public bool RunApplicationAtSystemStartup
@@ -470,6 +477,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             Settings.AppSettings.CheckForUpdates = CheckForUpdates;
             Settings.AppSettings.CheckForAlphaReleases = CheckForAlphaReleases;
             Settings.AppSettings.RunApplicationAtSystemStartup = RunApplicationAtSystemStartup;
+            Settings.AppSettings.StartMinimized = StartMinimized;
             Settings.AppSettings.IsManualSynchronization = IsManualSynchronization;
             Settings.AllowManualAuthentication = AllowManualGoogleAuth;
             Settings.AppSettings.ProxySettings = new ProxySetting()
@@ -561,6 +569,7 @@ namespace CalendarSyncPlus.Application.ViewModels
                     CheckForUpdates = Settings.AppSettings.CheckForUpdates;
                     CheckForAlphaReleases = Settings.AppSettings.CheckForAlphaReleases;
                     RunApplicationAtSystemStartup = Settings.AppSettings.RunApplicationAtSystemStartup;
+                    StartMinimized = Settings.AppSettings.StartMinimized;
                     IsManualSynchronization = Settings.AppSettings.IsManualSynchronization;
                     LoadProfiles();
                 }

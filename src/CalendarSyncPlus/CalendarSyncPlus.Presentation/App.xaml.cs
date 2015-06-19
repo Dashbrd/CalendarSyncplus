@@ -58,7 +58,7 @@ namespace CalendarSyncPlus.Presentation
         #region Fields
 
         private static ApplicationLogger _applicationLogger;
-        private readonly bool _startMinimized;
+        private bool _startMinimized;
         private AggregateCatalog catalog;
         private CompositionContainer container;
         private IApplicationController controller;
@@ -122,6 +122,9 @@ namespace CalendarSyncPlus.Presentation
 
         #region Protected Methods
 
+        /// <exception cref="ImportCardinalityMismatchException">There are zero exported objects with the contract name derived from <paramref name="T" /> in the <see cref="T:System.ComponentModel.Composition.Hosting.CompositionContainer" />.-or-There is more than one exported object with the contract name derived from <paramref name="T" /> in the <see cref="T:System.ComponentModel.Composition.Hosting.CompositionContainer" />.</exception>
+        /// <exception cref="CompositionContractMismatchException">The underlying exported object cannot be cast to <paramref name="T" />.</exception>
+        /// <exception cref="CompositionException">An error occurred during composition. <see cref="P:System.ComponentModel.Composition.CompositionException.Errors" /> will contain a collection of errors that occurred.</exception>
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
@@ -162,6 +165,10 @@ namespace CalendarSyncPlus.Presentation
             controller = container.GetExportedValue<IApplicationController>();
 
             controller.Initialize();
+            if (settings.AppSettings.StartMinimized)
+            {
+                _startMinimized = true;
+            }
             controller.Run(_startMinimized);
         }
 
