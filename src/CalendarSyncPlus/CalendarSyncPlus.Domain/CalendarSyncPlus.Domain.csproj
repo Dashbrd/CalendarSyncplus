@@ -63,6 +63,7 @@
     <Compile Include="File\Xml\XmlSerializer.cs" />
     <Compile Include="Helpers\AppointmentHelper.cs" />
     <Compile Include="Helpers\ExtensionMethods.cs" />
+    <Compile Include="Models\Announcement.cs" />
     <Compile Include="Models\AppSettings.cs" />
     <Compile Include="Models\Category.cs" />
     <Compile Include="Models\EWSCalendar.cs" />
