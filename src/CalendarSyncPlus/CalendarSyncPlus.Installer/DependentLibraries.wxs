@@ -215,7 +215,12 @@
           Source="$(var.ProjectDirectory)Google.Apis.Core.dll"
           KeyPath="yes" />
       </Component>
-
+      <Component>
+        <File Id="Google.Apis.Analytics.v3"
+          Name="Google.Apis.Analytics.v3.dll"
+          Source="$(var.ProjectDirectory)Google.Apis.Analytics.v3.dll"
+          KeyPath="yes" />
+      </Component>
       <Component>
         <File Id="Google.Apis.Calendar.v3"
           Name="Google.Apis.Calendar.v3.dll"
