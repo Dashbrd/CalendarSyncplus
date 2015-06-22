@@ -101,14 +101,15 @@
     <Compile Include="..\Shared\AssemblyInfo.cs">
       <Link>AssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Google\AccountAuthenticationService.cs" />
-    <Compile Include="Google\CustomCodeReceiver.cs" />
     <Compile Include="Google\GoogleCalendarService.cs" />
-    <Compile Include="Google\IAccountAuthenticationService.cs" />
     <Compile Include="Google\IGoogleCalendarService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CalendarSyncPlus.Authentication.Google\CalendarSyncPlus.Authentication.Google.csproj">
+      <Project>{cbd1c696-eac6-4092-8e18-42743f1a3d6c}</Project>
+      <Name>CalendarSyncPlus.Authentication.Google</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CalendarSyncPlus.Common\CalendarSyncPlus.Common.csproj">
       <Project>{58f42963-fc3f-4bf8-88a8-da70f5ae7e58}</Project>
       <Name>CalendarSyncPlus.Common</Name>

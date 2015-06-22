@@ -64,6 +64,12 @@
             KeyPath="yes" />
       </Component>
       <Component>
+        <File Id="CalendarSyncPlus.Authentication.Google"
+            Name="CalendarSyncPlus.Authentication.Google.dll"
+            Source="$(var.ProjectDirectory)CalendarSyncPlus.Authentication.Google.dll"
+            KeyPath="yes" />
+      </Component>
+      <Component>
         <File Id="CalendarSyncPlus.GoogleServices"
             Name="CalendarSyncPlus.GoogleServices.dll"
             Source="$(var.ProjectDirectory)CalendarSyncPlus.GoogleServices.dll"

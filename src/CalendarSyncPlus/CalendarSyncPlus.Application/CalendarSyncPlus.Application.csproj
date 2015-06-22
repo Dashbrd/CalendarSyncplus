@@ -131,6 +131,10 @@
       <Project>{4015c300-5771-470b-967d-0dae419a45c7}</Project>
       <Name>CalendarSyncPlus.Analytics</Name>
     </ProjectReference>
+    <ProjectReference Include="..\CalendarSyncPlus.Authentication.Google\CalendarSyncPlus.Authentication.Google.csproj">
+      <Project>{CBD1C696-EAC6-4092-8E18-42743F1A3D6C}</Project>
+      <Name>CalendarSyncPlus.Authentication.Google</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CalendarSyncPlus.ExchangeWebServices\CalendarSyncPlus.ExchangeWebServices.csproj">
       <Project>{60c60a47-1227-4659-8b9e-bfc6b7fcad0d}</Project>
       <Name>CalendarSyncPlus.ExchangeWebServices</Name>

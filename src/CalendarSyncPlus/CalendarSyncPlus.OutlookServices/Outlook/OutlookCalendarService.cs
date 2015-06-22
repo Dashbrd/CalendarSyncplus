@@ -416,7 +416,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
             }
             catch (Exception exception)
             {
-                ApplicationLogger.Error(string.Format("Unable to retrieve Email for the User : {0}{1}{2}", recip.Name,
+                ApplicationLogger.Warn(string.Format("Unable to retrieve Email for the User : {0}{1}{2}", recip.Name,
                     Environment.NewLine, exception.Message));
             }
             return smtpAddress;

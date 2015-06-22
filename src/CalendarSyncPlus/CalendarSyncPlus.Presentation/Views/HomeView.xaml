@@ -432,8 +432,5 @@
                 </Grid>
             </TabItem>
         </TabControl>
-
-      
-
     </Grid>
 </UserControl>

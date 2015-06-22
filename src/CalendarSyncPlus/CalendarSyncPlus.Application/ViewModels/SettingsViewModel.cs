@@ -29,6 +29,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Waf.Applications;
 using CalendarSyncPlus.Application.Views;
+using CalendarSyncPlus.Authentication.Google;
 using CalendarSyncPlus.Common.Log;
 using CalendarSyncPlus.Domain;
 using CalendarSyncPlus.Domain.Models;

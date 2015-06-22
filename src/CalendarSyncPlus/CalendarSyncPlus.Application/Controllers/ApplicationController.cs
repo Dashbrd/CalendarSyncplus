@@ -23,6 +23,7 @@ using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
 using System.Waf.Applications;
 using CalendarSyncPlus.Application.ViewModels;
+using CalendarSyncPlus.Authentication.Google;
 using CalendarSyncPlus.Common;
 using CalendarSyncPlus.Domain.Models;
 using CalendarSyncPlus.GoogleServices.Google;

@@ -25,6 +25,7 @@ using System.ComponentModel.Composition;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using CalendarSyncPlus.Authentication.Google;
 using CalendarSyncPlus.Common.Log;
 using CalendarSyncPlus.Common.MetaData;
 using CalendarSyncPlus.Domain.Helpers;
