@@ -40,7 +40,7 @@ namespace CalendarSyncPlus.ExchangeWebServices.ExchangeWeb
         #region IExchangeWebCalendarService Members
 
         public List<AppAppointment> GetAppointmentsAsync(int daysInPast, int daysInFuture,
-            string profileName, OutlookCalendar outlookCalendar)
+            string profileName, EWSCalendar outlookCalendar)
         {
 
             return null;

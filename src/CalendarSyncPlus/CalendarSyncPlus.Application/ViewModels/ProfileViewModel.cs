@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Waf.Applications;
 using System.Waf.Foundation;
+using CalendarSyncPlus.Authentication.Google;
 using CalendarSyncPlus.Common.Log;
 using CalendarSyncPlus.Common.MetaData;
 using CalendarSyncPlus.Domain.Helpers;

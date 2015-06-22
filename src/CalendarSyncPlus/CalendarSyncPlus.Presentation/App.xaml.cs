@@ -30,8 +30,11 @@ using System.Waf.Applications;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
+using CalendarSyncPlus.Analytics;
+using CalendarSyncPlus.Analytics.Interfaces;
 using CalendarSyncPlus.Application.Controllers;
 using CalendarSyncPlus.Application.ViewModels;
+using CalendarSyncPlus.Authentication.Google;
 using CalendarSyncPlus.Common;
 using CalendarSyncPlus.Common.Log;
 using CalendarSyncPlus.Domain.Models;
@@ -58,7 +61,7 @@ namespace CalendarSyncPlus.Presentation
         #region Fields
 
         private static ApplicationLogger _applicationLogger;
-        private readonly bool _startMinimized;
+        private bool _startMinimized;
         private AggregateCatalog catalog;
         private CompositionContainer container;
         private IApplicationController controller;
@@ -122,6 +125,9 @@ namespace CalendarSyncPlus.Presentation
 
         #region Protected Methods
 
+        /// <exception cref="ImportCardinalityMismatchException">There are zero exported objects with the contract name derived from <paramref name="T" /> in the <see cref="T:System.ComponentModel.Composition.Hosting.CompositionContainer" />.-or-There is more than one exported object with the contract name derived from <paramref name="T" /> in the <see cref="T:System.ComponentModel.Composition.Hosting.CompositionContainer" />.</exception>
+        /// <exception cref="CompositionContractMismatchException">The underlying exported object cannot be cast to <paramref name="T" />.</exception>
+        /// <exception cref="CompositionException">An error occurred during composition. <see cref="P:System.ComponentModel.Composition.CompositionException.Errors" /> will contain a collection of errors that occurred.</exception>
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
@@ -148,6 +154,10 @@ namespace CalendarSyncPlus.Presentation
             catalog.Catalogs.Add(new AssemblyCatalog(typeof(IExchangeWebCalendarService).Assembly));
             //Add SyncEngine assembly to catalog
             catalog.Catalogs.Add(new AssemblyCatalog(typeof(ICalendarSyncEngine).Assembly));
+            //Add Analytics assembly to catalog
+            catalog.Catalogs.Add(new AssemblyCatalog(typeof(SyncAnalyticsService).Assembly));
+            //Add Authentication.Google assembly to catalog
+            catalog.Catalogs.Add(new AssemblyCatalog(typeof(IAccountAuthenticationService).Assembly));
             //Composition Container
             container = new CompositionContainer(catalog, true);
             var batch = new CompositionBatch();
@@ -162,6 +172,10 @@ namespace CalendarSyncPlus.Presentation
             controller = container.GetExportedValue<IApplicationController>();
 
             controller.Initialize();
+            if (settings.AppSettings.StartMinimized)
+            {
+                _startMinimized = true;
+            }
             controller.Run(_startMinimized);
         }
 

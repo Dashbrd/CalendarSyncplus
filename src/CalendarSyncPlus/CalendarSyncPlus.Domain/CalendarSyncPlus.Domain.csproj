@@ -63,6 +63,7 @@
     <Compile Include="File\Xml\XmlSerializer.cs" />
     <Compile Include="Helpers\AppointmentHelper.cs" />
     <Compile Include="Helpers\ExtensionMethods.cs" />
+    <Compile Include="Models\Announcement.cs" />
     <Compile Include="Models\AppSettings.cs" />
     <Compile Include="Models\Category.cs" />
     <Compile Include="Models\EWSCalendar.cs" />
@@ -81,6 +82,7 @@
     <Compile Include="Models\CalendarSyncProfile.cs" />
     <Compile Include="Models\SyncFrequency.cs" />
     <Compile Include="Models\Settings.cs" />
+    <Compile Include="Models\SyncMetric.cs" />
     <Compile Include="Models\SyncSettings.cs" />
     <Compile Include="Models\WeeklySyncFrequency.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

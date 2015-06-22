@@ -8,7 +8,7 @@ namespace CalendarSyncPlus.ExchangeWebServices.ExchangeWeb
     public interface IExchangeWebCalendarService : ICalendarService
     {
         List<Appointment> GetAppointmentsAsync(int daysInPast, int daysInFuture, string profileName,
-            OutlookCalendar outlookCalendar);
+            EWSCalendar outlookCalendar);
 
         List<EWSCalendar> GetCalendarsAsync(int maxFoldersToRetrive);
     }

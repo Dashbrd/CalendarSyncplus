@@ -52,9 +52,21 @@
             KeyPath="yes" />
       </Component>
       <Component>
+        <File Id="CalendarSyncPlus.Analytics"
+            Name="CalendarSyncPlus.Analytics.dll"
+            Source="$(var.ProjectDirectory)CalendarSyncPlus.Analytics.dll"
+            KeyPath="yes" />
+      </Component>
+      <Component>
         <File Id="CalendarSyncPlus.OutlookServices"
             Name="CalendarSyncPlus.OutlookServices.dll"
             Source="$(var.ProjectDirectory)CalendarSyncPlus.OutlookServices.dll"
+            KeyPath="yes" />
+      </Component>
+      <Component>
+        <File Id="CalendarSyncPlus.Authentication.Google"
+            Name="CalendarSyncPlus.Authentication.Google.dll"
+            Source="$(var.ProjectDirectory)CalendarSyncPlus.Authentication.Google.dll"
             KeyPath="yes" />
       </Component>
       <Component>

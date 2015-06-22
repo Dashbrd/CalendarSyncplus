@@ -2,6 +2,12 @@
 
 namespace CalendarSyncPlus.Domain.Models
 {
+    public enum AnnouncementStateEnum
+    {
+        New,
+        Read,
+        UnRead,
+    }
     public enum ProxyType
     {
         Auto = 0,

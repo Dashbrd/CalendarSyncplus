@@ -21,26 +21,26 @@ namespace CalendarSyncPlus.Domain.Models
 {
     public class EWSCalendar : Model
     {
-        private string entryId;
-        private string name;
-        private string storeId;
+        private string _entryId;
+        private string _name;
+        private string _storeId;
 
         public string EntryId
         {
-            get { return entryId; }
-            set { SetProperty(ref entryId, value); }
+            get { return _entryId; }
+            set { SetProperty(ref _entryId, value); }
         }
 
         public string Name
         {
-            get { return name; }
-            set { SetProperty(ref name, value); }
+            get { return _name; }
+            set { SetProperty(ref _name, value); }
         }
 
         public string StoreId
         {
-            get { return storeId; }
-            set { SetProperty(ref storeId, value); }
+            get { return _storeId; }
+            set { SetProperty(ref _storeId, value); }
         }
     }
 }

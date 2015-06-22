@@ -1,7 +1,6 @@
 ﻿using System;
-using Google.Apis.Json;
 
-namespace OutlookGoogleSyncRefresh.Helper
+namespace Test.Helper
 {
     public static class ExtensionMethods
     {

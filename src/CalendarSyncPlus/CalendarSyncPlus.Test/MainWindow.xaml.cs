@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Waf.Presentation.Services;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -15,7 +16,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using OutlookGoogleSyncRefresh.Helper;
+using CalendarSyncPlus.Common.Log;
+using CalendarSyncPlus.GoogleServices.Google;
+using Test.Helper;
 using Test.Model;
 using Test.Services;
 using Calendar = Test.Model.Calendar;
@@ -68,7 +71,7 @@ namespace Test
             var googleCalenderService = new GoogleCalendarService(calenderService);
 
             googleCalenderService.GetAvailableCalendars()
-                .ContinueWith(task => ContinuationActionGoogle(task, googleCalenderService,taskScheduler));
+                .ContinueWith(task => ContinuationActionGoogle(task, googleCalenderService, taskScheduler));
         }
 
         private void ContinuationActionGoogle(Task<List<Calendar>> task, GoogleCalendarService googleCalenderService,
@@ -82,7 +85,7 @@ namespace Test
                 calenderId = calender.Id;
             }
 
-            
+
 
             googleCalenderService.GetCalendarEventsInRangeAsync(0, 1, calenderId)
                 .ContinueWith(ContinuationActionGoogleAppointments, taskScheduler);
@@ -95,15 +98,15 @@ namespace Test
             MyListBox.ItemsSource = task.Result;
         }
 
-        private async Task<List<Appointment>> GetEqualAppointments(GoogleCalendarService googleCalenderService,OutlookCalendarService outlookCalendarService,string calenderId)
+        private async Task<List<Appointment>> GetEqualAppointments(GoogleCalendarService googleCalenderService, OutlookCalendarService outlookCalendarService, string calenderId)
         {
-            List<Appointment> googleAppointments = await googleCalenderService.GetCalendarEventsInRangeAsync(0, 2,calenderId);
+            List<Appointment> googleAppointments = await googleCalenderService.GetCalendarEventsInRangeAsync(0, 2, calenderId);
             List<Appointment> outLookAppointments = await outlookCalendarService.GetOutlookAppointmentsAsync(0, 2);
 
             return (from lookAppointment in outLookAppointments
-                let isAvailable = googleAppointments.Any(appointment => appointment.Equals(lookAppointment))
-                where isAvailable
-                select lookAppointment).ToList();
+                    let isAvailable = googleAppointments.Any(appointment => appointment.Equals(lookAppointment))
+                    where isAvailable
+                    select lookAppointment).ToList();
         }
 
         private void Button_Click_Selected(object sender, RoutedEventArgs e)
@@ -116,9 +119,9 @@ namespace Test
             string redirectUri = "urn:ietf:wg:oauth:2.0:oob";
             string userName = "user"; //  A string used to identify a user (locally).
 
-            var calenderService = (new AccountAuthentication()).AuthenticateCalenderOauth(clientId, clientSecret, userName, "OutlookGoogleSyncRefresh.Auth.Store", "OutlookGoogleSyncRefresh");
+            var calenderService = (new AccountAuthenticationService(new ApplicationLogger(), new MessageService())).AuthenticateCalenderOauth(clientId, clientSecret, userName, "OutlookGoogleSyncRefresh.Auth.Store", "OutlookGoogleSyncRefresh");
 
-            var googleCalenderService = new GoogleCalendarService(calenderService);
+            var googleCalenderService = new GoogleCalendarService(calenderService, new ApplicationLogger());
             var scheduler = TaskScheduler.FromCurrentSynchronizationContext();
             googleCalenderService.GetAvailableCalendars()
                 .ContinueWith(
@@ -140,7 +143,7 @@ namespace Test
             }
             var outlookService = new OutlookCalendarService();
 
-            GetEqualAppointments(googleCalenderService,outlookService,calenderId).ContinueWith(ContinuationActionGoogleAppointments, currentSynchronizationContext);
+            GetEqualAppointments(googleCalenderService, outlookService, calenderId).ContinueWith(ContinuationActionGoogleAppointments, currentSynchronizationContext);
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -159,7 +162,7 @@ namespace Test
             string redirectUri = "urn:ietf:wg:oauth:2.0:oob";
             string userName = "user"; //  A string used to identify a user (locally).
 
-            var calenderService =(new AccountAuthentication()).AuthenticateCalenderOauth(clientId, clientSecret, userName, "OutlookGoogleSyncRefresh.Auth.Store", "OutlookGoogleSyncRefresh");
+            var calenderService = (new AccountAuthentication()).AuthenticateCalenderOauth(clientId, clientSecret, userName, "OutlookGoogleSyncRefresh.Auth.Store", "OutlookGoogleSyncRefresh");
 
             return new GoogleCalendarService(calenderService);
         }
@@ -174,7 +177,7 @@ namespace Test
 
         private void ContinuationAction(Task<bool> task)
         {
-            
+
         }
     }
 }

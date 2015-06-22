@@ -25,6 +25,7 @@ using System.ComponentModel.Composition;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Waf.Foundation;
+using CalendarSyncPlus.Analytics.Interfaces;
 using CalendarSyncPlus.Common.Log;
 using CalendarSyncPlus.Common.MetaData;
 using CalendarSyncPlus.Domain.Helpers;
@@ -56,11 +57,13 @@ namespace CalendarSyncPlus.Services
 
         [ImportingConstructor]
         public CalendarUpdateService(ICalendarServiceFactory calendarServiceFactory, ICalendarSyncEngine calendarSyncEngine,
+            ISyncAnalyticsService analyticsService,
             ApplicationLogger applicationLogger)
         {
             ApplicationLogger = applicationLogger.GetLogger(this.GetType());
             CalendarServiceFactory = calendarServiceFactory;
             CalendarSyncEngine = calendarSyncEngine;
+            AnalyticsService = analyticsService;
         }
 
         #endregion
@@ -69,6 +72,7 @@ namespace CalendarSyncPlus.Services
 
         public ICalendarServiceFactory CalendarServiceFactory { get; set; }
         public ICalendarSyncEngine CalendarSyncEngine { get; set; }
+        public ISyncAnalyticsService AnalyticsService { get; set; }
 
         #endregion
 
@@ -274,7 +278,7 @@ namespace CalendarSyncPlus.Services
                 {
                     string orphanEntries = Environment.NewLine + string.Join(Environment.NewLine, CalendarSyncEngine.DestOrphanEntries );
                     //Log Orphan Entries
-                    ApplicationLogger.Info("Orphan entries to delete: " + orphanEntries);
+                    ApplicationLogger.Warn("Orphan entries to delete: " + orphanEntries);
 
                     string message = string.Format("Are you sure you want to delete {0} orphan entries from {1}?{2}",
                         appointmentsToDelete.Count, DestinationCalendarService.CalendarServiceName, 
@@ -498,12 +502,6 @@ namespace CalendarSyncPlus.Services
                     DestinationCalendarService.CalendarServiceName,
                     syncProfile.SyncSettings.SyncMode == SyncModeEnum.TwoWay ? "<===>" : "===>");
                 SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
-                SyncStatus = string.Format("Source Calendar : {0}",
-                    GetCalendarName(syncProfile, syncProfile.SyncSettings.SourceCalendar));
-                SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
-                SyncStatus = string.Format("Destination Calendar : {0}",
-                    GetCalendarName(syncProfile, syncProfile.SyncSettings.DestinationCalendar));
-                SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
                 DateTime startDate, endDate;
                 GetDateRange(syncProfile, out startDate, out endDate);
                 //Add log for date range
@@ -556,11 +554,31 @@ namespace CalendarSyncPlus.Services
                     isSuccess = UpdateEntries(syncProfile, sourceCalendarSpecificData, destinationCalendarSpecificData);
                 }
             }
+            
             SourceAppointments = null;
             DestinationAppointments = null;
             SourceCalendarService = null;
             DestinationCalendarService = null;
             return isSuccess;
+        }
+
+        private void UploadAnalyticsData(CalendarSyncProfile syncProfile, bool isSuccess)
+        {
+
+            SyncMetric syncMetric = new SyncMetric()
+            {
+                IsSuccess = isSuccess,
+                SourceAppointmentCount = SourceAppointments == null ? 0: SourceAppointments.Count,
+                DestAppointmentCount = DestinationAppointments == null ? 0 : DestinationAppointments.Count,
+                DestDeleteCount = CalendarSyncEngine.DestAppointmentsToDelete.Count,
+                DestAddCount =  CalendarSyncEngine.DestAppointmentsToAdd.Count,
+                DestUpdateCount = CalendarSyncEngine.DestAppointmentsToUpdate.Count,
+                SourceAddCount = CalendarSyncEngine.SourceAppointmentsToAdd.Count,
+                SourceDeleteCount = CalendarSyncEngine.SourceAppointmentsToDelete.Count,
+                SourceUpdateCount = CalendarSyncEngine.DestAppointmentsToUpdate.Count
+            };
+
+            AnalyticsService.UploadSyncData(syncMetric, syncProfile.GoogleAccount.Name);
         }
 
         private bool UpdateEntries(CalendarSyncProfile syncProfile, IDictionary<string, object> sourceCalendarSpecificData,

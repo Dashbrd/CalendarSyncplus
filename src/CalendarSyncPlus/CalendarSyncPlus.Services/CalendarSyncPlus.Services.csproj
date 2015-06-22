@@ -69,6 +69,7 @@
     <Compile Include="Interfaces\ICalendarUpdateService.cs" />
     <Compile Include="Interfaces\ICalendarService.cs" />
     <Compile Include="Interfaces\IFileDialogService.cs" />
+    <Compile Include="Interfaces\ISyncAnalyticsService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ApplicationUpdateService.cs" />
     <Compile Include="Interfaces\IApplicationUpdateService.cs" />
@@ -92,6 +93,7 @@
     <Compile Include="Wrappers\AppointmentListWrapper.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

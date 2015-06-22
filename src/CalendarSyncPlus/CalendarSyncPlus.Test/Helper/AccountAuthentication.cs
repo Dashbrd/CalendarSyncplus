@@ -1,11 +1,10 @@
-﻿using System;
-using System.Threading;
+﻿using System.Threading;
 using Google.Apis.Auth.OAuth2;
 using Google.Apis.Calendar.v3;
 using Google.Apis.Services;
 using Google.Apis.Util.Store;
 
-namespace OutlookGoogleSyncRefresh.Helper
+namespace Test.Helper
 {
     public class AccountAuthentication
     {
@@ -19,7 +18,7 @@ namespace OutlookGoogleSyncRefresh.Helper
         /// <param name="fileDataStorePath">Name/Path where the Auth Token and refresh token are stored (usually in %APPDATA%)</param>
         /// <param name="applicationName">Applicaiton Name</param>
         /// <returns></returns>
-        public CalendarService AuthenticateCalenderOauth(string clientId, string clientSecret, string userName,string fileDataStorePath,string applicationName)
+        public CalendarService AuthenticateCalenderOauth(string clientId, string clientSecret, string userName, string fileDataStorePath, string applicationName)
         {
 
             var scopes = new[]
@@ -32,7 +31,7 @@ namespace OutlookGoogleSyncRefresh.Helper
             // here is where we Request the user to give us access, or use the Refresh Token that was previously stored in %AppData%
             UserCredential credential =
                 GoogleWebAuthorizationBroker.AuthorizeAsync(
-                    new ClientSecrets {ClientId = clientId, ClientSecret = clientSecret}
+                    new ClientSecrets { ClientId = clientId, ClientSecret = clientSecret }
                     , scopes
                     , userName
                     , CancellationToken.None

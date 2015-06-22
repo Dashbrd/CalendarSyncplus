@@ -25,6 +25,7 @@ using System.ComponentModel.Composition;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using CalendarSyncPlus.Authentication.Google;
 using CalendarSyncPlus.Common.Log;
 using CalendarSyncPlus.Common.MetaData;
 using CalendarSyncPlus.Domain.Helpers;
@@ -62,7 +63,7 @@ namespace CalendarSyncPlus.GoogleServices.Google
 
         private string calendarId;
         private string accountName;
-        private ILog ApplicationLogger { get; set; }
+        private ILog Logger { get; set; }
 
         #endregion
 
@@ -72,7 +73,7 @@ namespace CalendarSyncPlus.GoogleServices.Google
         public GoogleCalendarService(IAccountAuthenticationService accountAuthenticationService,
             ApplicationLogger applicationLogger)
         {
-            ApplicationLogger = applicationLogger.GetLogger(this.GetType());
+            Logger = applicationLogger.GetLogger(this.GetType());
             AccountAuthenticationService = accountAuthenticationService;
         }
 
@@ -332,7 +333,7 @@ namespace CalendarSyncPlus.GoogleServices.Google
             {
                 var googleEvent = eventList[index];
                 errorAppointments.Add(index, googleEvent);
-                ApplicationLogger.Error(googleEvent.ToString());
+                Logger.Error(googleEvent.ToString());
             }
         }
 
@@ -345,8 +346,7 @@ namespace CalendarSyncPlus.GoogleServices.Google
             {
                 var googleEvent = eventList[index];
                 errorAppointments.Add(index, googleEvent);
-                ApplicationLogger.Error(string.Format("Event : {0}, will be added without attendees", googleEvent.Subject));
-                ApplicationLogger.Error(googleEvent.ToString());
+                Logger.Error(string.Format("Error in deleting event: {0}", googleEvent));
             }
             else
             {
@@ -551,7 +551,7 @@ namespace CalendarSyncPlus.GoogleServices.Google
             }
             catch (Exception exception)
             {
-                ApplicationLogger.Error(exception);
+                Logger.Error(exception);
                 addedAppointments.IsSuccess = false;
                 return addedAppointments;
             }
@@ -652,7 +652,7 @@ namespace CalendarSyncPlus.GoogleServices.Google
             }
             catch (Exception exception)
             {
-                ApplicationLogger.Error(exception);
+                Logger.Error(exception);
                 return false;
             }
             return true;
@@ -747,12 +747,12 @@ namespace CalendarSyncPlus.GoogleServices.Google
             }
             catch (GoogleApiException exception)
             {
-                ApplicationLogger.Error(exception);
+                Logger.Error(exception);
                 return null;
             }
             catch (Exception exception)
             {
-                ApplicationLogger.Error(exception);
+                Logger.Error(exception);
                 return null;
             }
 
@@ -831,7 +831,7 @@ namespace CalendarSyncPlus.GoogleServices.Google
             }
             catch (Exception exception)
             {
-                ApplicationLogger.Error(exception);
+                Logger.Error(exception);
                 return false;
             }
             return true;
