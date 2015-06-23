@@ -93,7 +93,7 @@ namespace CalendarSyncPlus.Services
         {
             if (!File.Exists(SettingsFilePath))
             {
-                _applicationLogger.Info("Settings file does not exist");
+                _applicationLogger.Warn("Settings file does not exist");
                 return null;
             }
             try

@@ -104,6 +104,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             ISyncService syncStartService,
             IGuiInteractionService guiInteractionService,
             Settings settings,
+            SyncSummary syncSummary,
             IMessageService messageService,
             ApplicationLogger applicationLogger, IApplicationUpdateService applicationUpdateService,
             SystemTrayNotifierViewModel systemTrayNotifierViewModel, ChildContentViewFactory childContentViewFactory)
@@ -118,6 +119,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             SyncStartService = syncStartService;
             GuiInteractionService = guiInteractionService;
             Settings = settings;
+            SyncSummary = syncSummary;
             SystemTrayNotifierViewModel = systemTrayNotifierViewModel;
             ChildContentViewFactory = childContentViewFactory;
             view.Closing += ViewClosing;
@@ -213,6 +215,12 @@ namespace CalendarSyncPlus.Application.ViewModels
         {
             get { return _isSyncInProgress; }
             set { SetProperty(ref _isSyncInProgress, value); }
+        }
+
+        public SyncSummary SyncSummary
+        {
+            get { return _syncSummary; }
+            set { SetProperty(ref _syncSummary, value); }
         }
 
         public Settings Settings
@@ -499,6 +507,7 @@ namespace CalendarSyncPlus.Application.ViewModels
         private DelegateCommand _showWhatsNewCommand;
         private DelegateCommand _clearLogCommand;
         private DelegateCommand _deleteLogFileCommand;
+        private SyncSummary _syncSummary;
 
         private void OnTimerElapsed(object sender, ElapsedEventArgs e)
         {

@@ -102,6 +102,7 @@ namespace CalendarSyncPlus.Application.ViewModels
         private bool _isAuthCodeAvailable;
         private bool _checkForAlphaReleases;
         private bool _startMinimized;
+       
 
         #endregion
 
@@ -160,6 +161,8 @@ namespace CalendarSyncPlus.Application.ViewModels
             get { return _createNewFileForEverySync; }
             set { SetProperty(ref _createNewFileForEverySync, value); }
         }
+
+       
 
         public Settings Settings
         {

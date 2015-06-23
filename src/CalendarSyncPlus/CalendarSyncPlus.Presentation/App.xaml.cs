@@ -164,10 +164,18 @@ namespace CalendarSyncPlus.Presentation
             batch.AddExportedValue(container);
             container.Compose(batch);
 
+            //Load settings
             Settings settings = container.GetExportedValue<ISettingsProvider>().GetSettings();
             container.ComposeExportedValue(settings);
+            
+            //Load sync summary
+            SyncSummary syncSummary = container.GetExportedValue<ISyncSummaryProvider>().GetSyncSummary();
+            container.ComposeExportedValue(syncSummary);
+
+            //Get Application logger
             _applicationLogger = container.GetExportedValue<ApplicationLogger>();
             _applicationLogger.Setup();
+
             //Initialize Application Controller
             controller = container.GetExportedValue<IApplicationController>();
 
