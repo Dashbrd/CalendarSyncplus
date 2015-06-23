@@ -631,18 +631,22 @@ namespace CalendarSyncPlus.Application.ViewModels
 
         private void OnSyncCompleted(CalendarSyncProfile syncProfile, string result)
         {
+            SyncSummary.TotalSyncs++;
             if (string.IsNullOrEmpty(result))
             {
+                SyncSummary.SuccessSyncs++;
                 UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.SyncSuccess, DateTime.Now));
             }
             else
             {
+                SyncSummary.FailedSyncs++;
                 UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.SyncFailed, result));
             }
+            int totalSeconds = (int)DateTime.Now.Subtract(syncProfile.LastSync.GetValueOrDefault()).TotalSeconds;
             UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.Line));
-            UpdateStatus(string.Format("Time Elapsed : {0} s",
-                (int) DateTime.Now.Subtract(syncProfile.LastSync.GetValueOrDefault()).TotalSeconds));
+            UpdateStatus(string.Format("Time Elapsed : {0} s", totalSeconds));
             UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.LogSeparator));
+            SyncSummary.TotalSyncSeconds += totalSeconds;
             ShowNotification(false);
 
             syncProfile.NextSync = syncProfile.SyncSettings.SyncFrequency.GetNextSyncTime(
@@ -683,7 +687,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             {
                 if (key != null)
                 {
-                    var value = (int) key.GetValue("FirstLaunch", 0);
+                    var value = (int)key.GetValue("FirstLaunch", 0);
                     if (value == 1)
                     {
                         ShowWhatsNew();

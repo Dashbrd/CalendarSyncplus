@@ -36,7 +36,7 @@ using log4net;
 
 namespace CalendarSyncPlus.Services
 {
-    [Export(typeof (ISyncService))]
+    [Export(typeof(ISyncService))]
     public class SyncService : Model, ISyncService
     {
         #region Constructors
@@ -91,7 +91,7 @@ namespace CalendarSyncPlus.Services
         {
             if (_syncTimer == null)
             {
-                _syncTimer = new Timer(1000) {AutoReset = true};
+                _syncTimer = new Timer(1000) { AutoReset = true };
                 _syncTimer.Elapsed += timerCallback;
             }
             _syncTimer.Start();

@@ -27,7 +27,7 @@ namespace CalendarSyncPlus.Application.ViewModels
         private DelegateCommand _modifyFitlerCommand;
         private LogItem _selectedLogItem;
         private DelegateCommand _selectLogFileCommand;
-        private string currentFileName = @"%APPDATA%\CalendarSyncPlus\Log\CalSyncPlusLog.xml";
+        private string _currentFileName = @"%APPDATA%\CalendarSyncPlus\Log\CalSyncPlusLog.xml";
 
         [ImportingConstructor]
         public LogViewModel(ILogView view, IFileDialogService fileDialogService)
@@ -66,12 +66,12 @@ namespace CalendarSyncPlus.Application.ViewModels
 
         public DelegateCommand ModifyFilterCommand
         {
-            get { return _modifyFitlerCommand ?? new DelegateCommand(ModifyFilter); }
+            get { return _modifyFitlerCommand ?? (_modifyFitlerCommand = new DelegateCommand(ModifyFilter)); }
         }
 
         public DelegateCommand SelectLogFileCommand
         {
-            get { return _selectLogFileCommand ?? new DelegateCommand(SelectLogFile); }
+            get { return _selectLogFileCommand ?? (_selectLogFileCommand = new DelegateCommand(SelectLogFile)); }
         }
 
         public ObservableCollection<LogFilter> AppliedFilterList
@@ -82,7 +82,7 @@ namespace CalendarSyncPlus.Application.ViewModels
 
         public DelegateCommand LoadLogCommand
         {
-            get { return _loadLogCommand ?? new DelegateCommand(LoadLog); }
+            get { return _loadLogCommand ?? (_loadLogCommand = new DelegateCommand(LoadLog)); }
         }
 
         public ObservableCollection<LogItem> FilteredLogItemsView
@@ -99,8 +99,8 @@ namespace CalendarSyncPlus.Application.ViewModels
 
         public string CurrentFileName
         {
-            get { return currentFileName; }
-            set { SetProperty(ref currentFileName, value); }
+            get { return _currentFileName; }
+            set { SetProperty(ref _currentFileName, value); }
         }
 
         private void CreateDefaultFilter()
@@ -122,7 +122,7 @@ namespace CalendarSyncPlus.Application.ViewModels
 
         private void CreateFilters()
         {
-            foreach (var logLevel in Enum.GetValues(typeof (LogLevel)).Cast<LogLevel>())
+            foreach (var logLevel in Enum.GetValues(typeof(LogLevel)).Cast<LogLevel>())
             {
                 LogFilters.Add(new LogFilter
                 {
@@ -134,7 +134,7 @@ namespace CalendarSyncPlus.Application.ViewModels
 
         private void SelectLogFile()
         {
-            var result = FileDialogService.ShowOpenFileDialog(new[] {new FileType("Log4j Xml Schema File", ".xml")},
+            var result = FileDialogService.ShowOpenFileDialog(new[] { new FileType("Log4j Xml Schema File", ".xml") },
                 new FileType("Log4j Xml Schema File", ".xml"), CurrentFileName);
             if (result.IsValid)
             {

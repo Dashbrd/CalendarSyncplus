@@ -391,8 +391,6 @@ namespace CalendarSyncPlus.Application.ViewModels
         private ObservableCollection<GoogleAccount> _googleAccounts;
         private DelegateCommand _disconnectGoogleCommand;
         private bool _allowManualGoogleAuth;
-        private string _googleAuthCode;
-        private bool _isAuthCodeAvailable;
         private bool _checkForAlphaReleases;
         private bool _startMinimized;
 
