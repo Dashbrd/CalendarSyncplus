@@ -1,7 +1,8 @@
-version: 1.3.2.{build}
+version: 1.4.1.{build}
 branches:
   only:
   - master
+skip_tags: true
 configuration: Release
 assembly_info:
   patch: true
@@ -9,14 +10,30 @@ assembly_info:
   assembly_version: '{version}'
   assembly_file_version: '{version}'
   assembly_informational_version: '{version}'
-environment:
-  GithubAccessToken:
-    secure: b6PIkkKAu6m9U9gu86ObVKq7IxvQv5ICSHWXB1KUqOvuCO8CL18DTcyn8EYpMU/U
 before_build:
 - nuget restore src\CalendarSyncPlus\CalendarSyncPlus.sln
 build:
-  project: src\CalendarSyncPlus\CalendarSyncPlus.Installer\CalendarSyncPlus.Installer.wixproj
-  verbosity: detailed
+  project: src\CalendarSyncPlus\CalendarSyncPlus.InstallerBundle\CalendarSyncPlus.InstallerBundle.wixproj
+  verbosity: normal
 artifacts:
-- path: src\CalendarSyncPlus\CalendarSyncPlus.Installer\bin\Release\CalendarSyncPlus.msi
+- path: src\CalendarSyncPlus\CalendarSyncPlus.InstallerBundle\bin\Release\CalendarSyncPlus.exe
   name: Installer
+deploy:
+- provider: GitHub
+  tag: v$(appveyor_build_version)
+  release: Calendar Sync Plus $(appveyor_build_version)
+  description: Build with latest fixes ;)
+  auth_token:
+    secure: 1MDHqxV1YdXO142uyU6OQMdf71UjYVDKlFdAid/xLD5A8w+C/htueN8iTeAyqb5e
+  artifact: src\CalendarSyncPlus\CalendarSyncPlus.InstallerBundle\bin\Release\CalendarSyncPlus.exe
+  draft: true
+  prerelease: true
+  on:
+    branch: master
+notifications:
+- provider: Email
+  to:
+  - calendarsyncplus@outlook.com
+  on_build_success: true
+  on_build_failure: true
+  on_build_status_changed: false
