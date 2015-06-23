@@ -6,12 +6,8 @@ namespace CalendarSyncPlus.Services.Interfaces
     {
         object ShellView { get; set; }
         object SettingsView { get; set; }
-
         object AboutView { get; set; }
-
         object HelpView { get; set; }
-
         object LogView { get; set; }
-
     }
 }

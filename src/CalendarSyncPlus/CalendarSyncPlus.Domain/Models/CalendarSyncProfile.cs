@@ -5,9 +5,9 @@ using CalendarSyncPlus.Common.MetaData;
 
 namespace CalendarSyncPlus.Domain.Models
 {
-    [XmlInclude(typeof(Calendar))]
-    [XmlInclude(typeof(SyncFrequency))]
-    [XmlInclude(typeof(Category))]
+    [XmlInclude(typeof (Calendar))]
+    [XmlInclude(typeof (SyncFrequency))]
+    [XmlInclude(typeof (Category))]
     public class CalendarSyncProfile : Model
     {
         private bool _isDefault;
@@ -26,32 +26,32 @@ namespace CalendarSyncPlus.Domain.Models
             IsSyncEnabled = true;
             IsDefault = true;
         }
+
         /// <summary>
-        /// 
         /// </summary>
         public string Name
         {
             get { return _name; }
             set { SetProperty(ref _name, value); }
         }
+
         /// <summary>
-        /// 
         /// </summary>
         public bool IsSyncEnabled
         {
             get { return _isSyncEnabled; }
             set { SetProperty(ref _isSyncEnabled, value); }
         }
+
         /// <summary>
-        /// 
         /// </summary>
         public bool IsDefault
         {
             get { return _isDefault; }
             set { SetProperty(ref _isDefault, value); }
         }
+
         /// <summary>
-        /// 
         /// </summary>
         public SyncSettings SyncSettings
         {
@@ -62,7 +62,6 @@ namespace CalendarSyncPlus.Domain.Models
         public GoogleAccount GoogleAccount { get; set; }
 
         /// <summary>
-        /// 
         /// </summary>
         public OutlookSettings OutlookSettings { get; set; }
 
@@ -73,27 +72,22 @@ namespace CalendarSyncPlus.Domain.Models
         public ExchangeServerSettings ExchangeServerSettings { get; set; }
 
         /// <summary>
-        /// 
         /// </summary>
         public CalendarEntryOptionsEnum CalendarEntryOptions { get; set; }
 
         /// <summary>
-        /// 
         /// </summary>
         public LogSettings LogSettings { get; set; }
 
         /// <summary>
-        /// 
         /// </summary>
         public bool SetCalendarCategory { get; set; }
 
         /// <summary>
-        /// 
         /// </summary>
         public Category EventCategory { get; set; }
 
         /// <summary>
-        /// 
         /// </summary>
         public DateTime? LastSync
         {
@@ -110,7 +104,6 @@ namespace CalendarSyncPlus.Domain.Models
         }
 
         /// <summary>
-        /// 
         /// </summary>
         public void SetCalendarTypes()
         {
@@ -155,10 +148,12 @@ namespace CalendarSyncPlus.Domain.Models
                 SyncSettings.SyncMode = SyncModeEnum.OneWay;
             }
         }
+
         /// <summary>
-        /// Gets default calendar profile for the user
+        ///     Gets default calendar profile for the user
         /// </summary>
-        /// <returns></returns>
+        /// <returns>
+        /// </returns>
         public static CalendarSyncProfile GetDefaultSyncProfile()
         {
             var syncProfile = new CalendarSyncProfile
@@ -169,8 +164,10 @@ namespace CalendarSyncPlus.Domain.Models
                     OutlookOptions = OutlookOptionsEnum.DefaultProfile |
                                      OutlookOptionsEnum.DefaultCalendar
                 },
-                CalendarEntryOptions = CalendarEntryOptionsEnum.Description | CalendarEntryOptionsEnum.Attendees| CalendarEntryOptionsEnum.AttendeesToDescription |
-                                       CalendarEntryOptionsEnum.Reminders | CalendarEntryOptionsEnum.AsAppointments,
+                CalendarEntryOptions =
+                    CalendarEntryOptionsEnum.Description | CalendarEntryOptionsEnum.Attendees |
+                    CalendarEntryOptionsEnum.AttendeesToDescription |
+                    CalendarEntryOptionsEnum.Reminders | CalendarEntryOptionsEnum.AsAppointments
             };
             syncProfile.SetCalendarTypes();
             return syncProfile;

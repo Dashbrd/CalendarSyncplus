@@ -1,19 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Waf.Foundation;
 
 namespace CalendarSyncPlus.Domain.Models
 {
     public class Announcement : Model
     {
-        private string _title;
-        private DateTime _createdDate;
-        private List<string> _tags;
         private string _content;
+        private DateTime _createdDate;
         private AnnouncementStateEnum _readState;
+        private List<string> _tags;
+        private string _title;
 
         public string Title
         {

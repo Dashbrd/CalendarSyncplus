@@ -67,14 +67,13 @@ using HTMLConverter;
 // reading a table and ignore them otherwise? This may be too much of a load on the parser, I think it's better if the converter
 // deals with it
 
-
 namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
 {
     /// <summary>
-    /// HtmlParser class accepts a string of possibly badly formed Html, parses it and returns a string
-    /// of well-formed Html that is as close to the original string in content as possible
+    ///     <see cref="HtmlParser" /> class accepts a string of possibly badly formed
+    ///     Html, parses it and returns a string of well-formed Html that is as
+    ///     close to the original string in content as possible
     /// </summary>
-
     internal class HtmlParser
     {
         // ---------------------------------------------------------------------
@@ -86,10 +85,11 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
         #region Constructors
 
         /// <summary>
-        /// Constructor. Initializes the _htmlLexicalAnalayzer element with the given input string
+        ///     Constructor. Initializes the _htmlLexicalAnalayzer element with the
+        ///     given input string
         /// </summary>
         /// <param name="inputString">
-        /// string to parsed into well-formed Html
+        ///     string to parsed into well-formed Html
         /// </param>
         private HtmlParser(string inputString)
         {
@@ -119,19 +119,21 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
         #region Internal Methods
 
         /// <summary>
-        /// Instantiates an HtmlParser element and calls the parsing function on the given input string
+        ///     Instantiates an HtmlParser element and calls the parsing function on
+        ///     the given input string
         /// </summary>
         /// <param name="htmlString">
-        /// Input string of pssibly badly-formed Html to be parsed into well-formed Html
+        ///     Input string of pssibly badly-formed Html to be parsed into
+        ///     well-formed Html
         /// </param>
         /// <returns>
-        /// XmlElement rep
+        ///     XmlElement rep
         /// </returns>
         internal static XmlElement ParseHtml(string htmlString)
         {
-            HtmlParser htmlParser = new HtmlParser(htmlString);
+            var htmlParser = new HtmlParser(htmlString);
 
-            XmlElement htmlRootElement = htmlParser.ParseHtmlContent();
+            var htmlRootElement = htmlParser.ParseHtmlContent();
 
             return htmlRootElement;
         }
@@ -150,35 +152,40 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
         //      EndFragment:000000000
         //      StartSelection:000000000
         //      EndSelection:000000000
-        internal const string HtmlHeader = "Version:1.0\r\nStartHTML:{0:D10}\r\nEndHTML:{1:D10}\r\nStartFragment:{2:D10}\r\nEndFragment:{3:D10}\r\nStartSelection:{4:D10}\r\nEndSelection:{5:D10}\r\n";
+        internal const string HtmlHeader =
+            "Version:1.0\r\nStartHTML:{0:D10}\r\nEndHTML:{1:D10}\r\nStartFragment:{2:D10}\r\nEndFragment:{3:D10}\r\nStartSelection:{4:D10}\r\nEndSelection:{5:D10}\r\n";
+
         internal const string HtmlStartFragmentComment = "<!--StartFragment-->";
         internal const string HtmlEndFragmentComment = "<!--EndFragment-->";
 
         /// <summary>
-        /// Extracts Html string from clipboard data by parsing header information in htmlDataString
+        ///     Extracts Html string from clipboard data by parsing header
+        ///     information in <paramref name="htmlDataString" />
         /// </summary>
         /// <param name="htmlDataString">
-        /// String representing Html clipboard data. This includes Html header
+        ///     String representing Html clipboard data. This includes Html header
         /// </param>
         /// <returns>
-        /// String containing only the Html data part of htmlDataString, without header
+        ///     String containing only the Html data part of htmlDataString, without
+        ///     header
         /// </returns>
         internal static string ExtractHtmlFromClipboardData(string htmlDataString)
         {
-            int startHtmlIndex = htmlDataString.IndexOf("StartHTML:");
+            var startHtmlIndex = htmlDataString.IndexOf("StartHTML:");
             if (startHtmlIndex < 0)
             {
                 return "ERROR: Urecognized html header";
             }
             // TODO: We assume that indices represented by strictly 10 zeros ("0123456789".Length),
             // which could be wrong assumption. We need to implement more flrxible parsing here
-            startHtmlIndex = Int32.Parse(htmlDataString.Substring(startHtmlIndex + "StartHTML:".Length, "0123456789".Length));
+            startHtmlIndex =
+                Int32.Parse(htmlDataString.Substring(startHtmlIndex + "StartHTML:".Length, "0123456789".Length));
             if (startHtmlIndex < 0 || startHtmlIndex > htmlDataString.Length)
             {
                 return "ERROR: Urecognized html header";
             }
 
-            int endHtmlIndex = htmlDataString.IndexOf("EndHTML:");
+            var endHtmlIndex = htmlDataString.IndexOf("EndHTML:");
             if (endHtmlIndex < 0)
             {
                 return "ERROR: Urecognized html header";
@@ -195,23 +202,25 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
         }
 
         /// <summary>
-        /// Adds Xhtml header information to Html data string so that it can be placed on clipboard
+        ///     Adds Xhtml header information to Html data string so that it can be
+        ///     placed on clipboard
         /// </summary>
         /// <param name="htmlString">
-        /// Html string to be placed on clipboard with appropriate header
+        ///     Html string to be placed on clipboard with appropriate header
         /// </param>
         /// <returns>
-        /// String wrapping htmlString with appropriate Html header
+        ///     String wrapping <paramref name="htmlString" /> with appropriate Html
+        ///     header
         /// </returns>
         internal static string AddHtmlClipboardHeader(string htmlString)
         {
-            StringBuilder stringBuilder = new StringBuilder();
+            var stringBuilder = new StringBuilder();
 
             // each of 6 numbers is represented by "{0:D10}" in the format string
             // must actually occupy 10 digit positions ("0123456789")
-            int startHTML = HtmlHeader.Length + 6 * ("0123456789".Length - "{0:D10}".Length);
-            int endHTML = startHTML + htmlString.Length;
-            int startFragment = htmlString.IndexOf(HtmlStartFragmentComment, 0);
+            var startHTML = HtmlHeader.Length + 6*("0123456789".Length - "{0:D10}".Length);
+            var endHTML = startHTML + htmlString.Length;
+            var startFragment = htmlString.IndexOf(HtmlStartFragmentComment, 0);
             if (startFragment >= 0)
             {
                 startFragment = startHTML + startFragment + HtmlStartFragmentComment.Length;
@@ -220,7 +229,7 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
             {
                 startFragment = startHTML;
             }
-            int endFragment = htmlString.IndexOf(HtmlEndFragmentComment, 0);
+            var endFragment = htmlString.IndexOf(HtmlEndFragmentComment, 0);
             if (endFragment >= 0)
             {
                 endFragment = startHTML + endFragment;
@@ -231,7 +240,8 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
             }
 
             // Create HTML clipboard header string
-            stringBuilder.AppendFormat(HtmlHeader, startHTML, endHTML, startFragment, endFragment, startFragment, endFragment);
+            stringBuilder.AppendFormat(HtmlHeader, startHTML, endHTML, startFragment, endFragment, startFragment,
+                endFragment);
 
             // Append HTML body.
             stringBuilder.Append(htmlString);
@@ -258,16 +268,14 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
         }
 
         /// <summary>
-        /// Parses the stream of html tokens starting
-        /// from the name of top-level element.
-        /// Returns XmlElement representing the top-level
-        /// html element
+        ///     Parses the stream of html tokens starting from the name of top-level
+        ///     element. Returns XmlElement representing the top-level html element
         /// </summary>
         private XmlElement ParseHtmlContent()
         {
             // Create artificial root elelemt to be able to group multiple top-level elements
             // We create "html" element which may be a duplicate of real HTML element, which is ok, as HtmlConverter will swallow it painlessly..
-            XmlElement htmlRootElement = _document.CreateElement("html", XhtmlNamespace);
+            var htmlRootElement = _document.CreateElement("html", XhtmlNamespace);
             OpenStructuringElement(htmlRootElement);
 
             while (_htmlLexicalAnalyzer.NextTokenType != HtmlTokenType.EOF)
@@ -277,16 +285,17 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
                     _htmlLexicalAnalyzer.GetNextTagToken();
                     if (_htmlLexicalAnalyzer.NextTokenType == HtmlTokenType.Name)
                     {
-                        string htmlElementName = _htmlLexicalAnalyzer.NextToken.ToLower();
+                        var htmlElementName = _htmlLexicalAnalyzer.NextToken.ToLower();
                         _htmlLexicalAnalyzer.GetNextTagToken();
 
                         // Create an element
-                        XmlElement htmlElement = _document.CreateElement(htmlElementName, XhtmlNamespace);
+                        var htmlElement = _document.CreateElement(htmlElementName, XhtmlNamespace);
 
                         // Parse element attributes
                         ParseAttributes(htmlElement);
 
-                        if (_htmlLexicalAnalyzer.NextTokenType == HtmlTokenType.EmptyTagEnd || HtmlSchema.IsEmptyElement(htmlElementName))
+                        if (_htmlLexicalAnalyzer.NextTokenType == HtmlTokenType.EmptyTagEnd ||
+                            HtmlSchema.IsEmptyElement(htmlElementName))
                         {
                             // It is an element without content (because of explicit slash or based on implicit knowledge aboout html)
                             AddEmptyElement(htmlElement);
@@ -299,25 +308,12 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
                             // overlapping tags into normal heirarchical element structure.
                             OpenInlineElement(htmlElement);
                         }
-                        else if (HtmlSchema.IsBlockElement(htmlElementName) || HtmlSchema.IsKnownOpenableElement(htmlElementName))
+                        else if (HtmlSchema.IsBlockElement(htmlElementName) ||
+                                 HtmlSchema.IsKnownOpenableElement(htmlElementName))
                         {
                             // This includes no-scope elements
                             OpenStructuringElement(htmlElement);
                         }
-                        else
-                        {
-                            // Do nothing. Skip the whole opening tag.
-                            // Ignoring all unknown elements on their start tags.
-                            // Thus we will ignore them on closinng tag as well.
-                            // Anyway we don't know what to do withthem on conversion to Xaml.
-                        }
-                    }
-                    else
-                    {
-                        // Note that the token following opening angle bracket must be a name - lexical analyzer must guarantee that.
-                        // Otherwise - we skip the angle bracket and continue parsing the content as if it is just text.
-                        //  Add the following asserion here, right? or output "<" as a text run instead?:
-                        // InvariantAssert(false, "Angle bracket without a following name is not expected");
                     }
                 }
                 else if (_htmlLexicalAnalyzer.NextTokenType == HtmlTokenType.ClosingTagStart)
@@ -325,7 +321,7 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
                     _htmlLexicalAnalyzer.GetNextTagToken();
                     if (_htmlLexicalAnalyzer.NextTokenType == HtmlTokenType.Name)
                     {
-                        string htmlElementName = _htmlLexicalAnalyzer.NextToken.ToLower();
+                        var htmlElementName = _htmlLexicalAnalyzer.NextToken.ToLower();
 
                         // Skip the name token. Assume that the following token is end of tag,
                         // but do not check this. If it is not true, we simply ignore one token
@@ -352,7 +348,7 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
                 htmlRootElement.FirstChild == htmlRootElement.LastChild &&
                 htmlRootElement.FirstChild.LocalName.ToLower() == "html")
             {
-                htmlRootElement = (XmlElement)htmlRootElement.FirstChild;
+                htmlRootElement = (XmlElement) htmlRootElement.FirstChild;
             }
 
             return htmlRootElement;
@@ -360,10 +356,10 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
 
         private XmlElement CreateElementCopy(XmlElement htmlElement)
         {
-            XmlElement htmlElementCopy = _document.CreateElement(htmlElement.LocalName, XhtmlNamespace);
-            for (int i = 0; i < htmlElement.Attributes.Count; i++)
+            var htmlElementCopy = _document.CreateElement(htmlElement.LocalName, XhtmlNamespace);
+            for (var i = 0; i < htmlElement.Attributes.Count; i++)
             {
-                XmlAttribute attribute = htmlElement.Attributes[i];
+                var attribute = htmlElement.Attributes[i];
                 htmlElementCopy.SetAttribute(attribute.Name, attribute.Value);
             }
             return htmlElementCopy;
@@ -371,8 +367,9 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
 
         private void AddEmptyElement(XmlElement htmlEmptyElement)
         {
-            InvariantAssert(_openedElements.Count > 0, "AddEmptyElement: Stack of opened elements cannot be empty, as we have at least one artificial root element");
-            XmlElement htmlParent = _openedElements.Peek();
+            InvariantAssert(_openedElements.Count > 0,
+                "AddEmptyElement: Stack of opened elements cannot be empty, as we have at least one artificial root element");
+            var htmlParent = _openedElements.Peek();
             htmlParent.AppendChild(htmlEmptyElement);
         }
 
@@ -393,8 +390,9 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
             {
                 while (_openedElements.Count > 0 && HtmlSchema.IsInlineElement(_openedElements.Peek().LocalName))
                 {
-                    XmlElement htmlInlineElement = _openedElements.Pop();
-                    InvariantAssert(_openedElements.Count > 0, "OpenStructuringElement: stack of opened elements cannot become empty here");
+                    var htmlInlineElement = _openedElements.Pop();
+                    InvariantAssert(_openedElements.Count > 0,
+                        "OpenStructuringElement: stack of opened elements cannot become empty here");
 
                     _pendingInlineElements.Push(CreateElementCopy(htmlInlineElement));
                 }
@@ -403,7 +401,7 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
             // Add this block element to its parent
             if (_openedElements.Count > 0)
             {
-                XmlElement htmlParent = _openedElements.Peek();
+                var htmlParent = _openedElements.Peek();
 
                 // Check some known block elements for auto-closing (LI and P)
                 if (HtmlSchema.ClosesOnNextElementStart(htmlParent.LocalName, htmlElement.LocalName))
@@ -427,7 +425,7 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
 
         private bool IsElementOpened(string htmlElementName)
         {
-            foreach (XmlElement openedElement in _openedElements)
+            foreach (var openedElement in _openedElements)
             {
                 if (openedElement.LocalName == htmlElementName)
                 {
@@ -440,25 +438,26 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
         private void CloseElement(string htmlElementName)
         {
             // Check if the element is opened and already added to the parent
-            InvariantAssert(_openedElements.Count > 0, "CloseElement: Stack of opened elements cannot be empty, as we have at least one artificial root element");
+            InvariantAssert(_openedElements.Count > 0,
+                "CloseElement: Stack of opened elements cannot be empty, as we have at least one artificial root element");
 
             // Check if the element is opened and still waiting to be added to the parent
             if (_pendingInlineElements.Count > 0 && _pendingInlineElements.Peek().LocalName == htmlElementName)
             {
                 // Closing an empty inline element.
                 // Note that HtmlConverter will skip empty inlines, but for completeness we keep them here on parser level.
-                XmlElement htmlInlineElement = _pendingInlineElements.Pop();
-                InvariantAssert(_openedElements.Count > 0, "CloseElement: Stack of opened elements cannot be empty, as we have at least one artificial root element");
-                XmlElement htmlParent = _openedElements.Peek();
+                var htmlInlineElement = _pendingInlineElements.Pop();
+                InvariantAssert(_openedElements.Count > 0,
+                    "CloseElement: Stack of opened elements cannot be empty, as we have at least one artificial root element");
+                var htmlParent = _openedElements.Peek();
                 htmlParent.AppendChild(htmlInlineElement);
-                return;
             }
             else if (IsElementOpened(htmlElementName))
             {
                 while (_openedElements.Count > 1) // we never pop the last element - the artificial root
                 {
                     // Close all unbalanced elements.
-                    XmlElement htmlOpenedElement = _openedElements.Pop();
+                    var htmlOpenedElement = _openedElements.Pop();
 
                     if (htmlOpenedElement.LocalName == htmlElementName)
                     {
@@ -474,17 +473,17 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
             }
 
             // If element was not opened, we simply ignore the unbalanced closing tag
-            return;
         }
 
         private void AddTextContent(string textContent)
         {
             OpenPendingInlineElements();
 
-            InvariantAssert(_openedElements.Count > 0, "AddTextContent: Stack of opened elements cannot be empty, as we have at least one artificial root element");
+            InvariantAssert(_openedElements.Count > 0,
+                "AddTextContent: Stack of opened elements cannot be empty, as we have at least one artificial root element");
 
-            XmlElement htmlParent = _openedElements.Peek();
-            XmlText textNode = _document.CreateTextNode(textContent);
+            var htmlParent = _openedElements.Peek();
+            var textNode = _document.CreateTextNode(textContent);
             htmlParent.AppendChild(textNode);
         }
 
@@ -492,10 +491,11 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
         {
             OpenPendingInlineElements();
 
-            InvariantAssert(_openedElements.Count > 0, "AddComment: Stack of opened elements cannot be empty, as we have at least one artificial root element");
+            InvariantAssert(_openedElements.Count > 0,
+                "AddComment: Stack of opened elements cannot be empty, as we have at least one artificial root element");
 
-            XmlElement htmlParent = _openedElements.Peek();
-            XmlComment xmlComment = _document.CreateComment(comment);
+            var htmlParent = _openedElements.Peek();
+            var xmlComment = _document.CreateComment(comment);
             htmlParent.AppendChild(xmlComment);
         }
 
@@ -505,13 +505,14 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
         {
             if (_pendingInlineElements.Count > 0)
             {
-                XmlElement htmlInlineElement = _pendingInlineElements.Pop();
+                var htmlInlineElement = _pendingInlineElements.Pop();
 
                 OpenPendingInlineElements();
 
-                InvariantAssert(_openedElements.Count > 0, "OpenPendingInlineElements: Stack of opened elements cannot be empty, as we have at least one artificial root element");
+                InvariantAssert(_openedElements.Count > 0,
+                    "OpenPendingInlineElements: Stack of opened elements cannot be empty, as we have at least one artificial root element");
 
-                XmlElement htmlParent = _openedElements.Peek();
+                var htmlParent = _openedElements.Peek();
                 htmlParent.AppendChild(htmlInlineElement);
                 _openedElements.Push(htmlInlineElement);
             }
@@ -520,18 +521,18 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
         private void ParseAttributes(XmlElement xmlElement)
         {
             while (_htmlLexicalAnalyzer.NextTokenType != HtmlTokenType.EOF && //
-                _htmlLexicalAnalyzer.NextTokenType != HtmlTokenType.TagEnd && //
-                _htmlLexicalAnalyzer.NextTokenType != HtmlTokenType.EmptyTagEnd)
+                   _htmlLexicalAnalyzer.NextTokenType != HtmlTokenType.TagEnd && //
+                   _htmlLexicalAnalyzer.NextTokenType != HtmlTokenType.EmptyTagEnd)
             {
                 // read next attribute (name=value)
                 if (_htmlLexicalAnalyzer.NextTokenType == HtmlTokenType.Name)
                 {
-                    string attributeName = _htmlLexicalAnalyzer.NextToken;
+                    var attributeName = _htmlLexicalAnalyzer.NextToken;
                     _htmlLexicalAnalyzer.GetNextEqualSignToken();
 
                     _htmlLexicalAnalyzer.GetNextAtomToken();
 
-                    string attributeValue = _htmlLexicalAnalyzer.NextToken;
+                    var attributeValue = _htmlLexicalAnalyzer.NextToken;
                     xmlElement.SetAttribute(attributeName, attributeValue);
                 }
                 _htmlLexicalAnalyzer.GetNextTagToken();
@@ -539,7 +540,6 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
         }
 
         #endregion Private Methods
-
 
         // ---------------------------------------------------------------------
         //
@@ -551,14 +551,14 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
 
         internal const string XhtmlNamespace = "http://www.w3.org/1999/xhtml";
 
-        private HtmlLexicalAnalyzer _htmlLexicalAnalyzer;
+        private readonly HtmlLexicalAnalyzer _htmlLexicalAnalyzer;
 
         // document from which all elements are created
-        private XmlDocument _document;
+        private readonly XmlDocument _document;
 
         // stack for open elements
-        Stack<XmlElement> _openedElements;
-        Stack<XmlElement> _pendingInlineElements;
+        private readonly Stack<XmlElement> _openedElements;
+        private readonly Stack<XmlElement> _pendingInlineElements;
 
         #endregion Private Fields
     }

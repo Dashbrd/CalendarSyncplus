@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using CalendarSyncPlus.Common.Log;
 using CalendarSyncPlus.Domain.File.Xml;
@@ -13,14 +10,13 @@ using log4net;
 
 namespace CalendarSyncPlus.Services
 {
-    [Export(typeof(ISummarySerializationService))]
-    public class SummarySerializationService :ISummarySerializationService
+    [Export(typeof (ISummarySerializationService))]
+    public class SummarySerializationService : ISummarySerializationService
     {
-          private readonly ILog _applicationLogger;
-        
         private readonly string _applicationDataDirectory;
+        private readonly ILog _applicationLogger;
         private readonly string _settingsFilePath;
-       
+
         [ImportingConstructor]
         public SummarySerializationService(ApplicationLogger applicationLogger)
         {
@@ -31,19 +27,36 @@ namespace CalendarSyncPlus.Services
             _settingsFilePath = Path.Combine(_applicationDataDirectory, "Summary.xml");
         }
 
-        #region Properties
-
-        public string SettingsFilePath
+        public async Task<bool> SerializeSyncSummaryAsync(SyncSummary syncProfile)
         {
-            get { return _settingsFilePath; }
+            await TaskEx.Run(() => SerializeSyncSummaryBackgroundTask(syncProfile));
+            return true;
         }
 
-        public string ApplicationDataDirectory
+        public async Task<SyncSummary> DeserializeSyncSummaryAsync()
         {
-            get { return _applicationDataDirectory; }
+            if (!File.Exists(SettingsFilePath))
+            {
+                return null;
+            }
+            return await TaskEx.Run(() => DeserializeSyncSummaryBackgroundTask());
         }
 
-        #endregion
+        public bool SerializeSyncSummary(SyncSummary syncProfile)
+        {
+            SerializeSyncSummaryBackgroundTask(syncProfile);
+            return true;
+        }
+
+        public SyncSummary DeserializeSyncSummary()
+        {
+            var result = DeserializeSyncSummaryBackgroundTask();
+            if (result == null)
+            {
+                return SyncSummary.GetDefault();
+            }
+            return result;
+        }
 
         private void SerializeSyncSummaryBackgroundTask(SyncSummary syncProfile)
         {
@@ -74,35 +87,19 @@ namespace CalendarSyncPlus.Services
                 return null;
             }
         }
-        public async Task<bool> SerializeSyncSummaryAsync(SyncSummary syncProfile)
+
+        #region Properties
+
+        public string SettingsFilePath
         {
-            await TaskEx.Run(() => SerializeSyncSummaryBackgroundTask(syncProfile));
-            return true;
+            get { return _settingsFilePath; }
         }
 
-        public async Task<SyncSummary> DeserializeSyncSummaryAsync()
+        public string ApplicationDataDirectory
         {
-            if (!File.Exists(SettingsFilePath))
-            {
-                return null;
-            }
-            return await TaskEx.Run(() => DeserializeSyncSummaryBackgroundTask());
+            get { return _applicationDataDirectory; }
         }
 
-        public bool SerializeSyncSummary(SyncSummary syncProfile)
-        {
-            SerializeSyncSummaryBackgroundTask(syncProfile);
-            return true;
-        }
-
-        public SyncSummary DeserializeSyncSummary()
-        {
-            SyncSummary result = DeserializeSyncSummaryBackgroundTask();
-            if (result == null)
-            {
-                return SyncSummary.GetDefault();
-            }
-            return result;
-        }
+        #endregion
     }
 }

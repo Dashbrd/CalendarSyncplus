@@ -16,10 +16,76 @@ namespace CalendarSyncPlus.Presentation.Services
         [ImportingConstructor]
         public WindowsStartupService(ApplicationLogger applicationLogger)
         {
-            ApplicationLogger = applicationLogger.GetLogger(this.GetType());
+            ApplicationLogger = applicationLogger.GetLogger(GetType());
         }
 
         public ILog ApplicationLogger { get; set; }
+
+        public void AddApplicationToCurrentUserStartup()
+        {
+            using (
+                var key = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run",
+                    true))
+            {
+                key.SetValue("CalendarSyncPlusStartup",
+                    "\"" + Assembly.GetExecutingAssembly().Location + "\" " + Constants.Minimized);
+            }
+        }
+
+        public void AddApplicationToAllUserStartup()
+        {
+            using (
+                var key = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run",
+                    true))
+            {
+                key.SetValue("CalendarSyncPlusStartup",
+                    "\"" + Assembly.GetExecutingAssembly().Location + "\" " + Constants.Minimized);
+            }
+        }
+
+        public void RemoveApplicationFromCurrentUserStartup()
+        {
+            using (
+                var key = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run",
+                    true))
+            {
+                key.DeleteValue("CalendarSyncPlusStartup", false);
+            }
+        }
+
+        public void RemoveApplicationFromAllUserStartup()
+        {
+            using (
+                var key = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run",
+                    true))
+            {
+                key.DeleteValue("CalendarSyncPlusStartup", false);
+            }
+        }
+
+        public bool IsUserAdministrator()
+        {
+            //bool value to hold our return value
+            bool isAdmin;
+            try
+            {
+                //get the currently logged in user
+                var user = WindowsIdentity.GetCurrent();
+                var principal = new WindowsPrincipal(user);
+                isAdmin = principal.IsInRole(WindowsBuiltInRole.Administrator);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                isAdmin = false;
+                ApplicationLogger.Error(ex);
+            }
+            catch (Exception ex)
+            {
+                isAdmin = false;
+                ApplicationLogger.Error(ex);
+            }
+            return isAdmin;
+        }
 
         #region IWindowsStartupService Members
 
@@ -48,71 +114,5 @@ namespace CalendarSyncPlus.Presentation.Services
         }
 
         #endregion
-
-        public void AddApplicationToCurrentUserStartup()
-        {
-            using (
-                RegistryKey key = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run",
-                    true))
-            {
-                key.SetValue("CalendarSyncPlusStartup",
-                    "\"" + Assembly.GetExecutingAssembly().Location + "\" " + Constants.Minimized);
-            }
-        }
-
-        public void AddApplicationToAllUserStartup()
-        {
-            using (
-                RegistryKey key = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run",
-                    true))
-            {
-                key.SetValue("CalendarSyncPlusStartup",
-                    "\"" + Assembly.GetExecutingAssembly().Location + "\" " + Constants.Minimized);
-            }
-        }
-
-        public void RemoveApplicationFromCurrentUserStartup()
-        {
-            using (
-                RegistryKey key = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run",
-                    true))
-            {
-                key.DeleteValue("CalendarSyncPlusStartup", false);
-            }
-        }
-
-        public void RemoveApplicationFromAllUserStartup()
-        {
-            using (
-                RegistryKey key = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run",
-                    true))
-            {
-                key.DeleteValue("CalendarSyncPlusStartup", false);
-            }
-        }
-
-        public bool IsUserAdministrator()
-        {
-            //bool value to hold our return value
-            bool isAdmin;
-            try
-            {
-                //get the currently logged in user
-                WindowsIdentity user = WindowsIdentity.GetCurrent();
-                var principal = new WindowsPrincipal(user);
-                isAdmin = principal.IsInRole(WindowsBuiltInRole.Administrator);
-            }
-            catch (UnauthorizedAccessException ex)
-            {
-                isAdmin = false;
-                ApplicationLogger.Error(ex);
-            }
-            catch (Exception ex)
-            {
-                isAdmin = false;
-                ApplicationLogger.Error(ex);
-            }
-            return isAdmin;
-        }
     }
 }

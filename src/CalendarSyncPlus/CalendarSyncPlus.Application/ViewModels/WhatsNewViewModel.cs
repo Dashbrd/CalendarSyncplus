@@ -8,23 +8,30 @@ using log4net;
 
 namespace CalendarSyncPlus.Application.ViewModels
 {
-    [Export,Export(typeof(IChildContentViewModel))]
+    [Export, Export(typeof (IChildContentViewModel))]
     [ExportMetadata("ChildViewContentType", ChildViewContentType.WhatsNew)]
     public class WhatsNewViewModel : ViewModel<IWhatsNewView>, IChildContentViewModel
     {
-        public ILog Logger { get; set; }
         private string _text;
 
         [ImportingConstructor]
-        public WhatsNewViewModel(IWhatsNewView view,ApplicationLogger applicationLogger) : base(view)
+        public WhatsNewViewModel(IWhatsNewView view, ApplicationLogger applicationLogger) : base(view)
         {
-            Logger = applicationLogger.GetLogger(this.GetType());
+            Logger = applicationLogger.GetLogger(GetType());
             GetReleaseNotes();
+        }
+
+        public ILog Logger { get; set; }
+
+        public string Text
+        {
+            get { return _text; }
+            set { SetProperty(ref _text, value); }
         }
 
         private void GetReleaseNotes()
         {
-            var releaseNotesPath= ApplicationInfo.ApplicationPath + @"\ReleaseNotes\Release Notes.rtf";
+            var releaseNotesPath = ApplicationInfo.ApplicationPath + @"\ReleaseNotes\Release Notes.rtf";
 
             if (!File.Exists(releaseNotesPath))
             {
@@ -32,14 +39,8 @@ namespace CalendarSyncPlus.Application.ViewModels
                     releaseNotesPath));
                 Text = @"<h1>No Release Notes Found. Report Error to Developers</h1>";
             }
-            var notes=File.ReadAllText(releaseNotesPath);
+            var notes = File.ReadAllText(releaseNotesPath);
             Text = notes;
-        }
-
-        public string Text
-        {
-            get { return _text; }
-            set { SetProperty(ref _text, value); }
         }
     }
 }

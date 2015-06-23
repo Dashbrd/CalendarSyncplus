@@ -23,38 +23,12 @@ using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
-
 #endregion
 
 namespace CalendarSyncPlus.Services.Utilities
 {
     public static class ExtensionMethods
     {
-        #region Private Methods
-       
-        public static bool IsValidEmailAddress(this string email)
-        {
-            if (string.IsNullOrEmpty(email))
-            {
-                return false;
-            }
-
-            string emailRegex = @"^[\w!#$%&'*+\-/=?\^_`{|}~]+(\.[\w!#$%&'*+\-/=?\^_`{|}~]+)*" + "@" +
-                                @"((([\-\w]+\.)+[a-zA-Z]{2,4})|(([0-9]{1,3}\.){3}[0-9]{1,3}))$";
-
-            return Regex.IsMatch(email, emailRegex);
-        }
-
-        private static IEnumerable<T> GetChunk<T>(this IEnumerator<T> enumerator,
-            int chunkSize)
-        {
-            do
-                yield return enumerator.Current;
-            while (--chunkSize > 0 && enumerator.MoveNext());
-        }
-
-        #endregion
-
         #region Public Methods
 
         public static IEnumerable<IEnumerable<T>> Chunkify<T>(this IEnumerable<T> enumerable,
@@ -65,11 +39,35 @@ namespace CalendarSyncPlus.Services.Utilities
                 throw new ArgumentException("chunkSize must be positive");
             }
 
-            using (IEnumerator<T> enumerator = enumerable.GetEnumerator())
+            using (var enumerator = enumerable.GetEnumerator())
                 while (enumerator.MoveNext())
                 {
                     yield return enumerator.GetChunk(chunkSize);
                 }
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        public static bool IsValidEmailAddress(this string email)
+        {
+            if (string.IsNullOrEmpty(email))
+            {
+                return false;
+            }
+
+            var emailRegex = @"^[\w!#$%&'*+\-/=?\^_`{|}~]+(\.[\w!#$%&'*+\-/=?\^_`{|}~]+)*" + "@" +
+                             @"((([\-\w]+\.)+[a-zA-Z]{2,4})|(([0-9]{1,3}\.){3}[0-9]{1,3}))$";
+
+            return Regex.IsMatch(email, emailRegex);
+        }
+
+        private static IEnumerable<T> GetChunk<T>(this IEnumerator<T> enumerator,
+            int chunkSize)
+        {
+            do
+                yield return enumerator.Current; while (--chunkSize > 0 && enumerator.MoveNext());
         }
 
         #endregion

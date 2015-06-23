@@ -1,21 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Globalization;
 using System.Windows.Data;
 
 namespace CalendarSyncPlus.Presentation.Converters
 {
     public class BootToIntConverter : IValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             try
             {
-                if ((bool)value)
+                if ((bool) value)
                     return 0;
-
             }
             catch (Exception)
             {
@@ -24,13 +20,12 @@ namespace CalendarSyncPlus.Presentation.Converters
             return 1;
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             try
             {
-                if (((int)value) == 0)
+                if (((int) value) == 0)
                     return true;
-
             }
             catch (Exception)
             {

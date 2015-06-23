@@ -9,12 +9,11 @@
         }
 
         public string Message { get; private set; }
-
         public UserActionEnum UserActionEnum { get; private set; }
     }
 
     public enum UserActionEnum
     {
-        ConfirmDelete,
+        ConfirmDelete
     }
 }

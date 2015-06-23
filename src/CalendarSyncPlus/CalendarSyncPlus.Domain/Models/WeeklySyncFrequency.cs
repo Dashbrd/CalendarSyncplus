@@ -13,13 +13,9 @@ namespace CalendarSyncPlus.Domain.Models
         }
 
         public DateTime StartDate { get; set; }
-
         public int WeekRecurrence { get; set; }
-
         public DateTime TimeOfDay { get; set; }
-
         public List<DayOfWeek> DaysOfWeek { get; set; }
-
 
         public override bool ValidateTimer(DateTime dateTimeNow)
         {
@@ -77,7 +73,7 @@ namespace CalendarSyncPlus.Domain.Models
 
         public override string ToString()
         {
-            string str = string.Format("{0} : {1}", GetType().Name, TimeOfDay);
+            var str = string.Format("{0} : {1}", GetType().Name, TimeOfDay);
             return str;
         }
     }

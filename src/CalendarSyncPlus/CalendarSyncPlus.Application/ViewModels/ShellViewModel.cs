@@ -21,24 +21,18 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.ComponentModel.Composition;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Waf.Applications;
-using System.Waf.Foundation;
 using CalendarSyncPlus.Application.Views;
 using CalendarSyncPlus.Common;
 using CalendarSyncPlus.Common.Log;
-using CalendarSyncPlus.Domain.Helpers;
 using CalendarSyncPlus.Domain.Models;
-using CalendarSyncPlus.GoogleServices.Google;
 using CalendarSyncPlus.Services.Interfaces;
 using CalendarSyncPlus.Services.Utilities;
 using log4net;
@@ -54,37 +48,6 @@ namespace CalendarSyncPlus.Application.ViewModels
     [Export]
     public class ShellViewModel : ViewModel<IShellView>
     {
-        #region Fields
-
-        private readonly StringBuilder _statusBuilder;
-        private DelegateCommand _downloadCommand;
-        private DelegateCommand _exitCommand;
-        private bool _isAboutVisible;
-        private bool _isHelpVisible;
-        private bool _isLatestVersionAvailable;
-        private bool _isPeriodicSyncStarted;
-        private bool _isSettingsLoading;
-        private bool _isSettingsVisible;
-        private bool _isSyncInProgress;
-        private DateTime? _lastCheckDateTime;
-        private string _latestVersion;
-        private DelegateCommand _launchAbout;
-        private DelegateCommand _launchHelp;
-        private DelegateCommand _launchSettings;
-        private Settings _settings;
-        private DelegateCommand _startSyncCommand;
-        private DelegateCommand _syncNowCommand;
-        private List<CalendarSyncProfile> _scheduledSyncProfiles;
-        private ChildViewContentType _childContentViewType;
-        private bool _showChildView;
-        #endregion
-
-        #region Events
-
-        public event CancelEventHandler Closing;
-
-        #endregion
-
         #region Constructors
 
         /// <summary>
@@ -113,7 +76,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             _statusBuilder = new StringBuilder();
             MessageService = messageService;
             ApplicationLogger = applicationLogger;
-            Logger = applicationLogger.GetLogger(this.GetType());
+            Logger = applicationLogger.GetLogger(GetType());
             ApplicationUpdateService = applicationUpdateService;
             ShellService = shellService;
             SyncStartService = syncStartService;
@@ -125,6 +88,50 @@ namespace CalendarSyncPlus.Application.ViewModels
             view.Closing += ViewClosing;
             view.Closed += ViewClosed;
         }
+
+        #endregion
+
+        #region Events
+
+        public event CancelEventHandler Closing;
+
+        #endregion
+
+        #region Protected Methods
+
+        protected virtual void OnClosing(CancelEventArgs e)
+        {
+            if (Closing != null)
+            {
+                Closing(this, e);
+            }
+        }
+
+        #endregion
+
+        #region Fields
+
+        private readonly StringBuilder _statusBuilder;
+        private DelegateCommand _downloadCommand;
+        private DelegateCommand _exitCommand;
+        private bool _isAboutVisible;
+        private bool _isHelpVisible;
+        private bool _isLatestVersionAvailable;
+        private bool _isPeriodicSyncStarted;
+        private bool _isSettingsLoading;
+        private bool _isSettingsVisible;
+        private bool _isSyncInProgress;
+        private DateTime? _lastCheckDateTime;
+        private string _latestVersion;
+        private DelegateCommand _launchAbout;
+        private DelegateCommand _launchHelp;
+        private DelegateCommand _launchSettings;
+        private Settings _settings;
+        private DelegateCommand _startSyncCommand;
+        private DelegateCommand _syncNowCommand;
+        private List<CalendarSyncProfile> _scheduledSyncProfiles;
+        private ChildViewContentType _childContentViewType;
+        private bool _showChildView;
 
         #endregion
 
@@ -235,7 +242,7 @@ namespace CalendarSyncPlus.Application.ViewModels
                     if (!IsPeriodicSyncStarted)
                     {
                         if ((Settings.AppSettings.IsManualSynchronization && Settings.AppSettings.PeriodicSyncOn) ||
-                                !Settings.AppSettings.IsManualSynchronization)
+                            !Settings.AppSettings.IsManualSynchronization)
                         {
                             StartPeriodicSync();
                         }
@@ -396,10 +403,10 @@ namespace CalendarSyncPlus.Application.ViewModels
             }
             else
             {
-                bool result = await SyncStartService.Start(OnTimerElapsed);
+                var result = await SyncStartService.Start(OnTimerElapsed);
                 if (result)
                 {
-                    foreach (CalendarSyncProfile syncProfile in Settings.SyncProfiles)
+                    foreach (var syncProfile in Settings.SyncProfiles)
                     {
                         if (syncProfile.IsSyncEnabled && syncProfile.SyncSettings.SyncFrequency != null)
                         {
@@ -427,7 +434,8 @@ namespace CalendarSyncPlus.Application.ViewModels
                         {
                             IsLatestVersionAvailable = true;
                             LatestVersion = version;
-                            SystemTrayNotifierViewModel.ShowBalloon(string.Format("New Update {0} Available!", version), 5000);
+                            SystemTrayNotifierViewModel.ShowBalloon(
+                                string.Format("New Update {0} Available!", version), 5000);
                         }
                     }
                     _lastCheckDateTime = DateTime.Now;
@@ -530,16 +538,16 @@ namespace CalendarSyncPlus.Application.ViewModels
                     return;
                 }
 
-                foreach (CalendarSyncProfile syncProfile in ScheduledSyncProfiles)
+                foreach (var syncProfile in ScheduledSyncProfiles)
                 {
-                    CalendarSyncProfile profile = syncProfile;
+                    var profile = syncProfile;
                     Task.Factory.StartNew(() => StartSyncTask(profile));
                     Task.Delay(1000);
                 }
             }
             catch (AggregateException exception)
             {
-                AggregateException flattenException = exception.Flatten();
+                var flattenException = exception.Flatten();
                 MessageService.ShowMessageAsync(flattenException.Message);
             }
             catch (Exception exception)
@@ -550,26 +558,27 @@ namespace CalendarSyncPlus.Application.ViewModels
 
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="signalTime"></param>
         private void SyncPeriodicHandler(DateTime signalTime)
         {
             try
             {
-                foreach (CalendarSyncProfile syncProfile in ScheduledSyncProfiles)
+                foreach (var syncProfile in ScheduledSyncProfiles)
                 {
-                    DateTime nextSyncTime = syncProfile.NextSync.GetValueOrDefault();
-                    if (nextSyncTime.ToString(Constants.CompareStringFormat).Equals(signalTime.ToString(Constants.CompareStringFormat)))
+                    var nextSyncTime = syncProfile.NextSync.GetValueOrDefault();
+                    if (
+                        nextSyncTime.ToString(Constants.CompareStringFormat)
+                            .Equals(signalTime.ToString(Constants.CompareStringFormat)))
                     {
-                        CalendarSyncProfile profile = syncProfile;
+                        var profile = syncProfile;
                         Task.Factory.StartNew(() => StartSyncTask(profile), TaskCreationOptions.None);
                     }
                     else if (nextSyncTime.CompareTo(signalTime) < 0)
                     {
                         if (!IsSyncInProgress && (signalTime - nextSyncTime).TotalMinutes > 1)
                         {
-                            CalendarSyncProfile profile = syncProfile;
+                            var profile = syncProfile;
                             Task.Factory.StartNew(() => StartSyncTask(profile), TaskCreationOptions.None);
                         }
                     }
@@ -577,7 +586,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             }
             catch (AggregateException exception)
             {
-                AggregateException flattenException = exception.Flatten();
+                var flattenException = exception.Flatten();
                 MessageService.ShowMessageAsync(flattenException.Message);
             }
             catch (Exception exception)
@@ -604,7 +613,7 @@ namespace CalendarSyncPlus.Application.ViewModels
                 UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.Line));
                 UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.Profile, syncProfile.Name));
                 UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.Line));
-                string result = SyncStartService.SyncNow(syncProfile, SyncCallback);
+                var result = SyncStartService.SyncNow(syncProfile, SyncCallback);
                 OnSyncCompleted(syncProfile, result);
             }
         }
@@ -612,7 +621,7 @@ namespace CalendarSyncPlus.Application.ViewModels
 
         private async Task<bool> SyncCallback(SyncEventArgs e)
         {
-            MessageDialogResult task = await MessageService.ShowConfirmMessage(e.Message);
+            var task = await MessageService.ShowConfirmMessage(e.Message);
             if (task != MessageDialogResult.Affirmative)
             {
                 return false;
@@ -632,7 +641,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             }
             UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.Line));
             UpdateStatus(string.Format("Time Elapsed : {0} s",
-                (int)DateTime.Now.Subtract(syncProfile.LastSync.GetValueOrDefault()).TotalSeconds));
+                (int) DateTime.Now.Subtract(syncProfile.LastSync.GetValueOrDefault()).TotalSeconds));
             UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.LogSeparator));
             ShowNotification(false);
 
@@ -645,21 +654,7 @@ namespace CalendarSyncPlus.Application.ViewModels
 
         #endregion
 
-        #region Protected Methods
-
-        protected virtual void OnClosing(CancelEventArgs e)
-        {
-            if (Closing != null)
-            {
-                Closing(this, e);
-            }
-        }
-
-        #endregion
-
         #region Public Methods
-
-
 
         public void Show(bool startMinimized)
         {
@@ -688,7 +683,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             {
                 if (key != null)
                 {
-                    int value = (int)key.GetValue("FirstLaunch", 0);
+                    var value = (int) key.GetValue("FirstLaunch", 0);
                     if (value == 1)
                     {
                         ShowWhatsNew();
@@ -724,7 +719,10 @@ namespace CalendarSyncPlus.Application.ViewModels
                 if (_lastCheckDateTime == null ||
                     DateTime.Now.Subtract(_lastCheckDateTime.GetValueOrDefault()).TotalHours > 6)
                 {
-                    Task<string>.Factory.StartNew(() => ApplicationUpdateService.GetLatestReleaseFromServer(Settings.AppSettings.CheckForAlphaReleases))
+                    Task<string>.Factory.StartNew(
+                        () =>
+                            ApplicationUpdateService.GetLatestReleaseFromServer(
+                                Settings.AppSettings.CheckForAlphaReleases))
                         .ContinueWith(UpdateContinuationAction);
                 }
             }

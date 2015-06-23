@@ -34,9 +34,10 @@ namespace CalendarSyncPlus.Presentation.Converters
             {
                 double parentWidth;
                 int percentage;
-                if (double.TryParse(value.ToString(), out parentWidth) && int.TryParse(parameter.ToString(), out percentage))
+                if (double.TryParse(value.ToString(), out parentWidth) &&
+                    int.TryParse(parameter.ToString(), out percentage))
                 {
-                    width = parentWidth * percentage / 100;
+                    width = parentWidth*percentage/100;
                     if (width < 500)
                     {
                         width = 500;

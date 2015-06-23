@@ -11,7 +11,7 @@
 namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
 {
     /// <summary>
-    /// types of lexical tokens for html-to-xaml converter
+    ///     types of lexical tokens for html-to-xaml converter
     /// </summary>
     internal enum HtmlTokenType
     {
@@ -24,6 +24,6 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
         Atom, // any attribute value not in quotes
         Text, //text content when accepting text
         Comment,
-        EOF,
+        EOF
     }
 }

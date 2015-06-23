@@ -21,17 +21,14 @@ using System;
 using System.ComponentModel.Composition;
 using System.Threading.Tasks;
 using System.Waf.Applications;
-using System.Windows;
 using CalendarSyncPlus.Common;
-using CalendarSyncPlus.GoogleServices.Google;
 using CalendarSyncPlus.Presentation.Views;
 using CalendarSyncPlus.Services.Interfaces;
 using MahApps.Metro.Controls.Dialogs;
-using Microsoft.CSharp.RuntimeBinder;
 
 namespace CalendarSyncPlus.Presentation.Services
 {
-    [Export(typeof(IMessageService))]
+    [Export(typeof (IMessageService))]
     public class MessageService : IMessageService
     {
         [ImportingConstructor]
@@ -41,6 +38,11 @@ namespace CalendarSyncPlus.Presentation.Services
         }
 
         public ShellView View { get; set; }
+
+        private T InvokeOnCurrentDispatcher<T>(Func<T> action)
+        {
+            return DispatcherHelper.CheckInvokeOnUI(action);
+        }
 
         #region IMessageService Members
 
@@ -74,7 +76,7 @@ namespace CalendarSyncPlus.Presentation.Services
             };
             return await InvokeOnCurrentDispatcher(async () =>
             {
-                MessageDialogResult taskResult =
+                var taskResult =
                     await View.ShowMessageAsync(title, message, MessageDialogStyle.Affirmative, metroDialogSettings);
                 return taskResult;
             });
@@ -93,7 +95,7 @@ namespace CalendarSyncPlus.Presentation.Services
                 NegativeButtonText = "NO",
                 AnimateHide = true,
                 AnimateShow = true,
-                ColorScheme = MetroDialogColorScheme.Accented,
+                ColorScheme = MetroDialogColorScheme.Accented
             };
 
             DispatcherHelper.CheckBeginInvokeOnUI(
@@ -119,7 +121,7 @@ namespace CalendarSyncPlus.Presentation.Services
 
             return await InvokeOnCurrentDispatcher(async () =>
             {
-                MessageDialogResult taskResult =
+                var taskResult =
                     await View.ShowMessageAsync(title, message, MessageDialogStyle.AffirmativeAndNegative,
                         metroDialogSettings);
                 return taskResult;
@@ -135,6 +137,7 @@ namespace CalendarSyncPlus.Presentation.Services
         {
             return ShowInputAsync(message, ApplicationInfo.ProductName);
         }
+
         public Task<string> ShowInputAsync(string message, string title)
         {
             var metroDialogSettings = new MetroDialogSettings
@@ -143,13 +146,10 @@ namespace CalendarSyncPlus.Presentation.Services
                 NegativeButtonText = "CANCEL",
                 AnimateHide = true,
                 AnimateShow = true,
-                ColorScheme = MetroDialogColorScheme.Accented,
+                ColorScheme = MetroDialogColorScheme.Accented
             };
 
-            return InvokeOnCurrentDispatcher(() =>
-            {
-                return View.ShowInputAsync(title, message, metroDialogSettings);
-            });
+            return InvokeOnCurrentDispatcher(() => { return View.ShowInputAsync(title, message, metroDialogSettings); });
         }
 
         public Task<string> ShowInput(string message)
@@ -166,7 +166,7 @@ namespace CalendarSyncPlus.Presentation.Services
                 NegativeButtonText = "CANCEL",
                 AnimateHide = true,
                 AnimateShow = true,
-                ColorScheme = MetroDialogColorScheme.Accented,
+                ColorScheme = MetroDialogColorScheme.Accented
             };
 
             return InvokeOnCurrentDispatcher(() =>
@@ -208,8 +208,8 @@ namespace CalendarSyncPlus.Presentation.Services
 
             return await InvokeOnCurrentDispatcher(async () =>
             {
-                ProgressDialogController controller =
-                await View.ShowProgressAsync(title, message, false, metroDialogSettings);
+                var controller =
+                    await View.ShowProgressAsync(title, message, false, metroDialogSettings);
                 return controller;
             });
         }
@@ -219,15 +219,15 @@ namespace CalendarSyncPlus.Presentation.Services
             return ShowProgress(message, ApplicationInfo.ProductName);
         }
 
-        public Task<string> ShowCustomInput(string message, string title,int maxLength=15)
+        public Task<string> ShowCustomInput(string message, string title, int maxLength = 15)
         {
-            var metroDialogSettings = new MetroDialogSettings()
+            var metroDialogSettings = new MetroDialogSettings
             {
                 AffirmativeButtonText = "OK",
                 NegativeButtonText = "CANCEL",
                 AnimateHide = true,
                 AnimateShow = true,
-                ColorScheme = MetroDialogColorScheme.Accented,
+                ColorScheme = MetroDialogColorScheme.Accented
             };
 
             var dialog = new CustomInputDialog(View, metroDialogSettings)
@@ -235,7 +235,7 @@ namespace CalendarSyncPlus.Presentation.Services
                 Message = message,
                 Title = title,
                 Input = metroDialogSettings.DefaultText,
-                MaxInputLength=maxLength
+                MaxInputLength = maxLength
             };
 
             return InvokeOnCurrentDispatcher(() =>
@@ -243,10 +243,10 @@ namespace CalendarSyncPlus.Presentation.Services
                 View.ShowMetroDialogAsync(dialog, metroDialogSettings);
 
                 return dialog.WaitForButtonPressAsync().ContinueWith(m =>
-                    {
-                        InvokeOnCurrentDispatcher(() => View.HideMetroDialogAsync(dialog));
-                        return m.Result;
-                    });
+                {
+                    InvokeOnCurrentDispatcher(() => View.HideMetroDialogAsync(dialog));
+                    return m.Result;
+                });
             });
         }
 
@@ -256,10 +256,5 @@ namespace CalendarSyncPlus.Presentation.Services
         }
 
         #endregion
-
-        private T InvokeOnCurrentDispatcher<T>(Func<T> action)
-        {
-            return DispatcherHelper.CheckInvokeOnUI(action);
-        }
     }
 }

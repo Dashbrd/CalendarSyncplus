@@ -26,7 +26,6 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Waf.Applications;
 using CalendarSyncPlus.Common.Log;
-using CalendarSyncPlus.Domain;
 using CalendarSyncPlus.Domain.File.Xml;
 using CalendarSyncPlus.Domain.Models;
 using CalendarSyncPlus.Services.Interfaces;
@@ -36,29 +35,29 @@ using log4net;
 
 namespace CalendarSyncPlus.Services
 {
-    [Export(typeof(ISettingsSerializationService))]
+    [Export(typeof (ISettingsSerializationService))]
     public class SettingsSerializationService : ISettingsSerializationService
     {
         private readonly ILog _applicationLogger;
-
-        #region Fields
-
-        private readonly string applicationDataDirectory;
-        private readonly string settingsFilePath;
-
-        #endregion
 
         #region Constructors
 
         [ImportingConstructor]
         public SettingsSerializationService(ApplicationLogger applicationLogger)
         {
-            _applicationLogger = applicationLogger.GetLogger(this.GetType());
+            _applicationLogger = applicationLogger.GetLogger(GetType());
             applicationDataDirectory =
                 Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
                     "CalendarSyncPlus");
             settingsFilePath = Path.Combine(applicationDataDirectory, "Settings.xml");
         }
+
+        #endregion
+
+        #region Fields
+
+        private readonly string applicationDataDirectory;
+        private readonly string settingsFilePath;
 
         #endregion
 
@@ -135,7 +134,7 @@ namespace CalendarSyncPlus.Services
 
         public Settings DeserializeSettings()
         {
-            Settings result = DeserializeSettingsBackgroundTask();
+            var result = DeserializeSettingsBackgroundTask();
             if (result == null)
             {
                 return Settings.GetDefaultSettings();
@@ -167,7 +166,7 @@ namespace CalendarSyncPlus.Services
                 result.SyncProfiles.Add(CalendarSyncProfile.GetDefaultSyncProfile());
             }
 
-            foreach (CalendarSyncProfile syncProfile in result.SyncProfiles)
+            foreach (var syncProfile in result.SyncProfiles)
             {
                 syncProfile.SetCalendarTypes();
                 if (syncProfile.SyncSettings == null || syncProfile.SyncSettings.SyncFrequency == null)
@@ -189,7 +188,7 @@ namespace CalendarSyncPlus.Services
 
             if (result.AppSettings.ProxySettings == null)
             {
-                result.AppSettings.ProxySettings = new ProxySetting()
+                result.AppSettings.ProxySettings = new ProxySetting
                 {
                     ProxyType = ProxyType.Auto
                 };

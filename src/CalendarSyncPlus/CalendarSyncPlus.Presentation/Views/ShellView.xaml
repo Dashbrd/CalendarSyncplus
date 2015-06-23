@@ -66,51 +66,53 @@
                     <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_refresh}" />
                 </Rectangle.OpacityMask>
             </Rectangle>
-            
+
         </DataTemplate>
     </controls:MetroWindow.Resources>
     <controls:MetroWindow.Flyouts>
         <controls:FlyoutsControl>
-            <controls:Flyout Width="{Binding Width,
+            <controls:Flyout
+                Width="{Binding Width,
                                              RelativeSource={RelativeSource AncestorType={x:Type views:ShellView}},
                                              Converter={StaticResource PercentageWidthConverter},
                                              ConverterParameter=75}"
-                             AnimateOnPositionChange="True"
-                             Content="{Binding Path=ShellService.SettingsView}"
-                             Header="{localizeExtension:LocText Key=ShellView_Flyouts_Settings_Header}"
-                             IsModal="True"
-                             IsOpen="{Binding IsSettingsVisible,
+                AnimateOnPositionChange="True"
+                Content="{Binding Path=ShellService.SettingsView}"
+                Header="{localizeExtension:LocText Key=ShellView_Flyouts_Settings_Header}"
+                IsModal="True"
+                IsOpen="{Binding IsSettingsVisible,
                                               Mode=TwoWay}"
-                             Position="Right"
-                             Theme="Adapt"
-                             />
-            <controls:Flyout Width="{Binding Width,
+                Position="Right"
+                Theme="Adapt" />
+            <controls:Flyout
+                Width="{Binding Width,
                                              RelativeSource={RelativeSource AncestorType={x:Type views:ShellView}},
                                              Converter={StaticResource PercentageWidthConverter},
                                              ConverterParameter=75}"
-                             AnimateOnPositionChange="True"
-                             Content="{Binding Path=ShellService.AboutView}"
-                             Header="{localizeExtension:LocText Key=ShellView_Flyouts_About_Header}"
-                             IsModal="True"
-                             IsOpen="{Binding IsAboutVisible,
+                AnimateOnPositionChange="True"
+                Content="{Binding Path=ShellService.AboutView}"
+                Header="{localizeExtension:LocText Key=ShellView_Flyouts_About_Header}"
+                IsModal="True"
+                IsOpen="{Binding IsAboutVisible,
                                               Mode=TwoWay}"
-                             Position="Right"
-                             Theme="Adapt"/>
-            <controls:Flyout Width="{Binding Width,
+                Position="Right"
+                Theme="Adapt" />
+            <controls:Flyout
+                Width="{Binding Width,
                                              RelativeSource={RelativeSource AncestorType={x:Type views:ShellView}},
                                              Converter={StaticResource PercentageWidthConverter},
                                              ConverterParameter=75}"
-                             AnimateOnPositionChange="True"
-                             Content="{Binding Path=ShellService.HelpView}"
-                             Header="{localizeExtension:LocText Key=ShellView_Flyouts_Help_Header}"
-                             IsModal="True"
-                             IsOpen="{Binding IsHelpVisible,
+                AnimateOnPositionChange="True"
+                Content="{Binding Path=ShellService.HelpView}"
+                Header="{localizeExtension:LocText Key=ShellView_Flyouts_Help_Header}"
+                IsModal="True"
+                IsOpen="{Binding IsHelpVisible,
                                               Mode=TwoWay}"
-                             Position="Right"
-                             Theme="Adapt"/>
+                Position="Right"
+                Theme="Adapt" />
         </controls:FlyoutsControl>
     </controls:MetroWindow.Flyouts>
-  
-    <views:HomeView DataContext="{Binding}"/>
+
+    <views:HomeView DataContext="{Binding}" />
 
 </controls:MetroWindow>

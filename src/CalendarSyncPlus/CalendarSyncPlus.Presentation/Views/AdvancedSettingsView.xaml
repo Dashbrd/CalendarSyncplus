@@ -74,7 +74,7 @@
                           IsChecked="{Binding StartMinimized,
                                               Mode=TwoWay,
                                               UpdateSourceTrigger=PropertyChanged}" />
-                <ContentControl  Grid.Row="1" Grid.Column="1"
+                <ContentControl Grid.Row="1" Grid.Column="1"
                                 ContentTemplate="{StaticResource HelpButtonTemplate}"
                                 ToolTip="{localizeExtension:LocText Key=AdvancedSettingsView_ContentControl_HelpButtonStartMinimized_Tooltip}" />
                 <CheckBox Grid.Row="2"

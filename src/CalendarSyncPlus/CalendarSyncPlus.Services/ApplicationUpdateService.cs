@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Waf.Applications;
-using CalendarSyncPlus.Common;
 using CalendarSyncPlus.Common.Log;
 using CalendarSyncPlus.Services.Interfaces;
 using log4net;
@@ -14,14 +13,14 @@ namespace CalendarSyncPlus.Services
 {
     /// <summary>
     /// </summary>
-    [Export(typeof(IApplicationUpdateService))]
+    [Export(typeof (IApplicationUpdateService))]
     public class ApplicationUpdateService : IApplicationUpdateService
     {
         /// <summary>
         /// </summary>
         private string _downloadLink;
+
         /// <summary>
-        /// 
         /// </summary>
         private bool _isAlpha;
 
@@ -32,7 +31,7 @@ namespace CalendarSyncPlus.Services
         [ImportingConstructor]
         public ApplicationUpdateService(ApplicationLogger applicationLogger)
         {
-            ApplicationLogger = applicationLogger.GetLogger(this.GetType());
+            ApplicationLogger = applicationLogger.GetLogger(GetType());
         }
 
         public ILog ApplicationLogger { get; set; }
@@ -49,13 +48,13 @@ namespace CalendarSyncPlus.Services
             try
             {
                 var obj = GetLatestReleaseTag();
-                
+
                 if (includeAlpha)
                 {
                     string version1 = obj.tag_name;
                     obj = GetLatestTag();
                     string version2 = obj.tag_name;
-                    _isAlpha = IsAlpha(version1,version2);
+                    _isAlpha = IsAlpha(version1, version2);
                 }
 
                 _version = obj.tag_name;
@@ -63,10 +62,10 @@ namespace CalendarSyncPlus.Services
                 string body = obj.body;
                 if (body.Contains("[link]"))
                 {
-                    body = body.Split(new[] { "[link]" }, StringSplitOptions.RemoveEmptyEntries).Last();
+                    body = body.Split(new[] {"[link]"}, StringSplitOptions.RemoveEmptyEntries).Last();
                     if (body.Contains("(") && body.Contains(")"))
                     {
-                        var arrayValues = body.Split(new string[] { "(", ")" }, StringSplitOptions.RemoveEmptyEntries);
+                        var arrayValues = body.Split(new[] {"(", ")"}, StringSplitOptions.RemoveEmptyEntries);
                         _downloadLink = arrayValues.FirstOrDefault(t => !string.IsNullOrEmpty(t.Trim()));
                     }
                 }
@@ -84,10 +83,14 @@ namespace CalendarSyncPlus.Services
             return null;
         }
 
-        bool IsAlpha(string version1, string version2)
+        private bool IsAlpha(string version1, string version2)
         {
-            version1 = version1.Contains("-") ? version1.Remove(version1.IndexOf("-",StringComparison.InvariantCultureIgnoreCase)) : version1;
-            version2 = version2.Contains("-") ? version2.Remove(version2.IndexOf("-", StringComparison.InvariantCultureIgnoreCase)) : version2;
+            version1 = version1.Contains("-")
+                ? version1.Remove(version1.IndexOf("-", StringComparison.InvariantCultureIgnoreCase))
+                : version1;
+            version2 = version2.Contains("-")
+                ? version2.Remove(version2.IndexOf("-", StringComparison.InvariantCultureIgnoreCase))
+                : version2;
             var version = new Version(version1.Substring(1));
             if (version < new Version(version2.Substring(1)))
             {
@@ -95,9 +98,10 @@ namespace CalendarSyncPlus.Services
             }
             return false;
         }
+
         private dynamic GetLatestReleaseTag()
         {
-            HttpWebRequest request =
+            var request =
                 WebRequest.Create(new Uri("https://api.github.com/repos/ankeshdave/calendarsyncplus/releases/latest"))
                     as HttpWebRequest;
             request.Method = "GET";
@@ -123,7 +127,7 @@ namespace CalendarSyncPlus.Services
 
         private dynamic GetLatestTag()
         {
-            HttpWebRequest request =
+            var request =
                 WebRequest.Create(new Uri("https://api.github.com/repos/ankeshdave/calendarsyncplus/releases"))
                     as HttpWebRequest;
             request.Method = "GET";
@@ -149,12 +153,15 @@ namespace CalendarSyncPlus.Services
 
         /// <summary>
         /// </summary>
-        /// <returns></returns>
+        /// <returns>
+        /// </returns>
         public bool IsNewVersionAvailable()
         {
             try
             {
-                string versionString = _version.Contains("-") ? _version.Remove(_version.IndexOf("-", StringComparison.InvariantCultureIgnoreCase)) : _version;
+                var versionString = _version.Contains("-")
+                    ? _version.Remove(_version.IndexOf("-", StringComparison.InvariantCultureIgnoreCase))
+                    : _version;
                 var version = new Version(versionString.Substring(1));
                 if (version > new Version(ApplicationInfo.Version))
                 {
@@ -170,7 +177,8 @@ namespace CalendarSyncPlus.Services
 
         /// <summary>
         /// </summary>
-        /// <returns></returns>
+        /// <returns>
+        /// </returns>
         public string GetNewAvailableVersion()
         {
             try
@@ -187,7 +195,8 @@ namespace CalendarSyncPlus.Services
 
         /// <summary>
         /// </summary>
-        /// <returns></returns>
+        /// <returns>
+        /// </returns>
         public Uri GetDownloadUri()
         {
             //Avoid for a while

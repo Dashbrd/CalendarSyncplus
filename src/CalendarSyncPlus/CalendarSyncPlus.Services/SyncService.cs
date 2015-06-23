@@ -36,20 +36,9 @@ using log4net;
 
 namespace CalendarSyncPlus.Services
 {
-    [Export(typeof(ISyncService))]
+    [Export(typeof (ISyncService))]
     public class SyncService : Model, ISyncService
     {
-        #region Fields
-
-        private readonly ILog _applicationLogger;
-        private readonly ICalendarUpdateService _calendarUpdateService;
-        private readonly IMessageService _messageService;
-        private readonly ISettingsProvider _settingsProvider;
-        private string _syncStatus;
-        private Timer _syncTimer;
-
-        #endregion
-
         #region Constructors
 
         [ImportingConstructor]
@@ -59,8 +48,34 @@ namespace CalendarSyncPlus.Services
             _settingsProvider = settingsProvider;
             _calendarUpdateService = calendarUpdateService;
             _messageService = messageService;
-            _applicationLogger = applicationLogger.GetLogger(this.GetType());
+            _applicationLogger = applicationLogger.GetLogger(GetType());
         }
+
+        #endregion
+
+        private void ResetSyncData()
+        {
+            _syncStatus = null;
+        }
+
+        private void CalendarUpdateNotificationChanged(object sender, PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case "SyncStatus":
+                    SyncStatus = _calendarUpdateService.SyncStatus;
+                    break;
+            }
+        }
+
+        #region Fields
+
+        private readonly ILog _applicationLogger;
+        private readonly ICalendarUpdateService _calendarUpdateService;
+        private readonly IMessageService _messageService;
+        private readonly ISettingsProvider _settingsProvider;
+        private string _syncStatus;
+        private Timer _syncTimer;
 
         #endregion
 
@@ -76,7 +91,7 @@ namespace CalendarSyncPlus.Services
         {
             if (_syncTimer == null)
             {
-                _syncTimer = new Timer(1000) { AutoReset = true };
+                _syncTimer = new Timer(1000) {AutoReset = true};
                 _syncTimer.Elapsed += timerCallback;
             }
             _syncTimer.Start();
@@ -95,19 +110,20 @@ namespace CalendarSyncPlus.Services
         {
             try
             {
-                if (syncProfile.GoogleAccount == null || syncProfile.GoogleAccount.GoogleCalendar==null || !syncProfile.ValidateOutlookSettings())
+                if (syncProfile.GoogleAccount == null || syncProfile.GoogleAccount.GoogleCalendar == null ||
+                    !syncProfile.ValidateOutlookSettings())
                 {
                     _messageService.ShowMessageAsync(
                         "Please configure Google and Outlook calendar in settings to continue.");
                     return "Invalid Settings";
                 }
                 ResetSyncData();
-                bool isSyncComplete = _calendarUpdateService.SyncCalendar(syncProfile, syncCallback);
+                var isSyncComplete = _calendarUpdateService.SyncCalendar(syncProfile, syncCallback);
                 return isSyncComplete ? null : "Error Occurred";
             }
             catch (AggregateException exception)
             {
-                AggregateException flattenException = exception.Flatten();
+                var flattenException = exception.Flatten();
                 _messageService.ShowMessageAsync(flattenException.Message);
                 _applicationLogger.Error(exception);
                 return flattenException.Message;
@@ -139,20 +155,5 @@ namespace CalendarSyncPlus.Services
         }
 
         #endregion
-
-        private void ResetSyncData()
-        {
-            _syncStatus = null;
-        }
-
-        private void CalendarUpdateNotificationChanged(object sender, PropertyChangedEventArgs e)
-        {
-            switch (e.PropertyName)
-            {
-                case "SyncStatus":
-                    SyncStatus = _calendarUpdateService.SyncStatus;
-                    break;
-            }
-        }
     }
 }

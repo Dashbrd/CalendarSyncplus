@@ -30,14 +30,15 @@ namespace CalendarSyncPlus.Services.Utilities
         UpdateEntriesSuccess,
         UpdateEntriesFailed,
         SyncSuccess,
-        SyncFailed,
+        SyncFailed
     }
 
     public class StatusHelper
     {
         public const string LineConstant = "--------------------------------------------------------------------------";
 
-        public const string LogSeparatorConstant = "**************************************************************************";
+        public const string LogSeparatorConstant =
+            "**************************************************************************";
 
         private static readonly Dictionary<SyncStateEnum, string> StatusDictionary =
             new Dictionary<SyncStateEnum, string>();
@@ -75,7 +76,7 @@ namespace CalendarSyncPlus.Services.Utilities
 
         public static string GetMessage(SyncStateEnum syncStateEnum, params object[] values)
         {
-            string message = string.Empty;
+            var message = string.Empty;
             if (StatusDictionary.ContainsKey(syncStateEnum))
             {
                 message = StatusDictionary[syncStateEnum];

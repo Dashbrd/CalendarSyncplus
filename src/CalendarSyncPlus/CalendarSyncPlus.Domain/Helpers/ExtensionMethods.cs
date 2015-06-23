@@ -8,14 +8,14 @@ namespace CalendarSyncPlus.Domain.Helpers
     {
         public static string Rfc339FFormat(this DateTime dateTime)
         {
-            string timezone = TimeZoneInfo.Local.GetUtcOffset(dateTime).ToString();
+            var timezone = TimeZoneInfo.Local.GetUtcOffset(dateTime).ToString();
             if (timezone[0] != '-')
             {
                 timezone = '+' + timezone;
             }
             timezone = timezone.Substring(0, 6);
 
-            string result = dateTime.GetDateTimeFormats('s')[0] + timezone;
+            var result = dateTime.GetDateTimeFormats('s')[0] + timezone;
             return result;
         }
 
@@ -81,10 +81,10 @@ namespace CalendarSyncPlus.Domain.Helpers
 
             if (asAppointments)
             {
-                syncProfile.CalendarEntryOptions = syncProfile.CalendarEntryOptions | CalendarEntryOptionsEnum.AsAppointments;
+                syncProfile.CalendarEntryOptions = syncProfile.CalendarEntryOptions |
+                                                   CalendarEntryOptionsEnum.AsAppointments;
             }
         }
-
 
         public static void UpdateOutlookOptions(this OutlookSettings settings, OutlookOptionsEnum isDefaultProfile,
             OutlookOptionsEnum isDefaultMailBox, bool isExchangeWebServices)

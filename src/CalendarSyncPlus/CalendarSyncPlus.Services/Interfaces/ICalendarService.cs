@@ -22,7 +22,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using CalendarSyncPlus.Domain.Models;
 using CalendarSyncPlus.Domain.Wrappers;
-using CalendarSyncPlus.Services.Wrappers;
 
 namespace CalendarSyncPlus.Services.Interfaces
 {
@@ -47,6 +46,5 @@ namespace CalendarSyncPlus.Services.Interfaces
             IDictionary<string, object> calendarSpecificData);
 
         Task<bool> ResetCalendar(IDictionary<string, object> calendarSpecificData);
-
     }
 }

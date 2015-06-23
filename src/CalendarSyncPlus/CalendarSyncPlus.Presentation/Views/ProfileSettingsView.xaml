@@ -27,7 +27,8 @@
                     <ColumnDefinition Width="2*" />
                     <ColumnDefinition Width="3.5*" />
                 </Grid.ColumnDefinitions>
-                <TextBlock VerticalAlignment="Center" Text="{localizeExtension:LocText Key=ProfileSettingsView_TextBlock_SelectProfile_Text}" />
+                <TextBlock VerticalAlignment="Center"
+                           Text="{localizeExtension:LocText Key=ProfileSettingsView_TextBlock_SelectProfile_Text}" />
                 <ComboBox Grid.Column="1"
                           DisplayMemberPath="Name"
                           ItemsSource="{Binding SyncProfileList}"
@@ -58,7 +59,7 @@
                     <views:OptionsSettingsView DataContext="{Binding SelectedProfile}" />
                 </ScrollViewer>
             </TabItem>
-            
+
         </TabControl>
     </Grid>
 </UserControl>

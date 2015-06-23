@@ -6,7 +6,8 @@ namespace CalendarSyncPlus.SyncEngine.Helpers
 {
     public static class ExtensionMethods
     {
-        public static bool CopyDetail(this Appointment appointment, Appointment otherAppointment, CalendarEntryOptionsEnum calendarEntryOptions)
+        public static bool CopyDetail(this Appointment appointment, Appointment otherAppointment,
+            CalendarEntryOptionsEnum calendarEntryOptions)
         {
             //Copy basic information
             appointment.OldStartTime = appointment.StartTime;

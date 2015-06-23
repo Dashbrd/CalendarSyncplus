@@ -14,13 +14,13 @@
              d:DesignWidth="500"
              mc:Ignorable="d">
     <UserControl.Resources>
-        
+
         <metroConverters:ToUpperConverter x:Key="ToUpperConverter" />
         <converters:InvertBooleanToVisibilityConverter x:Key="InvertBooleanToVisibilityConverter" />
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
         <wafConverters:InvertBooleanConverter x:Key="InvertBooleanConverter" />
         <converters:BootToIntConverter x:Key="BootToIntConverter" />
-        <converters:BoolToEnumConverter x:Key="BoolToEnumConverter"/>
+        <converters:BoolToEnumConverter x:Key="BoolToEnumConverter" />
         <DataTemplate x:Key="ExchangeHeaderTemplate">
             <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
                 <Rectangle Width="18" Fill="{DynamicResource AccentSelectedColorBrush}">

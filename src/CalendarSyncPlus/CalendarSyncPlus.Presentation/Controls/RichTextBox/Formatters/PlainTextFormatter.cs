@@ -3,7 +3,7 @@
 namespace CalendarSyncPlus.Presentation.Controls.RichTextBox.Formatters
 {
     /// <summary>
-    /// Formats the BindableHtmlRichTextBox text as plain text
+    ///     Formats the <see cref="BindableHtmlRichTextBox" /> text as plain text
     /// </summary>
     public class PlainTextFormatter : ITextFormatter
     {

@@ -29,7 +29,7 @@ namespace CalendarSyncPlus.Domain.Models
     {
         #region Fields
 
-        private bool _bypassOnLocal=true;
+        private bool _bypassOnLocal = true;
         private string _domain;
         private string _password;
         private int _port;
@@ -41,18 +41,20 @@ namespace CalendarSyncPlus.Domain.Models
         #endregion
 
         #region Properties
+
         public string ProxyAddress
         {
             get { return _proxyAddress; }
             set { SetProperty(ref _proxyAddress, value); }
         }
+
         public int Port
         {
             get { return _port; }
             set { SetProperty(ref _port, value); }
         }
 
-        
+
         public ProxyType ProxyType
         {
             get { return _proxyType; }

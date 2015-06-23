@@ -1,21 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.Composition;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.Composition;
 using CalendarSyncPlus.Domain.Models;
 using CalendarSyncPlus.Services.Interfaces;
 
 namespace CalendarSyncPlus.Services
 {
-    [Export(typeof(ISyncSummaryProvider))]
+    [Export(typeof (ISyncSummaryProvider))]
     public class SyncSummaryProvider : ISyncSummaryProvider
-    { 
+    {
         #region Constructors
 
         [ImportingConstructor]
-        public SettingsProvider(ISummarySerializationService summarySerializationService)
+        public SyncSummaryProvider(ISummarySerializationService summarySerializationService)
         {
             SummarySerializationService = summarySerializationService;
         }
@@ -28,7 +23,7 @@ namespace CalendarSyncPlus.Services
 
         #endregion
 
-        #region ISettingsProvider Members
+        #region ISyncSummaryProvider Members
 
         public SyncSummary GetSyncSummary()
         {

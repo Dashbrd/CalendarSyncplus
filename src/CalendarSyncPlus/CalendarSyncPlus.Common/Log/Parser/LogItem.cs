@@ -2,6 +2,7 @@
 
 using System;
 using System.IO;
+using System.Waf.Foundation;
 
 #endregion
 
@@ -10,7 +11,7 @@ namespace CalendarSyncPlus.Common.Log.Parser
     /// <summary>
     ///     Details for each Log Entry
     /// </summary>
-    public class LogItem : System.Waf.Foundation.Model
+    public class LogItem : Model
     {
         #region Fields
 
@@ -98,7 +99,7 @@ namespace CalendarSyncPlus.Common.Log.Parser
         /// <value>
         ///     The name of the host.
         /// </value>
-        public string HostName { get; set; } 
+        public string HostName { get; set; }
 
         /// <summary>
         ///     Gets or sets the application.
@@ -106,7 +107,7 @@ namespace CalendarSyncPlus.Common.Log.Parser
         /// <value>
         ///     The application.
         /// </value>
-        public string App { get; set; } 
+        public string App { get; set; }
 
         /// <summary>
         ///     Gets or sets the throwable.
@@ -130,7 +131,8 @@ namespace CalendarSyncPlus.Common.Log.Parser
         /// <value>
         ///     The method.
         /// </value>
-        public string Method { get; set; } 
+        public string Method { get; set; }
+
         /// <summary>
         ///     Gets or sets the file.
         /// </summary>
@@ -183,8 +185,8 @@ namespace CalendarSyncPlus.Common.Log.Parser
 
         /// <summary>
         ///     Gets or sets a value indicating whether
-        /// LogItem="Model.LogItem.LogFile" /> property is
-        ///     returning the full path of just the file name.
+        ///     LogItem="Model.LogItem.LogFile" /> property is returning the full
+        ///     path of just the file name.
         /// </summary>
         /// <value>
         ///     <c>true</c> if [just file name]; otherwise, <c>false</c> .

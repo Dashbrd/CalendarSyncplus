@@ -36,10 +36,10 @@ namespace CalendarSyncPlus.Presentation
             {
                 try
                 {
-                    bool startMinimized = false;
+                    var startMinimized = false;
                     if (args != null)
                     {
-                        string minimized = args.FirstOrDefault();
+                        var minimized = args.FirstOrDefault();
                         if (minimized != null && minimized.Equals(Constants.Minimized))
                         {
                             startMinimized = true;
@@ -47,7 +47,7 @@ namespace CalendarSyncPlus.Presentation
                     }
                     var application = new App(startMinimized);
                     application.InitializeComponent();
-                    application.Run();  
+                    application.Run();
                 }
                 finally
                 {

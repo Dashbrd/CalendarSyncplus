@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Waf.Applications;
 using System.Waf.Foundation;
@@ -23,18 +21,23 @@ namespace CalendarSyncPlus.Application.ViewModels
 {
     public class ProfileViewModel : Model
     {
+        private bool _addAsAppointments;
+
         /// <summary>
-        /// Stores the flag if attachments should be saved
+        ///     Stores the flag if attachments should be saved
         /// </summary>
         private bool _addAttachments;
+
         /// <summary>
-        /// Stores the flag if attendees should be synchronized
+        ///     Stores the flag if attendees should be synchronized
         /// </summary>
         private bool _addAttendees;
+
         /// <summary>
-        /// Stores the flag if attendees should be synchronized
+        ///     Stores the flag if attendees should be synchronized
         /// </summary>
         private bool _addAttendeesToDescription;
+
         private bool _addDescription;
         private bool _addReminders;
         private bool _allowMasterCalendarSelect;
@@ -45,6 +48,7 @@ namespace CalendarSyncPlus.Application.ViewModels
         private int _daysInFuture = 7;
         private int _daysInPast = 1;
         private bool _disableDelete;
+        private DateTime _endDate;
         private List<OutlookCalendar> _exchangeCalendarList;
         private string _exchangeServerUrl;
         private DelegateCommand _getGoogleCalendarCommand;
@@ -59,6 +63,7 @@ namespace CalendarSyncPlus.Application.ViewModels
         private bool _isSyncEnabled;
         private bool _keepLastModifiedCopy;
         private CalendarServiceType _masterCalendarServiceType;
+        private bool _mergeExistingEntries;
         private string _name;
         private OutlookCalendar _outlookCalendar;
         private OutlookMailBox _outlookMailBox;
@@ -71,19 +76,16 @@ namespace CalendarSyncPlus.Application.ViewModels
         private CalendarSyncDirectionEnum _selectedCalendarSyncDirection;
         private Category _selectedCategory;
         private OutlookCalendar _selectedExchangeCalendar;
+        private GoogleAccount _selectedGoogleAccount;
         private string _selectedOutlookProfileName;
+        private SyncRangeTypeEnum _selectedSyncRangeType;
         private bool _setCategory;
+        private DateTime _startDate;
         private List<string> _syncFrequencies;
         private string _syncFrequency;
         private SyncFrequencyViewModel _syncFrequencyViewModel;
-        private string _username;
-        private SyncRangeTypeEnum _selectedSyncRangeType;
-        private bool _addAsAppointments;
-        private DateTime _startDate;
-        private DateTime _endDate;
         private List<SyncRangeTypeEnum> _syncRangeTypes;
-        private GoogleAccount _selectedGoogleAccount;
-        private bool _mergeExistingEntries;
+        private string _username;
 
         public ProfileViewModel(CalendarSyncProfile syncProfile, IGoogleCalendarService googleCalendarService,
             IOutlookCalendarService outlookCalendarService,
@@ -92,7 +94,7 @@ namespace CalendarSyncPlus.Application.ViewModels
         {
             SyncProfile = syncProfile;
             ExchangeWebCalendarService = exchangeWebCalendarService;
-            ApplicationLogger = applicationLogger.GetLogger(this.GetType());
+            ApplicationLogger = applicationLogger.GetLogger(GetType());
             AccountAuthenticationService = accountAuthenticationService;
             GoogleCalendarService = googleCalendarService;
             OutlookCalendarService = outlookCalendarService;
@@ -264,6 +266,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             get { return _daysInFuture; }
             set { SetProperty(ref _daysInFuture, value); }
         }
+
         public int DaysInPast
         {
             get { return _daysInPast; }
@@ -435,7 +438,6 @@ namespace CalendarSyncPlus.Application.ViewModels
         }
 
 
-
         public DelegateCommand GetGoogleCalendarCommand
         {
             get
@@ -471,7 +473,6 @@ namespace CalendarSyncPlus.Application.ViewModels
         }
 
 
-
         public GoogleAccount SelectedGoogleAccount
         {
             get { return _selectedGoogleAccount; }
@@ -494,7 +495,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             Name = SyncProfile.Name;
             IsSyncEnabled = SyncProfile.IsSyncEnabled;
             IsDefault = SyncProfile.IsDefault;
-            SyncRangeTypes = new List<SyncRangeTypeEnum>()
+            SyncRangeTypes = new List<SyncRangeTypeEnum>
             {
                 SyncRangeTypeEnum.SyncEntireCalendar,
                 SyncRangeTypeEnum.SyncFixedDateRange,
@@ -530,10 +531,12 @@ namespace CalendarSyncPlus.Application.ViewModels
             AddReminders = SyncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Reminders);
             AddAttachments = SyncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Attachments);
             AddAsAppointments = SyncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.AsAppointments);
-            IsDefaultProfile = SyncProfile.OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.DefaultProfile) ?
-                OutlookOptionsEnum.DefaultProfile : OutlookOptionsEnum.AlternateProfile;
-            IsDefaultMailBox = SyncProfile.OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.DefaultCalendar) ?
-                OutlookOptionsEnum.DefaultCalendar : OutlookOptionsEnum.AlternateCalendar;
+            IsDefaultProfile = SyncProfile.OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.DefaultProfile)
+                ? OutlookOptionsEnum.DefaultProfile
+                : OutlookOptionsEnum.AlternateProfile;
+            IsDefaultMailBox = SyncProfile.OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.DefaultCalendar)
+                ? OutlookOptionsEnum.DefaultCalendar
+                : OutlookOptionsEnum.AlternateCalendar;
             IsExchangeWebServices =
                 SyncProfile.OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.ExchangeWebServices);
             SelectedOutlookProfileName = SyncProfile.OutlookSettings.OutlookProfileName;
@@ -594,7 +597,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             }
             catch (Exception aggregateException)
             {
-                string exception = aggregateException.ToString();
+                var exception = aggregateException.ToString();
                 ApplicationLogger.Error(exception);
             }
         }
@@ -628,7 +631,6 @@ namespace CalendarSyncPlus.Application.ViewModels
         }
 
 
-
         internal async void GetGoogleCalendar()
         {
             if (IsLoading)
@@ -648,7 +650,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             }
             catch (AggregateException exception)
             {
-                AggregateException flattenException = exception.Flatten();
+                var flattenException = exception.Flatten();
                 MessageService.ShowMessageAsync(flattenException.Message);
                 ApplicationLogger.Error(flattenException);
             }
@@ -671,8 +673,8 @@ namespace CalendarSyncPlus.Application.ViewModels
                 {
                     return;
                 }
-                List<GoogleCalendar> calendars =
-                        await GoogleCalendarService.GetAvailableCalendars(SelectedGoogleAccount.Name);
+                var calendars =
+                    await GoogleCalendarService.GetAvailableCalendars(SelectedGoogleAccount.Name);
 
                 if (calendars.Any())
                 {
@@ -711,7 +713,7 @@ namespace CalendarSyncPlus.Application.ViewModels
                 return;
             }
 
-            MessageDialogResult task =
+            var task =
                 await
                     MessageService.ShowConfirmMessage(
                         "Are you sure you want to reset events from 10 year past and 10 year future?");
@@ -722,10 +724,10 @@ namespace CalendarSyncPlus.Application.ViewModels
 
             var calendarSpecificData = new Dictionary<string, object>
             {
-                { "CalendarId", SelectedCalendar.Id },
-                { "AccountName", SelectedGoogleAccount.Name }
+                {"CalendarId", SelectedCalendar.Id},
+                {"AccountName", SelectedGoogleAccount.Name}
             };
-            bool result = await GoogleCalendarService.ResetCalendar(calendarSpecificData);
+            var result = await GoogleCalendarService.ResetCalendar(calendarSpecificData);
             if (!result)
             {
                 MessageService.ShowMessageAsync("Reset calendar failed.");
@@ -741,14 +743,16 @@ namespace CalendarSyncPlus.Application.ViewModels
 
         private async Task ResetOutlookCalendarInternal()
         {
-            if ((IsDefaultMailBox == OutlookOptionsEnum.AlternateCalendar && (SelectedOutlookMailBox == null || SelectedOutlookCalendar == null)) ||
-                (IsDefaultProfile == OutlookOptionsEnum.AlternateProfile && string.IsNullOrEmpty(SelectedOutlookProfileName)))
+            if ((IsDefaultMailBox == OutlookOptionsEnum.AlternateCalendar &&
+                 (SelectedOutlookMailBox == null || SelectedOutlookCalendar == null)) ||
+                (IsDefaultProfile == OutlookOptionsEnum.AlternateProfile &&
+                 string.IsNullOrEmpty(SelectedOutlookProfileName)))
             {
                 MessageService.ShowMessageAsync("Please select a Outlook calendar to reset.");
                 return;
             }
 
-            MessageDialogResult task =
+            var task =
                 await
                     MessageService.ShowConfirmMessage(
                         "Are you sure you want to reset events from 10 year past and 10 year future?");
@@ -758,28 +762,28 @@ namespace CalendarSyncPlus.Application.ViewModels
             }
 
             var calendarSpecificData = new Dictionary<string, object>
-                    {
-                        {
-                            "ProfileName", IsDefaultProfile != OutlookOptionsEnum.DefaultProfile
-                                ? SelectedOutlookProfileName
-                                : null
-                        },
-                        {
-                            "OutlookCalendar", IsDefaultMailBox != OutlookOptionsEnum.DefaultCalendar
-                                ? SelectedOutlookCalendar
-                                : null
-                        },
-                        { "AddAsAppointments", AddAsAppointments }
-                    };
+            {
+                {
+                    "ProfileName", IsDefaultProfile != OutlookOptionsEnum.DefaultProfile
+                        ? SelectedOutlookProfileName
+                        : null
+                },
+                {
+                    "OutlookCalendar", IsDefaultMailBox != OutlookOptionsEnum.DefaultCalendar
+                        ? SelectedOutlookCalendar
+                        : null
+                },
+                {"AddAsAppointments", AddAsAppointments}
+            };
 
-            bool result = await OutlookCalendarService.ResetCalendar(calendarSpecificData);
+            var result = await OutlookCalendarService.ResetCalendar(calendarSpecificData);
             if (!result)
             {
                 MessageService.ShowMessageAsync("Reset calendar failed.");
             }
         }
+
         /// <summary>
-        /// 
         /// </summary>
         private void OnSyncFrequencyChanged()
         {
@@ -843,17 +847,17 @@ namespace CalendarSyncPlus.Application.ViewModels
         }
 
         /// <summary>
-        /// 
         /// </summary>
-        /// <returns></returns>
+        /// <returns>
+        /// </returns>
         public CalendarSyncProfile SaveCurrentSyncProfile()
         {
             SyncProfile.IsSyncEnabled = IsSyncEnabled;
 
-            SyncProfile.GoogleAccount = new GoogleAccount()
+            SyncProfile.GoogleAccount = new GoogleAccount
             {
                 GoogleCalendar = SelectedCalendar,
-                Name = SelectedGoogleAccount == null ? null : SelectedGoogleAccount.Name,
+                Name = SelectedGoogleAccount == null ? null : SelectedGoogleAccount.Name
             };
 
             SyncProfile.SyncSettings.DaysInFuture = DaysInFuture;
@@ -876,7 +880,9 @@ namespace CalendarSyncPlus.Application.ViewModels
                 SyncProfile.OutlookSettings.OutlookCalendar = null;
             }
 
-            SyncProfile.OutlookSettings.OutlookProfileName = IsDefaultProfile == OutlookOptionsEnum.AlternateProfile ? SelectedOutlookProfileName : null;
+            SyncProfile.OutlookSettings.OutlookProfileName = IsDefaultProfile == OutlookOptionsEnum.AlternateProfile
+                ? SelectedOutlookProfileName
+                : null;
 
             SyncProfile.OutlookSettings.UpdateOutlookOptions(IsDefaultProfile, IsDefaultMailBox,
                 IsExchangeWebServices);

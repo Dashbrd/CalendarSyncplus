@@ -1,4 +1,5 @@
 ﻿#region File Header
+
 // /******************************************************************************
 //  * 
 //  *      Copyright (C) Ankesh Dave 2015 All Rights Reserved. Confidential
@@ -13,6 +14,7 @@
 //  *      FileName:       ILocalizationService.cs
 //  * 
 //  *****************************************************************************/
+
 #endregion
 
 using System.Globalization;
@@ -21,8 +23,7 @@ namespace CalendarSyncPlus.Common
 {
     public interface ILocalizationService
     {
-        string GetLocalizedString(string key);
-
         CultureInfo CurrentCulture { get; }
+        string GetLocalizedString(string key);
     }
 }

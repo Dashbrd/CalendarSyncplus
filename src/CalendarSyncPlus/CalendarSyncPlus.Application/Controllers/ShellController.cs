@@ -31,8 +31,8 @@ namespace CalendarSyncPlus.Application.Controllers
     {
         private readonly ApplicationLogger _applicationLogger;
         private readonly ISettingsSerializationService _settingsSerializationService;
-        private readonly ISummarySerializationService _summarySerializationService;
         private readonly ShellViewModel _shellViewModel;
+        private readonly ISummarySerializationService _summarySerializationService;
         private readonly ISyncService _syncService;
         private readonly SystemTrayNotifierViewModel _systemTrayNotifierViewModel;
 
@@ -60,6 +60,21 @@ namespace CalendarSyncPlus.Application.Controllers
         public ISyncService SyncService
         {
             get { return _syncService; }
+        }
+
+        private void SyncServiceNotificationHandler(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
+        {
+            switch (propertyChangedEventArgs.PropertyName)
+            {
+                case "SyncStatus":
+                    SyncStatusChangedHandler();
+                    break;
+            }
+        }
+
+        private void SyncStatusChangedHandler()
+        {
+            ShellViewModel.ErrorMessageChanged(SyncService.SyncStatus);
         }
 
         #region IShellController Members
@@ -91,20 +106,5 @@ namespace CalendarSyncPlus.Application.Controllers
         }
 
         #endregion
-
-        private void SyncServiceNotificationHandler(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
-        {
-            switch (propertyChangedEventArgs.PropertyName)
-            {
-                case "SyncStatus":
-                    SyncStatusChangedHandler();
-                    break;
-            }
-        }
-
-        private void SyncStatusChangedHandler()
-        {
-            ShellViewModel.ErrorMessageChanged(SyncService.SyncStatus);
-        }
     }
 }

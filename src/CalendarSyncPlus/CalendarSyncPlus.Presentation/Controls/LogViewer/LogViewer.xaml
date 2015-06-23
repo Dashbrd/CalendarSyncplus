@@ -15,17 +15,17 @@
              Name="LogViewerUserControl">
     <Grid>
         <Grid.Resources>
-            <converters:ToUpperConverter x:Key="ToUpperConverter"/>
+            <converters:ToUpperConverter x:Key="ToUpperConverter" />
             <DataTemplate x:Key="ProgressBarDataTemplate">
                 <ProgressBar IsIndeterminate="True"
-                             Height="4"/>
+                             Height="4" />
             </DataTemplate>
         </Grid.Resources>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition></RowDefinition>
-            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <ContentControl Grid.Row="2">
             <ContentControl.Style>
@@ -44,35 +44,35 @@
         </ContentControl>
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="50"></ColumnDefinition>
-                <ColumnDefinition Width="Auto"></ColumnDefinition>
-                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition Width="50" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition />
             </Grid.ColumnDefinitions>
             <TextBlock VerticalAlignment="Center"
-                       Text="Filters :"/>
+                       Text="Filters :" />
             <ItemsControl Grid.Column="1"
                           ItemsSource="{Binding LogFilters}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <CheckBox Content="{Binding Path=FilterType,Converter={StaticResource ToUpperConverter}}"
-                                               IsChecked="{Binding Path=IsSelected}"
-                                               Margin="4"
-                                                Command="{Binding Path=DataContext.ModifyFilterCommand,ElementName=LogViewerUserControl}"
-                                                CommandParameter="{Binding Path=.}"/>
+                                  IsChecked="{Binding Path=IsSelected}"
+                                  Margin="4"
+                                  Command="{Binding Path=DataContext.ModifyFilterCommand,ElementName=LogViewerUserControl}"
+                                  CommandParameter="{Binding Path=.}" />
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <StackPanel Orientation="Horizontal"></StackPanel>
+                        <StackPanel Orientation="Horizontal" />
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
             </ItemsControl>
             <Button Grid.Column="2"
                     HorizontalAlignment="Right"
                     Command="{Binding Path=LoadLogCommand}"
-                    Content="Reload" 
+                    Content="Reload"
                     VerticalAlignment="Center"
-                    Margin="4"/>
+                    Margin="4" />
         </Grid>
         <DataGrid Grid.Row="2"
                   ItemsSource="{Binding Path=FilteredLogItemsView}"
@@ -98,7 +98,7 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding Path=TimeStamp}"
-                                       ToolTip="{Binding Path=TimeStamp}"/> 
+                                       ToolTip="{Binding Path=TimeStamp}" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
@@ -125,7 +125,7 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding Path=Class}"
-                                       ToolTip="{Binding Path=Class}"/>
+                                       ToolTip="{Binding Path=Class}" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
@@ -134,7 +134,7 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding Path=Method}"
-                                       ToolTip="{Binding Path=Method}"/>
+                                       ToolTip="{Binding Path=Method}" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>

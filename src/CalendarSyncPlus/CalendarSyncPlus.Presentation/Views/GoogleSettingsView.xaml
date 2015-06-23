@@ -34,7 +34,8 @@
             <RowDefinition Height="Auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
-        <GroupBox Header="{localizeExtension:LocText Key=GoogleSettingsView_GroupBox_Header}" HeaderTemplate="{StaticResource GoogleHeaderTemplate}">
+        <GroupBox Header="{localizeExtension:LocText Key=GoogleSettingsView_GroupBox_Header}"
+                  HeaderTemplate="{StaticResource GoogleHeaderTemplate}">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition />
@@ -89,7 +90,7 @@
                           IsChecked="{Binding Path=DataContext.AllowManualGoogleAuth,
                                               RelativeSource={RelativeSource Mode=FindAncestor,
                                                                              AncestorType={x:Type views:ProfileSettingsView}}}"
-                          Content="{localizeExtension:LocText Key=GoogleSettingsView_CheckBox_ManualAuth_Content}"/>
+                          Content="{localizeExtension:LocText Key=GoogleSettingsView_CheckBox_ManualAuth_Content}" />
 
                 <TextBlock Grid.Row="3"
                            Grid.Column="0"

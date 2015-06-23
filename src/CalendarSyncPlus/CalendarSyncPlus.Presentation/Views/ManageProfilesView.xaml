@@ -50,7 +50,8 @@
                                             EditingElementStyle="{DynamicResource MetroDataGridCheckBox}"
                                             ElementStyle="{DynamicResource MetroDataGridCheckBox}"
                                             Header="{localizeExtension:LocText Key=ManageProfileView_DataGrid_Column_SyncColumn_Header}" />
-                    <DataGridTemplateColumn Width="80" Header="{localizeExtension:LocText Key=ManageProfileView_DataGrid_Column_DeleteColumn_Header}">
+                    <DataGridTemplateColumn Width="80"
+                                            Header="{localizeExtension:LocText Key=ManageProfileView_DataGrid_Column_DeleteColumn_Header}">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <Button Width="20"

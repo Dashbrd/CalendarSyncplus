@@ -2,7 +2,7 @@
 {
     public enum ChildViewContentType
     {
-        None=0,
+        None = 0,
         WhatsNew,
         UpdateChanges
     }

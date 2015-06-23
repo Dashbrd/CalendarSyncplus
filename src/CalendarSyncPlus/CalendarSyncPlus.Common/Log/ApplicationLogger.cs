@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.IO;
-using System.Runtime.CompilerServices;
 using log4net;
 using log4net.Appender;
 using log4net.Config;
@@ -15,11 +14,12 @@ namespace CalendarSyncPlus.Common.Log
     [Export]
     public class ApplicationLogger
     {
+        private readonly Dictionary<string, ILog> _logDictionary = new Dictionary<string, ILog>();
         public string LogFilePath;
-        readonly Dictionary<string, ILog> _logDictionary = new Dictionary<string, ILog>();
+
         public ILog GetLogger(Type type)
         {
-            string className = type.Name;
+            var className = type.Name;
 
             ILog logger = null;
             ILog value;
@@ -35,21 +35,20 @@ namespace CalendarSyncPlus.Common.Log
             return logger;
         }
 
-
         public void Setup()
         {
-            string applicationDataDirectory =
+            var applicationDataDirectory =
                 Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
                     "CalendarSyncPlus", "Log");
             LogFilePath = Path.Combine(applicationDataDirectory, "CalSyncPlusLog.xml");
 
-            var hierarchy = (Hierarchy)LogManager.GetRepository();
+            var hierarchy = (Hierarchy) LogManager.GetRepository();
 
             var patternLayout = new XmlLayoutSchemaLog4j();
             patternLayout.LocationInfo = true;
             patternLayout.ActivateOptions();
 
-            var roller = new RollingFileAppender()
+            var roller = new RollingFileAppender
             {
                 AppendToFile = true,
                 MaximumFileSize = "1MB",
@@ -57,7 +56,7 @@ namespace CalendarSyncPlus.Common.Log
                 PreserveLogFileNameExtension = true,
                 MaxSizeRollBackups = 10,
                 RollingStyle = RollingFileAppender.RollingMode.Size,
-                Layout = patternLayout,
+                Layout = patternLayout
             };
             roller.ActivateOptions();
             hierarchy.Root.AddAppender(roller);

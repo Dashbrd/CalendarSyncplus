@@ -6,8 +6,9 @@ namespace CalendarSyncPlus.Domain.Models
     {
         New,
         Read,
-        UnRead,
+        UnRead
     }
+
     public enum ProxyType
     {
         Auto = 0,
@@ -19,7 +20,7 @@ namespace CalendarSyncPlus.Domain.Models
     {
         SyncRangeInDays = 0,
         SyncEntireCalendar = 1,
-        SyncFixedDateRange = 2,
+        SyncFixedDateRange = 2
     }
 
     public enum MeetingResponseStatusEnum
@@ -49,7 +50,7 @@ namespace CalendarSyncPlus.Domain.Models
         AlternateProfile = 2,
         DefaultCalendar = 4,
         AlternateCalendar = 8,
-        ExchangeWebServices = 16,
+        ExchangeWebServices = 16
     }
 
     [Flags]
@@ -61,14 +62,14 @@ namespace CalendarSyncPlus.Domain.Models
         AttendeesToDescription = 4,
         Reminders = 8,
         Attachments = 16,
-        AsAppointments = 32,
+        AsAppointments = 32
     }
 
     public enum CalendarSyncDirectionEnum
     {
         OutlookGoogleOneWay = 0,
         OutlookGoogleOneWayToSource = 1,
-        OutlookGoogleTwoWay = 2,
+        OutlookGoogleTwoWay = 2
     }
 
     public enum SyncModeEnum
@@ -84,5 +85,4 @@ namespace CalendarSyncPlus.Domain.Models
         OutOfOffice,
         Tentative
     }
-
 }

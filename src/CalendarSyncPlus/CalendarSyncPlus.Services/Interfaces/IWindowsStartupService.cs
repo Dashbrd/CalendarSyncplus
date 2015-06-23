@@ -3,7 +3,6 @@
     public interface IWindowsStartupService
     {
         void RunAtWindowsStartup();
-
         void RemoveFromWindowsStartup();
     }
 }

@@ -12,10 +12,9 @@ namespace CalendarSyncPlus.Domain.Models
             StartTime = DateTime.Now;
             StartTime = StartTime.AddSeconds(-StartTime.Second);
         }
+
         public DateTime StartTime { get; set; }
-
         public int Hours { get; set; }
-
         public int Minutes { get; set; }
 
         public override bool ValidateTimer(DateTime dateTimeNow)
@@ -25,7 +24,7 @@ namespace CalendarSyncPlus.Domain.Models
                 return false;
             }
             var timeSpan = new TimeSpan(Hours, Minutes, 0);
-            DateTime dateTime = StartTime;
+            var dateTime = StartTime;
             while (dateTime.CompareTo(dateTimeNow) < 0)
             {
                 dateTime = dateTime.Add(timeSpan);
@@ -47,7 +46,7 @@ namespace CalendarSyncPlus.Domain.Models
                     return dateTimeNow;
                 }
                 var timeSpan = new TimeSpan(Hours, Minutes, 0);
-                DateTime dateTime = StartTime;
+                var dateTime = StartTime;
                 while (dateTime.CompareTo(dateTimeNow) <= 0)
                 {
                     dateTime = dateTime.Add(timeSpan);
@@ -62,7 +61,7 @@ namespace CalendarSyncPlus.Domain.Models
 
         public override string ToString()
         {
-            string str = string.Format("{0} : Minute Offset : {1}", GetType().Name, Minutes);
+            var str = string.Format("{0} : Minute Offset : {1}", GetType().Name, Minutes);
             return str;
         }
     }
