@@ -56,13 +56,15 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
             ApplicationLogger = applicationLogger.GetLogger(GetType());
         }
 
-        public async Task<bool> UpdateCalendarEvents(List<Appointment> calendarAppointments, bool addDescription,
+        public async Task<CalendarAppointments> UpdateCalendarEvents(List<Appointment> calendarAppointments, bool addDescription,
             bool addReminder, bool addAttendees, bool attendeesToDescription,
             IDictionary<string, object> calendarSpecificData)
         {
+            var updateAppointments = new CalendarAppointments();
             if (!calendarAppointments.Any())
             {
-                return true;
+                updateAppointments.IsSuccess = true;
+                return updateAppointments;
             }
             CheckCalendarSpecificData(calendarSpecificData);
 
@@ -70,9 +72,9 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
                 Task<bool>.Factory.StartNew(
                     () =>
                         UpdateEvents(calendarAppointments, addDescription, addReminder, addAttendees,
-                            attendeesToDescription));
-
-            return result;
+                            attendeesToDescription, updateAppointments));
+            updateAppointments.IsSuccess = result;
+            return updateAppointments;
         }
 
         private bool AddEvents(List<Appointment> calendarAppointments, bool addDescription,
@@ -101,6 +103,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
         /// <param name="addReminder"></param>
         /// <param name="addAttendees"></param>
         /// <param name="attendeesToDescription"></param>
+        /// <param name="addedAppointment"></param>
         /// <returns>
         /// </returns>
         private AppointmentListWrapper AddEventsToOutlook(List<Appointment> calendarAppointments, bool addDescription,
@@ -311,9 +314,9 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
             return createdAppointment;
         }
 
-        private bool DeleteEvents(List<Appointment> calendarAppointments)
+        private bool DeleteEvents(List<Appointment> calendarAppointments, List<Appointment> deletedAppointments)
         {
-            var wrapper = DeleteEventsFromOutlook(calendarAppointments);
+            var wrapper = DeleteEventsFromOutlook(calendarAppointments,deletedAppointments);
 
             if (!wrapper.WaitForApplicationQuit)
             {
@@ -327,7 +330,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
             return wrapper.Success;
         }
 
-        private AppointmentListWrapper DeleteEventsFromOutlook(List<Appointment> calendarAppointments)
+        private AppointmentListWrapper DeleteEventsFromOutlook(List<Appointment> calendarAppointments, List<Appointment> deletedAppointments)
         {
             var disposeOutlookInstances = false;
             Application application = null;
@@ -366,6 +369,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
                         {
                             appointmentItem.Delete();
                             Marshal.FinalReleaseComObject(appointmentItem);
+                            deletedAppointments.Add(calendarAppointment);
                         }
                     }
                     catch (Exception exception)
@@ -413,10 +417,10 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
 
         private bool UpdateEvents(List<Appointment> calendarAppointments, bool addDescription,
             bool addReminder,
-            bool addAttendees, bool attendeesToDescription)
+            bool addAttendees, bool attendeesToDescription, List<Appointment> updatedAppointments)
         {
             var wrapper = UpdateEventsToOutlook(calendarAppointments, addDescription, addReminder,
-                addAttendees, attendeesToDescription);
+                addAttendees, attendeesToDescription, updatedAppointments);
 
             if (!wrapper.WaitForApplicationQuit)
             {
@@ -437,10 +441,11 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
         /// <param name="addReminder"></param>
         /// <param name="addAttendees"></param>
         /// <param name="attendeesToDescription"></param>
+        /// <param name="updatedAppointments"></param>
         /// <returns>
         /// </returns>
         private AppointmentListWrapper UpdateEventsToOutlook(List<Appointment> calendarAppointments, bool addDescription,
-            bool addReminder, bool addAttendees, bool attendeesToDescription)
+            bool addReminder, bool addAttendees, bool attendeesToDescription, List<Appointment> updatedAppointments)
         {
             var disposeOutlookInstances = false;
             Application application = null;
@@ -485,8 +490,12 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
                         {
                             continue;
                         }
-                        UpdateAppointment(addDescription, addReminder, addAttendees, attendeesToDescription, appItem,
+                        var success = UpdateAppointment(addDescription, addReminder, addAttendees, attendeesToDescription, appItem,
                             calendarAppointment);
+                        if (success)
+                        {
+                            updatedAppointments.Add(calendarAppointment);
+                        }
                     }
                     catch (Exception exception)
                     {
@@ -542,7 +551,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
             };
         }
 
-        private void UpdateAppointment(bool addDescription, bool addReminder, bool addAttendees,
+        private bool UpdateAppointment(bool addDescription, bool addReminder, bool addAttendees,
             bool attendeesToDescription, AppointmentItem appItem,
             Appointment calendarAppointment)
         {
@@ -630,6 +639,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
             catch (Exception exception)
             {
                 ApplicationLogger.Error(exception);
+                return false;
             }
             finally
             {
@@ -646,6 +656,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
                     Marshal.FinalReleaseComObject(appItem);
                 }
             }
+            return true;
         }
 
         #region Properties
@@ -1346,17 +1357,22 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
         /// <param name="calendarSpecificData"></param>
         /// <returns>
         /// </returns>
-        public async Task<bool> DeleteCalendarEvents(List<Appointment> calendarAppointments,
+        public async Task<CalendarAppointments> DeleteCalendarEvents(List<Appointment> calendarAppointments,
             IDictionary<string, object> calendarSpecificData)
         {
+            var deleteAppointments = new CalendarAppointments();
             if (!calendarAppointments.Any())
             {
-                return true;
+                deleteAppointments.IsSuccess = true;
+                return deleteAppointments;
             }
             CheckCalendarSpecificData(calendarSpecificData);
-            var result = await Task<bool>.Factory.StartNew(() => DeleteEvents(calendarAppointments));
-
-            return result;
+            var result = await 
+                Task<bool>.Factory.StartNew(() =>
+                    DeleteEvents(calendarAppointments, deleteAppointments));
+            
+            deleteAppointments.IsSuccess = result;
+            return deleteAppointments;
         }
 
         public async Task<bool> ResetCalendar(IDictionary<string, object> calendarSpecificData)
@@ -1368,7 +1384,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
             if (appointments != null)
             {
                 var success = await DeleteCalendarEvents(appointments, calendarSpecificData);
-                return success;
+                return success.IsSuccess;
             }
             return false;
         }

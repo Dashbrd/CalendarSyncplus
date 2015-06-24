@@ -579,6 +579,13 @@ namespace CalendarSyncPlus.Application.ViewModels
             try
             {
                 var mailBoxes = await Task<List<OutlookMailBox>>.Factory.StartNew(GetOutlookMailBox);
+                if (mailBoxes == null)
+                {
+                    MessageService.ShowMessageAsync("Failed to fetch outlook mailboxes. Please try again."+
+                        Environment.NewLine+"If the problem persists, Please restart Outlook application.");
+                    return;
+                }
+
                 if (SelectedOutlookMailBox != null && mailBoxes.Any())
                 {
                     var mailbox = mailBoxes.FirstOrDefault(
@@ -597,8 +604,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             }
             catch (Exception aggregateException)
             {
-                var exception = aggregateException.ToString();
-                ApplicationLogger.Error(exception);
+                ApplicationLogger.Error(aggregateException);
             }
         }
 
@@ -628,6 +634,10 @@ namespace CalendarSyncPlus.Application.ViewModels
         private async Task GetOutlookProfileListInternal()
         {
             OutlookProfileList = await OutlookCalendarService.GetOutLookProfieListAsync();
+            if (OutlookProfileList == null)
+            {
+                MessageService.ShowMessageAsync("Failed to fetch outlook profiles. Please try again.");
+            }
         }
 
 

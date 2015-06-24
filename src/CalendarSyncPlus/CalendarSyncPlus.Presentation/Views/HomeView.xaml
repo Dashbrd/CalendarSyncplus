@@ -111,49 +111,7 @@
                 </ScrollViewer>
             </StackPanel>
         </Expander>
-
-        <!--  Sync Statistics  -->
-        <!--<Expander Grid.Row="2"
-                  Grid.Column="1"
-                  Margin="5"
-                  Header="Sync Statistics"
-                  IsExpanded="True">-->
-        <Border Grid.Row="2"
-                Grid.Column="1"
-                Margin="5"
-                BorderBrush="{StaticResource AccentColorBrush}"
-                BorderThickness="1">
-        <Grid >
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition />
-                <ColumnDefinition />
-                <ColumnDefinition />
-                <ColumnDefinition />
-            </Grid.ColumnDefinitions>
-            <!--<Rectangle Stroke="{StaticResource AccentColorBrush}"
-                       StrokeThickness="1"
-                       Grid.ColumnSpan="4"
-                       VerticalAlignment="Center" />-->
-            <TextBlock Text="{Binding SyncSummary.TotalSyncs,StringFormat='{}Total Syncs : {0}'}"
-                       HorizontalAlignment="Center"
-                       VerticalAlignment="Center"
-                       Grid.Column="0" Margin="5"/>
-            <TextBlock Text="{Binding SyncSummary.SuccessSyncs,StringFormat='{}Success Syncs : {0}'}"
-                       HorizontalAlignment="Center"
-                       VerticalAlignment="Center"
-                       Grid.Column="1" />
-            <TextBlock Text="{Binding SyncSummary.FailedSyncs,StringFormat='{}Failed Syncs : {0}'}"
-                       HorizontalAlignment="Center"
-                       VerticalAlignment="Center"
-                       Grid.Column="2" />
-            <TextBlock Text="{Binding SyncSummary.TotalSyncSeconds,StringFormat='{}Total Sync Seconds : {0}'}"
-                       Grid.Column="3"
-                       HorizontalAlignment="Center"
-                       VerticalAlignment="Center" />
-        </Grid>
-        </Border>
-        <!--</Expander>-->
-
+     
         <!--  Sync Status & Log  -->
         <TabControl Grid.Row="3"
                     Grid.Column="1">
@@ -227,6 +185,40 @@
                             Command="{Binding DeleteLogFileCommand}"
                             Content="{localizeExtension:LocText Key=HomeView_Button_DeleteLog_Content}" />
                 </Grid>
+            </TabItem>
+            <TabItem Header="Stats" Visibility="Collapsed">
+                <GroupBox Header="Sync Statistics">
+                    <!--  Sync Statistics  -->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <TextBlock Text="{Binding SyncSummary.TotalSyncs,StringFormat='{}Total Syncs : {0}'}"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   Grid.Column="0"
+                                   Margin="5" />
+                        <TextBlock Text="{Binding SyncSummary.SuccessSyncs,StringFormat='{}Success Syncs : {0}'}"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   Grid.Column="1" />
+                        <TextBlock Text="{Binding SyncSummary.FailedSyncs,StringFormat='{}Failed Syncs : {0}'}"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   Grid.Column="2" />
+                        <TextBlock Text="{Binding SyncSummary.TotalSyncSeconds,StringFormat='{}Total Sync Seconds : {0}'}"
+                                   Grid.Column="3"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center" />
+                    </Grid>
+                </GroupBox>
             </TabItem>
         </TabControl>
     </Grid>

@@ -33,7 +33,7 @@ namespace CalendarSyncPlus.ExchangeWebServices.ExchangeWeb
 
         public ILog ApplicationLogger { get; set; }
 
-        public Task<bool> UpdateCalendarEvents(List<AppAppointment> calendarAppointments, bool addDescription,
+        public Task<CalendarAppointments> UpdateCalendarEvents(List<AppAppointment> calendarAppointments, bool addDescription,
             bool addReminder, bool addAttendees, bool attendeesToDescription,
             IDictionary<string, object> calendarSpecificData)
         {
@@ -207,7 +207,7 @@ namespace CalendarSyncPlus.ExchangeWebServices.ExchangeWeb
 
         private ExchangeServerSettings ExchangeServerSettings { get; set; }
 
-        public Task<bool> DeleteCalendarEvents(List<AppAppointment> calendarAppointments,
+        public Task<CalendarAppointments> DeleteCalendarEvents(List<AppAppointment> calendarAppointments,
             IDictionary<string, object> calendarSpecificData)
         {
             throw new NotImplementedException();

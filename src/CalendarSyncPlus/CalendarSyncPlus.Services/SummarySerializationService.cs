@@ -24,6 +24,7 @@ namespace CalendarSyncPlus.Services
             _applicationDataDirectory =
                 Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
                     "CalendarSyncPlus");
+            _applicationDataDirectory = Path.Combine(_applicationDataDirectory, "Stats");
             _settingsFilePath = Path.Combine(_applicationDataDirectory, "Summary.xml");
         }
 
@@ -68,7 +69,7 @@ namespace CalendarSyncPlus.Services
             var serializer = new XmlSerializer<SyncSummary>();
             serializer.SerializeToFile(syncProfile, SettingsFilePath);
         }
-
+        
         private SyncSummary DeserializeSyncSummaryBackgroundTask()
         {
             if (!File.Exists(SettingsFilePath))

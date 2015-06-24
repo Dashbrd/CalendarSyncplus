@@ -65,13 +65,15 @@ namespace CalendarSyncPlus.GoogleServices.Google
 
         #endregion
 
-        public async Task<bool> UpdateCalendarEvents(List<Appointment> calendarAppointments, bool addDescription,
+        public async Task<CalendarAppointments> UpdateCalendarEvents(List<Appointment> calendarAppointments, bool addDescription,
             bool addReminder, bool addAttendees, bool attendeesToDescription,
             IDictionary<string, object> calendarSpecificData)
         {
+            var updatedAppointments = new CalendarAppointments();
             if (!calendarAppointments.Any())
             {
-                return true;
+                updatedAppointments.IsSuccess = true;
+                return updatedAppointments;
             }
 
             CheckCalendarSpecificData(calendarSpecificData);
@@ -82,7 +84,8 @@ namespace CalendarSyncPlus.GoogleServices.Google
 
             if (calendarAppointments == null || string.IsNullOrEmpty(CalendarId))
             {
-                return false;
+                updatedAppointments.IsSuccess = false;
+                return updatedAppointments;
             }
 
             try
@@ -111,7 +114,7 @@ namespace CalendarSyncPlus.GoogleServices.Google
                         updateRequest.SendNotifications = false;
                         batchRequest.Queue<Event>(updateRequest,
                             (content, error, index, message) =>
-                                DeleteEventErrorMessage(content, error, index, message, calendarAppointments, errorList));
+                                CallbackEventErrorMessage(content, error, index, message, calendarAppointments, "Error in updating event",errorList,updatedAppointments));
                     }
 
                     await batchRequest.ExecuteAsync();
@@ -120,9 +123,11 @@ namespace CalendarSyncPlus.GoogleServices.Google
             catch (Exception exception)
             {
                 Logger.Error(exception);
-                return false;
+                updatedAppointments.IsSuccess = false;
+                return updatedAppointments;
             }
-            return true;
+            updatedAppointments.IsSuccess = true;
+            return updatedAppointments;
         }
 
         #region Static and Constants
@@ -377,32 +382,20 @@ namespace CalendarSyncPlus.GoogleServices.Google
             return AccountAuthenticationService.AuthenticateCalendarOauth(accountName);
         }
 
-        private void DeleteEventErrorMessage(Event content, RequestError error, int index, HttpResponseMessage message,
-            List<Appointment> eventList, Dictionary<int, Appointment> errorAppointments)
+        private void CallbackEventErrorMessage(Event content, RequestError error, int index, HttpResponseMessage message,
+            List<Appointment> eventList,string errorMessage,
+            Dictionary<int, Appointment> errorAppointments, List<Appointment> deletedEvents)
         {
             var phrase = message.ReasonPhrase;
             if (!message.IsSuccessStatusCode)
             {
                 var googleEvent = eventList[index];
                 errorAppointments.Add(index, googleEvent);
-                Logger.Error(googleEvent.ToString());
-            }
-        }
-
-
-        private void InsertEventErrorMessage(Event content, RequestError error, int index, HttpResponseMessage message,
-            List<Appointment> eventList, Dictionary<int, Appointment> errorAppointments, List<Appointment> addedEvents)
-        {
-            var phrase = message.ReasonPhrase;
-            if (!message.IsSuccessStatusCode)
-            {
-                var googleEvent = eventList[index];
-                errorAppointments.Add(index, googleEvent);
-                Logger.Error(string.Format("Error in deleting event: {0}", googleEvent));
+                Logger.ErrorFormat("{0} : {1}{2} - {3}", errorMessage,Environment.NewLine, phrase, googleEvent);
             }
             else
             {
-                addedEvents.Add(CreateAppointment(content));
+                deletedEvents.Add(CreateAppointment(content));
             }
         }
 
@@ -655,7 +648,8 @@ namespace CalendarSyncPlus.GoogleServices.Google
                 insertRequest.MaxAttendees = 10000;
                 batchRequest.Queue<Event>(insertRequest,
                     (content, error, index, message) =>
-                        InsertEventErrorMessage(content, error, index, message, calendarAppointments, errorList,
+                        CallbackEventErrorMessage(content, error, index, message, 
+                        calendarAppointments, "Error in adding events",errorList,
                             addedEvents));
             }
 
@@ -664,12 +658,14 @@ namespace CalendarSyncPlus.GoogleServices.Google
             return addedEvents;
         }
 
-        public async Task<bool> DeleteCalendarEvents(List<Appointment> calendarAppointments,
+        public async Task<CalendarAppointments> DeleteCalendarEvents(List<Appointment> calendarAppointments,
             IDictionary<string, object> calendarSpecificData)
         {
+            var deletedAppointments = new CalendarAppointments();
             if (!calendarAppointments.Any())
             {
-                return true;
+                deletedAppointments.IsSuccess = true;
+                return deletedAppointments;
             }
 
             CheckCalendarSpecificData(calendarSpecificData);
@@ -680,7 +676,8 @@ namespace CalendarSyncPlus.GoogleServices.Google
 
             if (calendarAppointments == null || string.IsNullOrEmpty(CalendarId))
             {
-                return false;
+                deletedAppointments.IsSuccess = false;
+                return deletedAppointments;
             }
 
             try
@@ -691,7 +688,6 @@ namespace CalendarSyncPlus.GoogleServices.Google
                     var batchRequest = new BatchRequest(calendarService);
 
                     //Split the list of calendarAppointments by 1000 per list
-
                     //Iterate over each appointment to create a event and batch it 
                     for (var i = 0; i < calendarAppointments.Count; i++)
                     {
@@ -706,7 +702,8 @@ namespace CalendarSyncPlus.GoogleServices.Google
                             appointment.AppointmentId);
                         batchRequest.Queue<Event>(deleteRequest,
                             (content, error, index, message) =>
-                                DeleteEventErrorMessage(content, error, index, message, calendarAppointments, errorList));
+                                CallbackEventErrorMessage(content, error, index, message, calendarAppointments, 
+                                "Error in deleting events",errorList,deletedAppointments));
                     }
                     await batchRequest.ExecuteAsync();
                 }
@@ -714,9 +711,11 @@ namespace CalendarSyncPlus.GoogleServices.Google
             catch (Exception exception)
             {
                 Logger.Error(exception);
-                return false;
+                deletedAppointments.IsSuccess = false;
+                return deletedAppointments;
             }
-            return true;
+            deletedAppointments.IsSuccess = true;
+            return deletedAppointments;
         }
 
         public async Task<CalendarAppointments> GetCalendarEventsInRangeAsync(DateTime startDate, DateTime endDate,
@@ -800,7 +799,7 @@ namespace CalendarSyncPlus.GoogleServices.Google
             if (appointments != null)
             {
                 var success = await DeleteCalendarEvents(appointments, calendarSpecificData);
-                return success;
+                return success.IsSuccess;
             }
             return false;
         }

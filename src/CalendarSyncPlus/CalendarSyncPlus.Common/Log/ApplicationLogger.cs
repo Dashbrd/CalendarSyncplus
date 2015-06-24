@@ -51,7 +51,7 @@ namespace CalendarSyncPlus.Common.Log
             var roller = new RollingFileAppender
             {
                 AppendToFile = true,
-                MaximumFileSize = "1MB",
+                MaximumFileSize = "2MB",
                 File = LogFilePath,
                 PreserveLogFileNameExtension = true,
                 MaxSizeRollBackups = 10,

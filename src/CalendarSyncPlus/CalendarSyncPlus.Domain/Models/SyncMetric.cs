@@ -75,6 +75,9 @@ namespace CalendarSyncPlus.Domain.Models
         private int _addCount;
         private int _deleteCount;
         private int _updateCount;
+        private int _updateFailedCount;
+        private int _deleteFailedCount;
+        private int _addFailedCount;
 
         public int OriginalCount
         {
@@ -88,16 +91,34 @@ namespace CalendarSyncPlus.Domain.Models
             set { SetProperty(ref _addCount, value); }
         }
 
+        public int AddFailedCount
+        {
+            get { return _addFailedCount; }
+            set { SetProperty(ref _addFailedCount, value); }
+        }
+
         public int DeleteCount
         {
             get { return _deleteCount; }
             set { SetProperty(ref _deleteCount, value); }
         }
 
+        public int DeleteFailedCount
+        {
+            get { return _deleteFailedCount; }
+            set { SetProperty(ref _deleteFailedCount, value); }
+        }
+
         public int UpdateCount
         {
             get { return _updateCount; }
             set { SetProperty(ref _updateCount, value); }
+        }
+
+        public int UpdateFailedCount
+        {
+            get { return _updateFailedCount; }
+            set { SetProperty(ref _updateFailedCount, value); }
         }
     }
 }

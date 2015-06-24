@@ -326,9 +326,10 @@ namespace CalendarSyncPlus.Services
                 DestinationCalendarService.CalendarServiceName);
 
             //Deleting entries
-            var isSuccess =
-                DestinationCalendarService.DeleteCalendarEvents(appointmentsToDelete, destinationCalendarSpecificData)
+            
+            var deletedAppointments = DestinationCalendarService.DeleteCalendarEvents(appointmentsToDelete, destinationCalendarSpecificData)
                     .Result;
+            var isSuccess = deletedAppointments.IsSuccess;
             //Update status if entries were successfully deleted
             SyncStatus =
                 StatusHelper.GetMessage(isSuccess
@@ -338,6 +339,7 @@ namespace CalendarSyncPlus.Services
             if (isSuccess)
             {
                 syncMetric.DestMetric.DeleteCount = appointmentsToDelete.Count;
+                syncMetric.DestMetric.DeleteFailedCount = appointmentsToDelete.Count - deletedAppointments.Count;
                 for (var index = 0; index < appointmentsToDelete.Count; index++)
                 {
                     DestinationAppointments.Remove(appointmentsToDelete[index]);
@@ -465,17 +467,20 @@ namespace CalendarSyncPlus.Services
             SyncStatus = StatusHelper.GetMessage(SyncStateEnum.DeletingEntries,
                 SourceCalendarService.CalendarServiceName);
             //Deleting entries
-            var isSuccess =
+            var deletedAppointments =
                 SourceCalendarService.DeleteCalendarEvents(appointmentsToDelete, sourceCalendarSpecificData).Result;
+            var isSuccess = deletedAppointments.IsSuccess;
             //Update status if entries were successfully deleted
             SyncStatus =
                 StatusHelper.GetMessage(isSuccess
                     ? SyncStateEnum.DeletingEntriesComplete
                     : SyncStateEnum.DeletingEntriesFailed);
             SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
+
             if (isSuccess)
             {
                 syncMetric.SourceMetric.DeleteCount = appointmentsToDelete.Count;
+                syncMetric.SourceMetric.DeleteFailedCount = appointmentsToDelete.Count - deletedAppointments.Count;
                 for (var index = 0; index < appointmentsToDelete.Count; index++)
                 {
                     SourceAppointments.Remove(appointmentsToDelete[index]);
@@ -622,18 +627,21 @@ namespace CalendarSyncPlus.Services
                 SyncStatus = StatusHelper.GetMessage(SyncStateEnum.EntriesToUpdate,
                     CalendarSyncEngine.SourceAppointmentsToUpdate.Count,
                     SourceCalendarService.CalendarServiceName);
-                isSuccess = SourceCalendarService.UpdateCalendarEvents(CalendarSyncEngine.SourceAppointmentsToUpdate,
+                var updatedAppointments = SourceCalendarService.UpdateCalendarEvents(CalendarSyncEngine.SourceAppointmentsToUpdate,
                     syncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Description),
                     syncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Reminders),
                     syncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Attendees),
                     syncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.AttendeesToDescription),
                     sourceCalendarSpecificData).Result;
+                isSuccess = updatedAppointments.IsSuccess;
                 SyncStatus =
                     StatusHelper.GetMessage(isSuccess
                         ? SyncStateEnum.UpdateEntriesSuccess
                         : SyncStateEnum.UpdateEntriesFailed);
                 SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
                 syncMetric.SourceMetric.UpdateCount = CalendarSyncEngine.SourceAppointmentsToUpdate.Count;
+                syncMetric.SourceMetric.UpdateFailedCount = 
+                    CalendarSyncEngine.SourceAppointmentsToUpdate.Count - updatedAppointments.Count;
             }
 
             if (CalendarSyncEngine.DestAppointmentsToUpdate.Any())
@@ -643,18 +651,21 @@ namespace CalendarSyncPlus.Services
                 SyncStatus = StatusHelper.GetMessage(SyncStateEnum.EntriesToUpdate,
                     CalendarSyncEngine.DestAppointmentsToUpdate.Count,
                     DestinationCalendarService.CalendarServiceName);
-                isSuccess = DestinationCalendarService.UpdateCalendarEvents(CalendarSyncEngine.DestAppointmentsToUpdate,
+                var updatedAppointments = DestinationCalendarService.UpdateCalendarEvents(CalendarSyncEngine.DestAppointmentsToUpdate,
                     syncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Description),
                     syncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Reminders),
                     syncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Attendees),
                     syncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.AttendeesToDescription),
                     destinationCalendarSpecificData).Result;
+                isSuccess = updatedAppointments.IsSuccess;
                 SyncStatus =
                     StatusHelper.GetMessage(isSuccess
                         ? SyncStateEnum.UpdateEntriesSuccess
                         : SyncStateEnum.UpdateEntriesFailed);
                 SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
                 syncMetric.DestMetric.UpdateCount = CalendarSyncEngine.DestAppointmentsToUpdate.Count;
+                syncMetric.DestMetric.UpdateFailedCount =
+                    CalendarSyncEngine.DestAppointmentsToUpdate.Count - updatedAppointments.Count;
             }
 
             return isSuccess;
