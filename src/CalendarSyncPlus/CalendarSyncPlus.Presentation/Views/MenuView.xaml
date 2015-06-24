@@ -5,11 +5,15 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
              xmlns:lex="http://wpflocalizeextension.codeplex.com"
-             xmlns:converters="http://waf.codeplex.com/schemas"
-             mc:Ignorable="d" 
-             d:DesignHeight="500" d:DesignWidth="100">
+             xmlns:wafConverters="http://waf.codeplex.com/schemas"
+             xmlns:viewModels="clr-namespace:CalendarSyncPlus.Application.ViewModels;assembly=CalendarSyncPlus.Application"
+             d:DataContext="{d:DesignInstance viewModels:ShellViewModel}"
+             d:DesignHeight="500"
+             d:DesignWidth="100"
+             mc:Ignorable="d">
     <UserControl.Resources>
-        <converters:InvertBooleanConverter x:Key="InvertBooleanConverter" />
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+        <wafConverters:InvertBooleanConverter x:Key="InvertBooleanConverter" />
         <Style x:Key="ToggleMenuButtonStyle"
                TargetType="ToggleButton"
                BasedOn="{StaticResource {x:Type ToggleButton}}">

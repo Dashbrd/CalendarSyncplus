@@ -9,7 +9,7 @@ using CalendarSyncPlus.SyncEngine.Interfaces;
 
 namespace CalendarSyncPlus.SyncEngine
 {
-    [Export(typeof (ICalendarSyncEngine))]
+    [Export(typeof(ICalendarSyncEngine))]
     public class CalendarSyncEngine : ICalendarSyncEngine
     {
         public List<Appointment> SourceAppointmentsToUpdate { get; set; }
@@ -24,7 +24,7 @@ namespace CalendarSyncPlus.SyncEngine
         public bool GetSourceEntriesToDelete(CalendarSyncProfile syncProfile, CalendarAppointments sourceList,
             CalendarAppointments destinationList)
         {
-            GetAppointmentsToDeleteWithMergeEntries(syncProfile, destinationList, sourceList, SourceAppointmentsToDelete,
+            EvaluateAppointmentsToDelete(syncProfile, destinationList, sourceList, SourceAppointmentsToDelete,
                 SourceAppointmentsToUpdate, DestAppointmentsToUpdate, SourceOrphanEntries);
             return true;
         }
@@ -32,14 +32,14 @@ namespace CalendarSyncPlus.SyncEngine
         public bool GetSourceEntriesToAdd(CalendarSyncProfile syncProfile, CalendarAppointments sourceList,
             CalendarAppointments destinationList)
         {
-            GetAppointmentsToAddWithMergeEntries(syncProfile, destinationList, sourceList, SourceAppointmentsToAdd);
+            EvaluateAppointmentsToAdd(syncProfile, destinationList, sourceList, SourceAppointmentsToAdd);
             return true;
         }
 
         public bool GetDestEntriesToDelete(CalendarSyncProfile syncProfile, CalendarAppointments sourceList,
             CalendarAppointments destinationList)
         {
-            GetAppointmentsToDeleteWithMergeEntries(syncProfile, sourceList, destinationList, DestAppointmentsToDelete,
+            EvaluateAppointmentsToDelete(syncProfile, sourceList, destinationList, DestAppointmentsToDelete,
                 DestAppointmentsToUpdate, SourceAppointmentsToUpdate, DestOrphanEntries);
             return true;
         }
@@ -47,7 +47,7 @@ namespace CalendarSyncPlus.SyncEngine
         public bool GetDestEntriesToAdd(CalendarSyncProfile syncProfile, CalendarAppointments sourceList,
             CalendarAppointments destinationList)
         {
-            GetAppointmentsToAddWithMergeEntries(syncProfile, sourceList, destinationList, DestAppointmentsToAdd);
+            EvaluateAppointmentsToAdd(syncProfile, sourceList, destinationList, DestAppointmentsToAdd);
             return true;
         }
 
@@ -81,7 +81,7 @@ namespace CalendarSyncPlus.SyncEngine
         /// <param name="destOrphanEntries"></param>
         /// <returns>
         /// </returns>
-        private void GetAppointmentsToDeleteWithMergeEntries(CalendarSyncProfile syncProfile,
+        private void EvaluateAppointmentsToDelete(CalendarSyncProfile syncProfile,
             CalendarAppointments sourceList, CalendarAppointments destinationList,
             List<Appointment> destAppointmentsToDelete,
             List<Appointment> destAppointmentsToUpdate, List<Appointment> sourceAppointmentsToUpdate,
@@ -105,7 +105,7 @@ namespace CalendarSyncPlus.SyncEngine
                         {
                             appointment.ExtendedProperties.Remove(key);
                         }
-                        SourceAppointmentsToUpdate.Add(appointment);
+                        sourceAppointmentsToUpdate.AddCompareForUpdate(appointment);
                     }
                 }
                 return;
@@ -139,7 +139,7 @@ namespace CalendarSyncPlus.SyncEngine
                                 {
                                     destAppointment.ExtendedProperties[key] = childAppointment.AppointmentId;
                                 }
-                                destAppointmentsToUpdate.Add(destAppointment);
+                                destAppointmentsToUpdate.AddCompareForUpdate(destAppointment);
                             }
                         }
                         else if (syncProfile.SyncSettings.KeepLastModifiedVersion)
@@ -177,13 +177,13 @@ namespace CalendarSyncPlus.SyncEngine
                                     {
                                         sourceAppointment.CopyDetail(destAppointment,
                                             syncProfile.CalendarEntryOptions);
-                                        sourceAppointmentsToUpdate.Add(sourceAppointment);
+                                        sourceAppointmentsToUpdate.AddCompareForUpdate(sourceAppointment);
                                         continue;
                                     }
                                 }
                                 //Destination Calendar Entry is not Matching its Source Calendar Entry, Update it
                                 destAppointment.CopyDetail(sourceAppointment, syncProfile.CalendarEntryOptions);
-                                destAppointmentsToUpdate.Add(destAppointment);
+                                destAppointmentsToUpdate.AddCompareForUpdate(destAppointment);
                                 continue;
                             }
                         }
@@ -198,7 +198,7 @@ namespace CalendarSyncPlus.SyncEngine
                             addAttendeesToDescription))
                         {
                             destAppointment.CopyDetail(sourceAppointment, syncProfile.CalendarEntryOptions);
-                            destAppointmentsToUpdate.Add(destAppointment);
+                            destAppointmentsToUpdate.AddCompareForUpdate(destAppointment);
                         }
                     }
                     else
@@ -226,7 +226,7 @@ namespace CalendarSyncPlus.SyncEngine
         /// <param name="appointmentsToAdd"></param>
         /// <returns>
         /// </returns>
-        private void GetAppointmentsToAddWithMergeEntries(CalendarSyncProfile syncProfile, List<Appointment> sourceList,
+        private void EvaluateAppointmentsToAdd(CalendarSyncProfile syncProfile, List<Appointment> sourceList,
             List<Appointment> destinationList, List<Appointment> appointmentsToAdd)
         {
             if (!destinationList.Any())
@@ -240,10 +240,11 @@ namespace CalendarSyncPlus.SyncEngine
             {
                 foreach (var sourceAppointment in sourceList)
                 {
+                    //Allow adding appointments which are original entries & do not have a child in this calendar
                     if (sourceAppointment.SourceId == null && sourceAppointment.ChildId == null)
                     {
                         var destinationAppointment = destinationList.FirstOrDefault(t =>
-                            t.Equals(sourceAppointment));
+                           t.Equals(sourceAppointment));
                         if (destinationAppointment == null)
                         {
                             appointmentsToAdd.Add(sourceAppointment);

@@ -1,36 +1,46 @@
-﻿using System.Waf.Foundation;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Waf.Foundation;
+using System.Xml.Serialization;
 
 namespace CalendarSyncPlus.Domain.Models
 {
     public class SyncSummary : Model
     {
-        private int _totalSyncs;
-        private int _successSyncs;
-        private int _failedSyncs;
-        private long _totalSyncSeconds;
+        private List<SyncMetric> _syncMetrics;
 
+        public SyncSummary()
+        {
+            SyncMetrics = new List<SyncMetric>();
+        }
+        [XmlIgnore]
         public int TotalSyncs
         {
-            get { return _totalSyncs; }
-            set { SetProperty(ref _totalSyncs, value); }
-        }
+            get { return SyncMetrics == null ? 0 : SyncMetrics.Count; }
 
+        }
+        [XmlIgnore]
         public int SuccessSyncs
         {
-            get { return _successSyncs; }
-            set { SetProperty(ref _successSyncs, value); }
-        }
+            get { return SyncMetrics == null ? 0 : SyncMetrics.Count(t => t.IsSuccess); }
 
+        }
+        [XmlIgnore]
         public int FailedSyncs
         {
-            get { return _failedSyncs; }
-            set { SetProperty(ref _failedSyncs, value); }
-        }
+            get { return SyncMetrics == null ? 0 : SyncMetrics.Count(t => !t.IsSuccess); }
 
+        }
+        [XmlIgnore]
         public long TotalSyncSeconds
         {
-            get { return _totalSyncSeconds; }
-            set { SetProperty(ref _totalSyncSeconds, value); }
+            get { return SyncMetrics == null ? 0 : SyncMetrics.Sum(t => t.ElapsedSeconds); }
+        }
+
+        public List<SyncMetric> SyncMetrics
+        {
+            get { return _syncMetrics; }
+            set { SetProperty(ref _syncMetrics, value); }
         }
 
         public static SyncSummary GetDefault()

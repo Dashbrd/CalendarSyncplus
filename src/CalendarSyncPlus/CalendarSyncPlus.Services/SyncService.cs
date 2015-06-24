@@ -106,7 +106,7 @@ namespace CalendarSyncPlus.Services
             _syncTimer = null;
         }
 
-        public string SyncNow(CalendarSyncProfile syncProfile, SyncCallback syncCallback)
+        public string SyncNow(CalendarSyncProfile syncProfile, SyncMetric syncMetric, SyncCallback syncCallback)
         {
             try
             {
@@ -118,7 +118,8 @@ namespace CalendarSyncPlus.Services
                     return "Invalid Settings";
                 }
                 ResetSyncData();
-                var isSyncComplete = _calendarUpdateService.SyncCalendar(syncProfile, syncCallback);
+
+                var isSyncComplete = _calendarUpdateService.SyncCalendar(syncProfile, syncMetric, syncCallback);
                 return isSyncComplete ? null : "Error Occurred";
             }
             catch (AggregateException exception)

@@ -613,8 +613,15 @@ namespace CalendarSyncPlus.Application.ViewModels
                 UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.Line));
                 UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.Profile, syncProfile.Name));
                 UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.Line));
-                var result = SyncStartService.SyncNow(syncProfile, SyncCallback);
-                OnSyncCompleted(syncProfile, result);
+                var syncMetric = new SyncMetric()
+                {
+                    StartTime = syncProfile.LastSync.GetValueOrDefault(),
+                    ProfileName = syncProfile.Name,
+                    CalendarSyncDirection = syncProfile.SyncSettings.CalendarSyncDirection.ToString()
+                };
+                SyncSummary.SyncMetrics.Add(syncMetric);
+                var result = SyncStartService.SyncNow(syncProfile, syncMetric, SyncCallback);
+                OnSyncCompleted(syncProfile, syncMetric, result);
             }
         }
 
@@ -629,24 +636,21 @@ namespace CalendarSyncPlus.Application.ViewModels
             return true;
         }
 
-        private void OnSyncCompleted(CalendarSyncProfile syncProfile, string result)
+        private void OnSyncCompleted(CalendarSyncProfile syncProfile, SyncMetric syncMetric, string result)
         {
-            SyncSummary.TotalSyncs++;
             if (string.IsNullOrEmpty(result))
             {
-                SyncSummary.SuccessSyncs++;
                 UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.SyncSuccess, DateTime.Now));
             }
             else
             {
-                SyncSummary.FailedSyncs++;
                 UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.SyncFailed, result));
             }
             int totalSeconds = (int)DateTime.Now.Subtract(syncProfile.LastSync.GetValueOrDefault()).TotalSeconds;
             UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.Line));
             UpdateStatus(string.Format("Time Elapsed : {0} s", totalSeconds));
             UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.LogSeparator));
-            SyncSummary.TotalSyncSeconds += totalSeconds;
+            syncMetric.ElapsedSeconds = totalSeconds;
             ShowNotification(false);
 
             syncProfile.NextSync = syncProfile.SyncSettings.SyncFrequency.GetNextSyncTime(

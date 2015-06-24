@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using CalendarSyncPlus.Domain.Helpers;
 using CalendarSyncPlus.Domain.Models;
 
@@ -44,6 +45,26 @@ namespace CalendarSyncPlus.SyncEngine.Helpers
             }
 
             return true;
+        }
+
+        public static void AddCompareForUpdate(this List<Appointment> updateList, Appointment appointment)
+        {
+            if (!updateList.Exists(t => t.Equals(appointment)))
+            {
+                updateList.Add(appointment);
+            }
+        }
+
+
+        public static void AddRangeCompareForUpdate(this List<Appointment> updateList, List<Appointment> appointmentList)
+        {
+            foreach (var appointment in appointmentList)
+            {
+                if (!updateList.Exists(t => t.AppointmentId.Equals(appointment.AppointmentId)))
+                {
+                    updateList.Add(appointment);
+                }
+            }
         }
     }
 }

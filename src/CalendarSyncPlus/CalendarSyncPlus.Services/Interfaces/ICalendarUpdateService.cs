@@ -35,9 +35,11 @@ namespace CalendarSyncPlus.Services.Interfaces
         /// <summary>
         /// </summary>
         /// <param name="syncProfile"></param>
+        /// <param name="syncMetric"></param>
+        /// <param name="synccallback"></param>
         /// <returns>
         /// </returns>
-        bool SyncCalendar(CalendarSyncProfile syncProfile, SyncCallback synccallback);
+        bool SyncCalendar(CalendarSyncProfile syncProfile, SyncMetric syncMetric, SyncCallback synccallback);
 
         #endregion
 
