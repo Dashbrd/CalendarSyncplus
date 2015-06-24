@@ -4,12 +4,11 @@
                       xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
                       xmlns:converters="clr-namespace:CalendarSyncPlus.Presentation.Converters"
                       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-                      xmlns:localizeExtension="http://wpflocalizeextension.codeplex.com"
+                      
                       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                       xmlns:viewModels="clr-namespace:CalendarSyncPlus.Application.ViewModels;assembly=CalendarSyncPlus.Application"
                       xmlns:views="clr-namespace:CalendarSyncPlus.Presentation.Views"
-                      xmlns:wafConverters="http://waf.codeplex.com/schemas"
-                      Title="{localizeExtension:LocText Key=ShellView_Window_Title}"
+                      xmlns:lex="http://wpflocalizeextension.codeplex.com"
                       Width="650"
                       Height="750"
                       AllowsTransparency="True"
@@ -24,16 +23,20 @@
                       SnapsToDevicePixels="True"
                       TitleCaps="False"
                       WindowStartupLocation="CenterScreen"
+                      Title="{lex:LocText Key=ShellView_Window_Title}"
                       d:DataContext="{d:DesignInstance viewModels:ShellViewModel}"
-                      localizeExtension:LocalizeDictionary.DesignCulture="en"
-                      localizeExtension:ResxLocalizationProvider.DefaultAssembly="CalendarSyncPlus.Common"
-                      localizeExtension:ResxLocalizationProvider.DefaultDictionary="Resources"
+                      lex:LocalizeDictionary.DesignCulture="en"
+                      lex:ResxLocalizationProvider.DefaultAssembly="CalendarSyncPlus.Common"
+                      lex:ResxLocalizationProvider.DefaultDictionary="Resources"
                       mc:Ignorable="d" RightWindowCommandsOverlayBehavior="HiddenTitleBar">
 
     <controls:MetroWindow.Resources>
-        <Style x:Key="{x:Type ToolTip}" TargetType="ToolTip">
-            <Setter Property="OverridesDefaultStyle" Value="true" />
-            <Setter Property="HasDropShadow" Value="True" />
+        <Style x:Key="{x:Type ToolTip}"
+               TargetType="ToolTip">
+            <Setter Property="OverridesDefaultStyle"
+                    Value="true" />
+            <Setter Property="HasDropShadow"
+                    Value="True" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="ToolTip">
@@ -57,13 +60,15 @@
                 </Setter.Value>
             </Setter>
         </Style>
-        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
-        <wafConverters:InvertBooleanConverter x:Key="InvertBooleanConverter" />
         <converters:PercentageWidthConverter x:Key="PercentageWidthConverter" />
         <DataTemplate x:Key="IconTemplate">
-            <Rectangle Fill="{DynamicResource AccentSelectedColorBrush}" Height="25" Width="25" Margin="5,0,5,0">
+            <Rectangle Fill="{DynamicResource AccentSelectedColorBrush}"
+                       Height="25"
+                       Width="25"
+                       Margin="5,0,5,0">
                 <Rectangle.OpacityMask>
-                    <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_refresh}" />
+                    <VisualBrush Stretch="Fill"
+                                 Visual="{StaticResource appbar_refresh}" />
                 </Rectangle.OpacityMask>
             </Rectangle>
 
@@ -78,7 +83,7 @@
                                              ConverterParameter=75}"
                 AnimateOnPositionChange="True"
                 Content="{Binding Path=ShellService.SettingsView}"
-                Header="{localizeExtension:LocText Key=ShellView_Flyouts_Settings_Header}"
+                Header="{lex:LocText Key=ShellView_Flyouts_Settings_Header}"
                 IsModal="True"
                 IsOpen="{Binding IsSettingsVisible,
                                               Mode=TwoWay}"
@@ -91,7 +96,7 @@
                                              ConverterParameter=75}"
                 AnimateOnPositionChange="True"
                 Content="{Binding Path=ShellService.AboutView}"
-                Header="{localizeExtension:LocText Key=ShellView_Flyouts_About_Header}"
+                Header="{lex:LocText Key=ShellView_Flyouts_About_Header}"
                 IsModal="True"
                 IsOpen="{Binding IsAboutVisible,
                                               Mode=TwoWay}"
@@ -104,7 +109,7 @@
                                              ConverterParameter=75}"
                 AnimateOnPositionChange="True"
                 Content="{Binding Path=ShellService.HelpView}"
-                Header="{localizeExtension:LocText Key=ShellView_Flyouts_Help_Header}"
+                Header="{lex:LocText Key=ShellView_Flyouts_Help_Header}"
                 IsModal="True"
                 IsOpen="{Binding IsHelpVisible,
                                               Mode=TwoWay}"

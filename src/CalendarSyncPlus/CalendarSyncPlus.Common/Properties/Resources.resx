@@ -117,44 +117,128 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="ShellView_ExitButton_ToolTip" xml:space="preserve">
-    <value>Exit Application</value>
+  <data name="AboutView_Button_CheckForUpdate_Content" xml:space="preserve">
+    <value>Check For updates</value>
   </data>
-  <data name="ShellView_ExitButton_Content" xml:space="preserve">
-    <value>Exit</value>
+  <data name="AboutView_Button_DownloadNow_Content" xml:space="preserve">
+    <value>Download Now</value>
   </data>
-  <data name="ShellView_SettingsButton_Content" xml:space="preserve">
-    <value>Preferences</value>
+  <data name="AboutView_Textblock_BugReportComment" xml:space="preserve">
+    <value>This is a free utility. To report issues/flaws or share appreciation, comments and further suggestions, Please go to the following link.</value>
   </data>
-  <data name="ShellView_SettingsButton_ToolTip" xml:space="preserve">
-    <value>Configure Calendar Sync +</value>
+  <data name="AboutView_TextBlock_Contributers" xml:space="preserve">
+    <value>Contributors:</value>
   </data>
-  <data name="ShellView_AboutButton_Content" xml:space="preserve">
-    <value>About</value>
+  <data name="AboutView_Textblock_SupportUsComment" xml:space="preserve">
+    <value>Support Us: Buy us a coffee/beer</value>
   </data>
-  <data name="ShellView_AboutButton_ToolTip" xml:space="preserve">
-    <value>About Calendar Sync +</value>
+  <data name="AboutView_Textblock_UseHelpSuggestionComment" xml:space="preserve">
+    <value>Please click on 'Help' learn how to use this application.</value>
   </data>
-  <data name="ShellView_HelpButton_Content" xml:space="preserve">
-    <value>Help</value>
+  <data name="AdvancedSettingsView_Checkbox_AlphaCheckForUpdates_Content" xml:space="preserve">
+    <value>Include Alpha Releases</value>
   </data>
-  <data name="ShellView_HelpButton_ToolTip" xml:space="preserve">
-    <value>Help</value>
+  <data name="AdvancedSettingsView_Checkbox_CheckForUpdates_Content" xml:space="preserve">
+    <value>Check For Updates</value>
   </data>
-  <data name="ShellView_Window_Title" xml:space="preserve">
-    <value>Calendar Sync +</value>
+  <data name="AdvancedSettingsView_Checkbox_CloseToSystemTray_Content" xml:space="preserve">
+    <value>Close button minimizes to tray</value>
   </data>
-  <data name="ShellView_Flyouts_Settings_Header" xml:space="preserve">
-    <value>Preferences</value>
+  <data name="AdvancedSettingsView_Checkbox_HideSystemTrayNotification_Content" xml:space="preserve">
+    <value>Hide sync notification</value>
   </data>
-  <data name="ShellView_Flyouts_About_Header" xml:space="preserve">
-    <value>About</value>
+  <data name="AdvancedSettingsView_CheckBox_ProxySettings_UseDefaultCredentials_Content" xml:space="preserve">
+    <value>Use Default Credential</value>
   </data>
-  <data name="ShellView_Flyouts_Help_Header" xml:space="preserve">
-    <value>Help</value>
+  <data name="AdvancedSettingsView_Checkbox_RunAtStartup_Content" xml:space="preserve">
+    <value>Run CalendarSync+ when computer starts</value>
   </data>
-  <data name="ShellView_RightWindowCommands_Download_Tooltip" xml:space="preserve">
-    <value>New version available for download</value>
+  <data name="AdvancedSettingsView_Checkbox_StartMinimized_Content" xml:space="preserve">
+    <value>Start minimized</value>
+  </data>
+  <data name="AdvancedSettingsView_ContentControl_AlphaCheckForUpdates_Tooltip" xml:space="preserve">
+    <value>Check for alpha releases of the application</value>
+  </data>
+  <data name="AdvancedSettingsView_ContentControl_CheckForUpdates_Tooltip" xml:space="preserve">
+    <value>Select this option to automatically check for latest version of this application</value>
+  </data>
+  <data name="AdvancedSettingsView_ContentControl_HelpButtonCloseToSystray_Tooltip" xml:space="preserve">
+    <value>Select this option to minimize to system tray on closing the window</value>
+  </data>
+  <data name="AdvancedSettingsView_ContentControl_HelpButtonHideSystrayNotification_Tooltip" xml:space="preserve">
+    <value>Select this option to hide system tray tooltip</value>
+  </data>
+  <data name="AdvancedSettingsView_ContentControl_HelpButtonRunAtStartup_Tooltip" xml:space="preserve">
+    <value>Select this option to start CalendarSync+ when computer starts</value>
+  </data>
+  <data name="AdvancedSettingsView_ContentControl_HelpButtonStartMinimized_Tooltip" xml:space="preserve">
+    <value>Always starts application in the minimized to tray state.</value>
+  </data>
+  <data name="AdvancedSettingsView_ContentControl_HelpButtonSynchronizationMode_Tooltip" xml:space="preserve">
+    <value>Select this option to configure Synchronization Mode</value>
+  </data>
+  <data name="AdvancedSettingsView_RadioButton_ProxySettings_AutoDetect_Content" xml:space="preserve">
+    <value>Auto Detect</value>
+  </data>
+  <data name="AdvancedSettingsView_RadioButton_ProxySettings_ManualProxy_Content" xml:space="preserve">
+    <value>Manual Proxy Configuration</value>
+  </data>
+  <data name="AdvancedSettingsView_RadioButton_ProxySettings_NoProxy_Content" xml:space="preserve">
+    <value>No Proxy</value>
+  </data>
+  <data name="AdvancedSettingsView_RadioButton_Synchronization_AutoSync_Content" xml:space="preserve">
+    <value>Auto Synchronization</value>
+  </data>
+  <data name="AdvancedSettingsView_RadioButton_Synchronization_ManualSync_Content" xml:space="preserve">
+    <value>Manual Synchronization</value>
+  </data>
+  <data name="AdvancedSettingsView_TextBlock_MoreFeaturesNote_Content" xml:space="preserve">
+    <value>More advanced features are yet to come ;)</value>
+  </data>
+  <data name="AdvancedSettingsView_TextBlock_ProxySettings_Domain_Content" xml:space="preserve">
+    <value>Domain</value>
+  </data>
+  <data name="AdvancedSettingsView_TextBlock_ProxySettings_Password_Content" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="AdvancedSettingsView_TextBlock_ProxySettings_ProxyAddress_Content" xml:space="preserve">
+    <value>Http Proxy:</value>
+  </data>
+  <data name="AdvancedSettingsView_TextBlock_ProxySettings_ProxyPort_Content" xml:space="preserve">
+    <value>Port No:</value>
+  </data>
+  <data name="AdvancedSettingsView_TextBlock_ProxySettings_Username_Content" xml:space="preserve">
+    <value>Username</value>
+  </data>
+  <data name="GoogleSettingsView_Button_DisconnectAccount_Content" xml:space="preserve">
+    <value>Disconnect Account</value>
+  </data>
+  <data name="GoogleSettingsView_Button_GetCalendar_Content" xml:space="preserve">
+    <value>Get Google Calendars</value>
+  </data>
+  <data name="GoogleSettingsView_Button_NewtAccount_Content" xml:space="preserve">
+    <value>Add Google Account</value>
+  </data>
+  <data name="GoogleSettingsView_Button_ResetCalendar_Content" xml:space="preserve">
+    <value>Reset Google Calendar</value>
+  </data>
+  <data name="GoogleSettingsView_CheckBox_ManualAuth_Content" xml:space="preserve">
+    <value>Allow Manual Google Code Entry</value>
+  </data>
+  <data name="GoogleSettingsView_GroupBox_Header" xml:space="preserve">
+    <value>Select Google Calendar</value>
+  </data>
+  <data name="GoogleSettingsView_TextBlock_SelectAccount_Text" xml:space="preserve">
+    <value>Select Account</value>
+  </data>
+  <data name="GoogleSettingsView_TextBlock_SelectCalendar_Text" xml:space="preserve">
+    <value>Select Calendar</value>
+  </data>
+  <data name="HomeView_Button_ClearLog_Content" xml:space="preserve">
+    <value>Clear Sync Status</value>
+  </data>
+  <data name="HomeView_Button_DeleteLog_Content" xml:space="preserve">
+    <value>Delete Application Log</value>
   </data>
   <data name="HomeView_Button_StartSync_Content_Start" xml:space="preserve">
     <value>Start Periodic Sync</value>
@@ -165,110 +249,17 @@
   <data name="HomeView_Button_SyncNow_Content" xml:space="preserve">
     <value>Sync Now</value>
   </data>
-  <data name="AboutView_TextBlock_Contributers" xml:space="preserve">
-    <value>Contributors:</value>
+  <data name="HomeView_GroupBox_Schedules_Header" xml:space="preserve">
+    <value>Next Scheduled</value>
   </data>
-  <data name="AboutView_Textblock_BugReportComment" xml:space="preserve">
-    <value>This is a free utility. To report issues/flaws or share appreciation, comments and further suggestions, Please go to the following link.</value>
+  <data name="HomeView_GroupBox_Status_Header" xml:space="preserve">
+    <value>Sync Status</value>
   </data>
-  <data name="AboutView_Textblock_SupportUsComment" xml:space="preserve">
-    <value>Support Us: Buy us a coffee/beer</value>
+  <data name="ManageProfileView_Button_New_Content" xml:space="preserve">
+    <value>New</value>
   </data>
-  <data name="AboutView_Textblock_UseHelpSuggestionComment" xml:space="preserve">
-    <value>Please click on 'Help' learn how to use this application.</value>
-  </data>
-  <data name="AboutView_Button_CheckForUpdate_Content" xml:space="preserve">
-    <value>Check For updates</value>
-  </data>
-  <data name="AboutView_Button_DownloadNow_Content" xml:space="preserve">
-    <value>Download Now</value>
-  </data>
-  <data name="AdvancedSettingsView_Checkbox_RunAtStartup_Content" xml:space="preserve">
-    <value>Run CalendarSync+ when computer starts</value>
-  </data>
-  <data name="AdvancedSettingsView_ContentControl_HelpButtonRunAtStartup_Tooltip" xml:space="preserve">
-    <value>Select this option to start CalendarSync+ when computer starts</value>
-  </data>
-  <data name="AdvancedSettingsView_Checkbox_CloseToSystemTray_Content" xml:space="preserve">
-    <value>Close button minimizes to tray</value>
-  </data>
-  <data name="AdvancedSettingsView_ContentControl_HelpButtonCloseToSystray_Tooltip" xml:space="preserve">
-    <value>Select this option to minimize to system tray on closing the window</value>
-  </data>
-  <data name="AdvancedSettingsView_Checkbox_HideSystemTrayNotification_Content" xml:space="preserve">
-    <value>Hide sync notification</value>
-  </data>
-  <data name="AdvancedSettingsView_ContentControl_HelpButtonHideSystrayNotification_Tooltip" xml:space="preserve">
-    <value>Select this option to hide system tray tooltip</value>
-  </data>
-  <data name="AdvancedSettingsView_Checkbox_CheckForUpdates_Content" xml:space="preserve">
-    <value>Check For Updates</value>
-  </data>
-  <data name="AdvancedSettingsView_ContentControl_CheckForUpdates_Tooltip" xml:space="preserve">
-    <value>Select this option to automatically check for latest version of this application</value>
-  </data>
-  <data name="AdvancedSettingsView_RadioButton_Synchronization_AutoSync_Content" xml:space="preserve">
-    <value>Auto Synchronization</value>
-  </data>
-  <data name="AdvancedSettingsView_RadioButton_Synchronization_ManualSync_Content" xml:space="preserve">
-    <value>Manual Synchronization</value>
-  </data>
-  <data name="AdvancedSettingsView_ContentControl_HelpButtonSynchronizationMode_Tooltip" xml:space="preserve">
-    <value>Select this option to configure Synchronization Mode</value>
-  </data>
-  <data name="AdvancedSettingsView_RadioButton_ProxySettings_AutoDetect_Content" xml:space="preserve">
-    <value>Auto Detect</value>
-  </data>
-  <data name="AdvancedSettingsView_RadioButton_ProxySettings_NoProxy_Content" xml:space="preserve">
-    <value>No Proxy</value>
-  </data>
-  <data name="AdvancedSettingsView_RadioButton_ProxySettings_ManualProxy_Content" xml:space="preserve">
-    <value>Manual Proxy Configuration</value>
-  </data>
-  <data name="AdvancedSettingsView_TextBlock_ProxySettings_ProxyAddress_Content" xml:space="preserve">
-    <value>Http Proxy:</value>
-  </data>
-  <data name="AdvancedSettingsView_TextBlock_ProxySettings_ProxyPort_Content" xml:space="preserve">
-    <value>Port No:</value>
-  </data>
-  <data name="AdvancedSettingsView_CheckBox_ProxySettings_UseDefaultCredentials_Content" xml:space="preserve">
-    <value>Use Default Credential</value>
-  </data>
-  <data name="AdvancedSettingsView_TextBlock_ProxySettings_Domain_Content" xml:space="preserve">
-    <value>Domain</value>
-  </data>
-  <data name="AdvancedSettingsView_TextBlock_ProxySettings_Username_Content" xml:space="preserve">
-    <value>Username</value>
-  </data>
-  <data name="AdvancedSettingsView_TextBlock_ProxySettings_Password_Content" xml:space="preserve">
-    <value>Password</value>
-  </data>
-  <data name="AdvancedSettingsView_TextBlock_MoreFeaturesNote_Content" xml:space="preserve">
-    <value>More advanced features are yet to come ;)</value>
-  </data>
-  <data name="GoogleSettingsView_GroupBox_Header" xml:space="preserve">
-    <value>Select Google Calendar</value>
-  </data>
-  <data name="GoogleSettingsView_TextBlock_SelectAccount_Text" xml:space="preserve">
-    <value>Select Account</value>
-  </data>
-  <data name="GoogleSettingsView_Button_DisconnectAccount_Content" xml:space="preserve">
-    <value>Disconnect Account</value>
-  </data>
-  <data name="GoogleSettingsView_Button_NewtAccount_Content" xml:space="preserve">
-    <value>Add Google Account</value>
-  </data>
-  <data name="GoogleSettingsView_TextBlock_SelectCalendar_Text" xml:space="preserve">
-    <value>Select Calendar</value>
-  </data>
-  <data name="GoogleSettingsView_Button_ResetCalendar_Content" xml:space="preserve">
-    <value>Reset Google Calendar</value>
-  </data>
-  <data name="GoogleSettingsView_Button_GetCalendar_Content" xml:space="preserve">
-    <value>Get Google Calendars</value>
-  </data>
-  <data name="ManageProfileView_GroupBox_Header" xml:space="preserve">
-    <value>Manage Calendar Profiles</value>
+  <data name="ManageProfileView_DataGrid_Column_DeleteColumn_Header" xml:space="preserve">
+    <value>Delete</value>
   </data>
   <data name="ManageProfileView_DataGrid_Column_NameColumn_Header" xml:space="preserve">
     <value>Name</value>
@@ -276,149 +267,146 @@
   <data name="ManageProfileView_DataGrid_Column_SyncColumn_Header" xml:space="preserve">
     <value>Sync</value>
   </data>
-  <data name="ManageProfileView_DataGrid_Column_DeleteColumn_Header" xml:space="preserve">
-    <value>Delete</value>
-  </data>
-  <data name="ManageProfileView_Button_New_Content" xml:space="preserve">
-    <value>New</value>
-  </data>
-  <data name="OptionsSettingsView_GroupBox_Category_Header" xml:space="preserve">
-    <value>Category</value>
+  <data name="ManageProfileView_GroupBox_Header" xml:space="preserve">
+    <value>Manage Calendar Profiles</value>
   </data>
   <data name="OptionsSettingsView_CheckBox_Category_Content" xml:space="preserve">
     <value>Set Category To Appointments</value>
   </data>
-  <data name="OptionsSettingsView_HelpButton_Category_Tooltip" xml:space="preserve">
-    <value>Set color to Outlook and Google Appointments</value>
-  </data>
-  <data name="OptionsSettingsView_GroupBox_DestinationCalendarOptions_Header" xml:space="preserve">
-    <value>Destination Calendar Entry Options</value>
-  </data>
-  <data name="OptionsSettingsView_CheckBox_DestinationCalendarOptions_AddDescription_Content" xml:space="preserve">
-    <value>Add Description</value>
-  </data>
-  <data name="OptionsSettingsView_ContentControl_DestinationCalendarOptions_AddDescription_ToolTip" xml:space="preserve">
-    <value>Select this option to add description to the calendarAppointments</value>
-  </data>
-  <data name="OptionsSettingsView_CheckBox_DestinationCalendarOptions_AddAttendees_Content" xml:space="preserve">
-    <value>Add Attendees</value>
-  </data>
-  <data name="OptionsSettingsView_ContentControl_DestinationCalendarOptions_AddAttendees_ToolTip" xml:space="preserve">
-    <value>Select this option to add attendees to appointment</value>
+  <data name="OptionsSettingsView_CheckBox_DestinationCalendarOptions_AddAttachments_Content" xml:space="preserve">
+    <value>Add Attachments</value>
   </data>
   <data name="OptionsSettingsView_CheckBox_DestinationCalendarOptions_AddAttendeesDescription_Content" xml:space="preserve">
     <value>Add Attendees to Description</value>
   </data>
-  <data name="OptionsSettingsView_ContentControl_DestinationCalendarOptions_AddAttendeesDescription_ToolTip" xml:space="preserve">
-    <value>Select this option to add attendees to appointment description instead of TO/CC/BCC fields</value>
+  <data name="OptionsSettingsView_CheckBox_DestinationCalendarOptions_AddAttendees_Content" xml:space="preserve">
+    <value>Add Attendees</value>
   </data>
-  <data name="OptionsSettingsView_CheckBox_DestinationCalendarOptions_AddReminders_Content" xml:space="preserve">
-    <value>Add Reminders</value>
-  </data>
-  <data name="OptionsSettingsView_ContentControl_DestinationCalendarOptions_AddReminder_ToolTip" xml:space="preserve">
-    <value>Select this option to add reminders of the appointment. Note: Outlook gives default reminder messages for all calendarAppointments. To disable please go to your outlook settings.</value>
+  <data name="OptionsSettingsView_CheckBox_DestinationCalendarOptions_AddDescription_Content" xml:space="preserve">
+    <value>Add Description</value>
   </data>
   <data name="OptionsSettingsView_CheckBox_DestinationCalendarOptions_AddEventsAsAppointment_Content" xml:space="preserve">
     <value>Add events with no recipients as appointments</value>
   </data>
-  <data name="OptionsSettingsView_ContentControl_DestinationCalendarOptions_AddEventsAsAppointment_ToolTip" xml:space="preserve">
-    <value>Select this option to add events from Google without recipients as appointments in outlook.</value>
-  </data>
-  <data name="OptionsSettingsView_CheckBox_DestinationCalendarOptions_AddAttachments_Content" xml:space="preserve">
-    <value>Add Attachments</value>
-  </data>
-  <data name="OptionsSettingsView_GroupBox_OtherOptions_Header" xml:space="preserve">
-    <value>Other</value>
-  </data>
-  <data name="OptionsSettingsView_CheckBox_OtherOptions_DisableDelete_Content" xml:space="preserve">
-    <value>Disable delete for Orphan Source Entries (One way only)</value>
-  </data>
-  <data name="OptionsSettingsView_ContentControl_OtherOptions_DisableDelete_ToolTip" xml:space="preserve">
-    <value>Disable Delete when Syncing Calendars</value>
+  <data name="OptionsSettingsView_CheckBox_DestinationCalendarOptions_AddReminders_Content" xml:space="preserve">
+    <value>Add Reminders</value>
   </data>
   <data name="OptionsSettingsView_CheckBox_OtherOptions_ConfirmDelete_Content" xml:space="preserve">
     <value>Confirm delete for Orphan Source Entries (One way only)</value>
   </data>
-  <data name="OptionsSettingsView_ContentControl_OtherOptions_ConfirmDelete_ToolTip" xml:space="preserve">
-    <value>Display Confirm Dialog before deleting an Appointement</value>
+  <data name="OptionsSettingsView_CheckBox_OtherOptions_DisableDelete_Content" xml:space="preserve">
+    <value>Disable delete for Orphan Source Entries (One way only)</value>
   </data>
   <data name="OptionsSettingsView_CheckBox_OtherOptions_KeepLastModified_Content" xml:space="preserve">
     <value>Keep Last Modified Version (For Bidirectional only)</value>
   </data>
-  <data name="OutlookSettingsView_GroupBox_OutlookSettings_Header" xml:space="preserve">
-    <value>Outlook Settings</value>
+  <data name="OptionsSettingsView_CheckBox_OtherOptions_MergeExistingEntries_Content" xml:space="preserve">
+    <value>Update Existing Entries</value>
   </data>
-  <data name="OutlookSettingsView_CheckBox_OutlookSettings_OutlookApplicaiton_Content" xml:space="preserve">
-    <value>Outlook Application</value>
+  <data name="OptionsSettingsView_ContentControl_DestinationCalendarOptions_AddAttendeesDescription_ToolTip" xml:space="preserve">
+    <value>Select this option to add attendees to appointment description instead of TO/CC/BCC fields</value>
   </data>
-  <data name="OutlookSettingsView_CheckBox_OutlookSettings_EWS_Content" xml:space="preserve">
-    <value>Exchange Web Services</value>
+  <data name="OptionsSettingsView_ContentControl_DestinationCalendarOptions_AddAttendees_ToolTip" xml:space="preserve">
+    <value>Select this option to add attendees to appointment</value>
   </data>
-  <data name="OutlookSettingsView_GroupBox_ExchnageSettings_Header" xml:space="preserve">
-    <value>Exchange Server Settings</value>
+  <data name="OptionsSettingsView_ContentControl_DestinationCalendarOptions_AddDescription_ToolTip" xml:space="preserve">
+    <value>Select this option to add description to the calendarAppointments</value>
   </data>
-  <data name="OutlookSettingsView_TextBlock_ExchnageSettings_Domain_Text" xml:space="preserve">
-    <value>Domain</value>
+  <data name="OptionsSettingsView_ContentControl_DestinationCalendarOptions_AddEventsAsAppointment_ToolTip" xml:space="preserve">
+    <value>Select this option to add events from Google without recipients as appointments in outlook.</value>
   </data>
-  <data name="OutlookSettingsView_TextBlock_ExchnageSettings_UserName_Text" xml:space="preserve">
-    <value>Username</value>
+  <data name="OptionsSettingsView_ContentControl_DestinationCalendarOptions_AddReminder_ToolTip" xml:space="preserve">
+    <value>Select this option to add reminders of the appointment. Note: Outlook gives default reminder messages for all calendarAppointments. To disable please go to your outlook settings.</value>
   </data>
-  <data name="OutlookSettingsView_TextBlock_ExchnageSettings_Password_Text" xml:space="preserve">
-    <value>Password</value>
+  <data name="OptionsSettingsView_ContentControl_OtherOptions_ConfirmDelete_ToolTip" xml:space="preserve">
+    <value>Display Confirm Dialog before deleting an Appointement</value>
   </data>
-  <data name="OutlookSettingsView_TextBlock_ExchnageSettings_ServerUrl_Text" xml:space="preserve">
-    <value>Exchange Server Url</value>
+  <data name="OptionsSettingsView_ContentControl_OtherOptions_DisableDelete_ToolTip" xml:space="preserve">
+    <value>Disable Delete when Syncing Calendars</value>
+  </data>
+  <data name="OptionsSettingsView_ContentControl_OtherOptions_KeepLastModified_Content" xml:space="preserve">
+    <value>In Bidirectional Sync keep the Latest copy of the appointment</value>
+  </data>
+  <data name="OptionsSettingsView_ContentControl_OtherOptions_MergeExistingEntries_Content" xml:space="preserve">
+    <value>Update existing entries for any changes, instead of adding and deleting for updation</value>
+  </data>
+  <data name="OptionsSettingsView_GroupBox_Category_Header" xml:space="preserve">
+    <value>Category</value>
+  </data>
+  <data name="OptionsSettingsView_GroupBox_DestinationCalendarOptions_Header" xml:space="preserve">
+    <value>Destination Calendar Entry Options</value>
+  </data>
+  <data name="OptionsSettingsView_GroupBox_OtherOptions_Header" xml:space="preserve">
+    <value>Other</value>
+  </data>
+  <data name="OptionsSettingsView_HelpButton_Category_Tooltip" xml:space="preserve">
+    <value>Set color to Outlook and Google Appointments</value>
   </data>
   <data name="OutlookSettingsView_Button_ExchnageSettings_DetectSettings_Content" xml:space="preserve">
     <value>Detect Settings</value>
   </data>
-  <data name="OutlookSettingsView_TextBlock_ExchnageSettings_SelectCalendar_Content" xml:space="preserve">
-    <value>Select Calendar</value>
-  </data>
   <data name="OutlookSettingsView_Button_ExchnageSettings_ResetExchangeCalendar_Content" xml:space="preserve">
     <value>Reset Exchange Calendar</value>
-  </data>
-  <data name="OutlookSettingsView_GroupBox_OutlookProfileSettings_Header" xml:space="preserve">
-    <value>Profile &amp; MailBox Settings</value>
-  </data>
-  <data name="OutlookSettingsView_RadioButton_OutlookProfileSettings_DefaultProfile_Content" xml:space="preserve">
-    <value>Default Profile</value>
-  </data>
-  <data name="OutlookSettingsView_RadioButton_OutlookProfileSettings_ChooseProfile_Content" xml:space="preserve">
-    <value>Choose Profile</value>
-  </data>
-  <data name="OutlookSettingsView_RadioButton_OutlookProfileSettings_SelectProfile_Content" xml:space="preserve">
-    <value>Select Profile</value>
-  </data>
-  <data name="OutlookSettingsView_TextBlock_OutlookProfileSettings_ChooseProfile_Text" xml:space="preserve">
-    <value>Select Profile</value>
-  </data>
-  <data name="OutlookSettingsView_RadioButton_OutlookProfileSettings_DefaultMailnCalendar_Content" xml:space="preserve">
-    <value>Default MailBox and Calendar</value>
-  </data>
-  <data name="OutlookSettingsView_RadioButton_OutlookProfileSettings_ChooseAnotherMailBox_Content" xml:space="preserve">
-    <value>Choose Another MailBox</value>
-  </data>
-  <data name="OutlookSettingsView_TextBlock_OutlookProfileSettings_SelectMailBox_Text" xml:space="preserve">
-    <value>Select MailBox</value>
-  </data>
-  <data name="OutlookSettingsView_TextBlock_OutlookProfileSettings_SelectCalendar_Text" xml:space="preserve">
-    <value>Select Calendar</value>
   </data>
   <data name="OutlookSettingsView_Button_OutlookProfileSettings_ResetOutlookCalendar_Text" xml:space="preserve">
     <value>Reset Outlook Calendar</value>
   </data>
-  <data name="ProfileSettingsView_GroupBox_SyncProfile_Header" xml:space="preserve">
-    <value>Select Sync Profile</value>
+  <data name="OutlookSettingsView_CheckBox_OutlookSettings_EWS_Content" xml:space="preserve">
+    <value>Exchange Web Services</value>
   </data>
-  <data name="ProfileSettingsView_TextBlock_SelectProfile_Text" xml:space="preserve">
+  <data name="OutlookSettingsView_CheckBox_OutlookSettings_OutlookApplicaiton_Content" xml:space="preserve">
+    <value>Outlook Application</value>
+  </data>
+  <data name="OutlookSettingsView_GroupBox_ExchnageSettings_Header" xml:space="preserve">
+    <value>Exchange Server Settings</value>
+  </data>
+  <data name="OutlookSettingsView_GroupBox_OutlookProfileSettings_Header" xml:space="preserve">
+    <value>Profile &amp; MailBox Settings</value>
+  </data>
+  <data name="OutlookSettingsView_GroupBox_OutlookSettings_Header" xml:space="preserve">
+    <value>Outlook Settings</value>
+  </data>
+  <data name="OutlookSettingsView_RadioButton_OutlookProfileSettings_ChooseAnotherMailBox_Content" xml:space="preserve">
+    <value>Choose Another MailBox</value>
+  </data>
+  <data name="OutlookSettingsView_RadioButton_OutlookProfileSettings_ChooseProfile_Content" xml:space="preserve">
+    <value>Choose Profile</value>
+  </data>
+  <data name="OutlookSettingsView_RadioButton_OutlookProfileSettings_DefaultMailnCalendar_Content" xml:space="preserve">
+    <value>Default MailBox and Calendar</value>
+  </data>
+  <data name="OutlookSettingsView_RadioButton_OutlookProfileSettings_DefaultProfile_Content" xml:space="preserve">
+    <value>Default Profile</value>
+  </data>
+  <data name="OutlookSettingsView_RadioButton_OutlookProfileSettings_SelectProfile_Content" xml:space="preserve">
     <value>Select Profile</value>
   </data>
-  <data name="ProfileSettingsView_TabItem_Sync_Header" xml:space="preserve">
-    <value>Sync</value>
+  <data name="OutlookSettingsView_TextBlock_ExchnageSettings_Domain_Text" xml:space="preserve">
+    <value>Domain</value>
   </data>
-  <data name="ProfileSettingsView_TabItem_Outlook_Header" xml:space="preserve">
-    <value>Outlook</value>
+  <data name="OutlookSettingsView_TextBlock_ExchnageSettings_Password_Text" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="OutlookSettingsView_TextBlock_ExchnageSettings_SelectCalendar_Content" xml:space="preserve">
+    <value>Select Calendar</value>
+  </data>
+  <data name="OutlookSettingsView_TextBlock_ExchnageSettings_ServerUrl_Text" xml:space="preserve">
+    <value>Exchange Server Url</value>
+  </data>
+  <data name="OutlookSettingsView_TextBlock_ExchnageSettings_UserName_Text" xml:space="preserve">
+    <value>Username</value>
+  </data>
+  <data name="OutlookSettingsView_TextBlock_OutlookProfileSettings_ChooseProfile_Text" xml:space="preserve">
+    <value>Select Profile</value>
+  </data>
+  <data name="OutlookSettingsView_TextBlock_OutlookProfileSettings_SelectCalendar_Text" xml:space="preserve">
+    <value>Select Calendar</value>
+  </data>
+  <data name="OutlookSettingsView_TextBlock_OutlookProfileSettings_SelectMailBox_Text" xml:space="preserve">
+    <value>Select MailBox</value>
+  </data>
+  <data name="ProfileSettingsView_GroupBox_SyncProfile_Header" xml:space="preserve">
+    <value>Select Sync Profile</value>
   </data>
   <data name="ProfileSettingsView_TabItem_Google_Header" xml:space="preserve">
     <value>Google</value>
@@ -426,62 +414,89 @@
   <data name="ProfileSettingsView_TabItem_Options_Header" xml:space="preserve">
     <value>Options</value>
   </data>
+  <data name="ProfileSettingsView_TabItem_Outlook_Header" xml:space="preserve">
+    <value>Outlook</value>
+  </data>
+  <data name="ProfileSettingsView_TabItem_Sync_Header" xml:space="preserve">
+    <value>Sync</value>
+  </data>
+  <data name="ProfileSettingsView_TextBlock_SelectProfile_Text" xml:space="preserve">
+    <value>Select Profile</value>
+  </data>
+  <data name="SettingsView_Button_Save_Content" xml:space="preserve">
+    <value>SAVE</value>
+  </data>
+  <data name="SettingsView_TabItem_Application_Header" xml:space="preserve">
+    <value>Application</value>
+  </data>
   <data name="SettingsView_TabItem_Calendars_Header" xml:space="preserve">
     <value>Calendars</value>
   </data>
   <data name="SettingsView_TabItem_Manage_Header" xml:space="preserve">
     <value>Manage</value>
   </data>
-  <data name="SettingsView_TabItem_Application_Header" xml:space="preserve">
-    <value>Application</value>
+  <data name="ShellView_AboutButton_Content" xml:space="preserve">
+    <value>About</value>
   </data>
-  <data name="SettingsView_Button_Save_Content" xml:space="preserve">
-    <value>SAVE</value>
+  <data name="ShellView_AboutButton_ToolTip" xml:space="preserve">
+    <value>About Calendar Sync +</value>
   </data>
-  <data name="SyncSettingsView_GroupBox_CalendarSyncDirection_Header" xml:space="preserve">
-    <value>Calendar Sync Direction</value>
+  <data name="ShellView_ExitButton_Content" xml:space="preserve">
+    <value>Exit</value>
   </data>
-  <data name="SyncSettingsView_GroupBox_SyncRange_Header" xml:space="preserve">
-    <value>Sync Range</value>
+  <data name="ShellView_ExitButton_ToolTip" xml:space="preserve">
+    <value>Exit Application</value>
   </data>
-  <data name="SyncSettingsView_GroupBox_Recurrence_Header" xml:space="preserve">
-    <value>Recurrence</value>
+  <data name="ShellView_Flyouts_About_Header" xml:space="preserve">
+    <value>About</value>
   </data>
-  <data name="SyncSettingsView_ContentControl_SyncFrequencyHelp_Tooltip" xml:space="preserve">
-    <value>Select Sync Frequecy</value>
+  <data name="ShellView_Flyouts_Help_Header" xml:space="preserve">
+    <value>Help</value>
   </data>
-  <data name="SyncSettingsView_RadioButton_SyncFullCalendar_Content" xml:space="preserve">
-    <value>Sync Full Calendar</value>
+  <data name="ShellView_Flyouts_Settings_Header" xml:space="preserve">
+    <value>Preferences</value>
   </data>
-  <data name="SyncSettingsView_RadioButton_SyncDaysInRange_Content" xml:space="preserve">
-    <value>Sync Days in Range</value>
+  <data name="ShellView_HelpButton_Content" xml:space="preserve">
+    <value>Help</value>
   </data>
-  <data name="SyncSettingsView_RadioButton_SyncFixedDateRange_Content" xml:space="preserve">
-    <value>Sync Fixed Date Range</value>
+  <data name="ShellView_HelpButton_ToolTip" xml:space="preserve">
+    <value>Help</value>
   </data>
-  <data name="SyncSettingsView_TextBlock_DaysInPast_Text" xml:space="preserve">
-    <value>No of days in past</value>
+  <data name="ShellView_RightWindowCommands_Download_Tooltip" xml:space="preserve">
+    <value>New version available for download</value>
   </data>
-  <data name="SyncSettingsView_TextBlock_DaysInFuture_Text" xml:space="preserve">
-    <value>No of days in future</value>
+  <data name="ShellView_SettingsButton_Content" xml:space="preserve">
+    <value>Preferences</value>
   </data>
-  <data name="SyncSettingsView_TextBlock_StartDate_Text" xml:space="preserve">
-    <value>Select Start Date</value>
+  <data name="ShellView_SettingsButton_ToolTip" xml:space="preserve">
+    <value>Configure Calendar Sync +</value>
   </data>
-  <data name="SyncSettingsView_TextBlock_EndDate_Text" xml:space="preserve">
-    <value>Select End date</value>
+  <data name="ShellView_WhatsNewButton_Content" xml:space="preserve">
+    <value>What's New</value>
   </data>
-  <data name="SyncSettingsView_TextBlock_SelectMasterCalendar_Text" xml:space="preserve">
-    <value>Select Master Calendar</value>
+  <data name="ShellView_Window_Title" xml:space="preserve">
+    <value>Calendar Sync +</value>
   </data>
-  <data name="SyncSettingsView_RadioButton_OutlookMaster_Content" xml:space="preserve">
-    <value>Outlook</value>
+  <data name="String" xml:space="preserve">
+    <value>Select Outlook &lt;- Google, to sync your Google calendar to an Outlook calendar</value>
   </data>
-  <data name="SyncSettingsView_RadioButton_GoogleMaster_Content" xml:space="preserve">
-    <value>Google</value>
+  <data name="String1" xml:space="preserve">
+    <value>Select Outlook &lt;-&gt; Google, to sync our Outlook and Google calendar with each other</value>
   </data>
-  <data name="SyncSettingsView_TextBlock_CalendarSyncMode_Text" xml:space="preserve">
-    <value>Calendar Sync Mode</value>
+  <data name="SyncSettingsView_ContentControl_HelpCalendarSyncMode_Tooltip" xml:space="preserve">
+    <value>Select Outlook -&gt; Google, to sync your Outlook calendar to a Google Calendar</value>
+  </data>
+  <data name="SyncSettingsView_ContentControl_HelpDailyTimeOfDay_Tooltip" xml:space="preserve">
+    <value>Set the time of day for daily sync for</value>
+  </data>
+  <data name="SyncSettingsView_ContentControl_HelpDaysInFuture_Tooltip" xml:space="preserve">
+    <value>Select the number of days in future for which you wish to sync calendar calendarAppointments</value>
+  </data>
+  <data name="SyncSettingsView_ContentControl_HelpDaysInPast_Tooltip" xml:space="preserve">
+    <value>Select the number of days in past for which you wish to sync calendar calendarAppointments</value>
+  </data>
+  <data name="SyncSettingsView_ContentControl_HelpEndDate_Tooltip" xml:space="preserve">
+    <value>Select the end date for which you wish to sync calendar</value>
   </data>
   <data name="SyncSettingsView_ContentControl_HelpIntervalHours_Tooltip" xml:space="preserve">
     <value>Select number of hour after in which you need  to sync calendar</value>
@@ -489,49 +504,8 @@
   <data name="SyncSettingsView_ContentControl_HelpIntervalMinutes_Tooltip" xml:space="preserve">
     <value>Select number of minutes after in which you need  to sync calendar</value>
   </data>
-  <data name="SyncSettingsView_ContentControl_HelpDailyTimeOfDay_Tooltip" xml:space="preserve">
-    <value>Set the time of day for daily sync for</value>
-  </data>
-  <data name="SyncSettingsView_ContentControl_HelpWeeklyRecurrence_Tooltip" xml:space="preserve">
-    <value>Allow sync frequency to set on weekly basis</value>
-  </data>
-  <data name="SyncSettingsView_ContentControl_HelpWeeklyTimeOfDay_Tooltip" xml:space="preserve">
-    <value>Weekly time of day help</value>
-  </data>
-  <data name="SyncSettingsView_TextBlock_IntervalHours_Text" xml:space="preserve">
-    <value>Hours</value>
-  </data>
-  <data name="SyncSettingsView_TextBlock_IntervalMinutes_Text" xml:space="preserve">
-    <value>Minutes</value>
-  </data>
-  <data name="SyncSettingsView_RadioButton_DailyEveryDay_Content" xml:space="preserve">
-    <value>Every</value>
-  </data>
-  <data name="SyncSettingsView_TextBlock_DailyDays_Text" xml:space="preserve">
-    <value>day(s)</value>
-  </data>
-  <data name="SyncSettingsView_RadioButto_DailyWeekday_Content" xml:space="preserve">
-    <value>Every Weekday</value>
-  </data>
-  <data name="SyncSettingsView_TextBlock_DailyTimeOfDay_Text" xml:space="preserve">
-    <value>Time of Day</value>
-  </data>
-  <data name="SyncSettingsView_TextBlock_WeeklyRecur_Text" xml:space="preserve">
-    <value>Recur Every</value>
-  </data>
-  <data name="SyncSettingsView_TextBlock_WeeklyWeekday_Text" xml:space="preserve">
-    <value>week(s) on:</value>
-  </data>
-  <data name="SyncSettingsView_TextBlock_WeeklyTimeOfDay_Text" xml:space="preserve">
-    <value>Time of Day</value>
-  </data>
-  <data name="SyncSettingsView_ContentControl_HelpCalendarSyncMode_Tooltip" xml:space="preserve">
-    <value>Select Outlook -&gt; Google, to sync your Outlook calendar to a Google Calendar
-Select Outlook &lt;- Google, to sync your Google calendar to an Outlook calendar
-Select Outlook &lt;-&gt; Google, to sync our Outlook and Google calendar with each other</value>
-  </data>
-  <data name="SyncSettingsView_ContentControl_HelpSyncFullCalendar_Tooltip" xml:space="preserve">
-    <value>Sync your calendar from 1st Jan'1990 to 10 years from today</value>
+  <data name="SyncSettingsView_ContentControl_HelpStartDate_Tooltip" xml:space="preserve">
+    <value>Select the start date from which you wish to sync calendar</value>
   </data>
   <data name="SyncSettingsView_ContentControl_HelpSyncDaysInRange_Tooltip" xml:space="preserve">
     <value>Allows you to specify the number of days you need to sync in past and future. </value>
@@ -539,64 +513,94 @@ Select Outlook &lt;-&gt; Google, to sync our Outlook and Google calendar with ea
   <data name="SyncSettingsView_ContentControl_HelpSyncFixedDateRange_Tooltip" xml:space="preserve">
     <value>Allows you to specify a fixed date range to sync you calendar</value>
   </data>
-  <data name="SyncSettingsView_ContentControl_HelpDaysInPast_Tooltip" xml:space="preserve">
-    <value>Select the number of days in past for which you wish to sync calendar calendarAppointments</value>
+  <data name="SyncSettingsView_ContentControl_HelpSyncFullCalendar_Tooltip" xml:space="preserve">
+    <value>Sync your calendar from 1st Jan'1990 to 10 years from today</value>
   </data>
-  <data name="SyncSettingsView_ContentControl_HelpDaysInFuture_Tooltip" xml:space="preserve">
-    <value>Select the number of days in future for which you wish to sync calendar calendarAppointments</value>
+  <data name="SyncSettingsView_ContentControl_HelpWeeklyRecurrence_Tooltip" xml:space="preserve">
+    <value>Allow sync frequency to set on weekly basis</value>
   </data>
-  <data name="SyncSettingsView_ContentControl_HelpStartDate_Tooltip" xml:space="preserve">
-    <value>Select the start date from which you wish to sync calendar</value>
+  <data name="SyncSettingsView_ContentControl_HelpWeeklyTimeOfDay_Tooltip" xml:space="preserve">
+    <value>Weekly time of day help</value>
   </data>
-  <data name="SyncSettingsView_ContentControl_HelpEndDate_Tooltip" xml:space="preserve">
-    <value>Select the end date for which you wish to sync calendar</value>
+  <data name="SyncSettingsView_ContentControl_SyncFrequencyHelp_Tooltip" xml:space="preserve">
+    <value>Select Sync Frequecy</value>
   </data>
-  <data name="SystemtrayNotifierView_TextBlock_TaskBarIcon_MaximizeMessage_ToolTip" xml:space="preserve">
-    <value>Double click to maximize the application.</value>
+  <data name="SyncSettingsView_GroupBox_CalendarSyncDirection_Header" xml:space="preserve">
+    <value>Calendar Sync Direction</value>
   </data>
-  <data name="SystemtrayNotifierView_MenuItem_TaskBarIcon_ShowWindowMessage_Header" xml:space="preserve">
-    <value>Show Window</value>
+  <data name="SyncSettingsView_GroupBox_Recurrence_Header" xml:space="preserve">
+    <value>Recurrence</value>
+  </data>
+  <data name="SyncSettingsView_GroupBox_SyncRange_Header" xml:space="preserve">
+    <value>Sync Range</value>
+  </data>
+  <data name="SyncSettingsView_RadioButton_DailyEveryDay_Content" xml:space="preserve">
+    <value>Every</value>
+  </data>
+  <data name="SyncSettingsView_RadioButton_GoogleMaster_Content" xml:space="preserve">
+    <value>Google</value>
+  </data>
+  <data name="SyncSettingsView_RadioButton_OutlookMaster_Content" xml:space="preserve">
+    <value>Outlook</value>
+  </data>
+  <data name="SyncSettingsView_RadioButton_SyncDaysInRange_Content" xml:space="preserve">
+    <value>Sync Days in Range</value>
+  </data>
+  <data name="SyncSettingsView_RadioButton_SyncFixedDateRange_Content" xml:space="preserve">
+    <value>Sync Fixed Date Range</value>
+  </data>
+  <data name="SyncSettingsView_RadioButton_SyncFullCalendar_Content" xml:space="preserve">
+    <value>Sync Full Calendar</value>
+  </data>
+  <data name="SyncSettingsView_RadioButto_DailyWeekday_Content" xml:space="preserve">
+    <value>Every Weekday</value>
+  </data>
+  <data name="SyncSettingsView_TextBlock_CalendarSyncMode_Text" xml:space="preserve">
+    <value>Calendar Sync Mode</value>
+  </data>
+  <data name="SyncSettingsView_TextBlock_DailyDays_Text" xml:space="preserve">
+    <value>day(s)</value>
+  </data>
+  <data name="SyncSettingsView_TextBlock_DailyTimeOfDay_Text" xml:space="preserve">
+    <value>Time of Day</value>
+  </data>
+  <data name="SyncSettingsView_TextBlock_DaysInFuture_Text" xml:space="preserve">
+    <value>No of days in future</value>
+  </data>
+  <data name="SyncSettingsView_TextBlock_DaysInPast_Text" xml:space="preserve">
+    <value>No of days in past</value>
+  </data>
+  <data name="SyncSettingsView_TextBlock_EndDate_Text" xml:space="preserve">
+    <value>Select End date</value>
+  </data>
+  <data name="SyncSettingsView_TextBlock_IntervalHours_Text" xml:space="preserve">
+    <value>Hours</value>
+  </data>
+  <data name="SyncSettingsView_TextBlock_IntervalMinutes_Text" xml:space="preserve">
+    <value>Minutes</value>
+  </data>
+  <data name="SyncSettingsView_TextBlock_SelectMasterCalendar_Text" xml:space="preserve">
+    <value>Select Master Calendar</value>
+  </data>
+  <data name="SyncSettingsView_TextBlock_StartDate_Text" xml:space="preserve">
+    <value>Select Start Date</value>
+  </data>
+  <data name="SyncSettingsView_TextBlock_WeeklyRecur_Text" xml:space="preserve">
+    <value>Recur Every</value>
+  </data>
+  <data name="SyncSettingsView_TextBlock_WeeklyTimeOfDay_Text" xml:space="preserve">
+    <value>Time of Day</value>
+  </data>
+  <data name="SyncSettingsView_TextBlock_WeeklyWeekday_Text" xml:space="preserve">
+    <value>week(s) on:</value>
   </data>
   <data name="SystemtrayNotifierView_MenuItem_TaskBarIcon_ExitApplicaiton_Header" xml:space="preserve">
     <value>Exit</value>
   </data>
-  <data name="OptionsSettingsView_ContentControl_OtherOptions_KeepLastModified_Content" xml:space="preserve">
-    <value>In Bidirectional Sync keep the Latest copy of the appointment</value>
+  <data name="SystemtrayNotifierView_MenuItem_TaskBarIcon_ShowWindowMessage_Header" xml:space="preserve">
+    <value>Show Window</value>
   </data>
-  <data name="GoogleSettingsView_CheckBox_ManualAuth_Content" xml:space="preserve">
-    <value>Allow Manual Google Code Entry</value>
-  </data>
-  <data name="HomeView_GroupBox_Status_Header" xml:space="preserve">
-    <value>Sync Status</value>
-  </data>
-  <data name="HomeView_GroupBox_Schedules_Header" xml:space="preserve">
-    <value>Next Scheduled</value>
-  </data>
-  <data name="OptionsSettingsView_CheckBox_OtherOptions_MergeExistingEntries_Content" xml:space="preserve">
-    <value>Update Existing Entries</value>
-  </data>
-  <data name="OptionsSettingsView_ContentControl_OtherOptions_MergeExistingEntries_Content" xml:space="preserve">
-    <value>Update existing entries for any changes, instead of adding and deleting for updation</value>
-  </data>
-  <data name="AdvancedSettingsView_Checkbox_AlphaCheckForUpdates_Content" xml:space="preserve">
-    <value>Include Alpha Releases</value>
-  </data>
-  <data name="AdvancedSettingsView_ContentControl_AlphaCheckForUpdates_Tooltip" xml:space="preserve">
-    <value>Check for alpha releases of the application</value>
-  </data>
-  <data name="HomeView_Button_ClearLog_Content" xml:space="preserve">
-    <value>Clear Sync Status</value>
-  </data>
-  <data name="ShellView_WhatsNewButton_Content" xml:space="preserve">
-    <value>What's New</value>
-  </data>
-  <data name="HomeView_Button_DeleteLog_Content" xml:space="preserve">
-    <value>Delete Application Log</value>
-  </data>
-  <data name="AdvancedSettingsView_Checkbox_StartMinimized_Content" xml:space="preserve">
-    <value>Start minimized</value>
-  </data>
-  <data name="AdvancedSettingsView_ContentControl_HelpButtonStartMinimized_Tooltip" xml:space="preserve">
-    <value>Always starts application in the minimized to tray state.</value>
+  <data name="SystemtrayNotifierView_TextBlock_TaskBarIcon_MaximizeMessage_ToolTip" xml:space="preserve">
+    <value>Double click to maximize the application.</value>
   </data>
 </root>

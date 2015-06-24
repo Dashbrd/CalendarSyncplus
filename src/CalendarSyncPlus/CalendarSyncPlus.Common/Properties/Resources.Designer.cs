@@ -1150,9 +1150,25 @@ namespace CalendarSyncPlus.Common.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Select Outlook -&gt; Google, to sync your Outlook calendar to a Google Calendar
-        ///Select Outlook &lt;- Google, to sync your Google calendar to an Outlook calendar
-        ///Select Outlook &lt;-&gt; Google, to sync our Outlook and Google calendar with each other.
+        ///   Looks up a localized string similar to Select Outlook &lt;- Google, to sync your Google calendar to an Outlook calendar.
+        /// </summary>
+        public static string String {
+            get {
+                return ResourceManager.GetString("String", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select Outlook &lt;-&gt; Google, to sync our Outlook and Google calendar with each other.
+        /// </summary>
+        public static string String1 {
+            get {
+                return ResourceManager.GetString("String1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select Outlook -&gt; Google, to sync your Outlook calendar to a Google Calendar.
         /// </summary>
         public static string SyncSettingsView_ContentControl_HelpCalendarSyncMode_Tooltip {
             get {
