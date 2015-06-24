@@ -1,4 +1,5 @@
 ﻿#region File Header
+
 // /******************************************************************************
 //  * 
 //  *      Copyright (C) Ankesh Dave 2015 All Rights Reserved. Confidential
@@ -13,6 +14,7 @@
 //  *      FileName:       LogParser.cs
 //  * 
 //  *****************************************************************************/
+
 #endregion
 
 using System;
@@ -30,9 +32,14 @@ namespace CalendarSyncPlus.Common.Log.Parser
     {
         /// <summary>
         /// </summary>
-        /// <param name="filePath">Path of Log File, Should be in XmlLayoutLog4j Format</param>
-        /// <param name="lastIndexCount">Last Index of LogEntry, Default is Zero</param>
-        /// <returns></returns>
+        /// <param name="filePath">
+        ///     Path of Log File, Should be in XmlLayoutLog4j Format
+        /// </param>
+        /// <param name="lastIndexCount">
+        ///     Last Index of LogEntry, Default is Zero
+        /// </param>
+        /// <returns>
+        /// </returns>
         public IEnumerable<LogItem> Parse(string filePath, int lastIndexCount = 1)
         {
             var logItems = new List<LogItem>();
@@ -41,7 +48,7 @@ namespace CalendarSyncPlus.Common.Log.Parser
 
             using (var stringReader = new StringReader(fileText))
             {
-                using (var xmlReader = new XmlTextReader(stringReader) { Namespaces = false, })
+                using (var xmlReader = new XmlTextReader(stringReader) {Namespaces = false})
                 {
                     try
                     {
@@ -147,13 +154,13 @@ namespace CalendarSyncPlus.Common.Log.Parser
             return logItems;
         }
 
-        string ParseClassName(string attributeValue)
+        private string ParseClassName(string attributeValue)
         {
             if (!string.IsNullOrEmpty(attributeValue))
             {
                 if (attributeValue.Contains("."))
                 {
-                    return attributeValue.Split(new string[] {"."}, StringSplitOptions.RemoveEmptyEntries).Last();
+                    return attributeValue.Split(new[] {"."}, StringSplitOptions.RemoveEmptyEntries).Last();
                 }
             }
             return attributeValue;
@@ -192,16 +199,18 @@ namespace CalendarSyncPlus.Common.Log.Parser
         }
 
         /// <summary>
-        /// Read File
+        ///     Read File
         /// </summary>
         /// <param name="filePath">Path of File To Read</param>
-        /// <returns></returns>
+        /// <returns>
+        /// </returns>
         private string ReadFile(string filePath)
         {
-            string fileText = String.Empty;
+            var fileText = String.Empty;
             try
             {
-                using (var stream = new FileStream(filePath, FileMode.OpenOrCreate, FileAccess.Read, FileShare.ReadWrite))
+                using (
+                    var stream = new FileStream(filePath, FileMode.OpenOrCreate, FileAccess.Read, FileShare.ReadWrite))
                 {
                     using (var reader = new StreamReader(stream))
                     {

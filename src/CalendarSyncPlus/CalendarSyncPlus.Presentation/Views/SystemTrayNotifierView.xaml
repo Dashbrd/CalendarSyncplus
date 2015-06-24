@@ -33,8 +33,10 @@
     </tb:TaskbarIcon.TrayToolTip>
     <tb:TaskbarIcon.ContextMenu>
         <ContextMenu>
-            <MenuItem Command="{Binding ShowApplicationCommand}" Header="{localizeExtension:LocText Key=SystemtrayNotifierView_MenuItem_TaskBarIcon_ShowWindowMessage_Header}" />
-            <MenuItem Command="{Binding ExitCommand}" Header="{localizeExtension:LocText Key=SystemtrayNotifierView_MenuItem_TaskBarIcon_ExitApplicaiton_Header}" />
+            <MenuItem Command="{Binding ShowApplicationCommand}"
+                      Header="{localizeExtension:LocText Key=SystemtrayNotifierView_MenuItem_TaskBarIcon_ShowWindowMessage_Header}" />
+            <MenuItem Command="{Binding ExitCommand}"
+                      Header="{localizeExtension:LocText Key=SystemtrayNotifierView_MenuItem_TaskBarIcon_ExitApplicaiton_Header}" />
         </ContextMenu>
     </tb:TaskbarIcon.ContextMenu>
 </tb:TaskbarIcon>

@@ -1,4 +1,5 @@
 ﻿#region File Header
+
 // /******************************************************************************
 //  * 
 //  *      Copyright (C) Ankesh Dave 2015 All Rights Reserved. Confidential
@@ -13,6 +14,7 @@
 //  *      FileName:       EWSCalendar.cs
 //  * 
 //  *****************************************************************************/
+
 #endregion
 
 using System.Waf.Foundation;

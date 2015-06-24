@@ -16,48 +16,49 @@ namespace CalendarSyncPlus.Domain.Models
         ///     Id to identify the appointment
         /// </summary>
         private string _appointmentId;
+
         /// <summary>
-        /// 
         /// </summary>
         private string _calendarId;
+
+        private string _childId;
+
         /// <summary>
-        /// 
         /// </summary>
         private DateTime? _created;
 
         /// <summary>
         /// </summary>
         private string _description;
+
         /// <summary>
-        /// 
         /// </summary>
         private DateTime? _endTime;
+
         /// <summary>
-        /// 
         /// </summary>
         private Dictionary<string, string> _extendedProperties;
+
         /// <summary>
-        /// 
         /// </summary>
         private bool _isRecurring;
+
         /// <summary>
-        /// 
         /// </summary>
         private DateTime? _lastModified;
+
         private string _location;
+        private MeetingStatusEnum _meetingStatus;
+        private DateTime? _oldStartTime;
         private List<Recipient> _optionalAttendees;
         private Recipient _organizer;
         private string _privacy;
-        private List<Recipient> _recipients;
         private int _reminderMinutesBeforeStart;
         private bool _reminderSet;
         private List<Recipient> _requiredAttendees;
         private string _sourceId;
-        private string _childId;
         private DateTime? _startTime;
         private string _subject;
-        private MeetingStatusEnum _meetingStatus;
-        private DateTime? _oldStartTime;
 
         public Appointment(string description, string location, string subject, DateTime? endTime, DateTime? startTime,
             string appointmentId)
@@ -155,7 +156,6 @@ namespace CalendarSyncPlus.Domain.Models
                 return "";
             }
         }
-
 
         public string Rfc339FormatEndTime
         {
@@ -268,9 +268,8 @@ namespace CalendarSyncPlus.Domain.Models
                 return false;
             }
             // Instances are considered equal if the ToString matches.
-            return this.ToString().Equals(appointment.ToString());
+            return ToString().Equals(appointment.ToString());
         }
-
 
         public override int GetHashCode()
         {

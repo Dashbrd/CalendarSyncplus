@@ -11,6 +11,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Documents;
@@ -21,13 +22,87 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
     // DependencyProperty
 
     // TextElement
-  
+
     /// <summary>
-    /// HtmlToXamlConverter is a static class that takes an HTML string
-    /// and converts it into XAML
+    ///     <see cref="HtmlToXamlConverter" /> is a <see langword="static" /> class
+    ///     that takes an HTML string and converts it into XAML
     /// </summary>
     public static class HtmlToXamlConverter
     {
+        // ----------------------------------------------------------------
+        //
+        // Internal Constants
+        //
+        // ----------------------------------------------------------------
+
+        // The constants reprtesent all Xaml names used in a conversion
+        public const string Xaml_FlowDocument = "FlowDocument";
+        public const string Xaml_Run = "Run";
+        public const string Xaml_Span = "Span";
+        public const string Xaml_Hyperlink = "Hyperlink";
+        public const string Xaml_Hyperlink_NavigateUri = "NavigateUri";
+        public const string Xaml_Hyperlink_TargetName = "TargetName";
+        public const string Xaml_Section = "Section";
+        public const string Xaml_List = "List";
+        public const string Xaml_List_MarkerStyle = "MarkerStyle";
+        public const string Xaml_List_MarkerStyle_None = "None";
+        public const string Xaml_List_MarkerStyle_Decimal = "Decimal";
+        public const string Xaml_List_MarkerStyle_Disc = "Disc";
+        public const string Xaml_List_MarkerStyle_Circle = "Circle";
+        public const string Xaml_List_MarkerStyle_Square = "Square";
+        public const string Xaml_List_MarkerStyle_Box = "Box";
+        public const string Xaml_List_MarkerStyle_LowerLatin = "LowerLatin";
+        public const string Xaml_List_MarkerStyle_UpperLatin = "UpperLatin";
+        public const string Xaml_List_MarkerStyle_LowerRoman = "LowerRoman";
+        public const string Xaml_List_MarkerStyle_UpperRoman = "UpperRoman";
+        public const string Xaml_ListItem = "ListItem";
+        public const string Xaml_LineBreak = "LineBreak";
+        public const string Xaml_Paragraph = "Paragraph";
+        public const string Xaml_Margin = "Margin";
+        public const string Xaml_Padding = "Padding";
+        public const string Xaml_BorderBrush = "BorderBrush";
+        public const string Xaml_BorderThickness = "BorderThickness";
+        public const string Xaml_Table = "Table";
+        public const string Xaml_TableColumn = "TableColumn";
+        public const string Xaml_TableRowGroup = "TableRowGroup";
+        public const string Xaml_TableRow = "TableRow";
+        public const string Xaml_TableCell = "TableCell";
+        public const string Xaml_TableCell_BorderThickness = "BorderThickness";
+        public const string Xaml_TableCell_BorderBrush = "BorderBrush";
+        public const string Xaml_TableCell_ColumnSpan = "ColumnSpan";
+        public const string Xaml_TableCell_RowSpan = "RowSpan";
+        public const string Xaml_Width = "Width";
+        public const string Xaml_Brushes_Black = "Black";
+        public const string Xaml_FontFamily = "FontFamily";
+        public const string Xaml_FontSize = "FontSize";
+        public const string Xaml_FontSize_XXLarge = "22pt"; // "XXLarge";
+        public const string Xaml_FontSize_XLarge = "20pt"; // "XLarge";
+        public const string Xaml_FontSize_Large = "18pt"; // "Large";
+        public const string Xaml_FontSize_Medium = "16pt"; // "Medium";
+        public const string Xaml_FontSize_Small = "12pt"; // "Small";
+        public const string Xaml_FontSize_XSmall = "10pt"; // "XSmall";
+        public const string Xaml_FontSize_XXSmall = "8pt"; // "XXSmall";
+        public const string Xaml_FontWeight = "FontWeight";
+        public const string Xaml_FontWeight_Bold = "Bold";
+        public const string Xaml_FontStyle = "FontStyle";
+        public const string Xaml_Foreground = "Foreground";
+        public const string Xaml_Background = "Background";
+        public const string Xaml_TextDecorations = "TextDecorations";
+        public const string Xaml_TextDecorations_Underline = "Underline";
+        public const string Xaml_TextIndent = "TextIndent";
+        public const string Xaml_TextAlignment = "TextAlignment";
+        // ---------------------------------------------------------------------
+        //
+        // Private Fields
+        //
+        // ---------------------------------------------------------------------
+
+        #region Private Fields
+
+        private static readonly string _xamlNamespace = "http://schemas.microsoft.com/winfx/2006/xaml/presentation";
+
+        #endregion Private Fields
+
         // ---------------------------------------------------------------------
         //
         // Internal Methods
@@ -37,36 +112,38 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
         #region Internal Methods
 
         /// <summary>
-        /// Converts an html string into xaml string.
+        ///     Converts an html string into xaml string.
         /// </summary>
         /// <param name="htmlString">
-        /// Input html which may be badly formated xml.
+        ///     Input html which may be badly formated xml.
         /// </param>
         /// <param name="asFlowDocument">
-        /// true indicates that we need a FlowDocument as a root element;
-        /// false means that Section or Span elements will be used
-        /// dependeing on StartFragment/EndFragment comments locations.
+        ///     <see langword="true" /> indicates that we need a FlowDocument as a
+        ///     root element; <see langword="false" /> means that Section or Span
+        ///     elements will be used dependeing on StartFragment/EndFragment
+        ///     comments locations.
         /// </param>
         /// <returns>
-        /// Well-formed xml representing XAML equivalent for the input html string.
+        ///     Well-formed xml representing XAML equivalent for the input html
+        ///     string.
         /// </returns>
         public static string ConvertHtmlToXaml(string htmlString, bool asFlowDocument)
         {
             // Create well-formed Xml from Html string
-            XmlElement htmlElement = HtmlParser.ParseHtml(htmlString);
+            var htmlElement = HtmlParser.ParseHtml(htmlString);
 
             // Decide what name to use as a root
-            string rootElementName = asFlowDocument ? HtmlToXamlConverter.Xaml_FlowDocument : HtmlToXamlConverter.Xaml_Section;
+            var rootElementName = asFlowDocument ? Xaml_FlowDocument : Xaml_Section;
 
             // Create an XmlDocument for generated xaml
-            XmlDocument xamlTree = new XmlDocument();
-            XmlElement xamlFlowDocumentElement = xamlTree.CreateElement(null, rootElementName, _xamlNamespace);
+            var xamlTree = new XmlDocument();
+            var xamlFlowDocumentElement = xamlTree.CreateElement(null, rootElementName, _xamlNamespace);
 
             // Extract style definitions from all STYLE elements in the document
-            CssStylesheet stylesheet = new CssStylesheet(htmlElement);
+            var stylesheet = new CssStylesheet(htmlElement);
 
             // Source context is a stack of all elements - ancestors of a parentElement
-            List<XmlElement> sourceContext = new List<XmlElement>(10);
+            var sourceContext = new List<XmlElement>(10);
 
             // Clear fragment parent
             InlineFragmentParentElement = null;
@@ -82,26 +159,27 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
 
             // Return a string representing resulting Xaml
             xamlFlowDocumentElement.SetAttribute("xml:space", "preserve");
-            string xaml = xamlFlowDocumentElement.OuterXml;
+            var xaml = xamlFlowDocumentElement.OuterXml;
 
             return xaml;
         }
 
         /// <summary>
-        /// Returns a value for an attribute by its name (ignoring casing)
+        ///     Returns a value for an attribute by its name (ignoring casing)
         /// </summary>
         /// <param name="element">
-        /// XmlElement in which we are trying to find the specified attribute
+        ///     XmlElement in which we are trying to find the specified attribute
         /// </param>
         /// <param name="attributeName">
-        /// String representing the attribute name to be searched for
+        ///     String representing the attribute name to be searched for
         /// </param>
-        /// <returns></returns>
+        /// <returns>
+        /// </returns>
         public static string GetAttribute(XmlElement element, string attributeName)
         {
             attributeName = attributeName.ToLower();
 
-            for (int i = 0; i < element.Attributes.Count; i++)
+            for (var i = 0; i < element.Attributes.Count; i++)
             {
                 if (element.Attributes[i].Name.ToLower() == attributeName)
                 {
@@ -113,10 +191,10 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
         }
 
         /// <summary>
-        /// Returns string extracted from quotation marks
+        ///     Returns string extracted from quotation marks
         /// </summary>
         /// <param name="value">
-        /// String representing value enclosed in quotation marks
+        ///     String representing value enclosed in quotation marks
         /// </param>
         internal static string UnQuote(string value)
         {
@@ -138,50 +216,56 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
         #region Private Methods
 
         /// <summary>
-        /// Analyzes the given htmlElement expecting it to be converted
-        /// into some of xaml Block elements and adds the converted block
-        /// to the children collection of xamlParentElement.
-        /// 
-        /// Analyzes the given XmlElement htmlElement, recognizes it as some HTML element
-        /// and adds it as a child to a xamlParentElement.
-        /// In some cases several following siblings of the given htmlElement
-        /// will be consumed too (e.g. LIs encountered without wrapping UL/OL, 
-        /// which must be collected together and wrapped into one implicit List element).
+        ///     <para>
+        ///         Analyzes the given htmlElement expecting it to be converted into
+        ///         some of xaml Block elements and adds the converted block to the
+        ///         children collection of xamlParentElement.
+        ///     </para>
+        ///     <para>
+        ///         Analyzes the given XmlElement htmlElement, recognizes it as some
+        ///         HTML element and adds it as a child to a xamlParentElement. In some
+        ///         cases several following siblings of the given htmlElement will be
+        ///         consumed too (e.g. LIs encountered without wrapping UL/OL, which
+        ///         must be collected together and wrapped into one
+        ///         <see langword="implicit" /> List element).
+        ///     </para>
         /// </summary>
         /// <param name="xamlParentElement">
-        /// Parent xaml element, to which new converted element will be added
+        ///     Parent xaml element, to which new converted element will be added
         /// </param>
         /// <param name="htmlElement">
-        /// Source html element subject to convert to xaml.
+        ///     Source html element subject to convert to xaml.
         /// </param>
         /// <param name="inheritedProperties">
-        /// Properties inherited from an outer context.
+        ///     Properties inherited from an outer context.
         /// </param>
         /// <param name="stylesheet"></param>
         /// <param name="sourceContext"></param>
         /// <returns>
-        /// Last processed html node. Normally it should be the same htmlElement
-        /// as was passed as a paramater, but in some irregular cases
-        /// it could one of its following siblings.
-        /// The caller must use this node to get to next sibling from it.
+        ///     Last processed html node. Normally it should be the same htmlElement
+        ///     as was passed as a paramater, but in some irregular cases it could
+        ///     one of its following siblings. The caller must use this node to get
+        ///     to next sibling from it.
         /// </returns>
-        private static XmlNode AddBlock(XmlElement xamlParentElement, XmlNode htmlNode, Hashtable inheritedProperties, CssStylesheet stylesheet, List<XmlElement> sourceContext)
+        private static XmlNode AddBlock(XmlElement xamlParentElement, XmlNode htmlNode, Hashtable inheritedProperties,
+            CssStylesheet stylesheet, List<XmlElement> sourceContext)
         {
             if (htmlNode is XmlComment)
             {
-                DefineInlineFragmentParent((XmlComment)htmlNode, /*xamlParentElement:*/null);
+                DefineInlineFragmentParent((XmlComment) htmlNode, /*xamlParentElement:*/null);
             }
             else if (htmlNode is XmlText)
             {
-                htmlNode = AddImplicitParagraph(xamlParentElement, htmlNode, inheritedProperties, stylesheet, sourceContext);
+                htmlNode = AddImplicitParagraph(xamlParentElement, htmlNode, inheritedProperties, stylesheet,
+                    sourceContext);
             }
             else if (htmlNode is XmlElement)
             {
                 // Identify element name
-                XmlElement htmlElement = (XmlElement)htmlNode;
+                var htmlElement = (XmlElement) htmlNode;
 
-                string htmlElementName = htmlElement.LocalName; // Keep the name case-sensitive to check xml names
-                string htmlElementNamespace = htmlElement.NamespaceURI;
+                var htmlElementName = htmlElement.LocalName; // Keep the name case-sensitive to check xml names
+                var htmlElementNamespace = htmlElement.NamespaceURI;
 
                 if (htmlElementNamespace != HtmlParser.XhtmlNamespace)
                 {
@@ -241,7 +325,8 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
                     case "li":
                         // LI outside of OL/UL
                         // Collect all sibling LIs, wrap them into a List and then proceed with the element following the last of LIs
-                        htmlNode = AddOrphanListItems(xamlParentElement, htmlElement, inheritedProperties, stylesheet, sourceContext);
+                        htmlNode = AddOrphanListItems(xamlParentElement, htmlElement, inheritedProperties, stylesheet,
+                            sourceContext);
                         break;
 
                     case "img":
@@ -276,7 +361,8 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
 
                     default:
                         // Wrap a sequence of inlines into an implicit paragraph
-                        htmlNode = AddImplicitParagraph(xamlParentElement, htmlElement, inheritedProperties, stylesheet, sourceContext);
+                        htmlNode = AddImplicitParagraph(xamlParentElement, htmlElement, inheritedProperties, stylesheet,
+                            sourceContext);
                         break;
                 }
 
@@ -298,13 +384,15 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
         private static void AddBreak(XmlElement xamlParentElement, string htmlElementName)
         {
             // Create new xaml element corresponding to this html element
-            XmlElement xamlLineBreak = xamlParentElement.OwnerDocument.CreateElement(/*prefix:*/null, /*localName:*/HtmlToXamlConverter.Xaml_LineBreak, _xamlNamespace);
+            var xamlLineBreak = xamlParentElement.OwnerDocument.CreateElement( /*prefix:*/
+                null, /*localName:*/Xaml_LineBreak, _xamlNamespace);
             xamlParentElement.AppendChild(xamlLineBreak);
             if (htmlElementName == "hr")
             {
-                XmlText xamlHorizontalLine = xamlParentElement.OwnerDocument.CreateTextNode("----------------------");
+                var xamlHorizontalLine = xamlParentElement.OwnerDocument.CreateTextNode("----------------------");
                 xamlParentElement.AppendChild(xamlHorizontalLine);
-                xamlLineBreak = xamlParentElement.OwnerDocument.CreateElement(/*prefix:*/null, /*localName:*/HtmlToXamlConverter.Xaml_LineBreak, _xamlNamespace);
+                xamlLineBreak = xamlParentElement.OwnerDocument.CreateElement( /*prefix:*/
+                    null, /*localName:*/Xaml_LineBreak, _xamlNamespace);
                 xamlParentElement.AppendChild(xamlLineBreak);
             }
         }
@@ -316,31 +404,34 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
         // .............................................................
 
         /// <summary>
-        /// Generates Section or Paragraph element from DIV depending whether it contains any block elements or not
+        ///     Generates Section or Paragraph element from DIV depending whether it contains any block elements or not
         /// </summary>
         /// <param name="xamlParentElement">
-        /// XmlElement representing Xaml parent to which the converted element should be added
+        ///     XmlElement representing Xaml parent to which the converted element should be added
         /// </param>
         /// <param name="htmlElement">
-        /// XmlElement representing Html element to be converted
+        ///     XmlElement representing Html element to be converted
         /// </param>
         /// <param name="inheritedProperties">
-        /// properties inherited from parent context
+        ///     properties inherited from parent context
         /// </param>
         /// <param name="stylesheet"></param>
         /// <param name="sourceContext"></param>
         /// true indicates that a content added by this call contains at least one block element
         /// </param>
-        private static void AddSection(XmlElement xamlParentElement, XmlElement htmlElement, Hashtable inheritedProperties, CssStylesheet stylesheet, List<XmlElement> sourceContext)
+        private static void AddSection(XmlElement xamlParentElement, XmlElement htmlElement,
+            Hashtable inheritedProperties, CssStylesheet stylesheet, List<XmlElement> sourceContext)
         {
             // Analyze the content of htmlElement to decide what xaml element to choose - Section or Paragraph.
             // If this Div has at least one block child then we need to use Section, otherwise use Paragraph
-            bool htmlElementContainsBlocks = false;
-            for (XmlNode htmlChildNode = htmlElement.FirstChild; htmlChildNode != null; htmlChildNode = htmlChildNode.NextSibling)
+            var htmlElementContainsBlocks = false;
+            for (var htmlChildNode = htmlElement.FirstChild;
+                htmlChildNode != null;
+                htmlChildNode = htmlChildNode.NextSibling)
             {
                 if (htmlChildNode is XmlElement)
                 {
-                    string htmlChildName = ((XmlElement)htmlChildNode).LocalName.ToLower();
+                    var htmlChildName = ((XmlElement) htmlChildNode).LocalName.ToLower();
                     if (HtmlSchema.IsBlockElement(htmlChildName))
                     {
                         htmlElementContainsBlocks = true;
@@ -360,10 +451,12 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
 
                 // Create currentProperties as a compilation of local and inheritedProperties, set localProperties
                 Hashtable localProperties;
-                Hashtable currentProperties = GetElementProperties(htmlElement, inheritedProperties, out localProperties, stylesheet, sourceContext);
+                var currentProperties = GetElementProperties(htmlElement, inheritedProperties, out localProperties,
+                    stylesheet, sourceContext);
 
                 // Create a XAML element corresponding to this html element
-                XmlElement xamlElement = xamlParentElement.OwnerDocument.CreateElement(/*prefix:*/null, /*localName:*/HtmlToXamlConverter.Xaml_Section, _xamlNamespace);
+                var xamlElement = xamlParentElement.OwnerDocument.CreateElement( /*prefix:*/
+                    null, /*localName:*/Xaml_Section, _xamlNamespace);
                 ApplyLocalProperties(xamlElement, localProperties, /*isBlock:*/true);
 
                 // Decide whether we can unwrap this element as not having any formatting significance.
@@ -376,7 +469,9 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
                 }
 
                 // Recurse into element subtree
-                for (XmlNode htmlChildNode = htmlElement.FirstChild; htmlChildNode != null; htmlChildNode = htmlChildNode != null ? htmlChildNode.NextSibling : null)
+                for (var htmlChildNode = htmlElement.FirstChild;
+                    htmlChildNode != null;
+                    htmlChildNode = htmlChildNode != null ? htmlChildNode.NextSibling : null)
                 {
                     htmlChildNode = AddBlock(xamlElement, htmlChildNode, currentProperties, stylesheet, sourceContext);
                 }
@@ -390,33 +485,38 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
         }
 
         /// <summary>
-        /// Generates Paragraph element from P, H1-H7, Center etc.
+        ///     Generates Paragraph element from P, H1-H7, Center etc.
         /// </summary>
         /// <param name="xamlParentElement">
-        /// XmlElement representing Xaml parent to which the converted element should be added
+        ///     XmlElement representing Xaml parent to which the converted element should be added
         /// </param>
         /// <param name="htmlElement">
-        /// XmlElement representing Html element to be converted
+        ///     XmlElement representing Html element to be converted
         /// </param>
         /// <param name="inheritedProperties">
-        /// properties inherited from parent context
+        ///     properties inherited from parent context
         /// </param>
         /// <param name="stylesheet"></param>
         /// <param name="sourceContext"></param>
         /// true indicates that a content added by this call contains at least one block element
         /// </param>
-        private static void AddParagraph(XmlElement xamlParentElement, XmlElement htmlElement, Hashtable inheritedProperties, CssStylesheet stylesheet, List<XmlElement> sourceContext)
+        private static void AddParagraph(XmlElement xamlParentElement, XmlElement htmlElement,
+            Hashtable inheritedProperties, CssStylesheet stylesheet, List<XmlElement> sourceContext)
         {
             // Create currentProperties as a compilation of local and inheritedProperties, set localProperties
             Hashtable localProperties;
-            Hashtable currentProperties = GetElementProperties(htmlElement, inheritedProperties, out localProperties, stylesheet, sourceContext);
+            var currentProperties = GetElementProperties(htmlElement, inheritedProperties, out localProperties,
+                stylesheet, sourceContext);
 
             // Create a XAML element corresponding to this html element
-            XmlElement xamlElement = xamlParentElement.OwnerDocument.CreateElement(/*prefix:*/null, /*localName:*/HtmlToXamlConverter.Xaml_Paragraph, _xamlNamespace);
+            var xamlElement = xamlParentElement.OwnerDocument.CreateElement( /*prefix:*/
+                null, /*localName:*/Xaml_Paragraph, _xamlNamespace);
             ApplyLocalProperties(xamlElement, localProperties, /*isBlock:*/true);
 
             // Recurse into element subtree
-            for (XmlNode htmlChildNode = htmlElement.FirstChild; htmlChildNode != null; htmlChildNode = htmlChildNode.NextSibling)
+            for (var htmlChildNode = htmlElement.FirstChild;
+                htmlChildNode != null;
+                htmlChildNode = htmlChildNode.NextSibling)
             {
                 AddInline(xamlElement, htmlChildNode, currentProperties, stylesheet, sourceContext);
             }
@@ -426,35 +526,37 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
         }
 
         /// <summary>
-        /// Creates a Paragraph element and adds all nodes starting from htmlNode
-        /// converted to appropriate Inlines.
+        ///     Creates a Paragraph element and adds all nodes starting from htmlNode
+        ///     converted to appropriate Inlines.
         /// </summary>
         /// <param name="xamlParentElement">
-        /// XmlElement representing Xaml parent to which the converted element should be added
+        ///     XmlElement representing Xaml parent to which the converted element should be added
         /// </param>
         /// <param name="htmlNode">
-        /// XmlNode starting a collection of implicitly wrapped inlines.
+        ///     XmlNode starting a collection of implicitly wrapped inlines.
         /// </param>
         /// <param name="inheritedProperties">
-        /// properties inherited from parent context
+        ///     properties inherited from parent context
         /// </param>
         /// <param name="stylesheet"></param>
         /// <param name="sourceContext"></param>
         /// true indicates that a content added by this call contains at least one block element
         /// </param>
         /// <returns>
-        /// The last htmlNode added to the implicit paragraph
+        ///     The last htmlNode added to the implicit paragraph
         /// </returns>
-        private static XmlNode AddImplicitParagraph(XmlElement xamlParentElement, XmlNode htmlNode, Hashtable inheritedProperties, CssStylesheet stylesheet, List<XmlElement> sourceContext)
+        private static XmlNode AddImplicitParagraph(XmlElement xamlParentElement, XmlNode htmlNode,
+            Hashtable inheritedProperties, CssStylesheet stylesheet, List<XmlElement> sourceContext)
         {
             // Collect all non-block elements and wrap them into implicit Paragraph
-            XmlElement xamlParagraph = xamlParentElement.OwnerDocument.CreateElement(/*prefix:*/null, /*localName:*/HtmlToXamlConverter.Xaml_Paragraph, _xamlNamespace);
+            var xamlParagraph = xamlParentElement.OwnerDocument.CreateElement( /*prefix:*/
+                null, /*localName:*/Xaml_Paragraph, _xamlNamespace);
             XmlNode lastNodeProcessed = null;
             while (htmlNode != null)
             {
                 if (htmlNode is XmlComment)
                 {
-                    DefineInlineFragmentParent((XmlComment)htmlNode, /*xamlParentElement:*/null);
+                    DefineInlineFragmentParent((XmlComment) htmlNode, /*xamlParentElement:*/null);
                 }
                 else if (htmlNode is XmlText)
                 {
@@ -465,16 +567,13 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
                 }
                 else if (htmlNode is XmlElement)
                 {
-                    string htmlChildName = ((XmlElement)htmlNode).LocalName.ToLower();
+                    var htmlChildName = ((XmlElement) htmlNode).LocalName.ToLower();
                     if (HtmlSchema.IsBlockElement(htmlChildName))
                     {
                         // The sequence of non-blocked inlines ended. Stop implicit loop here.
                         break;
                     }
-                    else
-                    {
-                        AddInline(xamlParagraph, (XmlElement)htmlNode, inheritedProperties, stylesheet, sourceContext);
-                    }
+                    AddInline(xamlParagraph, (XmlElement) htmlNode, inheritedProperties, stylesheet, sourceContext);
                 }
 
                 // Store last processed node to return it at the end
@@ -500,11 +599,12 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
         //
         // .............................................................
 
-        private static void AddInline(XmlElement xamlParentElement, XmlNode htmlNode, Hashtable inheritedProperties, CssStylesheet stylesheet, List<XmlElement> sourceContext)
+        private static void AddInline(XmlElement xamlParentElement, XmlNode htmlNode, Hashtable inheritedProperties,
+            CssStylesheet stylesheet, List<XmlElement> sourceContext)
         {
             if (htmlNode is XmlComment)
             {
-                DefineInlineFragmentParent((XmlComment)htmlNode, xamlParentElement);
+                DefineInlineFragmentParent((XmlComment) htmlNode, xamlParentElement);
             }
             else if (htmlNode is XmlText)
             {
@@ -512,7 +612,7 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
             }
             else if (htmlNode is XmlElement)
             {
-                XmlElement htmlElement = (XmlElement)htmlNode;
+                var htmlElement = (XmlElement) htmlNode;
 
                 // Check whether this is an html element
                 if (htmlElement.NamespaceURI != HtmlParser.XhtmlNamespace)
@@ -521,7 +621,7 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
                 }
 
                 // Identify element name
-                string htmlElementName = htmlElement.LocalName.ToLower();
+                var htmlElementName = htmlElement.LocalName.ToLower();
 
                 // Put source element to the stack
                 sourceContext.Add(htmlElement);
@@ -556,17 +656,18 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
             }
         }
 
-        private static void AddSpanOrRun(XmlElement xamlParentElement, XmlElement htmlElement, Hashtable inheritedProperties, CssStylesheet stylesheet, List<XmlElement> sourceContext)
+        private static void AddSpanOrRun(XmlElement xamlParentElement, XmlElement htmlElement,
+            Hashtable inheritedProperties, CssStylesheet stylesheet, List<XmlElement> sourceContext)
         {
             // Decide what XAML element to use for this inline element.
             // Check whether it contains any nested inlines
-            bool elementHasChildren = false;
-            for (XmlNode htmlNode = htmlElement.FirstChild; htmlNode != null; htmlNode = htmlNode.NextSibling)
+            var elementHasChildren = false;
+            for (var htmlNode = htmlElement.FirstChild; htmlNode != null; htmlNode = htmlNode.NextSibling)
             {
                 if (htmlNode is XmlElement)
                 {
-                    string htmlChildName = ((XmlElement)htmlNode).LocalName.ToLower();
-                    if (HtmlSchema.IsInlineElement(htmlChildName) || HtmlSchema.IsBlockElement(htmlChildName) || 
+                    var htmlChildName = ((XmlElement) htmlNode).LocalName.ToLower();
+                    if (HtmlSchema.IsInlineElement(htmlChildName) || HtmlSchema.IsBlockElement(htmlChildName) ||
                         htmlChildName == "img" || htmlChildName == "br" || htmlChildName == "hr")
                     {
                         elementHasChildren = true;
@@ -575,18 +676,22 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
                 }
             }
 
-            string xamlElementName = elementHasChildren ? HtmlToXamlConverter.Xaml_Span : HtmlToXamlConverter.Xaml_Run;
+            var xamlElementName = elementHasChildren ? Xaml_Span : Xaml_Run;
 
             // Create currentProperties as a compilation of local and inheritedProperties, set localProperties
             Hashtable localProperties;
-            Hashtable currentProperties = GetElementProperties(htmlElement, inheritedProperties, out localProperties, stylesheet, sourceContext);
+            var currentProperties = GetElementProperties(htmlElement, inheritedProperties, out localProperties,
+                stylesheet, sourceContext);
 
             // Create a XAML element corresponding to this html element
-            XmlElement xamlElement = xamlParentElement.OwnerDocument.CreateElement(/*prefix:*/null, /*localName:*/xamlElementName, _xamlNamespace);
+            var xamlElement = xamlParentElement.OwnerDocument.CreateElement( /*prefix:*/
+                null, /*localName:*/xamlElementName, _xamlNamespace);
             ApplyLocalProperties(xamlElement, localProperties, /*isBlock:*/false);
 
             // Recurse into element subtree
-            for (XmlNode htmlChildNode = htmlElement.FirstChild; htmlChildNode != null; htmlChildNode = htmlChildNode.NextSibling)
+            for (var htmlChildNode = htmlElement.FirstChild;
+                htmlChildNode != null;
+                htmlChildNode = htmlChildNode.NextSibling)
             {
                 AddInline(xamlElement, htmlChildNode, currentProperties, stylesheet, sourceContext);
             }
@@ -599,17 +704,17 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
         private static void AddTextRun(XmlElement xamlElement, string textData)
         {
             // Remove control characters
-            for (int i = 0; i < textData.Length; i++)
+            for (var i = 0; i < textData.Length; i++)
             {
                 if (Char.IsControl(textData[i]))
                 {
-                    textData = textData.Remove(i--, 1);  // decrement i to compensate for character removal
+                    textData = textData.Remove(i--, 1); // decrement i to compensate for character removal
                 }
             }
 
             // Replace No-Breaks by spaces (160 is a code of &nbsp; entity in html)
             //  This is a work around since WPF/XAML does not support &nbsp.
-            textData = textData.Replace((char)160, ' ');
+            textData = textData.Replace((char) 160, ' ');
 
             if (textData.Length > 0)
             {
@@ -617,10 +722,11 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
             }
         }
 
-        private static void AddHyperlink(XmlElement xamlParentElement, XmlElement htmlElement, Hashtable inheritedProperties, CssStylesheet stylesheet, List<XmlElement> sourceContext)
+        private static void AddHyperlink(XmlElement xamlParentElement, XmlElement htmlElement,
+            Hashtable inheritedProperties, CssStylesheet stylesheet, List<XmlElement> sourceContext)
         {
             // Convert href attribute into NavigateUri and TargetName
-            string href = GetAttribute(htmlElement, "href");
+            var href = GetAttribute(htmlElement, "href");
             if (href == null)
             {
                 // When href attribute is missing - ignore the hyperlink
@@ -630,24 +736,28 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
             {
                 // Create currentProperties as a compilation of local and inheritedProperties, set localProperties
                 Hashtable localProperties;
-                Hashtable currentProperties = GetElementProperties(htmlElement, inheritedProperties, out localProperties, stylesheet, sourceContext);
+                var currentProperties = GetElementProperties(htmlElement, inheritedProperties, out localProperties,
+                    stylesheet, sourceContext);
 
                 // Create a XAML element corresponding to this html element
-                XmlElement xamlElement = xamlParentElement.OwnerDocument.CreateElement(/*prefix:*/null, /*localName:*/HtmlToXamlConverter.Xaml_Hyperlink, _xamlNamespace);
+                var xamlElement = xamlParentElement.OwnerDocument.CreateElement( /*prefix:*/
+                    null, /*localName:*/Xaml_Hyperlink, _xamlNamespace);
                 ApplyLocalProperties(xamlElement, localProperties, /*isBlock:*/false);
 
-                string[] hrefParts = href.Split(new char[] { '#' });
+                var hrefParts = href.Split('#');
                 if (hrefParts.Length > 0 && hrefParts[0].Trim().Length > 0)
                 {
-                    xamlElement.SetAttribute(HtmlToXamlConverter.Xaml_Hyperlink_NavigateUri, hrefParts[0].Trim());
+                    xamlElement.SetAttribute(Xaml_Hyperlink_NavigateUri, hrefParts[0].Trim());
                 }
                 if (hrefParts.Length == 2 && hrefParts[1].Trim().Length > 0)
                 {
-                    xamlElement.SetAttribute(HtmlToXamlConverter.Xaml_Hyperlink_TargetName, hrefParts[1].Trim());
+                    xamlElement.SetAttribute(Xaml_Hyperlink_TargetName, hrefParts[1].Trim());
                 }
 
                 // Recurse into element subtree
-                for (XmlNode htmlChildNode = htmlElement.FirstChild; htmlChildNode != null; htmlChildNode = htmlChildNode.NextSibling)
+                for (var htmlChildNode = htmlElement.FirstChild;
+                    htmlChildNode != null;
+                    htmlChildNode = htmlChildNode.NextSibling)
                 {
                     AddInline(xamlElement, htmlChildNode, currentProperties, stylesheet, sourceContext);
                 }
@@ -690,16 +800,17 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
         {
             if (InlineFragmentParentElement != null)
             {
-                if (InlineFragmentParentElement.LocalName == HtmlToXamlConverter.Xaml_Span)
+                if (InlineFragmentParentElement.LocalName == Xaml_Span)
                 {
                     xamlFlowDocumentElement = InlineFragmentParentElement;
                 }
                 else
                 {
-                    xamlFlowDocumentElement = xamlFlowDocumentElement.OwnerDocument.CreateElement(/*prefix:*/null, /*localName:*/HtmlToXamlConverter.Xaml_Span, _xamlNamespace);
+                    xamlFlowDocumentElement = xamlFlowDocumentElement.OwnerDocument.CreateElement( /*prefix:*/
+                        null, /*localName:*/Xaml_Span, _xamlNamespace);
                     while (InlineFragmentParentElement.FirstChild != null)
                     {
-                        XmlNode copyNode = InlineFragmentParentElement.FirstChild;
+                        var copyNode = InlineFragmentParentElement.FirstChild;
                         InlineFragmentParentElement.RemoveChild(copyNode);
                         xamlFlowDocumentElement.AppendChild(copyNode);
                     }
@@ -715,7 +826,8 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
         //
         // .............................................................
 
-        private static void AddImage(XmlElement xamlParentElement, XmlElement htmlElement, Hashtable inheritedProperties, CssStylesheet stylesheet, List<XmlElement> sourceContext)
+        private static void AddImage(XmlElement xamlParentElement, XmlElement htmlElement, Hashtable inheritedProperties,
+            CssStylesheet stylesheet, List<XmlElement> sourceContext)
         {
             //  Implement images
         }
@@ -727,40 +839,44 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
         // .............................................................
 
         /// <summary>
-        /// Converts Html ul or ol element into Xaml list element. During conversion if the ul/ol element has any children 
-        /// that are not li elements, they are ignored and not added to the list element
+        ///     Converts Html ul or ol element into Xaml list element. During
+        ///     conversion if the ul/ol element has any children that are not li
+        ///     elements, they are ignored and not added to the list element
         /// </summary>
         /// <param name="xamlParentElement">
-        /// XmlElement representing Xaml parent to which the converted element should be added
+        ///     XmlElement representing Xaml parent to which the converted element
+        ///     should be added
         /// </param>
         /// <param name="htmlListElement">
-        /// XmlElement representing Html ul/ol element to be converted
+        ///     XmlElement representing Html ul/ol element to be converted
         /// </param>
         /// <param name="inheritedProperties">
-        /// properties inherited from parent context
+        ///     properties inherited from parent context
         /// </param>
         /// <param name="stylesheet"></param>
         /// <param name="sourceContext"></param>
-        private static void AddList(XmlElement xamlParentElement, XmlElement htmlListElement, Hashtable inheritedProperties, CssStylesheet stylesheet, List<XmlElement> sourceContext)
+        private static void AddList(XmlElement xamlParentElement, XmlElement htmlListElement,
+            Hashtable inheritedProperties, CssStylesheet stylesheet, List<XmlElement> sourceContext)
         {
-            string htmlListElementName = htmlListElement.LocalName.ToLower();
+            var htmlListElementName = htmlListElement.LocalName.ToLower();
 
             Hashtable localProperties;
-            Hashtable currentProperties = GetElementProperties(htmlListElement, inheritedProperties, out localProperties, stylesheet, sourceContext);
+            var currentProperties = GetElementProperties(htmlListElement, inheritedProperties, out localProperties,
+                stylesheet, sourceContext);
 
             // Create Xaml List element
-            XmlElement xamlListElement = xamlParentElement.OwnerDocument.CreateElement(null, Xaml_List, _xamlNamespace);
+            var xamlListElement = xamlParentElement.OwnerDocument.CreateElement(null, Xaml_List, _xamlNamespace);
 
             // Set default list markers
             if (htmlListElementName == "ol")
             {
                 // Ordered list
-                xamlListElement.SetAttribute(HtmlToXamlConverter.Xaml_List_MarkerStyle, Xaml_List_MarkerStyle_Decimal);
+                xamlListElement.SetAttribute(Xaml_List_MarkerStyle, Xaml_List_MarkerStyle_Decimal);
             }
             else
             {
                 // Unordered list - all elements other than OL treated as unordered lists
-                xamlListElement.SetAttribute(HtmlToXamlConverter.Xaml_List_MarkerStyle, Xaml_List_MarkerStyle_Disc);
+                xamlListElement.SetAttribute(Xaml_List_MarkerStyle, Xaml_List_MarkerStyle_Disc);
             }
 
             // Apply local properties to list to set marker attribute if specified
@@ -768,20 +884,17 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
             ApplyLocalProperties(xamlListElement, localProperties, /*isBlock:*/true);
 
             // Recurse into list subtree
-            for (XmlNode htmlChildNode = htmlListElement.FirstChild; htmlChildNode != null; htmlChildNode = htmlChildNode.NextSibling)
+            for (var htmlChildNode = htmlListElement.FirstChild;
+                htmlChildNode != null;
+                htmlChildNode = htmlChildNode.NextSibling)
             {
                 if (htmlChildNode is XmlElement && htmlChildNode.LocalName.ToLower() == "li")
                 {
-                    sourceContext.Add((XmlElement)htmlChildNode);
-                    AddListItem(xamlListElement, (XmlElement)htmlChildNode, currentProperties, stylesheet, sourceContext);
+                    sourceContext.Add((XmlElement) htmlChildNode);
+                    AddListItem(xamlListElement, (XmlElement) htmlChildNode, currentProperties, stylesheet,
+                        sourceContext);
                     Debug.Assert(sourceContext.Count > 0 && sourceContext[sourceContext.Count - 1] == htmlChildNode);
                     sourceContext.RemoveAt(sourceContext.Count - 1);
-                }
-                else
-                {
-                    // Not an li element. Add it to previous ListBoxItem
-                    //  We need to append the content to the end
-                    // of a previous list item.
                 }
             }
 
@@ -793,36 +906,39 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
         }
 
         /// <summary>
-        /// If li items are found without a parent ul/ol element in Html string, creates xamlListElement as their parent and adds
-        /// them to it. If the previously added node to the same xamlParentElement was a List, adds the elements to that list.
-        /// Otherwise, we create a new xamlListElement and add them to it. Elements are added as long as li elements appear sequentially.
-        /// The first non-li or text node stops the addition.
+        ///     If li items are found without a parent ul/ol element in Html string,
+        ///     creates xamlListElement as their parent and adds them to it. If the
+        ///     previously added node to the same
+        ///     <paramref name="xamlParentElement" /> was a List, adds the elements
+        ///     to that list. Otherwise, we create a new xamlListElement and add
+        ///     them to it. Elements are added as long as li elements appear
+        ///     sequentially. The first non-li or text node stops the addition.
         /// </summary>
-        /// <param name="xamlParentElement">
-        /// Parent element for the list
-        /// </param>
+        /// <param name="xamlParentElement">Parent element for the list</param>
         /// <param name="htmlLIElement">
-        /// Start Html li element without parent list
+        ///     Start Html li element without parent list
         /// </param>
         /// <param name="inheritedProperties">
-        /// Properties inherited from parent context
+        ///     Properties inherited from parent context
         /// </param>
         /// <returns>
-        /// XmlNode representing the first non-li node in the input after one or more li's have been processed.
+        ///     XmlNode representing the first non-li node in the input after one or
+        ///     more li's have been processed.
         /// </returns>
-        private static XmlElement AddOrphanListItems(XmlElement xamlParentElement, XmlElement htmlLIElement, Hashtable inheritedProperties, CssStylesheet stylesheet, List<XmlElement> sourceContext)
+        private static XmlElement AddOrphanListItems(XmlElement xamlParentElement, XmlElement htmlLIElement,
+            Hashtable inheritedProperties, CssStylesheet stylesheet, List<XmlElement> sourceContext)
         {
             Debug.Assert(htmlLIElement.LocalName.ToLower() == "li");
 
             XmlElement lastProcessedListItemElement = null;
 
             // Find out the last element attached to the xamlParentElement, which is the previous sibling of this node
-            XmlNode xamlListItemElementPreviousSibling = xamlParentElement.LastChild;
+            var xamlListItemElementPreviousSibling = xamlParentElement.LastChild;
             XmlElement xamlListElement;
             if (xamlListItemElementPreviousSibling != null && xamlListItemElementPreviousSibling.LocalName == Xaml_List)
             {
                 // Previously added Xaml element was a list. We will add the new li to it
-                xamlListElement = (XmlElement)xamlListItemElementPreviousSibling;
+                xamlListElement = (XmlElement) xamlListItemElementPreviousSibling;
             }
             else
             {
@@ -832,7 +948,7 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
             }
 
             XmlNode htmlChildNode = htmlLIElement;
-            string htmlChildNodeName = htmlChildNode == null ? null : htmlChildNode.LocalName.ToLower();
+            var htmlChildNodeName = htmlChildNode == null ? null : htmlChildNode.LocalName.ToLower();
 
             //  Current element properties missed here.
             //currentProperties = GetElementProperties(htmlLIElement, inheritedProperties, out localProperties, stylesheet);
@@ -841,9 +957,9 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
             // Use properties inherited from xamlParentElement for context 
             while (htmlChildNode != null && htmlChildNodeName == "li")
             {
-                AddListItem(xamlListElement, (XmlElement)htmlChildNode, inheritedProperties, stylesheet, sourceContext);
-                lastProcessedListItemElement = (XmlElement)htmlChildNode;
-                htmlChildNode = htmlChildNode.NextSibling;               
+                AddListItem(xamlListElement, (XmlElement) htmlChildNode, inheritedProperties, stylesheet, sourceContext);
+                lastProcessedListItemElement = (XmlElement) htmlChildNode;
+                htmlChildNode = htmlChildNode.NextSibling;
                 htmlChildNodeName = htmlChildNode == null ? null : htmlChildNode.LocalName.ToLower();
             }
 
@@ -851,18 +967,22 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
         }
 
         /// <summary>
-        /// Converts htmlLIElement into Xaml ListItem element, and appends it to the parent xamlListElement
+        ///     Converts <paramref name="htmlLIElement" /> into Xaml ListItem
+        ///     element, and appends it to the parent
+        ///     <paramref name="xamlListElement" />
         /// </summary>
         /// <param name="xamlListElement">
-        /// XmlElement representing Xaml List element to which the converted td/th should be added
+        ///     XmlElement representing Xaml List element to which the converted
+        ///     td/th should be added
         /// </param>
         /// <param name="htmlLIElement">
-        /// XmlElement representing Html li element to be converted
+        ///     XmlElement representing Html li element to be converted
         /// </param>
         /// <param name="inheritedProperties">
-        /// Properties inherited from parent context
+        ///     Properties inherited from parent context
         /// </param>
-        private static void AddListItem(XmlElement xamlListElement, XmlElement htmlLIElement, Hashtable inheritedProperties, CssStylesheet stylesheet, List<XmlElement> sourceContext)
+        private static void AddListItem(XmlElement xamlListElement, XmlElement htmlLIElement,
+            Hashtable inheritedProperties, CssStylesheet stylesheet, List<XmlElement> sourceContext)
         {
             // Parameter validation
             Debug.Assert(xamlListElement != null);
@@ -872,16 +992,20 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
             Debug.Assert(inheritedProperties != null);
 
             Hashtable localProperties;
-            Hashtable currentProperties = GetElementProperties(htmlLIElement, inheritedProperties, out localProperties, stylesheet, sourceContext);
+            var currentProperties = GetElementProperties(htmlLIElement, inheritedProperties, out localProperties,
+                stylesheet, sourceContext);
 
-            XmlElement xamlListItemElement = xamlListElement.OwnerDocument.CreateElement(null, Xaml_ListItem, _xamlNamespace);
+            var xamlListItemElement = xamlListElement.OwnerDocument.CreateElement(null, Xaml_ListItem, _xamlNamespace);
 
             // TODO: process local properties for li element
 
             // Process children of the ListItem
-            for (XmlNode htmlChildNode = htmlLIElement.FirstChild; htmlChildNode != null; htmlChildNode = htmlChildNode != null ? htmlChildNode.NextSibling : null)
+            for (var htmlChildNode = htmlLIElement.FirstChild;
+                htmlChildNode != null;
+                htmlChildNode = htmlChildNode != null ? htmlChildNode.NextSibling : null)
             {
-                htmlChildNode = AddBlock(xamlListItemElement, htmlChildNode, currentProperties, stylesheet, sourceContext);
+                htmlChildNode = AddBlock(xamlListItemElement, htmlChildNode, currentProperties, stylesheet,
+                    sourceContext);
             }
 
             // Add resulting ListBoxItem to a xaml parent
@@ -895,19 +1019,21 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
         // .............................................................
 
         /// <summary>
-        /// Converts htmlTableElement to a Xaml Table element. Adds tbody elements if they are missing so
-        /// that a resulting Xaml Table element is properly formed.
+        ///     Converts <paramref name="htmlTableElement" /> to a Xaml Table
+        ///     element. Adds tbody elements if they are missing so that a resulting
+        ///     Xaml Table element is properly formed.
         /// </summary>
         /// <param name="xamlParentElement">
-        /// Parent xaml element to which a converted table must be added.
+        ///     Parent xaml element to which a converted table must be added.
         /// </param>
         /// <param name="htmlTableElement">
-        /// XmlElement reprsenting the Html table element to be converted
+        ///     XmlElement reprsenting the Html table element to be converted
         /// </param>
         /// <param name="inheritedProperties">
-        /// Hashtable representing properties inherited from parent context. 
+        ///     Hashtable representing properties inherited from parent context.
         /// </param>
-        private static void AddTable(XmlElement xamlParentElement, XmlElement htmlTableElement, Hashtable inheritedProperties, CssStylesheet stylesheet, List<XmlElement> sourceContext)
+        private static void AddTable(XmlElement xamlParentElement, XmlElement htmlTableElement,
+            Hashtable inheritedProperties, CssStylesheet stylesheet, List<XmlElement> sourceContext)
         {
             // Parameter validation
             Debug.Assert(htmlTableElement.LocalName.ToLower() == "table");
@@ -916,12 +1042,13 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
 
             // Create current properties to be used by children as inherited properties, set local properties
             Hashtable localProperties;
-            Hashtable currentProperties = GetElementProperties(htmlTableElement, inheritedProperties, out localProperties, stylesheet, sourceContext);
+            var currentProperties = GetElementProperties(htmlTableElement, inheritedProperties, out localProperties,
+                stylesheet, sourceContext);
 
             // TODO: process localProperties for tables to override defaults, decide cell spacing defaults
 
             // Check if the table contains only one cell - we want to take only its content
-            XmlElement singleCell = GetCellFromSingleCellTable(htmlTableElement);
+            var singleCell = GetCellFromSingleCellTable(htmlTableElement);
 
             if (singleCell != null)
             {
@@ -929,9 +1056,12 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
                 sourceContext.Add(singleCell);
 
                 // Add the cell's content directly to parent
-                for (XmlNode htmlChildNode = singleCell.FirstChild; htmlChildNode != null; htmlChildNode = htmlChildNode != null ? htmlChildNode.NextSibling : null)
+                for (var htmlChildNode = singleCell.FirstChild;
+                    htmlChildNode != null;
+                    htmlChildNode = htmlChildNode != null ? htmlChildNode.NextSibling : null)
                 {
-                    htmlChildNode = AddBlock(xamlParentElement, htmlChildNode, currentProperties, stylesheet, sourceContext);
+                    htmlChildNode = AddBlock(xamlParentElement, htmlChildNode, currentProperties, stylesheet,
+                        sourceContext);
                 }
 
                 Debug.Assert(sourceContext.Count > 0 && sourceContext[sourceContext.Count - 1] == singleCell);
@@ -940,37 +1070,41 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
             else
             {
                 // Create xamlTableElement
-                XmlElement xamlTableElement = xamlParentElement.OwnerDocument.CreateElement(null, Xaml_Table, _xamlNamespace);
+                var xamlTableElement = xamlParentElement.OwnerDocument.CreateElement(null, Xaml_Table, _xamlNamespace);
 
                 // Analyze table structure for column widths and rowspan attributes
-                ArrayList columnStarts = AnalyzeTableStructure(htmlTableElement, stylesheet);
+                var columnStarts = AnalyzeTableStructure(htmlTableElement, stylesheet);
 
                 // Process COLGROUP & COL elements
-                AddColumnInformation(htmlTableElement, xamlTableElement, columnStarts, currentProperties, stylesheet, sourceContext);
+                AddColumnInformation(htmlTableElement, xamlTableElement, columnStarts, currentProperties, stylesheet,
+                    sourceContext);
 
                 // Process table body - TBODY and TR elements
-                XmlNode htmlChildNode = htmlTableElement.FirstChild;
+                var htmlChildNode = htmlTableElement.FirstChild;
 
                 while (htmlChildNode != null)
                 {
-                    string htmlChildName = htmlChildNode.LocalName.ToLower();
+                    var htmlChildName = htmlChildNode.LocalName.ToLower();
 
                     // Process the element
                     if (htmlChildName == "tbody" || htmlChildName == "thead" || htmlChildName == "tfoot")
                     {
                         //  Add more special processing for TableHeader and TableFooter
-                        XmlElement xamlTableBodyElement = xamlTableElement.OwnerDocument.CreateElement(null, Xaml_TableRowGroup, _xamlNamespace);
+                        var xamlTableBodyElement = xamlTableElement.OwnerDocument.CreateElement(null, Xaml_TableRowGroup,
+                            _xamlNamespace);
                         xamlTableElement.AppendChild(xamlTableBodyElement);
 
-                        sourceContext.Add((XmlElement)htmlChildNode);
+                        sourceContext.Add((XmlElement) htmlChildNode);
 
                         // Get properties of Html tbody element
                         Hashtable tbodyElementLocalProperties;
-                        Hashtable tbodyElementCurrentProperties = GetElementProperties((XmlElement)htmlChildNode, currentProperties, out tbodyElementLocalProperties, stylesheet, sourceContext);
+                        var tbodyElementCurrentProperties = GetElementProperties((XmlElement) htmlChildNode,
+                            currentProperties, out tbodyElementLocalProperties, stylesheet, sourceContext);
                         // TODO: apply local properties for tbody
 
                         // Process children of htmlChildNode, which is tbody, for tr elements
-                        AddTableRowsToTableBody(xamlTableBodyElement, htmlChildNode.FirstChild, tbodyElementCurrentProperties, columnStarts, stylesheet, sourceContext);
+                        AddTableRowsToTableBody(xamlTableBodyElement, htmlChildNode.FirstChild,
+                            tbodyElementCurrentProperties, columnStarts, stylesheet, sourceContext);
                         if (xamlTableBodyElement.HasChildNodes)
                         {
                             xamlTableElement.AppendChild(xamlTableBodyElement);
@@ -985,12 +1119,14 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
                     else if (htmlChildName == "tr")
                     {
                         // Tbody is not present, but tr element is present. Tr is wrapped in tbody
-                        XmlElement xamlTableBodyElement = xamlTableElement.OwnerDocument.CreateElement(null, Xaml_TableRowGroup, _xamlNamespace);
+                        var xamlTableBodyElement = xamlTableElement.OwnerDocument.CreateElement(null, Xaml_TableRowGroup,
+                            _xamlNamespace);
 
                         // We use currentProperties of xamlTableElement when adding rows since the tbody element is artificially created and has 
                         // no properties of its own
 
-                        htmlChildNode = AddTableRowsToTableBody(xamlTableBodyElement, htmlChildNode, currentProperties, columnStarts, stylesheet, sourceContext);
+                        htmlChildNode = AddTableRowsToTableBody(xamlTableBodyElement, htmlChildNode, currentProperties,
+                            columnStarts, stylesheet, sourceContext);
                         if (xamlTableBodyElement.HasChildNodes)
                         {
                             xamlTableElement.AppendChild(xamlTableBodyElement);
@@ -1015,16 +1151,18 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
         {
             XmlElement singleCell = null;
 
-            for (XmlNode tableChild = htmlTableElement.FirstChild; tableChild != null; tableChild = tableChild.NextSibling)
+            for (var tableChild = htmlTableElement.FirstChild; tableChild != null; tableChild = tableChild.NextSibling)
             {
-                string elementName = tableChild.LocalName.ToLower();
+                var elementName = tableChild.LocalName.ToLower();
                 if (elementName == "tbody" || elementName == "thead" || elementName == "tfoot")
                 {
                     if (singleCell != null)
                     {
                         return null;
                     }
-                    for (XmlNode tbodyChild = tableChild.FirstChild; tbodyChild != null; tbodyChild = tbodyChild.NextSibling)
+                    for (var tbodyChild = tableChild.FirstChild;
+                        tbodyChild != null;
+                        tbodyChild = tbodyChild.NextSibling)
                     {
                         if (tbodyChild.LocalName.ToLower() == "tr")
                         {
@@ -1032,16 +1170,16 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
                             {
                                 return null;
                             }
-                            for (XmlNode trChild = tbodyChild.FirstChild; trChild != null; trChild = trChild.NextSibling)
+                            for (var trChild = tbodyChild.FirstChild; trChild != null; trChild = trChild.NextSibling)
                             {
-                                string cellName = trChild.LocalName.ToLower();
+                                var cellName = trChild.LocalName.ToLower();
                                 if (cellName == "td" || cellName == "th")
                                 {
                                     if (singleCell != null)
                                     {
                                         return null;
                                     }
-                                    singleCell = (XmlElement)trChild;
+                                    singleCell = (XmlElement) trChild;
                                 }
                             }
                         }
@@ -1053,16 +1191,16 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
                     {
                         return null;
                     }
-                    for (XmlNode trChild = tableChild.FirstChild; trChild != null; trChild = trChild.NextSibling)
+                    for (var trChild = tableChild.FirstChild; trChild != null; trChild = trChild.NextSibling)
                     {
-                        string cellName = trChild.LocalName.ToLower();
+                        var cellName = trChild.LocalName.ToLower();
                         if (cellName == "td" || cellName == "th")
                         {
                             if (singleCell != null)
                             {
                                 return null;
                             }
-                            singleCell = (XmlElement)trChild;
+                            singleCell = (XmlElement) trChild;
                         }
                     }
                 }
@@ -1072,36 +1210,42 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
         }
 
         /// <summary>
-        /// Processes the information about table columns - COLGROUP and COL html elements.
+        ///     Processes the information about table columns - COLGROUP and COL
+        ///     html elements.
         /// </summary>
         /// <param name="htmlTableElement">
-        /// XmlElement representing a source html table.
+        ///     XmlElement representing a source html table.
         /// </param>
         /// <param name="xamlTableElement">
-        /// XmlElement repesenting a resulting xaml table.
+        ///     XmlElement repesenting a resulting xaml table.
         /// </param>
         /// <param name="columnStartsAllRows">
-        /// Array of doubles - column start coordinates.
-        /// Can be null, which means that column size information is not available
-        /// and we must use source colgroup/col information.
-        /// In case wneh it's not null, we will ignore source colgroup/col information.
+        ///     Array of doubles - column start coordinates. Can be null, which
+        ///     means that column size information is not available and we must use
+        ///     source colgroup/col information. In case wneh it's not null, we will
+        ///     ignore source colgroup/col information.
         /// </param>
         /// <param name="currentProperties"></param>
         /// <param name="stylesheet"></param>
         /// <param name="sourceContext"></param>
-        private static void AddColumnInformation(XmlElement htmlTableElement, XmlElement xamlTableElement, ArrayList columnStartsAllRows, Hashtable currentProperties, CssStylesheet stylesheet, List<XmlElement> sourceContext)
+        private static void AddColumnInformation(XmlElement htmlTableElement, XmlElement xamlTableElement,
+            ArrayList columnStartsAllRows, Hashtable currentProperties, CssStylesheet stylesheet,
+            List<XmlElement> sourceContext)
         {
             // Add column information
             if (columnStartsAllRows != null)
             {
                 // We have consistent information derived from table cells; use it
                 // The last element in columnStarts represents the end of the table
-                for (int columnIndex = 0; columnIndex < columnStartsAllRows.Count - 1; columnIndex++)
+                for (var columnIndex = 0; columnIndex < columnStartsAllRows.Count - 1; columnIndex++)
                 {
                     XmlElement xamlColumnElement;
 
-                    xamlColumnElement = xamlTableElement.OwnerDocument.CreateElement(null, Xaml_TableColumn, _xamlNamespace);
-                    xamlColumnElement.SetAttribute(Xaml_Width, ((double)columnStartsAllRows[columnIndex + 1] - (double)columnStartsAllRows[columnIndex]).ToString());
+                    xamlColumnElement = xamlTableElement.OwnerDocument.CreateElement(null, Xaml_TableColumn,
+                        _xamlNamespace);
+                    xamlColumnElement.SetAttribute(Xaml_Width,
+                        ((double) columnStartsAllRows[columnIndex + 1] - (double) columnStartsAllRows[columnIndex])
+                            .ToString());
                     xamlTableElement.AppendChild(xamlColumnElement);
                 }
             }
@@ -1109,16 +1253,20 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
             {
                 // We do not have consistent information from table cells;
                 // Translate blindly colgroups from html.                
-                for (XmlNode htmlChildNode = htmlTableElement.FirstChild; htmlChildNode != null; htmlChildNode = htmlChildNode.NextSibling)
+                for (var htmlChildNode = htmlTableElement.FirstChild;
+                    htmlChildNode != null;
+                    htmlChildNode = htmlChildNode.NextSibling)
                 {
                     if (htmlChildNode.LocalName.ToLower() == "colgroup")
                     {
                         // TODO: add column width information to this function as a parameter and process it
-                        AddTableColumnGroup(xamlTableElement, (XmlElement)htmlChildNode, currentProperties, stylesheet, sourceContext);
+                        AddTableColumnGroup(xamlTableElement, (XmlElement) htmlChildNode, currentProperties, stylesheet,
+                            sourceContext);
                     }
                     else if (htmlChildNode.LocalName.ToLower() == "col")
                     {
-                        AddTableColumn(xamlTableElement, (XmlElement)htmlChildNode, currentProperties, stylesheet, sourceContext);
+                        AddTableColumn(xamlTableElement, (XmlElement) htmlChildNode, currentProperties, stylesheet,
+                            sourceContext);
                     }
                     else if (htmlChildNode is XmlElement)
                     {
@@ -1130,53 +1278,58 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
         }
 
         /// <summary>
-        /// Converts htmlColgroupElement into Xaml TableColumnGroup element, and appends it to the parent
-        /// xamlTableElement
+        ///     Converts htmlColgroupElement into Xaml TableColumnGroup element, and appends it to the parent
+        ///     xamlTableElement
         /// </summary>
         /// <param name="xamlTableElement">
-        /// XmlElement representing Xaml Table element to which the converted column group should be added
+        ///     XmlElement representing Xaml Table element to which the converted column group should be added
         /// </param>
         /// <param name="htmlColgroupElement">
-        /// XmlElement representing Html colgroup element to be converted
-        /// <param name="inheritedProperties">
-        /// Properties inherited from parent context
-        /// </param>
-        private static void AddTableColumnGroup(XmlElement xamlTableElement, XmlElement htmlColgroupElement, Hashtable inheritedProperties, CssStylesheet stylesheet, List<XmlElement> sourceContext)
+        ///     XmlElement representing Html colgroup element to be converted
+        ///     <param name="inheritedProperties">
+        ///         Properties inherited from parent context
+        ///     </param>
+        private static void AddTableColumnGroup(XmlElement xamlTableElement, XmlElement htmlColgroupElement,
+            Hashtable inheritedProperties, CssStylesheet stylesheet, List<XmlElement> sourceContext)
         {
             Hashtable localProperties;
-            Hashtable currentProperties = GetElementProperties(htmlColgroupElement, inheritedProperties, out localProperties, stylesheet, sourceContext);
+            var currentProperties = GetElementProperties(htmlColgroupElement, inheritedProperties, out localProperties,
+                stylesheet, sourceContext);
 
             // TODO: process local properties for colgroup
 
             // Process children of colgroup. Colgroup may contain only col elements.
-            for (XmlNode htmlNode = htmlColgroupElement.FirstChild; htmlNode != null; htmlNode = htmlNode.NextSibling)
+            for (var htmlNode = htmlColgroupElement.FirstChild; htmlNode != null; htmlNode = htmlNode.NextSibling)
             {
                 if (htmlNode is XmlElement && htmlNode.LocalName.ToLower() == "col")
                 {
-                    AddTableColumn(xamlTableElement, (XmlElement)htmlNode, currentProperties, stylesheet, sourceContext);
+                    AddTableColumn(xamlTableElement, (XmlElement) htmlNode, currentProperties, stylesheet, sourceContext);
                 }
             }
         }
 
         /// <summary>
-        /// Converts htmlColElement into Xaml TableColumn element, and appends it to the parent
-        /// xamlTableColumnGroupElement
+        ///     Converts <paramref name="htmlColElement" /> into Xaml TableColumn
+        ///     element, and appends it to the parent xamlTableColumnGroupElement
         /// </summary>
         /// <param name="xamlTableElement"></param>
         /// <param name="htmlColElement">
-        /// XmlElement representing Html col element to be converted
+        ///     XmlElement representing Html col element to be converted
         /// </param>
         /// <param name="inheritedProperties">
-        /// properties inherited from parent context
+        ///     properties inherited from parent context
         /// </param>
         /// <param name="stylesheet"></param>
         /// <param name="sourceContext"></param>
-        private static void AddTableColumn(XmlElement xamlTableElement, XmlElement htmlColElement, Hashtable inheritedProperties, CssStylesheet stylesheet, List<XmlElement> sourceContext)
+        private static void AddTableColumn(XmlElement xamlTableElement, XmlElement htmlColElement,
+            Hashtable inheritedProperties, CssStylesheet stylesheet, List<XmlElement> sourceContext)
         {
             Hashtable localProperties;
-            Hashtable currentProperties = GetElementProperties(htmlColElement, inheritedProperties, out localProperties, stylesheet, sourceContext);
+            var currentProperties = GetElementProperties(htmlColElement, inheritedProperties, out localProperties,
+                stylesheet, sourceContext);
 
-            XmlElement xamlTableColumnElement = xamlTableElement.OwnerDocument.CreateElement(null, Xaml_TableColumn, _xamlNamespace);
+            var xamlTableColumnElement = xamlTableElement.OwnerDocument.CreateElement(null, Xaml_TableColumn,
+                _xamlNamespace);
 
             // TODO: process local properties for TableColumn element
 
@@ -1185,33 +1338,40 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
         }
 
         /// <summary>
-        /// Adds TableRow elements to xamlTableBodyElement. The rows are converted from Html tr elements that
-        /// may be the children of an Html tbody element or an Html table element with tbody missing
+        ///     Adds TableRow elements to xamlTableBodyElement. The rows are
+        ///     converted from Html tr elements that may be the children of an Html
+        ///     tbody element or an Html table element with tbody missing
         /// </summary>
         /// <param name="xamlTableBodyElement">
-        /// XmlElement representing Xaml TableRowGroup element to which the converted rows should be added
+        ///     XmlElement representing Xaml TableRowGroup element to which the
+        ///     converted rows should be added
         /// </param>
         /// <param name="htmlTRStartNode">
-        /// XmlElement representing the first tr child of the tbody element to be read
+        ///     XmlElement representing the first tr child of the tbody element to
+        ///     be read
         /// </param>
         /// <param name="currentProperties">
-        /// Hashtable representing current properties of the tbody element that are generated and applied in the
-        /// AddTable function; to be used as inheritedProperties when adding tr elements
+        ///     Hashtable representing current properties of the tbody element that
+        ///     are generated and applied in the <see cref="AddTable" /> function; to
+        ///     be used as inheritedProperties when adding tr elements
         /// </param>
         /// <param name="columnStarts"></param>
         /// <param name="stylesheet"></param>
         /// <param name="sourceContext"></param>
         /// <returns>
-        /// XmlNode representing the current position of the iterator among tr elements
+        ///     XmlNode representing the current position of the iterator among tr
+        ///     elements
         /// </returns>
-        private static XmlNode AddTableRowsToTableBody(XmlElement xamlTableBodyElement, XmlNode htmlTRStartNode, Hashtable currentProperties, ArrayList columnStarts, CssStylesheet stylesheet, List<XmlElement> sourceContext)
+        private static XmlNode AddTableRowsToTableBody(XmlElement xamlTableBodyElement, XmlNode htmlTRStartNode,
+            Hashtable currentProperties, ArrayList columnStarts, CssStylesheet stylesheet,
+            List<XmlElement> sourceContext)
         {
             // Parameter validation
             Debug.Assert(xamlTableBodyElement.LocalName == Xaml_TableRowGroup);
             Debug.Assert(currentProperties != null);
 
             // Initialize child node for iteratimg through children to the first tr element
-            XmlNode htmlChildNode = htmlTRStartNode;
+            var htmlChildNode = htmlTRStartNode;
             ArrayList activeRowSpans = null;
             if (columnStarts != null)
             {
@@ -1223,16 +1383,19 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
             {
                 if (htmlChildNode.LocalName.ToLower() == "tr")
                 {
-                    XmlElement xamlTableRowElement = xamlTableBodyElement.OwnerDocument.CreateElement(null, Xaml_TableRow, _xamlNamespace);
+                    var xamlTableRowElement = xamlTableBodyElement.OwnerDocument.CreateElement(null, Xaml_TableRow,
+                        _xamlNamespace);
 
-                    sourceContext.Add((XmlElement)htmlChildNode);
+                    sourceContext.Add((XmlElement) htmlChildNode);
 
                     // Get tr element properties
                     Hashtable trElementLocalProperties;
-                    Hashtable trElementCurrentProperties = GetElementProperties((XmlElement)htmlChildNode, currentProperties, out trElementLocalProperties, stylesheet, sourceContext);
+                    var trElementCurrentProperties = GetElementProperties((XmlElement) htmlChildNode, currentProperties,
+                        out trElementLocalProperties, stylesheet, sourceContext);
                     // TODO: apply local properties to tr element
 
-                    AddTableCellsToTableRow(xamlTableRowElement, htmlChildNode.FirstChild, trElementCurrentProperties, columnStarts, activeRowSpans, stylesheet, sourceContext);
+                    AddTableCellsToTableRow(xamlTableRowElement, htmlChildNode.FirstChild, trElementCurrentProperties,
+                        columnStarts, activeRowSpans, stylesheet, sourceContext);
                     if (xamlTableRowElement.HasChildNodes)
                     {
                         xamlTableBodyElement.AppendChild(xamlTableRowElement);
@@ -1243,23 +1406,24 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
 
                     // Advance
                     htmlChildNode = htmlChildNode.NextSibling;
-                    
                 }
                 else if (htmlChildNode.LocalName.ToLower() == "td")
                 {
                     // Tr element is not present. We create one and add td elements to it
-                    XmlElement xamlTableRowElement = xamlTableBodyElement.OwnerDocument.CreateElement(null, Xaml_TableRow, _xamlNamespace);
-                    
+                    var xamlTableRowElement = xamlTableBodyElement.OwnerDocument.CreateElement(null, Xaml_TableRow,
+                        _xamlNamespace);
+
                     // This is incorrect formatting and the column starts should not be set in this case
                     Debug.Assert(columnStarts == null);
 
-                    htmlChildNode = AddTableCellsToTableRow(xamlTableRowElement, htmlChildNode, currentProperties, columnStarts, activeRowSpans, stylesheet, sourceContext);
+                    htmlChildNode = AddTableCellsToTableRow(xamlTableRowElement, htmlChildNode, currentProperties,
+                        columnStarts, activeRowSpans, stylesheet, sourceContext);
                     if (xamlTableRowElement.HasChildNodes)
                     {
                         xamlTableBodyElement.AppendChild(xamlTableRowElement);
                     }
                 }
-                else 
+                else
                 {
                     // Not a tr or td  element. Ignore it.
                     // TODO: consider better recovery here
@@ -1270,21 +1434,27 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
         }
 
         /// <summary>
-        /// Adds TableCell elements to xamlTableRowElement.
+        ///     Adds TableCell elements to xamlTableRowElement.
         /// </summary>
         /// <param name="xamlTableRowElement">
-        /// XmlElement representing Xaml TableRow element to which the converted cells should be added
+        ///     XmlElement representing Xaml TableRow element to which the converted
+        ///     cells should be added
         /// </param>
         /// <param name="htmlTDStartNode">
-        /// XmlElement representing the child of tr or tbody element from which we should start adding td elements
+        ///     XmlElement representing the child of tr or tbody element from which
+        ///     we should start adding td elements
         /// </param>
         /// <param name="currentProperties">
-        /// properties of the current html tr element to which cells are to be added
+        ///     properties of the current html tr element to which cells are to be
+        ///     added
         /// </param>
         /// <returns>
-        /// XmlElement representing the current position of the iterator among the children of the parent Html tbody/tr element
+        ///     XmlElement representing the current position of the iterator among
+        ///     the children of the parent Html tbody/tr element
         /// </returns>
-        private static XmlNode AddTableCellsToTableRow(XmlElement xamlTableRowElement, XmlNode htmlTDStartNode, Hashtable currentProperties, ArrayList columnStarts, ArrayList activeRowSpans, CssStylesheet stylesheet, List<XmlElement> sourceContext)
+        private static XmlNode AddTableCellsToTableRow(XmlElement xamlTableRowElement, XmlNode htmlTDStartNode,
+            Hashtable currentProperties, ArrayList columnStarts, ArrayList activeRowSpans, CssStylesheet stylesheet,
+            List<XmlElement> sourceContext)
         {
             // parameter validation
             Debug.Assert(xamlTableRowElement.LocalName == Xaml_TableRow);
@@ -1294,60 +1464,67 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
                 Debug.Assert(activeRowSpans.Count == columnStarts.Count);
             }
 
-            XmlNode htmlChildNode = htmlTDStartNode;
+            var htmlChildNode = htmlTDStartNode;
             double columnStart = 0;
             double columnWidth = 0;
-            int columnIndex = 0;
-            int columnSpan = 0;
+            var columnIndex = 0;
+            var columnSpan = 0;
 
-            while (htmlChildNode != null && htmlChildNode.LocalName.ToLower() != "tr" && htmlChildNode.LocalName.ToLower() != "tbody" && htmlChildNode.LocalName.ToLower() != "thead" && htmlChildNode.LocalName.ToLower() != "tfoot")
+            while (htmlChildNode != null && htmlChildNode.LocalName.ToLower() != "tr" &&
+                   htmlChildNode.LocalName.ToLower() != "tbody" && htmlChildNode.LocalName.ToLower() != "thead" &&
+                   htmlChildNode.LocalName.ToLower() != "tfoot")
             {
                 if (htmlChildNode.LocalName.ToLower() == "td" || htmlChildNode.LocalName.ToLower() == "th")
                 {
-                    XmlElement xamlTableCellElement = xamlTableRowElement.OwnerDocument.CreateElement(null, Xaml_TableCell, _xamlNamespace);
+                    var xamlTableCellElement = xamlTableRowElement.OwnerDocument.CreateElement(null, Xaml_TableCell,
+                        _xamlNamespace);
 
-                    sourceContext.Add((XmlElement)htmlChildNode);
+                    sourceContext.Add((XmlElement) htmlChildNode);
 
                     Hashtable tdElementLocalProperties;
-                    Hashtable tdElementCurrentProperties = GetElementProperties((XmlElement)htmlChildNode, currentProperties, out tdElementLocalProperties, stylesheet, sourceContext);
+                    var tdElementCurrentProperties = GetElementProperties((XmlElement) htmlChildNode, currentProperties,
+                        out tdElementLocalProperties, stylesheet, sourceContext);
 
                     // TODO: determine if localProperties can be used instead of htmlChildNode in this call, and if they can,
                     // make necessary changes and use them instead.
-                    ApplyPropertiesToTableCellElement((XmlElement)htmlChildNode, xamlTableCellElement);
+                    ApplyPropertiesToTableCellElement((XmlElement) htmlChildNode, xamlTableCellElement);
 
                     if (columnStarts != null)
                     {
                         Debug.Assert(columnIndex < columnStarts.Count - 1);
-                        while (columnIndex < activeRowSpans.Count && (int)activeRowSpans[columnIndex] > 0)
+                        while (columnIndex < activeRowSpans.Count && (int) activeRowSpans[columnIndex] > 0)
                         {
-                            activeRowSpans[columnIndex] = (int)activeRowSpans[columnIndex] - 1;
-                            Debug.Assert((int)activeRowSpans[columnIndex] >= 0);
+                            activeRowSpans[columnIndex] = (int) activeRowSpans[columnIndex] - 1;
+                            Debug.Assert((int) activeRowSpans[columnIndex] >= 0);
                             columnIndex++;
                         }
                         Debug.Assert(columnIndex < columnStarts.Count - 1);
-                        columnStart = (double)columnStarts[columnIndex];
-                        columnWidth = GetColumnWidth((XmlElement)htmlChildNode);
+                        columnStart = (double) columnStarts[columnIndex];
+                        columnWidth = GetColumnWidth((XmlElement) htmlChildNode);
                         columnSpan = CalculateColumnSpan(columnIndex, columnWidth, columnStarts);
-                        int rowSpan = GetRowSpan((XmlElement)htmlChildNode);
+                        var rowSpan = GetRowSpan((XmlElement) htmlChildNode);
 
                         // Column cannot have no span
                         Debug.Assert(columnSpan > 0);
                         Debug.Assert(columnIndex + columnSpan < columnStarts.Count);
 
                         xamlTableCellElement.SetAttribute(Xaml_TableCell_ColumnSpan, columnSpan.ToString());
-                        
+
                         // Apply row span
-                        for (int spannedColumnIndex = columnIndex; spannedColumnIndex < columnIndex + columnSpan; spannedColumnIndex++)
+                        for (var spannedColumnIndex = columnIndex;
+                            spannedColumnIndex < columnIndex + columnSpan;
+                            spannedColumnIndex++)
                         {
                             Debug.Assert(spannedColumnIndex < activeRowSpans.Count);
                             activeRowSpans[spannedColumnIndex] = (rowSpan - 1);
-                            Debug.Assert((int)activeRowSpans[spannedColumnIndex] >= 0);
+                            Debug.Assert((int) activeRowSpans[spannedColumnIndex] >= 0);
                         }
 
                         columnIndex = columnIndex + columnSpan;
                     }
 
-                    AddDataToTableCell(xamlTableCellElement, htmlChildNode.FirstChild, tdElementCurrentProperties, stylesheet, sourceContext);
+                    AddDataToTableCell(xamlTableCellElement, htmlChildNode.FirstChild, tdElementCurrentProperties,
+                        stylesheet, sourceContext);
                     if (xamlTableCellElement.HasChildNodes)
                     {
                         xamlTableRowElement.AppendChild(xamlTableCellElement);
@@ -1369,41 +1546,51 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
         }
 
         /// <summary>
-        /// adds table cell data to xamlTableCellElement
+        ///     adds table cell data to <paramref name="xamlTableCellElement" />
         /// </summary>
         /// <param name="xamlTableCellElement">
-        /// XmlElement representing Xaml TableCell element to which the converted data should be added
+        ///     XmlElement representing Xaml TableCell element to which the
+        ///     converted data should be added
         /// </param>
         /// <param name="htmlDataStartNode">
-        /// XmlElement representing the start element of data to be added to xamlTableCellElement
+        ///     XmlElement representing the start element of data to be added to
+        ///     <paramref name="xamlTableCellElement" />
         /// </param>
         /// <param name="currentProperties">
-        /// Current properties for the html td/th element corresponding to xamlTableCellElement
+        ///     Current properties for the html td/th element corresponding to
+        ///     <paramref name="xamlTableCellElement" />
         /// </param>
-        private static void AddDataToTableCell(XmlElement xamlTableCellElement, XmlNode htmlDataStartNode, Hashtable currentProperties, CssStylesheet stylesheet, List<XmlElement> sourceContext)
+        private static void AddDataToTableCell(XmlElement xamlTableCellElement, XmlNode htmlDataStartNode,
+            Hashtable currentProperties, CssStylesheet stylesheet, List<XmlElement> sourceContext)
         {
             // Parameter validation
             Debug.Assert(xamlTableCellElement.LocalName == Xaml_TableCell);
             Debug.Assert(currentProperties != null);
 
-            for (XmlNode htmlChildNode = htmlDataStartNode; htmlChildNode != null; htmlChildNode = htmlChildNode != null ? htmlChildNode.NextSibling : null)
+            for (var htmlChildNode = htmlDataStartNode;
+                htmlChildNode != null;
+                htmlChildNode = htmlChildNode != null ? htmlChildNode.NextSibling : null)
             {
                 // Process a new html element and add it to the td element
-                htmlChildNode = AddBlock(xamlTableCellElement, htmlChildNode, currentProperties, stylesheet, sourceContext);
+                htmlChildNode = AddBlock(xamlTableCellElement, htmlChildNode, currentProperties, stylesheet,
+                    sourceContext);
             }
         }
 
         /// <summary>
-        /// Performs a parsing pass over a table to read information about column width and rowspan attributes. This information
-        /// is used to determine the starting point of each column. 
+        ///     Performs a parsing pass over a table to read information about
+        ///     column width and rowspan attributes. This information is used to
+        ///     determine the starting point of each column.
         /// </summary>
         /// <param name="htmlTableElement">
-        /// XmlElement representing Html table whose structure is to be analyzed
+        ///     XmlElement representing Html table whose structure is to be analyzed
         /// </param>
         /// <returns>
-        /// ArrayList of type double which contains the function output. If analysis is successful, this ArrayList contains
-        /// all the points which are the starting position of any column in the table, ordered from left to right.
-        /// In case if analisys was impossible we return null.
+        ///     ArrayList of type <see langword="double" /> which contains the
+        ///     function output. If analysis is successful, this ArrayList contains
+        ///     all the points which are the starting position of any column in the
+        ///     table, ordered from left to right. In case if analisys was
+        ///     impossible we return null.
         /// </returns>
         private static ArrayList AnalyzeTableStructure(XmlElement htmlTableElement, CssStylesheet stylesheet)
         {
@@ -1414,14 +1601,14 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
                 return null;
             }
 
-            bool columnWidthsAvailable = true;
+            var columnWidthsAvailable = true;
 
-            ArrayList columnStarts = new ArrayList();
-            ArrayList activeRowSpans = new ArrayList();
+            var columnStarts = new ArrayList();
+            var activeRowSpans = new ArrayList();
             Debug.Assert(columnStarts.Count == activeRowSpans.Count);
 
-            XmlNode htmlChildNode = htmlTableElement.FirstChild;
-            double tableWidth = 0;  // Keep track of table width which is the width of its widest row
+            var htmlChildNode = htmlTableElement.FirstChild;
+            double tableWidth = 0; // Keep track of table width which is the width of its widest row
 
             // Analyze tbody and tr elements
             while (htmlChildNode != null && columnWidthsAvailable)
@@ -1432,7 +1619,8 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
                 {
                     case "tbody":
                         // Tbody element, we should analyze its children for trows
-                        double tbodyWidth = AnalyzeTbodyStructure((XmlElement)htmlChildNode, columnStarts, activeRowSpans, tableWidth, stylesheet);
+                        var tbodyWidth = AnalyzeTbodyStructure((XmlElement) htmlChildNode, columnStarts, activeRowSpans,
+                            tableWidth, stylesheet);
                         if (tbodyWidth > tableWidth)
                         {
                             // Table width must be increased to supported newly added wide row
@@ -1447,7 +1635,8 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
                         break;
                     case "tr":
                         // Table row. Analyze column structure within row directly
-                        double trWidth = AnalyzeTRStructure((XmlElement)htmlChildNode, columnStarts, activeRowSpans, tableWidth, stylesheet);
+                        var trWidth = AnalyzeTRStructure((XmlElement) htmlChildNode, columnStarts, activeRowSpans,
+                            tableWidth, stylesheet);
                         if (trWidth > tableWidth)
                         {
                             tableWidth = trWidth;
@@ -1485,34 +1674,41 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
         }
 
         /// <summary>
-        /// Performs a parsing pass over a tbody to read information about column width and rowspan attributes. Information read about width
-        /// attributes is stored in the reference ArrayList parameter columnStarts, which contains a list of all starting
-        /// positions of all columns in the table, ordered from left to right. Row spans are taken into consideration when 
-        /// computing column starts
+        ///     Performs a parsing pass over a tbody to read information about
+        ///     column width and rowspan attributes. Information read about width
+        ///     attributes is stored in the reference ArrayList parameter
+        ///     columnStarts, which contains a list of all starting positions of all
+        ///     columns in the table, ordered from left to right. Row spans are
+        ///     taken into consideration when computing column starts
         /// </summary>
         /// <param name="htmlTbodyElement">
-        /// XmlElement representing Html tbody whose structure is to be analyzed
+        ///     XmlElement representing Html tbody whose structure is to be analyzed
         /// </param>
         /// <param name="columnStarts">
-        /// ArrayList of type double which contains the function output. If analysis fails, this parameter is set to null
+        ///     ArrayList of type <see langword="double" /> which contains the
+        ///     function output. If analysis fails, this parameter is set to
+        ///     <see langword="null" />
         /// </param>
         /// <param name="tableWidth">
-        /// Current width of the table. This is used to determine if a new column when added to the end of table should
-        /// come after the last column in the table or is actually splitting the last column in two. If it is only splitting
-        /// the last column it should inherit row span for that column
+        ///     Current width of the table. This is used to determine if a new
+        ///     column when added to the end of table should come after the last
+        ///     column in the table or is actually splitting the last column in two.
+        ///     If it is only splitting the last column it should inherit row span
+        ///     for that column
         /// </param>
         /// <returns>
-        /// Calculated width of a tbody.
-        /// In case of non-analizable column width structure return 0;
+        ///     Calculated width of a tbody. In case of non-analizable column width
+        ///     structure return 0;
         /// </returns>
-        private static double AnalyzeTbodyStructure(XmlElement htmlTbodyElement, ArrayList columnStarts, ArrayList activeRowSpans, double tableWidth, CssStylesheet stylesheet)
+        private static double AnalyzeTbodyStructure(XmlElement htmlTbodyElement, ArrayList columnStarts,
+            ArrayList activeRowSpans, double tableWidth, CssStylesheet stylesheet)
         {
             // Parameter validation
             Debug.Assert(htmlTbodyElement.LocalName.ToLower() == "tbody");
             Debug.Assert(columnStarts != null);
 
             double tbodyWidth = 0;
-            bool columnWidthsAvailable = true;
+            var columnWidthsAvailable = true;
 
             if (!htmlTbodyElement.HasChildNodes)
             {
@@ -1522,15 +1718,16 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
             // Set active row spans to 0 - thus ignoring row spans crossing tbody boundaries
             ClearActiveRowSpans(activeRowSpans);
 
-            XmlNode htmlChildNode = htmlTbodyElement.FirstChild;
-          
+            var htmlChildNode = htmlTbodyElement.FirstChild;
+
             // Analyze tr elements
             while (htmlChildNode != null && columnWidthsAvailable)
             {
                 switch (htmlChildNode.LocalName.ToLower())
                 {
                     case "tr":
-                        double trWidth = AnalyzeTRStructure((XmlElement)htmlChildNode, columnStarts, activeRowSpans, tbodyWidth, stylesheet);
+                        var trWidth = AnalyzeTRStructure((XmlElement) htmlChildNode, columnStarts, activeRowSpans,
+                            tbodyWidth, stylesheet);
                         if (trWidth > tbodyWidth)
                         {
                             tbodyWidth = trWidth;
@@ -1552,26 +1749,33 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
         }
 
         /// <summary>
-        /// Performs a parsing pass over a tr element to read information about column width and rowspan attributes.  
+        ///     Performs a parsing pass over a tr element to read information about
+        ///     column width and rowspan attributes.
         /// </summary>
         /// <param name="htmlTRElement">
-        /// XmlElement representing Html tr element whose structure is to be analyzed
+        ///     XmlElement representing Html tr element whose structure is to be
+        ///     analyzed
         /// </param>
         /// <param name="columnStarts">
-        /// ArrayList of type double which contains the function output. If analysis is successful, this ArrayList contains
-        /// all the points which are the starting position of any column in the tr, ordered from left to right. If analysis fails,
-        /// the ArrayList is set to null
+        ///     ArrayList of type <see langword="double" /> which contains the
+        ///     function output. If analysis is successful, this ArrayList contains
+        ///     all the points which are the starting position of any column in the
+        ///     tr, ordered from left to right. If analysis fails, the ArrayList is
+        ///     set to <see langword="null" />
         /// </param>
         /// <param name="activeRowSpans">
-        /// ArrayList representing all columns currently spanned by an earlier row span attribute. These columns should
-        /// not be used for data in this row. The ArrayList actually contains notation for all columns in the table, if the
-        /// active row span is set to 0 that column is not presently spanned but if it is > 0 the column is presently spanned
+        ///     ArrayList representing all columns currently spanned by an earlier
+        ///     row span attribute. These columns should not be used for data in
+        ///     this row. The ArrayList actually contains notation for all columns
+        ///     in the table, if the active row span is set to 0 that column is not
+        ///     presently spanned but if it is > 0 the column is presently spanned
         /// </param>
         /// <param name="tableWidth">
-        /// Double value representing the current width of the table.
-        /// Return 0 if analisys was insuccessful.
+        ///     Double value representing the current width of the table. Return 0
+        ///     if analisys was insuccessful.
         /// </param>
-        private static double AnalyzeTRStructure(XmlElement htmlTRElement, ArrayList columnStarts, ArrayList activeRowSpans, double tableWidth, CssStylesheet stylesheet)
+        private static double AnalyzeTRStructure(XmlElement htmlTRElement, ArrayList columnStarts,
+            ArrayList activeRowSpans, double tableWidth, CssStylesheet stylesheet)
         {
             double columnWidth;
 
@@ -1586,26 +1790,26 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
                 return 0;
             }
 
-            bool columnWidthsAvailable = true;
+            var columnWidthsAvailable = true;
 
             double columnStart = 0; // starting position of current column
-            XmlNode htmlChildNode = htmlTRElement.FirstChild;
-            int columnIndex = 0;
+            var htmlChildNode = htmlTRElement.FirstChild;
+            var columnIndex = 0;
             double trWidth = 0;
 
             // Skip spanned columns to get to real column start
             if (columnIndex < activeRowSpans.Count)
             {
-                Debug.Assert((double)columnStarts[columnIndex] >= columnStart);
-                if ((double)columnStarts[columnIndex] == columnStart)
+                Debug.Assert((double) columnStarts[columnIndex] >= columnStart);
+                if ((double) columnStarts[columnIndex] == columnStart)
                 {
                     // The new column may be in a spanned area
-                    while (columnIndex < activeRowSpans.Count && (int)activeRowSpans[columnIndex] > 0)
+                    while (columnIndex < activeRowSpans.Count && (int) activeRowSpans[columnIndex] > 0)
                     {
-                        activeRowSpans[columnIndex] = (int)activeRowSpans[columnIndex] - 1;
-                        Debug.Assert((int)activeRowSpans[columnIndex] >= 0);
+                        activeRowSpans[columnIndex] = (int) activeRowSpans[columnIndex] - 1;
+                        Debug.Assert((int) activeRowSpans[columnIndex] >= 0);
                         columnIndex++;
-                        columnStart = (double)columnStarts[columnIndex];
+                        columnStart = (double) columnStarts[columnIndex];
                     }
                 }
             }
@@ -1622,8 +1826,8 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
                         Debug.Assert(columnIndex <= columnStarts.Count);
                         if (columnIndex < columnStarts.Count)
                         {
-                            Debug.Assert(columnStart <= (double)columnStarts[columnIndex]);
-                            if (columnStart < (double)columnStarts[columnIndex])
+                            Debug.Assert(columnStart <= (double) columnStarts[columnIndex]);
+                            if (columnStart < (double) columnStarts[columnIndex])
                             {
                                 columnStarts.Insert(columnIndex, columnStart);
                                 // There can be no row spans now - the column data will appear here
@@ -1642,11 +1846,11 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
                             columnStarts.Add(columnStart);
                             activeRowSpans.Add(0);
                         }
-                        columnWidth = GetColumnWidth((XmlElement)htmlChildNode);
+                        columnWidth = GetColumnWidth((XmlElement) htmlChildNode);
                         if (columnWidth != -1)
                         {
                             int nextColumnIndex;
-                            int rowSpan = GetRowSpan((XmlElement)htmlChildNode);
+                            var rowSpan = GetRowSpan((XmlElement) htmlChildNode);
 
                             nextColumnIndex = GetNextColumnIndex(columnIndex, columnWidth, columnStarts, activeRowSpans);
                             if (nextColumnIndex != -1)
@@ -1656,10 +1860,12 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
                                 Debug.Assert(nextColumnIndex <= columnStarts.Count);
 
                                 // Apply row span to affected columns
-                                for (int spannedColumnIndex = columnIndex; spannedColumnIndex < nextColumnIndex; spannedColumnIndex++)
+                                for (var spannedColumnIndex = columnIndex;
+                                    spannedColumnIndex < nextColumnIndex;
+                                    spannedColumnIndex++)
                                 {
                                     activeRowSpans[spannedColumnIndex] = rowSpan - 1;
-                                    Debug.Assert((int)activeRowSpans[spannedColumnIndex] >= 0);
+                                    Debug.Assert((int) activeRowSpans[spannedColumnIndex] >= 0);
                                 }
 
                                 columnIndex = nextColumnIndex;
@@ -1669,16 +1875,17 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
 
                                 if (columnIndex < activeRowSpans.Count)
                                 {
-                                    Debug.Assert((double)columnStarts[columnIndex] >= columnStart);
-                                    if ((double)columnStarts[columnIndex] == columnStart)
+                                    Debug.Assert((double) columnStarts[columnIndex] >= columnStart);
+                                    if ((double) columnStarts[columnIndex] == columnStart)
                                     {
                                         // The new column may be in a spanned area
-                                        while (columnIndex < activeRowSpans.Count && (int)activeRowSpans[columnIndex] > 0)
+                                        while (columnIndex < activeRowSpans.Count &&
+                                               (int) activeRowSpans[columnIndex] > 0)
                                         {
-                                            activeRowSpans[columnIndex] = (int)activeRowSpans[columnIndex] - 1;
-                                            Debug.Assert((int)activeRowSpans[columnIndex] >= 0);
+                                            activeRowSpans[columnIndex] = (int) activeRowSpans[columnIndex] - 1;
+                                            Debug.Assert((int) activeRowSpans[columnIndex] >= 0);
                                             columnIndex++;
-                                            columnStart = (double)columnStarts[columnIndex];
+                                            columnStart = (double) columnStarts[columnIndex];
                                         }
                                     }
                                     // else: the new column does not start at the same time as a pre existing column
@@ -1721,18 +1928,19 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
         }
 
         /// <summary>
-        /// Gets row span attribute from htmlTDElement. Returns an integer representing the value of the rowspan attribute.
-        /// Default value if attribute is not specified or if it is invalid is 1
+        ///     Gets row span attribute from htmlTDElement. Returns an integer
+        ///     representing the value of the rowspan attribute. Default value if
+        ///     attribute is not specified or if it is invalid is 1
         /// </summary>
         /// <param name="htmlTDElement">
-        /// Html td element to be searched for rowspan attribute
+        ///     Html td element to be searched for rowspan attribute
         /// </param>
         private static int GetRowSpan(XmlElement htmlTDElement)
         {
             string rowSpanAsString;
             int rowSpan;
 
-            rowSpanAsString = GetAttribute((XmlElement)htmlTDElement, "rowspan");
+            rowSpanAsString = GetAttribute(htmlTDElement, "rowspan");
             if (rowSpanAsString != null)
             {
                 if (!Int32.TryParse(rowSpanAsString, out rowSpan))
@@ -1750,23 +1958,30 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
         }
 
         /// <summary>
-        /// Gets index at which a column should be inseerted into the columnStarts ArrayList. This is
-        /// decided by the value columnStart. The columnStarts ArrayList is ordered in ascending order.
-        /// Returns an integer representing the index at which the column should be inserted
+        ///     Gets index at which a column should be inseerted into the
+        ///     <paramref name="columnStarts" /> ArrayList. This is decided by the
+        ///     value columnStart. The <paramref name="columnStarts" /> ArrayList is
+        ///     ordered in ascending order. Returns an integer representing the
+        ///     index at which the column should be inserted
         /// </summary>
         /// <param name="columnStarts">
-        /// Array list representing starting coordinates of all columns in the table
+        ///     Array list representing starting coordinates of all columns in the
+        ///     table
         /// </param>
         /// <param name="columnStart">
-        /// Starting coordinate of column we wish to insert into columnStart
+        ///     Starting coordinate of column we wish to insert into columnStart
         /// </param>
         /// <param name="columnIndex">
-        /// Int representing the current column index. This acts as a clue while finding the insertion index.
-        /// If the value of columnStarts at columnIndex is the same as columnStart, then this position alrady exists
-        /// in the array and we can jsut return columnIndex.
+        ///     Int representing the current column index. This acts as a clue while
+        ///     finding the insertion index. If the value of
+        ///     <paramref name="columnStarts" /> at columnIndex is the same as
+        ///     columnStart, then this position alrady exists in the array and we
+        ///     can jsut return columnIndex.
         /// </param>
-        /// <returns></returns>
-        private static int GetNextColumnIndex(int columnIndex, double columnWidth, ArrayList columnStarts, ArrayList activeRowSpans)
+        /// <returns>
+        /// </returns>
+        private static int GetNextColumnIndex(int columnIndex, double columnWidth, ArrayList columnStarts,
+            ArrayList activeRowSpans)
         {
             double columnStart;
             int spannedColumnIndex;
@@ -1776,12 +1991,13 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
             Debug.Assert(0 <= columnIndex && columnIndex <= columnStarts.Count);
             Debug.Assert(columnWidth > 0);
 
-            columnStart = (double)columnStarts[columnIndex];
+            columnStart = (double) columnStarts[columnIndex];
             spannedColumnIndex = columnIndex + 1;
 
-            while (spannedColumnIndex < columnStarts.Count && (double)columnStarts[spannedColumnIndex] < columnStart + columnWidth && spannedColumnIndex != -1)
+            while (spannedColumnIndex < columnStarts.Count &&
+                   (double) columnStarts[spannedColumnIndex] < columnStart + columnWidth && spannedColumnIndex != -1)
             {
-                if ((int)activeRowSpans[spannedColumnIndex] > 0)
+                if ((int) activeRowSpans[spannedColumnIndex] > 0)
                 {
                     // The current column should span this area, but something else is already spanning it
                     // Not analyzable
@@ -1796,33 +2012,33 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
             return spannedColumnIndex;
         }
 
-        
+
         /// <summary>
-        /// Used for clearing activeRowSpans array in the beginning/end of each tbody
+        ///     Used for clearing <paramref name="activeRowSpans" /> array in the
+        ///     beginning/end of each tbody
         /// </summary>
         /// <param name="activeRowSpans">
-        /// ArrayList representing currently active row spans
+        ///     ArrayList representing currently active row spans
         /// </param>
         private static void ClearActiveRowSpans(ArrayList activeRowSpans)
         {
-            for (int columnIndex = 0; columnIndex < activeRowSpans.Count; columnIndex++)
+            for (var columnIndex = 0; columnIndex < activeRowSpans.Count; columnIndex++)
             {
                 activeRowSpans[columnIndex] = 0;
             }
         }
 
         /// <summary>
-        /// Used for initializing activeRowSpans array in the before adding rows to tbody element
+        ///     Used for initializing <paramref name="activeRowSpans" /> array in the
+        ///     before adding rows to tbody element
         /// </summary>
         /// <param name="activeRowSpans">
-        /// ArrayList representing currently active row spans
+        ///     ArrayList representing currently active row spans
         /// </param>
-        /// <param name="count">
-        /// Size to be give to array list
-        /// </param>
+        /// <param name="count">Size to be give to array list</param>
         private static void InitializeActiveRowSpans(ArrayList activeRowSpans, int count)
         {
-            for (int columnIndex = 0; columnIndex < count; columnIndex++)
+            for (var columnIndex = 0; columnIndex < count; columnIndex++)
             {
                 activeRowSpans.Add(0);
             }
@@ -1830,25 +2046,25 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
 
 
         /// <summary>
-        /// Calculates width of next TD element based on starting position of current element and it's width, which
-        /// is calculated byt he function
+        ///     Calculates width of next TD element based on starting position of
+        ///     current element and it's width, which is calculated byt he function
         /// </summary>
         /// <param name="htmlTDElement">
-        /// XmlElement representing Html td element whose width is to be read
+        ///     XmlElement representing Html td element whose width is to be read
         /// </param>
         /// <param name="columnStart">
-        /// Starting position of current column
+        ///     Starting position of current column
         /// </param>
         private static double GetNextColumnStart(XmlElement htmlTDElement, double columnStart)
         {
             double columnWidth;
             double nextColumnStart;
-            
+
             // Parameter validation
             Debug.Assert(htmlTDElement.LocalName.ToLower() == "td" || htmlTDElement.LocalName.ToLower() == "th");
             Debug.Assert(columnStart >= 0);
 
-            nextColumnStart = -1;  // -1 indicates inability to calculate columnStart width
+            nextColumnStart = -1; // -1 indicates inability to calculate columnStart width
 
             columnWidth = GetColumnWidth(htmlTDElement);
 
@@ -1889,17 +2105,13 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
         }
 
         /// <summary>
-        /// Calculates column span based the column width and the widths of all other columns. Returns an integer representing 
-        /// the column span
+        ///     Calculates column span based the column width and the widths of all
+        ///     other columns. Returns an integer representing the column span
         /// </summary>
-        /// <param name="columnIndex">
-        /// Index of the current column
-        /// </param>
-        /// <param name="columnWidth">
-        /// Width of the current column
-        /// </param>
+        /// <param name="columnIndex">Index of the current column</param>
+        /// <param name="columnWidth">Width of the current column</param>
         /// <param name="columnStarts">
-        /// ArrayList repsenting starting coordinates of all columns
+        ///     ArrayList repsenting starting coordinates of all columns
         /// </param>
         private static int CalculateColumnSpan(int columnIndex, double columnWidth, ArrayList columnStarts)
         {
@@ -1911,7 +2123,7 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
 
             Debug.Assert(columnStarts != null);
             Debug.Assert(columnIndex < columnStarts.Count - 1);
-            Debug.Assert((double)columnStarts[columnIndex] >= 0);
+            Debug.Assert((double) columnStarts[columnIndex] >= 0);
             Debug.Assert(columnWidth > 0);
 
             columnSpanningIndex = columnIndex;
@@ -1919,9 +2131,10 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
             columnSpan = 0;
             subColumnWidth = 0;
 
-            while (columnSpanningValue <  columnWidth && columnSpanningIndex < columnStarts.Count - 1)
+            while (columnSpanningValue < columnWidth && columnSpanningIndex < columnStarts.Count - 1)
             {
-                subColumnWidth = (double)columnStarts[columnSpanningIndex + 1] - (double)columnStarts[columnSpanningIndex];
+                subColumnWidth = (double) columnStarts[columnSpanningIndex + 1] -
+                                 (double) columnStarts[columnSpanningIndex];
                 Debug.Assert(subColumnWidth > 0);
                 columnSpanningValue += subColumnWidth;
                 columnSpanningIndex++;
@@ -1936,11 +2149,11 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
         }
 
         /// <summary>
-        /// Verifies that values in columnStart, which represent starting coordinates of all columns, are arranged
-        /// in ascending order
+        ///     Verifies that values in columnStart, which represent starting
+        ///     coordinates of all columns, are arranged in ascending order
         /// </summary>
         /// <param name="columnStarts">
-        /// ArrayList representing starting coordinates of all columns
+        ///     ArrayList representing starting coordinates of all columns
         /// </param>
         private static void VerifyColumnStartsAscendingOrder(ArrayList columnStarts)
         {
@@ -1950,10 +2163,10 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
 
             columnStart = -0.01;
 
-            for (int columnIndex = 0; columnIndex < columnStarts.Count; columnIndex++)
+            for (var columnIndex = 0; columnIndex < columnStarts.Count; columnIndex++)
             {
-                Debug.Assert(columnStart < (double)columnStarts[columnIndex]);
-                columnStart = (double)columnStarts[columnIndex];
+                Debug.Assert(columnStart < (double) columnStarts[columnIndex]);
+                columnStart = (double) columnStarts[columnIndex];
             }
         }
 
@@ -1964,68 +2177,71 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
         // .............................................................
 
         /// <summary>
-        /// Analyzes local properties of Html element, converts them into Xaml equivalents, and applies them to xamlElement
+        ///     Analyzes local properties of Html element, converts them into Xaml
+        ///     equivalents, and applies them to <paramref name="xamlElement" />
         /// </summary>
         /// <param name="xamlElement">
-        /// XmlElement representing Xaml element to which properties are to be applied
+        ///     XmlElement representing Xaml element to which properties are to be
+        ///     applied
         /// </param>
         /// <param name="localProperties">
-        /// Hashtable representing local properties of Html element that is converted into xamlElement
+        ///     Hashtable representing local properties of Html element that is
+        ///     converted into <paramref name="xamlElement" />
         /// </param>
         private static void ApplyLocalProperties(XmlElement xamlElement, Hashtable localProperties, bool isBlock)
         {
-            bool marginSet = false;
-            string marginTop = "0";
-            string marginBottom = "0";
-            string marginLeft = "0";
-            string marginRight = "0";
+            var marginSet = false;
+            var marginTop = "0";
+            var marginBottom = "0";
+            var marginLeft = "0";
+            var marginRight = "0";
 
-            bool paddingSet = false;
-            string paddingTop = "0";
-            string paddingBottom = "0";
-            string paddingLeft = "0";
-            string paddingRight = "0";
+            var paddingSet = false;
+            var paddingTop = "0";
+            var paddingBottom = "0";
+            var paddingLeft = "0";
+            var paddingRight = "0";
 
             string borderColor = null;
 
-            bool borderThicknessSet = false;
-            string borderThicknessTop = "0";
-            string borderThicknessBottom = "0";
-            string borderThicknessLeft = "0";
-            string borderThicknessRight = "0";
+            var borderThicknessSet = false;
+            var borderThicknessTop = "0";
+            var borderThicknessBottom = "0";
+            var borderThicknessLeft = "0";
+            var borderThicknessRight = "0";
 
-            IDictionaryEnumerator propertyEnumerator = localProperties.GetEnumerator();
+            var propertyEnumerator = localProperties.GetEnumerator();
             while (propertyEnumerator.MoveNext())
             {
-                switch ((string)propertyEnumerator.Key)
+                switch ((string) propertyEnumerator.Key)
                 {
                     case "font-family":
                         //  Convert from font-family value list into xaml FontFamily value
-                        xamlElement.SetAttribute(Xaml_FontFamily, (string)propertyEnumerator.Value);
+                        xamlElement.SetAttribute(Xaml_FontFamily, (string) propertyEnumerator.Value);
                         break;
                     case "font-style":
-                        xamlElement.SetAttribute(Xaml_FontStyle, (string)propertyEnumerator.Value);
+                        xamlElement.SetAttribute(Xaml_FontStyle, (string) propertyEnumerator.Value);
                         break;
                     case "font-variant":
                         //  Convert from font-variant into xaml property
                         break;
                     case "font-weight":
-                        xamlElement.SetAttribute(Xaml_FontWeight, (string)propertyEnumerator.Value);
+                        xamlElement.SetAttribute(Xaml_FontWeight, (string) propertyEnumerator.Value);
                         break;
                     case "font-size":
                         //  Convert from css size into FontSize
-                        xamlElement.SetAttribute(Xaml_FontSize, (string)propertyEnumerator.Value);
+                        xamlElement.SetAttribute(Xaml_FontSize, (string) propertyEnumerator.Value);
                         break;
                     case "color":
-                        SetPropertyValue(xamlElement, TextElement.ForegroundProperty, (string)propertyEnumerator.Value);
+                        SetPropertyValue(xamlElement, TextElement.ForegroundProperty, (string) propertyEnumerator.Value);
                         break;
                     case "background-color":
-                        SetPropertyValue(xamlElement, TextElement.BackgroundProperty, (string)propertyEnumerator.Value);
+                        SetPropertyValue(xamlElement, TextElement.BackgroundProperty, (string) propertyEnumerator.Value);
                         break;
                     case "text-decoration-underline":
                         if (!isBlock)
                         {
-                            if ((string)propertyEnumerator.Value == "true")
+                            if ((string) propertyEnumerator.Value == "true")
                             {
                                 xamlElement.SetAttribute(Xaml_TextDecorations, Xaml_TextDecorations_Underline);
                             }
@@ -2047,14 +2263,14 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
                     case "text-indent":
                         if (isBlock)
                         {
-                            xamlElement.SetAttribute(Xaml_TextIndent, (string)propertyEnumerator.Value);
+                            xamlElement.SetAttribute(Xaml_TextIndent, (string) propertyEnumerator.Value);
                         }
                         break;
 
                     case "text-align":
                         if (isBlock)
                         {
-                            xamlElement.SetAttribute(Xaml_TextAlignment, (string)propertyEnumerator.Value);
+                            xamlElement.SetAttribute(Xaml_TextAlignment, (string) propertyEnumerator.Value);
                         }
                         break;
 
@@ -2065,51 +2281,51 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
 
                     case "margin-top":
                         marginSet = true;
-                        marginTop = (string)propertyEnumerator.Value;
+                        marginTop = (string) propertyEnumerator.Value;
                         break;
                     case "margin-right":
                         marginSet = true;
-                        marginRight = (string)propertyEnumerator.Value;
+                        marginRight = (string) propertyEnumerator.Value;
                         break;
                     case "margin-bottom":
                         marginSet = true;
-                        marginBottom = (string)propertyEnumerator.Value;
+                        marginBottom = (string) propertyEnumerator.Value;
                         break;
                     case "margin-left":
                         marginSet = true;
-                        marginLeft = (string)propertyEnumerator.Value;
+                        marginLeft = (string) propertyEnumerator.Value;
                         break;
 
                     case "padding-top":
                         paddingSet = true;
-                        paddingTop = (string)propertyEnumerator.Value;
+                        paddingTop = (string) propertyEnumerator.Value;
                         break;
                     case "padding-right":
                         paddingSet = true;
-                        paddingRight = (string)propertyEnumerator.Value;
+                        paddingRight = (string) propertyEnumerator.Value;
                         break;
                     case "padding-bottom":
                         paddingSet = true;
-                        paddingBottom = (string)propertyEnumerator.Value;
+                        paddingBottom = (string) propertyEnumerator.Value;
                         break;
                     case "padding-left":
                         paddingSet = true;
-                        paddingLeft = (string)propertyEnumerator.Value;
+                        paddingLeft = (string) propertyEnumerator.Value;
                         break;
 
                     // NOTE: css names for elementary border styles have side indications in the middle (top/bottom/left/right)
                     // In our internal notation we intentionally put them at the end - to unify processing in ParseCssRectangleProperty method
                     case "border-color-top":
-                        borderColor = (string)propertyEnumerator.Value;
+                        borderColor = (string) propertyEnumerator.Value;
                         break;
                     case "border-color-right":
-                        borderColor = (string)propertyEnumerator.Value;
+                        borderColor = (string) propertyEnumerator.Value;
                         break;
                     case "border-color-bottom":
-                        borderColor = (string)propertyEnumerator.Value;
+                        borderColor = (string) propertyEnumerator.Value;
                         break;
                     case "border-color-left":
-                        borderColor = (string)propertyEnumerator.Value;
+                        borderColor = (string) propertyEnumerator.Value;
                         break;
                     case "border-style-top":
                     case "border-style-right":
@@ -2119,62 +2335,62 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
                         break;
                     case "border-width-top":
                         borderThicknessSet = true;
-                        borderThicknessTop = (string)propertyEnumerator.Value;
+                        borderThicknessTop = (string) propertyEnumerator.Value;
                         break;
                     case "border-width-right":
                         borderThicknessSet = true;
-                        borderThicknessRight = (string)propertyEnumerator.Value;
+                        borderThicknessRight = (string) propertyEnumerator.Value;
                         break;
                     case "border-width-bottom":
                         borderThicknessSet = true;
-                        borderThicknessBottom = (string)propertyEnumerator.Value;
+                        borderThicknessBottom = (string) propertyEnumerator.Value;
                         break;
                     case "border-width-left":
                         borderThicknessSet = true;
-                        borderThicknessLeft = (string)propertyEnumerator.Value;
+                        borderThicknessLeft = (string) propertyEnumerator.Value;
                         break;
 
                     case "list-style-type":
                         if (xamlElement.LocalName == Xaml_List)
                         {
                             string markerStyle;
-                            switch (((string)propertyEnumerator.Value).ToLower())
+                            switch (((string) propertyEnumerator.Value).ToLower())
                             {
                                 case "disc":
-                                    markerStyle = HtmlToXamlConverter.Xaml_List_MarkerStyle_Disc;
+                                    markerStyle = Xaml_List_MarkerStyle_Disc;
                                     break;
                                 case "circle":
-                                    markerStyle = HtmlToXamlConverter.Xaml_List_MarkerStyle_Circle;
+                                    markerStyle = Xaml_List_MarkerStyle_Circle;
                                     break;
                                 case "none":
-                                    markerStyle = HtmlToXamlConverter.Xaml_List_MarkerStyle_None;
+                                    markerStyle = Xaml_List_MarkerStyle_None;
                                     break;
                                 case "square":
-                                    markerStyle = HtmlToXamlConverter.Xaml_List_MarkerStyle_Square;
+                                    markerStyle = Xaml_List_MarkerStyle_Square;
                                     break;
                                 case "box":
-                                    markerStyle = HtmlToXamlConverter.Xaml_List_MarkerStyle_Box;
+                                    markerStyle = Xaml_List_MarkerStyle_Box;
                                     break;
                                 case "lower-latin":
-                                    markerStyle = HtmlToXamlConverter.Xaml_List_MarkerStyle_LowerLatin;
+                                    markerStyle = Xaml_List_MarkerStyle_LowerLatin;
                                     break;
                                 case "upper-latin":
-                                    markerStyle = HtmlToXamlConverter.Xaml_List_MarkerStyle_UpperLatin;
+                                    markerStyle = Xaml_List_MarkerStyle_UpperLatin;
                                     break;
                                 case "lower-roman":
-                                    markerStyle = HtmlToXamlConverter.Xaml_List_MarkerStyle_LowerRoman;
+                                    markerStyle = Xaml_List_MarkerStyle_LowerRoman;
                                     break;
                                 case "upper-roman":
-                                    markerStyle = HtmlToXamlConverter.Xaml_List_MarkerStyle_UpperRoman;
+                                    markerStyle = Xaml_List_MarkerStyle_UpperRoman;
                                     break;
                                 case "decimal":
-                                    markerStyle = HtmlToXamlConverter.Xaml_List_MarkerStyle_Decimal;
+                                    markerStyle = Xaml_List_MarkerStyle_Decimal;
                                     break;
                                 default:
-                                    markerStyle = HtmlToXamlConverter.Xaml_List_MarkerStyle_Disc;
+                                    markerStyle = Xaml_List_MarkerStyle_Disc;
                                     break;
                             }
-                            xamlElement.SetAttribute(HtmlToXamlConverter.Xaml_List_MarkerStyle, markerStyle);
+                            xamlElement.SetAttribute(Xaml_List_MarkerStyle, markerStyle);
                         }
                         break;
 
@@ -2200,7 +2416,8 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
 
                 if (paddingSet)
                 {
-                    ComposeThicknessProperty(xamlElement, Xaml_Padding, paddingLeft, paddingRight, paddingTop, paddingBottom);
+                    ComposeThicknessProperty(xamlElement, Xaml_Padding, paddingLeft, paddingRight, paddingTop,
+                        paddingBottom);
                 }
 
                 if (borderColor != null)
@@ -2211,13 +2428,15 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
 
                 if (borderThicknessSet)
                 {
-                    ComposeThicknessProperty(xamlElement, Xaml_BorderThickness, borderThicknessLeft, borderThicknessRight, borderThicknessTop, borderThicknessBottom);
+                    ComposeThicknessProperty(xamlElement, Xaml_BorderThickness, borderThicknessLeft,
+                        borderThicknessRight, borderThicknessTop, borderThicknessBottom);
                 }
             }
         }
 
         // Create syntactically optimized four-value Thickness
-        private static void ComposeThicknessProperty(XmlElement xamlElement, string propertyName, string left, string right, string top, string bottom)
+        private static void ComposeThicknessProperty(XmlElement xamlElement, string propertyName, string left,
+            string right, string top, string bottom)
         {
             // Xaml syntax:
             // We have a reasonable interpreation for one value (all four edges), two values (horizontal, vertical),
@@ -2257,52 +2476,56 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
 
         private static void SetPropertyValue(XmlElement xamlElement, DependencyProperty property, string stringValue)
         {
-            System.ComponentModel.TypeConverter typeConverter = System.ComponentModel.TypeDescriptor.GetConverter(property.PropertyType);
+            var typeConverter = TypeDescriptor.GetConverter(property.PropertyType);
             try
             {
-                object convertedValue = typeConverter.ConvertFromInvariantString(stringValue);
+                var convertedValue = typeConverter.ConvertFromInvariantString(stringValue);
                 if (convertedValue != null)
                 {
                     xamlElement.SetAttribute(property.Name, stringValue);
                 }
             }
-            catch(Exception)
+            catch (Exception)
             {
             }
         }
 
         /// <summary>
-        /// Analyzes the tag of the htmlElement and infers its associated formatted properties.
-        /// After that parses style attribute and adds all inline css styles.
-        /// The resulting style attributes are collected in output parameter localProperties.
+        ///     Analyzes the tag of the <paramref name="htmlElement" /> and infers
+        ///     its associated formatted properties. After that parses style
+        ///     attribute and adds all inline css styles. The resulting style
+        ///     attributes are collected in output parameter localProperties.
         /// </summary>
-        /// <param name="htmlElement">
-        /// </param>
+        /// <param name="htmlElement"></param>
         /// <param name="inheritedProperties">
-        /// set of properties inherited from ancestor elements. Currently not used in the code. Reserved for the future development.
+        ///     set of properties inherited from ancestor elements. Currently not
+        ///     used in the code. Reserved for the future development.
         /// </param>
         /// <param name="localProperties">
-        /// returns all formatting properties defined by this element - implied by its tag, its attributes, or its css inline style
+        ///     returns all formatting properties defined by this element - implied
+        ///     by its tag, its attributes, or its css inline style
         /// </param>
         /// <param name="stylesheet"></param>
         /// <param name="sourceContext"></param>
         /// <returns>
-        /// returns a combination of previous context with local set of properties.
-        /// This value is not used in the current code - inntended for the future development.
+        ///     returns a combination of previous context with local set of
+        ///     properties. This value is not used in the current code - inntended
+        ///     for the future development.
         /// </returns>
-        private static Hashtable GetElementProperties(XmlElement htmlElement, Hashtable inheritedProperties, out Hashtable localProperties, CssStylesheet stylesheet, List<XmlElement> sourceContext)
+        private static Hashtable GetElementProperties(XmlElement htmlElement, Hashtable inheritedProperties,
+            out Hashtable localProperties, CssStylesheet stylesheet, List<XmlElement> sourceContext)
         {
             // Start with context formatting properties
-            Hashtable currentProperties = new Hashtable();
-            IDictionaryEnumerator propertyEnumerator = inheritedProperties.GetEnumerator();
+            var currentProperties = new Hashtable();
+            var propertyEnumerator = inheritedProperties.GetEnumerator();
             while (propertyEnumerator.MoveNext())
             {
                 currentProperties[propertyEnumerator.Key] = propertyEnumerator.Value;
             }
 
             // Identify element name
-            string elementName = htmlElement.LocalName.ToLower();
-            string elementNamespace = htmlElement.NamespaceURI;
+            var elementName = htmlElement.LocalName.ToLower();
+            var elementNamespace = htmlElement.NamespaceURI;
 
             // update current formatting properties depending on element tag
 
@@ -2326,7 +2549,7 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
                     localProperties["text-decoration-underline"] = "true";
                     break;
                 case "font":
-                    string attributeValue = GetAttribute(htmlElement, "face");
+                    var attributeValue = GetAttribute(htmlElement, "face");
                     if (attributeValue != null)
                     {
                         localProperties["font-family"] = attributeValue;
@@ -2334,7 +2557,7 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
                     attributeValue = GetAttribute(htmlElement, "size");
                     if (attributeValue != null)
                     {
-                        double fontSize = double.Parse(attributeValue) * (12.0 / 3.0);
+                        var fontSize = double.Parse(attributeValue)*(12.0/3.0);
                         if (fontSize < 1.0)
                         {
                             fontSize = 1.0;
@@ -2417,7 +2640,8 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
             }
 
             // Override html defaults by css attributes - from stylesheets and inline settings
-            HtmlCssParser.GetElementPropertiesFromCssAttributes(htmlElement, elementName, stylesheet, localProperties, sourceContext);
+            HtmlCssParser.GetElementPropertiesFromCssAttributes(htmlElement, elementName, stylesheet, localProperties,
+                sourceContext);
 
             // Combine local properties with context to create new current properties
             propertyEnumerator = localProperties.GetEnumerator();
@@ -2430,17 +2654,16 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
         }
 
         /// <summary>
-        /// Extracts a value of css attribute from css style definition.
+        ///     Extracts a value of css attribute from css style definition.
         /// </summary>
-        /// <param name="cssStyle">
-        /// Source csll style definition
-        /// </param>
+        /// <param name="cssStyle">Source csll style definition</param>
         /// <param name="attributeName">
-        /// A name of css attribute to extract
+        ///     A name of css attribute to extract
         /// </param>
         /// <returns>
-        /// A string rrepresentation of an attribute value if found;
-        /// null if there is no such attribute in a given string.
+        ///     A string rrepresentation of an attribute value if found;
+        ///     <see langword="null" /> if there is no such attribute in a given
+        ///     string.
         /// </returns>
         private static string GetCssAttribute(string cssStyle, string attributeName)
         {
@@ -2454,7 +2677,7 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
                 // Check for width specification in style string
                 styleValues = cssStyle.Split(';');
 
-                for (int styleValueIndex = 0; styleValueIndex < styleValues.Length; styleValueIndex++)
+                for (var styleValueIndex = 0; styleValueIndex < styleValues.Length; styleValueIndex++)
                 {
                     string[] styleNameValue;
 
@@ -2473,13 +2696,15 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
         }
 
         /// <summary>
-        /// Converts a length value from string representation to a double.
+        ///     Converts a <paramref name="length" /> value from string
+        ///     representation to a double.
         /// </summary>
         /// <param name="lengthAsString">
-        /// Source string value of a length.
+        ///     Source string value of a length.
         /// </param>
         /// <param name="length"></param>
-        /// <returns></returns>
+        /// <returns>
+        /// </returns>
         private static bool TryGetLengthValue(string lengthAsString, out double length)
         {
             length = Double.NaN;
@@ -2494,7 +2719,7 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
                     lengthAsString = lengthAsString.Substring(0, lengthAsString.Length - 2);
                     if (Double.TryParse(lengthAsString, out length))
                     {
-                        length = (length * 96.0) / 72.0; // convert from points to pixels
+                        length = (length*96.0)/72.0; // convert from points to pixels
                     }
                     else
                     {
@@ -2534,17 +2759,20 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
         }
 
         /// <summary>
-        /// Applies properties to xamlTableCellElement based on the html td element it is converted from.
+        ///     Applies properties to <paramref name="xamlTableCellElement" /> based
+        ///     on the html td element it is converted from.
         /// </summary>
+        /// <remarks>
+        ///     TODO: Use the processed properties for
+        ///     <paramref name="htmlChildNode" /> instead of using the node itself
+        /// </remarks>
         /// <param name="htmlChildNode">
-        /// Html td/th element to be converted to xaml
+        ///     Html td/th element to be converted to xaml
         /// </param>
         /// <param name="xamlTableCellElement">
-        /// XmlElement representing Xaml element for which properties are to be processed
+        ///     XmlElement representing Xaml element for which properties are to be
+        ///     processed
         /// </param>
-        /// <remarks>
-        /// TODO: Use the processed properties for htmlChildNode instead of using the node itself 
-        /// </remarks>
         private static void ApplyPropertiesToTableCellElement(XmlElement htmlChildNode, XmlElement xamlTableCellElement)
         {
             // Parameter validation
@@ -2554,7 +2782,7 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
             // set default border thickness for xamlTableCellElement to enable gridlines
             xamlTableCellElement.SetAttribute(Xaml_TableCell_BorderThickness, "1,1,1,1");
             xamlTableCellElement.SetAttribute(Xaml_TableCell_BorderBrush, Xaml_Brushes_Black);
-            string rowSpanString = GetAttribute((XmlElement)htmlChildNode, "rowspan");
+            var rowSpanString = GetAttribute(htmlChildNode, "rowspan");
             if (rowSpanString != null)
             {
                 xamlTableCellElement.SetAttribute(Xaml_TableCell_RowSpan, rowSpanString);
@@ -2562,98 +2790,5 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
         }
 
         #endregion Private Methods
-
-        // ----------------------------------------------------------------
-        //
-        // Internal Constants
-        //
-        // ----------------------------------------------------------------
-
-        // The constants reprtesent all Xaml names used in a conversion
-        public const string Xaml_FlowDocument = "FlowDocument";
-
-        public const string Xaml_Run = "Run";
-        public const string Xaml_Span = "Span";
-        public const string Xaml_Hyperlink = "Hyperlink";
-        public const string Xaml_Hyperlink_NavigateUri = "NavigateUri";
-        public const string Xaml_Hyperlink_TargetName = "TargetName";
-
-        public const string Xaml_Section = "Section";
-
-        public const string Xaml_List = "List";
-
-        public const string Xaml_List_MarkerStyle = "MarkerStyle";
-        public const string Xaml_List_MarkerStyle_None = "None";
-        public const string Xaml_List_MarkerStyle_Decimal = "Decimal";
-        public const string Xaml_List_MarkerStyle_Disc = "Disc";
-        public const string Xaml_List_MarkerStyle_Circle = "Circle";
-        public const string Xaml_List_MarkerStyle_Square = "Square";
-        public const string Xaml_List_MarkerStyle_Box = "Box";
-        public const string Xaml_List_MarkerStyle_LowerLatin = "LowerLatin";
-        public const string Xaml_List_MarkerStyle_UpperLatin = "UpperLatin";
-        public const string Xaml_List_MarkerStyle_LowerRoman = "LowerRoman";
-        public const string Xaml_List_MarkerStyle_UpperRoman = "UpperRoman";
-
-        public const string Xaml_ListItem = "ListItem";
-
-        public const string Xaml_LineBreak = "LineBreak";
-
-        public const string Xaml_Paragraph = "Paragraph";
-
-        public const string Xaml_Margin = "Margin";
-        public const string Xaml_Padding = "Padding";
-        public const string Xaml_BorderBrush = "BorderBrush";
-        public const string Xaml_BorderThickness = "BorderThickness";
-
-        public const string Xaml_Table = "Table";
-
-        public const string Xaml_TableColumn = "TableColumn";
-        public const string Xaml_TableRowGroup = "TableRowGroup";
-        public const string Xaml_TableRow = "TableRow";
-
-        public const string Xaml_TableCell = "TableCell";
-        public const string Xaml_TableCell_BorderThickness = "BorderThickness";
-        public const string Xaml_TableCell_BorderBrush = "BorderBrush";
-
-        public const string Xaml_TableCell_ColumnSpan = "ColumnSpan";
-        public const string Xaml_TableCell_RowSpan = "RowSpan";
-
-        public const string Xaml_Width = "Width";
-        public const string Xaml_Brushes_Black = "Black";
-        public const string Xaml_FontFamily = "FontFamily";
-
-        public const string Xaml_FontSize = "FontSize";
-        public const string Xaml_FontSize_XXLarge = "22pt"; // "XXLarge";
-        public const string Xaml_FontSize_XLarge  = "20pt"; // "XLarge";
-        public const string Xaml_FontSize_Large   = "18pt"; // "Large";
-        public const string Xaml_FontSize_Medium  = "16pt"; // "Medium";
-        public const string Xaml_FontSize_Small   = "12pt"; // "Small";
-        public const string Xaml_FontSize_XSmall  = "10pt"; // "XSmall";
-        public const string Xaml_FontSize_XXSmall = "8pt"; // "XXSmall";
-
-        public const string Xaml_FontWeight = "FontWeight";
-        public const string Xaml_FontWeight_Bold = "Bold";
-
-        public const string Xaml_FontStyle = "FontStyle";
-
-        public const string Xaml_Foreground = "Foreground";
-        public const string Xaml_Background = "Background";
-        public const string Xaml_TextDecorations = "TextDecorations";
-        public const string Xaml_TextDecorations_Underline = "Underline";
-
-        public const string Xaml_TextIndent = "TextIndent";
-        public const string Xaml_TextAlignment = "TextAlignment";
-
-        // ---------------------------------------------------------------------
-        //
-        // Private Fields
-        //
-        // ---------------------------------------------------------------------
-
-        #region Private Fields
-
-        static string _xamlNamespace = "http://schemas.microsoft.com/winfx/2006/xaml/presentation";
-
-        #endregion Private Fields
     }
 }

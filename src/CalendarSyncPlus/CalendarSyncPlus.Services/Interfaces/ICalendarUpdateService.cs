@@ -23,7 +23,6 @@ using System.ComponentModel;
 using CalendarSyncPlus.Domain.Models;
 using CalendarSyncPlus.Domain.Wrappers;
 using CalendarSyncPlus.Services.Utilities;
-using CalendarSyncPlus.Services.Wrappers;
 
 #endregion
 
@@ -31,6 +30,19 @@ namespace CalendarSyncPlus.Services.Interfaces
 {
     public interface ICalendarUpdateService : INotifyPropertyChanged
     {
+        #region Public Methods
+
+        /// <summary>
+        /// </summary>
+        /// <param name="syncProfile"></param>
+        /// <param name="syncMetric"></param>
+        /// <param name="synccallback"></param>
+        /// <returns>
+        /// </returns>
+        bool SyncCalendar(CalendarSyncProfile syncProfile, SyncMetric syncMetric, SyncCallback synccallback);
+
+        #endregion
+
         #region Properties
 
         CalendarAppointments DestinationAppointments { get; set; }
@@ -39,16 +51,6 @@ namespace CalendarSyncPlus.Services.Interfaces
         string SyncStatus { get; set; }
         ICalendarService SourceCalendarService { get; set; }
         ICalendarService DestinationCalendarService { get; set; }
-
-        #endregion
-
-        #region Public Methods
-
-        /// <summary>
-        /// </summary>
-        /// <param name="syncProfile"></param>
-        /// <returns></returns>
-        bool SyncCalendar(CalendarSyncProfile syncProfile, SyncCallback synccallback);
 
         #endregion
     }

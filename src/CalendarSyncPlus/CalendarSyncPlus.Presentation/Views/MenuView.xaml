@@ -1,0 +1,272 @@
+﻿<UserControl x:Class="CalendarSyncPlus.Presentation.Views.MenuView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:lex="http://wpflocalizeextension.codeplex.com"
+             xmlns:wafConverters="http://waf.codeplex.com/schemas"
+             xmlns:viewModels="clr-namespace:CalendarSyncPlus.Application.ViewModels;assembly=CalendarSyncPlus.Application"
+             d:DataContext="{d:DesignInstance viewModels:ShellViewModel}"
+             d:DesignHeight="500"
+             d:DesignWidth="100"
+             mc:Ignorable="d">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+        <wafConverters:InvertBooleanConverter x:Key="InvertBooleanConverter" />
+        <Style x:Key="ToggleMenuButtonStyle"
+               TargetType="ToggleButton"
+               BasedOn="{StaticResource {x:Type ToggleButton}}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ToggleButton">
+                        <Border Name="ButtonBorder"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}">
+                            <ContentPresenter />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver"
+                                     Value="True">
+                                <Setter Property="Opacity"
+                                        Value="1" />
+                                <Setter Property="Background"
+                                        Value="{DynamicResource AccentColorBrush3}" />
+                            </Trigger>
+                            <Trigger Property="IsChecked"
+                                     Value="True">
+                                <Setter Property="Opacity"
+                                        Value="1" />
+                                <Setter Property="Width"
+                                        Value="130" />
+                            </Trigger>
+                            <Trigger Property="IsChecked"
+                                     Value="False">
+                                <Setter Property="Width"
+                                        Value="35" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="BorderThickness"
+                    Value="0,0,0,1" />
+            <Setter Property="BorderBrush"
+                    Value="{DynamicResource AccentSelectedColorBrush}" />
+            <Setter Property="Foreground"
+                    Value="{DynamicResource AccentSelectedColorBrush}" />
+            <Setter Property="Background"
+                    Value="Transparent" />
+            <Setter Property="Opacity"
+                    Value="0.5" />
+        </Style>
+        <Style x:Key="MenuButtonStyle"
+               TargetType="Button"
+               BasedOn="{StaticResource {x:Type Button}}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Name="ButtonBorder"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}">
+                            <ContentPresenter />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver"
+                                     Value="True">
+                                <Setter Property="Opacity"
+                                        Value="1" />
+                                <Setter Property="Background"
+                                        Value="{DynamicResource AccentColorBrush3}" />
+                            </Trigger>
+                            <DataTrigger Binding="{Binding IsChecked,ElementName=MenuToggleButton}"
+                                         Value="False">
+                                <Setter Property="Width"
+                                        Value="35" />
+                            </DataTrigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="BorderThickness"
+                    Value="0,0,0,1" />
+            <Setter Property="BorderBrush"
+                    Value="{DynamicResource AccentSelectedColorBrush}" />
+            <Setter Property="Foreground"
+                    Value="{DynamicResource AccentSelectedColorBrush}" />
+            <Setter Property="Background"
+                    Value="Transparent" />
+            <Setter Property="Width"
+                    Value="Auto" />
+            <Setter Property="Opacity"
+                    Value="0.5" />
+        </Style>
+        <Style x:Key="ToggleMenuRectangleStyle"
+               TargetType="Rectangle">
+            <Setter Property="Height"
+                    Value="25" />
+            <Setter Property="Width"
+                    Value="25" />
+            <Setter Property="Margin"
+                    Value="5,10,5,10" />
+            <Setter Property="Fill"
+                    Value="{Binding RelativeSource={RelativeSource AncestorType=ToggleButton},
+                                              Path=Foreground}" />
+        </Style>
+        <Style x:Key="MenuRectangleStyle"
+               TargetType="Rectangle">
+            <Setter Property="Height"
+                    Value="25" />
+            <Setter Property="Width"
+                    Value="25" />
+            <Setter Property="Margin"
+                    Value="5,10,5,10" />
+            <Setter Property="Fill"
+                    Value="{Binding RelativeSource={RelativeSource AncestorType=Button},
+                                              Path=Foreground}" />
+        </Style>
+        <Style x:Key="MenuTextBlockStyle"
+               TargetType="TextBlock">
+            <Setter Property="VerticalAlignment"
+                    Value="Center" />
+            <Setter Property="Margin"
+                    Value="0,0,5,0" />
+            <Setter Property="FontSize"
+                    Value="{StaticResource MenuFontSize}" />
+            <Setter Property="FontFamily"
+                    Value="Segoe UI" />
+        </Style>
+    </UserControl.Resources>
+    <StackPanel Orientation="Vertical">
+        <StackPanel.Resources>
+            <Style TargetType="StackPanel">
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding IsActive,RelativeSource={RelativeSource AncestorType={x:Type controls:MetroWindow},Mode=FindAncestor}}"
+                                 Value="True">
+                        <Setter Property="Background"
+                                Value="{Binding WindowTitleBrush,RelativeSource={RelativeSource AncestorType={x:Type controls:MetroWindow},Mode=FindAncestor}}" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding IsActive,RelativeSource={RelativeSource AncestorType={x:Type controls:MetroWindow},Mode=FindAncestor}}"
+                                 Value="False">
+                        <Setter Property="Background"
+                                Value="{Binding NonActiveWindowTitleBrush,RelativeSource={RelativeSource AncestorType={x:Type controls:MetroWindow},Mode=FindAncestor}}" />
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </StackPanel.Resources>
+        <ToggleButton Name="MenuToggleButton"
+                      Style="{StaticResource ToggleMenuButtonStyle}"
+                      ToolTip="Expand Menu">
+            <StackPanel Orientation="Horizontal">
+                <Rectangle Style="{StaticResource ToggleMenuRectangleStyle}"
+                           HorizontalAlignment="Left">
+                    <Rectangle.OpacityMask>
+                        <VisualBrush Stretch="Fill"
+                                     Visual="{StaticResource appbar_list}" />
+                    </Rectangle.OpacityMask>
+                </Rectangle>
+                <TextBlock Style="{StaticResource MenuTextBlockStyle}"
+                           Text="Menu" />
+            </StackPanel>
+        </ToggleButton>
+
+        <Button Command="{Binding ShowWhatsNewCommand}"
+                Style="{StaticResource MenuButtonStyle}"
+                ToolTip="What's New in this version">
+            <StackPanel Orientation="Horizontal">
+                <Rectangle Style="{StaticResource MenuRectangleStyle}">
+                    <Rectangle.OpacityMask>
+                        <VisualBrush Stretch="Fill"
+                                     Visual="{StaticResource appbar_newspaper}" />
+                    </Rectangle.OpacityMask>
+                </Rectangle>
+                <TextBlock Style="{StaticResource MenuTextBlockStyle}"
+                           Text="{lex:LocText Key=ShellView_WhatsNewButton_Content}" />
+            </StackPanel>
+        </Button>
+
+        <Button Command="{Binding LaunchSettings}"
+                Style="{StaticResource MenuButtonStyle}"
+                IsEnabled="{Binding IsSyncInProgress,
+                                        Converter={StaticResource InvertBooleanConverter}}"
+                ToolTip="{lex:LocText Key=ShellView_SettingsButton_ToolTip}">
+            <StackPanel Orientation="Horizontal">
+                <Rectangle Style="{StaticResource MenuRectangleStyle}">
+                    <Rectangle.OpacityMask>
+                        <VisualBrush Stretch="Fill"
+                                     Visual="{StaticResource appbar_settings}" />
+                    </Rectangle.OpacityMask>
+                </Rectangle>
+                <TextBlock Style="{StaticResource MenuTextBlockStyle}"
+                           Text="{lex:LocText Key=ShellView_SettingsButton_Content}" />
+            </StackPanel>
+        </Button>
+
+        <Button Command="{Binding LaunchAbout}"
+                Style="{StaticResource MenuButtonStyle}"
+                ToolTip="{lex:LocText Key=ShellView_AboutButton_ToolTip}">
+            <StackPanel Orientation="Horizontal">
+                <Rectangle Style="{StaticResource MenuRectangleStyle}">
+                    <Rectangle.OpacityMask>
+                        <VisualBrush Stretch="Fill"
+                                     Visual="{StaticResource appbar_information_circle}" />
+                    </Rectangle.OpacityMask>
+                </Rectangle>
+                <TextBlock Style="{StaticResource MenuTextBlockStyle}"
+                           Text="{lex:LocText Key=ShellView_AboutButton_Content}" />
+            </StackPanel>
+        </Button>
+
+        <Button Command="{Binding LaunchHelp}"
+                Style="{StaticResource MenuButtonStyle}"
+                ToolTip="{lex:LocText Key=ShellView_HelpButton_ToolTip}">
+            <StackPanel Orientation="Horizontal">
+                <Rectangle Style="{StaticResource MenuRectangleStyle}">
+                    <Rectangle.OpacityMask>
+                        <VisualBrush Stretch="Fill"
+                                     Visual="{StaticResource appbar_book_perspective_help}" />
+                    </Rectangle.OpacityMask>
+                </Rectangle>
+                <TextBlock Style="{StaticResource MenuTextBlockStyle}"
+                           Text="{lex:LocText Key=ShellView_HelpButton_Content}" />
+            </StackPanel>
+        </Button>
+
+        <Button Command="{Binding DownloadCommand}"
+                Style="{StaticResource MenuButtonStyle}"
+                ToolTip="{lex:LocText Key=ShellView_RightWindowCommands_Download_Tooltip}"
+                Visibility="{Binding IsLatestVersionAvailable,
+                                         Converter={StaticResource BooleanToVisibilityConverter}}">
+            <StackPanel Orientation="Horizontal">
+                <Rectangle Style="{StaticResource MenuRectangleStyle}">
+                    <Rectangle.OpacityMask>
+                        <VisualBrush Stretch="Fill"
+                                     Visual="{StaticResource appbar_download}" />
+                    </Rectangle.OpacityMask>
+                </Rectangle>
+                <TextBlock Style="{StaticResource MenuTextBlockStyle}"
+                           Foreground="LawnGreen"
+                           Text="{Binding LatestVersion,
+                                              UpdateSourceTrigger=PropertyChanged,
+                                              StringFormat='{}{0}'}" />
+            </StackPanel>
+        </Button>
+
+        <Button Command="{Binding ExitCommand}"
+                Style="{StaticResource MenuButtonStyle}"
+                ToolTip="{lex:LocText Key=ShellView_ExitButton_ToolTip}">
+            <StackPanel Orientation="Horizontal">
+                <Rectangle Style="{StaticResource MenuRectangleStyle}">
+                    <Rectangle.OpacityMask>
+                        <VisualBrush Stretch="Fill"
+                                     Visual="{StaticResource appbar_door_leave}" />
+                    </Rectangle.OpacityMask>
+                </Rectangle>
+                <TextBlock Style="{StaticResource MenuTextBlockStyle}"
+                           Text="{lex:LocText Key=ShellView_ExitButton_Content}" />
+            </StackPanel>
+        </Button>
+    </StackPanel>
+</UserControl>

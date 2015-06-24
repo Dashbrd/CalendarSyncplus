@@ -9,19 +9,7 @@ namespace CalendarSyncPlus.Presentation.Controls
     /// </summary>
     public partial class TimePickerControl : UserControl
     {
-        // Using a DependencyProperty as the backing store for TimeValue.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty TimeValueProperty =
-            DependencyProperty.Register("TimeValue", typeof (DateTime), typeof (TimePickerControl),
-                new FrameworkPropertyMetadata(TimeValueChangedCallback));
-
-
-        // Using a DependencyProperty as the backing store for TimeFormat.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty TimeFormatProperty =
-            DependencyProperty.Register("TimeFormat", typeof (string), typeof (TimePickerControl),
-                new FrameworkPropertyMetadata(TimeFormatChangedCallback));
-
         private bool IsLoading;
-
 
         public TimePickerControl()
         {
@@ -188,5 +176,15 @@ namespace CalendarSyncPlus.Presentation.Controls
             }
             control.IsLoading = false;
         }
+
+        // Using a DependencyProperty as the backing store for TimeValue.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty TimeValueProperty =
+            DependencyProperty.Register("TimeValue", typeof (DateTime), typeof (TimePickerControl),
+                new FrameworkPropertyMetadata(TimeValueChangedCallback));
+
+        // Using a DependencyProperty as the backing store for TimeFormat.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty TimeFormatProperty =
+            DependencyProperty.Register("TimeFormat", typeof (string), typeof (TimePickerControl),
+                new FrameworkPropertyMetadata(TimeFormatChangedCallback));
     }
 }

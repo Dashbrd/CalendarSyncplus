@@ -22,9 +22,7 @@ namespace CalendarSyncPlus.Application.Controllers
     public interface IController
     {
         void Initialize();
-
         void Run(bool startMinimized);
-
         void Shutdown();
     }
 }

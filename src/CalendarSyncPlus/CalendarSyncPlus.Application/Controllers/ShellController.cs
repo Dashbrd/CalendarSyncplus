@@ -32,18 +32,21 @@ namespace CalendarSyncPlus.Application.Controllers
         private readonly ApplicationLogger _applicationLogger;
         private readonly ISettingsSerializationService _settingsSerializationService;
         private readonly ShellViewModel _shellViewModel;
+        private readonly ISummarySerializationService _summarySerializationService;
         private readonly ISyncService _syncService;
         private readonly SystemTrayNotifierViewModel _systemTrayNotifierViewModel;
 
         [ImportingConstructor]
         public ShellController(ShellViewModel shellViewModel, ISyncService syncService,
             ISettingsSerializationService settingsSerializationService,
+            ISummarySerializationService summarySerializationService,
             SystemTrayNotifierViewModel systemTrayNotifierViewModel,
             ApplicationLogger applicationLogger)
         {
             _shellViewModel = shellViewModel;
             _syncService = syncService;
             _settingsSerializationService = settingsSerializationService;
+            _summarySerializationService = summarySerializationService;
 
             _systemTrayNotifierViewModel = systemTrayNotifierViewModel;
             _applicationLogger = applicationLogger;
@@ -57,6 +60,21 @@ namespace CalendarSyncPlus.Application.Controllers
         public ISyncService SyncService
         {
             get { return _syncService; }
+        }
+
+        private void SyncServiceNotificationHandler(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
+        {
+            switch (propertyChangedEventArgs.PropertyName)
+            {
+                case "SyncStatus":
+                    SyncStatusChangedHandler();
+                    break;
+            }
+        }
+
+        private void SyncStatusChangedHandler()
+        {
+            ShellViewModel.ErrorMessageChanged(SyncService.SyncStatus);
         }
 
         #region IShellController Members
@@ -83,24 +101,10 @@ namespace CalendarSyncPlus.Application.Controllers
             PropertyChangedEventManager.RemoveHandler(SyncService, SyncServiceNotificationHandler, "");
             ShellViewModel.Settings.SettingsVersion = ApplicationInfo.Version;
             _settingsSerializationService.SerializeSettings(ShellViewModel.Settings);
+            _summarySerializationService.SerializeSyncSummary(ShellViewModel.SyncSummary);
             _systemTrayNotifierViewModel.Quit();
         }
 
         #endregion
-
-        private void SyncServiceNotificationHandler(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
-        {
-            switch (propertyChangedEventArgs.PropertyName)
-            {
-                case "SyncStatus":
-                    SyncStatusChangedHandler();
-                    break;
-            }
-        }
-
-        private void SyncStatusChangedHandler()
-        {
-            ShellViewModel.ErrorMessageChanged(SyncService.SyncStatus);
-        }
     }
 }

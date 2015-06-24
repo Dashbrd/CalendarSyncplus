@@ -2,7 +2,7 @@
 {
     public enum TextFormatterType
     {
-        Default=0,
+        Default = 0,
         Rtf,
         PlainText,
         Html,

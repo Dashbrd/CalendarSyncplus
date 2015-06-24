@@ -115,6 +115,6 @@ namespace CalendarSyncPlus.Presentation.Services.SingleInstance
         // This is the hard-coded message value used by WinForms for Shell_NotifyIcon.
         // It's relatively safe to reuse.
         TRAYMOUSEMESSAGE = 0x800, //WM_USER + 1024
-        APP = 0x8000,
+        APP = 0x8000
     }
 }

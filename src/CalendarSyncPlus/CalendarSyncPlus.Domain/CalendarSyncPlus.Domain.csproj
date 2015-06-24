@@ -84,6 +84,7 @@
     <Compile Include="Models\Settings.cs" />
     <Compile Include="Models\SyncMetric.cs" />
     <Compile Include="Models\SyncSettings.cs" />
+    <Compile Include="Models\SyncSummary.cs" />
     <Compile Include="Models\WeeklySyncFrequency.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Models\ProxySetting.cs" />

@@ -89,7 +89,7 @@ namespace CalendarSyncPlus.Application.ViewModels
 
             if (IsModified)
             {
-                DateTime timeNow = DateTime.Now;
+                var timeNow = DateTime.Now;
                 _syncFrequency.StartDate = timeNow.Subtract(new TimeSpan(0, 0, timeNow.Second));
                 _syncFrequency.EveryWeekday = EveryWeekday;
                 _syncFrequency.CustomDay = CustomDay;

@@ -31,12 +31,12 @@
                 <TextBlock Text="{localizeExtension:LocText Key=SyncSettingsView_TextBlock_IntervalHours_Text}"
                            VerticalAlignment="Center" />
                 <metroControls:NumericUpDown Grid.Column="1"
-                                        Value="{Binding Hours,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                        VerticalAlignment="Center"
-                                        Minimum="0"
-                                        Maximum="23"
-                                        Interval="1"
-                                        Margin="2" />
+                                             Value="{Binding Hours,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                             VerticalAlignment="Center"
+                                             Minimum="0"
+                                             Maximum="23"
+                                             Interval="1"
+                                             Margin="2" />
                 <ContentControl ContentTemplate="{DynamicResource HelpButtonTemplate}"
                                 Grid.Column="2"
                                 ToolTip="{localizeExtension:LocText Key=SyncSettingsView_ContentControl_HelpIntervalHours_Tooltip}" />
@@ -44,13 +44,13 @@
                            VerticalAlignment="Center"
                            Grid.Row="1" />
                 <metroControls:NumericUpDown Grid.Row="1"
-                                        Grid.Column="1"
-                                        Value="{Binding Minutes,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                        VerticalAlignment="Center"
-                                        Minimum="0"
-                                        Maximum="59"
-                                        Margin="2"
-                                        Interval="1" />
+                                             Grid.Column="1"
+                                             Value="{Binding Minutes,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                             VerticalAlignment="Center"
+                                             Minimum="0"
+                                             Maximum="59"
+                                             Margin="2"
+                                             Interval="1" />
                 <ContentControl ContentTemplate="{DynamicResource HelpButtonTemplate}"
                                 Grid.Row="1"
                                 Grid.Column="2"
@@ -70,17 +70,18 @@
                 </Grid.ColumnDefinitions>
                 <StackPanel Orientation="Horizontal"
                             VerticalAlignment="Center">
-                    <RadioButton Content="{localizeExtension:LocText Key=SyncSettingsView_RadioButton_DailyEveryDay_Content}"
-                                 Margin="2"
-                                 GroupName="DailyFrequency"
-                                 IsChecked="{Binding CustomDay,
+                    <RadioButton
+                        Content="{localizeExtension:LocText Key=SyncSettingsView_RadioButton_DailyEveryDay_Content}"
+                        Margin="2"
+                        GroupName="DailyFrequency"
+                        IsChecked="{Binding CustomDay,
                                                     Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
                     <metroControls:NumericUpDown Width="80"
-                                            Margin="2"
-                                            Minimum="1"
-                                            Maximum="30"
-                                            Interval="1"
-                                            Value="{Binding DayGap,
+                                                 Margin="2"
+                                                 Minimum="1"
+                                                 Maximum="30"
+                                                 Interval="1"
+                                                 Value="{Binding DayGap,
                                                     Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
                     <TextBlock Text="{localizeExtension:LocText Key=SyncSettingsView_TextBlock_DailyDays_Text}"
                                VerticalAlignment="Center"
@@ -128,13 +129,13 @@
                                Margin="2"
                                VerticalAlignment="Center" />
                     <metroControls:NumericUpDown Width="80"
-                                            Interval="1"
-                                            Margin="2"
+                                                 Interval="1"
+                                                 Margin="2"
                                                  Minimum="1"
                                                  Maximum="52"
-                                            TextAlignment="Right"
-                                            VerticalAlignment="Center"
-                                            Value="{Binding WeekRecurrence,
+                                                 TextAlignment="Right"
+                                                 VerticalAlignment="Center"
+                                                 Value="{Binding WeekRecurrence,
                                                     Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
                     <TextBlock Text="{localizeExtension:LocText Key=SyncSettingsView_TextBlock_WeeklyWeekday_Text}"
                                Margin="5"
@@ -281,26 +282,29 @@
                     <ColumnDefinition />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <RadioButton Content="{localizeExtension:LocText Key=SyncSettingsView_RadioButton_SyncFullCalendar_Content}"
-                             Margin="2"
-                             Visibility="Collapsed"
-                             IsChecked="{Binding SelectedSyncRangeType,Mode=TwoWay,Converter={StaticResource BoolToEnumConverter},ConverterParameter=SyncEntireCalendar}" />
+                <RadioButton
+                    Content="{localizeExtension:LocText Key=SyncSettingsView_RadioButton_SyncFullCalendar_Content}"
+                    Margin="2"
+                    Visibility="Collapsed"
+                    IsChecked="{Binding SelectedSyncRangeType,Mode=TwoWay,Converter={StaticResource BoolToEnumConverter},ConverterParameter=SyncEntireCalendar}" />
                 <ContentControl ContentTemplate="{DynamicResource HelpButtonTemplate}"
                                 Grid.Column="1"
                                 Visibility="Collapsed"
                                 ToolTip="{localizeExtension:LocText Key=SyncSettingsView_ContentControl_HelpSyncFullCalendar_Tooltip}" />
-                <RadioButton Content="{localizeExtension:LocText Key=SyncSettingsView_RadioButton_SyncDaysInRange_Content}"
-                             Grid.Row="1"
-                             Margin="2"
-                             IsChecked="{Binding SelectedSyncRangeType,Mode=TwoWay,Converter={StaticResource BoolToEnumConverter},ConverterParameter=SyncRangeInDays }" />
+                <RadioButton
+                    Content="{localizeExtension:LocText Key=SyncSettingsView_RadioButton_SyncDaysInRange_Content}"
+                    Grid.Row="1"
+                    Margin="2"
+                    IsChecked="{Binding SelectedSyncRangeType,Mode=TwoWay,Converter={StaticResource BoolToEnumConverter},ConverterParameter=SyncRangeInDays }" />
                 <ContentControl ContentTemplate="{DynamicResource HelpButtonTemplate}"
                                 Grid.Row="1"
                                 Grid.Column="1"
                                 ToolTip="{localizeExtension:LocText Key=SyncSettingsView_ContentControl_HelpSyncDaysInRange_Tooltip}" />
-                <RadioButton Content="{localizeExtension:LocText Key=SyncSettingsView_RadioButton_SyncFixedDateRange_Content}"
-                             Grid.Row="2"
-                             Margin="2"
-                             IsChecked="{Binding SelectedSyncRangeType,Mode=TwoWay,Converter={StaticResource BoolToEnumConverter},ConverterParameter=SyncFixedDateRange }" />
+                <RadioButton
+                    Content="{localizeExtension:LocText Key=SyncSettingsView_RadioButton_SyncFixedDateRange_Content}"
+                    Grid.Row="2"
+                    Margin="2"
+                    IsChecked="{Binding SelectedSyncRangeType,Mode=TwoWay,Converter={StaticResource BoolToEnumConverter},ConverterParameter=SyncFixedDateRange }" />
                 <ContentControl ContentTemplate="{DynamicResource HelpButtonTemplate}"
                                 Grid.Column="1"
                                 Grid.Row="2"
@@ -325,17 +329,17 @@
                         <ColumnDefinition Width="3.5*" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-                    <TextBlock  Text="{localizeExtension:LocText Key=SyncSettingsView_TextBlock_DaysInPast_Text}"
-                                VerticalAlignment="Center"
-                                Margin="2" />
+                    <TextBlock Text="{localizeExtension:LocText Key=SyncSettingsView_TextBlock_DaysInPast_Text}"
+                               VerticalAlignment="Center"
+                               Margin="2" />
 
                     <metroControls:NumericUpDown Grid.Column="1"
-                                            VerticalAlignment="Center"
-                                            Value="{Binding DaysInPast,Mode=TwoWay}"
-                                            Interval="1"
-                                            Margin="2"
-                                            Maximum="1825"
-                                            Minimum="0" />
+                                                 VerticalAlignment="Center"
+                                                 Value="{Binding DaysInPast,Mode=TwoWay}"
+                                                 Interval="1"
+                                                 Margin="2"
+                                                 Maximum="1825"
+                                                 Minimum="0" />
                     <ContentControl ContentTemplate="{DynamicResource HelpButtonTemplate}"
                                     Grid.Column="2"
                                     ToolTip="{localizeExtension:LocText Key=SyncSettingsView_ContentControl_HelpDaysInPast_Tooltip}" />
@@ -345,13 +349,13 @@
                                Text="{localizeExtension:LocText Key=SyncSettingsView_TextBlock_DaysInFuture_Text}"
                                VerticalAlignment="Center" />
                     <metroControls:NumericUpDown Grid.Row="1"
-                                            Grid.Column="1"
-                                            VerticalAlignment="Center"
-                                            Value="{Binding DaysInFuture,Mode=TwoWay}"
-                                            Interval="1"
-                                            Margin="2"
-                                            Maximum="1825"
-                                            Minimum="0" />
+                                                 Grid.Column="1"
+                                                 VerticalAlignment="Center"
+                                                 Value="{Binding DaysInFuture,Mode=TwoWay}"
+                                                 Interval="1"
+                                                 Margin="2"
+                                                 Maximum="1825"
+                                                 Minimum="0" />
                     <ContentControl ContentTemplate="{DynamicResource HelpButtonTemplate}"
                                     Grid.Row="1"
                                     Grid.Column="2"
@@ -369,14 +373,14 @@
                         <ColumnDefinition Width="3.5*" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-                    <TextBlock  Text="{localizeExtension:LocText Key=SyncSettingsView_TextBlock_StartDate_Text}"
-                                VerticalAlignment="Center"
-                                Margin="2" />
+                    <TextBlock Text="{localizeExtension:LocText Key=SyncSettingsView_TextBlock_StartDate_Text}"
+                               VerticalAlignment="Center"
+                               Margin="2" />
 
                     <DatePicker Grid.Column="1"
                                 VerticalAlignment="Center"
                                 SelectedDate="{Binding StartDate,Mode=TwoWay}"
-                                Margin="2" DisplayDateStart="01-01-1990" DisplayDateEnd="1-01-2030"/>
+                                Margin="2" DisplayDateStart="01-01-1990" DisplayDateEnd="1-01-2030" />
                     <ContentControl ContentTemplate="{DynamicResource HelpButtonTemplate}"
                                     Grid.Column="2"
                                     ToolTip="{localizeExtension:LocText Key=SyncSettingsView_ContentControl_HelpStartDate_Tooltip}" />

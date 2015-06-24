@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using System.Waf.Applications;
 using CalendarSyncPlus.Application.Views;
 using CalendarSyncPlus.Common.Log;
-using CalendarSyncPlus.Domain.Models;
 using CalendarSyncPlus.Services.Interfaces;
 using log4net;
 
@@ -14,26 +13,27 @@ namespace CalendarSyncPlus.Application.ViewModels
     [Export]
     public class AboutViewModel : ViewModel<IAboutView>
     {
-        public ILog ApplicationLogger { get; set; }
         private readonly IApplicationUpdateService _applicationUpdateService;
         private DelegateCommand _checkForUpdatesCommand;
         private DelegateCommand _downloadCommand;
         private bool _isCheckInProgress;
         private bool _isLatestVersionAvailable;
+        private DelegateCommand _mailToCommand;
         private string _productVersion;
         private string _updateText;
         private DelegateCommand _uriCommand;
-        private DelegateCommand _mailToCommand;
 
         [ImportingConstructor]
         public AboutViewModel(IAboutView aboutView, IApplicationUpdateService applicationUpdateService,
             ApplicationLogger applicationLogger)
             : base(aboutView)
         {
-            ApplicationLogger = applicationLogger.GetLogger(this.GetType());
+            ApplicationLogger = applicationLogger.GetLogger(GetType());
             _applicationUpdateService = applicationUpdateService;
             ProductVersion = ApplicationInfo.Version;
         }
+
+        public ILog ApplicationLogger { get; set; }
 
         public string ProductVersion
         {
@@ -67,14 +67,6 @@ namespace CalendarSyncPlus.Application.ViewModels
             get { return _mailToCommand = _mailToCommand ?? new DelegateCommand(LaunchMailToRequest); }
         }
 
-        private void LaunchMailToRequest(object address)
-        {
-            var actualAddress = address as string;
-            if (string.IsNullOrEmpty(actualAddress)) return;
-            Environment.ExpandEnvironmentVariables(actualAddress);
-            Process.Start(new ProcessStartInfo(actualAddress));
-        }
-
         public DelegateCommand CheckForUpdatesCommand
         {
             get { return _checkForUpdatesCommand = _checkForUpdatesCommand ?? new DelegateCommand(CheckForUpdates); }
@@ -89,6 +81,14 @@ namespace CalendarSyncPlus.Application.ViewModels
         {
             get { return _updateText; }
             set { SetProperty(ref _updateText, value); }
+        }
+
+        private void LaunchMailToRequest(object address)
+        {
+            var actualAddress = address as string;
+            if (string.IsNullOrEmpty(actualAddress)) return;
+            Environment.ExpandEnvironmentVariables(actualAddress);
+            Process.Start(new ProcessStartInfo(actualAddress));
         }
 
         private void DownloadNewVersion()
@@ -113,7 +113,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             IsCheckInProgress = true;
             IsLatestVersionAvailable = false;
             UpdateText = string.Empty;
-            TaskScheduler scheduler = TaskScheduler.FromCurrentSynchronizationContext();
+            var scheduler = TaskScheduler.FromCurrentSynchronizationContext();
             Task<string>.Factory.StartNew(() => _applicationUpdateService.GetLatestReleaseFromServer(true))
                 .ContinueWith(CheckForUpdatesComplete, scheduler);
         }

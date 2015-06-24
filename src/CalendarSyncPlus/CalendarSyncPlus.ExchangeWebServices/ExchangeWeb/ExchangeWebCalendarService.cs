@@ -8,48 +8,168 @@ using CalendarSyncPlus.Common.Log;
 using CalendarSyncPlus.Common.MetaData;
 using CalendarSyncPlus.Domain.Models;
 using CalendarSyncPlus.Domain.Wrappers;
-using CalendarSyncPlus.Services;
 using CalendarSyncPlus.Services.Interfaces;
-using CalendarSyncPlus.Services.Wrappers;
 using log4net;
 using Microsoft.Exchange.WebServices.Data;
 using AppAppointment = CalendarSyncPlus.Domain.Models.Appointment;
-using Appointment = Microsoft.Exchange.WebServices.Data.Appointment;
 
 namespace CalendarSyncPlus.ExchangeWebServices.ExchangeWeb
 {
-    [Export(typeof(ICalendarService)), Export(typeof(IExchangeWebCalendarService))]
+    [Export(typeof (ICalendarService)), Export(typeof (IExchangeWebCalendarService))]
     [ExportMetadata("ServiceType", CalendarServiceType.EWS)]
     public class ExchangeWebCalendarService : IExchangeWebCalendarService
     {
         private const string EWSCALENDAR = "EWSCalendar";
         private const string EXCHANGESERVERSETTINGS = "ExchangeServerSettings";
-        private ExchangeServerSettings _exchangeServerSettings;
-        EWSCalendar _ewsCalendar;
         private bool _addAsAppointments;
         private Category _eventCategory;
+        private EWSCalendar _ewsCalendar;
 
         [ImportingConstructor]
         public ExchangeWebCalendarService(ApplicationLogger applicationLogger)
         {
-            ApplicationLogger = applicationLogger.GetLogger(this.GetType());
+            ApplicationLogger = applicationLogger.GetLogger(GetType());
         }
 
         public ILog ApplicationLogger { get; set; }
+
+        public Task<CalendarAppointments> UpdateCalendarEvents(List<AppAppointment> calendarAppointments, bool addDescription,
+            bool addReminder, bool addAttendees, bool attendeesToDescription,
+            IDictionary<string, object> calendarSpecificData)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="attendeeCollection"></param>
+        /// <returns>
+        /// </returns>
+        private List<Recipient> GetAttendees(IEnumerable<Attendee> attendeeCollection)
+        {
+            return attendeeCollection.Select(attendee => new Recipient
+            {
+                Name = attendee.Name,
+                Email = attendee.Address
+            }).ToList();
+        }
+
+        public ExchangeService GetExchangeService(ExchangeServerSettings exchangeServerSettings)
+        {
+            ExchangeVersion exchangeVersion;
+            var isValidVersion = Enum.TryParse(exchangeServerSettings.ExchangeVersion, true, out exchangeVersion);
+            if (isValidVersion)
+            {
+                var service = new ExchangeService(exchangeVersion)
+                {
+                    UseDefaultCredentials = exchangeServerSettings.UsingCorporateNetwork,
+                    EnableScpLookup = false,
+                    Url = new Uri(exchangeServerSettings.ExchangeServerUrl)
+                };
+                if (string.IsNullOrEmpty(exchangeServerSettings.ExchangeServerUrl))
+                {
+                    service.AutodiscoverUrl(exchangeServerSettings.EmailId);
+                }
+                if (!exchangeServerSettings.UsingCorporateNetwork)
+                {
+                    service.Credentials = new WebCredentials(exchangeServerSettings.EmailId,
+                        exchangeServerSettings.Password,
+                        exchangeServerSettings.Domain);
+                }
+                //service.Credentials = new WebCredentials("user1@contoso.com", "password");
+                return service;
+            }
+            return null;
+        }
+
+        public ExchangeServerSettings GetBestSuitedExchangeServerData(string domain, string emailId, string password,
+            bool usingCorporateNetwork = false)
+        {
+            ExchangeServerSettings exchangeServerSettings = null;
+            var enumList =
+                Enum.GetValues(typeof (ExchangeVersion)).Cast<ExchangeVersion>().Reverse();
+
+            var proxy = WebRequest.DefaultWebProxy;
+            proxy.Credentials = CredentialCache.DefaultNetworkCredentials;
+
+
+            var exchangeVersions = enumList as ExchangeVersion[] ?? enumList.ToArray();
+            foreach (var exchangeVersion in exchangeVersions)
+            {
+                var service = new ExchangeService(exchangeVersion)
+                {
+                    UseDefaultCredentials = usingCorporateNetwork,
+                    WebProxy = proxy
+                };
+
+                if (usingCorporateNetwork)
+                {
+                    service.Credentials = string.IsNullOrEmpty(domain)
+                        ? new WebCredentials(emailId, password)
+                        : new WebCredentials(emailId, password, domain);
+                }
+
+                try
+                {
+                    service.AutodiscoverUrl(emailId);
+                    //Try to get value form Exchange Server
+                    var calendarFolder = CalendarFolder.Bind(service, WellKnownFolderName.Calendar);
+                    exchangeServerSettings = new ExchangeServerSettings
+                    {
+                        ExchangeServerUrl = service.Url.AbsoluteUri,
+                        ExchangeVersion = exchangeVersion.ToString(),
+                        Password = password,
+                        EmailId = emailId,
+                        Domain = domain,
+                        UsingCorporateNetwork = usingCorporateNetwork
+                    };
+                }
+                catch (Exception exception)
+                {
+                    ApplicationLogger.Error(exception);
+                }
+            }
+            return exchangeServerSettings;
+        }
+
+        private void GetCalendars(Folder searchFolder, List<EWSCalendar> ewsCalendars, FolderView view)
+        {
+            if (searchFolder == null)
+            {
+                return;
+            }
+
+            if (searchFolder.FolderClass == "IPF.Appointment")
+            {
+                //Add Calendar MAPIFolder to List
+                ewsCalendars.Add(new EWSCalendar
+                {
+                    Name = searchFolder.DisplayName,
+                    EntryId = searchFolder.Id.UniqueId,
+                    StoreId = searchFolder.ParentFolderId.UniqueId
+                });
+                return;
+            }
+
+            //Walk through all subFolders in MAPIFolder
+            foreach (var subFolder in searchFolder.FindFolders(view))
+            {
+                //Get Calendar MAPIFolders
+                GetCalendars(subFolder, ewsCalendars, view);
+            }
+        }
 
         #region IExchangeWebCalendarService Members
 
         public List<AppAppointment> GetAppointmentsAsync(int daysInPast, int daysInFuture,
             string profileName, EWSCalendar outlookCalendar)
         {
-
             return null;
         }
 
         public List<EWSCalendar> GetCalendarsAsync(int maxFoldersToRetrive)
         {
-
-            ExchangeService service = GetExchangeService(null);
+            var service = GetExchangeService(null);
 
             // Create a new folder view, and pass in the maximum number of folders to return.
             var view = new FolderView(1000);
@@ -69,10 +189,10 @@ namespace CalendarSyncPlus.ExchangeWebServices.ExchangeWeb
 
             // Call FindFolders to retrieve the folder hierarchy, starting with the MsgFolderRoot folder.
             // This method call results in a FindFolder call to EWS.
-            FindFoldersResults findFolderResults = service.FindFolders(WellKnownFolderName.MsgFolderRoot, view);
+            var findFolderResults = service.FindFolders(WellKnownFolderName.MsgFolderRoot, view);
 
             var ewsCalendars = new List<EWSCalendar>();
-            foreach (Folder searchFolder in findFolderResults.Folders)
+            foreach (var searchFolder in findFolderResults.Folders)
             {
                 GetCalendars(searchFolder, ewsCalendars, view);
             }
@@ -85,13 +205,9 @@ namespace CalendarSyncPlus.ExchangeWebServices.ExchangeWeb
             get { return "Exchange Server"; }
         }
 
-        private ExchangeServerSettings ExchangeServerSettings
-        {
-            get { return _exchangeServerSettings; }
-            set { _exchangeServerSettings = value; }
-        }
+        private ExchangeServerSettings ExchangeServerSettings { get; set; }
 
-        public Task<bool> DeleteCalendarEvents(List<AppAppointment> calendarAppointments,
+        public Task<CalendarAppointments> DeleteCalendarEvents(List<AppAppointment> calendarAppointments,
             IDictionary<string, object> calendarSpecificData)
         {
             throw new NotImplementedException();
@@ -103,23 +219,23 @@ namespace CalendarSyncPlus.ExchangeWebServices.ExchangeWeb
             CheckCalendarSpecificData(calendarSpecificData);
 
 
-            ExchangeService service = GetExchangeService(ExchangeServerSettings);
+            var service = GetExchangeService(ExchangeServerSettings);
 
             var calendarview = new CalendarView(startDate, endDate);
 
             // Get Default Calendar
             var outlookAppointments = new CalendarAppointments();
-            FindItemsResults<Appointment> exchangeAppointments = service.FindAppointments(_ewsCalendar.EntryId,
+            var exchangeAppointments = service.FindAppointments(_ewsCalendar.EntryId,
                 calendarview);
 
 
             service.LoadPropertiesForItems(
                 from Item item in exchangeAppointments select item,
-                new PropertySet(BasePropertySet.FirstClassProperties) { RequestedBodyType = BodyType.Text, });
+                new PropertySet(BasePropertySet.FirstClassProperties) {RequestedBodyType = BodyType.Text});
 
             if (exchangeAppointments != null)
             {
-                foreach (Appointment exchangeAppointment in exchangeAppointments)
+                foreach (var exchangeAppointment in exchangeAppointments)
                 {
                     var appointment = new AppAppointment(exchangeAppointment.Body, exchangeAppointment.Location,
                         exchangeAppointment.Subject, exchangeAppointment.Start, exchangeAppointment.Start)
@@ -135,7 +251,7 @@ namespace CalendarSyncPlus.ExchangeWebServices.ExchangeWeb
                                 Email = exchangeAppointment.Organizer.Address
                             },
                         ReminderSet = exchangeAppointment.IsReminderSet,
-                        RequiredAttendees = GetAttendees(exchangeAppointment.RequiredAttendees),
+                        RequiredAttendees = GetAttendees(exchangeAppointment.RequiredAttendees)
                     };
                     outlookAppointments.Add(appointment);
                 }
@@ -143,7 +259,8 @@ namespace CalendarSyncPlus.ExchangeWebServices.ExchangeWeb
             return outlookAppointments;
         }
 
-        public Task<CalendarAppointments> AddCalendarEvents(List<AppAppointment> calendarAppointments, bool addDescription,
+        public Task<CalendarAppointments> AddCalendarEvents(List<AppAppointment> calendarAppointments,
+            bool addDescription,
             bool addReminder, bool addAttendees,
             bool attendeesToDescription, IDictionary<string, object> calendarSpecificData)
         {
@@ -171,7 +288,7 @@ namespace CalendarSyncPlus.ExchangeWebServices.ExchangeWeb
             }
             _ewsCalendar = ewsCalendar as EWSCalendar;
             ExchangeServerSettings = serverSettings as ExchangeServerSettings;
-            _addAsAppointments = (bool)addAsAppointments;
+            _addAsAppointments = (bool) addAsAppointments;
             object eventCategory;
             if (calendarSpecificData.TryGetValue("EventCategory", out eventCategory))
             {
@@ -195,129 +312,5 @@ namespace CalendarSyncPlus.ExchangeWebServices.ExchangeWeb
         }
 
         #endregion
-
-        /// <summary>
-        /// </summary>
-        /// <param name="attendeeCollection"></param>
-        /// <returns></returns>
-        private List<Recipient> GetAttendees(IEnumerable<Attendee> attendeeCollection)
-        {
-            return attendeeCollection.Select(attendee => new Recipient
-            {
-                Name = attendee.Name,
-                Email = attendee.Address
-            }).ToList();
-        }
-
-        public ExchangeService GetExchangeService(ExchangeServerSettings exchangeServerSettings)
-        {
-            ExchangeVersion exchangeVersion;
-            var isValidVersion = Enum.TryParse(exchangeServerSettings.ExchangeVersion, true, out exchangeVersion);
-            if (isValidVersion)
-            {
-                var service = new ExchangeService(exchangeVersion)
-                    {
-                        UseDefaultCredentials = exchangeServerSettings.UsingCorporateNetwork,
-                        EnableScpLookup = false,
-                        Url = new Uri(exchangeServerSettings.ExchangeServerUrl)
-                    };
-                if (string.IsNullOrEmpty(exchangeServerSettings.ExchangeServerUrl))
-                {
-                    service.AutodiscoverUrl(exchangeServerSettings.EmailId);
-
-                }
-                if (!exchangeServerSettings.UsingCorporateNetwork)
-                {
-                    service.Credentials = new WebCredentials(exchangeServerSettings.EmailId, exchangeServerSettings.Password,
-                        exchangeServerSettings.Domain);
-                }
-                //service.Credentials = new WebCredentials("user1@contoso.com", "password");
-                return service;
-            }
-            return null;
-        }
-
-        public ExchangeServerSettings GetBestSuitedExchangeServerData(string domain, string emailId, string password, bool usingCorporateNetwork = false)
-        {
-            ExchangeServerSettings exchangeServerSettings = null;
-            IEnumerable<ExchangeVersion> enumList =
-                Enum.GetValues(typeof(ExchangeVersion)).Cast<ExchangeVersion>().Reverse();
-
-            IWebProxy proxy = WebRequest.DefaultWebProxy;
-            proxy.Credentials = CredentialCache.DefaultNetworkCredentials;
-
-
-            ExchangeVersion[] exchangeVersions = enumList as ExchangeVersion[] ?? enumList.ToArray();
-            foreach (ExchangeVersion exchangeVersion in exchangeVersions)
-            {
-                var service = new ExchangeService(exchangeVersion)
-                {
-                    UseDefaultCredentials = usingCorporateNetwork,
-                    WebProxy = proxy
-                };
-
-                if (usingCorporateNetwork)
-                {
-                    service.Credentials = string.IsNullOrEmpty(domain)
-                        ? new WebCredentials(emailId, password)
-                        : new WebCredentials(emailId, password, domain);
-                }
-
-                try
-                {
-                    service.AutodiscoverUrl(emailId);
-                    //Try to get value form Exchange Server
-                    CalendarFolder calendarFolder = CalendarFolder.Bind(service, WellKnownFolderName.Calendar);
-                    exchangeServerSettings = new ExchangeServerSettings
-                    {
-                        ExchangeServerUrl = service.Url.AbsoluteUri,
-                        ExchangeVersion = exchangeVersion.ToString(),
-                        Password = password,
-                        EmailId = emailId,
-                        Domain = domain,
-                        UsingCorporateNetwork = usingCorporateNetwork
-
-                    };
-                }
-                catch (Exception exception)
-                {
-                    ApplicationLogger.Error(exception);
-                }
-            }
-            return exchangeServerSettings;
-        }
-
-        private void GetCalendars(Folder searchFolder, List<EWSCalendar> ewsCalendars, FolderView view)
-        {
-            if (searchFolder == null)
-            {
-                return;
-            }
-
-            if (searchFolder.FolderClass == "IPF.Appointment")
-            {
-                //Add Calendar MAPIFolder to List
-                ewsCalendars.Add(new EWSCalendar()
-                {
-                    Name = searchFolder.DisplayName,
-                    EntryId = searchFolder.Id.UniqueId,
-                    StoreId = searchFolder.ParentFolderId.UniqueId
-                });
-                return;
-            }
-
-            //Walk through all subFolders in MAPIFolder
-            foreach (Folder subFolder in searchFolder.FindFolders(view))
-            {
-                //Get Calendar MAPIFolders
-                GetCalendars(subFolder, ewsCalendars, view);
-            }
-        }
-
-
-        public Task<bool> UpdateCalendarEvents(List<AppAppointment> calendarAppointments, bool addDescription, bool addReminder, bool addAttendees, bool attendeesToDescription, IDictionary<string, object> calendarSpecificData)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

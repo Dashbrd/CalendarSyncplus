@@ -24,11 +24,8 @@ namespace CalendarSyncPlus.Application.Views
     public interface ISystemTrayNotifierView : IView
     {
         void ShowCustomBalloon();
-
         void ShowCustomBalloon(int timeoutInMilliseconds);
-
         void CloseBalloon();
-
         void Quit();
     }
 }

@@ -76,7 +76,7 @@ namespace CalendarSyncPlus.Application.ViewModels
 
             if (IsModified)
             {
-                DateTime timeNow = DateTime.Now;
+                var timeNow = DateTime.Now;
                 _syncFrequency.StartTime = timeNow.Subtract(new TimeSpan(0, 0, timeNow.Second));
                 _syncFrequency.Hours = Hours;
                 _syncFrequency.Minutes = Minutes;

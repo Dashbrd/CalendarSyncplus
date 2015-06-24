@@ -8,25 +8,73 @@ using MahApps.Metro.Controls.Dialogs;
 namespace CalendarSyncPlus.Presentation.Views
 {
     /// <summary>
-    /// Interaction logic for CustomInputDialog.xaml
+    ///     Interaction logic for CustomInputDialog.xaml
     /// </summary>
     public partial class CustomInputDialog : BaseMetroDialog
     {
+        public static readonly DependencyProperty MessageProperty = DependencyProperty.Register("Message",
+            typeof (string), typeof (CustomInputDialog), new PropertyMetadata(default(string)));
+
+        public static readonly DependencyProperty InputProperty = DependencyProperty.Register("Input", typeof (string),
+            typeof (CustomInputDialog), new PropertyMetadata(default(string)));
+
+        public static readonly DependencyProperty AffirmativeButtonTextProperty =
+            DependencyProperty.Register("AffirmativeButtonText", typeof (string), typeof (CustomInputDialog),
+                new PropertyMetadata("OK"));
+
+        public static readonly DependencyProperty NegativeButtonTextProperty =
+            DependencyProperty.Register("NegativeButtonText", typeof (string), typeof (CustomInputDialog),
+                new PropertyMetadata("Cancel"));
+
+        public static readonly DependencyProperty MaxInputLengthProperty = DependencyProperty.Register(
+            "MaxInputLength", typeof (int), typeof (CustomInputDialog), new PropertyMetadata(15));
+
         internal CustomInputDialog(MetroWindow parentWindow)
             : this(parentWindow, null)
         {
         }
+
         internal CustomInputDialog(MetroWindow parentWindow, MetroDialogSettings settings)
             : base(parentWindow, settings)
         {
             InitializeComponent();
         }
 
+        public string Message
+        {
+            get { return (string) GetValue(MessageProperty); }
+            set { SetValue(MessageProperty, value); }
+        }
+
+        public string Input
+        {
+            get { return (string) GetValue(InputProperty); }
+            set { SetValue(InputProperty, value); }
+        }
+
+        public string AffirmativeButtonText
+        {
+            get { return (string) GetValue(AffirmativeButtonTextProperty); }
+            set { SetValue(AffirmativeButtonTextProperty, value); }
+        }
+
+        public string NegativeButtonText
+        {
+            get { return (string) GetValue(NegativeButtonTextProperty); }
+            set { SetValue(NegativeButtonTextProperty, value); }
+        }
+
+        public int MaxInputLength
+        {
+            get { return (int) GetValue(MaxInputLengthProperty); }
+            set { SetValue(MaxInputLengthProperty, value); }
+        }
+
         internal Task<string> WaitForButtonPressAsync()
         {
             Dispatcher.BeginInvoke(new Action(() =>
             {
-                this.Focus();
+                Focus();
                 PART_TextBox.Focus();
             }));
 
@@ -44,7 +92,7 @@ namespace CalendarSyncPlus.Presentation.Views
             {
                 PART_TextBox.KeyDown -= affirmativeKeyHandler;
 
-                this.KeyDown -= escapeKeyHandler;
+                KeyDown -= escapeKeyHandler;
 
                 PART_NegativeButton.Click -= negativeHandler;
                 PART_AffirmativeButton.Click -= affirmativeHandler;
@@ -106,7 +154,7 @@ namespace CalendarSyncPlus.Presentation.Views
 
             PART_TextBox.KeyDown += affirmativeKeyHandler;
 
-            this.KeyDown += escapeKeyHandler;
+            KeyDown += escapeKeyHandler;
 
             PART_NegativeButton.Click += negativeHandler;
             PART_AffirmativeButton.Click += affirmativeHandler;
@@ -116,51 +164,16 @@ namespace CalendarSyncPlus.Presentation.Views
 
         private void Dialog_Loaded(object sender, RoutedEventArgs e)
         {
-            this.AffirmativeButtonText = this.DialogSettings.AffirmativeButtonText;
-            this.NegativeButtonText = this.DialogSettings.NegativeButtonText;
+            AffirmativeButtonText = DialogSettings.AffirmativeButtonText;
+            NegativeButtonText = DialogSettings.NegativeButtonText;
 
-            switch (this.DialogSettings.ColorScheme)
+            switch (DialogSettings.ColorScheme)
             {
                 case MetroDialogColorScheme.Accented:
-                    this.PART_NegativeButton.Style = this.FindResource("HighlightedSquareButtonStyle") as Style;
+                    PART_NegativeButton.Style = FindResource("HighlightedSquareButtonStyle") as Style;
                     PART_TextBox.SetResourceReference(ForegroundProperty, "BlackColorBrush");
                     break;
             }
-        }
-
-        public static readonly DependencyProperty MessageProperty = DependencyProperty.Register("Message", typeof(string), typeof(CustomInputDialog), new PropertyMetadata(default(string)));
-        public static readonly DependencyProperty InputProperty = DependencyProperty.Register("Input", typeof(string), typeof(CustomInputDialog), new PropertyMetadata(default(string)));
-        public static readonly DependencyProperty AffirmativeButtonTextProperty = DependencyProperty.Register("AffirmativeButtonText", typeof(string), typeof(CustomInputDialog), new PropertyMetadata("OK"));
-        public static readonly DependencyProperty NegativeButtonTextProperty = DependencyProperty.Register("NegativeButtonText", typeof(string), typeof(CustomInputDialog), new PropertyMetadata("Cancel"));
-        public static readonly DependencyProperty MaxInputLengthProperty = DependencyProperty.Register("MaxInputLength", typeof(int), typeof(CustomInputDialog), new PropertyMetadata(15));
-        public string Message
-        {
-            get { return (string)GetValue(MessageProperty); }
-            set { SetValue(MessageProperty, value); }
-        }
-
-        public string Input
-        {
-            get { return (string)GetValue(InputProperty); }
-            set { SetValue(InputProperty, value); }
-        }
-
-        public string AffirmativeButtonText
-        {
-            get { return (string)GetValue(AffirmativeButtonTextProperty); }
-            set { SetValue(AffirmativeButtonTextProperty, value); }
-        }
-
-        public string NegativeButtonText
-        {
-            get { return (string)GetValue(NegativeButtonTextProperty); }
-            set { SetValue(NegativeButtonTextProperty, value); }
-        }
-
-        public int MaxInputLength
-        {
-            get { return (int)GetValue(MaxInputLengthProperty); }
-            set { SetValue(MaxInputLengthProperty, value); }
         }
     }
 }

@@ -28,6 +28,11 @@ namespace CalendarSyncPlus.Domain.Models
 {
     public class OutlookMailBox : Model
     {
+        public OutlookMailBox()
+        {
+            _calendars = new List<OutlookCalendar>();
+        }
+
         #region Fields
 
         private List<OutlookCalendar> _calendars;
@@ -36,11 +41,6 @@ namespace CalendarSyncPlus.Domain.Models
         private string name;
 
         #endregion
-
-        public OutlookMailBox()
-        {
-            _calendars = new List<OutlookCalendar>();
-        }
 
         #region Properties
 

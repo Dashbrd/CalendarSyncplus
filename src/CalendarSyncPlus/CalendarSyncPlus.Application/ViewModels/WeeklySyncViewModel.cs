@@ -13,8 +13,8 @@ namespace CalendarSyncPlus.Application.ViewModels
         private bool _isTuesday;
         private bool _isWednesday;
         private DateTime _timeOfDay;
-        private int _weekRecurrence;
         private WeeklySyncFrequency _weeklySyncFrequency;
+        private int _weekRecurrence;
 
         public WeeklySyncViewModel()
         {
@@ -28,7 +28,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             _weeklySyncFrequency = weeklyWeeklySyncFrequency;
             TimeOfDay = weeklyWeeklySyncFrequency.TimeOfDay;
             WeekRecurrence = weeklyWeeklySyncFrequency.WeekRecurrence;
-            foreach (DayOfWeek dayOfWeekEnum in weeklyWeeklySyncFrequency.DaysOfWeek)
+            foreach (var dayOfWeekEnum in weeklyWeeklySyncFrequency.DaysOfWeek)
             {
                 LoadDayOfTheWeek(dayOfWeekEnum);
             }
@@ -161,7 +161,7 @@ namespace CalendarSyncPlus.Application.ViewModels
 
             if (IsModified)
             {
-                DateTime timeNow = DateTime.Now;
+                var timeNow = DateTime.Now;
                 _weeklySyncFrequency.StartDate = timeNow.Subtract(new TimeSpan(0, 0, timeNow.Second));
                 _weeklySyncFrequency.WeekRecurrence = WeekRecurrence;
                 _weeklySyncFrequency.TimeOfDay = TimeOfDay;

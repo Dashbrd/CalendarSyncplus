@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CalendarSyncPlus.Domain.Models;
+﻿using CalendarSyncPlus.Domain.Models;
 using CalendarSyncPlus.Services.Utilities;
 using Microsoft.Office.Interop.Outlook;
 using Recipient = Microsoft.Office.Interop.Outlook.Recipient;
@@ -18,10 +13,11 @@ namespace CalendarSyncPlus.OutlookServices.Utilities
             email = null;
             try
             {
-                if (!string.IsNullOrEmpty(recipient.Name) && recipient.Name.Contains("<") && recipient.Name.Contains(">"))
+                if (!string.IsNullOrEmpty(recipient.Name) && recipient.Name.Contains("<") &&
+                    recipient.Name.Contains(">"))
                 {
-                    int startIndex = recipient.Name.LastIndexOf("<");
-                    int endIndex = recipient.Name.LastIndexOf(">");
+                    var startIndex = recipient.Name.LastIndexOf("<");
+                    var endIndex = recipient.Name.LastIndexOf(">");
                     if (startIndex < endIndex)
                     {
                         email = recipient.Name.Substring(startIndex + 1, endIndex - startIndex - 1);
@@ -39,25 +35,27 @@ namespace CalendarSyncPlus.OutlookServices.Utilities
             }
             return false;
         }
+
         public static MeetingResponseStatusEnum GetMeetingResponseStatus(this Recipient recipient)
         {
             switch (recipient.MeetingResponseStatus)
             {
-                    case OlResponseStatus.olResponseAccepted:
-                     return MeetingResponseStatusEnum.Accepted;
-                    case OlResponseStatus.olResponseDeclined:
-                     return MeetingResponseStatusEnum.Declined;
-                    case OlResponseStatus.olResponseNone:
-                     return MeetingResponseStatusEnum.None;
-                    case OlResponseStatus.olResponseNotResponded:
-                     return MeetingResponseStatusEnum.NotResponded;
-                    case OlResponseStatus.olResponseOrganized:
-                     return MeetingResponseStatusEnum.Organizer;
-                    case OlResponseStatus.olResponseTentative:
-                     return MeetingResponseStatusEnum.Tentative;
+                case OlResponseStatus.olResponseAccepted:
+                    return MeetingResponseStatusEnum.Accepted;
+                case OlResponseStatus.olResponseDeclined:
+                    return MeetingResponseStatusEnum.Declined;
+                case OlResponseStatus.olResponseNone:
+                    return MeetingResponseStatusEnum.None;
+                case OlResponseStatus.olResponseNotResponded:
+                    return MeetingResponseStatusEnum.NotResponded;
+                case OlResponseStatus.olResponseOrganized:
+                    return MeetingResponseStatusEnum.Organizer;
+                case OlResponseStatus.olResponseTentative:
+                    return MeetingResponseStatusEnum.Tentative;
             }
             return MeetingResponseStatusEnum.None;
         }
+
         public static MeetingStatusEnum GetMeetingStatus(this AppointmentItem appointment)
         {
             switch (appointment.MeetingStatus)
@@ -134,6 +132,5 @@ namespace CalendarSyncPlus.OutlookServices.Utilities
                 calendarAppointment.BusyStatus = BusyStatusEnum.Tentative;
             }
         }
-
     }
 }

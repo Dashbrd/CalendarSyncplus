@@ -32,15 +32,6 @@ namespace CalendarSyncPlus.Application.ViewModels
     [Export]
     public class SystemTrayNotifierViewModel : ViewModel<ISystemTrayNotifierView>
     {
-        #region Fields
-
-        private DelegateCommand _doubleClickCommand;
-        private DelegateCommand _exitApplicationCommand;
-        private DelegateCommand _showApplicationCommand;
-        private string _toolTipText;
-
-        #endregion
-
         #region Constructors
 
         [ImportingConstructor]
@@ -49,6 +40,51 @@ namespace CalendarSyncPlus.Application.ViewModels
         {
             GuiInteractionService = guiInteractionService;
         }
+
+        #endregion
+
+        public void ShowBalloon()
+        {
+            ViewCore.ShowCustomBalloon();
+        }
+
+        public void ShowBalloon(string tooltipText)
+        {
+            ToolTipText = tooltipText;
+            DispatcherHelper.CheckBeginInvokeOnUI(() => ViewCore.ShowCustomBalloon());
+        }
+
+        public void UpdateBalloonText(string tooltipText)
+        {
+            ToolTipText = tooltipText;
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="tooltipText"></param>
+        /// <param name="timeoutInMilliseconds"></param>
+        public void ShowBalloon(string tooltipText, int timeoutInMilliseconds)
+        {
+            ToolTipText = tooltipText;
+            DispatcherHelper.CheckBeginInvokeOnUI(() => ViewCore.ShowCustomBalloon(timeoutInMilliseconds));
+        }
+
+        public void HideBalloon()
+        {
+            DispatcherHelper.CheckBeginInvokeOnUI(() => ViewCore.CloseBalloon());
+        }
+
+        public void Quit()
+        {
+            ViewCore.Quit();
+        }
+
+        #region Fields
+
+        private DelegateCommand _doubleClickCommand;
+        private DelegateCommand _exitApplicationCommand;
+        private DelegateCommand _showApplicationCommand;
+        private string _toolTipText;
 
         #endregion
 
@@ -93,46 +129,9 @@ namespace CalendarSyncPlus.Application.ViewModels
 
         private bool CanShowApplication(object canShowApplication)
         {
-            return canShowApplication == null || (bool)canShowApplication;
+            return canShowApplication == null || (bool) canShowApplication;
         }
 
         #endregion
-
-        public void ShowBalloon()
-        {
-            ViewCore.ShowCustomBalloon();
-        }
-
-        public void ShowBalloon(string tooltipText)
-        {
-            ToolTipText = tooltipText;
-            DispatcherHelper.CheckBeginInvokeOnUI(() => ViewCore.ShowCustomBalloon());
-        }
-
-
-        public void UpdateBalloonText(string tooltipText)
-        {
-            ToolTipText = tooltipText;
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <param name="tooltipText"></param>
-        /// <param name="timeoutInMilliseconds"></param>
-        public void ShowBalloon(string tooltipText, int timeoutInMilliseconds)
-        {
-            ToolTipText = tooltipText;
-            DispatcherHelper.CheckBeginInvokeOnUI(() => ViewCore.ShowCustomBalloon(timeoutInMilliseconds));
-        }
-
-        public void HideBalloon()
-        {
-            DispatcherHelper.CheckBeginInvokeOnUI(() => ViewCore.CloseBalloon());
-        }
-
-        public void Quit()
-        {
-            ViewCore.Quit();
-        }
     }
 }

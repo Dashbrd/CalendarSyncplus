@@ -1,8 +1,5 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Waf.Foundation;
-using CalendarSyncPlus.Common.Attributes;
-using CalendarSyncPlus.Domain;
 using CalendarSyncPlus.Domain.Models;
 
 namespace CalendarSyncPlus.Application.ViewModels
@@ -23,13 +20,17 @@ namespace CalendarSyncPlus.Application.ViewModels
         #endregion
 
         #region Properties
-        [RegularExpression(@"^http(s?)\:\/\/[0-9a-zA-Z]([-.\w]*[0-9a-zA-Z])*(:(0-9)*)*(\/?)([a-zA-Z0-9\-\.\?\,\'\/\\\+&amp;%\$#_]*)?$", ErrorMessage = "Invalid URL")]
+
+        [RegularExpression(
+            @"^http(s?)\:\/\/[0-9a-zA-Z]([-.\w]*[0-9a-zA-Z])*(:(0-9)*)*(\/?)([a-zA-Z0-9\-\.\?\,\'\/\\\+&amp;%\$#_]*)?$",
+            ErrorMessage = "Invalid URL")]
         public string ProxyAddress
         {
             get { return _proxyAddress; }
             set { SetPropertyAndValidate(ref _proxyAddress, value); }
         }
-        [Range(0, 65535,ErrorMessage="Port should ne between {0}")]
+
+        [Range(0, 65535, ErrorMessage = "Port should ne between {0}")]
         public int Port
         {
             get { return _port; }

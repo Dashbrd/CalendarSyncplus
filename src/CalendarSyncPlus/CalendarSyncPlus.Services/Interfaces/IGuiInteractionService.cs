@@ -22,7 +22,6 @@ namespace CalendarSyncPlus.Services.Interfaces
     public interface IGuiInteractionService
     {
         void ShowApplication();
-
         void HideApplication();
     }
 }

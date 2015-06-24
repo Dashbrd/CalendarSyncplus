@@ -15,13 +15,13 @@ namespace CalendarSyncPlus.Presentation.Converters
             if (parameter == null)
                 return Visibility.Collapsed;
             var parameterString = parameter.ToString();
-            
+
             if (Enum.IsDefined(value.GetType(), value) == false)
                 return Visibility.Collapsed;
 
-            object parameterValue = Enum.Parse(value.GetType(), parameterString);
+            var parameterValue = Enum.Parse(value.GetType(), parameterString);
 
-           return parameterValue.Equals(value) ? Visibility.Visible : Visibility.Collapsed;
+            return parameterValue.Equals(value) ? Visibility.Visible : Visibility.Collapsed;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

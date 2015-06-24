@@ -25,36 +25,20 @@ namespace CalendarSyncPlus.Services.Interfaces
     public interface IMessageService
     {
         void ShowMessageAsync(string message, string title);
-
         void ShowMessageAsync(string message);
-
         Task<MessageDialogResult> ShowMessage(string message, string title);
-
         Task<MessageDialogResult> ShowMessage(string message);
-
         void ShowConfirmMessageAsync(string message, string title);
-
         void ShowConfirmMessageAsync(string message);
-
         Task<MessageDialogResult> ShowConfirmMessage(string message, string title);
-
         Task<MessageDialogResult> ShowConfirmMessage(string message);
-
         Task<string> ShowInput(string message, string title);
-
         Task<string> ShowInput(string message);
-
         Task<string> ShowInputAsync(string message);
-
         Task<string> ShowInputAsync(string message, string title);
-
         void ShowProgressAsync(string message, string title);
-
         void ShowProgressAsync(string message);
-
         Task<ProgressDialogController> ShowProgress(string message, string title);
-
         Task<ProgressDialogController> ShowProgress(string message);
-
     }
 }

@@ -25,38 +25,36 @@ using System.Waf.Applications;
 using CalendarSyncPlus.Application.ViewModels;
 using CalendarSyncPlus.Authentication.Google;
 using CalendarSyncPlus.Common;
-using CalendarSyncPlus.Domain.Models;
-using CalendarSyncPlus.GoogleServices.Google;
 using CalendarSyncPlus.Services;
 using CalendarSyncPlus.Services.Interfaces;
 
 namespace CalendarSyncPlus.Application.Controllers
 {
-    [Export(typeof(IApplicationController))]
+    [Export(typeof (IApplicationController))]
     public class ApplicationController : IApplicationController
     {
-        public ILocalizationService LocalizationService { get; set; }
         private readonly AboutViewModel _aboutViewModel;
         private readonly DelegateCommand _exitCommand;
         private readonly IGuiInteractionService _guiInteractionService;
-        private readonly ILogController _logController;
         private readonly HelpViewModel _helpViewModel;
+        private readonly ILogController _logController;
+        private readonly LogViewModel _logViewModel;
         private readonly SettingsViewModel _settingsViewModel;
         private readonly IShellController _shellController;
         private readonly ShellService _shellService;
         private readonly ShellViewModel _shellViewModel;
         private readonly SystemTrayNotifierViewModel _systemTrayNotifierViewModel;
         private bool _isApplicationExiting;
-        private LogViewModel _logViewModel;
 
         [ImportingConstructor]
         public ApplicationController(Lazy<ShellViewModel> shellViewModelLazy,
             Lazy<SettingsViewModel> settingsViewModelLazy,
-            Lazy<AboutViewModel> aboutViewModelLazy, Lazy<HelpViewModel> helpViewModelLazy,Lazy<LogViewModel> logViewModelLazy,
+            Lazy<AboutViewModel> aboutViewModelLazy, Lazy<HelpViewModel> helpViewModelLazy,
+            Lazy<LogViewModel> logViewModelLazy,
             Lazy<ShellService> shellServiceLazy, CompositionContainer compositionContainer,
             Lazy<IAccountAuthenticationService> accountAuthenticationServiceLazy, IShellController shellController,
             Lazy<SystemTrayNotifierViewModel> lazySystemTrayNotifierViewModel,
-            IGuiInteractionService guiInteractionService,ILogController logController)
+            IGuiInteractionService guiInteractionService, ILogController logController)
         {
             //ViewModels
             _shellViewModel = shellViewModelLazy.Value;
@@ -87,7 +85,72 @@ namespace CalendarSyncPlus.Application.Controllers
             }
         }
 
+        public ILocalizationService LocalizationService { get; set; }
         public IAccountAuthenticationService AccountAuthenticationService { get; set; }
+
+        private void ShellViewUpdatedHandler(object sender, PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case "IsAboutVisible":
+                    if (_shellViewModel.IsAboutVisible)
+                    {
+                        if (_shellViewModel.Settings.AppSettings.CheckForUpdates)
+                        {
+                            _aboutViewModel.CheckForUpdatesCommand.Execute(null);
+                        }
+                    }
+                    break;
+                case "IsSettingsVisible":
+                    if (_shellViewModel.IsSettingsVisible)
+                    {
+                        _settingsViewModel.Load();
+                    }
+                    break;
+            }
+        }
+
+        private void SettingsChangedHandler(object sender, PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case "SettingsSaved":
+                    if (_settingsViewModel.SettingsSaved)
+                    {
+                        _shellViewModel.IsSettingsVisible = false;
+                        _shellViewModel.Settings = _settingsViewModel.Settings;
+                        foreach (var syncProfile in _settingsViewModel.Settings.SyncProfiles)
+                        {
+                            if (syncProfile.IsSyncEnabled && syncProfile.SyncSettings.SyncFrequency != null)
+                            {
+                                syncProfile.NextSync =
+                                    syncProfile.SyncSettings.SyncFrequency.GetNextSyncTime(DateTime.Now);
+                            }
+                        }
+                    }
+                    break;
+                case "IsLoading":
+                    _shellViewModel.IsSettingsLoading = _settingsViewModel.IsLoading;
+                    break;
+            }
+        }
+
+        private void Close()
+        {
+            _isApplicationExiting = true;
+            _shellViewModel.Close();
+        }
+
+        private void ShellViewModelClosing(object sender, CancelEventArgs e)
+        {
+            // Try to  user has already saved settings or pending operation are left.
+            if (_isApplicationExiting || !_shellViewModel.Settings.AppSettings.MinimizeToSystemTray)
+            {
+                return;
+            }
+            _guiInteractionService.HideApplication();
+            e.Cancel = true;
+        }
 
         #region IApplicationController Members
 
@@ -123,69 +186,5 @@ namespace CalendarSyncPlus.Application.Controllers
         }
 
         #endregion
-
-        private void ShellViewUpdatedHandler(object sender, PropertyChangedEventArgs e)
-        {
-            switch (e.PropertyName)
-            {
-                case "IsAboutVisible":
-                    if (_shellViewModel.IsAboutVisible)
-                    {
-                        if (_shellViewModel.Settings.AppSettings.CheckForUpdates)
-                        {
-                            _aboutViewModel.CheckForUpdatesCommand.Execute(null);
-                        }
-                    }
-                    break;
-                case "IsSettingsVisible":
-                    if (_shellViewModel.IsSettingsVisible)
-                    {
-                        _settingsViewModel.Load();
-                    }
-                    break;
-            }
-        }
-
-        private void SettingsChangedHandler(object sender, PropertyChangedEventArgs e)
-        {
-            switch (e.PropertyName)
-            {
-                case "SettingsSaved":
-                    if (_settingsViewModel.SettingsSaved)
-                    {
-                        _shellViewModel.IsSettingsVisible = false;
-                        _shellViewModel.Settings = _settingsViewModel.Settings;
-                        foreach (CalendarSyncProfile syncProfile in _settingsViewModel.Settings.SyncProfiles)
-                        {
-                            if (syncProfile.IsSyncEnabled && syncProfile.SyncSettings.SyncFrequency != null)
-                            {
-                                syncProfile.NextSync =
-                                    syncProfile.SyncSettings.SyncFrequency.GetNextSyncTime(DateTime.Now);
-                            }
-                        }
-                    }
-                    break;
-                case "IsLoading":
-                    _shellViewModel.IsSettingsLoading = _settingsViewModel.IsLoading;
-                    break;
-            }
-        }
-
-        private void Close()
-        {
-            _isApplicationExiting = true;
-            _shellViewModel.Close();
-        }
-
-        private void ShellViewModelClosing(object sender, CancelEventArgs e)
-        {
-            // Try to  user has already saved settings or pending operation are left.
-            if (_isApplicationExiting || !_shellViewModel.Settings.AppSettings.MinimizeToSystemTray)
-            {
-                return;
-            }
-            _guiInteractionService.HideApplication();
-            e.Cancel = true;
-        }
     }
 }

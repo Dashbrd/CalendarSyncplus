@@ -17,8 +17,8 @@ using System.Xml;
 namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
 {
     /// <summary>
-    /// HtmlToXamlConverter is a static class that takes an HTML string
-    /// and converts it into XAML
+    ///     <see cref="HtmlToXamlConverter" /> is a <see langword="static" /> class
+    ///     that takes an HTML string and converts it into XAML
     /// </summary>
     internal static class HtmlFromXamlConverter
     {
@@ -31,14 +31,12 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
         #region Internal Methods
 
         /// <summary>
-        /// Main entry point for Xaml-to-Html converter.
-        /// Converts a xaml string into html string.
+        ///     Main entry point for Xaml-to-Html converter. Converts a xaml string
+        ///     into html string.
         /// </summary>
-        /// <param name="xamlString">
-        /// Xaml strinng to convert.
-        /// </param>
+        /// <param name="xamlString">Xaml strinng to convert.</param>
         /// <returns>
-        /// Html string produced from a source xaml.
+        ///     Html string produced from a source xaml.
         /// </returns>
         internal static string ConvertXamlToHtml(string xamlString)
         {
@@ -56,7 +54,7 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
                 return "";
             }
 
-            string htmlString = htmlStringBuilder.ToString();
+            var htmlString = htmlStringBuilder.ToString();
 
             return htmlString;
         }
@@ -70,14 +68,14 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
         // ---------------------------------------------------------------------
 
         #region Private Methods
+
         /// <summary>
-        /// Processes a root level element of XAML (normally it's FlowDocument element).
+        ///     Processes a root level element of XAML (normally it's FlowDocument
+        ///     element).
         /// </summary>
-        /// <param name="xamlReader">
-        /// XmlTextReader for a source xaml.
-        /// </param>
+        /// <param name="xamlReader">XmlTextReader for a source xaml.</param>
         /// <param name="htmlWriter">
-        /// XmlTextWriter producing resulting html
+        ///     XmlTextWriter producing resulting html
         /// </param>
         private static bool WriteFlowDocument(XmlTextReader xamlReader, XmlTextWriter htmlWriter)
         {
@@ -95,7 +93,7 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
 
             // Create a buffer StringBuilder for collecting css properties for inline STYLE attributes
             // on every element level (it will be re-initialized on every level).
-            StringBuilder inlineStyle = new StringBuilder();
+            var inlineStyle = new StringBuilder();
 
             htmlWriter.WriteStartElement("HTML");
             htmlWriter.WriteStartElement("BODY");
@@ -111,22 +109,24 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
         }
 
         /// <summary>
-        /// Reads attributes of the current xaml element and converts
-        /// them into appropriate html attributes or css styles.
+        ///     Reads attributes of the current xaml element and converts them into
+        ///     appropriate html attributes or css styles.
         /// </summary>
         /// <param name="xamlReader">
-        /// XmlTextReader which is expected to be at XmlNodeType.Element
-        /// (opening element tag) position.
-        /// The reader will remain at the same level after function complete.
+        ///     XmlTextReader which is expected to be at XmlNodeType.Element
+        ///     (opening element tag) position. The reader will remain at the same
+        ///     level after function complete.
         /// </param>
         /// <param name="htmlWriter">
-        /// XmlTextWriter for output html, which is expected to be in
-        /// after WriteStartElement state.
+        ///     XmlTextWriter for output html, which is expected to be in after
+        ///     WriteStartElement state.
         /// </param>
         /// <param name="inlineStyle">
-        /// String builder for collecting css properties for inline STYLE attribute.
+        ///     String builder for collecting css properties for inline STYLE
+        ///     attribute.
         /// </param>
-        private static void WriteFormattingProperties(XmlTextReader xamlReader, XmlTextWriter htmlWriter, StringBuilder inlineStyle)
+        private static void WriteFormattingProperties(XmlTextReader xamlReader, XmlTextWriter htmlWriter,
+            StringBuilder inlineStyle)
         {
             Debug.Assert(xamlReader.NodeType == XmlNodeType.Element);
 
@@ -138,7 +138,7 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
                 return;
             }
 
-            bool borderSet = false;
+            var borderSet = false;
 
             while (xamlReader.MoveToNextAttribute())
             {
@@ -260,9 +260,9 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
 
         private static string ParseXamlThickness(string thickness)
         {
-            string[] values = thickness.Split(',');
+            var values = thickness.Split(',');
 
-            for (int i = 0; i < values.Length; i++)
+            for (var i = 0; i < values.Length; i++)
             {
                 double value;
                 if (double.TryParse(values[i], out value))
@@ -296,24 +296,26 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
         }
 
         /// <summary>
-        /// Reads a content of current xaml element, converts it
+        ///     Reads a content of current xaml element, converts it
         /// </summary>
         /// <param name="xamlReader">
-        /// XmlTextReader which is expected to be at XmlNodeType.Element
-        /// (opening element tag) position.
+        ///     XmlTextReader which is expected to be at XmlNodeType.Element
+        ///     (opening element tag) position.
         /// </param>
         /// <param name="htmlWriter">
-        /// May be null, in which case we are skipping the xaml element;
-        /// witout producing any output to html.
+        ///     May be null, in which case we are skipping the xaml element; witout
+        ///     producing any output to html.
         /// </param>
         /// <param name="inlineStyle">
-        /// StringBuilder used for collecting css properties for inline STYLE attribute.
+        ///     StringBuilder used for collecting css properties for inline STYLE
+        ///     attribute.
         /// </param>
-        private static void WriteElementContent(XmlTextReader xamlReader, XmlTextWriter htmlWriter, StringBuilder inlineStyle)
+        private static void WriteElementContent(XmlTextReader xamlReader, XmlTextWriter htmlWriter,
+            StringBuilder inlineStyle)
         {
             Debug.Assert(xamlReader.NodeType == XmlNodeType.Element);
 
-            bool elementContentStarted = false;
+            var elementContentStarted = false;
 
             if (xamlReader.IsEmptyElement)
             {
@@ -347,7 +349,8 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
                                 elementContentStarted = true;
                                 WriteElement(xamlReader, htmlWriter, inlineStyle);
                             }
-                            Debug.Assert(xamlReader.NodeType == XmlNodeType.EndElement || xamlReader.NodeType == XmlNodeType.Element && xamlReader.IsEmptyElement);
+                            Debug.Assert(xamlReader.NodeType == XmlNodeType.EndElement ||
+                                         xamlReader.NodeType == XmlNodeType.Element && xamlReader.IsEmptyElement);
                             break;
                         case XmlNodeType.Comment:
                             if (htmlWriter != null)
@@ -381,14 +384,14 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
         }
 
         /// <summary>
-        /// Conberts an element notation of complex property into
+        ///     Conberts an element notation of complex property into
         /// </summary>
         /// <param name="xamlReader">
-        /// On entry this XmlTextReader must be on Element start tag;
-        /// on exit - on EndElement tag.
+        ///     On entry this XmlTextReader must be on Element start tag; on exit -
+        ///     on EndElement tag.
         /// </param>
         /// <param name="inlineStyle">
-        /// StringBuilder containing a value for STYLE attribute.
+        ///     StringBuilder containing a value for STYLE attribute.
         /// </param>
         private static void AddComplexProperty(XmlTextReader xamlReader, StringBuilder inlineStyle)
         {
@@ -404,18 +407,19 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
         }
 
         /// <summary>
-        /// Converts a xaml element into an appropriate html element.
+        ///     Converts a xaml element into an appropriate html element.
         /// </summary>
         /// <param name="xamlReader">
-        /// On entry this XmlTextReader must be on Element start tag;
-        /// on exit - on EndElement tag.
+        ///     On entry this XmlTextReader must be on Element start tag; on exit -
+        ///     on EndElement tag.
         /// </param>
         /// <param name="htmlWriter">
-        /// May be null, in which case we are skipping xaml content
-        /// without producing any html output
+        ///     May be null, in which case we are skipping xaml content without
+        ///     producing any html output
         /// </param>
         /// <param name="inlineStyle">
-        /// StringBuilder used for collecting css properties for inline STYLE attributes on every level.
+        ///     StringBuilder used for collecting css properties for inline STYLE
+        ///     attributes on every level.
         /// </param>
         private static void WriteElement(XmlTextReader xamlReader, XmlTextWriter htmlWriter, StringBuilder inlineStyle)
         {
@@ -432,7 +436,7 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
 
                 switch (xamlReader.Name)
                 {
-                    case "Run" :
+                    case "Run":
                     case "Span":
                         htmlElementName = "SPAN";
                         break;
@@ -442,10 +446,10 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
                     case "Bold":
                         htmlElementName = "B";
                         break;
-                    case "Italic" :
+                    case "Italic":
                         htmlElementName = "I";
                         break;
-                    case "Paragraph" :
+                    case "Paragraph":
                         htmlElementName = "P";
                         break;
                     case "BlockUIContainer":
@@ -460,18 +464,19 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
                     case "TableColumn":
                         htmlElementName = "COL";
                         break;
-                    case "TableRowGroup" :
+                    case "TableRowGroup":
                         htmlElementName = "TBODY";
                         break;
-                    case "TableRow" :
+                    case "TableRow":
                         htmlElementName = "TR";
                         break;
-                    case "TableCell" :
+                    case "TableCell":
                         htmlElementName = "TD";
                         break;
-                    case "List" :
-                        string marker = xamlReader.GetAttribute("MarkerStyle");
-                        if (marker == null || marker == "None" || marker == "Disc" || marker == "Circle" || marker == "Square" || marker == "Box")
+                    case "List":
+                        var marker = xamlReader.GetAttribute("MarkerStyle");
+                        if (marker == null || marker == "None" || marker == "Disc" || marker == "Circle" ||
+                            marker == "Square" || marker == "Box")
                         {
                             htmlElementName = "UL";
                         }
@@ -480,10 +485,10 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
                             htmlElementName = "OL";
                         }
                         break;
-                    case "ListItem" :
+                    case "ListItem":
                         htmlElementName = "LI";
                         break;
-                    default :
+                    default:
                         htmlElementName = null; // Ignore the element
                         break;
                 }
@@ -507,57 +512,60 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
         }
 
         // Reader advance helpers
-		// ----------------------
-				 
+        // ----------------------
+
         /// <summary>
-        /// Reads several items from xamlReader skipping all non-significant stuff.
+        ///     Reads several items from <paramref name="xamlReader" /> skipping all
+        ///     non-significant stuff.
         /// </summary>
         /// <param name="xamlReader">
-        /// XmlTextReader from tokens are being read.
+        ///     XmlTextReader from tokens are being read.
         /// </param>
         /// <returns>
-        /// True if new token is available; false if end of stream reached.
+        ///     True if new token is available; <see langword="false" /> if end of
+        ///     stream reached.
         /// </returns>
-		private static bool ReadNextToken(XmlReader xamlReader)
-		{
-			while (xamlReader.Read())
-			{
-				Debug.Assert(xamlReader.ReadState == ReadState.Interactive, "Reader is expected to be in Interactive state (" + xamlReader.ReadState + ")");
-				switch (xamlReader.NodeType)
-				{
-				    case XmlNodeType.Element: 
-				    case XmlNodeType.EndElement:
-				    case XmlNodeType.None:
-				    case XmlNodeType.CDATA:
-				    case XmlNodeType.Text:
-				    case XmlNodeType.SignificantWhitespace:
-					    return true;
+        private static bool ReadNextToken(XmlReader xamlReader)
+        {
+            while (xamlReader.Read())
+            {
+                Debug.Assert(xamlReader.ReadState == ReadState.Interactive,
+                    "Reader is expected to be in Interactive state (" + xamlReader.ReadState + ")");
+                switch (xamlReader.NodeType)
+                {
+                    case XmlNodeType.Element:
+                    case XmlNodeType.EndElement:
+                    case XmlNodeType.None:
+                    case XmlNodeType.CDATA:
+                    case XmlNodeType.Text:
+                    case XmlNodeType.SignificantWhitespace:
+                        return true;
 
-				    case XmlNodeType.Whitespace:
-					    if (xamlReader.XmlSpace == XmlSpace.Preserve)
-					    {
-						    return true;
-					    }
-					    // ignore insignificant whitespace
-					    break;
+                    case XmlNodeType.Whitespace:
+                        if (xamlReader.XmlSpace == XmlSpace.Preserve)
+                        {
+                            return true;
+                        }
+                        // ignore insignificant whitespace
+                        break;
 
-				    case XmlNodeType.EndEntity:
-				    case XmlNodeType.EntityReference:
+                    case XmlNodeType.EndEntity:
+                    case XmlNodeType.EntityReference:
                         //  Implement entity reading
-					    //xamlReader.ResolveEntity();
-					    //xamlReader.Read();
-					    //ReadChildNodes( parent, parentBaseUri, xamlReader, positionInfo);
+                        //xamlReader.ResolveEntity();
+                        //xamlReader.Read();
+                        //ReadChildNodes( parent, parentBaseUri, xamlReader, positionInfo);
                         break; // for now we ignore entities as insignificant stuff
 
                     case XmlNodeType.Comment:
                         return true;
                     case XmlNodeType.ProcessingInstruction:
-				    case XmlNodeType.DocumentType:
-				    case XmlNodeType.XmlDeclaration:
-				    default:
-					    // Ignorable stuff
-					    break;
-				}
+                    case XmlNodeType.DocumentType:
+                    case XmlNodeType.XmlDeclaration:
+                    default:
+                        // Ignorable stuff
+                        break;
+                }
             }
             return false;
         }

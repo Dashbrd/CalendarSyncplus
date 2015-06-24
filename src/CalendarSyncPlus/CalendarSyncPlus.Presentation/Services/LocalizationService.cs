@@ -1,4 +1,5 @@
 ﻿#region File Header
+
 // /******************************************************************************
 //  * 
 //  *      Copyright (C) Ankesh Dave 2015 All Rights Reserved. Confidential
@@ -13,18 +14,17 @@
 //  *      FileName:       LocalizationService.cs
 //  * 
 //  *****************************************************************************/
+
 #endregion
 
 using System.ComponentModel.Composition;
 using System.Globalization;
-
 using CalendarSyncPlus.Common;
-
 using WPFLocalizeExtension.Engine;
 
 namespace CalendarSyncPlus.Presentation.Services
 {
-    [Export(typeof(ILocalizationService))]
+    [Export(typeof (ILocalizationService))]
     public class LocalizationService : ILocalizationService
     {
         public string GetLocalizedString(string key)
@@ -33,7 +33,8 @@ namespace CalendarSyncPlus.Presentation.Services
             {
                 return string.Empty;
             }
-            var localizedObject =  LocalizeDictionary.Instance.GetLocalizedObject(string.Empty, string.Empty, key, LocalizeDictionary.Instance.Culture);
+            var localizedObject = LocalizeDictionary.Instance.GetLocalizedObject(string.Empty, string.Empty, key,
+                LocalizeDictionary.Instance.Culture);
             var actualString = localizedObject as string;
             return actualString;
         }

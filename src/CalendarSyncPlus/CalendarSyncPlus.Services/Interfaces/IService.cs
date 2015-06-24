@@ -22,9 +22,7 @@ namespace CalendarSyncPlus.Services.Interfaces
     public interface IService
     {
         void Initialize();
-
         void Run();
-
         void Shutdown();
     }
 }

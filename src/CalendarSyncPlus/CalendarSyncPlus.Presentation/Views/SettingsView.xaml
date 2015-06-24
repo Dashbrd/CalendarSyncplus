@@ -26,7 +26,7 @@
                 </Setter.Value>
             </Setter>
         </Style>
-        <converters:ToUpperConverter x:Key="ToUpperConverter"/>
+        <converters:ToUpperConverter x:Key="ToUpperConverter" />
         <wafConverters:InvertBooleanConverter x:Key="InvertBooleanConverter" />
         <DataTemplate x:Key="ProgressBarDataTemplate">
             <controls:MetroProgressBar Minimum="0"
@@ -51,7 +51,7 @@
     </UserControl.Resources>
     <Grid Margin="10">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="2" />
             <RowDefinition />
             <RowDefinition Height="Auto" />

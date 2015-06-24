@@ -22,7 +22,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using CalendarSyncPlus.Domain.Models;
 using CalendarSyncPlus.Domain.Wrappers;
-using CalendarSyncPlus.Services.Wrappers;
 
 namespace CalendarSyncPlus.Services.Interfaces
 {
@@ -30,7 +29,7 @@ namespace CalendarSyncPlus.Services.Interfaces
     {
         string CalendarServiceName { get; }
 
-        Task<bool> DeleteCalendarEvents(List<Appointment> calendarAppointments,
+        Task<CalendarAppointments> DeleteCalendarEvents(List<Appointment> calendarAppointments,
             IDictionary<string, object> calendarSpecificData);
 
         Task<CalendarAppointments> GetCalendarEventsInRangeAsync(DateTime startDate, DateTime endDate,
@@ -42,11 +41,10 @@ namespace CalendarSyncPlus.Services.Interfaces
 
         void CheckCalendarSpecificData(IDictionary<string, object> calendarSpecificData);
 
-        Task<bool> UpdateCalendarEvents(List<Appointment> calendarAppointments, bool addDescription,
+        Task<CalendarAppointments> UpdateCalendarEvents(List<Appointment> calendarAppointments, bool addDescription,
             bool addReminder, bool addAttendees, bool attendeesToDescription,
             IDictionary<string, object> calendarSpecificData);
 
         Task<bool> ResetCalendar(IDictionary<string, object> calendarSpecificData);
-
     }
 }

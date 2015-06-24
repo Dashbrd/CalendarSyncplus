@@ -43,7 +43,7 @@ namespace CalendarSyncPlus.Services.Interfaces
 
         void Stop(ElapsedEventHandler timerCallback);
 
-        string SyncNow(CalendarSyncProfile syncProfile, SyncCallback syncCallback);
+        string SyncNow(CalendarSyncProfile syncProfile, SyncMetric syncMetric, SyncCallback syncCallback);
 
         #endregion
     }

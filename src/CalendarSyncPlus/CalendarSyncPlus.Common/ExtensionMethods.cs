@@ -28,11 +28,11 @@ namespace CalendarSyncPlus.Common
             return Enum.GetName(eff.GetType(), eff);
         }
 
-        public static EnumType converToEnum<EnumType>(this String enumValue) where EnumType:new()
+        public static EnumType converToEnum<EnumType>(this String enumValue) where EnumType : new()
         {
             try
             {
-                return (EnumType)Enum.Parse(typeof(EnumType), enumValue);
+                return (EnumType) Enum.Parse(typeof (EnumType), enumValue);
             }
             catch (Exception exception)
             {

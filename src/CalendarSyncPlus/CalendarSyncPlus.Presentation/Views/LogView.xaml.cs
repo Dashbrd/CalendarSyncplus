@@ -1,26 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.Composition;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+﻿using System.ComponentModel.Composition;
 using CalendarSyncPlus.Application.Views;
 
 namespace CalendarSyncPlus.Presentation.Views
 {
     /// <summary>
-    /// Interaction logic for LogView.xaml
+    ///     Interaction logic for LogView.xaml
     /// </summary>
-    [Export(typeof(ILogView))]
+    [Export(typeof (ILogView))]
     public partial class LogView : ILogView
     {
         public LogView()

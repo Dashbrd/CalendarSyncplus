@@ -40,6 +40,54 @@ namespace CalendarSyncPlus.Presentation.Services.SingleInstance
     public static class SingleInstance<TApplication>
         where TApplication : System.Windows.Application, ISingleInstanceApp
     {
+        #region Public Properties
+
+        /// <summary>
+        ///     Gets list of command line arguments for the application.
+        /// </summary>
+        public static IList<string> CommandLineArgs
+        {
+            get { return commandLineArgs; }
+        }
+
+        #endregion
+
+        #region Private Classes
+
+        /// <summary>
+        ///     Remoting service class which is exposed by the server i.e the first instance and called by the second instance
+        ///     to pass on the command line arguments to the first instance and cause it to activate itself.
+        /// </summary>
+        private class IPCRemoteService : MarshalByRefObject
+        {
+            /// <summary>
+            ///     Activates the first instance of the application.
+            /// </summary>
+            /// <param name="args">List of arguments to pass to the first instance.</param>
+            public void InvokeFirstInstance(IList<string> args)
+            {
+                if (System.Windows.Application.Current != null)
+                {
+                    // Do an asynchronous call to ActivateFirstInstance function
+                    System.Windows.Application.Current.Dispatcher.BeginInvoke(
+                        DispatcherPriority.Normal, new DispatcherOperationCallback(ActivateFirstInstanceCallback), args);
+                }
+            }
+
+            /// <summary>
+            ///     Remoting Object's ease expires after every 5 minutes by default. We need to override the InitializeLifetimeService
+            ///     class
+            ///     to ensure that lease never expires.
+            /// </summary>
+            /// <returns>Always null.</returns>
+            public override object InitializeLifetimeService()
+            {
+                return null;
+            }
+        }
+
+        #endregion
+
         #region Private Fields
 
         /// <summary>
@@ -79,18 +127,6 @@ namespace CalendarSyncPlus.Presentation.Services.SingleInstance
 
         #endregion
 
-        #region Public Properties
-
-        /// <summary>
-        ///     Gets list of command line arguments for the application.
-        /// </summary>
-        public static IList<string> CommandLineArgs
-        {
-            get { return commandLineArgs; }
-        }
-
-        #endregion
-
         #region Public Methods
 
         /// <summary>
@@ -103,9 +139,9 @@ namespace CalendarSyncPlus.Presentation.Services.SingleInstance
             commandLineArgs = GetCommandLineArgs(uniqueName);
 
             // Build unique application Id and the IPC channel name.
-            string applicationIdentifier = uniqueName + Environment.UserName;
+            var applicationIdentifier = uniqueName + Environment.UserName;
 
-            string channelName = String.Concat(applicationIdentifier, Delimiter, ChannelNameSuffix);
+            var channelName = String.Concat(applicationIdentifier, Delimiter, ChannelNameSuffix);
 
             // Create mutex based on unique application Id to check if this is the first instance of the application. 
             bool firstInstance;
@@ -164,10 +200,10 @@ namespace CalendarSyncPlus.Presentation.Services.SingleInstance
                 // As a workaround commandline arguments can be written to a shared location before 
                 // the app is launched and the app can obtain its commandline arguments from the 
                 // shared location               
-                string appFolderPath = Path.Combine(
+                var appFolderPath = Path.Combine(
                     Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), uniqueApplicationName);
 
-                string cmdLinePath = Path.Combine(appFolderPath, "cmdline.txt");
+                var cmdLinePath = Path.Combine(appFolderPath, "cmdline.txt");
                 if (File.Exists(cmdLinePath))
                 {
                     try
@@ -232,7 +268,7 @@ namespace CalendarSyncPlus.Presentation.Services.SingleInstance
             var secondInstanceChannel = new IpcClientChannel();
             ChannelServices.RegisterChannel(secondInstanceChannel, true);
 
-            string remotingServiceUrl = IpcProtocol + channelName + "/" + RemoteServiceName;
+            var remotingServiceUrl = IpcProtocol + channelName + "/" + RemoteServiceName;
 
             // Obtain a reference to the remoting service exposed by the server i.e the first instance of the application
             var firstInstanceRemoteServiceReference =
@@ -274,42 +310,6 @@ namespace CalendarSyncPlus.Presentation.Services.SingleInstance
             }
 
             ((TApplication) System.Windows.Application.Current).SignalExternalCommandLineArgs(args);
-        }
-
-        #endregion
-
-        #region Private Classes
-
-        /// <summary>
-        ///     Remoting service class which is exposed by the server i.e the first instance and called by the second instance
-        ///     to pass on the command line arguments to the first instance and cause it to activate itself.
-        /// </summary>
-        private class IPCRemoteService : MarshalByRefObject
-        {
-            /// <summary>
-            ///     Activates the first instance of the application.
-            /// </summary>
-            /// <param name="args">List of arguments to pass to the first instance.</param>
-            public void InvokeFirstInstance(IList<string> args)
-            {
-                if (System.Windows.Application.Current != null)
-                {
-                    // Do an asynchronous call to ActivateFirstInstance function
-                    System.Windows.Application.Current.Dispatcher.BeginInvoke(
-                        DispatcherPriority.Normal, new DispatcherOperationCallback(ActivateFirstInstanceCallback), args);
-                }
-            }
-
-            /// <summary>
-            ///     Remoting Object's ease expires after every 5 minutes by default. We need to override the InitializeLifetimeService
-            ///     class
-            ///     to ensure that lease never expires.
-            /// </summary>
-            /// <returns>Always null.</returns>
-            public override object InitializeLifetimeService()
-            {
-                return null;
-            }
         }
 
         #endregion

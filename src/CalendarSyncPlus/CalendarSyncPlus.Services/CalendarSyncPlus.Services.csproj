@@ -69,7 +69,9 @@
     <Compile Include="Interfaces\ICalendarUpdateService.cs" />
     <Compile Include="Interfaces\ICalendarService.cs" />
     <Compile Include="Interfaces\IFileDialogService.cs" />
+    <Compile Include="Interfaces\ISummarySerializationService.cs" />
     <Compile Include="Interfaces\ISyncAnalyticsService.cs" />
+    <Compile Include="Interfaces\ISyncSummaryProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ApplicationUpdateService.cs" />
     <Compile Include="Interfaces\IApplicationUpdateService.cs" />
@@ -85,6 +87,8 @@
     <Compile Include="SettingsSerializationService.cs" />
     <Compile Include="ShellService.cs" />
     <Compile Include="SyncService.cs" />
+    <Compile Include="SummarySerializationService.cs" />
+    <Compile Include="SyncSummaryProvider.cs" />
     <Compile Include="Utilities\Constants.cs" />
     <Compile Include="Utilities\Delegates.cs" />
     <Compile Include="Utilities\ExtensionMethods.cs" />

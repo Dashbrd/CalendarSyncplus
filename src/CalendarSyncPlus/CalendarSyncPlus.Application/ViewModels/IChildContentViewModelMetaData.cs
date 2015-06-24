@@ -2,6 +2,6 @@
 {
     public interface IChildContentViewModelMetaData
     {
-        ChildViewContentType ChildViewContentType { get;}
+        ChildViewContentType ChildViewContentType { get; }
     }
 }

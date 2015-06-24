@@ -6,26 +6,26 @@ using System.Windows.Documents;
 namespace CalendarSyncPlus.Presentation.Controls.RichTextBox.Formatters
 {
     /// <summary>
-    /// Formats the RichTextBox text as Xaml
+    ///     Formats the RichTextBox text as Xaml
     /// </summary>
     public class XamlFormatter : ITextFormatter
     {
-        public string GetText(System.Windows.Documents.FlowDocument document)
+        public string GetText(FlowDocument document)
         {
-            TextRange tr = new TextRange(document.ContentStart, document.ContentEnd);
-            using (MemoryStream ms = new MemoryStream())
+            var tr = new TextRange(document.ContentStart, document.ContentEnd);
+            using (var ms = new MemoryStream())
             {
                 tr.Save(ms, DataFormats.Xaml);
-                return ASCIIEncoding.Default.GetString(ms.ToArray());
+                return Encoding.Default.GetString(ms.ToArray());
             }
         }
 
-        public void SetText(System.Windows.Documents.FlowDocument document, string text)
+        public void SetText(FlowDocument document, string text)
         {
             try
             {
-                TextRange tr = new TextRange(document.ContentStart, document.ContentEnd);
-                using (MemoryStream ms = new MemoryStream(Encoding.ASCII.GetBytes(text)))
+                var tr = new TextRange(document.ContentStart, document.ContentEnd);
+                using (var ms = new MemoryStream(Encoding.ASCII.GetBytes(text)))
                 {
                     tr.Load(ms, DataFormats.Xaml);
                 }

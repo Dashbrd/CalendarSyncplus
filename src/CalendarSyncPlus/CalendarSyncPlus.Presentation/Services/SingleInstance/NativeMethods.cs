@@ -30,10 +30,10 @@ namespace CalendarSyncPlus.Presentation.Services.SingleInstance
 
         public static string[] CommandLineToArgvW(string cmdLine)
         {
-            IntPtr argv = IntPtr.Zero;
+            var argv = IntPtr.Zero;
             try
             {
-                int numArgs = 0;
+                var numArgs = 0;
 
                 argv = _CommandLineToArgvW(cmdLine, out numArgs);
                 if (argv == IntPtr.Zero)
@@ -42,9 +42,9 @@ namespace CalendarSyncPlus.Presentation.Services.SingleInstance
                 }
                 var result = new string[numArgs];
 
-                for (int i = 0; i < numArgs; i++)
+                for (var i = 0; i < numArgs; i++)
                 {
-                    IntPtr currArg = Marshal.ReadIntPtr(argv, i*Marshal.SizeOf(typeof (IntPtr)));
+                    var currArg = Marshal.ReadIntPtr(argv, i*Marshal.SizeOf(typeof (IntPtr)));
                     result[i] = Marshal.PtrToStringUni(currArg);
                 }
 
@@ -52,7 +52,7 @@ namespace CalendarSyncPlus.Presentation.Services.SingleInstance
             }
             finally
             {
-                IntPtr p = _LocalFree(argv);
+                var p = _LocalFree(argv);
                 // Otherwise LocalFree failed.
                 // Assert.AreEqual(IntPtr.Zero, p);
             }

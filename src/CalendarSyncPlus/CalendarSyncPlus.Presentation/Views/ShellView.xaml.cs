@@ -19,6 +19,16 @@ namespace CalendarSyncPlus.Presentation.Views
             StateChanged += OnShellViewWindowStateChanged;
         }
 
+        private void OnShellViewWindowStateChanged(object sender, EventArgs e)
+        {
+            switch (WindowState)
+            {
+                case WindowState.Minimized:
+                    Utilities.HideForeground(this);
+                    break;
+            }
+        }
+
         #region IShellView Members
 
         public bool IsMaximized
@@ -37,21 +47,13 @@ namespace CalendarSyncPlus.Presentation.Views
             }
         }
 
-        public async void  ShowChildWindow(object childViewContent)
+        public async void ShowChildWindow(object childViewContent)
         {
-            await this.ShowChildWindowAsync(new ChildView() {ChildContentView = childViewContent},ChildWindowManager.OverlayFillBehavior.FullWindow);
+            await
+                this.ShowChildWindowAsync(new ChildView {ChildContentView = childViewContent},
+                    ChildWindowManager.OverlayFillBehavior.FullWindow);
         }
 
         #endregion
-
-        private void OnShellViewWindowStateChanged(object sender, EventArgs e)
-        {
-            switch (WindowState)
-            {
-                case WindowState.Minimized:
-                    Utilities.HideForeground(this);
-                    break;
-            }
-        }
     }
 }

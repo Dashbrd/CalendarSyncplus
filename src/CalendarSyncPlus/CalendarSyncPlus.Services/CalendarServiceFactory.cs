@@ -22,7 +22,7 @@ namespace CalendarSyncPlus.Services
 
         public ICalendarService GetCalendarService(CalendarServiceType serviceType)
         {
-            Lazy<ICalendarService, ICalendarServiceMetaData> serviceInstance =
+            var serviceInstance =
                 CalendarServicesFactoryLazy.FirstOrDefault(list => list.Metadata.ServiceType == serviceType);
 
             if (serviceInstance != null)

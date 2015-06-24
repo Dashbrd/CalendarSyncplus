@@ -20,40 +20,43 @@
                       Width="500">
     <controls:MetroWindow.Resources>
         <ResourceDictionary>
-        <ResourceDictionary.MergedDictionaries>
-            <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
-            <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
-            <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colors.xaml" />
-            <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml" />
-            <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
-            <ResourceDictionary Source="/Resources/Icons.xaml" />
-        </ResourceDictionary.MergedDictionaries>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colors.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml" />
+                <ResourceDictionary
+                    Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
+                <ResourceDictionary Source="/Resources/Icons.xaml" />
+            </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </controls:MetroWindow.Resources>
     <Border Background="{DynamicResource AccentColorBrush}">
-    <Grid>
-       <Grid.ColumnDefinitions>
-           <ColumnDefinition Width="Auto"/>
-           <ColumnDefinition />
-       </Grid.ColumnDefinitions>
-          <Rectangle Fill="{DynamicResource WhiteBrush}" Height="100" Width="100" Margin="10">
-              <Rectangle.OpacityMask>
-                <VisualBrush Visual="{DynamicResource appbar_refresh}"/>
-              </Rectangle.OpacityMask>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Rectangle Fill="{DynamicResource WhiteBrush}" Height="100" Width="100" Margin="10">
+                <Rectangle.OpacityMask>
+                    <VisualBrush Visual="{DynamicResource appbar_refresh}" />
+                </Rectangle.OpacityMask>
                 <Rectangle.Triggers>
                     <EventTrigger RoutedEvent="Loaded">
                         <BeginStoryboard>
                             <Storyboard>
-                                <DoubleAnimation Storyboard.TargetProperty="(Rectangle.RenderTransform).(RotateTransform.Angle)"
-                                                 To="-360"
-                                                 Duration="0:0:1"
-                                                 RepeatBehavior="Forever" />
+                                <DoubleAnimation
+                                    Storyboard.TargetProperty="(Rectangle.RenderTransform).(RotateTransform.Angle)"
+                                    To="-360"
+                                    Duration="0:0:1"
+                                    RepeatBehavior="Forever" />
                             </Storyboard>
                         </BeginStoryboard>
                     </EventTrigger>
                 </Rectangle.Triggers>
             </Rectangle>
-        <TextBlock VerticalAlignment="Center" Text="Calendar Sync +" Grid.Column="1" Margin="5" Foreground="{DynamicResource WhiteBrush}" FontSize="48" FontWeight="600"/>
-    </Grid>
+            <TextBlock VerticalAlignment="Center" Text="Calendar Sync +" Grid.Column="1" Margin="5"
+                       Foreground="{DynamicResource WhiteBrush}" FontSize="48" FontWeight="600" />
+        </Grid>
     </Border>
 </controls:MetroWindow>

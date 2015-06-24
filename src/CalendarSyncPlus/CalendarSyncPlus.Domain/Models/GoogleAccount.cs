@@ -22,8 +22,8 @@ namespace CalendarSyncPlus.Domain.Models
 
     public class GoogleCalendar : Model
     {
-        private string _name;
         private string _id;
+        private string _name;
 
         public string Name
         {

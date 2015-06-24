@@ -1,72 +1,124 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Waf.Foundation;
 
 namespace CalendarSyncPlus.Domain.Models
 {
     public class SyncMetric : Model
     {
+        private DateTime _startTime;
+        private int _elapsedSeconds;
+        private string _syncError;
+        private bool _isSuccess;
+        private string _profileName;
+        private CalendarMetric _sourceMetric;
+        private CalendarMetric _destMetric;
+        private string _calendarSyncDirection;
+
         public SyncMetric()
         {
-            SourceAddErrors = new List<string>();
-            SourceDeleteErrors = new List<string>();
-            SourceUpdateErrors = new List<string>();
-
-            DestAddErrors = new List<string>();
-            DestDeleteErrors = new List<string>();
-            DestUpdateErrors = new List<string>();
+            SourceMetric = new CalendarMetric();
+            DestMetric = new CalendarMetric();
         }
 
-        public int ElapsedSeconds { get; set; }
+        public DateTime StartTime
+        {
+            get { return _startTime; }
+            set { SetProperty(ref _startTime, value); }
+        }
 
-        public string SyncError { get; set; }
+        public int ElapsedSeconds
+        {
+            get { return _elapsedSeconds; }
+            set { SetProperty(ref _elapsedSeconds, value); }
+        }
 
-        public bool IsSuccess { get; set; }
+        public string SyncError
+        {
+            get { return _syncError; }
+            set { SetProperty(ref _syncError, value); }
+        }
 
-        public CalendarSyncDirectionEnum CalendarSyncDirection { get; set; }
+        public bool IsSuccess
+        {
+            get { return _isSuccess; }
+            set { SetProperty(ref _isSuccess, value); }
+        }
 
-        public int SourceAppointmentCount { get; set; }
+        public string CalendarSyncDirection
+        {
+            get { return _calendarSyncDirection; }
+            set { SetProperty(ref _calendarSyncDirection, value); }
+        }
 
-        public int SourceAddCount { get; set; }
+        public string ProfileName
+        {
+            get { return _profileName; }
+            set { SetProperty(ref _profileName, value); }
+        }
 
-        public int SourceAddErrorCount { get; set; }
+        public CalendarMetric SourceMetric
+        {
+            get { return _sourceMetric; }
+            set { SetProperty(ref _sourceMetric, value); }
+        }
 
-        public List<string> SourceAddErrors { get; set; }
+        public CalendarMetric DestMetric
+        {
+            get { return _destMetric; }
+            set { SetProperty(ref _destMetric, value); }
+        }
+    }
 
-        public int SourceDeleteCount { get; set; }
+    public class CalendarMetric : Model
+    {
+        private int _originalCount;
+        private int _addCount;
+        private int _deleteCount;
+        private int _updateCount;
+        private int _updateFailedCount;
+        private int _deleteFailedCount;
+        private int _addFailedCount;
 
-        public int SourceDeleteErrorCount { get; set; }
+        public int OriginalCount
+        {
+            get { return _originalCount; }
+            set { SetProperty(ref _originalCount, value); }
+        }
 
-        public List<string> SourceDeleteErrors { get; set; }
+        public int AddCount
+        {
+            get { return _addCount; }
+            set { SetProperty(ref _addCount, value); }
+        }
 
-        public int SourceUpdateCount { get; set; }
+        public int AddFailedCount
+        {
+            get { return _addFailedCount; }
+            set { SetProperty(ref _addFailedCount, value); }
+        }
 
-        public int SourceUpdateErrorCount { get; set; }
+        public int DeleteCount
+        {
+            get { return _deleteCount; }
+            set { SetProperty(ref _deleteCount, value); }
+        }
 
-        public List<string> SourceUpdateErrors { get; set; }
+        public int DeleteFailedCount
+        {
+            get { return _deleteFailedCount; }
+            set { SetProperty(ref _deleteFailedCount, value); }
+        }
 
-        public int DestAppointmentCount { get; set; }
+        public int UpdateCount
+        {
+            get { return _updateCount; }
+            set { SetProperty(ref _updateCount, value); }
+        }
 
-        public int DestAddCount { get; set; }
-
-        public int DestAddErrorCount { get; set; }
-
-        public List<string> DestAddErrors { get; set; }
-
-        public int DestDeleteCount { get; set; }
-
-        public int DestDeleteErrorCount { get; set; }
-
-        public List<string> DestDeleteErrors { get; set; }
-
-        public int DestUpdateCount { get; set; }
-
-        public int DestUpdateErrorCount { get; set; }
-
-        public List<string> DestUpdateErrors { get; set; }
-
+        public int UpdateFailedCount
+        {
+            get { return _updateFailedCount; }
+            set { SetProperty(ref _updateFailedCount, value); }
+        }
     }
 }

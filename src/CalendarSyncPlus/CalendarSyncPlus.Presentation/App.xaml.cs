@@ -31,22 +31,18 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
 using CalendarSyncPlus.Analytics;
-using CalendarSyncPlus.Analytics.Interfaces;
 using CalendarSyncPlus.Application.Controllers;
 using CalendarSyncPlus.Application.ViewModels;
 using CalendarSyncPlus.Authentication.Google;
 using CalendarSyncPlus.Common;
 using CalendarSyncPlus.Common.Log;
-using CalendarSyncPlus.Domain.Models;
 using CalendarSyncPlus.ExchangeWebServices.ExchangeWeb;
 using CalendarSyncPlus.GoogleServices.Google;
 using CalendarSyncPlus.OutlookServices.Outlook;
 using CalendarSyncPlus.Presentation.Helpers;
 using CalendarSyncPlus.Presentation.Services.SingleInstance;
-using CalendarSyncPlus.Services;
 using CalendarSyncPlus.Services.Interfaces;
 using CalendarSyncPlus.SyncEngine.Interfaces;
-using WPFLocalizeExtension.Engine;
 using WPFLocalizeExtension.Providers;
 
 #endregion
@@ -58,6 +54,36 @@ namespace CalendarSyncPlus.Presentation
     /// </summary>
     public partial class App : ISingleInstanceApp
     {
+        static App()
+        {
+            DispatcherHelper.Initialize();
+            ToolTipService.ShowDurationProperty.OverrideMetadata(
+                typeof (DependencyObject), new FrameworkPropertyMetadata(Int32.MaxValue));
+            LocalizationInit();
+        }
+
+        public App(bool startMinimized = false)
+        {
+            _startMinimized = startMinimized;
+        }
+
+        #region ISingleInstanceApp Members
+
+        public bool SignalExternalCommandLineArgs(IList<string> args)
+        {
+            //Activate Hidden,Background Application
+            Current.Dispatcher.BeginInvoke(((Action) (() => Utilities.BringToForeground(MainWindow))));
+            return true;
+        }
+
+        #endregion
+
+        private static void LocalizationInit()
+        {
+            ResxLocalizationProvider.Instance.FallbackAssembly = "CalendarSyncPlus.Common";
+            ResxLocalizationProvider.Instance.FallbackDictionary = "Resources";
+        }
+
         #region Fields
 
         private static ApplicationLogger _applicationLogger;
@@ -67,25 +93,6 @@ namespace CalendarSyncPlus.Presentation
         private IApplicationController controller;
 
         #endregion
-
-        static App()
-        {
-            DispatcherHelper.Initialize();
-            ToolTipService.ShowDurationProperty.OverrideMetadata(
-                        typeof(DependencyObject), new FrameworkPropertyMetadata(Int32.MaxValue));
-            LocalizationInit();
-        }
-
-        private static void LocalizationInit()
-        {
-            ResxLocalizationProvider.Instance.FallbackAssembly = "CalendarSyncPlus.Common";
-            ResxLocalizationProvider.Instance.FallbackDictionary = "Resources";
-        }
-
-        public App(bool startMinimized = false)
-        {
-            _startMinimized = startMinimized;
-        }
 
         #region Properties
 
@@ -117,7 +124,7 @@ namespace CalendarSyncPlus.Presentation
                 MessageBox.Show(string.Format(CultureInfo.CurrentCulture,
                     "Unknown Error Occurred:{1}{0}", exception, Environment.NewLine)
                     , ApplicationInfo.ProductName, MessageBoxButton.OK, MessageBoxImage.Error);
-                _applicationLogger.GetLogger(typeof(App)).Info(exception);
+                _applicationLogger.GetLogger(typeof (App)).Info(exception);
             }
         }
 
@@ -125,9 +132,22 @@ namespace CalendarSyncPlus.Presentation
 
         #region Protected Methods
 
-        /// <exception cref="ImportCardinalityMismatchException">There are zero exported objects with the contract name derived from <paramref name="T" /> in the <see cref="T:System.ComponentModel.Composition.Hosting.CompositionContainer" />.-or-There is more than one exported object with the contract name derived from <paramref name="T" /> in the <see cref="T:System.ComponentModel.Composition.Hosting.CompositionContainer" />.</exception>
-        /// <exception cref="CompositionContractMismatchException">The underlying exported object cannot be cast to <paramref name="T" />.</exception>
-        /// <exception cref="CompositionException">An error occurred during composition. <see cref="P:System.ComponentModel.Composition.CompositionException.Errors" /> will contain a collection of errors that occurred.</exception>
+        /// <exception cref="ImportCardinalityMismatchException">
+        ///     There are zero exported objects with the contract name derived from
+        ///     <paramref name="T" /> in the <see cref="CompositionContainer" />
+        ///     .-or-There is more than one exported object with the contract name
+        ///     derived from <paramref name="T" /> in the
+        ///     <see cref="CompositionContainer" /> .
+        /// </exception>
+        /// <exception cref="CompositionContractMismatchException">
+        ///     The underlying exported object cannot be cast to
+        ///     <paramref name="T" /> .
+        /// </exception>
+        /// <exception cref="CompositionException">
+        ///     An error occurred during composition.
+        ///     <see cref="System.ComponentModel.Composition.CompositionException.Errors" />
+        ///     will contain a collection of errors that occurred.
+        /// </exception>
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
@@ -137,37 +157,45 @@ namespace CalendarSyncPlus.Presentation
 
             catalog = new AggregateCatalog();
             // Add the WpfApplicationFramework assembly to the catalog
-            catalog.Catalogs.Add(new AssemblyCatalog(typeof(ViewModel).Assembly));
+            catalog.Catalogs.Add(new AssemblyCatalog(typeof (ViewModel).Assembly));
             // Add the Waf.BookLibrary.Library.Presentation assembly to the catalog
             catalog.Catalogs.Add(new AssemblyCatalog(Assembly.GetExecutingAssembly()));
             // Add the Waf.BookLibrary.Library.Applications assembly to the catalog
-            catalog.Catalogs.Add(new AssemblyCatalog(typeof(ShellViewModel).Assembly));
+            catalog.Catalogs.Add(new AssemblyCatalog(typeof (ShellViewModel).Assembly));
             // Add the Common assembly to catalog
-            catalog.Catalogs.Add(new AssemblyCatalog(typeof(ApplicationLogger).Assembly));
+            catalog.Catalogs.Add(new AssemblyCatalog(typeof (ApplicationLogger).Assembly));
             //Add Services assembly to catalog
-            catalog.Catalogs.Add(new AssemblyCatalog(typeof(ICalendarService).Assembly));
+            catalog.Catalogs.Add(new AssemblyCatalog(typeof (ICalendarService).Assembly));
             //Add GoogleServices assembly to catalog
-            catalog.Catalogs.Add(new AssemblyCatalog(typeof(IGoogleCalendarService).Assembly));
+            catalog.Catalogs.Add(new AssemblyCatalog(typeof (IGoogleCalendarService).Assembly));
             //Add OutlookServices assembly to catalog
-            catalog.Catalogs.Add(new AssemblyCatalog(typeof(IOutlookCalendarService).Assembly));
+            catalog.Catalogs.Add(new AssemblyCatalog(typeof (IOutlookCalendarService).Assembly));
             //Add ExchangeWebServices assembly to catalog
-            catalog.Catalogs.Add(new AssemblyCatalog(typeof(IExchangeWebCalendarService).Assembly));
+            catalog.Catalogs.Add(new AssemblyCatalog(typeof (IExchangeWebCalendarService).Assembly));
             //Add SyncEngine assembly to catalog
-            catalog.Catalogs.Add(new AssemblyCatalog(typeof(ICalendarSyncEngine).Assembly));
+            catalog.Catalogs.Add(new AssemblyCatalog(typeof (ICalendarSyncEngine).Assembly));
             //Add Analytics assembly to catalog
-            catalog.Catalogs.Add(new AssemblyCatalog(typeof(SyncAnalyticsService).Assembly));
+            catalog.Catalogs.Add(new AssemblyCatalog(typeof (SyncAnalyticsService).Assembly));
             //Add Authentication.Google assembly to catalog
-            catalog.Catalogs.Add(new AssemblyCatalog(typeof(IAccountAuthenticationService).Assembly));
+            catalog.Catalogs.Add(new AssemblyCatalog(typeof (IAccountAuthenticationService).Assembly));
             //Composition Container
             container = new CompositionContainer(catalog, true);
             var batch = new CompositionBatch();
             batch.AddExportedValue(container);
             container.Compose(batch);
 
-            Settings settings = container.GetExportedValue<ISettingsProvider>().GetSettings();
+            //Load settings
+            var settings = container.GetExportedValue<ISettingsProvider>().GetSettings();
             container.ComposeExportedValue(settings);
+
+            //Load sync summary
+            var syncSummary = container.GetExportedValue<ISyncSummaryProvider>().GetSyncSummary();
+            container.ComposeExportedValue(syncSummary);
+
+            //Get Application logger
             _applicationLogger = container.GetExportedValue<ApplicationLogger>();
             _applicationLogger.Setup();
+
             //Initialize Application Controller
             controller = container.GetExportedValue<IApplicationController>();
 
@@ -187,17 +215,6 @@ namespace CalendarSyncPlus.Presentation
             //Dispose All parts
             container.Dispose();
             catalog.Dispose();
-        }
-
-        #endregion
-
-        #region ISingleInstanceApp Members
-
-        public bool SignalExternalCommandLineArgs(IList<string> args)
-        {
-            //Activate Hidden,Background Application
-            Current.Dispatcher.BeginInvoke(((Action)(() => Utilities.BringToForeground(MainWindow))));
-            return true;
         }
 
         #endregion

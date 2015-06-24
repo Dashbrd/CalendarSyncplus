@@ -10,6 +10,7 @@
              d:DesignWidth="300"
              d:DataContext="{d:DesignInstance viewModels:WhatsNewViewModel}" Margin="20">
     <Grid>
-        <richTextBox:BindableHtmlRichTextBox Text="{Binding Text}" VerticalScrollBarVisibility="Auto" TextFormatterType="Rtf"></richTextBox:BindableHtmlRichTextBox>
+        <richTextBox:BindableHtmlRichTextBox Text="{Binding Text}" VerticalScrollBarVisibility="Auto"
+                                             TextFormatterType="Rtf" />
     </Grid>
 </UserControl>

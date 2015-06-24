@@ -21,7 +21,8 @@ namespace CalendarSyncPlus.Application.ViewModels
         {
             if (!ChildViewModelList.Any())
             {
-                return null;}
+                return null;
+            }
 
             var viewModelInstance =
                 ChildViewModelList
