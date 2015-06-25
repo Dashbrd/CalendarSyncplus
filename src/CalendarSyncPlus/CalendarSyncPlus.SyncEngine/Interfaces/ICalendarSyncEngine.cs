@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using CalendarSyncPlus.Domain.Models;
+using CalendarSyncPlus.Domain.Models.Preferences;
 using CalendarSyncPlus.Domain.Wrappers;
 
 namespace CalendarSyncPlus.SyncEngine.Interfaces

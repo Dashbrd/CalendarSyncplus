@@ -32,6 +32,7 @@ using CalendarSyncPlus.Application.Views;
 using CalendarSyncPlus.Authentication.Google;
 using CalendarSyncPlus.Common.Log;
 using CalendarSyncPlus.Domain.Models;
+using CalendarSyncPlus.Domain.Models.Preferences;
 using CalendarSyncPlus.ExchangeWebServices.ExchangeWeb;
 using CalendarSyncPlus.GoogleServices.Google;
 using CalendarSyncPlus.OutlookServices.Outlook;

@@ -217,6 +217,12 @@
               KeyPath="yes" />
       </Component>
       <Component>
+        <File Id="Google.Apis.Tasks.v1"
+              Name="Google.Apis.Tasks.v1.dll"
+              Source="$(var.ProjectDirectory)Google.Apis.Tasks.v1.dll"
+              KeyPath="yes" />
+      </Component>
+      <Component>
         <File Id="Google.Apis.Analytics.v3"
               Name="Google.Apis.Analytics.v3.dll"
               Source="$(var.ProjectDirectory)Google.Apis.Analytics.v3.dll"

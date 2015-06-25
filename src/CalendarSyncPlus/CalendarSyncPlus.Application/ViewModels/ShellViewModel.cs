@@ -33,6 +33,8 @@ using CalendarSyncPlus.Application.Views;
 using CalendarSyncPlus.Common;
 using CalendarSyncPlus.Common.Log;
 using CalendarSyncPlus.Domain.Models;
+using CalendarSyncPlus.Domain.Models.Metrics;
+using CalendarSyncPlus.Domain.Models.Preferences;
 using CalendarSyncPlus.Services.Interfaces;
 using CalendarSyncPlus.Services.Utilities;
 using log4net;

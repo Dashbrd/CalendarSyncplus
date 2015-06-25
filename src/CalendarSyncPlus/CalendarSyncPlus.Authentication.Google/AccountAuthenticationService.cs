@@ -15,6 +15,7 @@ using Google.Apis.Auth.OAuth2;
 using Google.Apis.Auth.OAuth2.Flows;
 using Google.Apis.Calendar.v3;
 using Google.Apis.Services;
+using Google.Apis.Tasks.v1;
 using Google.Apis.Util.Store;
 using log4net;
 
@@ -153,6 +154,65 @@ namespace CalendarSyncPlus.Authentication.Google
             }
         }
 
+        /// <summary>
+        ///     <see cref="Authenticate" /> to Google Using Oauth2 Documentation
+        ///     https://developers.google.com/accounts/docs/OAuth2
+        /// </summary>
+        /// <param name="clientId">
+        ///     From Google Developer console https://console.developers.google.com
+        /// </param>
+        /// <param name="clientSecret">
+        ///     From Google Developer console https://console.developers.google.com
+        /// </param>
+        /// <param name="userName">
+        ///     A string used to identify a user (locally).
+        /// </param>
+        /// <param name="fileDataStorePath">
+        ///     Name/Path where the Auth Token and refresh token are stored (usually
+        ///     in %APPDATA%)
+        /// </param>
+        /// <param name="applicationName">Applicaiton Name</param>
+        /// <param name="isFullPath">
+        ///     <paramref name="fileDataStorePath" /> is completePath or Directory
+        ///     Name
+        /// </param>
+        /// <returns>
+        /// </returns>
+        public TasksService AuthenticateTasksOauth(string clientId, string clientSecret, string userName,
+            string fileDataStorePath, string applicationName, bool isFullPath = false)
+        {
+            try
+            {
+                var authTask = Authenticate(clientId, clientSecret, userName, fileDataStorePath, isFullPath);
+
+                authTask.Wait(30000);
+
+                if (authTask.Status == TaskStatus.WaitingForActivation)
+                {
+                    return null;
+                }
+
+                var service = new TasksService(new BaseClientService.Initializer
+                {
+                    HttpClientInitializer = authTask.Result,
+                    ApplicationName = applicationName
+                });
+
+                return service;
+            }
+            catch (AggregateException exception)
+            {
+                ApplicationLogger.Error(exception);
+                return null;
+            }
+            catch (Exception exception)
+            {
+                ApplicationLogger.Error(exception);
+                return null;
+            }
+        }
+
+
         private static Task<UserCredential> Authenticate(string clientId, string clientSecret, string userName,
             string fileDataStorePath,
             bool isFullPath)
@@ -171,21 +231,6 @@ namespace CalendarSyncPlus.Authentication.Google
                 , fileDataStore);
         }
 
-        private static string[] GetScopes()
-        {
-            var scopes = new[]
-            {
-                CalendarService.Scope.Calendar, // Manage your calendars
-                CalendarService.Scope.CalendarReadonly // View your Calendars
-                //AnalyticsService.Scope.Analytics, // view and manage your analytics data
-                //AnalyticsService.Scope.AnalyticsEdit, // edit management actives
-                //AnalyticsService.Scope.AnalyticsManageUsers, // manage users
-                //AnalyticsService.Scope.AnalyticsReadonly
-            };
-            return scopes;
-        }
-
-
         public AnalyticsService AuthenticateAnalyticsOauth(string accountName)
         {
             var applicationDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData,
@@ -196,7 +241,6 @@ namespace CalendarSyncPlus.Authentication.Google
                 accountName, fullPath, ApplicationInfo.ProductName, true);
         }
 
-
         public CalendarService AuthenticateCalendarOauth(string accountName)
         {
             var applicationDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData,
@@ -204,6 +248,16 @@ namespace CalendarSyncPlus.Authentication.Google
             var fullPath = applicationDataPath + @"\CalendarSyncPlus\" + Constants.AuthFolderPath;
 
             return AuthenticateCalendarOauth(Constants.ClientId, Constants.ClientSecret,
+                accountName, fullPath, ApplicationInfo.ProductName, true);
+        }
+
+        public TasksService AuthenticateTasksOauth(string accountName)
+        {
+            var applicationDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData,
+                Environment.SpecialFolderOption.None);
+            var fullPath = applicationDataPath + @"\CalendarSyncPlus\" + Constants.AuthFolderPath;
+
+            return AuthenticateTasksOauth(Constants.ClientId, Constants.ClientSecret,
                 accountName, fullPath, ApplicationInfo.ProductName, true);
         }
 
@@ -304,5 +358,21 @@ namespace CalendarSyncPlus.Authentication.Google
         }
 
         #endregion
+
+        private static string[] GetScopes()
+        {
+            var scopes = new[]
+            {
+                CalendarService.Scope.Calendar, // Manage your calendars
+                CalendarService.Scope.CalendarReadonly, // View your Calendars
+                TasksService.Scope.Tasks, // Manage your tasks
+                TasksService.Scope.TasksReadonly // View your tasks
+                //AnalyticsService.Scope.Analytics, // view and manage your analytics data
+                //AnalyticsService.Scope.AnalyticsEdit, // edit management actives
+                //AnalyticsService.Scope.AnalyticsManageUsers, // manage users
+                //AnalyticsService.Scope.AnalyticsReadonly
+            };
+            return scopes;
+        }
     }
 }

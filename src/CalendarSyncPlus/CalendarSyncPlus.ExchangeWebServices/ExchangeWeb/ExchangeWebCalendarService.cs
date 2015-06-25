@@ -7,7 +7,9 @@ using System.Threading.Tasks;
 using CalendarSyncPlus.Common.Log;
 using CalendarSyncPlus.Common.MetaData;
 using CalendarSyncPlus.Domain.Models;
+using CalendarSyncPlus.Domain.Models.Preferences;
 using CalendarSyncPlus.Domain.Wrappers;
+using CalendarSyncPlus.Services.Calendars.Interfaces;
 using CalendarSyncPlus.Services.Interfaces;
 using log4net;
 using Microsoft.Exchange.WebServices.Data;
@@ -16,7 +18,7 @@ using AppAppointment = CalendarSyncPlus.Domain.Models.Appointment;
 namespace CalendarSyncPlus.ExchangeWebServices.ExchangeWeb
 {
     [Export(typeof (ICalendarService)), Export(typeof (IExchangeWebCalendarService))]
-    [ExportMetadata("ServiceType", CalendarServiceType.EWS)]
+    [ExportMetadata("ServiceType", ServiceType.EWS)]
     public class ExchangeWebCalendarService : IExchangeWebCalendarService
     {
         private const string EWSCALENDAR = "EWSCalendar";

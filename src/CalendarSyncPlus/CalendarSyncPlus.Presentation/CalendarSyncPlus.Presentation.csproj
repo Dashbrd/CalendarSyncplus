@@ -208,61 +208,61 @@
     <Compile Include="Services\SingleInstance\WM.cs" />
     <Compile Include="Services\GuiInteractionService.cs" />
     <Compile Include="Services\WindowsStartupService.cs" />
-    <Compile Include="Views\AboutView.xaml.cs">
+    <Compile Include="Views\Main\AboutView.xaml.cs">
       <DependentUpon>AboutView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\AdvancedSettingsView.xaml.cs">
+    <Compile Include="Views\Preferences\AdvancedSettingsView.xaml.cs">
       <DependentUpon>AdvancedSettingsView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\ChildView.xaml.cs">
+    <Compile Include="Views\Main\ChildView.xaml.cs">
       <DependentUpon>ChildView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\CustomInputDialog.xaml.cs">
+    <Compile Include="Views\Helper\CustomInputDialog.xaml.cs">
       <DependentUpon>CustomInputDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\GoogleSettingsView.xaml.cs">
+    <Compile Include="Views\Preferences\GoogleSettingsView.xaml.cs">
       <DependentUpon>GoogleSettingsView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\HelpView.xaml.cs">
+    <Compile Include="Views\Main\HelpView.xaml.cs">
       <DependentUpon>HelpView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\HomeView.xaml.cs">
+    <Compile Include="Views\Main\HomeView.xaml.cs">
       <DependentUpon>HomeView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\LogView.xaml.cs">
+    <Compile Include="Views\Main\LogView.xaml.cs">
       <DependentUpon>LogView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\MenuView.xaml.cs">
+    <Compile Include="Views\Main\MenuView.xaml.cs">
       <DependentUpon>MenuView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\OptionsSettingsView.xaml.cs">
+    <Compile Include="Views\Preferences\OptionsSettingsView.xaml.cs">
       <DependentUpon>OptionsSettingsView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\ManageProfilesView.xaml.cs">
+    <Compile Include="Views\Preferences\ManageProfilesView.xaml.cs">
       <DependentUpon>ManageProfilesView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\OutlookSettingsView.xaml.cs">
+    <Compile Include="Views\Preferences\OutlookSettingsView.xaml.cs">
       <DependentUpon>OutlookSettingsView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\ProfileSettingsView.xaml.cs">
+    <Compile Include="Views\Preferences\ProfileSettingsView.xaml.cs">
       <DependentUpon>ProfileSettingsView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\SettingsView.xaml.cs">
+    <Compile Include="Views\Main\SettingsView.xaml.cs">
       <DependentUpon>SettingsView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\SyncBalloon.xaml.cs">
+    <Compile Include="Views\Notifications\SyncBalloon.xaml.cs">
       <DependentUpon>SyncBalloon.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\SyncSettingsView.xaml.cs">
+    <Compile Include="Views\Notifications\SyncSettingsView.xaml.cs">
       <DependentUpon>SyncSettingsView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\SystemTrayNotifierView.xaml.cs">
+    <Compile Include="Views\Notifications\SystemTrayNotifierView.xaml.cs">
       <DependentUpon>SystemTrayNotifierView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\WelcomeView.xaml.cs">
+    <Compile Include="Views\Notifications\WelcomeView.xaml.cs">
       <DependentUpon>WelcomeView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\WhatsNewView.xaml.cs">
+    <Compile Include="Views\Main\WhatsNewView.xaml.cs">
       <DependentUpon>WhatsNewView.xaml</DependentUpon>
     </Compile>
     <Page Include="Controls\LogViewer\LogViewer.xaml">
@@ -281,63 +281,63 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\AboutView.xaml">
+    <Page Include="Views\Main\AboutView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\AdvancedSettingsView.xaml">
+    <Page Include="Views\Preferences\AdvancedSettingsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\ChildView.xaml">
+    <Page Include="Views\Main\ChildView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\CustomInputDialog.xaml">
+    <Page Include="Views\Helper\CustomInputDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\GoogleSettingsView.xaml">
+    <Page Include="Views\Preferences\GoogleSettingsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\HelpView.xaml">
+    <Page Include="Views\Main\HelpView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\HomeView.xaml">
+    <Page Include="Views\Main\HomeView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\LogView.xaml">
+    <Page Include="Views\Main\LogView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\MenuView.xaml">
+    <Page Include="Views\Main\MenuView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\OptionsSettingsView.xaml">
+    <Page Include="Views\Preferences\OptionsSettingsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\ManageProfilesView.xaml">
+    <Page Include="Views\Preferences\ManageProfilesView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\OutlookSettingsView.xaml">
+    <Page Include="Views\Preferences\OutlookSettingsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\ProfileSettingsView.xaml">
+    <Page Include="Views\Preferences\ProfileSettingsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\SettingsView.xaml">
+    <Page Include="Views\Main\SettingsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\ShellView.xaml">
+    <Page Include="Views\Main\ShellView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -345,27 +345,27 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Views\ShellView.xaml.cs">
+    <Compile Include="Views\Main\ShellView.xaml.cs">
       <DependentUpon>ShellView.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Views\SyncBalloon.xaml">
+    <Page Include="Views\Notifications\SyncBalloon.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\SyncSettingsView.xaml">
+    <Page Include="Views\Notifications\SyncSettingsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\SystemTrayNotifierView.xaml">
+    <Page Include="Views\Notifications\SystemTrayNotifierView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\WelcomeView.xaml">
+    <Page Include="Views\Notifications\WelcomeView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\WhatsNewView.xaml">
+    <Page Include="Views\Main\WhatsNewView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

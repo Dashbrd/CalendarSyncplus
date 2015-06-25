@@ -7,6 +7,7 @@ using CalendarSyncPlus.Analytics.Interfaces;
 using CalendarSyncPlus.Authentication.Google;
 using CalendarSyncPlus.Common.Log;
 using CalendarSyncPlus.Domain.Models;
+using CalendarSyncPlus.Domain.Models.Metrics;
 using Google.Apis.Analytics.v3;
 using Google.Apis.Analytics.v3.Data;
 using Google.Apis.Requests;

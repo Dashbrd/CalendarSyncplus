@@ -30,7 +30,9 @@ using CalendarSyncPlus.Common.Log;
 using CalendarSyncPlus.Common.MetaData;
 using CalendarSyncPlus.Domain.Helpers;
 using CalendarSyncPlus.Domain.Models;
+using CalendarSyncPlus.Domain.Models.Preferences;
 using CalendarSyncPlus.Domain.Wrappers;
+using CalendarSyncPlus.Services.Calendars.Interfaces;
 using CalendarSyncPlus.Services.Interfaces;
 using CalendarSyncPlus.Services.Utilities;
 using Google;
@@ -44,7 +46,7 @@ using log4net;
 namespace CalendarSyncPlus.GoogleServices.Google
 {
     [Export(typeof(ICalendarService)), Export(typeof(IGoogleCalendarService))]
-    [ExportMetadata("ServiceType", CalendarServiceType.Google)]
+    [ExportMetadata("ServiceType", ServiceType.Google)]
     public class GoogleCalendarService : IGoogleCalendarService
     {
         #region Constructors

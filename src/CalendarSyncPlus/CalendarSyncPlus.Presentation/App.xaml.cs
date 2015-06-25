@@ -41,6 +41,7 @@ using CalendarSyncPlus.GoogleServices.Google;
 using CalendarSyncPlus.OutlookServices.Outlook;
 using CalendarSyncPlus.Presentation.Helpers;
 using CalendarSyncPlus.Presentation.Services.SingleInstance;
+using CalendarSyncPlus.Services.Calendars.Interfaces;
 using CalendarSyncPlus.Services.Interfaces;
 using CalendarSyncPlus.SyncEngine.Interfaces;
 using WPFLocalizeExtension.Providers;

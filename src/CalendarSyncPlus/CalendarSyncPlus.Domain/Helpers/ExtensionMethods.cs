@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using CalendarSyncPlus.Domain.Models;
+using CalendarSyncPlus.Domain.Models.Preferences;
 
 namespace CalendarSyncPlus.Domain.Helpers
 {

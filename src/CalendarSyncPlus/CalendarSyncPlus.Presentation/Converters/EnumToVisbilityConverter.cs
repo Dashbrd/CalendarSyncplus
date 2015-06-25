@@ -34,7 +34,7 @@ namespace CalendarSyncPlus.Presentation.Converters
                 }
                 var isValid = (bool) value;
                 var parameterServiceType =
-                    (CalendarServiceType) Enum.Parse(typeof (CalendarServiceType), parameter.ToString());
+                    (ServiceType) Enum.Parse(typeof (ServiceType), parameter.ToString());
                 if (isValid)
                 {
                     return parameterServiceType;
@@ -43,7 +43,7 @@ namespace CalendarSyncPlus.Presentation.Converters
             catch (Exception)
             {
             }
-            return CalendarServiceType.None;
+            return ServiceType.None;
         }
 
         #endregion

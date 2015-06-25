@@ -1,5 +1,6 @@
 ﻿using System;
 using CalendarSyncPlus.Domain.Models;
+using CalendarSyncPlus.Domain.Models.Preferences;
 
 namespace CalendarSyncPlus.Application.ViewModels
 {

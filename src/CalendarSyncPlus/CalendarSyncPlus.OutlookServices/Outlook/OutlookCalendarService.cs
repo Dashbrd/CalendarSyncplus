@@ -30,8 +30,10 @@ using CalendarSyncPlus.Common.Log;
 using CalendarSyncPlus.Common.MetaData;
 using CalendarSyncPlus.Domain.Helpers;
 using CalendarSyncPlus.Domain.Models;
+using CalendarSyncPlus.Domain.Models.Preferences;
 using CalendarSyncPlus.Domain.Wrappers;
 using CalendarSyncPlus.OutlookServices.Utilities;
+using CalendarSyncPlus.Services.Calendars.Interfaces;
 using CalendarSyncPlus.Services.Interfaces;
 using CalendarSyncPlus.Services.Wrappers;
 using log4net;
@@ -47,36 +49,34 @@ using Recipient = Microsoft.Office.Interop.Outlook.Recipient;
 namespace CalendarSyncPlus.OutlookServices.Outlook
 {
     [Export(typeof (ICalendarService)), Export(typeof (IOutlookCalendarService))]
-    [ExportMetadata("ServiceType", CalendarServiceType.OutlookDesktop)]
+    [ExportMetadata("ServiceType", ServiceType.OutlookDesktop)]
     public class OutlookCalendarService : IOutlookCalendarService
     {
         [ImportingConstructor]
         public OutlookCalendarService(ApplicationLogger applicationLogger)
         {
-            ApplicationLogger = applicationLogger.GetLogger(GetType());
+            Logger = applicationLogger.GetLogger(GetType());
         }
+        #region Properties
 
-        public async Task<CalendarAppointments> UpdateCalendarEvents(List<Appointment> calendarAppointments, bool addDescription,
-            bool addReminder, bool addAttendees, bool attendeesToDescription,
-            IDictionary<string, object> calendarSpecificData)
+        public ILog Logger { get; set; }
+
+        private OutlookFolder OutlookCalendar { get; set; }
+
+        public bool AddAsAppointments { get; set; }
+
+        private string ProfileName { get; set; }
+
+        private Category EventCategory { get; set; }
+
+        public string CalendarServiceName
         {
-            var updateAppointments = new CalendarAppointments();
-            if (!calendarAppointments.Any())
-            {
-                updateAppointments.IsSuccess = true;
-                return updateAppointments;
-            }
-            CheckCalendarSpecificData(calendarSpecificData);
-
-            var result = await
-                Task<bool>.Factory.StartNew(
-                    () =>
-                        UpdateEvents(calendarAppointments, addDescription, addReminder, addAttendees,
-                            attendeesToDescription, updateAppointments));
-            updateAppointments.IsSuccess = result;
-            return updateAppointments;
+            get { return "Outlook"; }
         }
 
+        #endregion
+
+        #region Private Methods
         private bool AddEvents(List<Appointment> calendarAppointments, bool addDescription,
             bool addReminder,
             bool addAttendees, bool attendeesToDescription, List<Appointment> addedAppointment)
@@ -157,7 +157,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
             }
             catch (Exception exception)
             {
-                ApplicationLogger.Error(exception);
+                Logger.Error(exception);
                 return new AppointmentListWrapper
                 {
                     WaitForApplicationQuit = disposeOutlookInstances,
@@ -294,7 +294,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
             }
             catch (Exception exception)
             {
-                ApplicationLogger.Error(exception);
+                Logger.Error(exception);
             }
             finally
             {
@@ -374,13 +374,13 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
                     }
                     catch (Exception exception)
                     {
-                        ApplicationLogger.Error(exception);
+                        Logger.Error(exception);
                     }
                 }
             }
             catch (Exception exception)
             {
-                ApplicationLogger.Error(exception);
+                Logger.Error(exception);
                 return new AppointmentListWrapper
                 {
                     WaitForApplicationQuit = disposeOutlookInstances,
@@ -499,13 +499,13 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
                     }
                     catch (Exception exception)
                     {
-                        ApplicationLogger.Error(exception);
+                        Logger.Error(exception);
                     }
                 }
             }
             catch (Exception exception)
             {
-                ApplicationLogger.Error(exception);
+                Logger.Error(exception);
                 return new AppointmentListWrapper
                 {
                     WaitForApplicationQuit = disposeOutlookInstances,
@@ -638,7 +638,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
             }
             catch (Exception exception)
             {
-                ApplicationLogger.Error(exception);
+                Logger.Error(exception);
                 return false;
             }
             finally
@@ -658,27 +658,6 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
             }
             return true;
         }
-
-        #region Properties
-
-        public ILog ApplicationLogger { get; set; }
-
-        private OutlookCalendar OutlookCalendar { get; set; }
-
-        public bool AddAsAppointments { get; set; }
-
-        private string ProfileName { get; set; }
-
-        private Category EventCategory { get; set; }
-
-        public string CalendarServiceName
-        {
-            get { return "Outlook"; }
-        }
-
-        #endregion
-
-        #region Private Methods
 
         private void GetOutlookApplication(out bool disposeOutlookInstances,
             out Application application,
@@ -735,7 +714,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
                     : nameSpace.GetDefaultFolder(OlDefaultFolders.olFolderCalendar);
                 if (OutlookCalendar == null)
                 {
-                    OutlookCalendar = new OutlookCalendar
+                    OutlookCalendar = new OutlookFolder
                     {
                         Name = defaultOutlookCalendar.Name,
                         EntryId = defaultOutlookCalendar.EntryID,
@@ -776,7 +755,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
                                 }
                                 catch (Exception exception)
                                 {
-                                    ApplicationLogger.Error(exception);
+                                    Logger.Error(exception);
                                 }
                                 finally
                                 {
@@ -789,7 +768,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
             }
             catch (Exception exception)
             {
-                ApplicationLogger.Error(exception);
+                Logger.Error(exception);
                 return new AppointmentListWrapper
                 {
                     Appointments = null,
@@ -899,7 +878,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
             }
             catch (Exception exception)
             {
-                ApplicationLogger.Error(exception);
+                Logger.Error(exception);
             }
             finally
             {
@@ -1016,13 +995,13 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
             }
             catch (Exception exception)
             {
-                ApplicationLogger.Warn(string.Format("Unable to retrieve Email for the User : {0}{1}{2}", recip.Name,
+                Logger.Warn(string.Format("Unable to retrieve Email for the User : {0}{1}{2}", recip.Name,
                     Environment.NewLine, exception.Message));
             }
             return smtpAddress;
         }
 
-        private void GetCalendars(MAPIFolder searchFolder, List<OutlookCalendar> outlookCalendars)
+        private void GetCalendars(MAPIFolder searchFolder, List<OutlookFolder> outlookCalendars)
         {
             try
             {
@@ -1035,7 +1014,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
                     searchFolder.DefaultItemType == OlItemType.olAppointmentItem)
                 {
                     //Add Calendar MAPIFolder to List
-                    outlookCalendars.Add(new OutlookCalendar
+                    outlookCalendars.Add(new OutlookFolder
                     {
                         Name = searchFolder.Name,
                         EntryId = searchFolder.EntryID,
@@ -1055,7 +1034,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
             }
             catch (Exception exception)
             {
-                ApplicationLogger.Error(exception);
+                Logger.Error(exception);
             }
             finally
             {
@@ -1143,7 +1122,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
             }
             catch (Exception exception)
             {
-                ApplicationLogger.Error(exception);
+                Logger.Error(exception);
                 return new AppointmentListWrapper
                 {
                     Appointments = null,
@@ -1181,6 +1160,26 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
         #endregion
 
         #region IOutlookCalendarService Members
+        public async Task<CalendarAppointments> UpdateCalendarEvents(List<Appointment> calendarAppointments, bool addDescription,
+          bool addReminder, bool addAttendees, bool attendeesToDescription,
+          IDictionary<string, object> calendarSpecificData)
+        {
+            var updateAppointments = new CalendarAppointments();
+            if (!calendarAppointments.Any())
+            {
+                updateAppointments.IsSuccess = true;
+                return updateAppointments;
+            }
+            CheckCalendarSpecificData(calendarSpecificData);
+
+            var result = await
+                Task<bool>.Factory.StartNew(
+                    () =>
+                        UpdateEvents(calendarAppointments, addDescription, addReminder, addAttendees,
+                            attendeesToDescription, updateAppointments));
+            updateAppointments.IsSuccess = result;
+            return updateAppointments;
+        }
 
         public async void SetCalendarColor(Category background, IDictionary<string, object> calendarSpecificData)
         {
@@ -1208,7 +1207,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
             }
             catch (Exception exception)
             {
-                ApplicationLogger.Error(exception);
+                Logger.Error(exception);
             }
             finally
             {
@@ -1280,17 +1279,6 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
             return calendarAppointments;
         }
 
-        private IEnumerable<Tuple<DateTime, DateTime>> SplitDateRange(DateTime start, DateTime end, int dayChunkSize)
-        {
-            DateTime chunkEnd;
-            while ((chunkEnd = start.AddDays(dayChunkSize)) < end)
-            {
-                yield return Tuple.Create(start, chunkEnd);
-                start = chunkEnd;
-            }
-            yield return Tuple.Create(start, end);
-        }
-
         /// <exception cref="InvalidOperationException">
         ///     Essential parameters are not present.
         /// </exception>
@@ -1314,7 +1302,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
                         "ProfileName", "OutlookCalendar", "AddAsAppointments"));
             }
             ProfileName = profileValue as String;
-            OutlookCalendar = outlookCalendarValue as OutlookCalendar;
+            OutlookCalendar = outlookCalendarValue as OutlookFolder;
             AddAsAppointments = (bool) addAsAppointments;
             object eventCategory;
             if (calendarSpecificData.TryGetValue("EventCategory", out eventCategory))

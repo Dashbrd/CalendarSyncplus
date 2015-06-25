@@ -9,6 +9,7 @@ using CalendarSyncPlus.Common.Log;
 using CalendarSyncPlus.Common.MetaData;
 using CalendarSyncPlus.Domain.Helpers;
 using CalendarSyncPlus.Domain.Models;
+using CalendarSyncPlus.Domain.Models.Preferences;
 using CalendarSyncPlus.ExchangeWebServices.ExchangeWeb;
 using CalendarSyncPlus.GoogleServices.Google;
 using CalendarSyncPlus.OutlookServices.Outlook;
@@ -49,7 +50,7 @@ namespace CalendarSyncPlus.Application.ViewModels
         private int _daysInPast = 1;
         private bool _disableDelete;
         private DateTime _endDate;
-        private List<OutlookCalendar> _exchangeCalendarList;
+        private List<OutlookFolder> _exchangeCalendarList;
         private string _exchangeServerUrl;
         private DelegateCommand _getGoogleCalendarCommand;
         private DelegateCommand _getOutlookMailboxCommand;
@@ -62,10 +63,10 @@ namespace CalendarSyncPlus.Application.ViewModels
         private bool _isLoading;
         private bool _isSyncEnabled;
         private bool _keepLastModifiedCopy;
-        private CalendarServiceType _masterCalendarServiceType;
+        private ServiceType _masterServiceType;
         private bool _mergeExistingEntries;
         private string _name;
-        private OutlookCalendar _outlookCalendar;
+        private OutlookFolder _outlookCalendar;
         private OutlookMailBox _outlookMailBox;
         private List<OutlookMailBox> _outlookMailBoxes;
         private List<string> _outlookProfileList;
@@ -75,7 +76,7 @@ namespace CalendarSyncPlus.Application.ViewModels
         private GoogleCalendar _selectedCalendar;
         private CalendarSyncDirectionEnum _selectedCalendarSyncDirection;
         private Category _selectedCategory;
-        private OutlookCalendar _selectedExchangeCalendar;
+        private OutlookFolder _selectedExchangeCalendar;
         private GoogleAccount _selectedGoogleAccount;
         private string _selectedOutlookProfileName;
         private SyncRangeTypeEnum _selectedSyncRangeType;
@@ -194,13 +195,13 @@ namespace CalendarSyncPlus.Application.ViewModels
             set { SetProperty(ref _outlookProfileList, value); }
         }
 
-        public List<OutlookCalendar> ExchangeCalendarList
+        public List<OutlookFolder> ExchangeCalendarList
         {
             get { return _exchangeCalendarList; }
             set { SetProperty(ref _exchangeCalendarList, value); }
         }
 
-        public OutlookCalendar SelectedExchangeCalendar
+        public OutlookFolder SelectedExchangeCalendar
         {
             get { return _selectedExchangeCalendar; }
             set { SetProperty(ref _selectedExchangeCalendar, value); }
@@ -212,7 +213,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             set { SetProperty(ref _outlookMailBoxes, value); }
         }
 
-        public OutlookCalendar SelectedOutlookCalendar
+        public OutlookFolder SelectedOutlookCalendar
         {
             get { return _outlookCalendar; }
             set { SetProperty(ref _outlookCalendar, value); }
@@ -378,7 +379,7 @@ namespace CalendarSyncPlus.Application.ViewModels
                 SetProperty(ref _selectedCalendarSyncDirection, value);
                 if (_selectedCalendarSyncDirection == CalendarSyncDirectionEnum.OutlookGoogleTwoWay)
                 {
-                    MasterCalendarServiceType = CalendarServiceType.OutlookDesktop;
+                    MasterServiceType = ServiceType.OutlookDesktop;
                     AllowMasterCalendarSelect = true;
                 }
                 else
@@ -394,10 +395,10 @@ namespace CalendarSyncPlus.Application.ViewModels
             set { SetProperty(ref _allowMasterCalendarSelect, value); }
         }
 
-        public CalendarServiceType MasterCalendarServiceType
+        public ServiceType MasterServiceType
         {
-            get { return _masterCalendarServiceType; }
-            set { SetProperty(ref _masterCalendarServiceType, value); }
+            get { return _masterServiceType; }
+            set { SetProperty(ref _masterServiceType, value); }
         }
 
         public bool IsLoading
@@ -541,7 +542,7 @@ namespace CalendarSyncPlus.Application.ViewModels
                 SyncProfile.OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.ExchangeWebServices);
             SelectedOutlookProfileName = SyncProfile.OutlookSettings.OutlookProfileName;
             SelectedCalendarSyncDirection = SyncProfile.SyncSettings.CalendarSyncDirection;
-            MasterCalendarServiceType = SyncProfile.SyncSettings.MasterCalendar;
+            MasterServiceType = SyncProfile.SyncSettings.Master;
             DisableDelete = SyncProfile.SyncSettings.DisableDelete;
             ConfirmOnDelete = SyncProfile.SyncSettings.ConfirmOnDelete;
             KeepLastModifiedCopy = SyncProfile.SyncSettings.KeepLastModifiedVersion;
@@ -900,7 +901,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             SyncProfile.ExchangeServerSettings.Password = Password;
             SyncProfile.ExchangeServerSettings.ExchangeServerUrl = ExchangeServerUrl;
             SyncProfile.SyncSettings.CalendarSyncDirection = SelectedCalendarSyncDirection;
-            SyncProfile.SyncSettings.MasterCalendar = MasterCalendarServiceType;
+            SyncProfile.SyncSettings.Master = MasterServiceType;
             SyncProfile.SyncSettings.DisableDelete = DisableDelete;
             SyncProfile.SyncSettings.ConfirmOnDelete = ConfirmOnDelete;
             SyncProfile.SyncSettings.KeepLastModifiedVersion = KeepLastModifiedCopy;
