@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Diagnostics.Eventing.Reader;
+using System.Linq;
 using System.Threading.Tasks;
 using CalendarSyncPlus.Authentication.Google;
 using CalendarSyncPlus.Common.Log;
@@ -55,7 +56,9 @@ namespace CalendarSyncPlus.GoogleServices.Google
             //Get Calendar Service
             var tasksService = GetTasksService(AccountName);
 
-            var taskListRequest = tasksService.Tasks.List(TasksId);
+            var taskList = tasksService.Tasklists.List().Execute();
+
+            var taskListRequest = tasksService.Tasks.List(taskList.Items.First().Id);
             taskListRequest.MaxResults = 1000;
 
             try
