@@ -14,7 +14,7 @@
                       AllowsTransparency="True"
                       BorderBrush="{DynamicResource AccentColorBrush}"
                       GlowBrush="{DynamicResource AccentColorBrush}"
-                      Icon="../Resources/icon.ico"
+                      Icon="..\..\Resources/icon.ico"
                       IconTemplate="{DynamicResource IconTemplate}"
                       NonActiveGlowBrush="{DynamicResource GrayBrush9}"
                       ResizeMode="CanMinimize"

@@ -3,7 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:viewModels="clr-namespace:CalendarSyncPlus.Application.ViewModels;assembly=CalendarSyncPlus.Application"
              mc:Ignorable="d"
-             d:DesignHeight="600" d:DesignWidth="450" Loaded="HelpView_OnLoaded">
-    <DocumentViewer x:Name="HelpDocumentViewer" Margin="10" />
+             d:DesignHeight="600" d:DesignWidth="450" 
+             d:DataContext="{d:DesignInstance viewModels:HelpViewModel}">
+    <DocumentViewer Margin="10" Document="{Binding FixedDocument}"/>
 </UserControl>
