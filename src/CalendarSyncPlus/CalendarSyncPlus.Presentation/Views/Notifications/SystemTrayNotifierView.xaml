@@ -9,7 +9,7 @@
                 xmlns:viewModels="clr-namespace:CalendarSyncPlus.Application.ViewModels;assembly=CalendarSyncPlus.Application"
                 Name="SystemTrayTaskbarIcon"
                 DoubleClickCommand="{Binding Path=DoubleClickCommand}"
-                IconSource="../Resources/icon.ico"
+                IconSource="../../Resources/icon.ico"
                 ToolTipText="Calendar Sync+"
                 d:DataContext="{d:DesignInstance viewModels:SystemTrayNotifierViewModel}"
                 d:DesignHeight="300"

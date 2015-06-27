@@ -386,7 +386,7 @@ namespace CalendarSyncPlus.GoogleServices.Google
 
         private void CallbackEventErrorMessage(Event content, RequestError error, int index, HttpResponseMessage message,
             List<Appointment> eventList,string errorMessage,
-            Dictionary<int, Appointment> errorAppointments, List<Appointment> deletedEvents)
+            Dictionary<int, Appointment> errorAppointments, List<Appointment> modifiedEvents)
         {
             var phrase = message.ReasonPhrase;
             if (!message.IsSuccessStatusCode)
@@ -397,7 +397,10 @@ namespace CalendarSyncPlus.GoogleServices.Google
             }
             else
             {
-                deletedEvents.Add(CreateAppointment(content));
+                if (content != null)
+                {
+                    modifiedEvents.Add(CreateAppointment(content));
+                }
             }
         }
 
