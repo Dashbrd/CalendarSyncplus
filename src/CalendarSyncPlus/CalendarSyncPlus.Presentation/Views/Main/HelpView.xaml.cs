@@ -17,15 +17,5 @@ namespace CalendarSyncPlus.Presentation.Views
         {
             InitializeComponent();
         }
-
-        private void HelpView_OnLoaded(object sender, RoutedEventArgs e)
-        {
-            var directory = Path.GetDirectoryName(AppDomain.CurrentDomain.BaseDirectory);
-            directory = Path.Combine(directory, "UserGuide");
-            var fileName = Path.Combine(directory, "HowToUseGuide.xps");
-            var doc = new XpsDocument(fileName, FileAccess.Read);
-
-            HelpDocumentViewer.Document = doc.GetFixedDocumentSequence();
-        }
     }
 }
