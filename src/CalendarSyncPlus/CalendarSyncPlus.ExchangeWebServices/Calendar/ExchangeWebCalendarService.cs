@@ -10,12 +10,11 @@ using CalendarSyncPlus.Domain.Models;
 using CalendarSyncPlus.Domain.Models.Preferences;
 using CalendarSyncPlus.Domain.Wrappers;
 using CalendarSyncPlus.Services.Calendars.Interfaces;
-using CalendarSyncPlus.Services.Interfaces;
 using log4net;
 using Microsoft.Exchange.WebServices.Data;
-using AppAppointment = CalendarSyncPlus.Domain.Models.Appointment;
+using Appointment = CalendarSyncPlus.Domain.Models.Appointment;
 
-namespace CalendarSyncPlus.ExchangeWebServices.ExchangeWeb
+namespace CalendarSyncPlus.ExchangeWebServices.Calendar
 {
     [Export(typeof (ICalendarService)), Export(typeof (IExchangeWebCalendarService))]
     [ExportMetadata("ServiceType", ServiceType.EWS)]
@@ -35,7 +34,7 @@ namespace CalendarSyncPlus.ExchangeWebServices.ExchangeWeb
 
         public ILog ApplicationLogger { get; set; }
 
-        public Task<CalendarAppointments> UpdateCalendarEvents(List<AppAppointment> calendarAppointments, bool addDescription,
+        public Task<AppointmentsWrapper> UpdateCalendarEvents(List<Appointment> calendarAppointments, bool addDescription,
             bool addReminder, bool addAttendees, bool attendeesToDescription,
             IDictionary<string, object> calendarSpecificData)
         {
@@ -163,7 +162,7 @@ namespace CalendarSyncPlus.ExchangeWebServices.ExchangeWeb
 
         #region IExchangeWebCalendarService Members
 
-        public List<AppAppointment> GetAppointmentsAsync(int daysInPast, int daysInFuture,
+        public List<Appointment> GetAppointmentsAsync(int daysInPast, int daysInFuture,
             string profileName, EWSCalendar outlookCalendar)
         {
             return null;
@@ -209,13 +208,13 @@ namespace CalendarSyncPlus.ExchangeWebServices.ExchangeWeb
 
         private ExchangeServerSettings ExchangeServerSettings { get; set; }
 
-        public Task<CalendarAppointments> DeleteCalendarEvents(List<AppAppointment> calendarAppointments,
+        public Task<AppointmentsWrapper> DeleteCalendarEvents(List<Appointment> calendarAppointments,
             IDictionary<string, object> calendarSpecificData)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<CalendarAppointments> GetCalendarEventsInRangeAsync(DateTime startDate, DateTime endDate,
+        public async Task<AppointmentsWrapper> GetCalendarEventsInRangeAsync(DateTime startDate, DateTime endDate,
             IDictionary<string, object> calendarSpecificData)
         {
             CheckCalendarSpecificData(calendarSpecificData);
@@ -226,7 +225,7 @@ namespace CalendarSyncPlus.ExchangeWebServices.ExchangeWeb
             var calendarview = new CalendarView(startDate, endDate);
 
             // Get Default Calendar
-            var outlookAppointments = new CalendarAppointments();
+            var outlookAppointments = new AppointmentsWrapper();
             var exchangeAppointments = service.FindAppointments(_ewsCalendar.EntryId,
                 calendarview);
 
@@ -239,7 +238,7 @@ namespace CalendarSyncPlus.ExchangeWebServices.ExchangeWeb
             {
                 foreach (var exchangeAppointment in exchangeAppointments)
                 {
-                    var appointment = new AppAppointment(exchangeAppointment.Body, exchangeAppointment.Location,
+                    var appointment = new Appointment(exchangeAppointment.Body, exchangeAppointment.Location,
                         exchangeAppointment.Subject, exchangeAppointment.Start, exchangeAppointment.Start)
                     {
                         AppointmentId = exchangeAppointment.Id.UniqueId,
@@ -261,7 +260,7 @@ namespace CalendarSyncPlus.ExchangeWebServices.ExchangeWeb
             return outlookAppointments;
         }
 
-        public Task<CalendarAppointments> AddCalendarEvents(List<AppAppointment> calendarAppointments,
+        public Task<AppointmentsWrapper> AddCalendarEvents(List<Appointment> calendarAppointments,
             bool addDescription,
             bool addReminder, bool addAttendees,
             bool attendeesToDescription, IDictionary<string, object> calendarSpecificData)

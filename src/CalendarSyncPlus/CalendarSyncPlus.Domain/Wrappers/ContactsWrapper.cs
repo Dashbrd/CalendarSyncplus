@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using CalendarSyncPlus.Domain.Models;
+using System.Waf.Foundation;
 
 namespace CalendarSyncPlus.Domain.Wrappers
 {
-    public class TaskWrapper : List<ReminderTask>
+    public class ContactsWrapper : Model
     {
-        public string ParentId { get; set; }
+        public string ContactsListId { get; set; }
         public bool IsSuccess { get; set; }
     }
 }

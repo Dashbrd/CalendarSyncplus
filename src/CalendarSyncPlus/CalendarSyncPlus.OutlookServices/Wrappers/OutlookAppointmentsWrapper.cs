@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using CalendarSyncPlus.Domain.Models;
 
-namespace CalendarSyncPlus.Services.Wrappers
+namespace CalendarSyncPlus.OutlookServices.Wrappers
 {
-    public class AppointmentListWrapper
+    public class OutlookAppointmentsWrapper
     {
         public List<Appointment> Appointments { get; set; }
         public bool WaitForApplicationQuit { get; set; }

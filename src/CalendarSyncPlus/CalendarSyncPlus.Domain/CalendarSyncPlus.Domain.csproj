@@ -64,8 +64,10 @@
     <Compile Include="Helpers\AppointmentHelper.cs" />
     <Compile Include="Helpers\ExtensionMethods.cs" />
     <Compile Include="Models\Announcement.cs" />
+    <Compile Include="Models\Contact.cs" />
     <Compile Include="Models\Preferences\AppSettings.cs" />
     <Compile Include="Models\Preferences\Category.cs" />
+    <Compile Include="Models\Preferences\ContactsSyncProfile.cs" />
     <Compile Include="Models\Preferences\EWSCalendar.cs" />
     <Compile Include="Models\Preferences\GoogleAccount.cs" />
     <Compile Include="Models\Preferences\LogSettings.cs" />
@@ -79,6 +81,7 @@
     <Compile Include="Models\Preferences\OutlookFolder.cs" />
     <Compile Include="Models\Preferences\OutlookMailBox.cs" />
     <Compile Include="Models\Enumerations.cs" />
+    <Compile Include="Models\Preferences\SyncProfile.cs" />
     <Compile Include="Models\Preferences\TaskSyncProfile.cs" />
     <Compile Include="Models\Recipient.cs" />
     <Compile Include="Models\Preferences\CalendarSyncProfile.cs" />
@@ -91,8 +94,9 @@
     <Compile Include="Models\Preferences\WeeklySyncFrequency.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Models\Preferences\ProxySetting.cs" />
-    <Compile Include="Wrappers\CalendarAppointments.cs" />
-    <Compile Include="Wrappers\TaskWrapper.cs" />
+    <Compile Include="Wrappers\AppointmentsWrapper.cs" />
+    <Compile Include="Wrappers\ContactsWrapper.cs" />
+    <Compile Include="Wrappers\TasksWrapper.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CalendarSyncPlus.Common\CalendarSyncPlus.Common.csproj">

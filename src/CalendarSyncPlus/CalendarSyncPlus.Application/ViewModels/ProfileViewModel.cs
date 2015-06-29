@@ -10,9 +10,10 @@ using CalendarSyncPlus.Common.MetaData;
 using CalendarSyncPlus.Domain.Helpers;
 using CalendarSyncPlus.Domain.Models;
 using CalendarSyncPlus.Domain.Models.Preferences;
-using CalendarSyncPlus.ExchangeWebServices.ExchangeWeb;
+using CalendarSyncPlus.ExchangeWebServices.Calendar;
+using CalendarSyncPlus.GoogleServices.Calendar;
 using CalendarSyncPlus.GoogleServices.Google;
-using CalendarSyncPlus.OutlookServices.Outlook;
+using CalendarSyncPlus.OutlookServices.Calendar;
 using CalendarSyncPlus.OutlookServices.Utilities;
 using CalendarSyncPlus.Services.Interfaces;
 using log4net;
@@ -43,7 +44,7 @@ namespace CalendarSyncPlus.Application.ViewModels
         private bool _addReminders;
         private bool _allowMasterCalendarSelect;
         private DelegateCommand _autoDetectExchangeServer;
-        private List<CalendarSyncDirectionEnum> _calendarSyncModes;
+        private List<SyncDirectionEnum> _calendarSyncModes;
         private List<Category> _categories;
         private bool _confirmOnDelete;
         private int _daysInFuture = 7;
@@ -74,7 +75,7 @@ namespace CalendarSyncPlus.Application.ViewModels
         private DelegateCommand _resetGoogleCalendar;
         private DelegateCommand _resetOutlookCalendarCommand;
         private GoogleCalendar _selectedCalendar;
-        private CalendarSyncDirectionEnum _selectedCalendarSyncDirection;
+        private SyncDirectionEnum _selectedSyncDirection;
         private Category _selectedCategory;
         private OutlookFolder _selectedExchangeCalendar;
         private GoogleAccount _selectedGoogleAccount;
@@ -365,19 +366,19 @@ namespace CalendarSyncPlus.Application.ViewModels
         }
 
 
-        public List<CalendarSyncDirectionEnum> CalendarSyncModes
+        public List<SyncDirectionEnum> CalendarSyncModes
         {
             get { return _calendarSyncModes; }
             set { SetProperty(ref _calendarSyncModes, value); }
         }
 
-        public CalendarSyncDirectionEnum SelectedCalendarSyncDirection
+        public SyncDirectionEnum SelectedSyncDirection
         {
-            get { return _selectedCalendarSyncDirection; }
+            get { return _selectedSyncDirection; }
             set
             {
-                SetProperty(ref _selectedCalendarSyncDirection, value);
-                if (_selectedCalendarSyncDirection == CalendarSyncDirectionEnum.OutlookGoogleTwoWay)
+                SetProperty(ref _selectedSyncDirection, value);
+                if (_selectedSyncDirection == SyncDirectionEnum.OutlookGoogleTwoWay)
                 {
                     MasterServiceType = ServiceType.OutlookDesktop;
                     AllowMasterCalendarSelect = true;
@@ -502,11 +503,11 @@ namespace CalendarSyncPlus.Application.ViewModels
                 SyncRangeTypeEnum.SyncFixedDateRange,
                 SyncRangeTypeEnum.SyncRangeInDays
             };
-            CalendarSyncModes = new List<CalendarSyncDirectionEnum>
+            CalendarSyncModes = new List<SyncDirectionEnum>
             {
-                CalendarSyncDirectionEnum.OutlookGoogleOneWay,
-                CalendarSyncDirectionEnum.OutlookGoogleOneWayToSource,
-                CalendarSyncDirectionEnum.OutlookGoogleTwoWay
+                SyncDirectionEnum.OutlookGoogleOneWay,
+                SyncDirectionEnum.OutlookGoogleOneWayToSource,
+                SyncDirectionEnum.OutlookGoogleTwoWay
             };
             SyncFrequencies = new List<string>
             {
@@ -541,13 +542,13 @@ namespace CalendarSyncPlus.Application.ViewModels
             IsExchangeWebServices =
                 SyncProfile.OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.ExchangeWebServices);
             SelectedOutlookProfileName = SyncProfile.OutlookSettings.OutlookProfileName;
-            SelectedCalendarSyncDirection = SyncProfile.SyncSettings.CalendarSyncDirection;
-            MasterServiceType = SyncProfile.SyncSettings.Master;
+            SelectedSyncDirection = SyncProfile.SyncDirection;
+            MasterServiceType = SyncProfile.Master;
             DisableDelete = SyncProfile.SyncSettings.DisableDelete;
             ConfirmOnDelete = SyncProfile.SyncSettings.ConfirmOnDelete;
             KeepLastModifiedCopy = SyncProfile.SyncSettings.KeepLastModifiedVersion;
             MergeExistingEntries = SyncProfile.SyncSettings.MergeExistingEntries;
-            SyncFrequency = SyncProfile.SyncSettings.SyncFrequency.Name;
+            SyncFrequency = SyncProfile.SyncFrequency.Name;
             SetCategory = SyncProfile.SetCalendarCategory;
             _selectedGoogleAccount = googleAccount;
 
@@ -798,22 +799,22 @@ namespace CalendarSyncPlus.Application.ViewModels
         /// </summary>
         private void OnSyncFrequencyChanged()
         {
-            if (SyncProfile != null && SyncProfile.SyncSettings.SyncFrequency != null &&
-                SyncFrequency == SyncProfile.SyncSettings.SyncFrequency.Name)
+            if (SyncProfile != null && SyncProfile.SyncFrequency != null &&
+                SyncFrequency == SyncProfile.SyncFrequency.Name)
             {
                 switch (SyncFrequency)
                 {
                     case "Interval":
                         SyncFrequencyViewModel
-                            = new IntervalSyncViewModel(SyncProfile.SyncSettings.SyncFrequency as IntervalSyncFrequency);
+                            = new IntervalSyncViewModel(SyncProfile.SyncFrequency as IntervalSyncFrequency);
                         break;
                     case "Daily":
                         SyncFrequencyViewModel
-                            = new DailySyncViewModel(SyncProfile.SyncSettings.SyncFrequency as DailySyncFrequency);
+                            = new DailySyncViewModel(SyncProfile.SyncFrequency as DailySyncFrequency);
                         break;
                     case "Weekly":
                         SyncFrequencyViewModel
-                            = new WeeklySyncViewModel(SyncProfile.SyncSettings.SyncFrequency as WeeklySyncFrequency);
+                            = new WeeklySyncViewModel(SyncProfile.SyncFrequency as WeeklySyncFrequency);
                         break;
                 }
             }
@@ -876,7 +877,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             SyncProfile.SyncSettings.StartDate = StartDate;
             SyncProfile.SyncSettings.EndDate = EndDate;
             SyncProfile.SyncSettings.SyncRangeType = SelectedSyncRangeType;
-            SyncProfile.SyncSettings.SyncFrequency = SyncFrequencyViewModel.GetFrequency();
+            SyncProfile.SyncFrequency = SyncFrequencyViewModel.GetFrequency();
             SyncProfile.UpdateEntryOptions(AddDescription, AddReminders, AddAttendees, AddAttendeesToDescription,
                 AddAttachments, AddAsAppointments);
 
@@ -900,13 +901,13 @@ namespace CalendarSyncPlus.Application.ViewModels
             SyncProfile.ExchangeServerSettings.EmailId = Username;
             SyncProfile.ExchangeServerSettings.Password = Password;
             SyncProfile.ExchangeServerSettings.ExchangeServerUrl = ExchangeServerUrl;
-            SyncProfile.SyncSettings.CalendarSyncDirection = SelectedCalendarSyncDirection;
-            SyncProfile.SyncSettings.Master = MasterServiceType;
+            SyncProfile.SyncDirection = SelectedSyncDirection;
+            SyncProfile.Master = MasterServiceType;
             SyncProfile.SyncSettings.DisableDelete = DisableDelete;
             SyncProfile.SyncSettings.ConfirmOnDelete = ConfirmOnDelete;
             SyncProfile.SyncSettings.KeepLastModifiedVersion = KeepLastModifiedCopy;
             SyncProfile.SyncSettings.MergeExistingEntries = MergeExistingEntries;
-            SyncProfile.SetCalendarTypes();
+            SyncProfile.SetSourceDestTypes();
             SyncProfile.SetCalendarCategory = SetCategory;
             SyncProfile.EventCategory = SelectedCategory;
 

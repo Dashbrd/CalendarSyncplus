@@ -238,7 +238,7 @@
                 <ComboBox Grid.Column="1"
                           Margin="2"
                           ItemsSource="{Binding CalendarSyncModes,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                          SelectedItem="{Binding SelectedCalendarSyncDirection,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                          SelectedItem="{Binding SelectedSyncDirection,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                           ItemTemplate="{StaticResource CalendarEnumDataTemplate}" />
                 <ContentControl ContentTemplate="{DynamicResource HelpButtonTemplate}"
                                 Grid.Column="2"

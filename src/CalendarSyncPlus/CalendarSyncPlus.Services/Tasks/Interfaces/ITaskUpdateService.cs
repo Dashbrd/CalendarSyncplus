@@ -23,8 +23,8 @@ namespace CalendarSyncPlus.Services.Tasks.Interfaces
 
         #region Properties
 
-        TaskWrapper DestinationAppointments { get; set; }
-        TaskWrapper SourceAppointments { get; set; }
+        TasksWrapper DestinationAppointments { get; set; }
+        TasksWrapper SourceAppointments { get; set; }
         
         string SyncStatus { get; set; }
         ITaskService SourceCalendarService { get; set; }

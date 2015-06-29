@@ -10,13 +10,13 @@ using CalendarSyncPlus.Common.MetaData;
 using CalendarSyncPlus.Domain.Models;
 using CalendarSyncPlus.Domain.Models.Preferences;
 using CalendarSyncPlus.Domain.Wrappers;
+using CalendarSyncPlus.OutlookServices.Wrappers;
 using CalendarSyncPlus.Services.Tasks.Interfaces;
-using CalendarSyncPlus.Services.Wrappers;
 using log4net;
 using Microsoft.Office.Interop.Outlook;
 using Exception = System.Exception;
-
-namespace CalendarSyncPlus.OutlookServices.Outlook
+using ThreadingTask = System.Threading.Tasks.Task;
+namespace CalendarSyncPlus.OutlookServices.Task
 {
     [Export(typeof(ITaskService)), Export(typeof(IOutlookTaskService))]
     [ExportMetadata("ServiceType", ServiceType.OutlookDesktop)]
@@ -164,12 +164,12 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
             }
             while (Process.GetProcessesByName("OUTLOOK").Any())
             {
-                Task.Delay(5000);
+                ThreadingTask.Delay(5000);
             }
             return list.Tasks;
         }
 
-        private TaskListWrapper GetOutlookEntriesForSelectedTimeRange(DateTime startDate, DateTime endDate)
+        private OutlookTasksWrapper GetOutlookEntriesForSelectedTimeRange(DateTime startDate, DateTime endDate)
         {
             var disposeOutlookInstances = false;
             Application application = null;
@@ -243,7 +243,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
             catch (Exception exception)
             {
                 Logger.Error(exception);
-                return new TaskListWrapper
+                return new OutlookTasksWrapper
                 {
                     Tasks = null,
                     WaitForApplicationQuit = disposeOutlookInstances
@@ -289,7 +289,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
                 GC.WaitForPendingFinalizers();
             }
 
-            return new TaskListWrapper
+            return new OutlookTasksWrapper
             {
                 Tasks = outlookAppointments,
                 WaitForApplicationQuit = disposeOutlookInstances
@@ -326,11 +326,11 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
         }
 
 
-        public async Task<TaskWrapper> GetCalendarEventsInRangeAsync(DateTime startDate, DateTime endDate,
+        public async Task<TasksWrapper> GetCalendarEventsInRangeAsync(DateTime startDate, DateTime endDate,
             IDictionary<string, object> calendarSpecificData)
         {
             CheckCalendarSpecificData(calendarSpecificData);
-            var taskWrapper = new TaskWrapper();
+            var taskWrapper = new TasksWrapper();
 
             var appointmentList =
                 await
@@ -401,7 +401,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
 
                 while (disposeOutlookInstances && Process.GetProcessesByName("OUTLOOK").Any())
                 {
-                    Task.Delay(5000);
+                    ThreadingTask.Delay(5000);
                 }
             }
 

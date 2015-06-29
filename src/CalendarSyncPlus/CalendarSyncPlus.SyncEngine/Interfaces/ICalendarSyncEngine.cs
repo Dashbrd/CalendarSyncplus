@@ -48,8 +48,8 @@ namespace CalendarSyncPlus.SyncEngine.Interfaces
         /// <param name="destinationList"></param>
         /// <returns>
         /// </returns>
-        bool GetSourceEntriesToDelete(CalendarSyncProfile syncProfile, CalendarAppointments sourceList,
-            CalendarAppointments destinationList);
+        bool GetSourceEntriesToDelete(CalendarSyncProfile syncProfile, AppointmentsWrapper sourceList,
+            AppointmentsWrapper destinationList);
 
         /// <summary>
         /// </summary>
@@ -58,8 +58,8 @@ namespace CalendarSyncPlus.SyncEngine.Interfaces
         /// <param name="destinationList"></param>
         /// <returns>
         /// </returns>
-        bool GetSourceEntriesToAdd(CalendarSyncProfile syncProfile, CalendarAppointments sourceList,
-            CalendarAppointments destinationList);
+        bool GetSourceEntriesToAdd(CalendarSyncProfile syncProfile, AppointmentsWrapper sourceList,
+            AppointmentsWrapper destinationList);
 
         /// <summary>
         /// </summary>
@@ -68,8 +68,8 @@ namespace CalendarSyncPlus.SyncEngine.Interfaces
         /// <param name="destinationList"></param>
         /// <returns>
         /// </returns>
-        bool GetDestEntriesToDelete(CalendarSyncProfile syncProfile, CalendarAppointments sourceList,
-            CalendarAppointments destinationList);
+        bool GetDestEntriesToDelete(CalendarSyncProfile syncProfile, AppointmentsWrapper sourceList,
+            AppointmentsWrapper destinationList);
 
         /// <summary>
         /// </summary>
@@ -78,8 +78,8 @@ namespace CalendarSyncPlus.SyncEngine.Interfaces
         /// <param name="destinationList"></param>
         /// <returns>
         /// </returns>
-        bool GetDestEntriesToAdd(CalendarSyncProfile syncProfile, CalendarAppointments sourceList,
-            CalendarAppointments destinationList);
+        bool GetDestEntriesToAdd(CalendarSyncProfile syncProfile, AppointmentsWrapper sourceList,
+            AppointmentsWrapper destinationList);
 
         /// <summary>
         /// </summary>

@@ -9,49 +9,39 @@ using CalendarSyncPlus.Domain.Wrappers;
 
 namespace CalendarSyncPlus.SyncEngine.Interfaces
 {
-    public interface ITaskSyncEngine
+    public interface IContactsSyncEngine
     {
         /// <summary>
         /// </summary>
-        List<ReminderTask> SourceTasksToUpdate { get; set; }
+        List<Contact> SourceContactsToUpdate { get; set; }
 
         /// <summary>
         /// </summary>
-        List<ReminderTask> SourceOrphanEntries { get; set; }
+        List<Contact> SourceOrphanEntries { get; set; }
 
         /// <summary>
         /// </summary>
-        List<ReminderTask> SourceTasksToDelete { get; set; }
+        List<Contact> SourceContactsToDelete { get; set; }
 
         /// <summary>
         /// </summary>
-        List<ReminderTask> SourceTasksToAdd { get; set; }
+        List<Contact> SourceContactsToAdd { get; set; }
 
         /// <summary>
         /// </summary>
-        List<ReminderTask> DestTasksToUpdate { get; set; }
+        List<Contact> DestContactsToUpdate { get; set; }
 
         /// <summary>
         /// </summary>
-        List<ReminderTask> DestTasksToDelete { get; set; }
+        List<Contact> DestContactsToDelete { get; set; }
 
         /// <summary>
         /// </summary>
-        List<ReminderTask> DestTasksToAdd { get; set; }
+        List<Contact> DestContactsToAdd { get; set; }
 
         /// <summary>
         /// </summary>
-        List<ReminderTask> DestOrphanEntries { get; set; }
-
-        /// <summary>
-        /// </summary>
-        /// <param name="syncProfile"></param>
-        /// <param name="sourceList"></param>
-        /// <param name="destinationList"></param>
-        /// <returns>
-        /// </returns>
-        bool GetSourceEntriesToDelete(TaskSyncProfile syncProfile, TasksWrapper sourceList,
-            TasksWrapper destinationList);
+        List<Contact> DestOrphanEntries { get; set; }
 
         /// <summary>
         /// </summary>
@@ -60,8 +50,8 @@ namespace CalendarSyncPlus.SyncEngine.Interfaces
         /// <param name="destinationList"></param>
         /// <returns>
         /// </returns>
-        bool GetSourceEntriesToAdd(TaskSyncProfile syncProfile, TasksWrapper sourceList,
-            TasksWrapper destinationList);
+        bool GetSourceEntriesToDelete(ContactsSyncProfile syncProfile, ContactsWrapper sourceList,
+            ContactsWrapper destinationList);
 
         /// <summary>
         /// </summary>
@@ -70,8 +60,8 @@ namespace CalendarSyncPlus.SyncEngine.Interfaces
         /// <param name="destinationList"></param>
         /// <returns>
         /// </returns>
-        bool GetDestEntriesToDelete(TaskSyncProfile syncProfile, TasksWrapper sourceList,
-            TasksWrapper destinationList);
+        bool GetSourceEntriesToAdd(ContactsSyncProfile syncProfile, ContactsWrapper sourceList,
+            ContactsWrapper destinationList);
 
         /// <summary>
         /// </summary>
@@ -80,8 +70,18 @@ namespace CalendarSyncPlus.SyncEngine.Interfaces
         /// <param name="destinationList"></param>
         /// <returns>
         /// </returns>
-        bool GetDestEntriesToAdd(TaskSyncProfile syncProfile, TasksWrapper sourceList,
-            TasksWrapper destinationList);
+        bool GetDestEntriesToDelete(ContactsSyncProfile syncProfile, ContactsWrapper sourceList,
+            ContactsWrapper destinationList);
+
+        /// <summary>
+        /// </summary>
+        /// <param name="syncProfile"></param>
+        /// <param name="sourceList"></param>
+        /// <param name="destinationList"></param>
+        /// <returns>
+        /// </returns>
+        bool GetDestEntriesToAdd(ContactsSyncProfile syncProfile, ContactsWrapper sourceList,
+            ContactsWrapper destinationList);
 
         /// <summary>
         /// </summary>

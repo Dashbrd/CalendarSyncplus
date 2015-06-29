@@ -45,8 +45,8 @@ namespace CalendarSyncPlus.Services.Calendars
         #region Fields
 
         private Appointment _currentAppointment;
-        private CalendarAppointments _destinationAppointments;
-        private CalendarAppointments _sourceAppointments;
+        private AppointmentsWrapper _destinationAppointments;
+        private AppointmentsWrapper _sourceAppointments;
         private string _syncStatus;
 
         #endregion
@@ -113,9 +113,9 @@ namespace CalendarSyncPlus.Services.Calendars
 
         private void InitiatePreSyncSetup(CalendarSyncProfile syncProfile)
         {
-            SourceCalendarService = CalendarServiceFactory.GetCalendarService(syncProfile.SyncSettings.Source);
+            SourceCalendarService = CalendarServiceFactory.GetCalendarService(syncProfile.Source);
             DestinationCalendarService =
-                CalendarServiceFactory.GetCalendarService(syncProfile.SyncSettings.Destination);
+                CalendarServiceFactory.GetCalendarService(syncProfile.Destination);
         }
 
         private string GetCalendarName(CalendarSyncProfile syncProfile, ServiceType serviceType)
@@ -234,7 +234,7 @@ namespace CalendarSyncPlus.Services.Calendars
                 syncMetric.DestMetric.AddCount = appointmentsToAdd.Count;
                 LoadSourceId(addedAppointments, SourceAppointments.CalendarId);
                 DestinationAppointments.AddRange(addedAppointments);
-                if (syncProfile.SyncSettings.SyncMode == SyncModeEnum.TwoWay)
+                if (syncProfile.SyncMode == SyncModeEnum.TwoWay)
                 {
                     //Add appointments to update
                     var updateSourceList = UpdateWithChildId(addedAppointments, SourceAppointments);
@@ -269,7 +269,7 @@ namespace CalendarSyncPlus.Services.Calendars
                 SourceAppointments, DestinationAppointments);
             var appointmentsToDelete = CalendarSyncEngine.DestAppointmentsToDelete;
 
-            if (syncProfile.SyncSettings.SyncMode == SyncModeEnum.OneWay)
+            if (syncProfile.SyncMode == SyncModeEnum.OneWay)
             {
                 if (syncProfile.SyncSettings.ConfirmOnDelete && syncCallback != null)
                 {
@@ -376,7 +376,7 @@ namespace CalendarSyncPlus.Services.Calendars
                 syncMetric.SourceMetric.AddCount = appointmentsToAdd.Count;
                 LoadSourceId(addedAppointments, DestinationAppointments.CalendarId);
                 SourceAppointments.AddRange(addedAppointments);
-                if (syncProfile.SyncSettings.SyncMode == SyncModeEnum.TwoWay)
+                if (syncProfile.SyncMode == SyncModeEnum.TwoWay)
                 {
                     var updateDestList = UpdateWithChildId(addedAppointments, DestinationAppointments);
                     CalendarSyncEngine.DestAppointmentsToUpdate.AddRangeCompareForUpdate(updateDestList);
@@ -391,8 +391,8 @@ namespace CalendarSyncPlus.Services.Calendars
         /// <param name="addedAppointments"></param>
         /// <param name="existingAppointments"></param>
         /// <returns></returns>
-        private List<Appointment> UpdateWithChildId(CalendarAppointments addedAppointments,
-            CalendarAppointments existingAppointments)
+        private List<Appointment> UpdateWithChildId(AppointmentsWrapper addedAppointments,
+            AppointmentsWrapper existingAppointments)
         {
             //Add appointments to update
             var updateList = new List<Appointment>();
@@ -476,13 +476,13 @@ namespace CalendarSyncPlus.Services.Calendars
 
         #region ICalendarUpdateService Members
 
-        public CalendarAppointments DestinationAppointments
+        public AppointmentsWrapper DestinationAppointments
         {
             get { return _destinationAppointments; }
             set { SetProperty(ref _destinationAppointments, value); }
         }
 
-        public CalendarAppointments SourceAppointments
+        public AppointmentsWrapper SourceAppointments
         {
             get { return _sourceAppointments; }
             set { SetProperty(ref _sourceAppointments, value); }
@@ -517,7 +517,7 @@ namespace CalendarSyncPlus.Services.Calendars
                 //Add log for sync mode
                 SyncStatus = string.Format("Calendar Sync : {0} {2} {1}", SourceCalendarService.CalendarServiceName,
                     DestinationCalendarService.CalendarServiceName,
-                    syncProfile.SyncSettings.SyncMode == SyncModeEnum.TwoWay ? "<===>" : "===>");
+                    syncProfile.SyncMode == SyncModeEnum.TwoWay ? "<===>" : "===>");
                 SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
                 DateTime startDate, endDate;
                 GetDateRange(syncProfile, out startDate, out endDate);
@@ -528,9 +528,9 @@ namespace CalendarSyncPlus.Services.Calendars
 
                 //Load calendar specific data
                 var sourceCalendarSpecificData =
-                    GetCalendarSpecificData(syncProfile.SyncSettings.Source, syncProfile);
+                    GetCalendarSpecificData(syncProfile.Source, syncProfile);
                 var destinationCalendarSpecificData =
-                    GetCalendarSpecificData(syncProfile.SyncSettings.Destination, syncProfile);
+                    GetCalendarSpecificData(syncProfile.Destination, syncProfile);
 
                 //Get source and destination appointments
                 isSuccess = LoadAppointments(startDate, endDate,
@@ -557,7 +557,7 @@ namespace CalendarSyncPlus.Services.Calendars
                     isSuccess = AddDestinationAppointments(syncProfile, syncMetric, destinationCalendarSpecificData);
                 }
 
-                if (isSuccess && syncProfile.SyncSettings.SyncMode == SyncModeEnum.TwoWay)
+                if (isSuccess && syncProfile.SyncMode == SyncModeEnum.TwoWay)
                 {
                     //Delete destination appointments
                     isSuccess = DeleteSourceAppointments(syncProfile, syncMetric, sourceCalendarSpecificData, syncCallback);

@@ -22,31 +22,31 @@ namespace CalendarSyncPlus.SyncEngine
         public List<Appointment> DestAppointmentsToAdd { get; set; }
         public List<Appointment> DestOrphanEntries { get; set; }
 
-        public bool GetSourceEntriesToDelete(CalendarSyncProfile syncProfile, CalendarAppointments sourceList,
-            CalendarAppointments destinationList)
+        public bool GetSourceEntriesToDelete(CalendarSyncProfile syncProfile, AppointmentsWrapper sourceList,
+            AppointmentsWrapper destinationList)
         {
             EvaluateAppointmentsToDelete(syncProfile, destinationList, sourceList, SourceAppointmentsToDelete,
                 SourceAppointmentsToUpdate, DestAppointmentsToUpdate, SourceOrphanEntries);
             return true;
         }
 
-        public bool GetSourceEntriesToAdd(CalendarSyncProfile syncProfile, CalendarAppointments sourceList,
-            CalendarAppointments destinationList)
+        public bool GetSourceEntriesToAdd(CalendarSyncProfile syncProfile, AppointmentsWrapper sourceList,
+            AppointmentsWrapper destinationList)
         {
             EvaluateAppointmentsToAdd(syncProfile, destinationList, sourceList, SourceAppointmentsToAdd);
             return true;
         }
 
-        public bool GetDestEntriesToDelete(CalendarSyncProfile syncProfile, CalendarAppointments sourceList,
-            CalendarAppointments destinationList)
+        public bool GetDestEntriesToDelete(CalendarSyncProfile syncProfile, AppointmentsWrapper sourceList,
+            AppointmentsWrapper destinationList)
         {
             EvaluateAppointmentsToDelete(syncProfile, sourceList, destinationList, DestAppointmentsToDelete,
                 DestAppointmentsToUpdate, SourceAppointmentsToUpdate, DestOrphanEntries);
             return true;
         }
 
-        public bool GetDestEntriesToAdd(CalendarSyncProfile syncProfile, CalendarAppointments sourceList,
-            CalendarAppointments destinationList)
+        public bool GetDestEntriesToAdd(CalendarSyncProfile syncProfile, AppointmentsWrapper sourceList,
+            AppointmentsWrapper destinationList)
         {
             EvaluateAppointmentsToAdd(syncProfile, sourceList, destinationList, DestAppointmentsToAdd);
             return true;
@@ -83,7 +83,7 @@ namespace CalendarSyncPlus.SyncEngine
         /// <returns>
         /// </returns>
         private void EvaluateAppointmentsToDelete(CalendarSyncProfile syncProfile,
-            CalendarAppointments sourceList, CalendarAppointments destinationList,
+            AppointmentsWrapper sourceList, AppointmentsWrapper destinationList,
             List<Appointment> destAppointmentsToDelete,
             List<Appointment> destAppointmentsToUpdate, List<Appointment> sourceAppointmentsToUpdate,
             List<Appointment> destOrphanEntries)
@@ -117,7 +117,7 @@ namespace CalendarSyncPlus.SyncEngine
                 //If SourceId is null, it is not a copy of any entry from the selected source calendar
                 if (destAppointment.SourceId == null)
                 {
-                    if (syncProfile.SyncSettings.SyncMode == SyncModeEnum.OneWay)
+                    if (syncProfile.SyncMode == SyncModeEnum.OneWay)
                     {
                         //If mode is one way & user has disabled delete, do not remove this entry, as this is an original entry in the calendar
                         //Else this entry is not a copy of any appointment in source calendar so delete it
@@ -158,7 +158,7 @@ namespace CalendarSyncPlus.SyncEngine
                 {
                     //If the mode is two way, look for its parent copy in Source calendar
                     Appointment sourceAppointment;
-                    if (syncProfile.SyncSettings.SyncMode == SyncModeEnum.TwoWay
+                    if (syncProfile.SyncMode == SyncModeEnum.TwoWay
                         && syncProfile.SyncSettings.KeepLastModifiedVersion)
                     {
                         //If no entry was found, it is original entry of the calendar, Ignore
@@ -236,7 +236,7 @@ namespace CalendarSyncPlus.SyncEngine
                 //All entries need to be added
                 return;
             }
-            if (syncProfile.SyncSettings.SyncMode == SyncModeEnum.TwoWay &&
+            if (syncProfile.SyncMode == SyncModeEnum.TwoWay &&
                 syncProfile.SyncSettings.KeepLastModifiedVersion)
             {
                 foreach (var sourceAppointment in sourceList)

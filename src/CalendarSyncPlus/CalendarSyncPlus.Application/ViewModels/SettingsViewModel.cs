@@ -33,9 +33,10 @@ using CalendarSyncPlus.Authentication.Google;
 using CalendarSyncPlus.Common.Log;
 using CalendarSyncPlus.Domain.Models;
 using CalendarSyncPlus.Domain.Models.Preferences;
-using CalendarSyncPlus.ExchangeWebServices.ExchangeWeb;
+using CalendarSyncPlus.ExchangeWebServices.Calendar;
+using CalendarSyncPlus.GoogleServices.Calendar;
 using CalendarSyncPlus.GoogleServices.Google;
-using CalendarSyncPlus.OutlookServices.Outlook;
+using CalendarSyncPlus.OutlookServices.Calendar;
 using CalendarSyncPlus.Services.Interfaces;
 using log4net;
 using MahApps.Metro.Controls.Dialogs;
@@ -101,10 +102,10 @@ namespace CalendarSyncPlus.Application.ViewModels
                 UserName = ProxySettings.UserName
             };
             ApplyProxySettings();
-            Settings.SyncProfiles.Clear();
+            Settings.CalendarSyncProfiles.Clear();
             foreach (var profileViewModel in SyncProfileList)
             {
-                Settings.SyncProfiles.Add(profileViewModel.SaveCurrentSyncProfile());
+                Settings.CalendarSyncProfiles.Add(profileViewModel.SaveCurrentSyncProfile());
             }
 
             if (RunApplicationAtSystemStartup)
@@ -205,7 +206,7 @@ namespace CalendarSyncPlus.Application.ViewModels
         private void LoadProfiles()
         {
             var profileList = new ObservableCollection<ProfileViewModel>();
-            foreach (var syncProfile in Settings.SyncProfiles)
+            foreach (var syncProfile in Settings.CalendarSyncProfiles)
             {
                 var viewModel = new ProfileViewModel(syncProfile, GoogleCalendarService, OutlookCalendarService,
                     MessageService,
@@ -280,7 +281,7 @@ namespace CalendarSyncPlus.Application.ViewModels
 
                     await MessageService.ShowMessage("Google account successfully disconnected");
 
-                    foreach (var calendarSyncProfile in Settings.SyncProfiles)
+                    foreach (var calendarSyncProfile in Settings.CalendarSyncProfiles)
                     {
                         if (calendarSyncProfile.GoogleAccount != null &&
                             calendarSyncProfile.GoogleAccount.Name.Equals(googleAccount.Name))

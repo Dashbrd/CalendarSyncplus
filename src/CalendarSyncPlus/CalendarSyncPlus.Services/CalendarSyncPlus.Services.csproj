@@ -68,6 +68,11 @@
     </Compile>
     <Compile Include="Calendars\CalendarServiceFactory.cs" />
     <Compile Include="Calendars\CalendarUpdateService.cs" />
+    <Compile Include="Contacts\ContactsServiceFactory.cs" />
+    <Compile Include="Contacts\ContactsUpdateService.cs" />
+    <Compile Include="Contacts\Interfaces\IContactService.cs" />
+    <Compile Include="Contacts\Interfaces\IContactsServiceFactory.cs" />
+    <Compile Include="Contacts\Interfaces\IContactsUpdateService.cs" />
     <Compile Include="Sync\AnnouncementService.cs" />
     <Compile Include="Sync\Interfaces\IAnnouncementService.cs" />
     <Compile Include="Sync\Interfaces\IChildViewService.cs" />
@@ -105,8 +110,6 @@
     <Compile Include="Utilities\ExtensionMethods.cs" />
     <Compile Include="Utilities\StatusHelper.cs" />
     <Compile Include="Utilities\SyncEventArgs.cs" />
-    <Compile Include="Wrappers\AppointmentListWrapper.cs" />
-    <Compile Include="Wrappers\TaskListWrapper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

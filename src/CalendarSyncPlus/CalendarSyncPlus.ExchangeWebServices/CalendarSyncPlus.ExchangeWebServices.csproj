@@ -60,8 +60,8 @@
     <Compile Include="..\Shared\AssemblyInfo.cs">
       <Link>AssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="ExchangeWeb\ExchangeWebCalendarService.cs" />
-    <Compile Include="ExchangeWeb\IExchangeWebCalendarService.cs" />
+    <Compile Include="Calendar\ExchangeWebCalendarService.cs" />
+    <Compile Include="Calendar\IExchangeWebCalendarService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

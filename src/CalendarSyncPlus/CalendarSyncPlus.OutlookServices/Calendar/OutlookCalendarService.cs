@@ -1,23 +1,4 @@
-﻿#region File Header
-
-// /******************************************************************************
-//  * 
-//  *      Copyright (C) Ankesh Dave 2015 All Rights Reserved. Confidential
-//  * 
-//  ******************************************************************************
-//  * 
-//  *      Project:        CalendarSyncPlus
-//  *      SubProject:     CalendarSyncPlus.Application
-//  *      Author:         Ankesh Dave
-//  *      Created On:     07-02-2015 1:02 PM
-//  *      Modified On:    12-02-2015 10:28 PM
-//  *      FileName:       OutlookCalendarService.cs
-//  * 
-//  *****************************************************************************/
-
-#endregion
-
-#region Imports
+﻿#region Imports
 
 using System;
 using System.Collections.Generic;
@@ -33,20 +14,18 @@ using CalendarSyncPlus.Domain.Models;
 using CalendarSyncPlus.Domain.Models.Preferences;
 using CalendarSyncPlus.Domain.Wrappers;
 using CalendarSyncPlus.OutlookServices.Utilities;
+using CalendarSyncPlus.OutlookServices.Wrappers;
 using CalendarSyncPlus.Services.Calendars.Interfaces;
-using CalendarSyncPlus.Services.Interfaces;
-using CalendarSyncPlus.Services.Wrappers;
 using log4net;
 using Microsoft.Office.Interop.Outlook;
 using Microsoft.Win32;
-using AppRecipient = CalendarSyncPlus.Domain.Models.Recipient;
 using Category = CalendarSyncPlus.Domain.Models.Category;
 using Exception = System.Exception;
 using Recipient = Microsoft.Office.Interop.Outlook.Recipient;
-
+using ThreadingTask = System.Threading.Tasks.Task;
 #endregion
 
-namespace CalendarSyncPlus.OutlookServices.Outlook
+namespace CalendarSyncPlus.OutlookServices.Calendar
 {
     [Export(typeof (ICalendarService)), Export(typeof (IOutlookCalendarService))]
     [ExportMetadata("ServiceType", ServiceType.OutlookDesktop)]
@@ -91,7 +70,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
 
             while (Process.GetProcessesByName("OUTLOOK").Any())
             {
-                Task.Delay(5000);
+                ThreadingTask.Delay(5000);
             }
             return wrapper.Success;
         }
@@ -106,7 +85,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
         /// <param name="addedAppointment"></param>
         /// <returns>
         /// </returns>
-        private AppointmentListWrapper AddEventsToOutlook(List<Appointment> calendarAppointments, bool addDescription,
+        private OutlookAppointmentsWrapper AddEventsToOutlook(List<Appointment> calendarAppointments, bool addDescription,
             bool addReminder, bool addAttendees, bool attendeesToDescription, List<Appointment> addedAppointment)
         {
             var disposeOutlookInstances = false;
@@ -158,7 +137,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
             catch (Exception exception)
             {
                 Logger.Error(exception);
-                return new AppointmentListWrapper
+                return new OutlookAppointmentsWrapper
                 {
                     WaitForApplicationQuit = disposeOutlookInstances,
                     Success = false
@@ -196,7 +175,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
             }
-            return new AppointmentListWrapper
+            return new OutlookAppointmentsWrapper
             {
                 WaitForApplicationQuit = disposeOutlookInstances,
                 Success = true
@@ -325,12 +304,12 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
 
             while (Process.GetProcessesByName("OUTLOOK").Any())
             {
-                Task.Delay(5000);
+                ThreadingTask.Delay(5000);
             }
             return wrapper.Success;
         }
 
-        private AppointmentListWrapper DeleteEventsFromOutlook(List<Appointment> calendarAppointments, List<Appointment> deletedAppointments)
+        private OutlookAppointmentsWrapper DeleteEventsFromOutlook(List<Appointment> calendarAppointments, List<Appointment> deletedAppointments)
         {
             var disposeOutlookInstances = false;
             Application application = null;
@@ -381,7 +360,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
             catch (Exception exception)
             {
                 Logger.Error(exception);
-                return new AppointmentListWrapper
+                return new OutlookAppointmentsWrapper
                 {
                     WaitForApplicationQuit = disposeOutlookInstances,
                     Success = false
@@ -408,7 +387,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
             }
-            return new AppointmentListWrapper
+            return new OutlookAppointmentsWrapper
             {
                 WaitForApplicationQuit = disposeOutlookInstances,
                 Success = true
@@ -429,7 +408,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
 
             while (Process.GetProcessesByName("OUTLOOK").Any())
             {
-                Task.Delay(5000);
+                ThreadingTask.Delay(5000);
             }
             return wrapper.Success;
         }
@@ -444,7 +423,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
         /// <param name="updatedAppointments"></param>
         /// <returns>
         /// </returns>
-        private AppointmentListWrapper UpdateEventsToOutlook(List<Appointment> calendarAppointments, bool addDescription,
+        private OutlookAppointmentsWrapper UpdateEventsToOutlook(List<Appointment> calendarAppointments, bool addDescription,
             bool addReminder, bool addAttendees, bool attendeesToDescription, List<Appointment> updatedAppointments)
         {
             var disposeOutlookInstances = false;
@@ -506,7 +485,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
             catch (Exception exception)
             {
                 Logger.Error(exception);
-                return new AppointmentListWrapper
+                return new OutlookAppointmentsWrapper
                 {
                     WaitForApplicationQuit = disposeOutlookInstances,
                     Success = false
@@ -544,7 +523,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
             }
-            return new AppointmentListWrapper
+            return new OutlookAppointmentsWrapper
             {
                 WaitForApplicationQuit = disposeOutlookInstances,
                 Success = true
@@ -693,7 +672,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
             }
         }
 
-        private AppointmentListWrapper GetOutlookEntriesForSelectedTimeRange(DateTime startDate, DateTime endDate)
+        private OutlookAppointmentsWrapper GetOutlookEntriesForSelectedTimeRange(DateTime startDate, DateTime endDate)
         {
             var disposeOutlookInstances = false;
             Application application = null;
@@ -769,7 +748,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
             catch (Exception exception)
             {
                 Logger.Error(exception);
-                return new AppointmentListWrapper
+                return new OutlookAppointmentsWrapper
                 {
                     Appointments = null,
                     WaitForApplicationQuit = disposeOutlookInstances
@@ -815,7 +794,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
                 GC.WaitForPendingFinalizers();
             }
 
-            return new AppointmentListWrapper
+            return new OutlookAppointmentsWrapper
             {
                 Appointments = outlookAppointments,
                 WaitForApplicationQuit = disposeOutlookInstances
@@ -897,7 +876,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
         {
             foreach (Recipient attendee in appointmentItem.Recipients)
             {
-                var recipient = new AppRecipient();
+                var recipient = new Domain.Models.Recipient();
                 string name, email;
                 if (attendee.GetEmailFromName(out name, out email))
                 {
@@ -945,7 +924,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
             }
             while (Process.GetProcessesByName("OUTLOOK").Any())
             {
-                Task.Delay(5000);
+                ThreadingTask.Delay(5000);
             }
             return list.Appointments;
         }
@@ -1092,11 +1071,11 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
             }
             while (Process.GetProcessesByName("OUTLOOK").Any())
             {
-                Task.Delay(5000);
+                ThreadingTask.Delay(5000);
             }
         }
 
-        private AppointmentListWrapper SetColorForSelectedCalendar(Category background)
+        private OutlookAppointmentsWrapper SetColorForSelectedCalendar(Category background)
         {
             var disposeOutlookInstances = false;
             Application application = null;
@@ -1123,7 +1102,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
             catch (Exception exception)
             {
                 Logger.Error(exception);
-                return new AppointmentListWrapper
+                return new OutlookAppointmentsWrapper
                 {
                     Appointments = null,
                     WaitForApplicationQuit = disposeOutlookInstances
@@ -1150,7 +1129,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
                 GC.WaitForPendingFinalizers();
             }
 
-            return new AppointmentListWrapper
+            return new OutlookAppointmentsWrapper
             {
                 Appointments = null,
                 WaitForApplicationQuit = disposeOutlookInstances
@@ -1160,11 +1139,11 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
         #endregion
 
         #region IOutlookCalendarService Members
-        public async Task<CalendarAppointments> UpdateCalendarEvents(List<Appointment> calendarAppointments, bool addDescription,
+        public async Task<AppointmentsWrapper> UpdateCalendarEvents(List<Appointment> calendarAppointments, bool addDescription,
           bool addReminder, bool addAttendees, bool attendeesToDescription,
           IDictionary<string, object> calendarSpecificData)
         {
-            var updateAppointments = new CalendarAppointments();
+            var updateAppointments = new AppointmentsWrapper();
             if (!calendarAppointments.Any())
             {
                 updateAppointments.IsSuccess = true;
@@ -1185,7 +1164,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
         {
             CheckCalendarSpecificData(calendarSpecificData);
 
-            await Task.Factory.StartNew(
+            await ThreadingTask.Factory.StartNew(
                 () => SetColor(background));
         }
 
@@ -1240,7 +1219,7 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
 
                 while (disposeOutlookInstances && Process.GetProcessesByName("OUTLOOK").Any())
                 {
-                    Task.Delay(5000);
+                    ThreadingTask.Delay(5000);
                 }
             }
 
@@ -1253,11 +1232,11 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
         }
 
 
-        public async Task<CalendarAppointments> GetCalendarEventsInRangeAsync(DateTime startDate, DateTime endDate,
+        public async Task<AppointmentsWrapper> GetCalendarEventsInRangeAsync(DateTime startDate, DateTime endDate,
             IDictionary<string, object> calendarSpecificData)
         {
             CheckCalendarSpecificData(calendarSpecificData);
-            var calendarAppointments = new CalendarAppointments();
+            var calendarAppointments = new AppointmentsWrapper();
 
             var appointmentList =
                 await
@@ -1316,12 +1295,12 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
         }
 
 
-        public async Task<CalendarAppointments> AddCalendarEvents(List<Appointment> calendarAppointments,
+        public async Task<AppointmentsWrapper> AddCalendarEvents(List<Appointment> calendarAppointments,
             bool addDescription,
             bool addReminder, bool addAttendees, bool attendeesToDescription,
             IDictionary<string, object> calendarSpecificData)
         {
-            var addedAppointments = new CalendarAppointments();
+            var addedAppointments = new AppointmentsWrapper();
             if (!calendarAppointments.Any())
             {
                 addedAppointments.IsSuccess = true;
@@ -1345,10 +1324,10 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
         /// <param name="calendarSpecificData"></param>
         /// <returns>
         /// </returns>
-        public async Task<CalendarAppointments> DeleteCalendarEvents(List<Appointment> calendarAppointments,
+        public async Task<AppointmentsWrapper> DeleteCalendarEvents(List<Appointment> calendarAppointments,
             IDictionary<string, object> calendarSpecificData)
         {
-            var deleteAppointments = new CalendarAppointments();
+            var deleteAppointments = new AppointmentsWrapper();
             if (!calendarAppointments.Any())
             {
                 deleteAppointments.IsSuccess = true;

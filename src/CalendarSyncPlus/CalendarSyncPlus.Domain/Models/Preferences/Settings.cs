@@ -1,10 +1,11 @@
 ﻿using System.Collections.ObjectModel;
 using System.Waf.Applications;
+using System.Waf.Foundation;
 using System.Xml.Serialization;
 
 namespace CalendarSyncPlus.Domain.Models.Preferences
 {
-    public class Settings
+    public class Settings : Model
     {
         public string SettingsVersion { get; set; }
 
@@ -18,12 +19,19 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
 
         /// <summary>
         /// </summary>
-        public ObservableCollection<CalendarSyncProfile> SyncProfiles { get; set; }
+        public ObservableCollection<CalendarSyncProfile> CalendarSyncProfiles { get; set; }
 
+
+        public ObservableCollection<ContactsSyncProfile> ContactSyncProfiles { get; set; }
+
+        
+        public ObservableCollection<TaskSyncProfile> TaskSyncProfiles { get; set; }
         /// <summary>
         /// </summary>
         public AppSettings AppSettings { get; set; }
-
+        /// <summary>
+        /// </summary>
+        public LogSettings LogSettings { get; set; }
         /// <summary>
         /// </summary>
         [XmlIgnore]
@@ -50,7 +58,7 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
                         ProxyType = ProxyType.Auto
                     }
                 },
-                SyncProfiles = new ObservableCollection<CalendarSyncProfile>
+                CalendarSyncProfiles = new ObservableCollection<CalendarSyncProfile>
                 {
                     CalendarSyncProfile.GetDefaultSyncProfile()
                 },

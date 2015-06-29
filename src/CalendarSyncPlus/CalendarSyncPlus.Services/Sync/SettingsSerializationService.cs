@@ -157,20 +157,20 @@ namespace CalendarSyncPlus.Services
 
         private void ValidateSettings(Settings result)
         {
-            if (result.SyncProfiles == null)
+            if (result.CalendarSyncProfiles == null)
             {
-                result.SyncProfiles = new ObservableCollection<CalendarSyncProfile>();
+                result.CalendarSyncProfiles = new ObservableCollection<CalendarSyncProfile>();
             }
 
-            if (result.SyncProfiles.Count == 0)
+            if (result.CalendarSyncProfiles.Count == 0)
             {
-                result.SyncProfiles.Add(CalendarSyncProfile.GetDefaultSyncProfile());
+                result.CalendarSyncProfiles.Add(CalendarSyncProfile.GetDefaultSyncProfile());
             }
 
-            foreach (var syncProfile in result.SyncProfiles)
+            foreach (var syncProfile in result.CalendarSyncProfiles)
             {
-                syncProfile.SetCalendarTypes();
-                if (syncProfile.SyncSettings == null || syncProfile.SyncSettings.SyncFrequency == null)
+                syncProfile.SetSourceDestTypes();
+                if (syncProfile.SyncSettings == null || syncProfile.SyncFrequency == null)
                 {
                     syncProfile.SyncSettings = SyncSettings.GetDefault();
                 }

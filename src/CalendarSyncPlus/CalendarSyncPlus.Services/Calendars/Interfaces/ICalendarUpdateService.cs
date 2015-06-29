@@ -47,8 +47,8 @@ namespace CalendarSyncPlus.Services.Calendars.Interfaces
 
         #region Properties
 
-        CalendarAppointments DestinationAppointments { get; set; }
-        CalendarAppointments SourceAppointments { get; set; }
+        AppointmentsWrapper DestinationAppointments { get; set; }
+        AppointmentsWrapper SourceAppointments { get; set; }
         Appointment CurrentAppointment { get; set; }
         string SyncStatus { get; set; }
         ICalendarService SourceCalendarService { get; set; }

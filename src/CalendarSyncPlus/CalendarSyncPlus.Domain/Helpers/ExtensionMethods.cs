@@ -22,8 +22,8 @@ namespace CalendarSyncPlus.Domain.Helpers
 
         public static bool ValidateSettings(this Settings settings)
         {
-            if (settings == null || !settings.SyncProfiles.Any() ||
-                settings.SyncProfiles.All(t => !t.ValidateOutlookSettings() || t.GoogleAccount == null))
+            if (settings == null || !settings.CalendarSyncProfiles.Any() ||
+                settings.CalendarSyncProfiles.All(t => !t.ValidateOutlookSettings() || t.GoogleAccount == null))
             {
                 return false;
             }

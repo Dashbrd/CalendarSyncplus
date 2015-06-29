@@ -240,7 +240,7 @@ namespace CalendarSyncPlus.Application.ViewModels
                 SetProperty(ref _settings, value);
                 if (_settings != null)
                 {
-                    ScheduledSyncProfiles = Settings.SyncProfiles.Where(t => t.IsSyncEnabled).ToList();
+                    ScheduledSyncProfiles = Settings.CalendarSyncProfiles.Where(t => t.IsSyncEnabled).ToList();
                     if (!IsPeriodicSyncStarted)
                     {
                         if ((Settings.AppSettings.IsManualSynchronization && Settings.AppSettings.PeriodicSyncOn) ||
@@ -408,11 +408,11 @@ namespace CalendarSyncPlus.Application.ViewModels
                 var result = await SyncStartService.Start(OnTimerElapsed);
                 if (result)
                 {
-                    foreach (var syncProfile in Settings.SyncProfiles)
+                    foreach (var syncProfile in Settings.CalendarSyncProfiles)
                     {
-                        if (syncProfile.IsSyncEnabled && syncProfile.SyncSettings.SyncFrequency != null)
+                        if (syncProfile.IsSyncEnabled && syncProfile.SyncFrequency != null)
                         {
-                            syncProfile.NextSync = syncProfile.SyncSettings.SyncFrequency.GetNextSyncTime(DateTime.Now);
+                            syncProfile.NextSync = syncProfile.SyncFrequency.GetNextSyncTime(DateTime.Now);
                         }
                     }
 
@@ -619,7 +619,7 @@ namespace CalendarSyncPlus.Application.ViewModels
                 {
                     StartTime = syncProfile.LastSync.GetValueOrDefault(),
                     ProfileName = syncProfile.Name,
-                    CalendarSyncDirection = syncProfile.SyncSettings.CalendarSyncDirection.ToString()
+                    CalendarSyncDirection = syncProfile.SyncDirection.ToString()
                 };
                 SyncSummary.SyncMetrics.Add(syncMetric);
                 var result = SyncStartService.SyncNow(syncProfile, syncMetric, SyncCallback);
@@ -655,7 +655,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             syncMetric.ElapsedSeconds = totalSeconds;
             ShowNotification(false);
 
-            syncProfile.NextSync = syncProfile.SyncSettings.SyncFrequency.GetNextSyncTime(
+            syncProfile.NextSync = syncProfile.SyncFrequency.GetNextSyncTime(
                 DateTime.Now);
 
             IsSyncInProgress = false;

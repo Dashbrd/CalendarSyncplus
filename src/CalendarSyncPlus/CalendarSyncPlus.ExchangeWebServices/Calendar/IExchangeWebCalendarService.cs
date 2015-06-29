@@ -2,9 +2,8 @@
 using CalendarSyncPlus.Domain.Models;
 using CalendarSyncPlus.Domain.Models.Preferences;
 using CalendarSyncPlus.Services.Calendars.Interfaces;
-using CalendarSyncPlus.Services.Interfaces;
 
-namespace CalendarSyncPlus.ExchangeWebServices.ExchangeWeb
+namespace CalendarSyncPlus.ExchangeWebServices.Calendar
 {
     public interface IExchangeWebCalendarService : ICalendarService
     {

@@ -18,9 +18,9 @@ namespace CalendarSyncPlus.Services.Tasks
             throw new NotImplementedException();
         }
 
-        public TaskWrapper DestinationAppointments { get; set; }
+        public TasksWrapper DestinationAppointments { get; set; }
 
-        public TaskWrapper SourceAppointments
+        public TasksWrapper SourceAppointments
         {
             get;
             set;

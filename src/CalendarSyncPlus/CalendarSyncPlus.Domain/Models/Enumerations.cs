@@ -65,7 +65,7 @@ namespace CalendarSyncPlus.Domain.Models
         AsAppointments = 32
     }
 
-    public enum CalendarSyncDirectionEnum
+    public enum SyncDirectionEnum
     {
         OutlookGoogleOneWay = 0,
         OutlookGoogleOneWayToSource = 1,

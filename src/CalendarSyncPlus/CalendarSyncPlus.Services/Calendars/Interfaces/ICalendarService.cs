@@ -29,19 +29,19 @@ namespace CalendarSyncPlus.Services.Calendars.Interfaces
     {
         string CalendarServiceName { get; }
 
-        Task<CalendarAppointments> DeleteCalendarEvents(List<Appointment> calendarAppointments,
+        Task<AppointmentsWrapper> DeleteCalendarEvents(List<Appointment> calendarAppointments,
             IDictionary<string, object> calendarSpecificData);
 
-        Task<CalendarAppointments> GetCalendarEventsInRangeAsync(DateTime startDate, DateTime endDate,
+        Task<AppointmentsWrapper> GetCalendarEventsInRangeAsync(DateTime startDate, DateTime endDate,
             IDictionary<string, object> calendarSpecificData);
 
-        Task<CalendarAppointments> AddCalendarEvents(List<Appointment> calendarAppointments, bool addDescription,
+        Task<AppointmentsWrapper> AddCalendarEvents(List<Appointment> calendarAppointments, bool addDescription,
             bool addReminder, bool addAttendees, bool attendeesToDescription,
             IDictionary<string, object> calendarSpecificData);
 
         void CheckCalendarSpecificData(IDictionary<string, object> calendarSpecificData);
 
-        Task<CalendarAppointments> UpdateCalendarEvents(List<Appointment> calendarAppointments, bool addDescription,
+        Task<AppointmentsWrapper> UpdateCalendarEvents(List<Appointment> calendarAppointments, bool addDescription,
             bool addReminder, bool addAttendees, bool attendeesToDescription,
             IDictionary<string, object> calendarSpecificData);
 

@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CalendarSyncPlus.Domain.Models;
 using CalendarSyncPlus.Domain.Models.Preferences;
 using CalendarSyncPlus.Domain.Wrappers;
@@ -11,10 +8,10 @@ using CalendarSyncPlus.SyncEngine.Interfaces;
 
 namespace CalendarSyncPlus.SyncEngine
 {
-    [Export(typeof(ITaskSyncEngine))]
-    public class TaskSyncEngine : ITaskSyncEngine
+    [Export(typeof(IContactsSyncEngine))]
+    public class ContactsSyncEngine : IContactsSyncEngine
     {
-        public List<ReminderTask> SourceTasksToUpdate
+        public List<Contact> SourceContactsToUpdate
         {
             get
             {
@@ -26,7 +23,7 @@ namespace CalendarSyncPlus.SyncEngine
             }
         }
 
-        public List<ReminderTask> SourceOrphanEntries
+        public List<Contact> SourceOrphanEntries
         {
             get
             {
@@ -38,7 +35,7 @@ namespace CalendarSyncPlus.SyncEngine
             }
         }
 
-        public List<ReminderTask> SourceTasksToDelete
+        public List<Contact> SourceContactsToDelete
         {
             get
             {
@@ -50,7 +47,7 @@ namespace CalendarSyncPlus.SyncEngine
             }
         }
 
-        public List<ReminderTask> SourceTasksToAdd
+        public List<Contact> SourceContactsToAdd
         {
             get
             {
@@ -62,7 +59,7 @@ namespace CalendarSyncPlus.SyncEngine
             }
         }
 
-        public List<ReminderTask> DestTasksToUpdate
+        public List<Contact> DestContactsToUpdate
         {
             get
             {
@@ -74,7 +71,7 @@ namespace CalendarSyncPlus.SyncEngine
             }
         }
 
-        public List<ReminderTask> DestTasksToDelete
+        public List<Contact> DestContactsToDelete
         {
             get
             {
@@ -86,7 +83,7 @@ namespace CalendarSyncPlus.SyncEngine
             }
         }
 
-        public List<ReminderTask> DestTasksToAdd
+        public List<Contact> DestContactsToAdd
         {
             get
             {
@@ -98,7 +95,7 @@ namespace CalendarSyncPlus.SyncEngine
             }
         }
 
-        public List<ReminderTask> DestOrphanEntries
+        public List<Contact> DestOrphanEntries
         {
             get
             {
@@ -110,22 +107,22 @@ namespace CalendarSyncPlus.SyncEngine
             }
         }
 
-        public bool GetSourceEntriesToDelete(TaskSyncProfile syncProfile, TasksWrapper sourceList, TasksWrapper destinationList)
+        public bool GetSourceEntriesToDelete(ContactsSyncProfile syncProfile, ContactsWrapper sourceList, ContactsWrapper destinationList)
         {
             throw new NotImplementedException();
         }
 
-        public bool GetSourceEntriesToAdd(TaskSyncProfile syncProfile, TasksWrapper sourceList, TasksWrapper destinationList)
+        public bool GetSourceEntriesToAdd(ContactsSyncProfile syncProfile, ContactsWrapper sourceList, ContactsWrapper destinationList)
         {
             throw new NotImplementedException();
         }
 
-        public bool GetDestEntriesToDelete(TaskSyncProfile syncProfile, TasksWrapper sourceList, TasksWrapper destinationList)
+        public bool GetDestEntriesToDelete(ContactsSyncProfile syncProfile, ContactsWrapper sourceList, ContactsWrapper destinationList)
         {
             throw new NotImplementedException();
         }
 
-        public bool GetDestEntriesToAdd(TaskSyncProfile syncProfile, TasksWrapper sourceList, TasksWrapper destinationList)
+        public bool GetDestEntriesToAdd(ContactsSyncProfile syncProfile, ContactsWrapper sourceList, ContactsWrapper destinationList)
         {
             throw new NotImplementedException();
         }

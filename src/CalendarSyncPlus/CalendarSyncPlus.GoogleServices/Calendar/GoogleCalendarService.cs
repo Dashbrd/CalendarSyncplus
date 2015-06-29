@@ -33,7 +33,6 @@ using CalendarSyncPlus.Domain.Models;
 using CalendarSyncPlus.Domain.Models.Preferences;
 using CalendarSyncPlus.Domain.Wrappers;
 using CalendarSyncPlus.Services.Calendars.Interfaces;
-using CalendarSyncPlus.Services.Interfaces;
 using CalendarSyncPlus.Services.Utilities;
 using Google;
 using Google.Apis.Calendar.v3;
@@ -43,7 +42,7 @@ using log4net;
 
 #endregion
 
-namespace CalendarSyncPlus.GoogleServices.Google
+namespace CalendarSyncPlus.GoogleServices.Calendar
 {
     [Export(typeof(ICalendarService)), Export(typeof(IGoogleCalendarService))]
     [ExportMetadata("ServiceType", ServiceType.Google)]
@@ -67,11 +66,11 @@ namespace CalendarSyncPlus.GoogleServices.Google
 
         #endregion
 
-        public async Task<CalendarAppointments> UpdateCalendarEvents(List<Appointment> calendarAppointments, bool addDescription,
+        public async Task<AppointmentsWrapper> UpdateCalendarEvents(List<Appointment> calendarAppointments, bool addDescription,
             bool addReminder, bool addAttendees, bool attendeesToDescription,
             IDictionary<string, object> calendarSpecificData)
         {
-            var updatedAppointments = new CalendarAppointments();
+            var updatedAppointments = new AppointmentsWrapper();
             if (!calendarAppointments.Any())
             {
                 updatedAppointments.IsSuccess = true;
@@ -564,12 +563,12 @@ namespace CalendarSyncPlus.GoogleServices.Google
             return localCalendarList;
         }
 
-        public async Task<CalendarAppointments> AddCalendarEvents(List<Appointment> calendarAppointments,
+        public async Task<AppointmentsWrapper> AddCalendarEvents(List<Appointment> calendarAppointments,
             bool addDescription,
             bool addReminder, bool addAttendees, bool attendeesToDescription,
             IDictionary<string, object> calendarSpecificData)
         {
-            var addedAppointments = new CalendarAppointments();
+            var addedAppointments = new AppointmentsWrapper();
             if (!calendarAppointments.Any())
             {
                 addedAppointments.IsSuccess = true;
@@ -663,10 +662,10 @@ namespace CalendarSyncPlus.GoogleServices.Google
             return addedEvents;
         }
 
-        public async Task<CalendarAppointments> DeleteCalendarEvents(List<Appointment> calendarAppointments,
+        public async Task<AppointmentsWrapper> DeleteCalendarEvents(List<Appointment> calendarAppointments,
             IDictionary<string, object> calendarSpecificData)
         {
-            var deletedAppointments = new CalendarAppointments();
+            var deletedAppointments = new AppointmentsWrapper();
             if (!calendarAppointments.Any())
             {
                 deletedAppointments.IsSuccess = true;
@@ -723,7 +722,7 @@ namespace CalendarSyncPlus.GoogleServices.Google
             return deletedAppointments;
         }
 
-        public async Task<CalendarAppointments> GetCalendarEventsInRangeAsync(DateTime startDate, DateTime endDate,
+        public async Task<AppointmentsWrapper> GetCalendarEventsInRangeAsync(DateTime startDate, DateTime endDate,
             IDictionary<string, object> calendarSpecificData)
         {
             CheckCalendarSpecificData(calendarSpecificData);
@@ -789,7 +788,7 @@ namespace CalendarSyncPlus.GoogleServices.Google
                 return null;
             }
 
-            var calendarAppointments = new CalendarAppointments { CalendarId = CalendarId };
+            var calendarAppointments = new AppointmentsWrapper { CalendarId = CalendarId };
             calendarAppointments.AddRange(finalEventList);
             return calendarAppointments;
         }

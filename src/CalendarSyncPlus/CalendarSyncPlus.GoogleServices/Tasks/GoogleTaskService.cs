@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
-using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Threading.Tasks;
 using CalendarSyncPlus.Authentication.Google;
@@ -9,13 +8,13 @@ using CalendarSyncPlus.Common.Log;
 using CalendarSyncPlus.Common.MetaData;
 using CalendarSyncPlus.Domain.Models;
 using CalendarSyncPlus.Domain.Wrappers;
+using CalendarSyncPlus.GoogleServices.Google;
 using CalendarSyncPlus.Services.Tasks.Interfaces;
 using Google.Apis.Tasks.v1;
-using Google.Apis.Tasks.v1.Data;
 using log4net;
 using Task = Google.Apis.Tasks.v1.Data.Task;
 
-namespace CalendarSyncPlus.GoogleServices.Google
+namespace CalendarSyncPlus.GoogleServices.Tasks
 {
     [Export(typeof(ITaskService)), Export(typeof(IGoogleTaskService))]
     [ExportMetadata("ServiceType", ServiceType.Google)]
@@ -46,7 +45,7 @@ namespace CalendarSyncPlus.GoogleServices.Google
             
         //}
 
-        public async Task<TaskWrapper> GetReminderTasksInRangeAsync(DateTime startDate, DateTime endDate,
+        public async Task<TasksWrapper> GetReminderTasksInRangeAsync(DateTime startDate, DateTime endDate,
             IDictionary<string, object> calendarSpecificData)
         {
             CheckCalendarSpecificData(calendarSpecificData);
@@ -63,7 +62,7 @@ namespace CalendarSyncPlus.GoogleServices.Google
 
             try
             {
-                Tasks result =   taskListRequest.Execute();
+                global::Google.Apis.Tasks.v1.Data.Tasks result =   taskListRequest.Execute();
                 if (result != null)
                 {
                     while (result.Items != null)

@@ -119,12 +119,12 @@ namespace CalendarSyncPlus.Application.Controllers
                     {
                         _shellViewModel.IsSettingsVisible = false;
                         _shellViewModel.Settings = _settingsViewModel.Settings;
-                        foreach (var syncProfile in _settingsViewModel.Settings.SyncProfiles)
+                        foreach (var syncProfile in _settingsViewModel.Settings.CalendarSyncProfiles)
                         {
-                            if (syncProfile.IsSyncEnabled && syncProfile.SyncSettings.SyncFrequency != null)
+                            if (syncProfile.IsSyncEnabled && syncProfile.SyncFrequency != null)
                             {
                                 syncProfile.NextSync =
-                                    syncProfile.SyncSettings.SyncFrequency.GetNextSyncTime(DateTime.Now);
+                                    syncProfile.SyncFrequency.GetNextSyncTime(DateTime.Now);
                             }
                         }
                     }

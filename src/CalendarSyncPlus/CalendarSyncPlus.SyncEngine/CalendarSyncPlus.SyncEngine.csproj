@@ -49,8 +49,10 @@
       <Link>AssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="CalendarSyncEngine.cs" />
+    <Compile Include="ContactsSyncEngine.cs" />
     <Compile Include="Helpers\ExtensionMethods.cs" />
     <Compile Include="Interfaces\ICalendarSyncEngine.cs" />
+    <Compile Include="Interfaces\IContactsSyncEngine.cs" />
     <Compile Include="Interfaces\ITaskSyncEngine.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TaskSyncEngine.cs" />
