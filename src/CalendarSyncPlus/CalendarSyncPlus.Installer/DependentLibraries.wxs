@@ -208,7 +208,12 @@
               Source="$(var.ProjectDirectory)Microsoft.Threading.Tasks.Extensions.Desktop.dll"
               KeyPath="yes" />
       </Component>
-
+      <Component>
+        <File Id="Microsoft.AspNet.SignalR.Client"
+              Name="Microsoft.AspNet.SignalR.Client.dll"
+              Source="$(var.ProjectDirectory)Microsoft.AspNet.SignalR.Client.dll"
+              KeyPath="yes" />
+      </Component>
 
       <Component>
         <File Id="Google.Apis.Core"
@@ -226,6 +231,24 @@
         <File Id="Google.Apis.Analytics.v3"
               Name="Google.Apis.Analytics.v3.dll"
               Source="$(var.ProjectDirectory)Google.Apis.Analytics.v3.dll"
+              KeyPath="yes" />
+      </Component>
+      <Component>
+        <File Id="Google.GData.Client"
+              Name="Google.GData.Client.dll"
+              Source="$(var.ProjectDirectory)Google.GData.Client.dll"
+              KeyPath="yes" />
+      </Component>
+      <Component>
+        <File Id="Google.GData.Contacts"
+              Name="Google.GData.Contacts.dll"
+              Source="$(var.ProjectDirectory)Google.GData.Contacts.dll"
+              KeyPath="yes" />
+      </Component>
+      <Component>
+        <File Id="Google.GData.Extensions"
+              Name="Google.GData.Extensions.dll"
+              Source="$(var.ProjectDirectory)Google.GData.Extensions.dll"
               KeyPath="yes" />
       </Component>
       <Component>
