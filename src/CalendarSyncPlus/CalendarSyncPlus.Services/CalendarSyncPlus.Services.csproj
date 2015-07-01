@@ -69,10 +69,10 @@
     <Compile Include="Calendars\CalendarServiceFactory.cs" />
     <Compile Include="Calendars\CalendarUpdateService.cs" />
     <Compile Include="Contacts\ContactsServiceFactory.cs" />
-    <Compile Include="Contacts\ContactsUpdateService.cs" />
+    <Compile Include="Contacts\ContactUpdateService.cs" />
     <Compile Include="Contacts\Interfaces\IContactService.cs" />
     <Compile Include="Contacts\Interfaces\IContactsServiceFactory.cs" />
-    <Compile Include="Contacts\Interfaces\IContactsUpdateService.cs" />
+    <Compile Include="Contacts\Interfaces\IContactUpdateService.cs" />
     <Compile Include="Sync\AnnouncementService.cs" />
     <Compile Include="Sync\Interfaces\IAnnouncementService.cs" />
     <Compile Include="Sync\Interfaces\IChildViewService.cs" />

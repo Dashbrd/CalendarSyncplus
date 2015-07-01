@@ -23,6 +23,7 @@ using System.Waf.Applications;
 using CalendarSyncPlus.Application.ViewModels;
 using CalendarSyncPlus.Common.Log;
 using CalendarSyncPlus.Services.Interfaces;
+using CalendarSyncPlus.Services.Sync.Interfaces;
 
 namespace CalendarSyncPlus.Application.Controllers
 {

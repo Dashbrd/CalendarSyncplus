@@ -1,4 +1,5 @@
-﻿using CalendarSyncPlus.Domain.Models;
+﻿using System.ComponentModel;
+using CalendarSyncPlus.Domain.Models;
 using CalendarSyncPlus.Domain.Models.Metrics;
 using CalendarSyncPlus.Domain.Models.Preferences;
 using CalendarSyncPlus.Domain.Wrappers;
@@ -6,7 +7,7 @@ using CalendarSyncPlus.Services.Utilities;
 
 namespace CalendarSyncPlus.Services.Tasks.Interfaces
 {
-    public interface ITaskUpdateService
+    public interface ITaskUpdateService : INotifyPropertyChanged
     {
         #region Public Methods
 
@@ -26,7 +27,7 @@ namespace CalendarSyncPlus.Services.Tasks.Interfaces
         TasksWrapper DestinationAppointments { get; set; }
         TasksWrapper SourceAppointments { get; set; }
         
-        string SyncStatus { get; set; }
+        string TaskSyncStatus { get; set; }
         ITaskService SourceCalendarService { get; set; }
         ITaskService DestinationCalendarService { get; set; }
 

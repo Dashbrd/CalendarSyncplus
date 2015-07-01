@@ -47,7 +47,7 @@ namespace CalendarSyncPlus.Services.Calendars
         private Appointment _currentAppointment;
         private AppointmentsWrapper _destinationAppointments;
         private AppointmentsWrapper _sourceAppointments;
-        private string _syncStatus;
+        private string _calendarSyncStatus;
 
         #endregion
 
@@ -74,8 +74,8 @@ namespace CalendarSyncPlus.Services.Calendars
             IDictionary<string, object> destinationCalendarSpecificData)
         {
             //Update status
-            SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
-            SyncStatus = StatusHelper.GetMessage(SyncStateEnum.SourceAppointmentsReading,
+            CalendarSyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
+            CalendarSyncStatus = StatusHelper.GetMessage(SyncStateEnum.SourceAppointmentsReading,
                 SourceCalendarService.CalendarServiceName);
 
             //Get source calendar
@@ -84,15 +84,15 @@ namespace CalendarSyncPlus.Services.Calendars
                     .Result;
             if (SourceAppointments == null)
             {
-                SyncStatus = StatusHelper.GetMessage(SyncStateEnum.SourceAppointmentsReadFailed);
-                SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
+                CalendarSyncStatus = StatusHelper.GetMessage(SyncStateEnum.SourceAppointmentsReadFailed);
+                CalendarSyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
                 return false;
             }
             //Update status
-            SyncStatus = StatusHelper.GetMessage(SyncStateEnum.SourceAppointmentsRead,
+            CalendarSyncStatus = StatusHelper.GetMessage(SyncStateEnum.SourceAppointmentsRead,
                 SourceCalendarService.CalendarServiceName, SourceAppointments.Count);
-            SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
-            SyncStatus = StatusHelper.GetMessage(SyncStateEnum.DestAppointmentReading,
+            CalendarSyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
+            CalendarSyncStatus = StatusHelper.GetMessage(SyncStateEnum.DestAppointmentReading,
                 DestinationCalendarService.CalendarServiceName);
 
             //Get destination calendar
@@ -100,13 +100,13 @@ namespace CalendarSyncPlus.Services.Calendars
                 destinationCalendarSpecificData).Result;
             if (DestinationAppointments == null)
             {
-                SyncStatus = StatusHelper.GetMessage(SyncStateEnum.DestAppointmentReadFailed);
-                SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
+                CalendarSyncStatus = StatusHelper.GetMessage(SyncStateEnum.DestAppointmentReadFailed);
+                CalendarSyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
                 return false;
             }
-            SyncStatus = StatusHelper.GetMessage(SyncStateEnum.DestAppointmentRead,
+            CalendarSyncStatus = StatusHelper.GetMessage(SyncStateEnum.DestAppointmentRead,
                 DestinationCalendarService.CalendarServiceName, DestinationAppointments.Count);
-            SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
+            CalendarSyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
 
             return true;
         }
@@ -202,19 +202,19 @@ namespace CalendarSyncPlus.Services.Calendars
             IDictionary<string, object> destinationCalendarSpecificData)
         {
             //Update status for reading entries to add
-            SyncStatus = StatusHelper.GetMessage(SyncStateEnum.ReadingEntriesToAdd,
+            CalendarSyncStatus = StatusHelper.GetMessage(SyncStateEnum.ReadingEntriesToAdd,
                 DestinationCalendarService.CalendarServiceName);
             //Get entries to add
             CalendarSyncEngine.GetDestEntriesToAdd(syncProfile, SourceAppointments,
                 DestinationAppointments);
             var appointmentsToAdd = CalendarSyncEngine.DestAppointmentsToAdd;
-            SyncStatus = StatusHelper.GetMessage(SyncStateEnum.EntriesToAdd, appointmentsToAdd.Count);
+            CalendarSyncStatus = StatusHelper.GetMessage(SyncStateEnum.EntriesToAdd, appointmentsToAdd.Count);
             if (appointmentsToAdd.Count == 0)
             {
-                SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
+                CalendarSyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
                 return true;
             }
-            SyncStatus = StatusHelper.GetMessage(SyncStateEnum.AddingEntries,
+            CalendarSyncStatus = StatusHelper.GetMessage(SyncStateEnum.AddingEntries,
                 DestinationCalendarService.CalendarServiceName);
             //Add entries to destination calendar
             var addedAppointments = DestinationCalendarService.AddCalendarEvents(appointmentsToAdd,
@@ -226,9 +226,9 @@ namespace CalendarSyncPlus.Services.Calendars
                 .Result;
             var isSuccess = addedAppointments.IsSuccess;
             //Update status if entries were successfully added
-            SyncStatus =
+            CalendarSyncStatus =
                 StatusHelper.GetMessage(isSuccess ? SyncStateEnum.AddEntriesComplete : SyncStateEnum.AddEntriesFailed);
-            SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
+            CalendarSyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
             if (isSuccess)
             {
                 syncMetric.DestMetric.AddCount = appointmentsToAdd.Count;
@@ -261,8 +261,8 @@ namespace CalendarSyncPlus.Services.Calendars
                 return true;
             }
             //Updating entry isDeleteOperation status
-            SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
-            SyncStatus = StatusHelper.GetMessage(SyncStateEnum.ReadingEntriesToDelete,
+            CalendarSyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
+            CalendarSyncStatus = StatusHelper.GetMessage(SyncStateEnum.ReadingEntriesToDelete,
                 DestinationCalendarService.CalendarServiceName);
             //Getting appointments to isDeleteOperation
             CalendarSyncEngine.GetDestEntriesToDelete(syncProfile,
@@ -296,16 +296,16 @@ namespace CalendarSyncPlus.Services.Calendars
             }
 
             //Updating Get entry isDeleteOperation status
-            SyncStatus = StatusHelper.GetMessage(SyncStateEnum.EntriesToDelete, appointmentsToDelete.Count);
+            CalendarSyncStatus = StatusHelper.GetMessage(SyncStateEnum.EntriesToDelete, appointmentsToDelete.Count);
 
             if (appointmentsToDelete.Count == 0)
             {
-                SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
+                CalendarSyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
                 return true;
             }
 
             //Updating isDeleteOperation status
-            SyncStatus = StatusHelper.GetMessage(SyncStateEnum.DeletingEntries,
+            CalendarSyncStatus = StatusHelper.GetMessage(SyncStateEnum.DeletingEntries,
                 DestinationCalendarService.CalendarServiceName);
 
             //Deleting entries
@@ -314,11 +314,11 @@ namespace CalendarSyncPlus.Services.Calendars
                     .Result;
             var isSuccess = deletedAppointments.IsSuccess;
             //Update status if entries were successfully deleted
-            SyncStatus =
+            CalendarSyncStatus =
                 StatusHelper.GetMessage(isSuccess
                     ? SyncStateEnum.DeletingEntriesComplete
                     : SyncStateEnum.DeletingEntriesFailed);
-            SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
+            CalendarSyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
             if (isSuccess)
             {
                 syncMetric.DestMetric.DeleteCount = appointmentsToDelete.Count;
@@ -344,18 +344,18 @@ namespace CalendarSyncPlus.Services.Calendars
             IDictionary<string, object> sourceCalendarSpecificData)
         {
             //Update status for reading entries to add
-            SyncStatus = StatusHelper.GetMessage(SyncStateEnum.ReadingEntriesToAdd,
+            CalendarSyncStatus = StatusHelper.GetMessage(SyncStateEnum.ReadingEntriesToAdd,
                 SourceCalendarService.CalendarServiceName);
             //Get entries to add
             CalendarSyncEngine.GetSourceEntriesToAdd(syncProfile, SourceAppointments, DestinationAppointments);
             var appointmentsToAdd = CalendarSyncEngine.SourceAppointmentsToAdd;
-            SyncStatus = StatusHelper.GetMessage(SyncStateEnum.EntriesToAdd, appointmentsToAdd.Count);
+            CalendarSyncStatus = StatusHelper.GetMessage(SyncStateEnum.EntriesToAdd, appointmentsToAdd.Count);
             if (appointmentsToAdd.Count == 0)
             {
-                SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
+                CalendarSyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
                 return true;
             }
-            SyncStatus = StatusHelper.GetMessage(SyncStateEnum.AddingEntries, SourceCalendarService.CalendarServiceName);
+            CalendarSyncStatus = StatusHelper.GetMessage(SyncStateEnum.AddingEntries, SourceCalendarService.CalendarServiceName);
 
             //Add entries to calendar
             var addedAppointments = SourceCalendarService.AddCalendarEvents(appointmentsToAdd,
@@ -367,9 +367,9 @@ namespace CalendarSyncPlus.Services.Calendars
                 .Result;
             var isSuccess = addedAppointments.IsSuccess;
             //Update status if entries were successfully added
-            SyncStatus =
+            CalendarSyncStatus =
                 StatusHelper.GetMessage(isSuccess ? SyncStateEnum.AddEntriesComplete : SyncStateEnum.AddEntriesFailed);
-            SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
+            CalendarSyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
 
             if (isSuccess)
             {
@@ -432,33 +432,33 @@ namespace CalendarSyncPlus.Services.Calendars
                 return true;
             }
             //Updating entry isDeleteOperation status
-            SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
-            SyncStatus = StatusHelper.GetMessage(SyncStateEnum.ReadingEntriesToDelete,
+            CalendarSyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
+            CalendarSyncStatus = StatusHelper.GetMessage(SyncStateEnum.ReadingEntriesToDelete,
                 SourceCalendarService.CalendarServiceName);
             //Getting appointments to isDeleteOperation
             CalendarSyncEngine.GetSourceEntriesToDelete(syncProfile, SourceAppointments, DestinationAppointments);
             var appointmentsToDelete = CalendarSyncEngine.SourceAppointmentsToDelete;
             //Updating Get entry isDeleteOperation status
-            SyncStatus = StatusHelper.GetMessage(SyncStateEnum.EntriesToDelete, appointmentsToDelete.Count);
+            CalendarSyncStatus = StatusHelper.GetMessage(SyncStateEnum.EntriesToDelete, appointmentsToDelete.Count);
             if (appointmentsToDelete.Count == 0)
             {
-                SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
+                CalendarSyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
                 return true;
             }
 
             //Updating isDeleteOperation status
-            SyncStatus = StatusHelper.GetMessage(SyncStateEnum.DeletingEntries,
+            CalendarSyncStatus = StatusHelper.GetMessage(SyncStateEnum.DeletingEntries,
                 SourceCalendarService.CalendarServiceName);
             //Deleting entries
             var deletedAppointments =
                 SourceCalendarService.DeleteCalendarEvents(appointmentsToDelete, sourceCalendarSpecificData).Result;
             var isSuccess = deletedAppointments.IsSuccess;
             //Update status if entries were successfully deleted
-            SyncStatus =
+            CalendarSyncStatus =
                 StatusHelper.GetMessage(isSuccess
                     ? SyncStateEnum.DeletingEntriesComplete
                     : SyncStateEnum.DeletingEntriesFailed);
-            SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
+            CalendarSyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
 
             if (isSuccess)
             {
@@ -494,10 +494,10 @@ namespace CalendarSyncPlus.Services.Calendars
             set { SetProperty(ref _currentAppointment, value); }
         }
 
-        public string SyncStatus
+        public string CalendarSyncStatus
         {
-            get { return _syncStatus; }
-            set { SetProperty(ref _syncStatus, value); }
+            get { return _calendarSyncStatus; }
+            set { SetProperty(ref _calendarSyncStatus, value); }
         }
 
         public ICalendarService SourceCalendarService { get; set; }
@@ -515,14 +515,14 @@ namespace CalendarSyncPlus.Services.Calendars
             {
                 CalendarSyncEngine.Clear();
                 //Add log for sync mode
-                SyncStatus = string.Format("Calendar Sync : {0} {2} {1}", SourceCalendarService.CalendarServiceName,
+                CalendarSyncStatus = string.Format("Calendar Sync : {0} {2} {1}", SourceCalendarService.CalendarServiceName,
                     DestinationCalendarService.CalendarServiceName,
                     syncProfile.SyncMode == SyncModeEnum.TwoWay ? "<===>" : "===>");
-                SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
+                CalendarSyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
                 DateTime startDate, endDate;
                 GetDateRange(syncProfile, out startDate, out endDate);
                 //Add log for date range
-                SyncStatus = string.Format("Date Range : {0} - {1}",
+                CalendarSyncStatus = string.Format("Date Range : {0} - {1}",
                     startDate.ToString("d"),
                     endDate.ToString("d"));
 
@@ -605,9 +605,9 @@ namespace CalendarSyncPlus.Services.Calendars
             var isSuccess = true;
             if (CalendarSyncEngine.SourceAppointmentsToUpdate.Any())
             {
-                SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
+                CalendarSyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
                 //Update status for reading entries to update
-                SyncStatus = StatusHelper.GetMessage(SyncStateEnum.EntriesToUpdate,
+                CalendarSyncStatus = StatusHelper.GetMessage(SyncStateEnum.EntriesToUpdate,
                     CalendarSyncEngine.SourceAppointmentsToUpdate.Count,
                     SourceCalendarService.CalendarServiceName);
                 var updatedAppointments = SourceCalendarService.UpdateCalendarEvents(CalendarSyncEngine.SourceAppointmentsToUpdate,
@@ -617,11 +617,11 @@ namespace CalendarSyncPlus.Services.Calendars
                     syncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.AttendeesToDescription),
                     sourceCalendarSpecificData).Result;
                 isSuccess = updatedAppointments.IsSuccess;
-                SyncStatus =
+                CalendarSyncStatus =
                     StatusHelper.GetMessage(isSuccess
                         ? SyncStateEnum.UpdateEntriesSuccess
                         : SyncStateEnum.UpdateEntriesFailed);
-                SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
+                CalendarSyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
                 syncMetric.SourceMetric.UpdateCount = CalendarSyncEngine.SourceAppointmentsToUpdate.Count;
                 syncMetric.SourceMetric.UpdateFailedCount = 
                     CalendarSyncEngine.SourceAppointmentsToUpdate.Count - updatedAppointments.Count;
@@ -629,9 +629,9 @@ namespace CalendarSyncPlus.Services.Calendars
 
             if (CalendarSyncEngine.DestAppointmentsToUpdate.Any())
             {
-                SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
+                CalendarSyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
                 //Update status for reading entries to update
-                SyncStatus = StatusHelper.GetMessage(SyncStateEnum.EntriesToUpdate,
+                CalendarSyncStatus = StatusHelper.GetMessage(SyncStateEnum.EntriesToUpdate,
                     CalendarSyncEngine.DestAppointmentsToUpdate.Count,
                     DestinationCalendarService.CalendarServiceName);
                 var updatedAppointments = DestinationCalendarService.UpdateCalendarEvents(CalendarSyncEngine.DestAppointmentsToUpdate,
@@ -641,11 +641,11 @@ namespace CalendarSyncPlus.Services.Calendars
                     syncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.AttendeesToDescription),
                     destinationCalendarSpecificData).Result;
                 isSuccess = updatedAppointments.IsSuccess;
-                SyncStatus =
+                CalendarSyncStatus =
                     StatusHelper.GetMessage(isSuccess
                         ? SyncStateEnum.UpdateEntriesSuccess
                         : SyncStateEnum.UpdateEntriesFailed);
-                SyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
+                CalendarSyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
                 syncMetric.DestMetric.UpdateCount = CalendarSyncEngine.DestAppointmentsToUpdate.Count;
                 syncMetric.DestMetric.UpdateFailedCount =
                     CalendarSyncEngine.DestAppointmentsToUpdate.Count - updatedAppointments.Count;

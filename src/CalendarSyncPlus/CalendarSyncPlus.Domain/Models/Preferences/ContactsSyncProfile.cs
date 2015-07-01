@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CalendarSyncPlus.Domain.Models.Preferences
 {
-    public class ContactsSyncProfile
+    public class ContactsSyncProfile : SyncProfile
     {
     }
 }

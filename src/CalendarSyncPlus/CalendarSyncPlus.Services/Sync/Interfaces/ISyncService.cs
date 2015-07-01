@@ -1,35 +1,16 @@
-﻿#region File Header
-
-// /******************************************************************************
-//  * 
-//  *      Copyright (C) Ankesh Dave 2015 All Rights Reserved. Confidential
-//  * 
-//  ******************************************************************************
-//  * 
-//  *      Project:        CalendarSyncPlus
-//  *      SubProject:     CalendarSyncPlus.Application
-//  *      Author:         Dave, Ankesh
-//  *      Created On:     03-02-2015 7:31 PM
-//  *      Modified On:    05-02-2015 12:43 PM
-//  *      FileName:       ISyncService.cs
-//  * 
-//  *****************************************************************************/
-
-#endregion
-
-#region Imports
+﻿#region Imports
 
 using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Timers;
-using CalendarSyncPlus.Domain.Models;
 using CalendarSyncPlus.Domain.Models.Metrics;
 using CalendarSyncPlus.Domain.Models.Preferences;
+using CalendarSyncPlus.Services.Interfaces;
 using CalendarSyncPlus.Services.Utilities;
 
 #endregion
 
-namespace CalendarSyncPlus.Services.Interfaces
+namespace CalendarSyncPlus.Services.Sync.Interfaces
 {
     public interface ISyncService : INotifyPropertyChanged, IService
     {
@@ -40,13 +21,41 @@ namespace CalendarSyncPlus.Services.Interfaces
         #endregion
 
         #region Public Methods
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="timerCallback"></param>
+        /// <returns></returns>
         Task<bool> Start(ElapsedEventHandler timerCallback);
-
-        void Stop(ElapsedEventHandler timerCallback);
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="elapsedEventHandler"></param>
+        void Stop(ElapsedEventHandler elapsedEventHandler);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="syncProfile"></param>
+        /// <param name="syncMetric"></param>
+        /// <param name="syncCallback"></param>
+        /// <returns></returns>
         string SyncNow(CalendarSyncProfile syncProfile, SyncMetric syncMetric, SyncCallback syncCallback);
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="syncProfile"></param>
+        /// <param name="syncMetric"></param>
+        /// <param name="syncCallback"></param>
+        /// <returns></returns>
+        string SyncNow(ContactsSyncProfile syncProfile, SyncMetric syncMetric, SyncCallback syncCallback);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="syncProfile"></param>
+        /// <param name="syncMetric"></param>
+        /// <param name="syncCallback"></param>
+        /// <returns></returns>
+        string SyncNow(TaskSyncProfile syncProfile, SyncMetric syncMetric, SyncCallback syncCallback);
         #endregion
     }
 }

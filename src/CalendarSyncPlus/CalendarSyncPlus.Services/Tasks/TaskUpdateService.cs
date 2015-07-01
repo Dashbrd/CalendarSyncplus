@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.Composition;
+using System.Waf.Foundation;
 using CalendarSyncPlus.Domain.Models;
 using CalendarSyncPlus.Domain.Models.Metrics;
 using CalendarSyncPlus.Domain.Models.Preferences;
@@ -10,7 +11,7 @@ using CalendarSyncPlus.Services.Utilities;
 namespace CalendarSyncPlus.Services.Tasks
 {
     [Export(typeof(ITaskUpdateService))]
-    public class TaskUpdateService : ITaskUpdateService
+    public class TaskUpdateService : Model, ITaskUpdateService
     {
 
         public bool SyncTask(TaskSyncProfile syncProfile, SyncMetric syncMetric, SyncCallback syncCallback)
@@ -26,7 +27,7 @@ namespace CalendarSyncPlus.Services.Tasks
             set;
         }
 
-        public string SyncStatus
+        public string TaskSyncStatus
         {
             get;
             set;

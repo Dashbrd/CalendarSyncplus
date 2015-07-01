@@ -50,7 +50,7 @@ namespace CalendarSyncPlus.Services.Calendars.Interfaces
         AppointmentsWrapper DestinationAppointments { get; set; }
         AppointmentsWrapper SourceAppointments { get; set; }
         Appointment CurrentAppointment { get; set; }
-        string SyncStatus { get; set; }
+        string CalendarSyncStatus { get; set; }
         ICalendarService SourceCalendarService { get; set; }
         ICalendarService DestinationCalendarService { get; set; }
 

@@ -36,6 +36,7 @@ using CalendarSyncPlus.Domain.Models;
 using CalendarSyncPlus.Domain.Models.Metrics;
 using CalendarSyncPlus.Domain.Models.Preferences;
 using CalendarSyncPlus.Services.Interfaces;
+using CalendarSyncPlus.Services.Sync.Interfaces;
 using CalendarSyncPlus.Services.Utilities;
 using log4net;
 using MahApps.Metro.Controls.Dialogs;

@@ -27,31 +27,41 @@ using System.Timers;
 using System.Waf.Foundation;
 using CalendarSyncPlus.Common.Log;
 using CalendarSyncPlus.Domain.Helpers;
-using CalendarSyncPlus.Domain.Models;
 using CalendarSyncPlus.Domain.Models.Metrics;
 using CalendarSyncPlus.Domain.Models.Preferences;
 using CalendarSyncPlus.Services.Calendars.Interfaces;
+using CalendarSyncPlus.Services.Contacts.Interfaces;
 using CalendarSyncPlus.Services.Interfaces;
+using CalendarSyncPlus.Services.Sync.Interfaces;
+using CalendarSyncPlus.Services.Tasks.Interfaces;
 using CalendarSyncPlus.Services.Utilities;
 using log4net;
 
 #endregion
 
-namespace CalendarSyncPlus.Services
+namespace CalendarSyncPlus.Services.Sync
 {
     [Export(typeof(ISyncService))]
     public class SyncService : Model, ISyncService
     {
+        public ICalendarUpdateService CalendarUpdateService { get; set; }
+        public IContactUpdateService ContactUpdateService { get; set; }
+        public ITaskUpdateService TaskUpdateService { get; set; }
+        public IMessageService MessageService { get; set; }
+        public ILog Logger { get; set; }
+
         #region Constructors
 
         [ImportingConstructor]
-        public SyncService(ISettingsProvider settingsProvider, ICalendarUpdateService calendarUpdateService,
+        public SyncService(ICalendarUpdateService calendarUpdateService,
+            IContactUpdateService contactUpdateService, ITaskUpdateService taskUpdateService,
             IMessageService messageService, ApplicationLogger applicationLogger)
         {
-            _settingsProvider = settingsProvider;
-            _calendarUpdateService = calendarUpdateService;
-            _messageService = messageService;
-            _applicationLogger = applicationLogger.GetLogger(GetType());
+            CalendarUpdateService = calendarUpdateService;
+            ContactUpdateService = contactUpdateService;
+            TaskUpdateService = taskUpdateService;
+            MessageService = messageService;
+            Logger = applicationLogger.GetLogger(GetType());
         }
 
         #endregion
@@ -61,22 +71,24 @@ namespace CalendarSyncPlus.Services
             _syncStatus = null;
         }
 
-        private void CalendarUpdateNotificationChanged(object sender, PropertyChangedEventArgs e)
+        private void UpdateServiceNotificationChanged(object sender, PropertyChangedEventArgs e)
         {
             switch (e.PropertyName)
             {
-                case "SyncStatus":
-                    SyncStatus = _calendarUpdateService.SyncStatus;
+                case "CalendarSyncStatus":
+                    SyncStatus = CalendarUpdateService.CalendarSyncStatus;
+                    break;
+                case "TaskSyncStatus":
+                    SyncStatus = TaskUpdateService.TaskSyncStatus;
+                    break;
+                case "ContactSyncStatus":
+                    SyncStatus = ContactUpdateService.ContactSyncStatus;
                     break;
             }
         }
 
         #region Fields
 
-        private readonly ILog _applicationLogger;
-        private readonly ICalendarUpdateService _calendarUpdateService;
-        private readonly IMessageService _messageService;
-        private readonly ISettingsProvider _settingsProvider;
         private string _syncStatus;
         private Timer _syncTimer;
 
@@ -102,10 +114,10 @@ namespace CalendarSyncPlus.Services
             return true;
         }
 
-        public void Stop(ElapsedEventHandler ElapsedEventHandler)
+        public void Stop(ElapsedEventHandler elapsedEventHandler)
         {
             _syncTimer.Stop();
-            _syncTimer.Elapsed -= ElapsedEventHandler;
+            _syncTimer.Elapsed -= elapsedEventHandler;
             _syncTimer = null;
         }
 
@@ -116,33 +128,94 @@ namespace CalendarSyncPlus.Services
                 if (syncProfile.GoogleAccount == null || syncProfile.GoogleAccount.GoogleCalendar == null ||
                     !syncProfile.ValidateOutlookSettings())
                 {
-                    _messageService.ShowMessageAsync(
+                    MessageService.ShowMessageAsync(
                         "Please configure Google and Outlook calendar in settings to continue.");
                     return "Invalid Settings";
                 }
                 ResetSyncData();
 
-                var isSyncComplete = _calendarUpdateService.SyncCalendar(syncProfile, syncMetric, syncCallback);
+                var isSyncComplete = CalendarUpdateService.SyncCalendar(syncProfile, syncMetric, syncCallback);
                 return isSyncComplete ? null : "Error Occurred";
             }
             catch (AggregateException exception)
             {
                 var flattenException = exception.Flatten();
-                _messageService.ShowMessageAsync(flattenException.Message);
-                _applicationLogger.Error(exception);
+                MessageService.ShowMessageAsync(flattenException.Message);
+                Logger.Error(exception);
                 return flattenException.Message;
             }
             catch (Exception exception)
             {
-                _messageService.ShowMessageAsync(exception.Message);
-                _applicationLogger.Error(exception);
+                MessageService.ShowMessageAsync(exception.Message);
+                Logger.Error(exception);
                 return exception.Message;
             }
         }
+        public string SyncNow(ContactsSyncProfile syncProfile, SyncMetric syncMetric, SyncCallback syncCallback)
+        {
+            try
+            {
+                if (syncProfile.GoogleAccount == null || syncProfile.GoogleAccount.GoogleCalendar == null ||
+                    !syncProfile.ValidateOutlookSettings())
+                {
+                    MessageService.ShowMessageAsync(
+                        "Please configure Google and Outlook calendar in settings to continue.");
+                    return "Invalid Settings";
+                }
+                ResetSyncData();
 
+                var isSyncComplete = ContactUpdateService.SyncContact(syncProfile, syncMetric, syncCallback);
+                return isSyncComplete ? null : "Error Occurred";
+            }
+            catch (AggregateException exception)
+            {
+                var flattenException = exception.Flatten();
+                MessageService.ShowMessageAsync(flattenException.Message);
+                Logger.Error(exception);
+                return flattenException.Message;
+            }
+            catch (Exception exception)
+            {
+                MessageService.ShowMessageAsync(exception.Message);
+                Logger.Error(exception);
+                return exception.Message;
+            }
+        }
+        public string SyncNow(TaskSyncProfile syncProfile, SyncMetric syncMetric, SyncCallback syncCallback)
+        {
+            try
+            {
+                if (syncProfile.GoogleAccount == null || syncProfile.GoogleAccount.GoogleCalendar == null ||
+                    !syncProfile.ValidateOutlookSettings())
+                {
+                    MessageService.ShowMessageAsync(
+                        "Please configure Google and Outlook calendar in settings to continue.");
+                    return "Invalid Settings";
+                }
+                ResetSyncData();
+
+                var isSyncComplete = TaskUpdateService.SyncTask(syncProfile, syncMetric, syncCallback);
+                return isSyncComplete ? null : "Error Occurred";
+            }
+            catch (AggregateException exception)
+            {
+                var flattenException = exception.Flatten();
+                MessageService.ShowMessageAsync(flattenException.Message);
+                Logger.Error(exception);
+                return flattenException.Message;
+            }
+            catch (Exception exception)
+            {
+                MessageService.ShowMessageAsync(exception.Message);
+                Logger.Error(exception);
+                return exception.Message;
+            }
+        }
         public void Initialize()
         {
-            PropertyChangedEventManager.AddHandler(_calendarUpdateService, CalendarUpdateNotificationChanged, "");
+            PropertyChangedEventManager.AddHandler(CalendarUpdateService, UpdateServiceNotificationChanged, "");
+            PropertyChangedEventManager.AddHandler(TaskUpdateService, UpdateServiceNotificationChanged, "");
+            PropertyChangedEventManager.AddHandler(ContactUpdateService, UpdateServiceNotificationChanged, "");
         }
 
         public void Run()
@@ -152,9 +225,11 @@ namespace CalendarSyncPlus.Services
 
         public void Shutdown()
         {
-            if (_calendarUpdateService != null)
+            if (CalendarUpdateService != null)
             {
-                PropertyChangedEventManager.RemoveHandler(_calendarUpdateService, CalendarUpdateNotificationChanged, "");
+                PropertyChangedEventManager.RemoveHandler(CalendarUpdateService, UpdateServiceNotificationChanged, "");
+                PropertyChangedEventManager.RemoveHandler(TaskUpdateService, UpdateServiceNotificationChanged, "");
+                PropertyChangedEventManager.RemoveHandler(ContactUpdateService, UpdateServiceNotificationChanged, "");
             }
         }
 

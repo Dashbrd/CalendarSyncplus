@@ -30,7 +30,7 @@ namespace CalendarSyncPlus.Domain.Helpers
             return true;
         }
 
-        public static bool ValidateOutlookSettings(this CalendarSyncProfile syncProfile)
+        public static bool ValidateOutlookSettings(this SyncProfile syncProfile)
         {
             if (!syncProfile.OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.DefaultProfile) &&
                 string.IsNullOrEmpty(syncProfile.OutlookSettings.OutlookProfileName))
