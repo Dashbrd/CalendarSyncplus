@@ -234,6 +234,12 @@
               KeyPath="yes" />
       </Component>
       <Component>
+        <File Id="Google.Apis.Drive.v2"
+              Name="Google.Apis.Drive.v2.dll"
+              Source="$(var.ProjectDirectory)Google.Apis.Drive.v2.dll"
+              KeyPath="yes" />
+      </Component>
+      <Component>
         <File Id="Google.GData.Client"
               Name="Google.GData.Client.dll"
               Source="$(var.ProjectDirectory)Google.GData.Client.dll"

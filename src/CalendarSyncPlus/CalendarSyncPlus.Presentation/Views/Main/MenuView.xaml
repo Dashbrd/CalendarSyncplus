@@ -22,8 +22,7 @@
                     <ControlTemplate TargetType="ToggleButton">
                         <Border Name="ButtonBorder"
                                 Background="{TemplateBinding Background}"
-                                BorderBrush="{TemplateBinding BorderBrush}"
-                                BorderThickness="{TemplateBinding BorderThickness}">
+                                BorderBrush="{StaticResource WhiteColorBrush}">
                             <ContentPresenter />
                         </Border>
                         <ControlTemplate.Triggers>
@@ -31,6 +30,9 @@
                                      Value="True">
                                 <Setter Property="Opacity"
                                         Value="1" />
+                                <Setter Property="BorderThickness"
+                                        TargetName="ButtonBorder"
+                                        Value="4,0,0,0"/>
                                 <Setter Property="Background"
                                         Value="{DynamicResource AccentColorBrush3}" />
                             </Trigger>
@@ -44,7 +46,7 @@
                             <Trigger Property="IsChecked"
                                      Value="False">
                                 <Setter Property="Width"
-                                        Value="35" />
+                                        Value="40" />
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -69,13 +71,15 @@
                     <ControlTemplate TargetType="Button">
                         <Border Name="ButtonBorder"
                                 Background="{TemplateBinding Background}"
-                                BorderBrush="{TemplateBinding BorderBrush}"
-                                BorderThickness="{TemplateBinding BorderThickness}">
+                                BorderBrush="{StaticResource WhiteColorBrush}">
                             <ContentPresenter />
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver"
                                      Value="True">
+                                <Setter Property="BorderThickness"
+                                        TargetName="ButtonBorder"
+                                        Value="4,0,0,0" />
                                 <Setter Property="Opacity"
                                         Value="1" />
                                 <Setter Property="Background"
@@ -84,7 +88,7 @@
                             <DataTrigger Binding="{Binding IsChecked,ElementName=MenuToggleButton}"
                                          Value="False">
                                 <Setter Property="Width"
-                                        Value="35" />
+                                        Value="40" />
                             </DataTrigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -132,7 +136,7 @@
             <Setter Property="VerticalAlignment"
                     Value="Center" />
             <Setter Property="Margin"
-                    Value="0,0,5,0" />
+                    Value="5,0,5,0" />
             <Setter Property="FontSize"
                     Value="{StaticResource MenuFontSize}" />
             <Setter Property="FontFamily"
