@@ -5,9 +5,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:viewModels="clr-namespace:CalendarSyncPlus.Application.ViewModels;assembly=CalendarSyncPlus.Application"
              xmlns:views="clr-namespace:CalendarSyncPlus.Presentation.Views"
-             xmlns:Properties="clr-namespace:CalendarSyncPlus.Common.Properties;assembly=CalendarSyncPlus.Common"
              xmlns:localizeExtension="http://wpflocalizeextension.codeplex.com"
-             d:DataContext="{d:DesignInstance viewModels:SettingsViewModel}"
+             d:DataContext="{d:DesignInstance viewModels:CalendarViewModel}"
              d:DesignHeight="600"
              d:DesignWidth="500"
              mc:Ignorable="d">
@@ -31,8 +30,8 @@
                            Text="{localizeExtension:LocText Key=ProfileSettingsView_TextBlock_SelectProfile_Text}" />
                 <ComboBox Grid.Column="1"
                           DisplayMemberPath="Name"
-                          ItemsSource="{Binding SyncProfileList}"
-                          SelectedItem="{Binding SelectedCalendarProfile,
+                          ItemsSource="{Binding CalendarSyncProfiles}"
+                          SelectedItem="{Binding SelectedProfile,
                                                  Mode=TwoWay,
                                                  UpdateSourceTrigger=PropertyChanged}" />
             </Grid>
@@ -40,7 +39,7 @@
         <TabControl Grid.Row="1">
             <TabItem Header="{localizeExtension:LocText Key=ProfileSettingsView_TabItem_Sync_Header}">
                 <ScrollViewer HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto">
-                    <views:SyncSettingsView DataContext="{Binding SelectedCalendarProfile}" />
+                    <views:SyncSettingsView DataContext="{Binding}" />
                 </ScrollViewer>
             </TabItem>
             <TabItem Header="{localizeExtension:LocText Key=ProfileSettingsView_TabItem_Outlook_Header}">
@@ -50,13 +49,13 @@
             </TabItem>
             <TabItem Header="{localizeExtension:LocText Key=ProfileSettingsView_TabItem_Google_Header}">
                 <ScrollViewer HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto">
-                    <views:GoogleSettingsView DataContext="{Binding SelectedCalendarProfile}" />
+                    <views:GoogleSettingsView DataContext="{Binding}" />
                 </ScrollViewer>
             </TabItem>
             <TabItem VerticalAlignment="Top"
                      Header="{localizeExtension:LocText Key=ProfileSettingsView_TabItem_Options_Header}">
                 <ScrollViewer HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto">
-                    <views:OptionsSettingsView DataContext="{Binding SelectedCalendarProfile}" />
+                    <views:OptionsSettingsView DataContext="{Binding}" />
                 </ScrollViewer>
             </TabItem>
 

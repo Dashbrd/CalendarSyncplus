@@ -52,6 +52,7 @@ namespace CalendarSyncPlus.Application.Controllers
                     {
                         _calendarViewModel.CalendarSyncProfiles = _settingsViewModel.Settings.CalendarSyncProfiles;
                         _calendarViewModel.SelectedProfile = _calendarViewModel.CalendarSyncProfiles.FirstOrDefault();
+                        _manageProfileViewModel.CalendarSyncProfiles = _settingsViewModel.Settings.CalendarSyncProfiles;
                         _settingsViewModel.Init = false;
                     }
                     break;

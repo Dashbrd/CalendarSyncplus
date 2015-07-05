@@ -80,14 +80,8 @@ namespace CalendarSyncPlus.Application.ViewModels
         #endregion
 
         #region Fields
-
-        private DelegateCommand _createProfileCommand;
-        private DelegateCommand _deleteProfileCommand;
-        private bool _hideSystemTrayTooltip;
-        private bool _isLoading;
         
-        private DelegateCommand _moveDownCommand;
-        private DelegateCommand _moveUpCommand;
+        private bool _isLoading;
         private DelegateCommand _saveCommand;
         private CalendarViewModel _selectedCalendar;
         private Settings _settings;
@@ -113,26 +107,7 @@ namespace CalendarSyncPlus.Application.ViewModels
         public IWindowsStartupService WindowsStartupService { get; set; }
         public IAccountAuthenticationService AccountAuthenticationService { get; set; }
 
-        public DelegateCommand CreateProfileCommand
-        {
-            get { return _createProfileCommand ?? (_createProfileCommand = new DelegateCommand(CreateProfile)); }
-        }
-
-        public DelegateCommand DeleteProfileCommand
-        {
-            get { return _deleteProfileCommand ?? (_deleteProfileCommand = new DelegateCommand(DeleteProfile)); }
-        }
-
-        public DelegateCommand MoveUpCommand
-        {
-            get { return _moveUpCommand ?? (_moveUpCommand = new DelegateCommand(MoveProfileUp)); }
-        }
-
-        public DelegateCommand MoveDownCommand
-        {
-            get { return _moveDownCommand ?? (_moveDownCommand = new DelegateCommand(MoveProfileDown)); }
-        }
-
+        
         public DelegateCommand SaveCommand
         {
             get { return _saveCommand ?? (_saveCommand = new DelegateCommand(SaveSettings)); }
@@ -324,90 +299,7 @@ namespace CalendarSyncPlus.Application.ViewModels
                 MessageService.ShowMessageAsync("Invalid Proxy Settings. Proxy settings cannot be applied");
             }
         }
-        /// <summary>
-        /// 
-        /// </summary>
-        private async void CreateProfile()
-        {
-            if (Settings.CalendarSyncProfiles.Count > 4)
-            {
-                MessageService.ShowMessageAsync("You have reached the maximum number of profiles.");
-                return;
-            }
-
-            var result = await MessageService.ShowInput("Please enter profile name.");
-
-            if (!string.IsNullOrEmpty(result))
-            {
-                if (Settings.CalendarSyncProfiles.Any(t => !string.IsNullOrEmpty(t.Name) && t.Name.Equals(result)))
-                {
-                    MessageService.ShowMessageAsync(
-                        string.Format("A Profile with name '{0}' already exists. Please try again.", result));
-                    return;
-                }
-
-                var syncProfile = CalendarSyncProfile.GetDefaultSyncProfile();
-                syncProfile.Name = result;
-                syncProfile.IsDefault = false;
-                //var viewModel = new CalendarViewModel(syncProfile, GoogleCalendarService, OutlookCalendarService,
-                //    MessageService,
-                //    ExchangeWebCalendarService, ApplicationLogger, AccountAuthenticationService);
-                //PropertyChangedEventManager.AddHandler(viewModel, ProfilePropertyChangedHandler, "IsLoading");
-                //viewModel.Initialize(null);
-                Settings.CalendarSyncProfiles.Add(syncProfile);
-            }
-        }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="parameter"></param>
-        private async void DeleteProfile(object parameter)
-        {
-            var profile = parameter as CalendarSyncProfile;
-            if (profile != null)
-            {
-                var task =
-                    await MessageService.ShowConfirmMessage("Are you sure you want to delete the profile?");
-                if (task == MessageDialogResult.Affirmative)
-                {
-                    Settings.CalendarSyncProfiles.Remove(profile);
-                    //PropertyChangedEventManager.RemoveHandler(profile, ProfilePropertyChangedHandler, "IsLoading");
-                    //SelectedCalendarProfile = Settings.CalendarSyncProfiles.FirstOrDefault();
-                }
-            }
-        }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="parameter"></param>
-        private void MoveProfileUp(object parameter)
-        {
-            var profile = parameter as CalendarSyncProfile;
-            if (profile != null)
-            {
-                var index = Settings.CalendarSyncProfiles.IndexOf(profile);
-                if (index > 0)
-                {
-                    Settings.CalendarSyncProfiles.Move(index, index - 1);
-                }
-            }
-        }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="parameter"></param>
-        private void MoveProfileDown(object parameter)
-        {
-            var profile = parameter as CalendarSyncProfile;
-            if (profile != null)
-            {
-                var index = Settings.CalendarSyncProfiles.IndexOf(profile);
-                if (index < Settings.CalendarSyncProfiles.Count - 1)
-                {
-                    Settings.CalendarSyncProfiles.Move(index, index + 1);
-                }
-            }
-        }
+        
 
         /// <summary>
         /// 

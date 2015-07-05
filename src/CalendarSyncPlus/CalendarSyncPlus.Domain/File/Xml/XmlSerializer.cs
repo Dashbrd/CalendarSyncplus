@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
@@ -287,12 +288,12 @@ namespace CalendarSyncPlus.Domain.File.Xml
             {
                 throw new ArgumentNullException("source", "Object to serialize cannot be null");
             }
-
+            
             var serializer = new XmlSerializer(source.GetType());
 
             using (var xmlWriter = XmlWriter.Create(filename, settings))
             {
-                var x = new XmlSerializer(typeof (T));
+                var x = new XmlSerializer(typeof(T));
                 x.Serialize(xmlWriter, source, namespaces);
             }
         }

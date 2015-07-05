@@ -7,7 +7,7 @@
              xmlns:localizeExtension="http://wpflocalizeextension.codeplex.com"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:viewModels="clr-namespace:CalendarSyncPlus.Application.ViewModels;assembly=CalendarSyncPlus.Application"
-             d:DataContext="{d:DesignInstance viewModels:SettingsViewModel}"
+             d:DataContext="{d:DesignInstance viewModels:ManageProfileViewModel}"
              d:DesignHeight="300"
              d:DesignWidth="300"
              mc:Ignorable="d">
@@ -35,7 +35,7 @@
                       CanUserResizeRows="False"
                       CanUserSortColumns="False"
                       GridLinesVisibility="Horizontal"
-                      ItemsSource="{Binding Path=SyncProfileList}"
+                      ItemsSource="{Binding Path=CalendarSyncProfiles}"
                       RenderOptions.ClearTypeHint="Enabled"
                       SelectionMode="Single"
                       TextOptions.TextFormattingMode="Display">
