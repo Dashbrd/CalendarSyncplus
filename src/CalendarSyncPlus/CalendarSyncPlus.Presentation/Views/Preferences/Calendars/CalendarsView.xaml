@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="CalendarSyncPlus.Presentation.Views.ProfileSettingsView"
+﻿<UserControl x:Class="CalendarSyncPlus.Presentation.Views.CalendarsView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -32,7 +32,7 @@
                 <ComboBox Grid.Column="1"
                           DisplayMemberPath="Name"
                           ItemsSource="{Binding SyncProfileList}"
-                          SelectedItem="{Binding SelectedProfile,
+                          SelectedItem="{Binding SelectedCalendarProfile,
                                                  Mode=TwoWay,
                                                  UpdateSourceTrigger=PropertyChanged}" />
             </Grid>
@@ -40,7 +40,7 @@
         <TabControl Grid.Row="1">
             <TabItem Header="{localizeExtension:LocText Key=ProfileSettingsView_TabItem_Sync_Header}">
                 <ScrollViewer HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto">
-                    <views:SyncSettingsView DataContext="{Binding SelectedProfile}" />
+                    <views:SyncSettingsView DataContext="{Binding SelectedCalendarProfile}" />
                 </ScrollViewer>
             </TabItem>
             <TabItem Header="{localizeExtension:LocText Key=ProfileSettingsView_TabItem_Outlook_Header}">
@@ -50,13 +50,13 @@
             </TabItem>
             <TabItem Header="{localizeExtension:LocText Key=ProfileSettingsView_TabItem_Google_Header}">
                 <ScrollViewer HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto">
-                    <views:GoogleSettingsView DataContext="{Binding SelectedProfile}" />
+                    <views:GoogleSettingsView DataContext="{Binding SelectedCalendarProfile}" />
                 </ScrollViewer>
             </TabItem>
             <TabItem VerticalAlignment="Top"
                      Header="{localizeExtension:LocText Key=ProfileSettingsView_TabItem_Options_Header}">
                 <ScrollViewer HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto">
-                    <views:OptionsSettingsView DataContext="{Binding SelectedProfile}" />
+                    <views:OptionsSettingsView DataContext="{Binding SelectedCalendarProfile}" />
                 </ScrollViewer>
             </TabItem>
 

@@ -7,7 +7,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:viewModels="clr-namespace:CalendarSyncPlus.Application.ViewModels;assembly=CalendarSyncPlus.Application"
              xmlns:views="clr-namespace:CalendarSyncPlus.Presentation.Views"
-             d:DataContext="{d:DesignInstance viewModels:ProfileViewModel}"
+             d:DataContext="{d:DesignInstance viewModels:CalendarViewModel}"
              d:DesignHeight="500"
              d:DesignWidth="500"
              mc:Ignorable="d">
@@ -59,7 +59,7 @@
                           ItemsSource="{Binding Path=DataContext.GoogleAccounts,
                                                 UpdateSourceTrigger=PropertyChanged,
                                                 RelativeSource={RelativeSource Mode=FindAncestor,
-                                                                               AncestorType={x:Type views:ProfileSettingsView}}}"
+                                                                               AncestorType={x:Type views:CalendarsView}}}"
                           SelectedItem="{Binding SelectedGoogleAccount,
                                                  Mode=TwoWay,
                                                  UpdateSourceTrigger=PropertyChanged}" />
@@ -73,14 +73,14 @@
                             VerticalAlignment="Center"
                             Command="{Binding Path=DataContext.DisconnectGoogleCommand,
                                               RelativeSource={RelativeSource Mode=FindAncestor,
-                                                                             AncestorType={x:Type views:ProfileSettingsView}}}"
+                                                                             AncestorType={x:Type views:CalendarsView}}}"
                             Content="{localizeExtension:LocText Key=GoogleSettingsView_Button_DisconnectAccount_Content}" />
                     <Button Width="150"
                             Margin="2"
                             VerticalAlignment="Center"
                             Command="{Binding Path=DataContext.AddNewGoogleAccount,
                                               RelativeSource={RelativeSource Mode=FindAncestor,
-                                                                             AncestorType={x:Type views:ProfileSettingsView}}}"
+                                                                             AncestorType={x:Type views:CalendarsView}}}"
                             Content="{localizeExtension:LocText Key=GoogleSettingsView_Button_NewtAccount_Content}" />
                 </StackPanel>
                 <CheckBox Grid.Row="2"
@@ -89,7 +89,7 @@
                           HorizontalAlignment="Right"
                           IsChecked="{Binding Path=DataContext.AllowManualGoogleAuth,
                                               RelativeSource={RelativeSource Mode=FindAncestor,
-                                                                             AncestorType={x:Type views:ProfileSettingsView}}}"
+                                                                             AncestorType={x:Type views:CalendarsView}}}"
                           Content="{localizeExtension:LocText Key=GoogleSettingsView_CheckBox_ManualAuth_Content}" />
 
                 <TextBlock Grid.Row="3"

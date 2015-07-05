@@ -31,6 +31,7 @@ using System.Waf.Applications;
 using CalendarSyncPlus.Application.Views;
 using CalendarSyncPlus.Authentication.Google;
 using CalendarSyncPlus.Common.Log;
+using CalendarSyncPlus.Domain.Helpers;
 using CalendarSyncPlus.Domain.Models;
 using CalendarSyncPlus.Domain.Models.Preferences;
 using CalendarSyncPlus.ExchangeWebServices.Calendar;
@@ -38,6 +39,7 @@ using CalendarSyncPlus.GoogleServices.Calendar;
 using CalendarSyncPlus.GoogleServices.Google;
 using CalendarSyncPlus.OutlookServices.Calendar;
 using CalendarSyncPlus.Services.Interfaces;
+using CalendarSyncPlus.Services.Sync.Interfaces;
 using log4net;
 using MahApps.Metro.Controls.Dialogs;
 
@@ -48,67 +50,154 @@ namespace CalendarSyncPlus.Application.ViewModels
     [Export]
     public class SettingsViewModel : ViewModel<ISettingsView>
     {
+        private Settings _loadedSettings;
         #region Constructors
-
         [ImportingConstructor]
         public SettingsViewModel(ISettingsView view,
             IGoogleCalendarService googleCalendarService,
             Settings settings,
+            ISettingsService settingsService,
             ISettingsSerializationService serializationService, IOutlookCalendarService outlookCalendarService,
             IMessageService messageService, IExchangeWebCalendarService exchangeWebCalendarService,
             ApplicationLogger applicationLogger, IWindowsStartupService windowsStartupService,
             IAccountAuthenticationService accountAuthenticationService)
             : base(view)
         {
-            Settings = settings;
+            _loadedSettings = settings;
+            Settings = settings.DeepClone();
             ExchangeWebCalendarService = exchangeWebCalendarService;
             ApplicationLogger = applicationLogger;
             Logger = applicationLogger.GetLogger(GetType());
             WindowsStartupService = windowsStartupService;
             AccountAuthenticationService = accountAuthenticationService;
             GoogleCalendarService = googleCalendarService;
+            SettingsService = settingsService;
             SettingsSerializationService = serializationService;
             OutlookCalendarService = outlookCalendarService;
             MessageService = messageService;
         }
+        
+        #endregion
+
+        #region Fields
+
+        private DelegateCommand _createProfileCommand;
+        private DelegateCommand _deleteProfileCommand;
+        private bool _hideSystemTrayTooltip;
+        private bool _isLoading;
+        
+        private DelegateCommand _moveDownCommand;
+        private DelegateCommand _moveUpCommand;
+        private DelegateCommand _saveCommand;
+        private CalendarViewModel _selectedCalendar;
+        private Settings _settings;
+        private bool _settingsSaved;
+        private bool _isValid;
+        private DelegateCommand _addNewGoogleAccount;
+        private DelegateCommand _disconnectGoogleCommand;
+        private CalendarSyncProfile _selectedCalendarProfile;
+        private bool _init;
 
         #endregion
 
+        #region Properties
+
+        public IGoogleCalendarService GoogleCalendarService { get; set; }
+        public ISettingsService SettingsService { get; set; }
+        public ISettingsSerializationService SettingsSerializationService { get; set; }
+        public IOutlookCalendarService OutlookCalendarService { get; set; }
+        public IMessageService MessageService { get; set; }
+        public IExchangeWebCalendarService ExchangeWebCalendarService { get; private set; }
+        public ILog Logger { get; private set; }
+        public ApplicationLogger ApplicationLogger { get; set; }
+        public IWindowsStartupService WindowsStartupService { get; set; }
+        public IAccountAuthenticationService AccountAuthenticationService { get; set; }
+
+        public DelegateCommand CreateProfileCommand
+        {
+            get { return _createProfileCommand ?? (_createProfileCommand = new DelegateCommand(CreateProfile)); }
+        }
+
+        public DelegateCommand DeleteProfileCommand
+        {
+            get { return _deleteProfileCommand ?? (_deleteProfileCommand = new DelegateCommand(DeleteProfile)); }
+        }
+
+        public DelegateCommand MoveUpCommand
+        {
+            get { return _moveUpCommand ?? (_moveUpCommand = new DelegateCommand(MoveProfileUp)); }
+        }
+
+        public DelegateCommand MoveDownCommand
+        {
+            get { return _moveDownCommand ?? (_moveDownCommand = new DelegateCommand(MoveProfileDown)); }
+        }
+
+        public DelegateCommand SaveCommand
+        {
+            get { return _saveCommand ?? (_saveCommand = new DelegateCommand(SaveSettings)); }
+        }
+
+        public DelegateCommand DisconnectGoogleCommand
+        {
+            get
+            {
+                return _disconnectGoogleCommand ??
+                       (_disconnectGoogleCommand = new DelegateCommand(DisconnectGoogleHandler));
+            }
+        }
+
+        public DelegateCommand AddNewGoogleAccount
+        {
+            get
+            {
+                return _addNewGoogleAccount = _addNewGoogleAccount ?? new DelegateCommand(AddNewGoogleAccountHandler);
+            }
+        }
+
+        public Settings Settings
+        {
+            get { return _settings; }
+            set { SetProperty(ref _settings, value); }
+        }
+
+        public bool IsLoading
+        {
+            get { return _isLoading; }
+            set { SetProperty(ref _isLoading, value); }
+        }
+
+        public bool SettingsSaved
+        {
+            get { return _settingsSaved; }
+            set { SetProperty(ref _settingsSaved, value); }
+        }
+        
+        public bool IsValid
+        {
+            get { return _isValid; }
+            set { SetProperty(ref _isValid, value); }
+        }
+
+        public bool Init
+        {
+            get { return _init; }
+            set { SetProperty(ref _init, value); }
+        }
+
+        #endregion
+        
         #region Private Methods
 
         private async void SaveSettings()
         {
             IsLoading = true;
             SettingsSaved = false;
-            Settings.GoogleAccounts = GoogleAccounts;
-            Settings.SettingsVersion = ApplicationInfo.Version;
-            Settings.AppSettings.MinimizeToSystemTray = MinimizeToSystemTray;
-            Settings.AppSettings.HideSystemTrayTooltip = HideSystemTrayTooltip;
-            Settings.AppSettings.CheckForUpdates = CheckForUpdates;
-            Settings.AppSettings.CheckForAlphaReleases = CheckForAlphaReleases;
-            Settings.AppSettings.RunApplicationAtSystemStartup = RunApplicationAtSystemStartup;
-            Settings.AppSettings.StartMinimized = StartMinimized;
-            Settings.AppSettings.IsManualSynchronization = IsManualSynchronization;
-            Settings.AllowManualAuthentication = AllowManualGoogleAuth;
-            Settings.AppSettings.ProxySettings = new ProxySetting
-            {
-                BypassOnLocal = ProxySettings.BypassOnLocal,
-                Domain = ProxySettings.Domain,
-                Password = ProxySettings.Password,
-                Port = ProxySettings.Port,
-                ProxyAddress = ProxySettings.ProxyAddress,
-                ProxyType = ProxySettings.ProxyType,
-                UseDefaultCredentials = ProxySettings.UseDefaultCredentials,
-                UserName = ProxySettings.UserName
-            };
-            ApplyProxySettings();
-            Settings.CalendarSyncProfiles.Clear();
-            foreach (var profileViewModel in SyncProfileList)
-            {
-                Settings.CalendarSyncProfiles.Add(profileViewModel.SaveCurrentSyncProfile());
-            }
 
-            if (RunApplicationAtSystemStartup)
+            Settings.SettingsVersion = ApplicationInfo.Version;
+
+            ApplyProxySettings();
+            if (Settings.AppSettings.RunApplicationAtSystemStartup)
             {
                 WindowsStartupService.RunAtWindowsStartup();
             }
@@ -142,107 +231,11 @@ namespace CalendarSyncPlus.Application.ViewModels
             }
         }
 
-        #endregion
-
-        public void Load()
+        
+        private async void DisconnectGoogleHandler(object parameter)
         {
-            if (_isloaded)
-            {
-                return;
-            }
-            LoadSettingsAndGetCalendars();
-            _isloaded = true;
-        }
-
-        private void LoadSettingsAndGetCalendars()
-        {
-            try
-            {
-                if (Settings != null)
-                {
-                    ProxySettings = new ProxySettingsDataModel
-                    {
-                        BypassOnLocal = Settings.AppSettings.ProxySettings.BypassOnLocal,
-                        Domain = Settings.AppSettings.ProxySettings.Domain,
-                        Password = Settings.AppSettings.ProxySettings.Password,
-                        Port = Settings.AppSettings.ProxySettings.Port,
-                        ProxyAddress = Settings.AppSettings.ProxySettings.ProxyAddress,
-                        ProxyType = Settings.AppSettings.ProxySettings.ProxyType,
-                        UseDefaultCredentials = Settings.AppSettings.ProxySettings.UseDefaultCredentials,
-                        UserName = Settings.AppSettings.ProxySettings.UserName
-                    };
-                    ApplyProxySettings();
-                    AllowManualGoogleAuth = Settings.AllowManualAuthentication;
-                    GoogleAccounts = Settings.GoogleAccounts;
-                    MinimizeToSystemTray = Settings.AppSettings.MinimizeToSystemTray;
-                    HideSystemTrayTooltip = Settings.AppSettings.HideSystemTrayTooltip;
-                    CheckForUpdates = Settings.AppSettings.CheckForUpdates;
-                    CheckForAlphaReleases = Settings.AppSettings.CheckForAlphaReleases;
-                    RunApplicationAtSystemStartup = Settings.AppSettings.RunApplicationAtSystemStartup;
-                    StartMinimized = Settings.AppSettings.StartMinimized;
-                    IsManualSynchronization = Settings.AppSettings.IsManualSynchronization;
-                    LoadProfiles();
-                }
-                else
-                {
-                    LogSyncInfo = true;
-                    CreateNewFileForEverySync = false;
-                    MinimizeToSystemTray = true;
-                    HideSystemTrayTooltip = false;
-                    CheckForUpdates = true;
-                }
-            }
-            catch (AggregateException exception)
-            {
-                var flattenException = exception.Flatten();
-                MessageService.ShowMessageAsync(flattenException.Message);
-            }
-            catch (Exception exception)
-            {
-                MessageService.ShowMessageAsync(exception.Message);
-            }
-        }
-
-        private void LoadProfiles()
-        {
-            var profileList = new ObservableCollection<ProfileViewModel>();
-            foreach (var syncProfile in Settings.CalendarSyncProfiles)
-            {
-                var viewModel = new ProfileViewModel(syncProfile, GoogleCalendarService, OutlookCalendarService,
-                    MessageService,
-                    ExchangeWebCalendarService, ApplicationLogger, AccountAuthenticationService);
-                PropertyChangedEventManager.AddHandler(viewModel, ProfilePropertyChangedHandler, "IsLoading");
-                var googleAccount = GetGoogleAccount(syncProfile);
-
-                viewModel.Initialize(googleAccount);
-                profileList.Add(viewModel);
-            }
-            SyncProfileList = profileList;
-            SelectedProfile = SyncProfileList.FirstOrDefault();
-        }
-
-        private GoogleAccount GetGoogleAccount(CalendarSyncProfile syncProfile)
-        {
-            GoogleAccount googleAccount = null;
-            if (syncProfile.GoogleAccount != null)
-            {
-                if (GoogleAccounts.Any())
-                {
-                    googleAccount = GoogleAccounts.FirstOrDefault(
-                        account => account.Name == syncProfile.GoogleAccount.Name);
-                }
-            }
-
-            if (googleAccount != null)
-            {
-                googleAccount.GoogleCalendar = syncProfile.GoogleAccount.GoogleCalendar;
-            }
-            return googleAccount;
-        }
-
-        private async void DisconnectGoogleHandler()
-        {
-            if (SelectedProfile.SelectedGoogleAccount == null)
+            GoogleAccount googleAccount = parameter as GoogleAccount;
+            if (googleAccount == null)
             {
                 MessageService.ShowMessageAsync("No account selected");
                 return;
@@ -257,39 +250,28 @@ namespace CalendarSyncPlus.Application.ViewModels
                 return;
             }
 
-            var result = AccountAuthenticationService.DisconnectGoogle(SelectedProfile.SelectedGoogleAccount.Name);
+            var result = AccountAuthenticationService.DisconnectGoogle(googleAccount.Name);
             if (result)
             {
                 //Remove google account
-                var googleAccount =
-                    GoogleAccounts.FirstOrDefault(account => account.Name == SelectedProfile.SelectedGoogleAccount.Name);
+                 googleAccount = Settings.GoogleAccounts.FirstOrDefault(account =>
+                    account.Name == googleAccount.Name);
 
                 if (googleAccount != null)
                 {
-                    foreach (var profileViewModel in SyncProfileList)
+                    foreach (var profile in Settings.CalendarSyncProfiles)
                     {
-                        if (profileViewModel.SelectedGoogleAccount != null &&
-                            profileViewModel.SelectedGoogleAccount.Name.Equals(googleAccount.Name))
+                        if (profile.GoogleSettings.GoogleAccount != null &&
+                            profile.GoogleSettings.GoogleAccount.Name.Equals(googleAccount.Name))
                         {
-                            profileViewModel.SelectedGoogleAccount = null;
-                            profileViewModel.GoogleCalendars = null;
-                            profileViewModel.SelectedCalendar = null;
+                            profile.GoogleSettings.GoogleAccount = null;
                         }
                     }
 
-                    GoogleAccounts.Remove(googleAccount);
+                    Settings.GoogleAccounts.Remove(googleAccount);
 
                     await MessageService.ShowMessage("Google account successfully disconnected");
-
-                    foreach (var calendarSyncProfile in Settings.CalendarSyncProfiles)
-                    {
-                        if (calendarSyncProfile.GoogleAccount != null &&
-                            calendarSyncProfile.GoogleAccount.Name.Equals(googleAccount.Name))
-                        {
-                            calendarSyncProfile.GoogleAccount = null;
-                        }
-                    }
-
+                    
                     await SettingsSerializationService.SerializeSettingsAsync(Settings);
                 }
             }
@@ -298,7 +280,9 @@ namespace CalendarSyncPlus.Application.ViewModels
                 MessageService.ShowMessageAsync("Account wasn't authenticated earlier or disconnection failed.");
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         internal void ApplyProxySettings()
         {
             IWebProxy proxy;
@@ -340,226 +324,12 @@ namespace CalendarSyncPlus.Application.ViewModels
                 MessageService.ShowMessageAsync("Invalid Proxy Settings. Proxy settings cannot be applied");
             }
         }
-
-        private void ProfilePropertyChangedHandler(object sender, PropertyChangedEventArgs e)
-        {
-            switch (e.PropertyName)
-            {
-                case "IsLoading":
-                    var viewModel = sender as ProfileViewModel;
-                    if (viewModel != null)
-                    {
-                        IsLoading = viewModel.IsLoading;
-                    }
-                    break;
-            }
-        }
-
-        public void Shutdown()
-        {
-            if (SyncProfileList != null)
-            {
-                foreach (var profileViewModel in SyncProfileList)
-                {
-                    PropertyChangedEventManager.RemoveHandler(profileViewModel, ProfilePropertyChangedHandler,
-                        "IsLoading");
-                }
-            }
-        }
-
-        #region Fields
-
-        private bool _checkForUpdates = true;
-        private bool _createNewFileForEverySync;
-        private DelegateCommand _createProfileCommand;
-        private DelegateCommand _deleteProfileCommand;
-        private bool _hideSystemTrayTooltip;
-        private bool _isLoading;
-        private bool _isloaded;
-        private bool _logSyncInfo;
-        private bool _minimizeToSystemTray = true;
-        private DelegateCommand _moveDownCommand;
-        private DelegateCommand _moveUpCommand;
-        private bool _isManualSynchronization = true;
-        private bool _runApplicationAtSystemStartup = true;
-        private DelegateCommand _saveCommand;
-        private ProfileViewModel _selectedProfile;
-        private Settings _settings;
-        private bool _settingsSaved;
-        private ObservableCollection<ProfileViewModel> _syncProfileList;
-        private ProxySettingsDataModel _proxySettings;
-        private bool _isValid;
-        private DelegateCommand _addNewGoogleAccount;
-        private ObservableCollection<GoogleAccount> _googleAccounts;
-        private DelegateCommand _disconnectGoogleCommand;
-        private bool _allowManualGoogleAuth;
-        private bool _checkForAlphaReleases;
-        private bool _startMinimized;
-
-        #endregion
-
-        #region Properties
-
-        public IGoogleCalendarService GoogleCalendarService { get; set; }
-        public ISettingsSerializationService SettingsSerializationService { get; set; }
-        public IOutlookCalendarService OutlookCalendarService { get; set; }
-        public IMessageService MessageService { get; set; }
-        public IExchangeWebCalendarService ExchangeWebCalendarService { get; private set; }
-        public ILog Logger { get; private set; }
-        public ApplicationLogger ApplicationLogger { get; set; }
-        public IWindowsStartupService WindowsStartupService { get; set; }
-        public IAccountAuthenticationService AccountAuthenticationService { get; set; }
-
-
-        public DelegateCommand CreateProfileCommand
-        {
-            get { return _createProfileCommand ?? (_createProfileCommand = new DelegateCommand(CreateProfile)); }
-        }
-
-        public DelegateCommand DeleteProfileCommand
-        {
-            get { return _deleteProfileCommand ?? (_deleteProfileCommand = new DelegateCommand(DeleteProfile)); }
-        }
-
-        public DelegateCommand MoveUpCommand
-        {
-            get { return _moveUpCommand ?? (_moveUpCommand = new DelegateCommand(MoveProfileUp)); }
-        }
-
-        public DelegateCommand MoveDownCommand
-        {
-            get { return _moveDownCommand ?? (_moveDownCommand = new DelegateCommand(MoveProfileDown)); }
-        }
-
-        public DelegateCommand SaveCommand
-        {
-            get { return _saveCommand ?? (_saveCommand = new DelegateCommand(SaveSettings)); }
-        }
-
-        public DelegateCommand DisconnectGoogleCommand
-        {
-            get
-            {
-                return _disconnectGoogleCommand ??
-                       (_disconnectGoogleCommand = new DelegateCommand(DisconnectGoogleHandler));
-            }
-        }
-
-
-        public bool LogSyncInfo
-        {
-            get { return _logSyncInfo; }
-            set { SetProperty(ref _logSyncInfo, value); }
-        }
-
-        public bool CreateNewFileForEverySync
-        {
-            get { return _createNewFileForEverySync; }
-            set { SetProperty(ref _createNewFileForEverySync, value); }
-        }
-
-
-        public Settings Settings
-        {
-            get { return _settings; }
-            set { SetProperty(ref _settings, value); }
-        }
-
-        public ObservableCollection<ProfileViewModel> SyncProfileList
-        {
-            get { return _syncProfileList; }
-            set { SetProperty(ref _syncProfileList, value); }
-        }
-
-        public ProfileViewModel SelectedProfile
-        {
-            get { return _selectedProfile; }
-            set
-            {
-                SetProperty(ref _selectedProfile, value);
-                if (_selectedProfile != null)
-                {
-                    _selectedProfile.LoadSyncProfile();
-                }
-            }
-        }
-
-        public bool IsLoading
-        {
-            get { return _isLoading; }
-            set { SetProperty(ref _isLoading, value); }
-        }
-
-        public bool CheckForAlphaReleases
-        {
-            get { return _checkForAlphaReleases; }
-            set { SetProperty(ref _checkForAlphaReleases, value); }
-        }
-
-        public bool CheckForUpdates
-        {
-            get { return _checkForUpdates; }
-            set
-            {
-                SetProperty(ref _checkForUpdates, value);
-                if (!_checkForUpdates)
-                {
-                    CheckForAlphaReleases = false;
-                }
-            }
-        }
-
-        public bool StartMinimized
-        {
-            get { return _startMinimized; }
-            set { SetProperty(ref _startMinimized, value); }
-        }
-
-        public bool RunApplicationAtSystemStartup
-        {
-            get { return _runApplicationAtSystemStartup; }
-            set { SetProperty(ref _runApplicationAtSystemStartup, value); }
-        }
-
-        public bool IsManualSynchronization
-        {
-            get { return _isManualSynchronization; }
-            set { SetProperty(ref _isManualSynchronization, value); }
-        }
-
-        public bool SettingsSaved
-        {
-            get { return _settingsSaved; }
-            set { SetProperty(ref _settingsSaved, value); }
-        }
-
-        public bool MinimizeToSystemTray
-        {
-            get { return _minimizeToSystemTray; }
-            set { SetProperty(ref _minimizeToSystemTray, value); }
-        }
-
-        public bool HideSystemTrayTooltip
-        {
-            get { return _hideSystemTrayTooltip; }
-            set { SetProperty(ref _hideSystemTrayTooltip, value); }
-        }
-
-        public ProxySettingsDataModel ProxySettings
-        {
-            get { return _proxySettings; }
-            set { SetProperty(ref _proxySettings, value); }
-        }
-
-        public bool IsValid
-        {
-            get { return _isValid; }
-            set { SetProperty(ref _isValid, value); }
-        }
-
+        /// <summary>
+        /// 
+        /// </summary>
         private async void CreateProfile()
         {
-            if (SyncProfileList.Count > 4)
+            if (Settings.CalendarSyncProfiles.Count > 4)
             {
                 MessageService.ShowMessageAsync("You have reached the maximum number of profiles.");
                 return;
@@ -569,7 +339,7 @@ namespace CalendarSyncPlus.Application.ViewModels
 
             if (!string.IsNullOrEmpty(result))
             {
-                if (SyncProfileList.Any(t => !string.IsNullOrEmpty(t.Name) && t.Name.Equals(result)))
+                if (Settings.CalendarSyncProfiles.Any(t => !string.IsNullOrEmpty(t.Name) && t.Name.Equals(result)))
                 {
                     MessageService.ShowMessageAsync(
                         string.Format("A Profile with name '{0}' already exists. Please try again.", result));
@@ -579,77 +349,69 @@ namespace CalendarSyncPlus.Application.ViewModels
                 var syncProfile = CalendarSyncProfile.GetDefaultSyncProfile();
                 syncProfile.Name = result;
                 syncProfile.IsDefault = false;
-                var viewModel = new ProfileViewModel(syncProfile, GoogleCalendarService, OutlookCalendarService,
-                    MessageService,
-                    ExchangeWebCalendarService, ApplicationLogger, AccountAuthenticationService);
-                PropertyChangedEventManager.AddHandler(viewModel, ProfilePropertyChangedHandler, "IsLoading");
-                viewModel.Initialize(null);
-                SyncProfileList.Add(viewModel);
+                //var viewModel = new CalendarViewModel(syncProfile, GoogleCalendarService, OutlookCalendarService,
+                //    MessageService,
+                //    ExchangeWebCalendarService, ApplicationLogger, AccountAuthenticationService);
+                //PropertyChangedEventManager.AddHandler(viewModel, ProfilePropertyChangedHandler, "IsLoading");
+                //viewModel.Initialize(null);
+                Settings.CalendarSyncProfiles.Add(syncProfile);
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="parameter"></param>
         private async void DeleteProfile(object parameter)
         {
-            var profile = parameter as ProfileViewModel;
+            var profile = parameter as CalendarSyncProfile;
             if (profile != null)
             {
                 var task =
                     await MessageService.ShowConfirmMessage("Are you sure you want to delete the profile?");
                 if (task == MessageDialogResult.Affirmative)
                 {
-                    SyncProfileList.Remove(profile);
-                    PropertyChangedEventManager.RemoveHandler(profile, ProfilePropertyChangedHandler, "IsLoading");
-                    SelectedProfile = SyncProfileList.FirstOrDefault();
+                    Settings.CalendarSyncProfiles.Remove(profile);
+                    //PropertyChangedEventManager.RemoveHandler(profile, ProfilePropertyChangedHandler, "IsLoading");
+                    //SelectedCalendarProfile = Settings.CalendarSyncProfiles.FirstOrDefault();
                 }
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="parameter"></param>
         private void MoveProfileUp(object parameter)
         {
-            var profile = parameter as ProfileViewModel;
+            var profile = parameter as CalendarSyncProfile;
             if (profile != null)
             {
-                var index = SyncProfileList.IndexOf(profile);
+                var index = Settings.CalendarSyncProfiles.IndexOf(profile);
                 if (index > 0)
                 {
-                    SyncProfileList.Move(index, index - 1);
+                    Settings.CalendarSyncProfiles.Move(index, index - 1);
                 }
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="parameter"></param>
         private void MoveProfileDown(object parameter)
         {
-            var profile = parameter as ProfileViewModel;
+            var profile = parameter as CalendarSyncProfile;
             if (profile != null)
             {
-                var index = SyncProfileList.IndexOf(profile);
-                if (index < SyncProfileList.Count - 1)
+                var index = Settings.CalendarSyncProfiles.IndexOf(profile);
+                if (index < Settings.CalendarSyncProfiles.Count - 1)
                 {
-                    SyncProfileList.Move(index, index + 1);
+                    Settings.CalendarSyncProfiles.Move(index, index + 1);
                 }
             }
         }
 
-        public bool AllowManualGoogleAuth
-        {
-            get { return _allowManualGoogleAuth; }
-            set { SetProperty(ref _allowManualGoogleAuth, value); }
-        }
-
-        public DelegateCommand AddNewGoogleAccount
-        {
-            get
-            {
-                return _addNewGoogleAccount = _addNewGoogleAccount ?? new DelegateCommand(AddNewGoogleAccountHandler);
-            }
-        }
-
-        public ObservableCollection<GoogleAccount> GoogleAccounts
-        {
-            get { return _googleAccounts; }
-            set { SetProperty(ref _googleAccounts, value); }
-        }
-
+        /// <summary>
+        /// 
+        /// </summary>
         private async void AddNewGoogleAccountHandler()
         {
             //Accept Email Id
@@ -660,8 +422,8 @@ namespace CalendarSyncPlus.Application.ViewModels
                 return;
             }
 
-            if (GoogleAccounts != null &&
-                GoogleAccounts.Any(t => t.Name.Equals(accountName, StringComparison.InvariantCultureIgnoreCase)))
+            if (Settings.GoogleAccounts != null &&
+                Settings.GoogleAccounts.Any(t => t.Name.Equals(accountName, StringComparison.InvariantCultureIgnoreCase)))
             {
                 MessageService.ShowMessageAsync("An account with the same email already exists. Please try again.");
                 return;
@@ -671,7 +433,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             var tokenSource = new CancellationTokenSource();
             var token = tokenSource.Token;
 
-            if (AllowManualGoogleAuth)
+            if (Settings.AllowManualAuthentication)
             {
                 var authResult =
                     await
@@ -750,17 +512,14 @@ namespace CalendarSyncPlus.Application.ViewModels
 
         private async void AddGoogleAccountDetailsToApplication(string accountName)
         {
-            var account = new GoogleAccount {Name = accountName};
-            if (GoogleAccounts == null)
+            var account = new GoogleAccount { Name = accountName };
+            if (Settings.GoogleAccounts == null)
             {
-                GoogleAccounts = new ObservableCollection<GoogleAccount>();
+                Settings.GoogleAccounts = new ObservableCollection<GoogleAccount>();
             }
-            GoogleAccounts.Add(account);
-            SelectedProfile.SelectedGoogleAccount = account;
-            SelectedProfile.GoogleCalendars = null;
-            SelectedProfile.GetGoogleCalendar();
-
-            Settings.GoogleAccounts = GoogleAccounts;
+            Settings.GoogleAccounts.Add(account);
+            //SelectedCalendarProfile.GoogleAccount = account;
+            //SelectedCalendar.GetGoogleCalendar();
 
             await SettingsSerializationService.SerializeSettingsAsync(Settings);
         }
@@ -773,6 +532,10 @@ namespace CalendarSyncPlus.Application.ViewModels
                         "Manual Authentication");
         }
 
+        public void Load()
+        {
+            Init = true;
+        }
         #endregion
     }
 }

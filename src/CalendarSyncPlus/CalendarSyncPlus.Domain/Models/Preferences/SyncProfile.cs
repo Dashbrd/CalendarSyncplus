@@ -5,6 +5,7 @@ using CalendarSyncPlus.Common.MetaData;
 
 namespace CalendarSyncPlus.Domain.Models.Preferences
 {
+    [Serializable]
     public class SyncProfile : Model
     {
         private bool _isDefault;
@@ -12,7 +13,15 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
         private DateTime? _lastSync;
         private string _name;
         private DateTime? _nextSync;
-        
+        private GoogleSettings _googleSettings;
+        private OutlookSettings _outlookSettings;
+
+        public SyncProfile()
+        {
+            OutlookSettings = new OutlookSettings();
+            GoogleSettings  = new GoogleSettings();
+        }
+
         /// <summary>
         /// </summary>
         public string Name
@@ -53,17 +62,23 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
             set { SetProperty(ref _nextSync, value); }
         }
 
-
-        public GoogleAccount GoogleAccount { get; set; }
+        public GoogleSettings GoogleSettings
+        {
+            get { return _googleSettings; }
+            set { _googleSettings = value; }
+        }
 
         /// <summary>
         /// </summary>
-        public OutlookSettings OutlookSettings { get; set; }
+        public OutlookSettings OutlookSettings
+        {
+            get { return _outlookSettings; }
+            set { _outlookSettings = value; }
+        }
 
         /// <summary>
         ///     To be implemented in future
         /// </summary>
-        [XmlIgnore]
         public ExchangeServerSettings ExchangeServerSettings { get; set; }
 
 
@@ -74,6 +89,7 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
         public ServiceType Destination { get; set; }
         public SyncModeEnum SyncMode { get; set; }
 
+        
         /// <summary>
         /// </summary>
         public void SetSourceDestTypes()

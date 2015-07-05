@@ -19,6 +19,7 @@
 
 #region Imports
 
+using System;
 using System.Collections.Generic;
 using System.Waf.Foundation;
 
@@ -26,16 +27,17 @@ using System.Waf.Foundation;
 
 namespace CalendarSyncPlus.Domain.Models.Preferences
 {
+    [Serializable]
     public class OutlookMailBox : Model
     {
         public OutlookMailBox()
         {
-            _calendars = new List<OutlookFolder>();
+            _folders = new List<OutlookFolder>();
         }
 
         #region Fields
 
-        private List<OutlookFolder> _calendars;
+        private List<OutlookFolder> _folders;
         private string _entryId;
         private string _storeId;
         private string name;
@@ -50,10 +52,10 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
             set { SetProperty(ref name, value); }
         }
 
-        public List<OutlookFolder> Calendars
+        public List<OutlookFolder> Folders
         {
-            get { return _calendars; }
-            set { SetProperty(ref _calendars, value); }
+            get { return _folders; }
+            set { SetProperty(ref _folders, value); }
         }
 
         public string EntryId

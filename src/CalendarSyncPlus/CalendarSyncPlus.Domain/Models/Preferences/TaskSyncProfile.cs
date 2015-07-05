@@ -7,6 +7,7 @@ using System.Waf.Foundation;
 
 namespace CalendarSyncPlus.Domain.Models.Preferences
 {
+    [Serializable]
     public class TaskSyncProfile : SyncProfile
     {
     }

@@ -22,6 +22,7 @@ using System.ComponentModel;
 using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
 using System.Waf.Applications;
+using CalendarSyncPlus.Application.Controllers.Interfaces;
 using CalendarSyncPlus.Application.ViewModels;
 using CalendarSyncPlus.Authentication.Google;
 using CalendarSyncPlus.Common;
@@ -41,6 +42,7 @@ namespace CalendarSyncPlus.Application.Controllers
         private readonly LogViewModel _logViewModel;
         private readonly SettingsViewModel _settingsViewModel;
         private readonly IShellController _shellController;
+        private readonly ISettingsController _settingsController;
         private readonly ShellService _shellService;
         private readonly ShellViewModel _shellViewModel;
         private readonly SystemTrayNotifierViewModel _systemTrayNotifierViewModel;
@@ -52,7 +54,9 @@ namespace CalendarSyncPlus.Application.Controllers
             Lazy<AboutViewModel> aboutViewModelLazy, Lazy<HelpViewModel> helpViewModelLazy,
             Lazy<LogViewModel> logViewModelLazy,
             Lazy<ShellService> shellServiceLazy, CompositionContainer compositionContainer,
-            Lazy<IAccountAuthenticationService> accountAuthenticationServiceLazy, IShellController shellController,
+            Lazy<IAccountAuthenticationService> accountAuthenticationServiceLazy,
+            IShellController shellController,
+            ISettingsController settingsController,
             Lazy<SystemTrayNotifierViewModel> lazySystemTrayNotifierViewModel,
             IGuiInteractionService guiInteractionService, ILogController logController)
         {
@@ -77,12 +81,9 @@ namespace CalendarSyncPlus.Application.Controllers
             _shellService.HelpView = _helpViewModel.View;
             _shellService.LogView = _logViewModel.View;
             _shellController = shellController;
+            _settingsController = settingsController;
             _guiInteractionService = guiInteractionService;
             _logController = logController;
-            if (_shellViewModel.IsSettingsVisible)
-            {
-                _settingsViewModel.Load();
-            }
         }
 
         public ILocalizationService LocalizationService { get; set; }
@@ -161,6 +162,7 @@ namespace CalendarSyncPlus.Application.Controllers
             //Initialize Other Controllers if Any
             _shellController.Initialize();
             _logController.Initialize();
+            _settingsController.Initialize();
             PropertyChangedEventManager.AddHandler(_settingsViewModel, SettingsChangedHandler, "");
             PropertyChangedEventManager.AddHandler(_shellViewModel, ShellViewUpdatedHandler, "");
         }
@@ -168,6 +170,7 @@ namespace CalendarSyncPlus.Application.Controllers
         public void Run(bool startMinimized)
         {
             _logController.Run(startMinimized);
+            _settingsController.Run(startMinimized);
             //Perform Other assignments if required
             _shellViewModel.Show(startMinimized);
             _settingsViewModel.ApplyProxySettings();
@@ -178,7 +181,7 @@ namespace CalendarSyncPlus.Application.Controllers
             //Close All controllers if required
             _logController.Shutdown();
             _shellController.Shutdown();
-            _settingsViewModel.Shutdown();
+            _settingsController.Shutdown();
             PropertyChangedEventManager.RemoveHandler(_settingsViewModel, SettingsChangedHandler, "");
             PropertyChangedEventManager.RemoveHandler(_shellViewModel, ShellViewUpdatedHandler, "");
 

@@ -1,13 +1,16 @@
 ﻿
 #region Imports
 
+using System;
+using System.ComponentModel.DataAnnotations;
 using System.Waf.Foundation;
 
 #endregion
 
 namespace CalendarSyncPlus.Domain.Models.Preferences
 {
-    public class ProxySetting : Model
+    [Serializable]
+    public class ProxySetting : ValidatableModel
     {
         #region Fields
 
@@ -23,7 +26,9 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
         #endregion
 
         #region Properties
-
+          [RegularExpression(
+            @"^http(s?)\:\/\/[0-9a-zA-Z]([-.\w]*[0-9a-zA-Z])*(:(0-9)*)*(\/?)([a-zA-Z0-9\-\.\?\,\'\/\\\+&amp;%\$#_]*)?$",
+            ErrorMessage = "Invalid URL")]
         public string ProxyAddress
         {
             get { return _proxyAddress; }

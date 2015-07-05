@@ -91,19 +91,19 @@
             <TabItem Header="{localizeExtension:LocText Key=SettingsView_TabItem_Calendars_Header}">
                 <ScrollViewer VerticalScrollBarVisibility="Auto"
                               HorizontalScrollBarVisibility="Hidden">
-                    <views:ProfileSettingsView DataContext="{Binding}" />
+                    <ContentPresenter Content="{Binding SettingsService.CalendarView}" />
                 </ScrollViewer>
             </TabItem>
             <TabItem Header="{localizeExtension:LocText Key=SettingsView_TabItem_Manage_Header}">
                 <ScrollViewer VerticalScrollBarVisibility="Auto"
                               HorizontalScrollBarVisibility="Hidden">
-                    <views:ManageProfilesView DataContext="{Binding}" />
+                    <ContentPresenter Content="{Binding SettingsService.ManageProfilesView}"/>
                 </ScrollViewer>
             </TabItem>
             <TabItem Header="{localizeExtension:LocText Key=SettingsView_TabItem_Application_Header}">
                 <ScrollViewer VerticalScrollBarVisibility="Auto"
                               HorizontalScrollBarVisibility="Hidden">
-                    <views:AdvancedSettingsView DataContext="{Binding}" />
+                    <ContentPresenter Content="{Binding SettingsService.AppSettingsView}" />
                 </ScrollViewer>
             </TabItem>
         </TabControl>

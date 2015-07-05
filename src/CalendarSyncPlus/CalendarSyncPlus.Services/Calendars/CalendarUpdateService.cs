@@ -118,22 +118,6 @@ namespace CalendarSyncPlus.Services.Calendars
                 CalendarServiceFactory.GetCalendarService(syncProfile.Destination);
         }
 
-        private string GetCalendarName(CalendarSyncProfile syncProfile, ServiceType serviceType)
-        {
-            switch (serviceType)
-            {
-                case ServiceType.Google:
-                    return string.Format("{0} - {1}", syncProfile.GoogleAccount.Name,
-                        syncProfile.GoogleAccount.GoogleCalendar.Name);
-                case ServiceType.OutlookDesktop:
-                    return syncProfile.OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.DefaultCalendar)
-                        ? "Default Calendar"
-                        : string.Format("{0} - {1}", syncProfile.OutlookSettings.OutlookMailBox.Name,
-                            syncProfile.OutlookSettings.OutlookCalendar.Name);
-            }
-            return string.Empty;
-        }
-
         private IDictionary<string, object> GetCalendarSpecificData(ServiceType serviceType,
             CalendarSyncProfile syncProfile)
         {
@@ -143,8 +127,8 @@ namespace CalendarSyncPlus.Services.Calendars
                 case ServiceType.Google:
                     calendarSpecificData = new Dictionary<string, object>
                     {
-                        {"CalendarId", syncProfile.GoogleAccount.GoogleCalendar.Id},
-                        {"AccountName", syncProfile.GoogleAccount.Name}
+                        {"CalendarId", syncProfile.GoogleSettings.GoogleCalendar.Id},
+                        {"AccountName", syncProfile.GoogleSettings.GoogleAccount.Name}
                     };
                     break;
                 case ServiceType.OutlookDesktop:
@@ -158,13 +142,13 @@ namespace CalendarSyncPlus.Services.Calendars
                         },
                         {
                             "OutlookCalendar",
-                            !syncProfile.OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.DefaultCalendar)
+                            !syncProfile.OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.DefaultMailBoxCalendar)
                                 ? syncProfile.OutlookSettings.OutlookCalendar
                                 : null
                         },
                         {
                             "AddAsAppointments",
-                            syncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.AsAppointments)
+                            syncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.AddAsAppointments)
                         }
                     };
                     break;
@@ -588,7 +572,7 @@ namespace CalendarSyncPlus.Services.Calendars
                 IsSuccess = isSuccess,
             };
 
-            AnalyticsService.UploadSyncData(syncMetric, syncProfile.GoogleAccount.Name);
+            //AnalyticsService.UploadSyncData(syncMetric, syncProfile.GoogleAccount.Name);
         }
         /// <summary>
         /// 

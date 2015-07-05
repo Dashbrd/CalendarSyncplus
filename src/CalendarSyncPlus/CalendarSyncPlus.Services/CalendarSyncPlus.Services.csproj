@@ -80,9 +80,11 @@
     <Compile Include="Calendars\Interfaces\ICalendarUpdateService.cs" />
     <Compile Include="Calendars\Interfaces\ICalendarService.cs" />
     <Compile Include="Sync\Interfaces\IFileDialogService.cs" />
+    <Compile Include="Sync\Interfaces\ISettingsService.cs" />
     <Compile Include="Sync\Interfaces\ISummarySerializationService.cs" />
     <Compile Include="Sync\Interfaces\ISyncAnalyticsService.cs" />
     <Compile Include="Sync\Interfaces\ISyncSummaryProvider.cs" />
+    <Compile Include="Sync\SettingsService.cs" />
     <Compile Include="Tasks\Interfaces\ITaskService.cs" />
     <Compile Include="Tasks\Interfaces\ITaskServiceFactory.cs" />
     <Compile Include="Tasks\Interfaces\ITaskUpdateService.cs" />

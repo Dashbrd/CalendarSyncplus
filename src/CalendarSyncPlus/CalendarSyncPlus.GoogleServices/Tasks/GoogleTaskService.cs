@@ -7,6 +7,7 @@ using CalendarSyncPlus.Authentication.Google;
 using CalendarSyncPlus.Common.Log;
 using CalendarSyncPlus.Common.MetaData;
 using CalendarSyncPlus.Domain.Models;
+using CalendarSyncPlus.Domain.Models.Preferences;
 using CalendarSyncPlus.Domain.Wrappers;
 using CalendarSyncPlus.GoogleServices.Google;
 using CalendarSyncPlus.Services.Tasks.Interfaces;
@@ -151,6 +152,22 @@ namespace CalendarSyncPlus.GoogleServices.Tasks
         private TasksService GetTasksService(string accountName)
         {
             return AccountAuthenticationService.AuthenticateTasksOauth(accountName);
+        }
+
+
+        public async Task<List<GoogleCalendar>> GetAvailableTaskList(string accountName)
+        {
+            //Get Calendar Service
+            var tasksService = GetTasksService(accountName);
+
+            var taskList = await tasksService.Tasklists.List().ExecuteAsync();
+
+            var localTasksList =
+                taskList.Items.Select(
+                    taskListEntry =>
+                        new GoogleCalendar { Id = taskListEntry.Id, Name = taskListEntry.Title })
+                    .ToList();
+            return localTasksList;
         }
     }
 }

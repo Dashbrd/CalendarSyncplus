@@ -48,8 +48,8 @@ namespace CalendarSyncPlus.Domain.Models
         None = 0,
         DefaultProfile = 1,
         AlternateProfile = 2,
-        DefaultCalendar = 4,
-        AlternateCalendar = 8,
+        DefaultMailBoxCalendar = 4,
+        AlternateMailBoxCalendar = 8,
         ExchangeWebServices = 16
     }
 
@@ -62,7 +62,7 @@ namespace CalendarSyncPlus.Domain.Models
         AttendeesToDescription = 4,
         Reminders = 8,
         Attachments = 16,
-        AsAppointments = 32
+        AddAsAppointments = 32
     }
 
     public enum SyncDirectionEnum

@@ -1,5 +1,7 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
 using CalendarSyncPlus.Domain.Models;
 using CalendarSyncPlus.Domain.Models.Preferences;
 
@@ -7,6 +9,18 @@ namespace CalendarSyncPlus.Domain.Helpers
 {
     public static class ExtensionMethods
     {
+        // Deep clone
+        public static T DeepClone<T>(this T a)
+        {
+            using (MemoryStream stream = new MemoryStream())
+            {
+                BinaryFormatter formatter = new BinaryFormatter();
+                formatter.Serialize(stream, a);
+                stream.Position = 0;
+                return (T)formatter.Deserialize(stream);
+            }
+        }
+
         public static string Rfc339FFormat(this DateTime dateTime)
         {
             var timezone = TimeZoneInfo.Local.GetUtcOffset(dateTime).ToString();
@@ -23,7 +37,8 @@ namespace CalendarSyncPlus.Domain.Helpers
         public static bool ValidateSettings(this Settings settings)
         {
             if (settings == null || !settings.CalendarSyncProfiles.Any() ||
-                settings.CalendarSyncProfiles.All(t => !t.ValidateOutlookSettings() || t.GoogleAccount == null))
+                settings.CalendarSyncProfiles.All(t => !t.ValidateOutlookSettings() || 
+                    t.GoogleSettings.GoogleAccount == null))
             {
                 return false;
             }
@@ -38,7 +53,7 @@ namespace CalendarSyncPlus.Domain.Helpers
                 return false;
             }
 
-            if (!syncProfile.OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.DefaultCalendar) &&
+            if (!syncProfile.OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.DefaultMailBoxCalendar) &&
                 (syncProfile.OutlookSettings.OutlookCalendar == null ||
                  syncProfile.OutlookSettings.OutlookMailBox == null))
             {
@@ -83,7 +98,7 @@ namespace CalendarSyncPlus.Domain.Helpers
             if (asAppointments)
             {
                 syncProfile.CalendarEntryOptions = syncProfile.CalendarEntryOptions |
-                                                   CalendarEntryOptionsEnum.AsAppointments;
+                                                   CalendarEntryOptionsEnum.AddAsAppointments;
             }
         }
 

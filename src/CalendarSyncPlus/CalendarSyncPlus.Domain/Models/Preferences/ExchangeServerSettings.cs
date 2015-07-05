@@ -1,11 +1,13 @@
 ﻿#region Imports
 
+using System;
 using System.Waf.Foundation;
 
 #endregion
 
 namespace CalendarSyncPlus.Domain.Models.Preferences
 {
+    [Serializable]
     public class ExchangeServerSettings : Model
     {
         #region Fields

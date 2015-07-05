@@ -125,7 +125,8 @@ namespace CalendarSyncPlus.Services.Sync
         {
             try
             {
-                if (syncProfile.GoogleAccount == null || syncProfile.GoogleAccount.GoogleCalendar == null ||
+                if (syncProfile.GoogleSettings.GoogleAccount == null || 
+                    syncProfile.GoogleSettings.GoogleCalendar == null ||
                     !syncProfile.ValidateOutlookSettings())
                 {
                     MessageService.ShowMessageAsync(
@@ -155,7 +156,8 @@ namespace CalendarSyncPlus.Services.Sync
         {
             try
             {
-                if (syncProfile.GoogleAccount == null || syncProfile.GoogleAccount.GoogleCalendar == null ||
+                if (syncProfile.GoogleSettings.GoogleAccount == null || 
+                    syncProfile.GoogleSettings.GoogleCalendar == null ||
                     !syncProfile.ValidateOutlookSettings())
                 {
                     MessageService.ShowMessageAsync(
@@ -185,7 +187,8 @@ namespace CalendarSyncPlus.Services.Sync
         {
             try
             {
-                if (syncProfile.GoogleAccount == null || syncProfile.GoogleAccount.GoogleCalendar == null ||
+                if (syncProfile.GoogleSettings.GoogleAccount == null || 
+                    syncProfile.GoogleSettings.GoogleCalendar == null ||
                     !syncProfile.ValidateOutlookSettings())
                 {
                     MessageService.ShowMessageAsync(

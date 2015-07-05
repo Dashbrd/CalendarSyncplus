@@ -9,7 +9,7 @@
              xmlns:models="clr-namespace:CalendarSyncPlus.Domain.Models;assembly=CalendarSyncPlus.Domain"
              xmlns:viewModels="clr-namespace:CalendarSyncPlus.Application.ViewModels;assembly=CalendarSyncPlus.Application"
              xmlns:wafConverters="http://waf.codeplex.com/schemas"
-             d:DataContext="{d:DesignInstance viewModels:ProfileViewModel}"
+             d:DataContext="{d:DesignInstance viewModels:CalendarViewModel}"
              d:DesignHeight="600"
              d:DesignWidth="500"
              mc:Ignorable="d">

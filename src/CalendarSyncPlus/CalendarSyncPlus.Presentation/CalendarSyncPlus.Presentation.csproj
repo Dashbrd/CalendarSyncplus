@@ -94,8 +94,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\MahApps.Metro.1.1.2.0\lib\net45\MahApps.Metro.dll</HintPath>
     </Reference>
-    <Reference Include="MahApps.Metro.SimpleChildWindow, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\MahApps.Metro.SimpleChildWindow.1.1.0.0\lib\net45\MahApps.Metro.SimpleChildWindow.dll</HintPath>
+    <Reference Include="MahApps.Metro.SimpleChildWindow, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MahApps.Metro.SimpleChildWindow.1.2.0.0\lib\net45\MahApps.Metro.SimpleChildWindow.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="MefContrib">
@@ -190,9 +190,11 @@
       <DependentUpon>TimePickerControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\BootToIntConverter.cs" />
+    <Compile Include="Converters\CalendarOptionsConverter.cs" />
     <Compile Include="Converters\EnumToVisbilityConverter.cs" />
     <Compile Include="Converters\BoolToEnumConverter.cs" />
     <Compile Include="Converters\InvertBooleanToVisibilityConverter.cs" />
+    <Compile Include="Converters\OutlookOptionsConverter.cs" />
     <Compile Include="Converters\PercentageWidthConverter.cs" />
     <Compile Include="Converters\StringToBrushConverter.cs" />
     <Compile Include="Helpers\Utilities.cs" />
@@ -211,8 +213,8 @@
     <Compile Include="Views\Main\AboutView.xaml.cs">
       <DependentUpon>AboutView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Preferences\AdvancedSettingsView.xaml.cs">
-      <DependentUpon>AdvancedSettingsView.xaml</DependentUpon>
+    <Compile Include="Views\Preferences\Calendars\AppSettingsView.xaml.cs">
+      <DependentUpon>AppSettingsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Main\ChildView.xaml.cs">
       <DependentUpon>ChildView.xaml</DependentUpon>
@@ -220,7 +222,7 @@
     <Compile Include="Views\Helper\CustomInputDialog.xaml.cs">
       <DependentUpon>CustomInputDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Preferences\GoogleSettingsView.xaml.cs">
+    <Compile Include="Views\Preferences\Calendars\GoogleSettingsView.xaml.cs">
       <DependentUpon>GoogleSettingsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Main\HelpView.xaml.cs">
@@ -235,17 +237,17 @@
     <Compile Include="Views\Main\MenuView.xaml.cs">
       <DependentUpon>MenuView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Preferences\OptionsSettingsView.xaml.cs">
+    <Compile Include="Views\Preferences\Calendars\OptionsSettingsView.xaml.cs">
       <DependentUpon>OptionsSettingsView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Preferences\ManageProfilesView.xaml.cs">
+    <Compile Include="Views\Preferences\Calendars\ManageProfilesView.xaml.cs">
       <DependentUpon>ManageProfilesView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Preferences\OutlookSettingsView.xaml.cs">
+    <Compile Include="Views\Preferences\Calendars\OutlookSettingsView.xaml.cs">
       <DependentUpon>OutlookSettingsView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Preferences\ProfileSettingsView.xaml.cs">
-      <DependentUpon>ProfileSettingsView.xaml</DependentUpon>
+    <Compile Include="Views\Preferences\Calendars\CalendarsView.xaml.cs">
+      <DependentUpon>CalendarsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Main\SettingsView.xaml.cs">
       <DependentUpon>SettingsView.xaml</DependentUpon>
@@ -285,7 +287,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Preferences\AdvancedSettingsView.xaml">
+    <Page Include="Views\Preferences\Calendars\AppSettingsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -297,7 +299,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Preferences\GoogleSettingsView.xaml">
+    <Page Include="Views\Preferences\Calendars\GoogleSettingsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -317,19 +319,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Preferences\OptionsSettingsView.xaml">
+    <Page Include="Views\Preferences\Calendars\OptionsSettingsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Preferences\ManageProfilesView.xaml">
+    <Page Include="Views\Preferences\Calendars\ManageProfilesView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Preferences\OutlookSettingsView.xaml">
+    <Page Include="Views\Preferences\Calendars\OutlookSettingsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Preferences\ProfileSettingsView.xaml">
+    <Page Include="Views\Preferences\Calendars\CalendarsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -467,6 +469,10 @@
       <ProductName>Windows Installer 4.5</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Views\Preferences\Contacts\" />
+    <Folder Include="Views\Preferences\Tasks\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

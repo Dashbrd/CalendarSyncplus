@@ -10,6 +10,9 @@ using CalendarSyncPlus.SyncEngine.Interfaces;
 
 namespace CalendarSyncPlus.SyncEngine
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [Export(typeof(ICalendarSyncEngine))]
     public class CalendarSyncEngine : ICalendarSyncEngine
     {
@@ -236,38 +239,20 @@ namespace CalendarSyncPlus.SyncEngine
                 //All entries need to be added
                 return;
             }
-            if (syncProfile.SyncMode == SyncModeEnum.TwoWay &&
-                syncProfile.SyncSettings.KeepLastModifiedVersion)
+            
+            foreach (var sourceAppointment in sourceList)
             {
-                foreach (var sourceAppointment in sourceList)
+                if (sourceAppointment.SourceId == null)
                 {
-                    //Allow adding appointments which are original entries & do not have a child in this calendar
-                    if (sourceAppointment.SourceId == null && sourceAppointment.ChildId == null)
+                    var destinationAppointment = destinationList.FirstOrDefault(t =>
+                        t.Equals(sourceAppointment));
+                    if (destinationAppointment == null)
                     {
-                        var destinationAppointment = destinationList.FirstOrDefault(t =>
-                           t.Equals(sourceAppointment));
-                        if (destinationAppointment == null)
-                        {
-                            appointmentsToAdd.Add(sourceAppointment);
-                        }
+                        appointmentsToAdd.Add(sourceAppointment);
                     }
                 }
             }
-            else
-            {
-                foreach (var sourceAppointment in sourceList)
-                {
-                    if (sourceAppointment.SourceId == null)
-                    {
-                        var destinationAppointment = destinationList.FirstOrDefault(t =>
-                            t.Equals(sourceAppointment));
-                        if (destinationAppointment == null)
-                        {
-                            appointmentsToAdd.Add(sourceAppointment);
-                        }
-                    }
-                }
-            }
+            
         }
 
         /// <summary>

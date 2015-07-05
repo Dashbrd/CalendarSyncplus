@@ -58,7 +58,7 @@ namespace CalendarSyncPlus.OutlookServices.Task
                     };
                     mailBoxes.Add(mailBox);
 
-                    GetCalendars(rootFolder, mailBox.Calendars);
+                    GetCalendars(rootFolder, mailBox.Folders);
 
                     Marshal.FinalReleaseComObject(rootFolder);
                 }

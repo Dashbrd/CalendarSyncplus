@@ -953,7 +953,7 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
                     };
                     mailBoxes.Add(mailBox);
 
-                    GetCalendars(rootFolder, mailBox.Calendars);
+                    GetCalendars(rootFolder, mailBox.Folders);
 
                     Marshal.FinalReleaseComObject(rootFolder);
                 }

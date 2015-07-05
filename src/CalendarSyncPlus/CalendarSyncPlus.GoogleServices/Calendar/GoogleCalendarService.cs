@@ -44,6 +44,9 @@ using log4net;
 
 namespace CalendarSyncPlus.GoogleServices.Calendar
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [Export(typeof(ICalendarService)), Export(typeof(IGoogleCalendarService))]
     [ExportMetadata("ServiceType", ServiceType.Google)]
     public class GoogleCalendarService : IGoogleCalendarService

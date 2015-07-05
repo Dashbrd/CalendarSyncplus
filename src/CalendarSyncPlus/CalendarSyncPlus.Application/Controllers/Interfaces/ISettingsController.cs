@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CalendarSyncPlus.Domain.Models.Preferences
+namespace CalendarSyncPlus.Application.Controllers.Interfaces
 {
-    [Serializable]
-    public class ContactsSyncProfile : SyncProfile
+    public interface ISettingsController : IController
     {
     }
 }

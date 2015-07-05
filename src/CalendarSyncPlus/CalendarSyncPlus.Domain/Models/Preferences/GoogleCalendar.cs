@@ -1,8 +1,10 @@
-﻿using System.Waf.Foundation;
+﻿using System;
+using System.Waf.Foundation;
 
 namespace CalendarSyncPlus.Domain.Models.Preferences
 {
-    public class Calendar : Model
+    [Serializable]
+    public class GoogleCalendar : Model
     {
         private string _id;
         private string _name;

@@ -12,7 +12,7 @@
              mc:Ignorable="d"
              d:DesignHeight="500"
              d:DesignWidth="450"
-             d:DataContext="{d:DesignInstance viewModels:ProfileViewModel}">
+             d:DataContext="{d:DesignInstance viewModels:CalendarViewModel}">
     <UserControl.Resources>
         <converters:BoolToEnumConverter x:Key="BoolToEnumConverter" />
         <converters:EnumToVisbilityConverter x:Key="EnumToVisbilityConverter" />

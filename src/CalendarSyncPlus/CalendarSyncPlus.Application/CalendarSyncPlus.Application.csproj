@@ -95,36 +95,46 @@
       <Link>AssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Controllers\ApplicationController.cs" />
-    <Compile Include="Controllers\IApplicationController.cs" />
-    <Compile Include="Controllers\IController.cs" />
-    <Compile Include="Controllers\ILogController.cs" />
-    <Compile Include="Controllers\IShellController.cs" />
+    <Compile Include="Controllers\CalendarController.cs" />
+    <Compile Include="Controllers\Interfaces\IApplicationController.cs" />
+    <Compile Include="Controllers\Interfaces\ICalendarController.cs" />
+    <Compile Include="Controllers\Interfaces\IController.cs" />
+    <Compile Include="Controllers\Interfaces\ILogController.cs" />
+    <Compile Include="Controllers\Interfaces\ISettingsController.cs" />
+    <Compile Include="Controllers\Interfaces\IShellController.cs" />
     <Compile Include="Controllers\LogController.cs" />
+    <Compile Include="Controllers\SettingsController.cs" />
     <Compile Include="Controllers\ShellController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\AboutViewModel.cs" />
+    <Compile Include="ViewModels\AppSettingsViewModel.cs" />
     <Compile Include="ViewModels\ChildContentViewModelFactory.cs" />
     <Compile Include="ViewModels\ChildViewContentType.cs" />
     <Compile Include="ViewModels\DailySyncViewModel.cs" />
     <Compile Include="ViewModels\HelpViewModel.cs" />
-    <Compile Include="ViewModels\IChildContentViewModel.cs" />
-    <Compile Include="ViewModels\IChildContentViewModelMetaData.cs" />
+    <Compile Include="ViewModels\Interfaces\IChildContentViewModel.cs" />
+    <Compile Include="ViewModels\Interfaces\IChildContentViewModelMetaData.cs" />
     <Compile Include="ViewModels\IntervalSyncViewModel.cs" />
+    <Compile Include="ViewModels\CalendarViewModel.cs" />
     <Compile Include="ViewModels\LogViewModel.cs" />
-    <Compile Include="ViewModels\ProfileViewModel.cs" />
-    <Compile Include="ViewModels\ProxySettingsDataModel.cs" />
+    <Compile Include="ViewModels\ManageProfileViewModel.cs" />
     <Compile Include="ViewModels\SyncFrequencyViewModel.cs" />
     <Compile Include="ViewModels\SystemTrayNotifierViewModel.cs" />
     <Compile Include="ViewModels\WeeklySyncViewModel.cs" />
     <Compile Include="ViewModels\WhatsNewViewModel.cs" />
     <Compile Include="Views\IAboutView.cs" />
+    <Compile Include="Views\IAppSettingsView.cs" />
+    <Compile Include="Views\ICalendarView.cs" />
+    <Compile Include="Views\IContactView.cs" />
     <Compile Include="Views\IHelpView.cs" />
     <Compile Include="Views\ILogView.cs" />
+    <Compile Include="Views\IManageProfileView.cs" />
     <Compile Include="Views\ISettingsView.cs" />
     <Compile Include="Views\IShellView.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
     <Compile Include="ViewModels\ShellViewModel.cs" />
     <Compile Include="Views\ISystemTrayNotifierView.cs" />
+    <Compile Include="Views\ITaskView.cs" />
     <Compile Include="Views\IWhatsNewView.cs" />
   </ItemGroup>
   <ItemGroup>

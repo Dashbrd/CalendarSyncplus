@@ -1,6 +1,10 @@
-﻿namespace CalendarSyncPlus.Domain.Models
+﻿using System;
+using System.Waf.Foundation;
+
+namespace CalendarSyncPlus.Domain.Models
 {
-    public class Category
+    [Serializable]
+    public class Category : Model
     {
         public string HexValue { get; set; }
         public string CategoryName { get; set; }

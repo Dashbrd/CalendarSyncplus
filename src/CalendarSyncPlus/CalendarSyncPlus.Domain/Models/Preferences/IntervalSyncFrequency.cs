@@ -2,6 +2,7 @@
 
 namespace CalendarSyncPlus.Domain.Models.Preferences
 {
+    [Serializable]
     public class IntervalSyncFrequency : SyncFrequency
     {
         public IntervalSyncFrequency()

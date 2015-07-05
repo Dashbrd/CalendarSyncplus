@@ -1,10 +1,69 @@
-﻿namespace CalendarSyncPlus.Domain.Models.Preferences
+﻿using System;
+using System.Waf.Foundation;
+
+namespace CalendarSyncPlus.Domain.Models.Preferences
 {
-    public class OutlookSettings
+    [Serializable]
+    public class OutlookSettings : Model
     {
-        public OutlookOptionsEnum OutlookOptions { get; set; }
-        public string OutlookProfileName { get; set; }
-        public OutlookMailBox OutlookMailBox { get; set; }
-        public OutlookFolder OutlookCalendar { get; set; }
+        private OutlookOptionsEnum _outlookOptions;
+        private string _outlookProfileName;
+        private OutlookMailBox _outlookMailBox;
+        private OutlookFolder _outlookCalendar;
+
+        public OutlookOptionsEnum OutlookOptions
+        {
+            get { return _outlookOptions; }
+            set
+            {
+                value = ValidateOptions(value);
+                SetProperty(ref _outlookOptions, value);
+            }
+        }
+        
+        public string OutlookProfileName
+        {
+            get { return _outlookProfileName; }
+            set { SetProperty(ref _outlookProfileName, value); }
+        }
+
+        public OutlookMailBox OutlookMailBox
+        {
+            get { return _outlookMailBox; }
+            set { SetProperty(ref _outlookMailBox, value); }
+        }
+
+        public OutlookFolder OutlookCalendar
+        {
+            get { return _outlookCalendar; }
+            set { SetProperty(ref _outlookCalendar, value); }
+        }
+
+        private OutlookOptionsEnum ValidateOptions(OutlookOptionsEnum value)
+        {
+            if (value == OutlookOptionsEnum.ExchangeWebServices)
+            {
+                return value;
+            }
+
+            if (value == OutlookOptionsEnum.DefaultProfile)
+            {
+                if (value.HasFlag(OutlookOptionsEnum.AlternateProfile))
+                {
+                    value &= ~OutlookOptionsEnum.AlternateProfile;
+                }
+                return value | OutlookOptionsEnum.DefaultProfile;
+            }
+
+            if (value == OutlookOptionsEnum.DefaultMailBoxCalendar)
+            {
+                if (value.HasFlag(OutlookOptionsEnum.AlternateMailBoxCalendar))
+                {
+                    value &= ~OutlookOptionsEnum.AlternateMailBoxCalendar;
+                }
+                return value | OutlookOptionsEnum.DefaultMailBoxCalendar;
+            }
+            return value;
+        }
     }
 }

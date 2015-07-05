@@ -70,9 +70,10 @@
     <Compile Include="Models\Preferences\ContactsSyncProfile.cs" />
     <Compile Include="Models\Preferences\EWSCalendar.cs" />
     <Compile Include="Models\Preferences\GoogleAccount.cs" />
+    <Compile Include="Models\Preferences\GoogleSettings.cs" />
     <Compile Include="Models\Preferences\LogSettings.cs" />
     <Compile Include="Models\Appointment.cs" />
-    <Compile Include="Models\Preferences\Calendar.cs" />
+    <Compile Include="Models\Preferences\GoogleCalendar.cs" />
     <Compile Include="Models\Preferences\DailySyncFrequency.cs" />
     <Compile Include="Models\Preferences\ExchangeServerSettings.cs" />
     <Compile Include="Models\Preferences\IntervalSyncFrequency.cs" />

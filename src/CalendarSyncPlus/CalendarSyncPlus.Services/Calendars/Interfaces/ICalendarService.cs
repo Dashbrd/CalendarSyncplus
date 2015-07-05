@@ -41,8 +41,8 @@ namespace CalendarSyncPlus.Services.Calendars.Interfaces
 
         void CheckCalendarSpecificData(IDictionary<string, object> calendarSpecificData);
 
-        Task<AppointmentsWrapper> UpdateCalendarEvents(List<Appointment> calendarAppointments, bool addDescription,
-            bool addReminder, bool addAttendees, bool attendeesToDescription,
+        Task<AppointmentsWrapper> UpdateCalendarEvents(List<Appointment> calendarAppointments, 
+            bool addDescription, bool addReminder, bool addAttendees, bool attendeesToDescription,
             IDictionary<string, object> calendarSpecificData);
 
         Task<bool> ResetCalendar(IDictionary<string, object> calendarSpecificData);

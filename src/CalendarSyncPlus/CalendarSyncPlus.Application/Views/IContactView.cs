@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Waf.Applications;
 
-namespace CalendarSyncPlus.Domain.Models.Preferences
+namespace CalendarSyncPlus.Application.Views
 {
-    [Serializable]
-    public class ContactsSyncProfile : SyncProfile
+    public interface IContactView : IView
     {
     }
 }

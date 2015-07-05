@@ -5,9 +5,8 @@ using CalendarSyncPlus.Common.MetaData;
 
 namespace CalendarSyncPlus.Domain.Models.Preferences
 {
-    [XmlInclude(typeof (Calendar))]
+    [Serializable]
     [XmlInclude(typeof (SyncFrequency))]
-    [XmlInclude(typeof (Category))]
     public class CalendarSyncProfile : SyncProfile
     {
         private SyncSettings _syncSettings;
@@ -15,6 +14,7 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
         public CalendarSyncProfile()
         {
             Name = "Default Profile";
+            GoogleSettings = new GoogleSettings();
             SyncSettings = new SyncSettings();
             ExchangeServerSettings = new ExchangeServerSettings();
             OutlookSettings = new OutlookSettings();
@@ -41,9 +41,9 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
         /// <summary>
         /// </summary>
         public Category EventCategory { get; set; }
-        
-       
 
+        [XmlIgnore]
+        public bool IsLoaded { get; set; }
         /// <summary>
         ///     Gets default calendar profile for the user
         /// </summary>
@@ -57,12 +57,12 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
                 OutlookSettings =
                 {
                     OutlookOptions = OutlookOptionsEnum.DefaultProfile |
-                                     OutlookOptionsEnum.DefaultCalendar
+                                     OutlookOptionsEnum.DefaultMailBoxCalendar
                 },
                 CalendarEntryOptions =
                     CalendarEntryOptionsEnum.Description | CalendarEntryOptionsEnum.Attendees |
                     CalendarEntryOptionsEnum.AttendeesToDescription |
-                    CalendarEntryOptionsEnum.Reminders | CalendarEntryOptionsEnum.AsAppointments,
+                    CalendarEntryOptionsEnum.Reminders | CalendarEntryOptionsEnum.AddAsAppointments,
                     SyncDirection = SyncDirectionEnum.OutlookGoogleOneWay,
                 SyncFrequency = new IntervalSyncFrequency {Hours = 1, Minutes = 0, StartTime = DateTime.Now}
             };

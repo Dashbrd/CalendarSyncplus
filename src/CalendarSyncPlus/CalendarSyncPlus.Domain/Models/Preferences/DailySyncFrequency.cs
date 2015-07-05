@@ -3,6 +3,7 @@ using CalendarSyncPlus.Domain.Helpers;
 
 namespace CalendarSyncPlus.Domain.Models.Preferences
 {
+    [Serializable]
     public class DailySyncFrequency : SyncFrequency
     {
         public DailySyncFrequency()
