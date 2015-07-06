@@ -119,8 +119,8 @@ namespace CalendarSyncPlus.Application.Controllers
                     if (_settingsViewModel.SettingsSaved)
                     {
                         _shellViewModel.IsSettingsVisible = false;
-                        _shellViewModel.Settings = _settingsViewModel.Settings;
-                        foreach (var syncProfile in _settingsViewModel.Settings.CalendarSyncProfiles)
+                        _shellViewModel.Settings = _settingsViewModel.LastSavedSettings;
+                        foreach (var syncProfile in _shellViewModel.Settings.CalendarSyncProfiles)
                         {
                             if (syncProfile.IsSyncEnabled && syncProfile.SyncFrequency != null)
                             {
