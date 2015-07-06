@@ -17,19 +17,24 @@ namespace CalendarSyncPlus.Application.Controllers
         private readonly CalendarViewModel _calendarViewModel;
         private ManageProfileViewModel _manageProfileViewModel;
         private AppSettingsViewModel _appSettingsViewModel;
-
+        private TaskViewModel _taskViewModel;
         [ImportingConstructor]
         public SettingsController(ISettingsService settingsService,
             ICalendarController calendarController,
             SettingsViewModel settingsViewModel,
-            Lazy<CalendarViewModel> calendarViewModelLazy, Lazy<ManageProfileViewModel> manageProfileViewModelLazy,
+            Lazy<CalendarViewModel> calendarViewModelLazy, 
+            Lazy<ManageProfileViewModel> manageProfileViewModelLazy,
+            Lazy<TaskViewModel> taskViewModelLazy ,
             Lazy<AppSettingsViewModel> appSettingsViewModelLazy)
         {
             _calendarController = calendarController;
             _settingsViewModel = settingsViewModel;
             _calendarViewModel = calendarViewModelLazy.Value;
+            _taskViewModel = taskViewModelLazy.Value;
             _manageProfileViewModel = manageProfileViewModelLazy.Value;
             _appSettingsViewModel = appSettingsViewModelLazy.Value;
+
+            settingsService.TaskView = _taskViewModel.View;
             settingsService.CalendarView = _calendarViewModel.View;
             settingsService.ManageProfilesView = _manageProfileViewModel.View;
             settingsService.AppSettingsView = _appSettingsViewModel.View;
@@ -55,6 +60,8 @@ namespace CalendarSyncPlus.Application.Controllers
                         _calendarViewModel.SelectedProfile = _calendarViewModel.CalendarSyncProfiles.FirstOrDefault();
                         _manageProfileViewModel.CalendarSyncProfiles = _settingsViewModel.Settings.CalendarSyncProfiles;
                         _appSettingsViewModel.AppSettings = _settingsViewModel.Settings.AppSettings;
+                        _taskViewModel.TaskSyncProfiles = _settingsViewModel.Settings.TaskSyncProfiles;
+                        _taskViewModel.GoogleAccounts = _settingsViewModel.Settings.GoogleAccounts;
                         _settingsViewModel.Init = false;
                     }
                     break;

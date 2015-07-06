@@ -93,6 +93,12 @@
                     <ContentPresenter Content="{Binding SettingsService.CalendarView}" />
                 </ScrollViewer>
             </TabItem>
+            <TabItem Header="{localizeExtension:LocText Key=SettingsView_TabItem_Tasks_Header}">
+                <ScrollViewer VerticalScrollBarVisibility="Auto"
+                              HorizontalScrollBarVisibility="Hidden">
+                    <ContentPresenter Content="{Binding SettingsService.TaskView}" />
+                </ScrollViewer>
+            </TabItem>
             <TabItem Header="{localizeExtension:LocText Key=SettingsView_TabItem_Manage_Header}">
                 <ScrollViewer VerticalScrollBarVisibility="Auto"
                               HorizontalScrollBarVisibility="Hidden">

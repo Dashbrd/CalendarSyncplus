@@ -160,34 +160,50 @@ namespace CalendarSyncPlus.Services
 
         private void ValidateSettings(Settings result)
         {
-            if (result.CalendarSyncProfiles == null)
+            if (result.CalendarSyncProfiles == null || result.CalendarSyncProfiles.Count == 0)
             {
-                result.CalendarSyncProfiles = new ObservableCollection<CalendarSyncProfile>();
+                result.CalendarSyncProfiles = new ObservableCollection<CalendarSyncProfile>()
+                {
+                    CalendarSyncProfile.GetDefaultSyncProfile()
+                };
+            }
+            else
+            {
+                foreach (var syncProfile in result.CalendarSyncProfiles)
+                {
+                    syncProfile.SetSourceDestTypes();
+                    if (syncProfile.SyncSettings == null)
+                    {
+                        syncProfile.SyncSettings = SyncSettings.GetDefault();
+                    }
+                    else if (syncProfile.SyncSettings.SyncRangeType == SyncRangeTypeEnum.SyncEntireCalendar)
+                    {
+                        syncProfile.SyncSettings.SyncRangeType = SyncRangeTypeEnum.SyncRangeInDays;
+                        syncProfile.SyncSettings.DaysInPast = 120;
+                        syncProfile.SyncSettings.DaysInFuture = 120;
+                    }
+
+                    if (syncProfile.SyncFrequency == null)
+                    {
+                        syncProfile.SyncFrequency = new IntervalSyncFrequency();
+                    }
+                }
             }
 
-            if (result.CalendarSyncProfiles.Count == 0)
+            if (result.TaskSyncProfiles == null || result.TaskSyncProfiles.Count == 0)
             {
-                result.CalendarSyncProfiles.Add(CalendarSyncProfile.GetDefaultSyncProfile());
+                result.TaskSyncProfiles = new ObservableCollection<TaskSyncProfile>()
+                {
+                    TaskSyncProfile.GetDefaultSyncProfile()
+                };
             }
 
-            foreach (var syncProfile in result.CalendarSyncProfiles)
+            if (result.ContactSyncProfiles == null || result.ContactSyncProfiles.Count == 0)
             {
-                syncProfile.SetSourceDestTypes();
-                if (syncProfile.SyncSettings == null)
+                result.ContactSyncProfiles = new ObservableCollection<ContactsSyncProfile>()
                 {
-                    syncProfile.SyncSettings = SyncSettings.GetDefault();
-                }
-                else if (syncProfile.SyncSettings.SyncRangeType == SyncRangeTypeEnum.SyncEntireCalendar)
-                {
-                    syncProfile.SyncSettings.SyncRangeType = SyncRangeTypeEnum.SyncRangeInDays;
-                    syncProfile.SyncSettings.DaysInPast = 120;
-                    syncProfile.SyncSettings.DaysInFuture = 120;
-                }
-
-                if(syncProfile.SyncFrequency == null)
-                {
-                   syncProfile.SyncFrequency = new IntervalSyncFrequency(); 
-                }
+                    ContactsSyncProfile.GetDefaultSyncProfile()
+                };
             }
 
             if (result.AppSettings == null)

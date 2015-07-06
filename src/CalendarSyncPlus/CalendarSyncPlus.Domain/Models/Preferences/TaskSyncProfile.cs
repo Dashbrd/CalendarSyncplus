@@ -10,5 +10,10 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
     [Serializable]
     public class TaskSyncProfile : SyncProfile
     {
+
+        public static TaskSyncProfile GetDefaultSyncProfile()
+        {
+            return new TaskSyncProfile();
+        }
     }
 }

@@ -3,11 +3,11 @@
 namespace CalendarSyncPlus.Presentation.Views
 {
     /// <summary>
-    ///     Interaction logic for GoogleSettingsView.xaml
+    ///     Interaction logic for OutlookSettingsView.xaml
     /// </summary>
-    public partial class GoogleSettingsView : UserControl
+    public partial class OutlookTasksView : UserControl
     {
-        public GoogleSettingsView()
+        public OutlookTasksView()
         {
             InitializeComponent();
         }

@@ -215,7 +215,7 @@
     <Compile Include="Views\Main\AboutView.xaml.cs">
       <DependentUpon>AboutView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Preferences\Calendars\AppSettingsView.xaml.cs">
+    <Compile Include="Views\Preferences\General\AppSettingsView.xaml.cs">
       <DependentUpon>AppSettingsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Main\ChildView.xaml.cs">
@@ -224,8 +224,8 @@
     <Compile Include="Views\Helper\CustomInputDialog.xaml.cs">
       <DependentUpon>CustomInputDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Preferences\Calendars\GoogleSettingsView.xaml.cs">
-      <DependentUpon>GoogleSettingsView.xaml</DependentUpon>
+    <Compile Include="Views\Preferences\Calendars\GoogleCalendarsView.xaml.cs">
+      <DependentUpon>GoogleCalendarsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Main\HelpView.xaml.cs">
       <DependentUpon>HelpView.xaml</DependentUpon>
@@ -242,11 +242,11 @@
     <Compile Include="Views\Preferences\Calendars\OptionsSettingsView.xaml.cs">
       <DependentUpon>OptionsSettingsView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Preferences\Calendars\ManageProfilesView.xaml.cs">
+    <Compile Include="Views\Preferences\General\ManageProfilesView.xaml.cs">
       <DependentUpon>ManageProfilesView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Preferences\Calendars\OutlookSettingsView.xaml.cs">
-      <DependentUpon>OutlookSettingsView.xaml</DependentUpon>
+    <Compile Include="Views\Preferences\Calendars\OutlookCalendarsView.xaml.cs">
+      <DependentUpon>OutlookCalendarsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Preferences\Calendars\CalendarsView.xaml.cs">
       <DependentUpon>CalendarsView.xaml</DependentUpon>
@@ -269,6 +269,15 @@
     <Compile Include="Views\Main\WhatsNewView.xaml.cs">
       <DependentUpon>WhatsNewView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Preferences\Tasks\GoogleTasksView.xaml.cs">
+      <DependentUpon>GoogleTasksView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Preferences\Tasks\OutlookTasksView.xaml.cs">
+      <DependentUpon>OutlookTasksView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Preferences\Tasks\TasksView.xaml.cs">
+      <DependentUpon>TasksView.xaml</DependentUpon>
+    </Compile>
     <Page Include="Controls\LogViewer\LogViewer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -289,7 +298,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Preferences\Calendars\AppSettingsView.xaml">
+    <Page Include="Views\Preferences\General\AppSettingsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -301,7 +310,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Preferences\Calendars\GoogleSettingsView.xaml">
+    <Page Include="Views\Preferences\Calendars\GoogleCalendarsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -325,11 +334,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Preferences\Calendars\ManageProfilesView.xaml">
+    <Page Include="Views\Preferences\General\ManageProfilesView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Preferences\Calendars\OutlookSettingsView.xaml">
+    <Page Include="Views\Preferences\Calendars\OutlookCalendarsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -370,6 +379,18 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Main\WhatsNewView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Preferences\Tasks\GoogleTasksView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Preferences\Tasks\OutlookTasksView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Preferences\Tasks\TasksView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -474,7 +495,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\Preferences\Contacts\" />
-    <Folder Include="Views\Preferences\Tasks\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

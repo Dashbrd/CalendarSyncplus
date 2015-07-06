@@ -1,6 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel.Composition;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Waf.Applications;
 using CalendarSyncPlus.Application.Views;
 using CalendarSyncPlus.Domain.Models.Preferences;
@@ -70,9 +71,30 @@ namespace CalendarSyncPlus.Application.ViewModels
         /// <summary>
         /// 
         /// </summary>
-        private async void CreateProfile()
+        private async void CreateProfile(object parameter)
         {
-            if (CalendarSyncProfiles.Count > 4)
+            if (parameter == null)
+            {
+                return;
+            }
+
+            if (parameter.ToString().Equals("Calendars"))
+            {
+                await AddNewProfile(CalendarSyncProfiles, CalendarSyncProfile.GetDefaultSyncProfile());
+            }
+            else if (parameter.ToString().Equals("Tasks"))
+            {
+                await AddNewProfile(TaskSyncProfiles, TaskSyncProfile.GetDefaultSyncProfile());
+            }
+            else if (parameter.ToString().Equals("Contacts"))
+            {
+                await AddNewProfile(ContactsSyncProfiles, ContactsSyncProfile.GetDefaultSyncProfile());
+            }
+        }
+
+        private async Task AddNewProfile<T>(ObservableCollection<T> profileList, T profile) where T :SyncProfile
+        {
+            if (profileList.Count > 4)
             {
                 MessageService.ShowMessageAsync("You have reached the maximum number of profiles.");
                 return;
@@ -82,40 +104,41 @@ namespace CalendarSyncPlus.Application.ViewModels
 
             if (!string.IsNullOrEmpty(result))
             {
-                if (CalendarSyncProfiles.Any(t => !string.IsNullOrEmpty(t.Name) && t.Name.Equals(result)))
+                if (profileList.Any(t => !string.IsNullOrEmpty(t.Name) && t.Name.Equals(result)))
                 {
                     MessageService.ShowMessageAsync(
                         string.Format("A Profile with name '{0}' already exists. Please try again.", result));
                     return;
                 }
 
-                var syncProfile = CalendarSyncProfile.GetDefaultSyncProfile();
-                syncProfile.Name = result;
-                syncProfile.IsDefault = false;
-                //var viewModel = new CalendarViewModel(syncProfile, GoogleCalendarService, OutlookCalendarService,
-                //    MessageService,
-                //    ExchangeWebCalendarService, ApplicationLogger, AccountAuthenticationService);
-                //PropertyChangedEventManager.AddHandler(viewModel, ProfilePropertyChangedHandler, "IsLoading");
-                //viewModel.Initialize(null);
-                CalendarSyncProfiles.Add(syncProfile);
+                profile.Name = result;
+                profile.IsDefault = false;
+                profileList.Add(profile);
             }
         }
+
         /// <summary>
         /// 
         /// </summary>
         /// <param name="parameter"></param>
         private async void DeleteProfile(object parameter)
         {
-            var profile = parameter as CalendarSyncProfile;
+            await RemoveProfile(CalendarSyncProfiles, parameter as CalendarSyncProfile);
+            
+            await RemoveProfile(TaskSyncProfiles, parameter as TaskSyncProfile);
+
+            await RemoveProfile(ContactsSyncProfiles, parameter as ContactsSyncProfile);
+        }
+
+        async Task RemoveProfile<T>(ObservableCollection<T> profileList, T profile) where T: SyncProfile
+        {
             if (profile != null)
             {
                 var task =
                     await MessageService.ShowConfirmMessage("Are you sure you want to delete the profile?");
                 if (task == MessageDialogResult.Affirmative)
                 {
-                    CalendarSyncProfiles.Remove(profile);
-                    //PropertyChangedEventManager.RemoveHandler(profile, ProfilePropertyChangedHandler, "IsLoading");
-                    //SelectedCalendarProfile = Settings.CalendarSyncProfiles.FirstOrDefault();
+                    profileList.Remove(profile);
                 }
             }
         }
@@ -125,29 +148,42 @@ namespace CalendarSyncPlus.Application.ViewModels
         /// <param name="parameter"></param>
         private void MoveProfileUp(object parameter)
         {
-            var profile = parameter as CalendarSyncProfile;
+            MoveUp(CalendarSyncProfiles,parameter as CalendarSyncProfile);
+            MoveUp(TaskSyncProfiles, parameter as TaskSyncProfile);
+            MoveUp(ContactsSyncProfiles, parameter as ContactsSyncProfile);
+        }
+
+        private void MoveUp<T>(ObservableCollection<T> profileList, T profile) where T : SyncProfile
+        {
             if (profile != null)
             {
-                var index = CalendarSyncProfiles.IndexOf(profile);
+                var index = profileList.IndexOf(profile);
                 if (index > 0)
                 {
-                    CalendarSyncProfiles.Move(index, index - 1);
+                    profileList.Move(index, index - 1);
                 }
             }
         }
+
         /// <summary>
         /// 
         /// </summary>
         /// <param name="parameter"></param>
         private void MoveProfileDown(object parameter)
         {
-            var profile = parameter as CalendarSyncProfile;
+            MoveDown(CalendarSyncProfiles, parameter as CalendarSyncProfile);
+            MoveDown(TaskSyncProfiles, parameter as TaskSyncProfile);
+            MoveDown(ContactsSyncProfiles, parameter as ContactsSyncProfile);
+        }
+
+        private void MoveDown<T>(ObservableCollection<T> profileList, T profile) where T : SyncProfile
+        {
             if (profile != null)
             {
-                var index = CalendarSyncProfiles.IndexOf(profile);
-                if (index < CalendarSyncProfiles.Count - 1)
+                var index = profileList.IndexOf(profile);
+                if (index < profileList.Count - 1)
                 {
-                    CalendarSyncProfiles.Move(index, index + 1);
+                    profileList.Move(index, index + 1);
                 }
             }
         }

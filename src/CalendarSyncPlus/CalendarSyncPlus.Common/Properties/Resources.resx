@@ -267,7 +267,7 @@
   <data name="ManageProfileView_DataGrid_Column_SyncColumn_Header" xml:space="preserve">
     <value>Sync</value>
   </data>
-  <data name="ManageProfileView_GroupBox_Header" xml:space="preserve">
+  <data name="ManageProfileView_Calendars_GroupBox_Header" xml:space="preserve">
     <value>Manage Calendar Profiles</value>
   </data>
   <data name="OptionsSettingsView_CheckBox_Category_Content" xml:space="preserve">
@@ -605,5 +605,14 @@
   </data>
   <data name="SettingsView_Button_Cancel_Content" xml:space="preserve">
     <value>Cancel</value>
+  </data>
+  <data name="ManageProfileView_Contacts_GroupBox_Header" xml:space="preserve">
+    <value>Manage Contacts Profiles</value>
+  </data>
+  <data name="ManageProfileView_Tasks_GroupBox_Header" xml:space="preserve">
+    <value>Manage Tasks Profiles</value>
+  </data>
+  <data name="SettingsView_TabItem_Tasks_Header" xml:space="preserve">
+    <value>Tasks</value>
   </data>
 </root>

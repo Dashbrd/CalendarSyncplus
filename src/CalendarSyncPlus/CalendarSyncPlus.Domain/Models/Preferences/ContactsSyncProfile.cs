@@ -9,5 +9,9 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
     [Serializable]
     public class ContactsSyncProfile : SyncProfile
     {
+        public static ContactsSyncProfile GetDefaultSyncProfile()
+        {
+            return new ContactsSyncProfile();
+        }
     }
 }

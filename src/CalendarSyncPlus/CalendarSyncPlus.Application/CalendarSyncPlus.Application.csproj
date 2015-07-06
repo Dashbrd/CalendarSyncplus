@@ -117,6 +117,7 @@
     <Compile Include="ViewModels\LogViewModel.cs" />
     <Compile Include="ViewModels\ManageProfileViewModel.cs" />
     <Compile Include="ViewModels\SystemTrayNotifierViewModel.cs" />
+    <Compile Include="ViewModels\TaskViewModel.cs" />
     <Compile Include="ViewModels\WhatsNewViewModel.cs" />
     <Compile Include="Views\IAboutView.cs" />
     <Compile Include="Views\IAppSettingsView.cs" />
