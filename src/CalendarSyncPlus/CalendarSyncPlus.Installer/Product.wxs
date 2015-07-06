@@ -12,7 +12,7 @@
              Description="A utility to synchronize Outlook to Google calendars, vice versa and bidirectional." />
     <!--Upgrade Message-->
     <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed."
-                  AllowSameVersionUpgrades="yes" MigrateFeatures="yes" Schedule="afterInstallInitialize"/>
+                  AllowSameVersionUpgrades="yes" MigrateFeatures="yes" Schedule="afterInstallFinalize"/>
     <!--Do not create cab file separately-->
     <MediaTemplate EmbedCab="yes" />
 
@@ -52,9 +52,6 @@
         <Directory Id="ApplicationProgramsFolder" Name="Calendar Sync +" />
       </Directory>
     </Directory>
-    <InstallExecuteSequence>
-      <RemoveExistingProducts After="InstallFinalize" />
-    </InstallExecuteSequence>
     <ComponentGroup Id="ApplicationShortcuts" Directory="ApplicationProgramsFolder">
       <Component Id="ApplicationStartMenuShortcut" Guid="591a8bd1-2779-4e97-808e-defb2ea6a595">
         <Shortcut Id="ApplicationStartMenuShortcut"
