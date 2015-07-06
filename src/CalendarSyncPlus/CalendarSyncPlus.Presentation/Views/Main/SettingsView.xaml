@@ -5,7 +5,6 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
              xmlns:wafConverters="http://waf.codeplex.com/schemas"
-             xmlns:views="clr-namespace:CalendarSyncPlus.Presentation.Views"
              xmlns:viewModels="clr-namespace:CalendarSyncPlus.Application.ViewModels;assembly=CalendarSyncPlus.Application"
              xmlns:localizeExtension="http://wpflocalizeextension.codeplex.com"
              xmlns:converters="http://metro.mahapps.com/winfx/xaml/shared"
@@ -107,9 +106,10 @@
                 </ScrollViewer>
             </TabItem>
         </TabControl>
+        <StackPanel Orientation="Horizontal"
+                    Grid.Column="0"
+                    Grid.Row="3">
         <Button Content="{localizeExtension:LocText Key=SettingsView_Button_Save_Content}"
-                Grid.Column="0"
-                Grid.Row="3"
                 HorizontalAlignment="Left"
                 Width="100"
                 Margin="5"
@@ -117,6 +117,16 @@
                 IsEnabled="{Binding Path=IsLoading,Converter={StaticResource ResourceKey=InvertBooleanConverter}}"
                 controls:ButtonHelper.PreserveTextCase="True"
                 Style="{DynamicResource AccentedSquareButtonStyle}"
-                Command="{Binding SaveCommand}" />
+                    Command="{Binding SaveCommand}" />
+            <Button Content="{localizeExtension:LocText Key=SettingsView_Button_Cancel_Content}"
+                    HorizontalAlignment="Left"
+                    Width="100"
+                    Margin="5"
+                    Height="30"
+                    IsEnabled="{Binding Path=IsLoading,Converter={StaticResource ResourceKey=InvertBooleanConverter}}"
+                    controls:ButtonHelper.PreserveTextCase="True"
+                    Style="{DynamicResource AccentedSquareButtonStyle}"
+                    Command="{Binding CancelCommand}" />
+        </StackPanel>
     </Grid>
 </UserControl>

@@ -25,29 +25,24 @@ namespace CalendarSyncPlus.Application.ViewModels
     [Export]
     public class CalendarViewModel : ViewModel<ICalendarView>
     {
-        private bool _allowMasterCalendarSelect;
         private DelegateCommand _autoDetectExchangeServer;
-        private List<SyncDirectionEnum> _calendarSyncModes;
-        private List<Category> _categories;
         private DelegateCommand _getGoogleCalendarCommand;
         private DelegateCommand _getOutlookMailboxCommand;
         private DelegateCommand _getOutlookProfileLIstCommand;
-        private List<GoogleCalendar> _googleCalendars;
-        private OutlookOptionsEnum _isDefaultMailBox;
-        private OutlookOptionsEnum _isDefaultProfile;
-        private List<OutlookMailBox> _outlookMailBoxes;
-        private List<string> _outlookProfileList;
         private DelegateCommand _resetGoogleCalendar;
         private DelegateCommand _resetOutlookCalendarCommand;
-        private List<string> _syncFrequencies;
-        private string _syncFrequency;
-        private SyncFrequencyViewModel _syncFrequencyViewModel;
+        private DelegateCommand _addGoogleAccountCommand;
+        private DelegateCommand _disconnectAccountCommand;
+        private List<SyncDirectionEnum> _calendarSyncModes;
+        private List<Category> _categories;
+        private List<OutlookMailBox> _outlookMailBoxes;
+        private List<string> _outlookProfileList;
+        private List<string> _syncFrequencyTypes;
+        private string _selectedFrequency;
         private List<SyncRangeTypeEnum> _syncRangeTypes;
         private ObservableCollection<CalendarSyncProfile> _calendarSyncProfiles;
         private CalendarSyncProfile _selectedProfile;
         private ObservableCollection<GoogleAccount> _googleAccounts;
-        private DelegateCommand _addGoogleAccountCommand;
-        private DelegateCommand _disconnectAccountCommand;
         private bool _isLoading;
 
         [ImportingConstructor]
@@ -95,40 +90,28 @@ namespace CalendarSyncPlus.Application.ViewModels
             set { SetProperty(ref _syncRangeTypes, value); }
         }
 
-        public List<string> SyncFrequencies
+        public List<string> SyncFrequencyTypes
         {
-            get { return _syncFrequencies; }
-            set { SetProperty(ref _syncFrequencies, value); }
+            get { return _syncFrequencyTypes; }
+            set { SetProperty(ref _syncFrequencyTypes, value); }
         }
 
-        public string SyncFrequency
+        public string SelectedFrequency
         {
-            get { return _syncFrequency; }
+            get { return _selectedFrequency; }
             set
             {
-                SetProperty(ref _syncFrequency, value);
+                SetProperty(ref _selectedFrequency, value);
                 OnSyncFrequencyChanged();
             }
         }
-
-        public SyncFrequencyViewModel SyncFrequencyViewModel
-        {
-            get { return _syncFrequencyViewModel; }
-            set { SetProperty(ref _syncFrequencyViewModel, value); }
-        }
-
+        
         public List<SyncDirectionEnum> CalendarSyncModes
         {
             get { return _calendarSyncModes; }
             set { SetProperty(ref _calendarSyncModes, value); }
         }
 
-        public bool AllowMasterCalendarSelect
-        {
-            get { return _allowMasterCalendarSelect; }
-            set { SetProperty(ref _allowMasterCalendarSelect, value); }
-        }
-        
         public bool IsLoading
         {
             get { return _isLoading; }
@@ -162,6 +145,10 @@ namespace CalendarSyncPlus.Application.ViewModels
             get { return _googleAccounts; }
             set { SetProperty(ref _googleAccounts, value); }
         }
+        
+        #endregion
+
+        #region Commands
 
         public DelegateCommand AddGoogleAccountCommand
         {
@@ -174,11 +161,6 @@ namespace CalendarSyncPlus.Application.ViewModels
             get { return _disconnectAccountCommand; }
             set { SetProperty(ref _disconnectAccountCommand, value); }
         }
-
-        #endregion
-
-        #region Commands
-
         public DelegateCommand GetOutlookProfileListCommand
         {
             get
@@ -250,14 +232,14 @@ namespace CalendarSyncPlus.Application.ViewModels
                 SyncDirectionEnum.OutlookGoogleOneWayToSource,
                 SyncDirectionEnum.OutlookGoogleTwoWay
             };
-            SyncFrequencies = new List<string>
+            SyncFrequencyTypes = new List<string>
             {
                 "Interval",
                 "Daily",
                 "Weekly"
             };
 
-            SyncFrequency = "Interval";
+            SelectedFrequency = "Interval";
             Categories = CategoryHelper.GetCategories();
             
         }
@@ -288,11 +270,11 @@ namespace CalendarSyncPlus.Application.ViewModels
                     var mailbox = mailBoxes.FirstOrDefault(
                         t => t.EntryId.Equals(SelectedProfile.OutlookSettings.OutlookMailBox.EntryId)) ?? mailBoxes.First();
 
-                    if (SelectedProfile.OutlookSettings.OutlookCalendar != null)
+                    if (SelectedProfile.OutlookSettings.OutlookFolder != null)
                     {
-                        SelectedProfile.OutlookSettings.OutlookCalendar =
+                        SelectedProfile.OutlookSettings.OutlookFolder =
                             mailbox.Folders.FirstOrDefault(
-                                t => t.EntryId.Equals(SelectedProfile.OutlookSettings.OutlookCalendar.EntryId)) ??
+                                t => t.EntryId.Equals(SelectedProfile.OutlookSettings.OutlookFolder.EntryId)) ??
                             mailbox.Folders.First();
                     }
                     SelectedProfile.OutlookSettings.OutlookMailBox = mailbox;
@@ -454,7 +436,7 @@ namespace CalendarSyncPlus.Application.ViewModels
         private async Task ResetOutlookCalendarInternal()
         {
             if ((SelectedProfile.OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.AlternateMailBoxCalendar) &&
-                 (SelectedProfile.OutlookSettings.OutlookMailBox == null || SelectedProfile.OutlookSettings.OutlookCalendar == null)) ||
+                 (SelectedProfile.OutlookSettings.OutlookMailBox == null || SelectedProfile.OutlookSettings.OutlookFolder == null)) ||
                 (SelectedProfile.OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.AlternateProfile) &&
                  string.IsNullOrEmpty(SelectedProfile.OutlookSettings.OutlookProfileName)))
             {
@@ -480,10 +462,10 @@ namespace CalendarSyncPlus.Application.ViewModels
                 },
                 {
                     "OutlookCalendar", SelectedProfile.OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.AlternateMailBoxCalendar)
-                        ? SelectedProfile.OutlookSettings.OutlookCalendar
+                        ? SelectedProfile.OutlookSettings.OutlookFolder
                         : null
                 },
-                {"AddAsAppointments", SelectedProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.AddAsAppointments)}
+                {"AddAsAppointments", SelectedProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.AsAppointments)}
             };
 
             var result = await OutlookCalendarService.ResetCalendar(calendarSpecificData);
@@ -497,37 +479,24 @@ namespace CalendarSyncPlus.Application.ViewModels
         /// </summary>
         private void OnSyncFrequencyChanged()
         {
-            if (SelectedProfile != null && SelectedProfile.SyncFrequency != null &&
-                SyncFrequency == SelectedProfile.SyncFrequency.Name)
+            if ((SelectedProfile == null))
             {
-                switch (SyncFrequency)
-                {
-                    case "Interval":
-                        SyncFrequencyViewModel
-                            = new IntervalSyncViewModel(SelectedProfile.SyncFrequency as IntervalSyncFrequency);
-                        break;
-                    case "Daily":
-                        SyncFrequencyViewModel
-                            = new DailySyncViewModel(SelectedProfile.SyncFrequency as DailySyncFrequency);
-                        break;
-                    case "Weekly":
-                        SyncFrequencyViewModel
-                            = new WeeklySyncViewModel(SelectedProfile .SyncFrequency as WeeklySyncFrequency);
-                        break;
-                }
+                return;
             }
-            else
+
+            if (SelectedProfile.SyncFrequency == null ||
+                !SelectedFrequency.Equals(SelectedProfile.SyncFrequency.Name))
             {
-                switch (SyncFrequency)
+                switch (SelectedFrequency)
                 {
                     case "Interval":
-                        SyncFrequencyViewModel = new IntervalSyncViewModel();
+                        SelectedProfile.SyncFrequency = new IntervalSyncFrequency();
                         break;
                     case "Daily":
-                        SyncFrequencyViewModel = new DailySyncViewModel();
+                        SelectedProfile.SyncFrequency = new DailySyncFrequency();
                         break;
                     case "Weekly":
-                        SyncFrequencyViewModel = new WeeklySyncViewModel();
+                        SelectedProfile.SyncFrequency = new WeeklySyncFrequency();
                         break;
                 }
             }
@@ -535,41 +504,48 @@ namespace CalendarSyncPlus.Application.ViewModels
         
         public async void LoadSyncProfile()
         {
-            if (SelectedProfile == null || SelectedProfile.IsLoaded)
+            if (SelectedProfile == null)
                 return;
 
             IsLoading = true;
-            
-            if (!SelectedProfile.OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.DefaultProfile))
+
+            if (SelectedProfile.SyncFrequency != null)
             {
-                await GetOutlookProfileListInternal();
+                SelectedFrequency = SelectedProfile.SyncFrequency.Name;
             }
 
-            if (!SelectedProfile.OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.DefaultMailBoxCalendar))
+            if (!SelectedProfile.IsLoaded)
             {
-                await GetOutlookMailBoxesInternal();
-            }
-
-            if (SelectedProfile.GoogleSettings.GoogleAccount != null)
-            {
-                SelectedProfile.GoogleSettings.GoogleAccount = GoogleAccounts.FirstOrDefault(t =>
-                    t.Name.Equals(SelectedProfile.GoogleSettings.GoogleAccount.Name));
-                
-                if (SelectedProfile.GoogleSettings.GoogleCalendar != null)
+                if (!SelectedProfile.OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.DefaultProfile))
                 {
-                    await GetGoogleCalendarInternal();
+                    await GetOutlookProfileListInternal();
                 }
-            }
 
-            SyncFrequency = SelectedProfile.SyncFrequency.Name;
+                if (!SelectedProfile.OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.DefaultMailBoxCalendar))
+                {
+                    await GetOutlookMailBoxesInternal();
+                }
+
+                if (SelectedProfile.GoogleSettings.GoogleAccount != null)
+                {
+                    SelectedProfile.GoogleSettings.GoogleAccount = GoogleAccounts.FirstOrDefault(t =>
+                        t.Name.Equals(SelectedProfile.GoogleSettings.GoogleAccount.Name));
+
+                    if (SelectedProfile.GoogleSettings.GoogleCalendar != null)
+                    {
+                        await GetGoogleCalendarInternal();
+                    }
+                }
+
+                SelectedProfile.IsLoaded = true;
+            }
 
             if (SelectedProfile.EventCategory != null)
             {
                 SelectedProfile.EventCategory =
                     Categories.First(t => t.CategoryName.Equals(SelectedProfile.EventCategory.CategoryName));
             }
-
-            SelectedProfile.IsLoaded = true;
+            
             IsLoading = false;
         }
 

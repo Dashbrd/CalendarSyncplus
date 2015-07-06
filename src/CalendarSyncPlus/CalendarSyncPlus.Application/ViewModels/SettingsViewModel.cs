@@ -91,6 +91,7 @@ namespace CalendarSyncPlus.Application.ViewModels
         private DelegateCommand _disconnectGoogleCommand;
         private CalendarSyncProfile _selectedCalendarProfile;
         private bool _init;
+        private DelegateCommand _cancelCommand;
 
         #endregion
 
@@ -107,7 +108,11 @@ namespace CalendarSyncPlus.Application.ViewModels
         public IWindowsStartupService WindowsStartupService { get; set; }
         public IAccountAuthenticationService AccountAuthenticationService { get; set; }
 
-        
+        public DelegateCommand CancelCommand
+        {
+            get { return _cancelCommand ?? (_cancelCommand = new DelegateCommand(CancelSettingsHandler)); }
+        }
+
         public DelegateCommand SaveCommand
         {
             get { return _saveCommand ?? (_saveCommand = new DelegateCommand(SaveSettings)); }
@@ -184,9 +189,16 @@ namespace CalendarSyncPlus.Application.ViewModels
             try
             {
                 var result = await SettingsSerializationService.SerializeSettingsAsync(Settings);
-                await
-                    MessageService.ShowMessage(result ? "Settings Saved Successfully" : "Error Saving Settings",
+                
+                if (result)
+                {
+                    _loadedSettings = Settings;
+                    Settings = _loadedSettings.DeepClone();
+                }
+
+                await MessageService.ShowMessage(result ? "Settings Saved Successfully" : "Error Saving Settings",
                         "Settings");
+                
                 SettingsSaved = true;
             }
             catch (AggregateException exception)
@@ -206,6 +218,19 @@ namespace CalendarSyncPlus.Application.ViewModels
             }
         }
 
+        private void CancelSettingsHandler(object o)
+        {
+            Settings = _loadedSettings.DeepClone();
+
+            foreach (var calendarSyncProfile in Settings.CalendarSyncProfiles)
+            {
+                calendarSyncProfile.IsLoaded = false;
+            }
+
+            Init = true;
+            MessageService.ShowMessage("Settings cancelled.",
+                        "Settings");
+        }
         
         private async void DisconnectGoogleHandler(object parameter)
         {
@@ -215,6 +240,7 @@ namespace CalendarSyncPlus.Application.ViewModels
                 MessageService.ShowMessageAsync("No account selected");
                 return;
             }
+            string accountName = googleAccount.Name;
 
             var dialogResult =
                 await
@@ -228,27 +254,37 @@ namespace CalendarSyncPlus.Application.ViewModels
             var result = AccountAuthenticationService.DisconnectGoogle(googleAccount.Name);
             if (result)
             {
+
+                foreach (var profile in Settings.CalendarSyncProfiles)
+                {
+                    if (profile.GoogleSettings.GoogleAccount != null &&
+                        profile.GoogleSettings.GoogleAccount.Name.Equals(googleAccount.Name))
+                    {
+                        profile.GoogleSettings.GoogleAccount = null;
+                    }
+                    profile.IsLoaded = false;
+                }
+
                 //Remove google account
                  googleAccount = Settings.GoogleAccounts.FirstOrDefault(account =>
-                    account.Name == googleAccount.Name);
+                    account.Name == accountName);
+                
+                if (googleAccount != null)
+                {
+                    Settings.GoogleAccounts.Remove(googleAccount);
+                }
+
+                googleAccount = _loadedSettings.GoogleAccounts.FirstOrDefault(account =>
+                    account.Name == accountName);
 
                 if (googleAccount != null)
                 {
-                    foreach (var profile in Settings.CalendarSyncProfiles)
-                    {
-                        if (profile.GoogleSettings.GoogleAccount != null &&
-                            profile.GoogleSettings.GoogleAccount.Name.Equals(googleAccount.Name))
-                        {
-                            profile.GoogleSettings.GoogleAccount = null;
-                        }
-                    }
-
-                    Settings.GoogleAccounts.Remove(googleAccount);
-
-                    await MessageService.ShowMessage("Google account successfully disconnected");
-                    
-                    await SettingsSerializationService.SerializeSettingsAsync(Settings);
+                    _loadedSettings.GoogleAccounts.Remove(googleAccount);
                 }
+
+                await MessageService.ShowMessage("Google account successfully disconnected");
+
+                await SettingsSerializationService.SerializeSettingsAsync(_loadedSettings);
             }
             else
             {
@@ -409,11 +445,12 @@ namespace CalendarSyncPlus.Application.ViewModels
             {
                 Settings.GoogleAccounts = new ObservableCollection<GoogleAccount>();
             }
-            Settings.GoogleAccounts.Add(account);
+            Settings.GoogleAccounts.Add(account.DeepClone());
             //SelectedCalendarProfile.GoogleAccount = account;
             //SelectedCalendar.GetGoogleCalendar();
+            _loadedSettings.GoogleAccounts.Add(account);
 
-            await SettingsSerializationService.SerializeSettingsAsync(Settings);
+            await SettingsSerializationService.SerializeSettingsAsync(_loadedSettings);
         }
 
         private async Task<string> GetGoogleAuthCode()

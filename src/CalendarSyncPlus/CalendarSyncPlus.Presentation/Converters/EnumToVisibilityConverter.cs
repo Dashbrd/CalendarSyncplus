@@ -6,7 +6,7 @@ using CalendarSyncPlus.Common.MetaData;
 
 namespace CalendarSyncPlus.Presentation.Converters
 {
-    public class EnumToVisbilityConverter : IValueConverter
+    public class EnumToVisibilityConverter : IValueConverter
     {
         #region IValueConverter Members
 
@@ -32,9 +32,9 @@ namespace CalendarSyncPlus.Presentation.Converters
                 {
                     return false;
                 }
-                var isValid = (bool) value;
+                var isValid = (bool)value;
                 var parameterServiceType =
-                    (ServiceType) Enum.Parse(typeof (ServiceType), parameter.ToString());
+                    Enum.Parse(value.GetType(), parameter.ToString());
                 if (isValid)
                 {
                     return parameterServiceType;

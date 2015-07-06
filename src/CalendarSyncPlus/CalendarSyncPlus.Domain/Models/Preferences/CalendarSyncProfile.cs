@@ -10,6 +10,9 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
     public class CalendarSyncProfile : SyncProfile
     {
         private SyncSettings _syncSettings;
+        private CalendarEntryOptionsEnum _calendarEntryOptions;
+        private bool _setCalendarCategory;
+        private Category _eventCategory;
 
         public CalendarSyncProfile()
         {
@@ -32,15 +35,27 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
 
         /// <summary>
         /// </summary>
-        public CalendarEntryOptionsEnum CalendarEntryOptions { get; set; }
+        public CalendarEntryOptionsEnum CalendarEntryOptions
+        {
+            get { return _calendarEntryOptions; }
+            set { SetProperty(ref _calendarEntryOptions, value); }
+        }
 
         /// <summary>
         /// </summary>
-        public bool SetCalendarCategory { get; set; }
+        public bool SetCalendarCategory
+        {
+            get { return _setCalendarCategory; }
+            set { SetProperty(ref _setCalendarCategory, value); }
+        }
 
         /// <summary>
         /// </summary>
-        public Category EventCategory { get; set; }
+        public Category EventCategory
+        {
+            get { return _eventCategory; }
+            set { SetProperty(ref _eventCategory, value); }
+        }
 
         [XmlIgnore]
         public bool IsLoaded { get; set; }
@@ -56,13 +71,14 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
                 SyncSettings = SyncSettings.GetDefault(),
                 OutlookSettings =
                 {
-                    OutlookOptions = OutlookOptionsEnum.DefaultProfile |
+                    OutlookOptions =  OutlookOptionsEnum.OutlookDesktop |
+                                        OutlookOptionsEnum.DefaultProfile |
                                      OutlookOptionsEnum.DefaultMailBoxCalendar
                 },
                 CalendarEntryOptions =
                     CalendarEntryOptionsEnum.Description | CalendarEntryOptionsEnum.Attendees |
                     CalendarEntryOptionsEnum.AttendeesToDescription |
-                    CalendarEntryOptionsEnum.Reminders | CalendarEntryOptionsEnum.AddAsAppointments,
+                    CalendarEntryOptionsEnum.Reminders | CalendarEntryOptionsEnum.AsAppointments,
                     SyncDirection = SyncDirectionEnum.OutlookGoogleOneWay,
                 SyncFrequency = new IntervalSyncFrequency {Hours = 1, Minutes = 0, StartTime = DateTime.Now}
             };

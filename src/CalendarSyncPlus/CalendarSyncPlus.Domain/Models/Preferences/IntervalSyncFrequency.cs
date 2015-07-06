@@ -5,6 +5,10 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
     [Serializable]
     public class IntervalSyncFrequency : SyncFrequency
     {
+        private DateTime _startTime;
+        private int _hours;
+        private int _minutes;
+
         public IntervalSyncFrequency()
         {
             Name = "Interval";
@@ -14,9 +18,47 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
             StartTime = StartTime.AddSeconds(-StartTime.Second);
         }
 
-        public DateTime StartTime { get; set; }
-        public int Hours { get; set; }
-        public int Minutes { get; set; }
+        public DateTime StartTime
+        {
+            get { return _startTime; }
+            set { SetProperty(ref _startTime, value); }
+        }
+
+        public int Hours
+        {
+            get { return _hours; }
+            set
+            {
+                SetProperty(ref _hours, value);
+                ValidateHours();
+            }
+        }
+
+        public int Minutes
+        {
+            get { return _minutes; }
+            set
+            {
+                SetProperty(ref _minutes, value);
+                ValidateMinutes();
+            }
+        }
+
+        private void ValidateMinutes()
+        {
+            if (Minutes < 15 && Hours == 0)
+            {
+                Hours = 1;
+            }
+        }
+
+        private void ValidateHours()
+        {
+            if (Hours == 0 && Minutes < 15)
+            {
+                Minutes = 15;
+            }
+        }
 
         public override bool ValidateTimer(DateTime dateTimeNow)
         {

@@ -603,4 +603,7 @@
   <data name="SystemtrayNotifierView_TextBlock_TaskBarIcon_MaximizeMessage_ToolTip" xml:space="preserve">
     <value>Double click to maximize the application.</value>
   </data>
+  <data name="SettingsView_Button_Cancel_Content" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
 </root>

@@ -110,17 +110,13 @@
     <Compile Include="ViewModels\AppSettingsViewModel.cs" />
     <Compile Include="ViewModels\ChildContentViewModelFactory.cs" />
     <Compile Include="ViewModels\ChildViewContentType.cs" />
-    <Compile Include="ViewModels\DailySyncViewModel.cs" />
     <Compile Include="ViewModels\HelpViewModel.cs" />
     <Compile Include="ViewModels\Interfaces\IChildContentViewModel.cs" />
     <Compile Include="ViewModels\Interfaces\IChildContentViewModelMetaData.cs" />
-    <Compile Include="ViewModels\IntervalSyncViewModel.cs" />
     <Compile Include="ViewModels\CalendarViewModel.cs" />
     <Compile Include="ViewModels\LogViewModel.cs" />
     <Compile Include="ViewModels\ManageProfileViewModel.cs" />
-    <Compile Include="ViewModels\SyncFrequencyViewModel.cs" />
     <Compile Include="ViewModels\SystemTrayNotifierViewModel.cs" />
-    <Compile Include="ViewModels\WeeklySyncViewModel.cs" />
     <Compile Include="ViewModels\WhatsNewViewModel.cs" />
     <Compile Include="Views\IAboutView.cs" />
     <Compile Include="Views\IAppSettingsView.cs" />

@@ -1,7 +1,6 @@
 ﻿<UserControl x:Class="CalendarSyncPlus.Presentation.Views.OptionsSettingsView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:Properties="clr-namespace:CalendarSyncPlus.Common.Properties;assembly=CalendarSyncPlus.Common"
              xmlns:converters="clr-namespace:CalendarSyncPlus.Presentation.Converters"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:localizeExtension="http://wpflocalizeextension.codeplex.com"
@@ -16,6 +15,8 @@
     <UserControl.Resources>
         <wafConverters:InvertBooleanConverter x:Key="InvertBooleanConverter" />
         <converters:StringToBrushConverter x:Key="StringToBrushConverter" />
+        <converters:BoolToEnumConverter x:Key="BoolToEnumConverter"/>
+        <converters:BoolToCalendarOptionsConverter x:Key="CalendarOptionsToBoolConverter"/>
         <DataTemplate x:Key="CategoryDataTemplate" DataType="{x:Type models:Category}">
             <Rectangle Width="20"
                        Height="20"
@@ -53,17 +54,17 @@
                 <StackPanel Margin="2" Orientation="Horizontal">
                     <CheckBox Margin="2"
                               Content="{localizeExtension:LocText Key=OptionsSettingsView_CheckBox_Category_Content}"
-                              IsChecked="{Binding SetCategory,
+                              IsChecked="{Binding SelectedProfile.SetCalendarCategory,
                                                   Mode=TwoWay,
                                                   UpdateSourceTrigger=PropertyChanged}" />
 
                     <ComboBox Margin="10,2,2,2"
-                              IsEnabled="{Binding SetCategory,
+                              IsEnabled="{Binding SelectedProfile.SetCalendarCategory,
                                                   UpdateSourceTrigger=PropertyChanged}"
                               ItemTemplate="{StaticResource CategoryDataTemplate}"
                               ItemsSource="{Binding Categories,
                                                     UpdateSourceTrigger=PropertyChanged}"
-                              SelectedValue="{Binding SelectedCategory,
+                              SelectedValue="{Binding SelectedProfile.EventCategory,
                                                       Mode=TwoWay,
                                                       UpdateSourceTrigger=PropertyChanged}">
                         <ComboBox.ItemsPanel>
@@ -99,7 +100,9 @@
 
                 <CheckBox Margin="2"
                           Content="{localizeExtension:LocText Key=OptionsSettingsView_CheckBox_DestinationCalendarOptions_AddDescription_Content}"
-                          IsChecked="{Binding AddDescription,
+                          IsChecked="{Binding SelectedProfile.CalendarEntryOptions,
+                                              Converter={StaticResource CalendarOptionsToBoolConverter},
+                                              ConverterParameter={x:Static models:CalendarEntryOptionsEnum.Description},
                                               Mode=TwoWay,
                                               UpdateSourceTrigger=PropertyChanged}" />
                 <ContentControl Margin="2"
@@ -108,8 +111,11 @@
                                 ToolTip="{localizeExtension:LocText Key=OptionsSettingsView_ContentControl_DestinationCalendarOptions_AddDescription_ToolTip}" />
                 <CheckBox Grid.Row="1"
                           Margin="2"
+                          x:Name="AddAttendeesCheckBox"
                           Content="{localizeExtension:LocText Key=OptionsSettingsView_CheckBox_DestinationCalendarOptions_AddAttendees_Content}"
-                          IsChecked="{Binding AddAttendees,
+                          IsChecked="{Binding SelectedProfile.CalendarEntryOptions,
+                                              Converter={StaticResource CalendarOptionsToBoolConverter},
+                                              ConverterParameter={x:Static models:CalendarEntryOptionsEnum.Attendees},
                                               Mode=TwoWay,
                                               UpdateSourceTrigger=PropertyChanged}" />
                 <ContentControl Margin="2"
@@ -120,12 +126,12 @@
                 <CheckBox Grid.Row="2"
                           Margin="20,2,2,2"
                           Content="{localizeExtension:LocText Key=OptionsSettingsView_CheckBox_DestinationCalendarOptions_AddAttendeesDescription_Content}"
-                          IsChecked="{Binding AddAttendeesToDescription,
+                          IsChecked="{Binding SelectedProfile.CalendarEntryOptions,
+                                              Converter={StaticResource CalendarOptionsToBoolConverter},
+                                              ConverterParameter={x:Static models:CalendarEntryOptionsEnum.AttendeesToDescription},
                                               Mode=TwoWay,
                                               UpdateSourceTrigger=PropertyChanged}"
-                          IsEnabled="{Binding AddAttendees,
-                                              Mode=TwoWay,
-                                              UpdateSourceTrigger=PropertyChanged}" />
+                          IsEnabled="{Binding IsChecked,ElementName=AddAttendeesCheckBox}" />
                 <ContentControl Margin="2"
                                 Grid.Row="2"
                                 Grid.Column="1"
@@ -134,7 +140,9 @@
                 <CheckBox Grid.Row="3"
                           Margin="2"
                           Content="{localizeExtension:LocText Key=OptionsSettingsView_CheckBox_DestinationCalendarOptions_AddReminders_Content}"
-                          IsChecked="{Binding AddReminders,
+                          IsChecked="{Binding SelectedProfile.CalendarEntryOptions,
+                                              Converter={StaticResource CalendarOptionsToBoolConverter},
+                                              ConverterParameter={x:Static models:CalendarEntryOptionsEnum.Reminders},
                                               Mode=TwoWay,
                                               UpdateSourceTrigger=PropertyChanged}" />
                 <ContentControl Margin="2"
@@ -145,7 +153,9 @@
                 <CheckBox Grid.Row="4"
                           Margin="2"
                           Content="{localizeExtension:LocText Key=OptionsSettingsView_CheckBox_DestinationCalendarOptions_AddEventsAsAppointment_Content}"
-                          IsChecked="{Binding AddAsAppointments,
+                          IsChecked="{Binding SelectedProfile.CalendarEntryOptions,
+                                              Converter={StaticResource CalendarOptionsToBoolConverter},
+                                              ConverterParameter={x:Static models:CalendarEntryOptionsEnum.AsAppointments},
                                               Mode=TwoWay,
                                               UpdateSourceTrigger=PropertyChanged}" />
                 <ContentControl Margin="2"
@@ -156,7 +166,9 @@
                 <CheckBox Grid.Row="5"
                           Margin="2"
                           Content="{localizeExtension:LocText Key=OptionsSettingsView_CheckBox_DestinationCalendarOptions_AddAttachments_Content}"
-                          IsChecked="{Binding AddAttachments,
+                          IsChecked="{Binding SelectedProfile.CalendarEntryOptions,
+                                              Converter={StaticResource CalendarOptionsToBoolConverter},
+                                              ConverterParameter={x:Static models:CalendarEntryOptionsEnum.Attachments},
                                               Mode=TwoWay,
                                               UpdateSourceTrigger=PropertyChanged}"
                           Visibility="Collapsed" />
@@ -184,7 +196,7 @@
                 </Grid.ColumnDefinitions>
                 <CheckBox Margin="2"
                           Content="{localizeExtension:LocText Key=OptionsSettingsView_CheckBox_OtherOptions_DisableDelete_Content}"
-                          IsChecked="{Binding DisableDelete,
+                          IsChecked="{Binding SelectedProfile.SyncSettings.DisableDelete,
                                               Mode=TwoWay}" />
                 <ContentControl Margin="2"
                                 Grid.Column="1"
@@ -193,9 +205,9 @@
                 <CheckBox Grid.Row="1"
                           Margin="2"
                           Content="{localizeExtension:LocText Key=OptionsSettingsView_CheckBox_OtherOptions_ConfirmDelete_Content}"
-                          IsChecked="{Binding ConfirmOnDelete,
+                          IsChecked="{Binding SelectedProfile.SyncSettings.ConfirmOnDelete,
                                               Mode=TwoWay}"
-                          IsEnabled="{Binding DisableDelete,
+                          IsEnabled="{Binding SelectedProfile.SyncSettings.DisableDelete,
                                               Converter={StaticResource InvertBooleanConverter},
                                               UpdateSourceTrigger=PropertyChanged}" />
                 <ContentControl Margin="2"
@@ -206,31 +218,13 @@
                 <CheckBox Grid.Row="2"
                           Margin="2"
                           Content="{localizeExtension:LocText Key=OptionsSettingsView_CheckBox_OtherOptions_KeepLastModified_Content}"
-                          IsChecked="{Binding KeepLastModifiedCopy,
-                                              Mode=TwoWay}"
-                          IsEnabled="{Binding DisableDelete,
-                                              Converter={StaticResource InvertBooleanConverter},
-                                              UpdateSourceTrigger=PropertyChanged}" />
+                          IsChecked="{Binding SelectedProfile.SyncSettings.KeepLastModifiedVersion,
+                                              Mode=TwoWay}"/>
                 <ContentControl Margin="2"
                                 Grid.Row="2"
                                 Grid.Column="1"
                                 ContentTemplate="{DynamicResource HelpButtonTemplate}"
                                 ToolTip="{localizeExtension:LocText Key=OptionsSettingsView_ContentControl_OtherOptions_KeepLastModified_Content}" />
-                <CheckBox Grid.Row="3"
-                          Margin="2"
-                          Visibility="Collapsed"
-                          Content="{localizeExtension:LocText Key=OptionsSettingsView_CheckBox_OtherOptions_MergeExistingEntries_Content}"
-                          IsChecked="{Binding MergeExistingEntries,
-                                              Mode=TwoWay}"
-                          IsEnabled="{Binding DisableDelete,
-                                              Converter={StaticResource InvertBooleanConverter},
-                                              UpdateSourceTrigger=PropertyChanged}" />
-                <ContentControl Margin="2"
-                                Grid.Row="3"
-                                Grid.Column="1"
-                                Visibility="Collapsed"
-                                ContentTemplate="{DynamicResource HelpButtonTemplate}"
-                                ToolTip="{localizeExtension:LocText Key=OptionsSettingsView_ContentControl_OtherOptions_MergeExistingEntries_Content}" />
             </Grid>
         </GroupBox>
     </Grid>

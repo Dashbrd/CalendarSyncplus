@@ -7,16 +7,37 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
     [Serializable]
     public class WeeklySyncFrequency : SyncFrequency
     {
+        private int _weekRecurrence;
+        private DateTime _timeOfDay;
+        private List<DayOfWeek> _daysOfWeek;
+
         public WeeklySyncFrequency()
         {
             Name = "Weekly";
-            DaysOfWeek = new List<DayOfWeek>();
+            DaysOfWeek = new List<DayOfWeek>() {DateTime.Today.DayOfWeek};
+            WeekRecurrence = 1;
+            TimeOfDay = DateTime.Now;
         }
 
         public DateTime StartDate { get; set; }
-        public int WeekRecurrence { get; set; }
-        public DateTime TimeOfDay { get; set; }
-        public List<DayOfWeek> DaysOfWeek { get; set; }
+
+        public int WeekRecurrence
+        {
+            get { return _weekRecurrence; }
+            set { SetProperty(ref _weekRecurrence, value); }
+        }
+
+        public DateTime TimeOfDay
+        {
+            get { return _timeOfDay; }
+            set { SetProperty(ref _timeOfDay, value); }
+        }
+
+        public List<DayOfWeek> DaysOfWeek
+        {
+            get { return _daysOfWeek; }
+            set { SetProperty(ref _daysOfWeek, value); }
+        }
 
         public override bool ValidateTimer(DateTime dateTimeNow)
         {

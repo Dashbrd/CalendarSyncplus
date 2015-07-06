@@ -6,16 +6,50 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
     [Serializable]
     public class DailySyncFrequency : SyncFrequency
     {
+        private bool _customDay;
+        private DateTime _startDate;
+        private bool _everyWeekday;
+        private int _dayGap;
+        private DateTime _timeOfDay;
+
         public DailySyncFrequency()
         {
             Name = "Daily";
+            DayGap = 1;
+            CustomDay = true;
+            StartDate = DateTime.Today;
+            TimeOfDay = DateTime.Now;
         }
 
-        public DateTime StartDate { get; set; }
-        public bool EveryWeekday { get; set; }
-        public bool CustomDay { get; set; }
-        public int DayGap { get; set; }
-        public DateTime TimeOfDay { get; set; }
+        public DateTime StartDate
+        {
+            get { return _startDate; }
+            set { SetProperty(ref _startDate, value); }
+        }
+
+        public bool EveryWeekday
+        {
+            get { return _everyWeekday; }
+            set { SetProperty(ref _everyWeekday, value); }
+        }
+
+        public bool CustomDay
+        {
+            get { return _customDay; }
+            set { SetProperty(ref _customDay, value); }
+        }
+
+        public int DayGap
+        {
+            get { return _dayGap; }
+            set { SetProperty(ref _dayGap, value); }
+        }
+
+        public DateTime TimeOfDay
+        {
+            get { return _timeOfDay; }
+            set { SetProperty(ref _timeOfDay, value); }
+        }
 
         public override bool ValidateTimer(DateTime dateTimeNow)
         {

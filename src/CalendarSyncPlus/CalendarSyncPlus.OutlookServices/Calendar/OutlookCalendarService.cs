@@ -119,7 +119,7 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
                             CategoryHelper.GetOutlookColor(EventCategory.HexValue);
                     }
                 }
-
+                string id = defaultOutlookCalendar.EntryID;
                 foreach (var calendarAppointment in calendarAppointments)
                 {
                     var appItem = outlookItems.Add(OlItemType.olAppointmentItem) as AppointmentItem;
@@ -129,7 +129,7 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
                     }
                     var newAppointment = AddAppointment(addDescription, addReminder, addAttendees,
                         attendeesToDescription, appItem,
-                        calendarAppointment);
+                        calendarAppointment, id);
                     addedAppointment.Add(newAppointment);
                     Marshal.FinalReleaseComObject(appItem);
                 }
@@ -192,7 +192,7 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
         /// <param name="calendarAppointment"></param>
         private Appointment AddAppointment(bool addDescription, bool addReminder, bool addAttendees,
             bool attendeesToDescription, AppointmentItem appItem,
-            Appointment calendarAppointment)
+            Appointment calendarAppointment, string id)
         {
             Recipients recipients = null;
             UserProperties userProperties = null;
@@ -269,7 +269,7 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
                 }
                 appItem.Save();
 
-                createdAppointment = GetAppointmentFromItem(calendarAppointment.CalendarId, appItem);
+                createdAppointment = GetAppointmentFromItem(id, appItem);
             }
             catch (Exception exception)
             {

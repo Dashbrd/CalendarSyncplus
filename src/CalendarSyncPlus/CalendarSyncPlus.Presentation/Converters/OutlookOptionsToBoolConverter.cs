@@ -10,8 +10,10 @@ using CalendarSyncPlus.Domain.Models;
 
 namespace CalendarSyncPlus.Presentation.Converters
 {
-    public class OutlookOptionsConverter : IValueConverter
+    public class OutlookOptionsToBoolConverter : IValueConverter
     {
+        #region IValueConverter Members
+
         /// <summary>
         ///     Converts a value.
         /// </summary>
@@ -29,25 +31,13 @@ namespace CalendarSyncPlus.Presentation.Converters
         /// </returns>
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            try
-            {
-                if (parameter == null)
-                    return DependencyProperty.UnsetValue;
+            if (parameter == null)
+                return Visibility.Collapsed;
+            var parameterString = parameter.ToString();
 
-                var parameterString = parameter.ToString();
+            var parameterValue = (OutlookOptionsEnum)Enum.Parse(value.GetType(), parameterString);
 
-                if (Enum.IsDefined(typeof(OutlookOptionsEnum), value) == false)
-                    return DependencyProperty.UnsetValue;
-
-                var parameterValue = (OutlookOptionsEnum)Enum.Parse(typeof(OutlookOptionsEnum), parameterString);
-                var valueEnum = (OutlookOptionsEnum)value;
-
-                return valueEnum.HasFlag(parameterValue);
-            }
-            catch
-            {
-                return DependencyProperty.UnsetValue;
-            }
+            return ((OutlookOptionsEnum)value).HasFlag(parameterValue);
         }
 
         /// <summary>
@@ -65,8 +55,26 @@ namespace CalendarSyncPlus.Presentation.Converters
         /// </returns>
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var parameterString = parameter as string;
-            return parameterString == null ? DependencyProperty.UnsetValue : Enum.Parse(targetType, parameterString);
+            try
+            {
+                if (value == null || parameter == null)
+                {
+                    return false;
+                }
+                var isValid = (bool)value;
+                var parameterServiceType =
+                    (OutlookOptionsEnum)Enum.Parse(typeof(OutlookOptionsEnum), parameter.ToString());
+                if (isValid)
+                {
+                    return parameterServiceType;
+                }
+            }
+            catch (Exception)
+            {
+            }
+            return OutlookOptionsEnum.None;
         }
+
+        #endregion
     }
 }

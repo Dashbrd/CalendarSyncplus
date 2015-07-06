@@ -19,8 +19,8 @@ namespace CalendarSyncPlus.Domain.Models
     public enum SyncRangeTypeEnum
     {
         SyncRangeInDays = 0,
-        SyncEntireCalendar = 1,
-        SyncFixedDateRange = 2
+        SyncFixedDateRange = 1,
+        SyncEntireCalendar = 2
     }
 
     public enum MeetingResponseStatusEnum
@@ -45,12 +45,13 @@ namespace CalendarSyncPlus.Domain.Models
     [Flags]
     public enum OutlookOptionsEnum
     {
-        None = 0,
-        DefaultProfile = 1,
-        AlternateProfile = 2,
-        DefaultMailBoxCalendar = 4,
-        AlternateMailBoxCalendar = 8,
-        ExchangeWebServices = 16
+        None,
+        OutlookDesktop = 1,
+        ExchangeWebServices = 2,
+        DefaultProfile = 4,
+        AlternateProfile = 8,
+        DefaultMailBoxCalendar = 16,
+        AlternateMailBoxCalendar = 32,
     }
 
     [Flags]
@@ -62,7 +63,7 @@ namespace CalendarSyncPlus.Domain.Models
         AttendeesToDescription = 4,
         Reminders = 8,
         Attachments = 16,
-        AddAsAppointments = 32
+        AsAppointments = 32
     }
 
     public enum SyncDirectionEnum

@@ -51,8 +51,10 @@ namespace CalendarSyncPlus.Application.Controllers
                     if (_settingsViewModel.Init)
                     {
                         _calendarViewModel.CalendarSyncProfiles = _settingsViewModel.Settings.CalendarSyncProfiles;
+                        _calendarViewModel.GoogleAccounts = _settingsViewModel.Settings.GoogleAccounts;
                         _calendarViewModel.SelectedProfile = _calendarViewModel.CalendarSyncProfiles.FirstOrDefault();
                         _manageProfileViewModel.CalendarSyncProfiles = _settingsViewModel.Settings.CalendarSyncProfiles;
+                        _appSettingsViewModel.AppSettings = _settingsViewModel.Settings.AppSettings;
                         _settingsViewModel.Init = false;
                     }
                     break;

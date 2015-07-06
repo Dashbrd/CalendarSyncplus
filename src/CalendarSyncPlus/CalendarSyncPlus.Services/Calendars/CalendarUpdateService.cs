@@ -143,12 +143,12 @@ namespace CalendarSyncPlus.Services.Calendars
                         {
                             "OutlookCalendar",
                             !syncProfile.OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.DefaultMailBoxCalendar)
-                                ? syncProfile.OutlookSettings.OutlookCalendar
+                                ? syncProfile.OutlookSettings.OutlookFolder
                                 : null
                         },
                         {
                             "AddAsAppointments",
-                            syncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.AddAsAppointments)
+                            syncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.AsAppointments)
                         }
                     };
                     break;

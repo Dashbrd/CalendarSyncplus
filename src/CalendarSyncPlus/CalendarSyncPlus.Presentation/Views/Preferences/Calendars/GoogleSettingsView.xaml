@@ -56,11 +56,8 @@
                           Grid.Column="1"
                           Margin="2"
                           DisplayMemberPath="Name"
-                          ItemsSource="{Binding Path=DataContext.GoogleAccounts,
-                                                UpdateSourceTrigger=PropertyChanged,
-                                                RelativeSource={RelativeSource Mode=FindAncestor,
-                                                                               AncestorType={x:Type views:CalendarsView}}}"
-                          SelectedItem="{Binding SelectedGoogleAccount,
+                          ItemsSource="{Binding Path=GoogleAccounts}"
+                          SelectedItem="{Binding SelectedProfile.GoogleSettings.GoogleAccount,
                                                  Mode=TwoWay,
                                                  UpdateSourceTrigger=PropertyChanged}" />
                 <StackPanel Grid.Row="1"
@@ -71,25 +68,21 @@
                             Margin="2"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Center"
-                            Command="{Binding Path=DataContext.DisconnectGoogleCommand,
-                                              RelativeSource={RelativeSource Mode=FindAncestor,
-                                                                             AncestorType={x:Type views:CalendarsView}}}"
+                            Command="{Binding Path=DisconnectAccountCommand}"
                             Content="{localizeExtension:LocText Key=GoogleSettingsView_Button_DisconnectAccount_Content}" />
                     <Button Width="150"
                             Margin="2"
                             VerticalAlignment="Center"
-                            Command="{Binding Path=DataContext.AddNewGoogleAccount,
-                                              RelativeSource={RelativeSource Mode=FindAncestor,
-                                                                             AncestorType={x:Type views:CalendarsView}}}"
+                            Command="{Binding Path=AddGoogleAccountCommand}"
                             Content="{localizeExtension:LocText Key=GoogleSettingsView_Button_NewtAccount_Content}" />
                 </StackPanel>
                 <CheckBox Grid.Row="2"
                           Grid.Column="1"
                           Margin="2"
                           HorizontalAlignment="Right"
-                          IsChecked="{Binding Path=DataContext.AllowManualGoogleAuth,
-                                              RelativeSource={RelativeSource Mode=FindAncestor,
+                          IsChecked="{Binding Path=DataContext.Settings.AllowManualAuthentication,RelativeSource={RelativeSource Mode=FindAncestor,
                                                                              AncestorType={x:Type views:CalendarsView}}}"
+                          
                           Content="{localizeExtension:LocText Key=GoogleSettingsView_CheckBox_ManualAuth_Content}" />
 
                 <TextBlock Grid.Row="3"
@@ -100,9 +93,9 @@
                           Grid.Column="1"
                           Margin="2"
                           DisplayMemberPath="Name"
-                          ItemsSource="{Binding GoogleCalendars,
+                          ItemsSource="{Binding SelectedProfile.GoogleSettings.GoogleCalendars,
                                                 UpdateSourceTrigger=PropertyChanged}"
-                          SelectedItem="{Binding SelectedCalendar,
+                          SelectedItem="{Binding SelectedProfile.GoogleSettings.GoogleCalendar,
                                                  Mode=TwoWay,
                                                  UpdateSourceTrigger=PropertyChanged}" />
                 <StackPanel Grid.Row="4"
@@ -121,7 +114,6 @@
                             VerticalAlignment="Center"
                             Command="{Binding GetGoogleCalendarCommand}"
                             Content="{localizeExtension:LocText Key=GoogleSettingsView_Button_GetCalendar_Content}" />
-
 
                 </StackPanel>
             </Grid>

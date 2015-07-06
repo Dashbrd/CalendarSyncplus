@@ -49,7 +49,7 @@ namespace CalendarSyncPlus.SyncEngine.Helpers
 
         public static void AddCompareForUpdate(this List<Appointment> updateList, Appointment appointment)
         {
-            if (!updateList.Exists(t => t.Equals(appointment)))
+            if (!updateList.Exists(t => t.AppointmentId.Equals(appointment.AppointmentId)))
             {
                 updateList.Add(appointment);
             }

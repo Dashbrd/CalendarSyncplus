@@ -190,13 +190,15 @@
       <DependentUpon>TimePickerControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\BootToIntConverter.cs" />
-    <Compile Include="Converters\CalendarOptionsConverter.cs" />
-    <Compile Include="Converters\EnumToVisbilityConverter.cs" />
+    <Compile Include="Converters\BoolToCalendarOptionsConverter.cs" />
+    <Compile Include="Converters\EnumToVisibilityConverter.cs" />
+    <Compile Include="Converters\OutlookOptionsToBoolConverter.cs" />
+    <Compile Include="Converters\OutlookOptionsToVisibilityConverter.cs" />
     <Compile Include="Converters\BoolToEnumConverter.cs" />
     <Compile Include="Converters\InvertBooleanToVisibilityConverter.cs" />
-    <Compile Include="Converters\OutlookOptionsConverter.cs" />
     <Compile Include="Converters\PercentageWidthConverter.cs" />
     <Compile Include="Converters\StringToBrushConverter.cs" />
+    <Compile Include="Converters\WeekDaysToBoolConverter.cs" />
     <Compile Include="Helpers\Utilities.cs" />
     <Compile Include="MarkupExtensions\ResourceBinding.cs" />
     <Compile Include="Program.cs" />
@@ -255,7 +257,7 @@
     <Compile Include="Views\Notifications\SyncBalloon.xaml.cs">
       <DependentUpon>SyncBalloon.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Notifications\SyncSettingsView.xaml.cs">
+    <Compile Include="Views\Preferences\Calendars\SyncSettingsView.xaml.cs">
       <DependentUpon>SyncSettingsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Notifications\SystemTrayNotifierView.xaml.cs">
@@ -355,7 +357,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Notifications\SyncSettingsView.xaml">
+    <Page Include="Views\Preferences\Calendars\SyncSettingsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

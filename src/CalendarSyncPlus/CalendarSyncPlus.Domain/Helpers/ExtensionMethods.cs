@@ -54,7 +54,7 @@ namespace CalendarSyncPlus.Domain.Helpers
             }
 
             if (!syncProfile.OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.DefaultMailBoxCalendar) &&
-                (syncProfile.OutlookSettings.OutlookCalendar == null ||
+                (syncProfile.OutlookSettings.OutlookFolder == null ||
                  syncProfile.OutlookSettings.OutlookMailBox == null))
             {
                 return false;
@@ -98,14 +98,14 @@ namespace CalendarSyncPlus.Domain.Helpers
             if (asAppointments)
             {
                 syncProfile.CalendarEntryOptions = syncProfile.CalendarEntryOptions |
-                                                   CalendarEntryOptionsEnum.AddAsAppointments;
+                                                   CalendarEntryOptionsEnum.AsAppointments;
             }
         }
 
         public static void UpdateOutlookOptions(this OutlookSettings settings, OutlookOptionsEnum isDefaultProfile,
             OutlookOptionsEnum isDefaultMailBox, bool isExchangeWebServices)
         {
-            settings.OutlookOptions = OutlookOptionsEnum.None;
+            settings.OutlookOptions = OutlookOptionsEnum.OutlookDesktop;
 
             if (isExchangeWebServices)
             {

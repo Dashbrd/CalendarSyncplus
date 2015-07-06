@@ -26,6 +26,7 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Waf.Applications;
 using CalendarSyncPlus.Common.Log;
+using CalendarSyncPlus.Domain.File.Binary;
 using CalendarSyncPlus.Domain.File.Xml;
 using CalendarSyncPlus.Domain.Models;
 using CalendarSyncPlus.Domain.Models.Preferences;
@@ -85,7 +86,8 @@ namespace CalendarSyncPlus.Services
                 Directory.CreateDirectory(ApplicationDataDirectory);
             }
 
-            var serializer = new XmlSerializer<Settings>();
+            //var serializer = new XmlSerializer<Settings>();
+            var serializer = new BinarySerializer<Settings>();
             serializer.SerializeToFile(syncProfile, SettingsFilePath);
         }
 
@@ -98,7 +100,8 @@ namespace CalendarSyncPlus.Services
             }
             try
             {
-                var serializer = new XmlSerializer<Settings>();
+                //var serializer = new XmlSerializer<Settings>();
+                var serializer = new BinarySerializer<Settings>();
                 return serializer.DeserializeFromFile(SettingsFilePath);
             }
             catch (Exception exception)
@@ -170,7 +173,7 @@ namespace CalendarSyncPlus.Services
             foreach (var syncProfile in result.CalendarSyncProfiles)
             {
                 syncProfile.SetSourceDestTypes();
-                if (syncProfile.SyncSettings == null || syncProfile.SyncFrequency == null)
+                if (syncProfile.SyncSettings == null)
                 {
                     syncProfile.SyncSettings = SyncSettings.GetDefault();
                 }
@@ -179,6 +182,11 @@ namespace CalendarSyncPlus.Services
                     syncProfile.SyncSettings.SyncRangeType = SyncRangeTypeEnum.SyncRangeInDays;
                     syncProfile.SyncSettings.DaysInPast = 120;
                     syncProfile.SyncSettings.DaysInFuture = 120;
+                }
+
+                if(syncProfile.SyncFrequency == null)
+                {
+                   syncProfile.SyncFrequency = new IntervalSyncFrequency(); 
                 }
             }
 

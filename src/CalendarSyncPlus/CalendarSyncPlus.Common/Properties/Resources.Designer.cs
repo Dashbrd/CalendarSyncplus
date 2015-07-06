@@ -988,6 +988,15 @@ namespace CalendarSyncPlus.Common.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        public static string SettingsView_Button_Cancel_Content {
+            get {
+                return ResourceManager.GetString("SettingsView_Button_Cancel_Content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to SAVE.
         /// </summary>
         public static string SettingsView_Button_Save_Content {

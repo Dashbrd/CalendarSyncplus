@@ -239,16 +239,20 @@ namespace CalendarSyncPlus.SyncEngine
                 //All entries need to be added
                 return;
             }
-            
+            bool checkChild = syncProfile.SyncMode == SyncModeEnum.TwoWay &&
+                              syncProfile.SyncSettings.KeepLastModifiedVersion;
             foreach (var sourceAppointment in sourceList)
             {
                 if (sourceAppointment.SourceId == null)
                 {
-                    var destinationAppointment = destinationList.FirstOrDefault(t =>
-                        t.Equals(sourceAppointment));
-                    if (destinationAppointment == null)
+                    if (!checkChild || sourceAppointment.ChildId == null)
                     {
-                        appointmentsToAdd.Add(sourceAppointment);
+                        var destinationAppointment = destinationList.FirstOrDefault(t =>
+                            t.Equals(sourceAppointment));
+                        if (destinationAppointment == null)
+                        {
+                            appointmentsToAdd.Add(sourceAppointment);
+                        }
                     }
                 }
             }

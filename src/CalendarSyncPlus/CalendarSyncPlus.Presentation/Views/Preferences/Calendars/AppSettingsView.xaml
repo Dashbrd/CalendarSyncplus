@@ -2,16 +2,14 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:Behaviors="clr-namespace:CalendarSyncPlus.Presentation.Behaviors"
-             xmlns:Properties="clr-namespace:CalendarSyncPlus.Common.Properties;assembly=CalendarSyncPlus.Common"
              xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
              xmlns:converters="clr-namespace:CalendarSyncPlus.Presentation.Converters"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:localizeExtension="http://wpflocalizeextension.codeplex.com"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:viewModels="clr-namespace:CalendarSyncPlus.Application.ViewModels;assembly=CalendarSyncPlus.Application"
              xmlns:wafConverters="http://waf.codeplex.com/schemas"
-             d:DataContext="{d:DesignInstance viewModels:SettingsViewModel}"
+             d:DataContext="{d:DesignInstance viewModels:AppSettingsViewModel}"
              d:DesignHeight="500"
              d:DesignWidth="450"
              mc:Ignorable="d">
@@ -63,7 +61,7 @@
                 </Grid.ColumnDefinitions>
                 <CheckBox Margin="2"
                           Content="{localizeExtension:LocText Key=AdvancedSettingsView_Checkbox_RunAtStartup_Content}"
-                          IsChecked="{Binding RunApplicationAtSystemStartup,
+                          IsChecked="{Binding AppSettings.RunApplicationAtSystemStartup,
                                               Mode=TwoWay,
                                               UpdateSourceTrigger=PropertyChanged}" />
                 <ContentControl Grid.Column="1"
@@ -71,7 +69,7 @@
                                 ToolTip="{localizeExtension:LocText Key=AdvancedSettingsView_ContentControl_HelpButtonRunAtStartup_Tooltip}" />
                 <CheckBox Grid.Row="1" Margin="2"
                           Content="{localizeExtension:LocText Key=AdvancedSettingsView_Checkbox_StartMinimized_Content}"
-                          IsChecked="{Binding StartMinimized,
+                          IsChecked="{Binding AppSettings.StartMinimized,
                                               Mode=TwoWay,
                                               UpdateSourceTrigger=PropertyChanged}" />
                 <ContentControl Grid.Row="1" Grid.Column="1"
@@ -80,7 +78,7 @@
                 <CheckBox Grid.Row="2"
                           Margin="2"
                           Content="{localizeExtension:LocText Key=AdvancedSettingsView_Checkbox_CloseToSystemTray_Content}"
-                          IsChecked="{Binding MinimizeToSystemTray,
+                          IsChecked="{Binding AppSettings.MinimizeToSystemTray,
                                               Mode=TwoWay,
                                               UpdateSourceTrigger=PropertyChanged}" />
                 <ContentControl Grid.Row="2"
@@ -90,7 +88,7 @@
                 <CheckBox Grid.Row="3"
                           Margin="2"
                           Content="{localizeExtension:LocText Key=AdvancedSettingsView_Checkbox_HideSystemTrayNotification_Content}"
-                          IsChecked="{Binding HideSystemTrayTooltip,
+                          IsChecked="{Binding AppSettings.HideSystemTrayTooltip,
                                               Mode=TwoWay,
                                               UpdateSourceTrigger=PropertyChanged}" />
 
@@ -101,7 +99,7 @@
                 <CheckBox Grid.Row="4"
                           Margin="2"
                           Content="{localizeExtension:LocText Key=AdvancedSettingsView_Checkbox_CheckForUpdates_Content}"
-                          IsChecked="{Binding CheckForUpdates,
+                          IsChecked="{Binding AppSettings.CheckForUpdates,
                                               Mode=TwoWay,
                                               UpdateSourceTrigger=PropertyChanged}" />
                 <ContentControl Grid.Row="4"
@@ -113,8 +111,8 @@
                 <CheckBox Grid.Row="5"
                           Margin="20,2,2,2"
                           Content="{localizeExtension:LocText Key=AdvancedSettingsView_Checkbox_AlphaCheckForUpdates_Content}"
-                          IsEnabled="{Binding CheckForUpdates}"
-                          IsChecked="{Binding CheckForAlphaReleases,
+                          IsEnabled="{Binding AppSettings.CheckForUpdates}"
+                          IsChecked="{Binding AppSettings.CheckForAlphaReleases,
                                               Mode=TwoWay,
                                               UpdateSourceTrigger=PropertyChanged}" />
                 <ContentControl Grid.Row="5"
@@ -125,13 +123,13 @@
                 <StackPanel Grid.Row="6" Orientation="Horizontal">
                     <RadioButton Margin="2"
                                  Content="{localizeExtension:LocText Key=AdvancedSettingsView_RadioButton_Synchronization_AutoSync_Content}"
-                                 IsChecked="{Binding IsManualSynchronization,
+                                 IsChecked="{Binding AppSettings.IsManualSynchronization,
                                                      Mode=TwoWay,
                                                      Converter={StaticResource InvertBooleanConverter},
                                                      UpdateSourceTrigger=PropertyChanged}" />
                     <RadioButton Margin="2"
                                  Content="{localizeExtension:LocText Key=AdvancedSettingsView_RadioButton_Synchronization_ManualSync_Content}"
-                                 IsChecked="{Binding IsManualSynchronization,
+                                 IsChecked="{Binding AppSettings.IsManualSynchronization,
                                                      Mode=TwoWay,
                                                      UpdateSourceTrigger=PropertyChanged}" />
                 </StackPanel>
@@ -164,7 +162,7 @@
                              Grid.ColumnSpan="4"
                              Margin="2"
                              Content="{localizeExtension:LocText Key=AdvancedSettingsView_RadioButton_ProxySettings_AutoDetect_Content}"
-                             IsChecked="{Binding Path=ProxySettings.ProxyType,
+                             IsChecked="{Binding Path=AppSettings.ProxySettings.ProxyType,
                                                  Converter={StaticResource BootToEnumConverter},
                                                  ConverterParameter=Auto}" />
                 <RadioButton Grid.Row="1"
@@ -172,7 +170,7 @@
                              Grid.ColumnSpan="4"
                              Margin="2"
                              Content="{localizeExtension:LocText Key=AdvancedSettingsView_RadioButton_ProxySettings_NoProxy_Content}"
-                             IsChecked="{Binding Path=ProxySettings.ProxyType,
+                             IsChecked="{Binding Path=AppSettings.ProxySettings.ProxyType,
                                                  Converter={StaticResource BootToEnumConverter},
                                                  ConverterParameter=NoProxy}" />
 
@@ -182,7 +180,7 @@
                              Grid.ColumnSpan="4"
                              Margin="2"
                              Content="{localizeExtension:LocText Key=AdvancedSettingsView_RadioButton_ProxySettings_ManualProxy_Content}"
-                             IsChecked="{Binding Path=ProxySettings.ProxyType,
+                             IsChecked="{Binding Path=AppSettings.ProxySettings.ProxyType,
                                                  Converter={StaticResource BootToEnumConverter},
                                                  ConverterParameter=ProxyWithAuth}" />
                 <TextBlock Grid.Row="3"
@@ -197,7 +195,7 @@
                          Margin="2"
                          IsEnabled="{Binding Path=IsChecked,
                                              ElementName=_manualProxyConfigurationRadioButton}"
-                         Text="{Binding Path=ProxySettings.ProxyAddress,
+                         Text="{Binding Path=AppSettings.ProxySettings.ProxyAddress,
                                         ValidatesOnExceptions=True,
                                         NotifyOnValidationError=True,
                                         UpdateSourceTrigger=PropertyChanged,
@@ -215,7 +213,7 @@
                                         HideUpDownButtons="True"
                                         IsEnabled="{Binding Path=IsChecked,
                                                             ElementName=_manualProxyConfigurationRadioButton}"
-                                        Value="{Binding Path=ProxySettings.Port,
+                                        Value="{Binding Path=AppSettings.ProxySettings.Port,
                                                         ValidatesOnExceptions=true,
                                                         NotifyOnValidationError=true}" />
                 <CheckBox x:Name="_useDefaultCredentialCheckbox"
@@ -224,7 +222,7 @@
                           Grid.ColumnSpan="2"
                           Margin="2"
                           Content="{localizeExtension:LocText Key=AdvancedSettingsView_CheckBox_ProxySettings_UseDefaultCredentials_Content}"
-                          IsChecked="{Binding Path=ProxySettings.UseDefaultCredentials,
+                          IsChecked="{Binding Path=AppSettings.ProxySettings.UseDefaultCredentials,
                                               Mode=TwoWay}" />
                 <TextBlock Grid.Row="5"
                            Grid.Column="0"
@@ -238,7 +236,7 @@
                          IsEnabled="{Binding Path=IsChecked,
                                              ElementName=_useDefaultCredentialCheckbox,
                                              Converter={StaticResource InvertBooleanConverter}}"
-                         Text="{Binding ProxySettings.Domain}" />
+                         Text="{Binding AppSettings.ProxySettings.Domain}" />
 
                 <TextBlock Grid.Row="6"
                            Grid.Column="0"
@@ -252,7 +250,7 @@
                          IsEnabled="{Binding Path=IsChecked,
                                              ElementName=_useDefaultCredentialCheckbox,
                                              Converter={StaticResource InvertBooleanConverter}}"
-                         Text="{Binding ProxySettings.UserName}" />
+                         Text="{Binding AppSettings.ProxySettings.UserName}" />
                 <TextBlock Grid.Row="7"
                            Grid.Column="0"
                            Margin="2"
@@ -265,7 +263,7 @@
                              Grid.ColumnSpan="3"
                              Margin="2"
                              Behaviors:PasswordHelper.Attach="True"
-                             Behaviors:PasswordHelper.Password="{Binding Path=ProxySettings.Password,
+                             Behaviors:PasswordHelper.Password="{Binding Path=AppSettings.ProxySettings.Password,
                                                                          Mode=TwoWay,
                                                                          UpdateSourceTrigger=PropertyChanged}"
                              IsEnabled="{Binding Path=IsChecked,

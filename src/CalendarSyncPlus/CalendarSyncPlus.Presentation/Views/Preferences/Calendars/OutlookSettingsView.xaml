@@ -9,18 +9,16 @@
              xmlns:metroConverters="http://metro.mahapps.com/winfx/xaml/shared"
              xmlns:viewModels="clr-namespace:CalendarSyncPlus.Application.ViewModels;assembly=CalendarSyncPlus.Application"
              xmlns:wafConverters="http://waf.codeplex.com/schemas"
-             d:DataContext="{d:DesignInstance viewModels:SettingsViewModel}"
+             xmlns:models="clr-namespace:CalendarSyncPlus.Domain.Models;assembly=CalendarSyncPlus.Domain"
+             d:DataContext="{d:DesignInstance viewModels:CalendarViewModel}"
              d:DesignHeight="500"
              d:DesignWidth="500"
              mc:Ignorable="d">
     <UserControl.Resources>
-
         <metroConverters:ToUpperConverter x:Key="ToUpperConverter" />
-        <converters:InvertBooleanToVisibilityConverter x:Key="InvertBooleanToVisibilityConverter" />
-        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
-        <wafConverters:InvertBooleanConverter x:Key="InvertBooleanConverter" />
-        <converters:BootToIntConverter x:Key="BootToIntConverter" />
         <converters:BoolToEnumConverter x:Key="BoolToEnumConverter" />
+        <converters:OutlookOptionsToBoolConverter x:Key="OutlookOptionsToBoolConverter"/>
+        <converters:OutlookOptionsToVisibilityConverter x:Key="OutlookOptionsToVisibilityConverter"/>
         <DataTemplate x:Key="ExchangeHeaderTemplate">
             <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
                 <Rectangle Width="18" Fill="{DynamicResource AccentSelectedColorBrush}">
@@ -66,101 +64,30 @@
                 <RadioButton Margin="2"
                              Content="{localizeExtension:LocText Key=OutlookSettingsView_CheckBox_OutlookSettings_OutlookApplicaiton_Content}"
                              GroupName="OutlookApplicationGroup"
-                             IsChecked="{Binding SelectedCalendarProfile.IsExchangeWebServices,
+                             IsChecked="{Binding SelectedProfile.OutlookSettings.OutlookOptions,
+                                                Converter={StaticResource OutlookOptionsToBoolConverter},
+                                                ConverterParameter={x:Static models:OutlookOptionsEnum.OutlookDesktop},
                                                  Mode=TwoWay,
-                                                 UpdateSourceTrigger=PropertyChanged,
-                                                 Converter={StaticResource ResourceKey=InvertBooleanConverter}}" />
+                                                 UpdateSourceTrigger=PropertyChanged}" />
                 <RadioButton Grid.Column="1"
                              Margin="2"
-                             Command="{Binding SelectedCalendarProfile.GetOutlookProfileListCommand}"
+                             Command="{Binding GetOutlookProfileListCommand}"
                              Content="{localizeExtension:LocText Key=OutlookSettingsView_CheckBox_OutlookSettings_EWS_Content}"
                              GroupName="OutlookApplicationGroup"
-                             IsChecked="{Binding SelectedCalendarProfile.IsExchangeWebServices}"
+                             IsChecked="{Binding SelectedProfile.OutlookSettings.OutlookOptions,
+                                                Converter={StaticResource OutlookOptionsToBoolConverter},
+                                                ConverterParameter={x:Static models:OutlookOptionsEnum.ExchangeWebServices},
+                                                 Mode=TwoWay,
+                                                 UpdateSourceTrigger=PropertyChanged}"
                              IsEnabled="False" />
             </Grid>
         </GroupBox>
         <GroupBox Grid.Row="1"
-                  Header="{localizeExtension:LocText Key=OutlookSettingsView_GroupBox_ExchnageSettings_Header}"
-                  HeaderTemplate="{StaticResource ExchangeHeaderTemplate}"
-                  Visibility="{Binding SelectedCalendarProfile.IsExchangeWebServices,
-                                       Converter={StaticResource BooleanToVisibilityConverter}}">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition />
-                    <RowDefinition />
-                    <RowDefinition />
-                    <RowDefinition />
-                    <RowDefinition />
-                    <RowDefinition />
-                    <RowDefinition />
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="2*" />
-                    <ColumnDefinition Width="3.5*" />
-                </Grid.ColumnDefinitions>
-                <TextBlock Margin="2"
-                           VerticalAlignment="Center"
-                           Text="{localizeExtension:LocText Key=OutlookSettingsView_TextBlock_ExchnageSettings_Domain_Text}" />
-                <TextBox Grid.Column="1"
-                         Margin="2"
-                         Text="{Binding SelectedCalendarProfile.Username,
-                                        Mode=TwoWay}" />
-                <TextBlock Grid.Row="1"
-                           Margin="2"
-                           VerticalAlignment="Center"
-                           Text="{localizeExtension:LocText Key=OutlookSettingsView_TextBlock_ExchnageSettings_UserName_Text}" />
-                <TextBox Grid.Row="1"
-                         Grid.Column="1"
-                         Margin="2"
-                         Text="{Binding SelectedCalendarProfile.Username,
-                                        Mode=TwoWay}" />
-                <TextBlock Grid.Row="2"
-                           Margin="2"
-                           VerticalAlignment="Center"
-                           Text="{localizeExtension:LocText Key=OutlookSettingsView_TextBlock_ExchnageSettings_Password_Text}" />
-                <PasswordBox Grid.Row="2"
-                             Grid.Column="1"
-                             Margin="2"
-                             PasswordChar="*"
-                             controls:PasswordBoxHelper.CapsLockWarningToolTip="CAPSLOCK IS ON" />
-                <TextBlock Grid.Row="3"
-                           Margin="2"
-                           VerticalAlignment="Center"
-                           Text="{localizeExtension:LocText Key=OutlookSettingsView_TextBlock_ExchnageSettings_ServerUrl_Text}" />
-                <TextBox Grid.Row="3"
-                         Grid.Column="1"
-                         Margin="2"
-                         Text="{Binding SelectedCalendarProfile.ExchangeServerUrl,
-                                        Mode=TwoWay}" />
-                <Button Grid.Row="4"
-                        Grid.ColumnSpan="2"
-                        Height="30"
-                        Margin="5"
-                        HorizontalAlignment="Right"
-                        Command="{Binding SelectedCalendarProfile.AutoDetectExchangeServer}"
-                        Content="{localizeExtension:LocText Key=OutlookSettingsView_Button_ExchnageSettings_DetectSettings_Content}" />
-                <TextBlock Grid.Row="5"
-                           Margin="2"
-                           VerticalAlignment="Center"
-                           Text="{localizeExtension:LocText Key=OutlookSettingsView_TextBlock_ExchnageSettings_SelectCalendar_Content}" />
-                <ComboBox Grid.Row="5"
-                          Grid.Column="1"
-                          Height="30"
-                          Margin="2" />
-                <Button Grid.Row="6"
-                        Grid.Column="1"
-                        Width="150"
-                        Margin="2"
-                        HorizontalAlignment="Right"
-                        Content="{localizeExtension:LocText Key=OutlookSettingsView_Button_ExchnageSettings_ResetExchangeCalendar_Content}" />
-            </Grid>
-        </GroupBox>
-
-        <GroupBox Grid.Row="1"
                   Header="{localizeExtension:LocText Key=OutlookSettingsView_GroupBox_OutlookProfileSettings_Header}"
                   HeaderTemplate="{StaticResource OutlookHeaderTemplate}"
-                  Visibility="{Binding SelectedCalendarProfile.IsExchangeWebServices,
-                                       Converter={StaticResource InvertBooleanToVisibilityConverter}}">
+                  Visibility="{Binding SelectedProfile.OutlookSettings.OutlookOptions,                                        
+                                       Converter={StaticResource OutlookOptionsToVisibilityConverter},
+                                        ConverterParameter={x:Static models:OutlookOptionsEnum.OutlookDesktop}}">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition />
@@ -182,17 +109,24 @@
                              Margin="2"
                              Content="{localizeExtension:LocText Key=OutlookSettingsView_RadioButton_OutlookProfileSettings_DefaultProfile_Content}"
                              GroupName="OutlookProfileGroup"
-                             IsChecked="{Binding SelectedCalendarProfile.IsDefaultProfile,Converter={StaticResource BoolToEnumConverter},ConverterParameter=DefaultProfile}" />
+                             IsChecked="{Binding SelectedProfile.OutlookSettings.OutlookOptions,
+                                                Converter={StaticResource OutlookOptionsToBoolConverter},
+                                                ConverterParameter={x:Static models:OutlookOptionsEnum.DefaultProfile},
+                                                 Mode=TwoWay,
+                                                 UpdateSourceTrigger=PropertyChanged}" />
                 <RadioButton Name="OutlookProfileRadioButton"
                              Grid.Row="1"
                              Grid.Column="0"
                              Grid.ColumnSpan="2"
                              Margin="2"
-                             Command="{Binding SelectedCalendarProfile.GetOutlookProfileListCommand}"
+                             Command="{Binding GetOutlookProfileListCommand}"
                              Content="{localizeExtension:LocText Key=OutlookSettingsView_RadioButton_OutlookProfileSettings_ChooseProfile_Content}"
                              GroupName="OutlookProfileGroup"
-                             IsChecked="{Binding SelectedCalendarProfile.IsDefaultProfile,
-                                                 Converter={StaticResource BoolToEnumConverter},ConverterParameter=AlternateProfile}" />
+                             IsChecked="{Binding SelectedProfile.OutlookSettings.OutlookOptions,
+                                                Converter={StaticResource OutlookOptionsToBoolConverter},
+                                                ConverterParameter={x:Static models:OutlookOptionsEnum.AlternateProfile},
+                                                 Mode=TwoWay,
+                                                 UpdateSourceTrigger=PropertyChanged}" />
                 <TextBlock Grid.Row="2"
                            Grid.Column="0"
                            Margin="2"
@@ -204,25 +138,33 @@
                           Margin="2"
                           IsEnabled="{Binding Path=IsChecked,
                                               ElementName=OutlookProfileRadioButton}"
-                          ItemsSource="{Binding SelectedCalendarProfile.OutlookProfileList,
+                          ItemsSource="{Binding OutlookProfileList,
                                                 UpdateSourceTrigger=PropertyChanged}"
-                          SelectedItem="{Binding SelectedCalendarProfile.SelectedOutlookProfileName}" />
+                          SelectedItem="{Binding SelectedProfile.OutlookSettings.OutlookProfileName}" />
                 <RadioButton Grid.Row="3"
                              Grid.Column="0"
                              Grid.ColumnSpan="2"
                              Margin="2"
                              Content="{localizeExtension:LocText Key=OutlookSettingsView_RadioButton_OutlookProfileSettings_DefaultMailnCalendar_Content}"
                              GroupName="OutlookMailBoxGroup"
-                             IsChecked="{Binding SelectedCalendarProfile.IsDefaultMailBox,Converter={StaticResource BoolToEnumConverter},ConverterParameter=DefaultCalendar}" />
+                             IsChecked="{Binding SelectedProfile.OutlookSettings.OutlookOptions,
+                                                Converter={StaticResource OutlookOptionsToBoolConverter},
+                                                ConverterParameter={x:Static models:OutlookOptionsEnum.DefaultMailBoxCalendar},
+                                                 Mode=TwoWay,
+                                                 UpdateSourceTrigger=PropertyChanged}" />
                 <RadioButton Name="MailBoxRadioButton"
                              Grid.Row="4"
                              Grid.Column="0"
                              Grid.ColumnSpan="2"
                              Margin="2"
-                             Command="{Binding SelectedCalendarProfile.GetOutlookMailBoxesCommand}"
+                             Command="{Binding GetOutlookMailBoxesCommand}"
                              Content="{localizeExtension:LocText Key=OutlookSettingsView_RadioButton_OutlookProfileSettings_ChooseAnotherMailBox_Content}"
                              GroupName="OutlookMailBoxGroup"
-                             IsChecked="{Binding SelectedCalendarProfile.IsDefaultMailBox,Converter={StaticResource BoolToEnumConverter},ConverterParameter=AlternateCalendar}" />
+                             IsChecked="{Binding SelectedProfile.OutlookSettings.OutlookOptions,
+                                                Converter={StaticResource OutlookOptionsToBoolConverter},
+                                                ConverterParameter={x:Static models:OutlookOptionsEnum.AlternateMailBoxCalendar},
+                                                 Mode=TwoWay,
+                                                 UpdateSourceTrigger=PropertyChanged}"/>
                 <TextBlock Grid.Row="5"
                            Grid.Column="0"
                            Margin="2"
@@ -235,8 +177,8 @@
                           DisplayMemberPath="Name"
                           IsEnabled="{Binding Path=IsChecked,
                                               ElementName=MailBoxRadioButton}"
-                          ItemsSource="{Binding SelectedCalendarProfile.OutlookMailBoxes}"
-                          SelectedItem="{Binding SelectedCalendarProfile.SelectedOutlookMailBox}" />
+                          ItemsSource="{Binding OutlookMailBoxes}"
+                          SelectedItem="{Binding SelectedProfile.OutlookSettings.OutlookMailBox}" />
                 <TextBlock Grid.Row="6"
                            Grid.Column="0"
                            Margin="2"
@@ -249,17 +191,96 @@
                           DisplayMemberPath="Name"
                           IsEnabled="{Binding Path=IsChecked,
                                               ElementName=MailBoxRadioButton}"
-                          ItemsSource="{Binding SelectedCalendarProfile.SelectedOutlookMailBox.Calendars}"
-                          SelectedItem="{Binding SelectedCalendarProfile.SelectedOutlookCalendar}" />
+                          ItemsSource="{Binding SelectedProfile.OutlookSettings.OutlookMailBox.Folders}"
+                          SelectedItem="{Binding SelectedProfile.OutlookSettings.OutlookFolder}" />
                 <Button Grid.Row="7"
                         Grid.Column="1"
                         Width="150"
                         Margin="2"
                         HorizontalAlignment="Right"
                         VerticalAlignment="Center"
-                        Command="{Binding SelectedCalendarProfile.ResetOutlookCalendarCommand}"
+                        Command="{Binding ResetOutlookCalendarCommand}"
                         Content="{localizeExtension:LocText Key=OutlookSettingsView_Button_OutlookProfileSettings_ResetOutlookCalendar_Text}" />
             </Grid>
         </GroupBox>
+        <GroupBox Grid.Row="1"
+                  Header="{localizeExtension:LocText Key=OutlookSettingsView_GroupBox_ExchnageSettings_Header}"
+                  HeaderTemplate="{StaticResource ExchangeHeaderTemplate}"
+                  Visibility="{Binding SelectedProfile.OutlookSettings.OutlookOptions,                                        
+                                       Converter={StaticResource OutlookOptionsToVisibilityConverter},
+                                        ConverterParameter={x:Static models:OutlookOptionsEnum.ExchangeWebServices}}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="3.5*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Margin="2"
+                           VerticalAlignment="Center"
+                           Text="{localizeExtension:LocText Key=OutlookSettingsView_TextBlock_ExchnageSettings_Domain_Text}" />
+                <TextBox Grid.Column="1"
+                         Margin="2"
+                         Text="{Binding SelectedProfile.ExchangeServerSettings.Username,
+                                        Mode=TwoWay}" />
+                <TextBlock Grid.Row="1"
+                           Margin="2"
+                           VerticalAlignment="Center"
+                           Text="{localizeExtension:LocText Key=OutlookSettingsView_TextBlock_ExchnageSettings_UserName_Text}" />
+                <TextBox Grid.Row="1"
+                         Grid.Column="1"
+                         Margin="2"
+                         Text="{Binding SelectedProfile.ExchangeServerSettings.Username,
+                                        Mode=TwoWay}" />
+                <TextBlock Grid.Row="2"
+                           Margin="2"
+                           VerticalAlignment="Center"
+                           Text="{localizeExtension:LocText Key=OutlookSettingsView_TextBlock_ExchnageSettings_Password_Text}" />
+                <PasswordBox Grid.Row="2"
+                             Grid.Column="1"
+                             Margin="2"
+                             PasswordChar="*"
+                             controls:PasswordBoxHelper.CapsLockWarningToolTip="CAPSLOCK IS ON" />
+                <TextBlock Grid.Row="3"
+                           Margin="2"
+                           VerticalAlignment="Center"
+                           Text="{localizeExtension:LocText Key=OutlookSettingsView_TextBlock_ExchnageSettings_ServerUrl_Text}" />
+                <TextBox Grid.Row="3"
+                         Grid.Column="1"
+                         Margin="2"
+                         Text="{Binding SelectedProfile.ExchangeServerSettings.ExchangeServerUrl,
+                                        Mode=TwoWay}" />
+                <Button Grid.Row="4"
+                        Grid.ColumnSpan="2"
+                        Height="30"
+                        Margin="5"
+                        HorizontalAlignment="Right"
+                        Command="{Binding SelectedProfile.ExchangeServerSettings.AutoDetectExchangeServer}"
+                        Content="{localizeExtension:LocText Key=OutlookSettingsView_Button_ExchnageSettings_DetectSettings_Content}" />
+                <TextBlock Grid.Row="5"
+                           Margin="2"
+                           VerticalAlignment="Center"
+                           Text="{localizeExtension:LocText Key=OutlookSettingsView_TextBlock_ExchnageSettings_SelectCalendar_Content}" />
+                <ComboBox Grid.Row="5"
+                          Grid.Column="1"
+                          Height="30"
+                          Margin="2" />
+                <Button Grid.Row="6"
+                        Grid.Column="1"
+                        Width="150"
+                        Margin="2"
+                        HorizontalAlignment="Right"
+                        Content="{localizeExtension:LocText Key=OutlookSettingsView_Button_ExchnageSettings_ResetExchangeCalendar_Content}" />
+            </Grid>
+        </GroupBox>
+
+       
     </Grid>
 </UserControl>

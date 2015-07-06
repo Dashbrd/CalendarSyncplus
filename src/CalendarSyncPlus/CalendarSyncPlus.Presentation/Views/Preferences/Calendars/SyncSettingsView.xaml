@@ -9,15 +9,17 @@
              xmlns:converters="clr-namespace:CalendarSyncPlus.Presentation.Converters"
              xmlns:models="clr-namespace:CalendarSyncPlus.Domain.Models;assembly=CalendarSyncPlus.Domain"
              xmlns:localizeExtension="http://wpflocalizeextension.codeplex.com"
+             xmlns:preferences="clr-namespace:CalendarSyncPlus.Domain.Models.Preferences;assembly=CalendarSyncPlus.Domain"
+             xmlns:system="clr-namespace:System;assembly=mscorlib"
              mc:Ignorable="d"
              d:DesignHeight="500"
              d:DesignWidth="450"
              d:DataContext="{d:DesignInstance viewModels:CalendarViewModel}">
     <UserControl.Resources>
         <converters:BoolToEnumConverter x:Key="BoolToEnumConverter" />
-        <converters:EnumToVisbilityConverter x:Key="EnumToVisbilityConverter" />
-        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
-        <DataTemplate DataType="{x:Type viewModels:IntervalSyncViewModel}">
+        <converters:EnumToVisibilityConverter x:Key="EnumToVisibilityConverter"/>
+        <converters:WeekDaysToBoolConverter x:Key="WeekDaysToBoolConverter"/>
+        <DataTemplate DataType="{x:Type preferences:IntervalSyncFrequency}">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition />
@@ -57,7 +59,7 @@
                                 ToolTip="{localizeExtension:LocText Key=SyncSettingsView_ContentControl_HelpIntervalMinutes_Tooltip}" />
             </Grid>
         </DataTemplate>
-        <DataTemplate DataType="{x:Type viewModels:DailySyncViewModel}">
+        <DataTemplate DataType="{x:Type preferences:DailySyncFrequency}">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition />
@@ -111,7 +113,7 @@
                                 ToolTip="{localizeExtension:LocText Key=SyncSettingsView_ContentControl_HelpDailyTimeOfDay_Tooltip}" />
             </Grid>
         </DataTemplate>
-        <DataTemplate DataType="{x:Type viewModels:WeeklySyncViewModel}">
+        <DataTemplate DataType="{x:Type preferences:WeeklySyncFrequency}">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -152,49 +154,63 @@
                                   Width="30"
                                   ToolTip="Sunday"
                                   Style="{DynamicResource MetroCircleToggleButtonStyle}"
-                                  IsChecked="{Binding IsSunday,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
+                                  IsChecked="{Binding DaysOfWeek,Converter={StaticResource WeekDaysToBoolConverter},
+                                                ConverterParameter={x:Static system:DayOfWeek.Sunday},
+                                                Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
                     <ToggleButton Margin="2"
                                   Content="M"
                                   Height="30"
                                   Width="30"
                                   ToolTip="Monday"
                                   Style="{DynamicResource MetroCircleToggleButtonStyle}"
-                                  IsChecked="{Binding IsMonday,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
+                                  IsChecked="{Binding DaysOfWeek,Converter={StaticResource WeekDaysToBoolConverter},
+                                                ConverterParameter={x:Static system:DayOfWeek.Monday},
+                                                Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
                     <ToggleButton Margin="2"
                                   Content="T"
                                   Height="30"
                                   Width="30"
                                   ToolTip="Tuesday"
                                   Style="{DynamicResource MetroCircleToggleButtonStyle}"
-                                  IsChecked="{Binding IsTuesday,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
+                                  IsChecked="{Binding DaysOfWeek,Converter={StaticResource WeekDaysToBoolConverter},
+                                                ConverterParameter={x:Static system:DayOfWeek.Tuesday},
+                                                Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
                     <ToggleButton Margin="2"
                                   Content="W"
                                   Height="30"
                                   Width="30"
                                   ToolTip="Wednesday"
                                   Style="{DynamicResource MetroCircleToggleButtonStyle}"
-                                  IsChecked="{Binding IsWednesday,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
+                                  IsChecked="{Binding DaysOfWeek,Converter={StaticResource WeekDaysToBoolConverter},
+                                                ConverterParameter={x:Static system:DayOfWeek.Wednesday},
+                                                Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
                     <ToggleButton Margin="2"
                                   Content="T"
                                   Height="30"
                                   Width="30"
                                   ToolTip="Thursday"
                                   Style="{DynamicResource MetroCircleToggleButtonStyle}"
-                                  IsChecked="{Binding IsThursday,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
+                                  IsChecked="{Binding DaysOfWeek,Converter={StaticResource WeekDaysToBoolConverter},
+                                                ConverterParameter={x:Static system:DayOfWeek.Thursday},
+                                                Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
                     <ToggleButton Margin="2"
                                   Content="F"
                                   Height="30"
                                   Width="30"
                                   ToolTip="Friday"
                                   Style="{DynamicResource MetroCircleToggleButtonStyle}"
-                                  IsChecked="{Binding IsFriday,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
+                                  IsChecked="{Binding DaysOfWeek,Converter={StaticResource WeekDaysToBoolConverter},
+                                                ConverterParameter={x:Static system:DayOfWeek.Friday},
+                                                Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
                     <ToggleButton Margin="2"
                                   Content="S"
                                   Height="30"
                                   Width="30"
                                   ToolTip="Saturday"
                                   Style="{DynamicResource MetroCircleToggleButtonStyle}"
-                                  IsChecked="{Binding IsSaturday,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
+                                  IsChecked="{Binding DaysOfWeek,Converter={StaticResource WeekDaysToBoolConverter},
+                                                ConverterParameter={x:Static system:DayOfWeek.Saturday},
+                                                Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal"
                             VerticalAlignment="Center"
@@ -238,7 +254,7 @@
                 <ComboBox Grid.Column="1"
                           Margin="2"
                           ItemsSource="{Binding CalendarSyncModes,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                          SelectedItem="{Binding SelectedSyncDirection,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                          SelectedItem="{Binding SelectedProfile.SyncDirection,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                           ItemTemplate="{StaticResource CalendarEnumDataTemplate}" />
                 <ContentControl ContentTemplate="{DynamicResource HelpButtonTemplate}"
                                 Grid.Column="2"
@@ -247,24 +263,29 @@
                            VerticalAlignment="Center"
                            Margin="2"
                            Grid.Row="1"
-                           Visibility="{Binding AllowMasterCalendarSelect,Mode=TwoWay,Converter={StaticResource BooleanToVisibilityConverter} }" />
+                           Visibility="{Binding SelectedProfile.SyncDirection,
+                                        Converter={StaticResource EnumToVisibilityConverter},
+                                        ConverterParameter={x:Static models:SyncDirectionEnum.OutlookGoogleTwoWay}}" />
                 <StackPanel Orientation="Horizontal"
                             Grid.Row="1"
                             Grid.Column="1"
                             VerticalAlignment="Center"
                             Margin="2,5,5,5"
-                            Visibility="{Binding AllowMasterCalendarSelect,Mode=TwoWay,Converter={StaticResource BooleanToVisibilityConverter} }">
+                            Visibility="{Binding SelectedProfile.SyncDirection,
+                                        Converter={StaticResource EnumToVisibilityConverter},
+                                        ConverterParameter={x:Static models:SyncDirectionEnum.OutlookGoogleTwoWay}}">
                     <RadioButton GroupName="MasterCalendar"
                                  Margin="2"
                                  Content="{localizeExtension:LocText Key=SyncSettingsView_RadioButton_OutlookMaster_Content}"
-                                 IsChecked="{Binding MasterServiceType,Mode=TwoWay,
+                                 IsChecked="{Binding SelectedProfile.Master,Mode=TwoWay,
                                                     Converter={StaticResource BoolToEnumConverter},
                                         ConverterParameter=OutlookDesktop}" />
                     <RadioButton GroupName="MasterCalendar"
                                  Margin="20,2,2,2"
                                  Content="{localizeExtension:LocText Key=SyncSettingsView_RadioButton_GoogleMaster_Content}"
-                                 IsChecked="{Binding MasterServiceType,
-                                                   Mode=TwoWay,Converter={StaticResource BoolToEnumConverter},
+                                 IsChecked="{Binding SelectedProfile.Master,
+                                                   Mode=TwoWay,
+                                                    Converter={StaticResource BoolToEnumConverter},
                                                  ConverterParameter=Google}" />
                 </StackPanel>
             </Grid>
@@ -286,7 +307,10 @@
                     Content="{localizeExtension:LocText Key=SyncSettingsView_RadioButton_SyncFullCalendar_Content}"
                     Margin="2"
                     Visibility="Collapsed"
-                    IsChecked="{Binding SelectedSyncRangeType,Mode=TwoWay,Converter={StaticResource BoolToEnumConverter},ConverterParameter=SyncEntireCalendar}" />
+                    IsChecked="{Binding SelectedProfile.SyncSettings.SyncRangeType,
+                                                   Mode=TwoWay,
+                                                    Converter={StaticResource BoolToEnumConverter},
+                                                 ConverterParameter=SyncEntireCalendar}" />
                 <ContentControl ContentTemplate="{DynamicResource HelpButtonTemplate}"
                                 Grid.Column="1"
                                 Visibility="Collapsed"
@@ -295,7 +319,10 @@
                     Content="{localizeExtension:LocText Key=SyncSettingsView_RadioButton_SyncDaysInRange_Content}"
                     Grid.Row="1"
                     Margin="2"
-                    IsChecked="{Binding SelectedSyncRangeType,Mode=TwoWay,Converter={StaticResource BoolToEnumConverter},ConverterParameter=SyncRangeInDays }" />
+                             IsChecked="{Binding SelectedProfile.SyncSettings.SyncRangeType,
+                                                   Mode=TwoWay,
+                                                    Converter={StaticResource BoolToEnumConverter},
+                                                 ConverterParameter=SyncRangeInDays}" />
                 <ContentControl ContentTemplate="{DynamicResource HelpButtonTemplate}"
                                 Grid.Row="1"
                                 Grid.Column="1"
@@ -304,7 +331,10 @@
                     Content="{localizeExtension:LocText Key=SyncSettingsView_RadioButton_SyncFixedDateRange_Content}"
                     Grid.Row="2"
                     Margin="2"
-                    IsChecked="{Binding SelectedSyncRangeType,Mode=TwoWay,Converter={StaticResource BoolToEnumConverter},ConverterParameter=SyncFixedDateRange }" />
+                             IsChecked="{Binding SelectedProfile.SyncSettings.SyncRangeType,
+                                                   Mode=TwoWay,
+                                                    Converter={StaticResource BoolToEnumConverter},
+                                                 ConverterParameter=SyncFixedDateRange}" />
                 <ContentControl ContentTemplate="{DynamicResource HelpButtonTemplate}"
                                 Grid.Column="1"
                                 Grid.Row="2"
@@ -318,7 +348,7 @@
 
                 <Grid Grid.Row="3"
                       Grid.ColumnSpan="2"
-                      Visibility="{Binding SelectedSyncRangeType,Converter={StaticResource EnumToVisbilityConverter},
+                      Visibility="{Binding SelectedProfile.SyncSettings.SyncRangeType,Converter={StaticResource EnumToVisibilityConverter},
                     ConverterParameter={x:Static models:SyncRangeTypeEnum.SyncRangeInDays} }">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
@@ -335,7 +365,7 @@
 
                     <metroControls:NumericUpDown Grid.Column="1"
                                                  VerticalAlignment="Center"
-                                                 Value="{Binding DaysInPast,Mode=TwoWay}"
+                                                 Value="{Binding SelectedProfile.SyncSettings.DaysInPast,Mode=TwoWay}"
                                                  Interval="1"
                                                  Margin="2"
                                                  Maximum="1825"
@@ -351,7 +381,7 @@
                     <metroControls:NumericUpDown Grid.Row="1"
                                                  Grid.Column="1"
                                                  VerticalAlignment="Center"
-                                                 Value="{Binding DaysInFuture,Mode=TwoWay}"
+                                                 Value="{Binding SelectedProfile.SyncSettings.DaysInFuture,Mode=TwoWay}"
                                                  Interval="1"
                                                  Margin="2"
                                                  Maximum="1825"
@@ -363,7 +393,9 @@
                 </Grid>
                 <Grid Grid.Row="3"
                       Grid.ColumnSpan="2"
-                      Visibility="{Binding SelectedSyncRangeType,Converter={StaticResource EnumToVisbilityConverter},ConverterParameter={x:Static models:SyncRangeTypeEnum.SyncFixedDateRange} }">
+                      Visibility="{Binding SelectedProfile.SyncSettings.SyncRangeType,
+                    Converter={StaticResource EnumToVisibilityConverter},
+                    ConverterParameter={x:Static models:SyncRangeTypeEnum.SyncFixedDateRange} }">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
@@ -379,7 +411,7 @@
 
                     <DatePicker Grid.Column="1"
                                 VerticalAlignment="Center"
-                                SelectedDate="{Binding StartDate,Mode=TwoWay}"
+                                SelectedDate="{Binding SelectedProfile.SyncSettings.StartDate,Mode=TwoWay}"
                                 Margin="2" DisplayDateStart="01-01-1990" DisplayDateEnd="1-01-2030" />
                     <ContentControl ContentTemplate="{DynamicResource HelpButtonTemplate}"
                                     Grid.Column="2"
@@ -392,7 +424,7 @@
                     <DatePicker Grid.Row="1"
                                 Grid.Column="1"
                                 VerticalAlignment="Center"
-                                SelectedDate="{Binding EndDate,Mode=TwoWay}"
+                                SelectedDate="{Binding SelectedProfile.SyncSettings.EndDate,Mode=TwoWay}"
                                 Margin="2"
                                 DisplayDateStart="01-01-1990"
                                 DisplayDateEnd="1-01-2030" />
@@ -416,15 +448,15 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <ComboBox x:Name="SyncFrequencyComboBox"
-                          ItemsSource="{Binding SyncFrequencies,UpdateSourceTrigger=PropertyChanged}"
-                          SelectedItem="{Binding SyncFrequency,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
+                          ItemsSource="{Binding SyncFrequencyTypes,UpdateSourceTrigger=PropertyChanged}"
+                          SelectedItem="{Binding SelectedFrequency,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
                 <ContentControl ContentTemplate="{DynamicResource HelpButtonTemplate}"
                                 Grid.Column="1"
                                 ToolTip="{localizeExtension:LocText Key=SyncSettingsView_ContentControl_SyncFrequencyHelp_Tooltip}" />
                 <ContentControl Margin="0,5,0,5"
                                 Grid.Row="1"
                                 Grid.ColumnSpan="2"
-                                Content="{Binding SyncFrequencyViewModel,UpdateSourceTrigger=PropertyChanged}" />
+                                Content="{Binding SelectedProfile.SyncFrequency}" />
             </Grid>
         </GroupBox>
     </Grid>

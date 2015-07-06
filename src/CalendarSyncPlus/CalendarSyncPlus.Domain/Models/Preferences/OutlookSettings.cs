@@ -9,7 +9,7 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
         private OutlookOptionsEnum _outlookOptions;
         private string _outlookProfileName;
         private OutlookMailBox _outlookMailBox;
-        private OutlookFolder _outlookCalendar;
+        private OutlookFolder _outlookFolder;
 
         public OutlookOptionsEnum OutlookOptions
         {
@@ -33,37 +33,30 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
             set { SetProperty(ref _outlookMailBox, value); }
         }
 
-        public OutlookFolder OutlookCalendar
+        public OutlookFolder OutlookFolder
         {
-            get { return _outlookCalendar; }
-            set { SetProperty(ref _outlookCalendar, value); }
+            get { return _outlookFolder; }
+            set { SetProperty(ref _outlookFolder, value); }
         }
 
         private OutlookOptionsEnum ValidateOptions(OutlookOptionsEnum value)
         {
-            if (value == OutlookOptionsEnum.ExchangeWebServices)
+            switch (value)
             {
-                return value;
+                case OutlookOptionsEnum.ExchangeWebServices:
+                    return _outlookOptions & ~OutlookOptionsEnum.OutlookDesktop | value;
+                case OutlookOptionsEnum.OutlookDesktop:
+                    return _outlookOptions & ~OutlookOptionsEnum.ExchangeWebServices | value;
+                case OutlookOptionsEnum.DefaultProfile:
+                    return _outlookOptions & ~OutlookOptionsEnum.AlternateProfile | value;
+                case OutlookOptionsEnum.AlternateProfile:
+                    return _outlookOptions & ~OutlookOptionsEnum.DefaultProfile | value;
+                case OutlookOptionsEnum.DefaultMailBoxCalendar:
+                    return _outlookOptions & ~OutlookOptionsEnum.AlternateMailBoxCalendar | value;
+                case OutlookOptionsEnum.AlternateMailBoxCalendar:
+                    return _outlookOptions & ~OutlookOptionsEnum.DefaultMailBoxCalendar | value;
             }
-
-            if (value == OutlookOptionsEnum.DefaultProfile)
-            {
-                if (value.HasFlag(OutlookOptionsEnum.AlternateProfile))
-                {
-                    value &= ~OutlookOptionsEnum.AlternateProfile;
-                }
-                return value | OutlookOptionsEnum.DefaultProfile;
-            }
-
-            if (value == OutlookOptionsEnum.DefaultMailBoxCalendar)
-            {
-                if (value.HasFlag(OutlookOptionsEnum.AlternateMailBoxCalendar))
-                {
-                    value &= ~OutlookOptionsEnum.AlternateMailBoxCalendar;
-                }
-                return value | OutlookOptionsEnum.DefaultMailBoxCalendar;
-            }
-            return value;
+            return _outlookOptions | value;
         }
     }
 }

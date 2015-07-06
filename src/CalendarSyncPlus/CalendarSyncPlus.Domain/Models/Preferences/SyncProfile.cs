@@ -15,6 +15,13 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
         private DateTime? _nextSync;
         private GoogleSettings _googleSettings;
         private OutlookSettings _outlookSettings;
+        private SyncDirectionEnum _syncDirection;
+        private ServiceType _master;
+        private ServiceType _source;
+        private ServiceType _destination;
+        private SyncModeEnum _syncMode;
+        private SyncFrequency _syncFrequency;
+        private ExchangeServerSettings _exchangeServerSettings;
 
         public SyncProfile()
         {
@@ -22,6 +29,7 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
             GoogleSettings  = new GoogleSettings();
         }
 
+        #region Properties
         /// <summary>
         /// </summary>
         public string Name
@@ -65,7 +73,7 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
         public GoogleSettings GoogleSettings
         {
             get { return _googleSettings; }
-            set { _googleSettings = value; }
+            set { SetProperty(ref _googleSettings, value); }
         }
 
         /// <summary>
@@ -73,23 +81,57 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
         public OutlookSettings OutlookSettings
         {
             get { return _outlookSettings; }
-            set { _outlookSettings = value; }
+            set { SetProperty(ref _outlookSettings, value); }
         }
 
         /// <summary>
         ///     To be implemented in future
         /// </summary>
-        public ExchangeServerSettings ExchangeServerSettings { get; set; }
+        public ExchangeServerSettings ExchangeServerSettings
+        {
+            get { return _exchangeServerSettings; }
+            set { SetProperty(ref _exchangeServerSettings, value); }
+        }
 
 
-        public SyncFrequency SyncFrequency { get; set; }
-        public SyncDirectionEnum SyncDirection { get; set; }
-        public ServiceType Master { get; set; }
-        public ServiceType Source { get; set; }
-        public ServiceType Destination { get; set; }
-        public SyncModeEnum SyncMode { get; set; }
+        public SyncFrequency SyncFrequency
+        {
+            get { return _syncFrequency; }
+            set { SetProperty(ref _syncFrequency, value); }
+        }
 
+        public SyncDirectionEnum SyncDirection
+        {
+            get { return _syncDirection; }
+            set { SetProperty(ref _syncDirection, value); }
+        }
+
+        public ServiceType Master
+        {
+            get { return _master; }
+            set { SetProperty(ref _master, value); }
+        }
+
+        public ServiceType Source
+        {
+            get { return _source; }
+            set { SetProperty(ref _source, value); }
+        }
+
+        public ServiceType Destination
+        {
+            get { return _destination; }
+            set { SetProperty(ref _destination, value); }
+        }
+
+        public SyncModeEnum SyncMode
+        {
+            get { return _syncMode; }
+            set { SetProperty(ref _syncMode, value); }
+        }
         
+        #endregion
+
         /// <summary>
         /// </summary>
         public void SetSourceDestTypes()
