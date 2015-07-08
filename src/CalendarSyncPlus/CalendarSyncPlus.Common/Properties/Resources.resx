@@ -615,4 +615,10 @@
   <data name="SettingsView_TabItem_Tasks_Header" xml:space="preserve">
     <value>Tasks</value>
   </data>
+  <data name="GoogleSettingsView_Button_ClearCalendar_Content" xml:space="preserve">
+    <value>Clear Outlook Calendar</value>
+  </data>
+  <data name="OutlookSettingsView_Button_OutlookProfileSettings_ClearOutlookCalendar_Text" xml:space="preserve">
+    <value>Clear Outlook Calendar</value>
+  </data>
 </root>

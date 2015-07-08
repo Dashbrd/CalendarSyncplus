@@ -199,7 +199,15 @@
                         Margin="2"
                         HorizontalAlignment="Right"
                         VerticalAlignment="Center"
-                        Command="{Binding ResetOutlookCalendarCommand}"
+                        Command="{Binding CleanOutlookCalendarCommand}"
+                        Content="{localizeExtension:LocText Key=OutlookSettingsView_Button_OutlookProfileSettings_ClearOutlookCalendar_Text}" />
+                <Button Grid.Row="8"
+                        Grid.Column="1"
+                        Width="150"
+                        Margin="2"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        Command="{Binding CleanGoogleCalendarCommand}"
                         Content="{localizeExtension:LocText Key=OutlookSettingsView_Button_OutlookProfileSettings_ResetOutlookCalendar_Text}" />
             </Grid>
         </GroupBox>

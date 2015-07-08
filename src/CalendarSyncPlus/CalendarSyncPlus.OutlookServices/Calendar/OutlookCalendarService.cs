@@ -1342,7 +1342,7 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
             return deleteAppointments;
         }
 
-        public async Task<bool> ResetCalendar(IDictionary<string, object> calendarSpecificData)
+        public async Task<bool> ClearCalendar(IDictionary<string, object> calendarSpecificData)
         {
             var startDate = DateTime.Today.AddDays(-(10*365));
             var endDate = DateTime.Today.AddDays(10*365);
@@ -1356,6 +1356,20 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
             return false;
         }
 
+        public async Task<bool> ResetCalendarEntries(IDictionary<string, object> calendarSpecificData)
+        {
+            var startDate = DateTime.Today.AddDays(-(10 * 365));
+            var endDate = DateTime.Today.AddDays(10 * 365);
+            var appointments =
+                await GetCalendarEventsInRangeAsync(startDate, endDate, calendarSpecificData);
+            if (appointments != null)
+            {
+                appointments.ForEach(t=> t.ExtendedProperties  = new Dictionary<string, string>());
+                var success = await DeleteCalendarEvents(appointments, calendarSpecificData);
+                return success.IsSuccess;
+            }
+            return false;
+        }
         #endregion
     }
 }

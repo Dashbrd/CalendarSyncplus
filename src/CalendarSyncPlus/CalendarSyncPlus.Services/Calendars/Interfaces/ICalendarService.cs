@@ -1,22 +1,4 @@
-﻿#region File Header
-
-// /******************************************************************************
-//  * 
-//  *      Copyright (C) Ankesh Dave 2015 All Rights Reserved. Confidential
-//  * 
-//  ******************************************************************************
-//  * 
-//  *      Project:        CalendarSyncPlus
-//  *      SubProject:     CalendarSyncPlus.Application
-//  *      Author:         Dave, Ankesh
-//  *      Created On:     05-03-2015 3:09 PM
-//  *      Modified On:    05-03-2015 3:09 PM
-//  *      FileName:       ICalendarService.cs
-//  * 
-//  *****************************************************************************/
-
-#endregion
-
+﻿
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -45,6 +27,8 @@ namespace CalendarSyncPlus.Services.Calendars.Interfaces
             bool addDescription, bool addReminder, bool addAttendees, bool attendeesToDescription,
             IDictionary<string, object> calendarSpecificData);
 
-        Task<bool> ResetCalendar(IDictionary<string, object> calendarSpecificData);
+        Task<bool> ClearCalendar(IDictionary<string, object> calendarSpecificData);
+
+        Task<bool> ResetCalendarEntries(IDictionary<string, object> calendarSpecificData);
     }
 }

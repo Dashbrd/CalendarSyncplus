@@ -29,8 +29,8 @@ namespace CalendarSyncPlus.Application.ViewModels
         private DelegateCommand _getGoogleCalendarCommand;
         private DelegateCommand _getOutlookMailboxCommand;
         private DelegateCommand _getOutlookProfileLIstCommand;
-        private DelegateCommand _resetGoogleCalendar;
-        private DelegateCommand _resetOutlookCalendarCommand;
+        private DelegateCommand _cleanGoogleCalendar;
+        private DelegateCommand _cleanOutlookCalendarCommand;
         private DelegateCommand _addGoogleAccountCommand;
         private DelegateCommand _disconnectAccountCommand;
         private List<SyncDirectionEnum> _calendarSyncModes;
@@ -44,6 +44,8 @@ namespace CalendarSyncPlus.Application.ViewModels
         private CalendarSyncProfile _selectedProfile;
         private ObservableCollection<GoogleAccount> _googleAccounts;
         private bool _isLoading;
+        private DelegateCommand _resetOutlookCalendarCommand;
+        private DelegateCommand _resetGoogleCalendarCommand;
 
         [ImportingConstructor]
         public CalendarViewModel(ICalendarView calendarView, 
@@ -199,18 +201,28 @@ namespace CalendarSyncPlus.Application.ViewModels
 
         public DelegateCommand ResetOutlookCalendarCommand
         {
-            get
-            {
-                return _resetOutlookCalendarCommand = _resetOutlookCalendarCommand ??
-                                                      new DelegateCommand(ResetOutlookCalendarHandler);
-            }
+            get { return _resetOutlookCalendarCommand ?? (_resetGoogleCalendarCommand = new DelegateCommand(ResetOutlookCalendar)); }
         }
-
+        
         public DelegateCommand ResetGoogleCalendarCommand
+        {
+            get { return _resetGoogleCalendarCommand ?? (_resetGoogleCalendarCommand = new DelegateCommand(ResetGoogleCalendar)); }
+        }
+        
+        public DelegateCommand CleanOutlookCalendarCommand
         {
             get
             {
-                return _resetGoogleCalendar = _resetGoogleCalendar ?? new DelegateCommand(ResetGoogleCalendarHandler);
+                return _cleanOutlookCalendarCommand = _cleanOutlookCalendarCommand ??
+                                                      new DelegateCommand(CleanOutlookCalendarHandler);
+            }
+        }
+
+        public DelegateCommand CleanGoogleCalendarCommand
+        {
+            get
+            {
+                return _cleanGoogleCalendar = _cleanGoogleCalendar ?? new DelegateCommand(CleanGoogleCalendarHandler);
             }
         }
         
@@ -387,15 +399,12 @@ namespace CalendarSyncPlus.Application.ViewModels
                 Logger.Error(exception);
             }
         }
-
-
-        private async void ResetGoogleCalendarHandler()
+        private async void ResetGoogleCalendar()
         {
             IsLoading = true;
             await ResetGoogleCalendarInternal();
             IsLoading = false;
         }
-
         private async Task ResetGoogleCalendarInternal()
         {
             if (SelectedProfile.GoogleSettings.GoogleAccount == null ||
@@ -419,14 +428,49 @@ namespace CalendarSyncPlus.Application.ViewModels
                 {"CalendarId", SelectedProfile.GoogleSettings.GoogleCalendar.Id},
                 {"AccountName", SelectedProfile.GoogleSettings.GoogleAccount.Name}
             };
-            var result = await GoogleCalendarService.ResetCalendar(calendarSpecificData);
+            var result = await GoogleCalendarService.ResetCalendarEntries(calendarSpecificData);
             if (!result)
             {
                 MessageService.ShowMessageAsync("Reset calendar failed.");
             }
         }
+        private async void CleanGoogleCalendarHandler()
+        {
+            IsLoading = true;
+            await CleanGoogleCalendarInternal();
+            IsLoading = false;
+        }
 
-        private async void ResetOutlookCalendarHandler()
+        private async Task CleanGoogleCalendarInternal()
+        {
+            if (SelectedProfile.GoogleSettings.GoogleAccount == null ||
+                SelectedProfile.GoogleSettings.GoogleCalendar == null)
+            {
+                MessageService.ShowMessageAsync("Please select a Google calendar to wipe");
+                return;
+            }
+
+            var task =
+                await
+                    MessageService.ShowConfirmMessage(
+                        "Are you sure you want to reset events from 10 year past and 10 year future?");
+            if (task != MessageDialogResult.Affirmative)
+            {
+                return;
+            }
+
+            var calendarSpecificData = new Dictionary<string, object>
+            {
+                {"CalendarId", SelectedProfile.GoogleSettings.GoogleCalendar.Id},
+                {"AccountName", SelectedProfile.GoogleSettings.GoogleAccount.Name}
+            };
+            var result = await GoogleCalendarService.ClearCalendar(calendarSpecificData);
+            if (!result)
+            {
+                MessageService.ShowMessageAsync("Reset calendar failed.");
+            }
+        }
+        private async void ResetOutlookCalendar(object o)
         {
             IsLoading = true;
             await ResetOutlookCalendarInternal();
@@ -468,7 +512,56 @@ namespace CalendarSyncPlus.Application.ViewModels
                 {"AddAsAppointments", SelectedProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.AsAppointments)}
             };
 
-            var result = await OutlookCalendarService.ResetCalendar(calendarSpecificData);
+            var result = await OutlookCalendarService.ResetCalendarEntries(calendarSpecificData);
+            if (!result)
+            {
+                MessageService.ShowMessageAsync("Reset calendar failed.");
+            }
+        }
+
+        private async void CleanOutlookCalendarHandler()
+        {
+            IsLoading = true;
+            await CleanOutlookCalendarInternal();
+            IsLoading = false;
+        }
+
+        private async Task CleanOutlookCalendarInternal()
+        {
+            if ((SelectedProfile.OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.AlternateMailBoxCalendar) &&
+                 (SelectedProfile.OutlookSettings.OutlookMailBox == null || SelectedProfile.OutlookSettings.OutlookFolder == null)) ||
+                (SelectedProfile.OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.AlternateProfile) &&
+                 string.IsNullOrEmpty(SelectedProfile.OutlookSettings.OutlookProfileName)))
+            {
+                MessageService.ShowMessageAsync("Please select a Outlook calendar to reset.");
+                return;
+            }
+
+            var task =
+                await
+                    MessageService.ShowConfirmMessage(
+                        "Are you sure you want to reset events from 10 year past and 10 year future?");
+            if (task != MessageDialogResult.Affirmative)
+            {
+                return;
+            }
+
+            var calendarSpecificData = new Dictionary<string, object>
+            {
+                {
+                    "ProfileName", SelectedProfile.OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.AlternateProfile)
+                        ? SelectedProfile.OutlookSettings.OutlookProfileName
+                        : null
+                },
+                {
+                    "OutlookCalendar", SelectedProfile.OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.AlternateMailBoxCalendar)
+                        ? SelectedProfile.OutlookSettings.OutlookFolder
+                        : null
+                },
+                {"AddAsAppointments", SelectedProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.AsAppointments)}
+            };
+
+            var result = await OutlookCalendarService.ClearCalendar(calendarSpecificData);
             if (!result)
             {
                 MessageService.ShowMessageAsync("Reset calendar failed.");
