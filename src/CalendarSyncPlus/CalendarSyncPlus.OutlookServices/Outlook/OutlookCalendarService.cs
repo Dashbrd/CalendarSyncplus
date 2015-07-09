@@ -1280,17 +1280,6 @@ namespace CalendarSyncPlus.OutlookServices.Outlook
             return calendarAppointments;
         }
 
-        private IEnumerable<Tuple<DateTime, DateTime>> SplitDateRange(DateTime start, DateTime end, int dayChunkSize)
-        {
-            DateTime chunkEnd;
-            while ((chunkEnd = start.AddDays(dayChunkSize)) < end)
-            {
-                yield return Tuple.Create(start, chunkEnd);
-                start = chunkEnd;
-            }
-            yield return Tuple.Create(start, end);
-        }
-
         /// <exception cref="InvalidOperationException">
         ///     Essential parameters are not present.
         /// </exception>
