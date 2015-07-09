@@ -324,7 +324,7 @@ namespace CalendarSyncPlus.ExchangeWebServices.Calendar
             if (appointments != null)
             {
                 appointments.ForEach(t => t.ExtendedProperties = new Dictionary<string, string>());
-                var success = await DeleteCalendarEvents(appointments, calendarSpecificData);
+                var success = await UpdateCalendarEvents(appointments, false,false,false,false, calendarSpecificData);
                 return success.IsSuccess;
             }
             return false;

@@ -557,14 +557,17 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
                     appItem.Categories = EventCategory.CategoryName;
                 }
 
-                if (calendarAppointment.AllDayEvent)
+                if (calendarAppointment.AllDayEvent != appItem.AllDayEvent)
                 {
-                    appItem.AllDayEvent = true;
+                    appItem.AllDayEvent = calendarAppointment.AllDayEvent;
                 }
 
                 appItem.Start = calendarAppointment.StartTime.GetValueOrDefault();
                 appItem.End = calendarAppointment.EndTime.GetValueOrDefault();
-                appItem.Body = calendarAppointment.GetDescriptionData(addDescription, attendeesToDescription);
+                if (addDescription || attendeesToDescription)
+                {
+                    appItem.Body = calendarAppointment.GetDescriptionData(addDescription, attendeesToDescription);
+                }
 
                 if (addAttendees && !attendeesToDescription)
                 {
@@ -1364,8 +1367,8 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
                 await GetCalendarEventsInRangeAsync(startDate, endDate, calendarSpecificData);
             if (appointments != null)
             {
-                appointments.ForEach(t=> t.ExtendedProperties  = new Dictionary<string, string>());
-                var success = await DeleteCalendarEvents(appointments, calendarSpecificData);
+                appointments.ForEach(t => t.ExtendedProperties = new Dictionary<string, string>());
+                var success = await UpdateCalendarEvents(appointments, false, false, false, false, calendarSpecificData);
                 return success.IsSuccess;
             }
             return false;

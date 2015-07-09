@@ -810,6 +810,7 @@ namespace CalendarSyncPlus.GoogleServices.Calendar
             }
             return false;
         }
+
         public async Task<bool> ResetCalendarEntries(IDictionary<string, object> calendarSpecificData)
         {
             var startDate = DateTime.Today.AddDays(-(10 * 365));
@@ -819,7 +820,7 @@ namespace CalendarSyncPlus.GoogleServices.Calendar
             if (appointments != null)
             {
                 appointments.ForEach(t => t.ExtendedProperties = new Dictionary<string, string>());
-                var success = await DeleteCalendarEvents(appointments, calendarSpecificData);
+                var success = await UpdateCalendarEvents(appointments, true, true,true, false, calendarSpecificData);
                 return success.IsSuccess;
             }
             return false;

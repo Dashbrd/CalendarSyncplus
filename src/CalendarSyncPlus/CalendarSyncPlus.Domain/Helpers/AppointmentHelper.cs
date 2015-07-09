@@ -18,17 +18,18 @@ namespace CalendarSyncPlus.Domain.Helpers
         public static string GetDescriptionData(this Appointment calendarAppointment, bool addDescription,
             bool addAttendees)
         {
+            if (!addAttendees)
+            {
+                return calendarAppointment.Description;
+            }
+
             var additionDescription = new StringBuilder(string.Empty);
             if (addDescription)
             {
-                additionDescription.Append(calendarAppointment.Description);
+                var description = TrimDescription(calendarAppointment.Description);
+                additionDescription.Append(description);
             }
-
-            if (!addAttendees)
-            {
-                return additionDescription.ToString();
-            }
-
+            
             //Start Header
             var attendeesDescription = calendarAppointment.GetAttendeesData();
             if (!String.IsNullOrEmpty(attendeesDescription))
@@ -36,6 +37,22 @@ namespace CalendarSyncPlus.Domain.Helpers
                 additionDescription.AppendLine(attendeesDescription);
             }
             return additionDescription.ToString();
+        }
+
+        private static string TrimDescription(string description)
+        {
+            try
+            {
+                if (!string.IsNullOrEmpty(description) && description.Contains(LineBreak))
+                {
+                    return description.Remove(description.IndexOf(LineBreak, StringComparison.InvariantCultureIgnoreCase)).Trim();
+                }
+            }
+            catch
+            {
+                return description;
+            }
+            return description;
         }
 
         public static string GetAttendeesData(this Appointment calendarAppointment)
