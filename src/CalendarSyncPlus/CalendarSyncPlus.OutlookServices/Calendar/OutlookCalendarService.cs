@@ -716,8 +716,6 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
                     var max = endDate;
 
                     // create Final filter as string
-                    //string filter = "[End] > '" + min.ToString("dd/MM/yyyy") + "' AND [Start] < '" + max.ToString("dd/MM/yyyy") + "'";
-                    //string filter = "[Start] >= '" + min.ToString("dd/MM/yy hh:mm tt") + "' AND [End] <= '" + max.ToString("dd/MM/yy hh:mm tt") + "'";
                     var filter = "[Start] >= '" + min.ToString("g") + "' AND [End] <= '" + max.ToString("g") + "'";
                     //Set filter on outlookItems and Loop through to create appointment List
                     var outlookEntries = outlookItems.Restrict(filter);
@@ -746,6 +744,14 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
                             }
                         }
                     }
+                    else
+                    {
+                        Logger.Warn("Outlook items null, check short date & time format in date time settings of your system.");
+                    }
+                }
+                else
+                {
+                    Logger.Warn("Outlook items null, check short date & time format in date time settings of your system.");
                 }
                 else
                 {
