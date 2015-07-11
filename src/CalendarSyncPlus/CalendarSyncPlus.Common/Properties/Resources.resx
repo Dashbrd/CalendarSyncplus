@@ -621,4 +621,19 @@
   <data name="OutlookSettingsView_Button_OutlookProfileSettings_ClearOutlookCalendar_Text" xml:space="preserve">
     <value>Clear Outlook Calendar</value>
   </data>
+  <data name="GoogleSettingsView_Button_ClearTaskList_Content" xml:space="preserve">
+    <value>Clear Google Task List</value>
+  </data>
+  <data name="GoogleSettingsView_Button_GetTaskList_Content" xml:space="preserve">
+    <value>Get Google Task Lists</value>
+  </data>
+  <data name="GoogleSettingsView_TextBlock_SelectTask_Text" xml:space="preserve">
+    <value>Select Task List</value>
+  </data>
+  <data name="OutlookSettingsView_Button_OutlookProfileSettings_ResetOutlookTaskList_Text" xml:space="preserve">
+    <value>Clear Outlook Task List</value>
+  </data>
+  <data name="OutlookSettingsView_TextBlock_OutlookProfileSettings_SelectTask_Text" xml:space="preserve">
+    <value>Select Task List</value>
+  </data>
 </root>

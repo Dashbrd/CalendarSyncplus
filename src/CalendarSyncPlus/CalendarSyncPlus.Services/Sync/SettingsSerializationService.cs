@@ -174,7 +174,7 @@ namespace CalendarSyncPlus.Services
                     syncProfile.SetSourceDestTypes();
                     if (syncProfile.SyncSettings == null)
                     {
-                        syncProfile.SyncSettings = SyncSettings.GetDefault();
+                        syncProfile.SyncSettings = CalendarSyncSettings.GetDefault();
                     }
                     else if (syncProfile.SyncSettings.SyncRangeType == SyncRangeTypeEnum.SyncEntireCalendar)
                     {
@@ -200,9 +200,9 @@ namespace CalendarSyncPlus.Services
 
             if (result.ContactSyncProfiles == null || result.ContactSyncProfiles.Count == 0)
             {
-                result.ContactSyncProfiles = new ObservableCollection<ContactsSyncProfile>()
+                result.ContactSyncProfiles = new ObservableCollection<ContactSyncProfile>()
                 {
-                    ContactsSyncProfile.GetDefaultSyncProfile()
+                    ContactSyncProfile.GetDefaultSyncProfile()
                 };
             }
 

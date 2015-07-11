@@ -39,13 +39,6 @@ namespace CalendarSyncPlus.GoogleServices.Tasks
         #endregion
 
         
-
-        //public Task<TaskWrapper> DeleteReminderTasks(List<Appointment> reminderTasks,
-        //    IDictionary<string, object> calendarSpecificData)
-        //{
-            
-        //}
-
         public async Task<TasksWrapper> GetReminderTasksInRangeAsync(DateTime startDate, DateTime endDate,
             IDictionary<string, object> calendarSpecificData)
         {
@@ -111,9 +104,7 @@ namespace CalendarSyncPlus.GoogleServices.Tasks
             return reminderTask;
         }
 
-        //public Task<TaskWrapper> AddReminderTasks(List<ReminderTask> reminderTasks, bool addDescription,
-        //    bool addReminder, bool addAttendees, bool attendeesToDescription,
-        //    IDictionary<string, object> calendarSpecificData) { }
+      
         private const string dictionaryKey_AccountName = "AccountName";
         private const string dictionaryKey_TasksId = "AccountName";
 
@@ -143,12 +134,6 @@ namespace CalendarSyncPlus.GoogleServices.Tasks
            
         }
 
-        //public Task<TaskWrapper> UpdateReminderTasks(List<ReminderTask> reminderTasks, bool addDescription,
-        //    bool addReminder, bool addAttendees, bool attendeesToDescription,
-        //    IDictionary<string, object> calendarSpecificData) { }
-
-        //public Task<bool> ResetReminderTasks(IDictionary<string, object> calendarSpecificData) { }
-
         private TasksService GetTasksService(string accountName)
         {
             return AccountAuthenticationService.AuthenticateTasksOauth(accountName);
@@ -168,6 +153,27 @@ namespace CalendarSyncPlus.GoogleServices.Tasks
                         new GoogleCalendar { Id = taskListEntry.Id, Name = taskListEntry.Title })
                     .ToList();
             return localTasksList;
+        }
+
+
+        public Task<TasksWrapper> DeleteReminderTasks(List<ReminderTask> reminderTasks, IDictionary<string, object> calendarSpecificData)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<TasksWrapper> AddReminderTasks(List<ReminderTask> reminderTasks, bool addDescription, bool addReminder, bool addAttendees, bool attendeesToDescription, IDictionary<string, object> calendarSpecificData)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<TasksWrapper> UpdateReminderTasks(List<ReminderTask> reminderTasks, bool addDescription, bool addReminder, bool addAttendees, bool attendeesToDescription, IDictionary<string, object> calendarSpecificData)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> ClearCalendar(IDictionary<string, object> calendarSpecificData)
+        {
+            throw new NotImplementedException();
         }
     }
 }

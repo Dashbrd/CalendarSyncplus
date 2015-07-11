@@ -68,8 +68,10 @@
     <Compile Include="Models\Announcement.cs" />
     <Compile Include="Models\Contact.cs" />
     <Compile Include="Models\Preferences\AppSettings.cs" />
+    <Compile Include="Models\Preferences\CalendarSyncSettings.cs" />
     <Compile Include="Models\Preferences\Category.cs" />
-    <Compile Include="Models\Preferences\ContactsSyncProfile.cs" />
+    <Compile Include="Models\Preferences\ContactSyncProfile.cs" />
+    <Compile Include="Models\Preferences\ContactSyncSettings.cs" />
     <Compile Include="Models\Preferences\EWSCalendar.cs" />
     <Compile Include="Models\Preferences\GoogleAccount.cs" />
     <Compile Include="Models\Preferences\GoogleSettings.cs" />
@@ -86,6 +88,7 @@
     <Compile Include="Models\Enumerations.cs" />
     <Compile Include="Models\Preferences\SyncProfile.cs" />
     <Compile Include="Models\Preferences\TaskSyncProfile.cs" />
+    <Compile Include="Models\Preferences\TaskSyncSettings.cs" />
     <Compile Include="Models\Recipient.cs" />
     <Compile Include="Models\Preferences\CalendarSyncProfile.cs" />
     <Compile Include="Models\ReminderTask.cs" />

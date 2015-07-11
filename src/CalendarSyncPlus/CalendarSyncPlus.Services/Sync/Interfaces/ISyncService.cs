@@ -47,7 +47,7 @@ namespace CalendarSyncPlus.Services.Sync.Interfaces
         /// <param name="syncMetric"></param>
         /// <param name="syncCallback"></param>
         /// <returns></returns>
-        string SyncNow(ContactsSyncProfile syncProfile, SyncMetric syncMetric, SyncCallback syncCallback);
+        string SyncNow(ContactSyncProfile syncProfile, SyncMetric syncMetric, SyncCallback syncCallback);
         /// <summary>
         /// 
         /// </summary>

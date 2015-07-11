@@ -107,22 +107,22 @@ namespace CalendarSyncPlus.SyncEngine
             }
         }
 
-        public bool GetSourceEntriesToDelete(ContactsSyncProfile syncProfile, ContactsWrapper sourceList, ContactsWrapper destinationList)
+        public bool GetSourceEntriesToDelete(ContactSyncProfile syncProfile, ContactsWrapper sourceList, ContactsWrapper destinationList)
         {
             throw new NotImplementedException();
         }
 
-        public bool GetSourceEntriesToAdd(ContactsSyncProfile syncProfile, ContactsWrapper sourceList, ContactsWrapper destinationList)
+        public bool GetSourceEntriesToAdd(ContactSyncProfile syncProfile, ContactsWrapper sourceList, ContactsWrapper destinationList)
         {
             throw new NotImplementedException();
         }
 
-        public bool GetDestEntriesToDelete(ContactsSyncProfile syncProfile, ContactsWrapper sourceList, ContactsWrapper destinationList)
+        public bool GetDestEntriesToDelete(ContactSyncProfile syncProfile, ContactsWrapper sourceList, ContactsWrapper destinationList)
         {
             throw new NotImplementedException();
         }
 
-        public bool GetDestEntriesToAdd(ContactsSyncProfile syncProfile, ContactsWrapper sourceList, ContactsWrapper destinationList)
+        public bool GetDestEntriesToAdd(ContactSyncProfile syncProfile, ContactsWrapper sourceList, ContactsWrapper destinationList)
         {
             throw new NotImplementedException();
         }

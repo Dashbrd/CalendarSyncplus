@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace CalendarSyncPlus.Presentation.Views
+namespace CalendarSyncPlus.Presentation.Views.Preferences.Calendars
 {
     /// <summary>
     ///     Interaction logic for GoogleSettingsView.xaml

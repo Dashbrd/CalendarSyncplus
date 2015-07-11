@@ -2,13 +2,15 @@
 using System.ComponentModel;
 using System.ComponentModel.Composition;
 using System.Linq;
-using System.Windows.Documents;
 using CalendarSyncPlus.Application.Controllers.Interfaces;
 using CalendarSyncPlus.Application.ViewModels;
 using CalendarSyncPlus.Services.Sync.Interfaces;
 
 namespace CalendarSyncPlus.Application.Controllers
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [Export(typeof(ISettingsController))]
     public class SettingsController : ISettingsController
     {
@@ -18,6 +20,16 @@ namespace CalendarSyncPlus.Application.Controllers
         private ManageProfileViewModel _manageProfileViewModel;
         private AppSettingsViewModel _appSettingsViewModel;
         private TaskViewModel _taskViewModel;
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="settingsService"></param>
+        /// <param name="calendarController"></param>
+        /// <param name="settingsViewModel"></param>
+        /// <param name="calendarViewModelLazy"></param>
+        /// <param name="manageProfileViewModelLazy"></param>
+        /// <param name="taskViewModelLazy"></param>
+        /// <param name="appSettingsViewModelLazy"></param>
         [ImportingConstructor]
         public SettingsController(ISettingsService settingsService,
             ICalendarController calendarController,
@@ -42,9 +54,14 @@ namespace CalendarSyncPlus.Application.Controllers
         public void Initialize()
         {
             _calendarController.Initialize();
+            
             _calendarViewModel.AddGoogleAccountCommand = _settingsViewModel.AddNewGoogleAccount;
             _calendarViewModel.DisconnectAccountCommand = _settingsViewModel.DisconnectGoogleCommand;
             _calendarViewModel.Initialize();
+
+            _taskViewModel.AddGoogleAccountCommand = _settingsViewModel.AddNewGoogleAccount;
+            _taskViewModel.DisconnectAccountCommand = _settingsViewModel.DisconnectGoogleCommand;
+            _taskViewModel.Initialize();
             PropertyChangedEventManager.AddHandler(_settingsViewModel,SettingsPropertyChangedHandler, "");
         }
 
@@ -58,10 +75,17 @@ namespace CalendarSyncPlus.Application.Controllers
                         _calendarViewModel.CalendarSyncProfiles = _settingsViewModel.Settings.CalendarSyncProfiles;
                         _calendarViewModel.GoogleAccounts = _settingsViewModel.Settings.GoogleAccounts;
                         _calendarViewModel.SelectedProfile = _calendarViewModel.CalendarSyncProfiles.FirstOrDefault();
+                        
                         _manageProfileViewModel.CalendarSyncProfiles = _settingsViewModel.Settings.CalendarSyncProfiles;
+                        _manageProfileViewModel.TaskSyncProfiles = _settingsViewModel.Settings.TaskSyncProfiles;
+                        _manageProfileViewModel.ContactsSyncProfiles = _settingsViewModel.Settings.ContactSyncProfiles;
+
                         _appSettingsViewModel.AppSettings = _settingsViewModel.Settings.AppSettings;
+                        
                         _taskViewModel.TaskSyncProfiles = _settingsViewModel.Settings.TaskSyncProfiles;
                         _taskViewModel.GoogleAccounts = _settingsViewModel.Settings.GoogleAccounts;
+                        _taskViewModel.SelectedProfile = _taskViewModel.TaskSyncProfiles.FirstOrDefault();
+                        
                         _settingsViewModel.Init = false;
                     }
                     break;

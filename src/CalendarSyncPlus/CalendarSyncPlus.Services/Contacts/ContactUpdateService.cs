@@ -16,7 +16,7 @@ namespace CalendarSyncPlus.Services.Contacts
     [Export(typeof(IContactUpdateService))]
     public class ContactUpdateService : Model, IContactUpdateService
     {
-        public bool SyncContact(ContactsSyncProfile syncProfile, SyncMetric syncMetric, SyncCallback syncCallback)
+        public bool SyncContact(ContactSyncProfile syncProfile, SyncMetric syncMetric, SyncCallback syncCallback)
         {
             throw new NotImplementedException();
         }

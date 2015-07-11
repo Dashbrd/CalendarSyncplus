@@ -152,7 +152,7 @@ namespace CalendarSyncPlus.Services.Sync
                 return exception.Message;
             }
         }
-        public string SyncNow(ContactsSyncProfile syncProfile, SyncMetric syncMetric, SyncCallback syncCallback)
+        public string SyncNow(ContactSyncProfile syncProfile, SyncMetric syncMetric, SyncCallback syncCallback)
         {
             try
             {

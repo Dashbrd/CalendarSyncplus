@@ -50,7 +50,7 @@ namespace CalendarSyncPlus.SyncEngine.Interfaces
         /// <param name="destinationList"></param>
         /// <returns>
         /// </returns>
-        bool GetSourceEntriesToDelete(ContactsSyncProfile syncProfile, ContactsWrapper sourceList,
+        bool GetSourceEntriesToDelete(ContactSyncProfile syncProfile, ContactsWrapper sourceList,
             ContactsWrapper destinationList);
 
         /// <summary>
@@ -60,7 +60,7 @@ namespace CalendarSyncPlus.SyncEngine.Interfaces
         /// <param name="destinationList"></param>
         /// <returns>
         /// </returns>
-        bool GetSourceEntriesToAdd(ContactsSyncProfile syncProfile, ContactsWrapper sourceList,
+        bool GetSourceEntriesToAdd(ContactSyncProfile syncProfile, ContactsWrapper sourceList,
             ContactsWrapper destinationList);
 
         /// <summary>
@@ -70,7 +70,7 @@ namespace CalendarSyncPlus.SyncEngine.Interfaces
         /// <param name="destinationList"></param>
         /// <returns>
         /// </returns>
-        bool GetDestEntriesToDelete(ContactsSyncProfile syncProfile, ContactsWrapper sourceList,
+        bool GetDestEntriesToDelete(ContactSyncProfile syncProfile, ContactsWrapper sourceList,
             ContactsWrapper destinationList);
 
         /// <summary>
@@ -80,7 +80,7 @@ namespace CalendarSyncPlus.SyncEngine.Interfaces
         /// <param name="destinationList"></param>
         /// <returns>
         /// </returns>
-        bool GetDestEntriesToAdd(ContactsSyncProfile syncProfile, ContactsWrapper sourceList,
+        bool GetDestEntriesToAdd(ContactSyncProfile syncProfile, ContactsWrapper sourceList,
             ContactsWrapper destinationList);
 
         /// <summary>

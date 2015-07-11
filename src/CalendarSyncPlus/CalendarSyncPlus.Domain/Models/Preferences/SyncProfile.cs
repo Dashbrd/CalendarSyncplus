@@ -22,6 +22,7 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
         private SyncModeEnum _syncMode;
         private SyncFrequency _syncFrequency;
         private ExchangeServerSettings _exchangeServerSettings;
+        private bool _isLoaded;
 
         public SyncProfile()
         {
@@ -129,7 +130,14 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
             get { return _syncMode; }
             set { SetProperty(ref _syncMode, value); }
         }
-        
+
+        [XmlIgnore]
+        public bool IsLoaded
+        {
+            get { return _isLoaded; }
+            set { SetProperty(ref _isLoaded, value); }
+        }
+
         #endregion
 
         /// <summary>

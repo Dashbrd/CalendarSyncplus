@@ -14,6 +14,7 @@ using CalendarSyncPlus.OutlookServices.Wrappers;
 using CalendarSyncPlus.Services.Tasks.Interfaces;
 using log4net;
 using Microsoft.Office.Interop.Outlook;
+using Microsoft.Win32;
 using Exception = System.Exception;
 using ThreadingTask = System.Threading.Tasks.Task;
 namespace CalendarSyncPlus.OutlookServices.Task
@@ -34,6 +35,44 @@ namespace CalendarSyncPlus.OutlookServices.Task
         private OutlookFolder OutlookCalendar { get; set; }
         
         private string ProfileName { get; set; }
+
+        private List<string> GetOutlookProfileList()
+        {
+            var profileList = new List<string>();
+            const string defaultProfilePath =
+                @"Software\Microsoft\Windows NT\CurrentVersion\Windows Messaging Subsystem\Profiles";
+            const string newProfilePath = @"Software\Microsoft\Office\15.0\Outlook\Profiles";
+
+            var defaultRegKey = Registry.CurrentUser.OpenSubKey(defaultProfilePath,
+                RegistryKeyPermissionCheck.Default);
+
+            if (defaultRegKey != null)
+            {
+                var list = defaultRegKey.GetSubKeyNames();
+
+                if (list.Any())
+                {
+                    profileList.AddRange(list);
+                }
+            }
+
+            var newregKey = Registry.CurrentUser.OpenSubKey(newProfilePath, RegistryKeyPermissionCheck.Default);
+
+            if (newregKey != null)
+            {
+                var list = newregKey.GetSubKeyNames();
+
+                if (list.Any())
+                {
+                    foreach (var name in list.Where(name => !profileList.Contains(name)))
+                    {
+                        profileList.Add(name);
+                    }
+                }
+            }
+
+            return profileList;
+        }
         private List<OutlookMailBox> GetOutlookMailBoxes(Folders rootFolders)
         {
             var mailBoxes = new List<OutlookMailBox>();
@@ -347,8 +386,25 @@ namespace CalendarSyncPlus.OutlookServices.Task
             return taskWrapper;
         }
 
+        public async Task<List<string>> GetOutLookProfieListAsync()
+        {
+            return await Task<List<string>>.Factory.StartNew(GetOutlookProfileList);
+        }
 
-       
+
+        public async Task<bool> ClearCalendar(IDictionary<string, object> calendarSpecificData)
+        {
+            var startDate = DateTime.Today.AddDays(-(10 * 365));
+            var endDate = DateTime.Today.AddDays(10 * 365);
+            var appointments =
+                await GetCalendarEventsInRangeAsync(startDate, endDate, calendarSpecificData);
+            if (appointments != null)
+            {
+                var success = await DeleteReminderTasks(appointments, calendarSpecificData);
+                return success.IsSuccess;
+            }
+            return false;
+        }
 
         public List<OutlookMailBox> GetAllMailBoxes(string profileName = "")
         {
@@ -408,5 +464,26 @@ namespace CalendarSyncPlus.OutlookServices.Task
             return mailBoxes;
         }
 
+
+
+        public Task<TasksWrapper> DeleteReminderTasks(List<ReminderTask> reminderTasks, IDictionary<string, object> calendarSpecificData)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<TasksWrapper> GetReminderTasksInRangeAsync(DateTime startDate, DateTime endDate, IDictionary<string, object> calendarSpecificData)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<TasksWrapper> AddReminderTasks(List<ReminderTask> reminderTasks, bool addDescription, bool addReminder, bool addAttendees, bool attendeesToDescription, IDictionary<string, object> calendarSpecificData)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<TasksWrapper> UpdateReminderTasks(List<ReminderTask> reminderTasks, bool addDescription, bool addReminder, bool addAttendees, bool attendeesToDescription, IDictionary<string, object> calendarSpecificData)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

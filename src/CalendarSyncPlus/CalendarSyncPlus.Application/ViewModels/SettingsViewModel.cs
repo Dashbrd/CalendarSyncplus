@@ -50,7 +50,7 @@ namespace CalendarSyncPlus.Application.ViewModels
     [Export]
     public class SettingsViewModel : ViewModel<ISettingsView>
     {
-        private Settings _lastSavedSettings;
+        
         #region Constructors
         [ImportingConstructor]
         public SettingsViewModel(ISettingsView view,
@@ -80,16 +80,14 @@ namespace CalendarSyncPlus.Application.ViewModels
         #endregion
 
         #region Fields
-        
+        private Settings _lastSavedSettings;
         private bool _isLoading;
         private DelegateCommand _saveCommand;
-        private CalendarViewModel _selectedCalendar;
         private Settings _settings;
         private bool _settingsSaved;
         private bool _isValid;
         private DelegateCommand _addNewGoogleAccount;
         private DelegateCommand _disconnectGoogleCommand;
-        private CalendarSyncProfile _selectedCalendarProfile;
         private bool _init;
         private DelegateCommand _cancelCommand;
 
@@ -227,9 +225,19 @@ namespace CalendarSyncPlus.Application.ViewModels
         {
             Settings = _lastSavedSettings.DeepClone();
 
-            foreach (var calendarSyncProfile in Settings.CalendarSyncProfiles)
+            foreach (var syncProfile in Settings.CalendarSyncProfiles)
             {
-                calendarSyncProfile.IsLoaded = false;
+                syncProfile.IsLoaded = false;
+            }
+
+            foreach (var syncProfile in Settings.TaskSyncProfiles)
+            {
+                syncProfile.IsLoaded = false;
+            }
+
+            foreach (var syncProfile in Settings.ContactSyncProfiles)
+            {
+                syncProfile.IsLoaded = false;
             }
 
             Init = true;

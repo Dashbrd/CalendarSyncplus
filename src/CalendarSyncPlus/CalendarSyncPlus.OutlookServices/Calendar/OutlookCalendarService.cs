@@ -551,7 +551,7 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
 
                 appItem.Location = calendarAppointment.Location;
                 appItem.BusyStatus = calendarAppointment.GetOutlookBusyStatus();
-                recipients = appItem.Recipients;
+                
                 if (EventCategory != null)
                 {
                     appItem.Categories = EventCategory.CategoryName;
@@ -566,11 +566,12 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
                 appItem.End = calendarAppointment.EndTime.GetValueOrDefault();
                 if (addDescription || attendeesToDescription)
                 {
-                    appItem.Body = calendarAppointment.GetDescriptionData(addDescription, attendeesToDescription);
+                    appItem.Body = calendarAppointment.Description;
                 }
 
                 if (addAttendees && !attendeesToDescription)
                 {
+                    recipients = appItem.Recipients;
                     if (calendarAppointment.RequiredAttendees != null)
                     {
                         calendarAppointment.RequiredAttendees.ForEach(rcptName =>
@@ -596,8 +597,15 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
 
                 if (addReminder)
                 {
-                    appItem.ReminderMinutesBeforeStart = calendarAppointment.ReminderMinutesBeforeStart;
-                    appItem.ReminderSet = calendarAppointment.ReminderSet;
+                    if (appItem.ReminderSet != calendarAppointment.ReminderSet)
+                    {
+                        appItem.ReminderMinutesBeforeStart = calendarAppointment.ReminderMinutesBeforeStart;
+                        if (calendarAppointment.ReminderSet &&
+                            appItem.ReminderMinutesBeforeStart != calendarAppointment.ReminderMinutesBeforeStart)
+                        {
+                            appItem.ReminderMinutesBeforeStart = calendarAppointment.ReminderMinutesBeforeStart;
+                        }
+                    }
                 }
 
                 userProperties = appItem.UserProperties;
@@ -753,10 +761,7 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
                 {
                     Logger.Warn("Outlook items null, check short date & time format in date time settings of your system.");
                 }
-                else
-                {
-                    Logger.Error("Outlook Items were found null.");
-                }
+                
             }
             catch (Exception exception)
             {

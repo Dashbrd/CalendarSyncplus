@@ -3,11 +3,11 @@
 namespace CalendarSyncPlus.Presentation.Views.Preferences.Calendars
 {
     /// <summary>
-    ///     Interaction logic for OutlookSettingsView.xaml
+    ///     Interaction logic for SyncSettingsView.xaml
     /// </summary>
-    public partial class OutlookCalendarsView : UserControl
+    public partial class SyncCalendarsView : UserControl
     {
-        public OutlookCalendarsView()
+        public SyncCalendarsView()
         {
             InitializeComponent();
         }

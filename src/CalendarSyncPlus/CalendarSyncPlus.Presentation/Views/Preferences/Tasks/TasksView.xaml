@@ -6,6 +6,7 @@
              xmlns:viewModels="clr-namespace:CalendarSyncPlus.Application.ViewModels;assembly=CalendarSyncPlus.Application"
              xmlns:views="clr-namespace:CalendarSyncPlus.Presentation.Views"
              xmlns:lex="http://wpflocalizeextension.codeplex.com"
+             xmlns:tasks="clr-namespace:CalendarSyncPlus.Presentation.Views.Preferences.Tasks"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300"
              d:DataContext="{d:DesignInstance viewModels:TaskViewModel}">
@@ -36,19 +37,30 @@
             </Grid>
         </GroupBox>
         <TabControl Grid.Row="1">
+            <TabItem Header="{lex:LocText Key=ProfileSettingsView_TabItem_Sync_Header}">
+                <ScrollViewer HorizontalScrollBarVisibility="Hidden"
+                              VerticalScrollBarVisibility="Auto">
+                    <tasks:SyncTasksView DataContext="{Binding}" />
+                </ScrollViewer>
+            </TabItem>
             <TabItem Header="{lex:LocText Key=ProfileSettingsView_TabItem_Outlook_Header}">
                 <ScrollViewer HorizontalScrollBarVisibility="Hidden"
                               VerticalScrollBarVisibility="Auto">
-                    <views:OutlookTasksView DataContext="{Binding}" />
+                    <tasks:OutlookTasksView DataContext="{Binding}" />
                 </ScrollViewer>
             </TabItem>
             <TabItem Header="{lex:LocText Key=ProfileSettingsView_TabItem_Google_Header}">
                 <ScrollViewer HorizontalScrollBarVisibility="Hidden"
                               VerticalScrollBarVisibility="Auto">
-                    <views:GoogleTasksView DataContext="{Binding}" />
+                    <tasks:GoogleTasksView DataContext="{Binding}" />
                 </ScrollViewer>
             </TabItem>
-           
+            <TabItem Header="{lex:LocText Key=ProfileSettingsView_TabItem_Options_Header}">
+                <ScrollViewer HorizontalScrollBarVisibility="Hidden"
+                              VerticalScrollBarVisibility="Auto">
+                    <tasks:OptionsTasksView DataContext="{Binding}" />
+                </ScrollViewer>
+            </TabItem>
 
         </TabControl>
     </Grid>

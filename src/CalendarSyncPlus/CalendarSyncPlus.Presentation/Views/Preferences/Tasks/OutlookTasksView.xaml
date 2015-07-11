@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="CalendarSyncPlus.Presentation.Views.OutlookTasksView"
+﻿<UserControl x:Class="CalendarSyncPlus.Presentation.Views.Preferences.Tasks.OutlookTasksView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
@@ -184,7 +184,7 @@
                            Margin="2"
                            VerticalAlignment="Center"
                            IsEnabled="False"
-                           Text="{localizeExtension:LocText Key=OutlookSettingsView_TextBlock_OutlookProfileSettings_SelectCalendar_Text}" />
+                           Text="{localizeExtension:LocText Key=OutlookSettingsView_TextBlock_OutlookProfileSettings_SelectTask_Text}" />
                 <ComboBox Grid.Row="6"
                           Grid.Column="1"
                           Margin="2"
@@ -193,14 +193,14 @@
                                               ElementName=MailBoxRadioButton}"
                           ItemsSource="{Binding SelectedProfile.OutlookSettings.OutlookMailBox.Folders}"
                           SelectedItem="{Binding SelectedProfile.OutlookSettings.OutlookFolder}" />
-                <Button Grid.Row="7"
+                 <Button Grid.Row="7"
                         Grid.Column="1"
                         Width="150"
                         Margin="2"
                         HorizontalAlignment="Right"
                         VerticalAlignment="Center"
-                        Command="{Binding ResetOutlookCalendarCommand}"
-                        Content="{localizeExtension:LocText Key=OutlookSettingsView_Button_OutlookProfileSettings_ResetOutlookCalendar_Text}" />
+                        Command="{Binding CleanOutlookCalendarCommand}"
+                        Content="{localizeExtension:LocText Key=OutlookSettingsView_Button_OutlookProfileSettings_ResetOutlookTaskList_Text}" />
             </Grid>
         </GroupBox>
         <GroupBox Grid.Row="1"

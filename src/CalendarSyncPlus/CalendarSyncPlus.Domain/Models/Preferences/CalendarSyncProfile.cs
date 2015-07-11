@@ -9,16 +9,16 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
     [XmlInclude(typeof (SyncFrequency))]
     public class CalendarSyncProfile : SyncProfile
     {
-        private SyncSettings _syncSettings;
+        private CalendarSyncSettings _syncSettings;
         private CalendarEntryOptionsEnum _calendarEntryOptions;
         private bool _setCalendarCategory;
         private Category _eventCategory;
 
         public CalendarSyncProfile()
         {
-            Name = "Default Profile";
+            Name = "Default Calendar Profile";
             GoogleSettings = new GoogleSettings();
-            SyncSettings = new SyncSettings();
+            SyncSettings = new CalendarSyncSettings();
             ExchangeServerSettings = new ExchangeServerSettings();
             OutlookSettings = new OutlookSettings();
             IsSyncEnabled = true;
@@ -27,7 +27,7 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
 
         /// <summary>
         /// </summary>
-        public SyncSettings SyncSettings
+        public CalendarSyncSettings SyncSettings
         {
             get { return _syncSettings; }
             set { SetProperty(ref _syncSettings, value); }
@@ -56,9 +56,7 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
             get { return _eventCategory; }
             set { SetProperty(ref _eventCategory, value); }
         }
-
-        [XmlIgnore]
-        public bool IsLoaded { get; set; }
+        
         /// <summary>
         ///     Gets default calendar profile for the user
         /// </summary>
@@ -68,7 +66,7 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
         {
             var syncProfile = new CalendarSyncProfile
             {
-                SyncSettings = SyncSettings.GetDefault(),
+                SyncSettings = CalendarSyncSettings.GetDefault(),
                 OutlookSettings =
                 {
                     OutlookOptions =  OutlookOptionsEnum.OutlookDesktop |

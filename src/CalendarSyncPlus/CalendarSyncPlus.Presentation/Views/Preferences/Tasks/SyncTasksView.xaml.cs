@@ -1,13 +1,13 @@
 ﻿using System.Windows.Controls;
 
-namespace CalendarSyncPlus.Presentation.Views
+namespace CalendarSyncPlus.Presentation.Views.Preferences.Tasks
 {
     /// <summary>
     ///     Interaction logic for SyncSettingsView.xaml
     /// </summary>
-    public partial class SyncSettingsView : UserControl
+    public partial class SyncTasksView : UserControl
     {
-        public SyncSettingsView()
+        public SyncTasksView()
         {
             InitializeComponent();
         }

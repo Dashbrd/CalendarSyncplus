@@ -239,8 +239,8 @@
     <Compile Include="Views\Main\MenuView.xaml.cs">
       <DependentUpon>MenuView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Preferences\Calendars\OptionsSettingsView.xaml.cs">
-      <DependentUpon>OptionsSettingsView.xaml</DependentUpon>
+    <Compile Include="Views\Preferences\Calendars\OptionsCalendarsView.xaml.cs">
+      <DependentUpon>OptionsCalendarsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Preferences\General\ManageProfilesView.xaml.cs">
       <DependentUpon>ManageProfilesView.xaml</DependentUpon>
@@ -257,8 +257,8 @@
     <Compile Include="Views\Notifications\SyncBalloon.xaml.cs">
       <DependentUpon>SyncBalloon.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Preferences\Calendars\SyncSettingsView.xaml.cs">
-      <DependentUpon>SyncSettingsView.xaml</DependentUpon>
+    <Compile Include="Views\Preferences\Calendars\SyncCalendarsView.xaml.cs">
+      <DependentUpon>SyncCalendarsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Notifications\SystemTrayNotifierView.xaml.cs">
       <DependentUpon>SystemTrayNotifierView.xaml</DependentUpon>
@@ -272,8 +272,14 @@
     <Compile Include="Views\Preferences\Tasks\GoogleTasksView.xaml.cs">
       <DependentUpon>GoogleTasksView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Preferences\Tasks\OptionsTasksView.xaml.cs">
+      <DependentUpon>OptionsTasksView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Preferences\Tasks\OutlookTasksView.xaml.cs">
       <DependentUpon>OutlookTasksView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Preferences\Tasks\SyncTasksView.xaml.cs">
+      <DependentUpon>SyncTasksView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Preferences\Tasks\TasksView.xaml.cs">
       <DependentUpon>TasksView.xaml</DependentUpon>
@@ -330,7 +336,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Preferences\Calendars\OptionsSettingsView.xaml">
+    <Page Include="Views\Preferences\Calendars\OptionsCalendarsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -366,7 +372,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Preferences\Calendars\SyncSettingsView.xaml">
+    <Page Include="Views\Preferences\Calendars\SyncCalendarsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -386,7 +392,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Views\Preferences\Tasks\OptionsTasksView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\Preferences\Tasks\OutlookTasksView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Preferences\Tasks\SyncTasksView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

@@ -22,7 +22,7 @@ namespace CalendarSyncPlus.Services.Contacts.Interfaces
         /// <param name="syncCallback"></param>
         /// <returns>
         /// </returns>
-        bool SyncContact(ContactsSyncProfile syncProfile, SyncMetric syncMetric, SyncCallback syncCallback);
+        bool SyncContact(ContactSyncProfile syncProfile, SyncMetric syncMetric, SyncCallback syncCallback);
 
         #endregion
 

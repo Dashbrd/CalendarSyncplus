@@ -8,24 +8,26 @@ namespace CalendarSyncPlus.Services.Tasks.Interfaces
 {
     public interface ITaskService
     {
-        //string ServiceName { get; }
+        string ServiceName { get; }
 
-        //Task<TaskWrapper> DeleteReminderTasks(List<Appointment> reminderTasks,
-        //    IDictionary<string, object> calendarSpecificData);
+        Task<TasksWrapper> DeleteReminderTasks(List<ReminderTask> reminderTasks,
+            IDictionary<string, object> calendarSpecificData);
 
-        //Task<TaskWrapper> GetReminderTasksInRangeAsync(DateTime startDate, DateTime endDate,
-        //    IDictionary<string, object> calendarSpecificData);
+        Task<TasksWrapper> GetReminderTasksInRangeAsync(DateTime startDate, DateTime endDate,
+            IDictionary<string, object> calendarSpecificData);
 
-        //Task<TaskWrapper> AddReminderTasks(List<ReminderTask> reminderTasks, bool addDescription,
-        //    bool addReminder, bool addAttendees, bool attendeesToDescription,
-        //    IDictionary<string, object> calendarSpecificData);
+        Task<TasksWrapper> AddReminderTasks(List<ReminderTask> reminderTasks, bool addDescription,
+            bool addReminder, bool addAttendees, bool attendeesToDescription,
+            IDictionary<string, object> calendarSpecificData);
 
-        //void CheckCalendarSpecificData(IDictionary<string, object> calendarSpecificData);
+        void CheckCalendarSpecificData(IDictionary<string, object> calendarSpecificData);
 
-        //Task<TaskWrapper> UpdateReminderTasks(List<ReminderTask> reminderTasks, bool addDescription,
-        //    bool addReminder, bool addAttendees, bool attendeesToDescription,
-        //    IDictionary<string, object> calendarSpecificData);
+        Task<TasksWrapper> UpdateReminderTasks(List<ReminderTask> reminderTasks, bool addDescription,
+            bool addReminder, bool addAttendees, bool attendeesToDescription,
+            IDictionary<string, object> calendarSpecificData);
 
         //Task<bool> ResetReminderTasks(IDictionary<string, object> calendarSpecificData);
+
+        Task<bool> ClearCalendar(IDictionary<string, object> calendarSpecificData);
     }
 }

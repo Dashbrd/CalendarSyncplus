@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="CalendarSyncPlus.Presentation.Views.OutlookCalendarsView"
+﻿<UserControl x:Class="CalendarSyncPlus.Presentation.Views.Preferences.Calendars.OutlookCalendarsView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
@@ -199,7 +199,7 @@
                         Margin="2"
                         HorizontalAlignment="Right"
                         VerticalAlignment="Center"
-                        Command="{Binding CleanOutlookCalendarCommand}"
+                        Command="{Binding ResetOutlookCalendarCommand}"
                         Content="{localizeExtension:LocText Key=OutlookSettingsView_Button_OutlookProfileSettings_ClearOutlookCalendar_Text}" />
                 <Button Grid.Row="8"
                         Grid.Column="1"
@@ -207,7 +207,7 @@
                         Margin="2"
                         HorizontalAlignment="Right"
                         VerticalAlignment="Center"
-                        Command="{Binding CleanGoogleCalendarCommand}"
+                        Command="{Binding CleanOutlookCalendarCommand}"
                         Content="{localizeExtension:LocText Key=OutlookSettingsView_Button_OutlookProfileSettings_ResetOutlookCalendar_Text}" />
             </Grid>
         </GroupBox>

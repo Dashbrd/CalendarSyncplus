@@ -33,6 +33,9 @@ namespace CalendarSyncPlus.Application.ViewModels
         private DelegateCommand _cleanOutlookCalendarCommand;
         private DelegateCommand _addGoogleAccountCommand;
         private DelegateCommand _disconnectAccountCommand;
+        private DelegateCommand _resetOutlookCalendarCommand;
+        private DelegateCommand _resetGoogleCalendarCommand;
+
         private List<SyncDirectionEnum> _calendarSyncModes;
         private List<Category> _categories;
         private List<OutlookMailBox> _outlookMailBoxes;
@@ -44,8 +47,7 @@ namespace CalendarSyncPlus.Application.ViewModels
         private CalendarSyncProfile _selectedProfile;
         private ObservableCollection<GoogleAccount> _googleAccounts;
         private bool _isLoading;
-        private DelegateCommand _resetOutlookCalendarCommand;
-        private DelegateCommand _resetGoogleCalendarCommand;
+       
 
         [ImportingConstructor]
         public CalendarViewModel(ICalendarView calendarView, 
@@ -201,7 +203,7 @@ namespace CalendarSyncPlus.Application.ViewModels
 
         public DelegateCommand ResetOutlookCalendarCommand
         {
-            get { return _resetOutlookCalendarCommand ?? (_resetGoogleCalendarCommand = new DelegateCommand(ResetOutlookCalendar)); }
+            get { return _resetOutlookCalendarCommand ?? (_resetOutlookCalendarCommand = new DelegateCommand(ResetOutlookCalendar)); }
         }
         
         public DelegateCommand ResetGoogleCalendarCommand
@@ -304,7 +306,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             return OutlookCalendarService.GetAllMailBoxes(SelectedProfile.OutlookSettings.OutlookProfileName ?? string.Empty);
         }
 
-        private async void AutoDetectEWSSettings()
+        private void AutoDetectEWSSettings()
         {
             IsLoading = true;
 

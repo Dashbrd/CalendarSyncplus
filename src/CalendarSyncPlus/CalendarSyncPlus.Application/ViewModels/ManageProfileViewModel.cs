@@ -20,7 +20,7 @@ namespace CalendarSyncPlus.Application.ViewModels
         private DelegateCommand _moveUpCommand;
         private ObservableCollection<CalendarSyncProfile> _calendarSyncProfiles;
         private ObservableCollection<TaskSyncProfile> _taskSyncProfiles;
-        private ObservableCollection<ContactsSyncProfile> _contactsSyncProfiles;
+        private ObservableCollection<ContactSyncProfile> _contactsSyncProfiles;
 
         [ImportingConstructor]
         public ManageProfileViewModel(IManageProfileView view, IMessageService messageService) : base(view)
@@ -61,7 +61,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             set { SetProperty(ref _taskSyncProfiles, value); }
         }
 
-        public ObservableCollection<ContactsSyncProfile> ContactsSyncProfiles
+        public ObservableCollection<ContactSyncProfile> ContactsSyncProfiles
         {
             get { return _contactsSyncProfiles; }
             set { SetProperty(ref _contactsSyncProfiles, value); }
@@ -88,7 +88,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             }
             else if (parameter.ToString().Equals("Contacts"))
             {
-                await AddNewProfile(ContactsSyncProfiles, ContactsSyncProfile.GetDefaultSyncProfile());
+                await AddNewProfile(ContactsSyncProfiles, ContactSyncProfile.GetDefaultSyncProfile());
             }
         }
 
@@ -127,7 +127,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             
             await RemoveProfile(TaskSyncProfiles, parameter as TaskSyncProfile);
 
-            await RemoveProfile(ContactsSyncProfiles, parameter as ContactsSyncProfile);
+            await RemoveProfile(ContactsSyncProfiles, parameter as ContactSyncProfile);
         }
 
         async Task RemoveProfile<T>(ObservableCollection<T> profileList, T profile) where T: SyncProfile
@@ -150,7 +150,7 @@ namespace CalendarSyncPlus.Application.ViewModels
         {
             MoveUp(CalendarSyncProfiles,parameter as CalendarSyncProfile);
             MoveUp(TaskSyncProfiles, parameter as TaskSyncProfile);
-            MoveUp(ContactsSyncProfiles, parameter as ContactsSyncProfile);
+            MoveUp(ContactsSyncProfiles, parameter as ContactSyncProfile);
         }
 
         private void MoveUp<T>(ObservableCollection<T> profileList, T profile) where T : SyncProfile
@@ -173,7 +173,7 @@ namespace CalendarSyncPlus.Application.ViewModels
         {
             MoveDown(CalendarSyncProfiles, parameter as CalendarSyncProfile);
             MoveDown(TaskSyncProfiles, parameter as TaskSyncProfile);
-            MoveDown(ContactsSyncProfiles, parameter as ContactsSyncProfile);
+            MoveDown(ContactsSyncProfiles, parameter as ContactSyncProfile);
         }
 
         private void MoveDown<T>(ObservableCollection<T> profileList, T profile) where T : SyncProfile
@@ -190,7 +190,7 @@ namespace CalendarSyncPlus.Application.ViewModels
 
         public void UpdateProfiles(ObservableCollection<CalendarSyncProfile> calendarSyncProfiles,
             ObservableCollection<TaskSyncProfile> taskSyncProfiles,
-            ObservableCollection<ContactsSyncProfile> contactsSyncProfiles)
+            ObservableCollection<ContactSyncProfile> contactsSyncProfiles)
         {
             CalendarSyncProfiles = calendarSyncProfiles;
             TaskSyncProfiles = taskSyncProfiles;

@@ -38,7 +38,7 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
         /// <summary>
         /// 
         /// </summary>
-        public ObservableCollection<ContactsSyncProfile> ContactSyncProfiles { get; set; }
+        public ObservableCollection<ContactSyncProfile> ContactSyncProfiles { get; set; }
 
         /// <summary>
         /// 
@@ -75,6 +75,14 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
                 CalendarSyncProfiles = new ObservableCollection<CalendarSyncProfile>
                 {
                     CalendarSyncProfile.GetDefaultSyncProfile()
+                },
+                TaskSyncProfiles = new ObservableCollection<TaskSyncProfile>
+                {
+                    TaskSyncProfile.GetDefaultSyncProfile()
+                },
+                ContactSyncProfiles = new ObservableCollection<ContactSyncProfile>
+                {
+                    ContactSyncProfile.GetDefaultSyncProfile()
                 },
                 GoogleAccounts = new ObservableCollection<GoogleAccount>()
             };
