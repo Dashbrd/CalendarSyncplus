@@ -747,6 +747,10 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
                         }
                     }
                 }
+                else
+                {
+                    Logger.Error("Outlook Items were found null.");
+                }
             }
             catch (Exception exception)
             {
