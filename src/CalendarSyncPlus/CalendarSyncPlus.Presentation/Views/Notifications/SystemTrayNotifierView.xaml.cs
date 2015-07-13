@@ -4,7 +4,7 @@ using System.Windows.Controls.Primitives;
 using CalendarSyncPlus.Application.Views;
 using Hardcodet.Wpf.TaskbarNotification;
 
-namespace CalendarSyncPlus.Presentation.Views
+namespace CalendarSyncPlus.Presentation.Views.Notifications
 {
     /// <summary>
     ///     Interaction logic for SystemTrayNotifierView.xaml

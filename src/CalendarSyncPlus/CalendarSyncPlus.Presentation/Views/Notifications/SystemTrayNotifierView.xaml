@@ -1,4 +1,4 @@
-﻿<tb:TaskbarIcon x:Class="CalendarSyncPlus.Presentation.Views.SystemTrayNotifierView"
+﻿<tb:TaskbarIcon x:Class="CalendarSyncPlus.Presentation.Views.Notifications.SystemTrayNotifierView"
                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                 xmlns:Properties="clr-namespace:CalendarSyncPlus.Common.Properties;assembly=CalendarSyncPlus.Common"

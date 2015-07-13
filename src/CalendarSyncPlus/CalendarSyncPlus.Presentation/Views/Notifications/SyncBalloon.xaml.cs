@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace CalendarSyncPlus.Presentation.Views
+namespace CalendarSyncPlus.Presentation.Views.Notifications
 {
     /// <summary>
     ///     Interaction logic for SyncBalloon.xaml

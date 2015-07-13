@@ -11,6 +11,7 @@
              xmlns:viewModels="clr-namespace:CalendarSyncPlus.Application.ViewModels;assembly=CalendarSyncPlus.Application"
              xmlns:views="clr-namespace:CalendarSyncPlus.Presentation.Views"
              xmlns:preferences="clr-namespace:CalendarSyncPlus.Domain.Models.Preferences;assembly=CalendarSyncPlus.Domain"
+             xmlns:main="clr-namespace:CalendarSyncPlus.Presentation.Views.Main"
              d:DataContext="{d:DesignInstance viewModels:ShellViewModel}"
              d:DesignHeight="300"
              d:DesignWidth="300"
@@ -88,7 +89,7 @@
                                                         UpdateSourceTrigger=PropertyChanged}" />
 
         <!--  Menu buttons  -->
-        <views:MenuView Grid.Column="0"
+        <main:MenuView Grid.Column="0"
                         Grid.RowSpan="5" />
 
         <!--  Sync Schedule  -->

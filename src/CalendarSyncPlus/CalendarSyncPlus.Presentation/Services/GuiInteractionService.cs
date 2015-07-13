@@ -21,6 +21,7 @@ using System;
 using System.ComponentModel.Composition;
 using CalendarSyncPlus.Presentation.Helpers;
 using CalendarSyncPlus.Presentation.Views;
+using CalendarSyncPlus.Presentation.Views.Main;
 using CalendarSyncPlus.Services.Interfaces;
 
 namespace CalendarSyncPlus.Presentation.Services

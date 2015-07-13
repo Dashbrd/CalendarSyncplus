@@ -23,6 +23,8 @@ using System.Threading.Tasks;
 using System.Waf.Applications;
 using CalendarSyncPlus.Common;
 using CalendarSyncPlus.Presentation.Views;
+using CalendarSyncPlus.Presentation.Views.Helper;
+using CalendarSyncPlus.Presentation.Views.Main;
 using CalendarSyncPlus.Services.Interfaces;
 using MahApps.Metro.Controls.Dialogs;
 

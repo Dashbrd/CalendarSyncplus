@@ -1,11 +1,7 @@
-﻿using System;
-using System.ComponentModel.Composition;
-using System.IO;
-using System.Windows;
-using System.Windows.Xps.Packaging;
+﻿using System.ComponentModel.Composition;
 using CalendarSyncPlus.Application.Views;
 
-namespace CalendarSyncPlus.Presentation.Views
+namespace CalendarSyncPlus.Presentation.Views.Main
 {
     /// <summary>
     ///     Interaction logic for HelpView.xaml

@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using MahApps.Metro.SimpleChildWindow;
 
-namespace CalendarSyncPlus.Presentation.Views
+namespace CalendarSyncPlus.Presentation.Views.Main
 {
     /// <summary>
     ///     Interaction logic for ChildView.xaml

@@ -2,7 +2,7 @@
 using System.Windows.Controls;
 using CalendarSyncPlus.Application.Views;
 
-namespace CalendarSyncPlus.Presentation.Views
+namespace CalendarSyncPlus.Presentation.Views.Main
 {
     /// <summary>
     ///     Interaction logic for SettingsView.xaml

@@ -5,7 +5,7 @@ using System.Windows.Input;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
 
-namespace CalendarSyncPlus.Presentation.Views
+namespace CalendarSyncPlus.Presentation.Views.Helper
 {
     /// <summary>
     ///     Interaction logic for CustomInputDialog.xaml

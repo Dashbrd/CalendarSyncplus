@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.Composition;
 using CalendarSyncPlus.Application.Views;
 
-namespace CalendarSyncPlus.Presentation.Views
+namespace CalendarSyncPlus.Presentation.Views.Main
 {
     /// <summary>
     ///     Interaction logic for AboutView.xaml
