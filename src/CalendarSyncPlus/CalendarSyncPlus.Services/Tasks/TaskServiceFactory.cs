@@ -16,14 +16,14 @@ namespace CalendarSyncPlus.Services.Tasks
         }
 
         [ImportMany(typeof (ITaskService))]
-        public IEnumerable<Lazy<ITaskService, IServiceMetaData>> CalendarServicesFactoryLazy { get; set; }
+        public IEnumerable<Lazy<ITaskService, IServiceMetaData>> TaskServicesFactoryLazy { get; set; }
 
         #region ICalendarServiceFactory Members
 
         public ITaskService GetTaskService(ServiceType serviceType)
         {
             var serviceInstance =
-                CalendarServicesFactoryLazy.FirstOrDefault(list => list.Metadata.ServiceType == serviceType);
+                TaskServicesFactoryLazy.FirstOrDefault(list => list.Metadata.ServiceType == serviceType);
 
             if (serviceInstance != null)
             {

@@ -490,8 +490,8 @@ namespace CalendarSyncPlus.Authentication.Google
             {
                 CalendarService.Scope.Calendar, // Manage your calendars
                 CalendarService.Scope.CalendarReadonly, // View your Calendars
-                //TasksService.Scope.Tasks, // Manage your tasks
-                //TasksService.Scope.TasksReadonly // View your tasks
+                TasksService.Scope.Tasks, // Manage your tasks
+                TasksService.Scope.TasksReadonly // View your tasks
                 //AnalyticsService.Scope.Analytics, // view and manage your analytics data
                 //AnalyticsService.Scope.AnalyticsEdit, // edit management actives
                 //AnalyticsService.Scope.AnalyticsManageUsers, // manage users

@@ -71,6 +71,7 @@
                             HorizontalAlignment="Right"
                             VerticalAlignment="Center"
                             Command="{Binding Path=DisconnectAccountCommand}"
+                            CommandParameter="{Binding SelectedProfile.GoogleSettings.GoogleAccount}"
                             Content="{localizeExtension:LocText Key=GoogleSettingsView_Button_DisconnectAccount_Content}" />
                     <Button Width="150"
                             Margin="2"
