@@ -335,7 +335,7 @@ namespace CalendarSyncPlus.OutlookServices.Task
             };
         }
 
-        public string ServiceName
+        public string TaskServiceName
         {
             get { return "Outlook"; }
         }
@@ -476,12 +476,12 @@ namespace CalendarSyncPlus.OutlookServices.Task
             throw new NotImplementedException();
         }
 
-        public Task<TasksWrapper> AddReminderTasks(List<ReminderTask> reminderTasks, bool addDescription, bool addReminder, bool addAttendees, bool attendeesToDescription, IDictionary<string, object> calendarSpecificData)
+        public Task<TasksWrapper> AddReminderTasks(List<ReminderTask> reminderTasks, IDictionary<string, object> calendarSpecificData)
         {
             throw new NotImplementedException();
         }
 
-        public Task<TasksWrapper> UpdateReminderTasks(List<ReminderTask> reminderTasks, bool addDescription, bool addReminder, bool addAttendees, bool attendeesToDescription, IDictionary<string, object> calendarSpecificData)
+        public Task<TasksWrapper> UpdateReminderTasks(List<ReminderTask> reminderTasks,  IDictionary<string, object> calendarSpecificData)
         {
             throw new NotImplementedException();
         }

@@ -8,12 +8,12 @@ namespace CalendarSyncPlus.Services.Utilities
         Line,
         SyncStarted,
         Profile,
-        SourceAppointmentsReading,
-        SourceAppointmentsRead,
-        SourceAppointmentsReadFailed,
-        DestAppointmentReading,
-        DestAppointmentRead,
-        DestAppointmentReadFailed,
+        SourceReading,
+        SourceRead,
+        SourceReadFailed,
+        DestReading,
+        DestRead,
+        DestReadFailed,
         ReadingEntriesToDelete,
         EntriesToDelete,
         DeletingEntries,
@@ -49,12 +49,12 @@ namespace CalendarSyncPlus.Services.Utilities
             StatusDictionary.Add(SyncStateEnum.Line, LineConstant);
             StatusDictionary.Add(SyncStateEnum.SyncStarted, "Sync started : {0}");
             StatusDictionary.Add(SyncStateEnum.Profile, "Profile : {0}");
-            StatusDictionary.Add(SyncStateEnum.SourceAppointmentsReading, "Reading {0} calendar...");
-            StatusDictionary.Add(SyncStateEnum.SourceAppointmentsRead, "{0} entries read : {1}");
-            StatusDictionary.Add(SyncStateEnum.SourceAppointmentsReadFailed, "Read failed.");
-            StatusDictionary.Add(SyncStateEnum.DestAppointmentReading, "Reading {0} calendar...");
-            StatusDictionary.Add(SyncStateEnum.DestAppointmentRead, "{0} entries read : {1}");
-            StatusDictionary.Add(SyncStateEnum.DestAppointmentReadFailed, "Read failed");
+            StatusDictionary.Add(SyncStateEnum.SourceReading, "Reading {0} calendar...");
+            StatusDictionary.Add(SyncStateEnum.SourceRead, "{0} entries read : {1}");
+            StatusDictionary.Add(SyncStateEnum.SourceReadFailed, "Read failed.");
+            StatusDictionary.Add(SyncStateEnum.DestReading, "Reading {0} calendar...");
+            StatusDictionary.Add(SyncStateEnum.DestRead, "{0} entries read : {1}");
+            StatusDictionary.Add(SyncStateEnum.DestReadFailed, "Read failed");
             StatusDictionary.Add(SyncStateEnum.ReadingEntriesToDelete, "Getting {0} entries to delete...");
             StatusDictionary.Add(SyncStateEnum.EntriesToDelete, "Found {0} entries to delete");
             StatusDictionary.Add(SyncStateEnum.SkipDelete, "Skipping Delete");

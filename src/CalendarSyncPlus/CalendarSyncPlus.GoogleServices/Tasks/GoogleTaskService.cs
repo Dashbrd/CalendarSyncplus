@@ -22,7 +22,7 @@ namespace CalendarSyncPlus.GoogleServices.Tasks
     public class GoogleTaskService : IGoogleTaskService
     {
         public IAccountAuthenticationService AccountAuthenticationService { get; set; }
-        public string ServiceName { get { return "Google"; } }
+        public string TaskServiceName { get { return "Google"; } }
         private ILog Logger { get; set; }
         public string AccountName { get; set; }
         public string TasksId { get; set; }
@@ -161,12 +161,12 @@ namespace CalendarSyncPlus.GoogleServices.Tasks
             throw new NotImplementedException();
         }
 
-        public Task<TasksWrapper> AddReminderTasks(List<ReminderTask> reminderTasks, bool addDescription, bool addReminder, bool addAttendees, bool attendeesToDescription, IDictionary<string, object> calendarSpecificData)
+        public Task<TasksWrapper> AddReminderTasks(List<ReminderTask> reminderTasks,  IDictionary<string, object> calendarSpecificData)
         {
             throw new NotImplementedException();
         }
 
-        public Task<TasksWrapper> UpdateReminderTasks(List<ReminderTask> reminderTasks, bool addDescription, bool addReminder, bool addAttendees, bool attendeesToDescription, IDictionary<string, object> calendarSpecificData)
+        public Task<TasksWrapper> UpdateReminderTasks(List<ReminderTask> reminderTasks,  IDictionary<string, object> calendarSpecificData)
         {
             throw new NotImplementedException();
         }

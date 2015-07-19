@@ -66,5 +66,25 @@ namespace CalendarSyncPlus.SyncEngine.Helpers
                 }
             }
         }
+
+        public static void AddCompareForUpdate(this List<ReminderTask> updateList, ReminderTask appointment)
+        {
+            if (!updateList.Exists(t => t.TaskId.Equals(appointment.TaskId)))
+            {
+                updateList.Add(appointment);
+            }
+        }
+
+
+        public static void AddRangeCompareForUpdate(this List<ReminderTask> updateList, List<ReminderTask> appointmentList)
+        {
+            foreach (var appointment in appointmentList)
+            {
+                if (!updateList.Exists(t => t.TaskId.Equals(appointment.TaskId)))
+                {
+                    updateList.Add(appointment);
+                }
+            }
+        }
     }
 }

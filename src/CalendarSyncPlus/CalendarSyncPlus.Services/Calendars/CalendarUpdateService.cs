@@ -75,7 +75,7 @@ namespace CalendarSyncPlus.Services.Calendars
         {
             //Update status
             CalendarSyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
-            CalendarSyncStatus = StatusHelper.GetMessage(SyncStateEnum.SourceAppointmentsReading,
+            CalendarSyncStatus = StatusHelper.GetMessage(SyncStateEnum.SourceReading,
                 SourceCalendarService.CalendarServiceName);
 
             //Get source calendar
@@ -84,15 +84,15 @@ namespace CalendarSyncPlus.Services.Calendars
                     .Result;
             if (SourceAppointments == null)
             {
-                CalendarSyncStatus = StatusHelper.GetMessage(SyncStateEnum.SourceAppointmentsReadFailed);
+                CalendarSyncStatus = StatusHelper.GetMessage(SyncStateEnum.SourceReadFailed);
                 CalendarSyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
                 return false;
             }
             //Update status
-            CalendarSyncStatus = StatusHelper.GetMessage(SyncStateEnum.SourceAppointmentsRead,
+            CalendarSyncStatus = StatusHelper.GetMessage(SyncStateEnum.SourceRead,
                 SourceCalendarService.CalendarServiceName, SourceAppointments.Count);
             CalendarSyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
-            CalendarSyncStatus = StatusHelper.GetMessage(SyncStateEnum.DestAppointmentReading,
+            CalendarSyncStatus = StatusHelper.GetMessage(SyncStateEnum.DestReading,
                 DestinationCalendarService.CalendarServiceName);
 
             //Get destination calendar
@@ -100,11 +100,11 @@ namespace CalendarSyncPlus.Services.Calendars
                 destinationCalendarSpecificData).Result;
             if (DestinationAppointments == null)
             {
-                CalendarSyncStatus = StatusHelper.GetMessage(SyncStateEnum.DestAppointmentReadFailed);
+                CalendarSyncStatus = StatusHelper.GetMessage(SyncStateEnum.DestReadFailed);
                 CalendarSyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
                 return false;
             }
-            CalendarSyncStatus = StatusHelper.GetMessage(SyncStateEnum.DestAppointmentRead,
+            CalendarSyncStatus = StatusHelper.GetMessage(SyncStateEnum.DestRead,
                 DestinationCalendarService.CalendarServiceName, DestinationAppointments.Count);
             CalendarSyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
 
@@ -240,10 +240,6 @@ namespace CalendarSyncPlus.Services.Calendars
         private bool DeleteDestinationAppointments(CalendarSyncProfile syncProfile, SyncMetric syncMetric,
             IDictionary<string, object> destinationCalendarSpecificData, SyncCallback syncCallback)
         {
-            if (syncProfile.SyncSettings.DisableDelete)
-            {
-                return true;
-            }
             //Updating entry isDeleteOperation status
             CalendarSyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
             CalendarSyncStatus = StatusHelper.GetMessage(SyncStateEnum.ReadingEntriesToDelete,
@@ -411,10 +407,6 @@ namespace CalendarSyncPlus.Services.Calendars
         private bool DeleteSourceAppointments(CalendarSyncProfile syncProfile, SyncMetric syncMetric,
             IDictionary<string, object> sourceCalendarSpecificData, SyncCallback syncCallback)
         {
-            if (syncProfile.SyncSettings.DisableDelete)
-            {
-                return true;
-            }
             //Updating entry isDeleteOperation status
             CalendarSyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
             CalendarSyncStatus = StatusHelper.GetMessage(SyncStateEnum.ReadingEntriesToDelete,
@@ -574,6 +566,21 @@ namespace CalendarSyncPlus.Services.Calendars
 
             //AnalyticsService.UploadSyncData(syncMetric, syncProfile.GoogleAccount.Name);
         }
+        private void GetDateRange(CalendarSyncProfile syncProfile, out DateTime startDate, out DateTime endDate)
+        {
+            startDate = syncProfile.SyncSettings.StartDate.Date;
+            endDate = syncProfile.SyncSettings.EndDate.Date;
+            if (syncProfile.SyncSettings.SyncRangeType == SyncRangeTypeEnum.SyncRangeInDays)
+            {
+                startDate = DateTime.Today.AddDays((-syncProfile.SyncSettings.DaysInPast));
+                endDate = DateTime.Today.AddDays((syncProfile.SyncSettings.DaysInFuture + 1));
+            }
+            else if (syncProfile.SyncSettings.SyncRangeType == SyncRangeTypeEnum.SyncEntireCalendar)
+            {
+                startDate = DateTime.Parse("1990/01/01 12:00:00 AM");
+                endDate = DateTime.Today.AddYears(10);
+            }
+        }
         /// <summary>
         /// 
         /// </summary>
@@ -638,21 +645,6 @@ namespace CalendarSyncPlus.Services.Calendars
             return isSuccess;
         }
 
-        private void GetDateRange(CalendarSyncProfile syncProfile, out DateTime startDate, out DateTime endDate)
-        {
-            startDate = syncProfile.SyncSettings.StartDate.Date;
-            endDate = syncProfile.SyncSettings.EndDate.Date;
-            if (syncProfile.SyncSettings.SyncRangeType == SyncRangeTypeEnum.SyncRangeInDays)
-            {
-                startDate = DateTime.Today.AddDays((-syncProfile.SyncSettings.DaysInPast));
-                endDate = DateTime.Today.AddDays((syncProfile.SyncSettings.DaysInFuture + 1));
-            }
-            else if (syncProfile.SyncSettings.SyncRangeType == SyncRangeTypeEnum.SyncEntireCalendar)
-            {
-                startDate = DateTime.Parse("1990/01/01 12:00:00 AM");
-                endDate = DateTime.Today.AddYears(10);
-            }
-        }
 
         #endregion
     }

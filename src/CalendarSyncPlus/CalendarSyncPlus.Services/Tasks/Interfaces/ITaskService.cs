@@ -8,7 +8,7 @@ namespace CalendarSyncPlus.Services.Tasks.Interfaces
 {
     public interface ITaskService
     {
-        string ServiceName { get; }
+        string TaskServiceName { get; }
 
         Task<TasksWrapper> DeleteReminderTasks(List<ReminderTask> reminderTasks,
             IDictionary<string, object> calendarSpecificData);
@@ -16,14 +16,12 @@ namespace CalendarSyncPlus.Services.Tasks.Interfaces
         Task<TasksWrapper> GetReminderTasksInRangeAsync(DateTime startDate, DateTime endDate,
             IDictionary<string, object> calendarSpecificData);
 
-        Task<TasksWrapper> AddReminderTasks(List<ReminderTask> reminderTasks, bool addDescription,
-            bool addReminder, bool addAttendees, bool attendeesToDescription,
+        Task<TasksWrapper> AddReminderTasks(List<ReminderTask> reminderTasks,
             IDictionary<string, object> calendarSpecificData);
 
         void CheckCalendarSpecificData(IDictionary<string, object> calendarSpecificData);
 
-        Task<TasksWrapper> UpdateReminderTasks(List<ReminderTask> reminderTasks, bool addDescription,
-            bool addReminder, bool addAttendees, bool attendeesToDescription,
+        Task<TasksWrapper> UpdateReminderTasks(List<ReminderTask> reminderTasks,
             IDictionary<string, object> calendarSpecificData);
 
         //Task<bool> ResetReminderTasks(IDictionary<string, object> calendarSpecificData);

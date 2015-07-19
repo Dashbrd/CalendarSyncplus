@@ -9,7 +9,7 @@ namespace CalendarSyncPlus.ExchangeWebServices.Task
     public class ExchangeWebTaskService : IExchangeWebTaskService
     {
 
-        public string ServiceName
+        public string TaskServiceName
         {
             get { return "ExchangeWeb"; }
         }
@@ -24,7 +24,8 @@ namespace CalendarSyncPlus.ExchangeWebServices.Task
             throw new System.NotImplementedException();
         }
 
-        public System.Threading.Tasks.Task<Domain.Wrappers.TasksWrapper> AddReminderTasks(System.Collections.Generic.List<Domain.Models.ReminderTask> reminderTasks, bool addDescription, bool addReminder, bool addAttendees, bool attendeesToDescription, System.Collections.Generic.IDictionary<string, object> calendarSpecificData)
+        public System.Threading.Tasks.Task<Domain.Wrappers.TasksWrapper> AddReminderTasks(System.Collections.Generic.List<Domain.Models.ReminderTask> reminderTasks, 
+            System.Collections.Generic.IDictionary<string, object> calendarSpecificData)
         {
             throw new System.NotImplementedException();
         }
@@ -34,7 +35,7 @@ namespace CalendarSyncPlus.ExchangeWebServices.Task
             throw new System.NotImplementedException();
         }
 
-        public System.Threading.Tasks.Task<Domain.Wrappers.TasksWrapper> UpdateReminderTasks(System.Collections.Generic.List<Domain.Models.ReminderTask> reminderTasks, bool addDescription, bool addReminder, bool addAttendees, bool attendeesToDescription, System.Collections.Generic.IDictionary<string, object> calendarSpecificData)
+        public System.Threading.Tasks.Task<Domain.Wrappers.TasksWrapper> UpdateReminderTasks(System.Collections.Generic.List<Domain.Models.ReminderTask> reminderTasks,  System.Collections.Generic.IDictionary<string, object> calendarSpecificData)
         {
             throw new System.NotImplementedException();
         }
