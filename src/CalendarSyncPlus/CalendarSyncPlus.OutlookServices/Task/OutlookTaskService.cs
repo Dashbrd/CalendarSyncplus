@@ -32,7 +32,7 @@ namespace CalendarSyncPlus.OutlookServices.Task
 
         public ILog Logger { get; set; }
 
-        private OutlookFolder OutlookCalendar { get; set; }
+        private OutlookFolder OutlookTaskList { get; set; }
         
         private string ProfileName { get; set; }
 
@@ -224,12 +224,12 @@ namespace CalendarSyncPlus.OutlookServices.Task
                 GetOutlookApplication(out disposeOutlookInstances, out application, out nameSpace, ProfileName);
 
                 // Get Default Calendar
-                defaultOutlookCalendar = OutlookCalendar != null
-                    ? nameSpace.GetFolderFromID(OutlookCalendar.EntryId, OutlookCalendar.StoreId)
+                defaultOutlookCalendar = OutlookTaskList != null
+                    ? nameSpace.GetFolderFromID(OutlookTaskList.EntryId, OutlookTaskList.StoreId)
                     : nameSpace.GetDefaultFolder(OlDefaultFolders.olFolderTasks);
-                if (OutlookCalendar == null)
+                if (OutlookTaskList == null)
                 {
-                    OutlookCalendar = new OutlookFolder
+                    OutlookTaskList = new OutlookFolder
                     {
                         Name = defaultOutlookCalendar.Name,
                         EntryId = defaultOutlookCalendar.EntryID,
@@ -343,17 +343,17 @@ namespace CalendarSyncPlus.OutlookServices.Task
         /// <exception cref="InvalidOperationException">
         ///     Essential parameters are not present.
         /// </exception>
-        public void CheckCalendarSpecificData(IDictionary<string, object> calendarSpecificData)
+        public void CheckTaskListSpecificData(IDictionary<string, object> taskListSpecificData)
         {
-            if (calendarSpecificData == null)
+            if (taskListSpecificData == null)
             {
-                throw new ArgumentNullException("calendarSpecificData", "Calendar Specific Data cannot be null");
+                throw new ArgumentNullException("taskListSpecificData", "Calendar Specific Data cannot be null");
             }
 
             object profileValue;
             object outlookCalendarValue;
-            if (!(calendarSpecificData.TryGetValue("ProfileName", out profileValue) &&
-                  calendarSpecificData.TryGetValue("OutlookCalendar", out outlookCalendarValue)))
+            if (!(taskListSpecificData.TryGetValue("ProfileName", out profileValue) &&
+                  taskListSpecificData.TryGetValue("OutlookTaskList", out outlookCalendarValue)))
             {
                 throw new InvalidOperationException(
                     string.Format(
@@ -361,14 +361,14 @@ namespace CalendarSyncPlus.OutlookServices.Task
                         "ProfileName", "OutlookCalendar"));
             }
             ProfileName = profileValue as String;
-            OutlookCalendar = outlookCalendarValue as OutlookFolder;
+            OutlookTaskList = outlookCalendarValue as OutlookFolder;
         }
 
 
         public async Task<TasksWrapper> GetCalendarEventsInRangeAsync(DateTime startDate, DateTime endDate,
             IDictionary<string, object> calendarSpecificData)
         {
-            CheckCalendarSpecificData(calendarSpecificData);
+            CheckTaskListSpecificData(calendarSpecificData);
             var taskWrapper = new TasksWrapper();
 
             var appointmentList =
@@ -392,15 +392,15 @@ namespace CalendarSyncPlus.OutlookServices.Task
         }
 
 
-        public async Task<bool> ClearCalendar(IDictionary<string, object> calendarSpecificData)
+        public async Task<bool> ClearCalendar(IDictionary<string, object> taskListSpecificData)
         {
             var startDate = DateTime.Today.AddDays(-(10 * 365));
             var endDate = DateTime.Today.AddDays(10 * 365);
             var appointments =
-                await GetCalendarEventsInRangeAsync(startDate, endDate, calendarSpecificData);
+                await GetCalendarEventsInRangeAsync(startDate, endDate, taskListSpecificData);
             if (appointments != null)
             {
-                var success = await DeleteReminderTasks(appointments, calendarSpecificData);
+                var success = await DeleteReminderTasks(appointments, taskListSpecificData);
                 return success.IsSuccess;
             }
             return false;
@@ -466,22 +466,22 @@ namespace CalendarSyncPlus.OutlookServices.Task
 
 
 
-        public Task<TasksWrapper> DeleteReminderTasks(List<ReminderTask> reminderTasks, IDictionary<string, object> calendarSpecificData)
+        public Task<TasksWrapper> DeleteReminderTasks(List<ReminderTask> reminderTasks, IDictionary<string, object> taskListSpecificData)
         {
             throw new NotImplementedException();
         }
 
-        public Task<TasksWrapper> GetReminderTasksInRangeAsync(DateTime startDate, DateTime endDate, IDictionary<string, object> calendarSpecificData)
+        public Task<TasksWrapper> GetReminderTasksInRangeAsync(DateTime startDate, DateTime endDate, IDictionary<string, object> taskListSpecificData)
         {
             throw new NotImplementedException();
         }
 
-        public Task<TasksWrapper> AddReminderTasks(List<ReminderTask> reminderTasks, IDictionary<string, object> calendarSpecificData)
+        public Task<TasksWrapper> AddReminderTasks(List<ReminderTask> tasks, IDictionary<string, object> taskListSpecificData)
         {
             throw new NotImplementedException();
         }
 
-        public Task<TasksWrapper> UpdateReminderTasks(List<ReminderTask> reminderTasks,  IDictionary<string, object> calendarSpecificData)
+        public Task<TasksWrapper> UpdateReminderTasks(List<ReminderTask> reminderTasks,  IDictionary<string, object> taskListSpecificData)
         {
             throw new NotImplementedException();
         }

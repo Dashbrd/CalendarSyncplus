@@ -25,5 +25,9 @@ namespace CalendarSyncPlus.Domain.Models
 
         public DateTime? Due { get; set; }
 
+        public DateTime? Completed { get; set; }
+
+        public bool? Deleted { get; set; }
+
     }
 }

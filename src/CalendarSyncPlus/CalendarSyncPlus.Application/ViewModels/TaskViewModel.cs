@@ -94,7 +94,7 @@ namespace CalendarSyncPlus.Application.ViewModels
         {
             get
             {
-                return _getGoogleCalendarCommand ?? (_getGoogleCalendarCommand = new DelegateCommand(GetGoogleCalendar));
+                return _getGoogleCalendarCommand ?? (_getGoogleCalendarCommand = new DelegateCommand(GetGoogleTaskLists));
             }
         }
 
@@ -293,7 +293,7 @@ namespace CalendarSyncPlus.Application.ViewModels
         }
 
 
-        internal async void GetGoogleCalendar()
+        internal async void GetGoogleTaskLists()
         {
             if (IsLoading)
                 return;
@@ -306,9 +306,9 @@ namespace CalendarSyncPlus.Application.ViewModels
                     MessageService.ShowMessageAsync("Please select a Google account to get calendars");
                     return;
                 }
-                Logger.Info("Loading Google calendars...");
-                await GetGoogleCalendarInternal();
-                Logger.Info("Google calendars loaded...");
+                Logger.Info("Loading Google task lists...");
+                await GetGoogleTaskListsInternal();
+                Logger.Info("Google task lists loaded.");
             }
             catch (AggregateException exception)
             {
@@ -327,7 +327,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             }
         }
 
-        private async Task GetGoogleCalendarInternal()
+        private async Task GetGoogleTaskListsInternal()
         {
             try
             {
@@ -388,7 +388,7 @@ namespace CalendarSyncPlus.Application.ViewModels
 
             var calendarSpecificData = new Dictionary<string, object>
             {
-                {"CalendarId", SelectedProfile.GoogleSettings.GoogleCalendar.Id},
+                {"TaskListId", SelectedProfile.GoogleSettings.GoogleCalendar.Id},
                 {"AccountName", SelectedProfile.GoogleSettings.GoogleAccount.Name}
             };
             var result = await GoogleTaskService.ClearCalendar(calendarSpecificData);
@@ -433,7 +433,7 @@ namespace CalendarSyncPlus.Application.ViewModels
                         : null
                 },
                 {
-                    "OutlookCalendar", SelectedProfile.OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.AlternateMailBoxCalendar)
+                    "OutlookTaskList", SelectedProfile.OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.AlternateMailBoxCalendar)
                         ? SelectedProfile.OutlookSettings.OutlookFolder
                         : null
                 },
@@ -504,7 +504,7 @@ namespace CalendarSyncPlus.Application.ViewModels
 
                     if (SelectedProfile.GoogleSettings.GoogleCalendar != null)
                     {
-                        await GetGoogleCalendarInternal();
+                        await GetGoogleTaskListsInternal();
                     }
                 }
 
