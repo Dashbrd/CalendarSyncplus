@@ -29,5 +29,15 @@ namespace CalendarSyncPlus.Domain.Models
 
         public bool? Deleted { get; set; }
 
+        public override string ToString()
+        {
+            return Title + Notes + Completed + Deleted;
+        }
+
+        public bool Equal(ReminderTask reminderTask)
+        {
+            return this.ToString().Equals(reminderTask.ToString());
+        }
+
     }
 }
