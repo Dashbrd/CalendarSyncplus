@@ -173,9 +173,63 @@ namespace CalendarSyncPlus.GoogleServices.Tasks
         }
 
 
-        public Task<TasksWrapper> DeleteReminderTasks(List<ReminderTask> reminderTasks, IDictionary<string, object> taskListSpecificData)
+        public async Task<TasksWrapper> DeleteReminderTasks(List<ReminderTask> reminderTasks, IDictionary<string, object> taskListSpecificData)
         {
-            throw new NotImplementedException();
+            var deletedTasks = new TasksWrapper();
+            if (!reminderTasks.Any())
+            {
+                deletedTasks.IsSuccess = true;
+                return deletedTasks;
+            }
+
+            CheckTaskListSpecificData(taskListSpecificData);
+
+            var errorList = new Dictionary<int, ReminderTask>();
+            //Get Calendar Service
+            var calendarService = GetTasksService(AccountName);
+
+            if (reminderTasks == null || string.IsNullOrEmpty(TaskListId))
+            {
+                deletedTasks.IsSuccess = false;
+                return deletedTasks;
+            }
+
+            try
+            {
+                if (reminderTasks.Any())
+                {
+                    //Create a Batch Request
+                    var batchRequest = new BatchRequest(calendarService);
+
+                    //Split the list of calendarAppointments by 1000 per list
+                    //Iterate over each appointment to create a event and batch it 
+                    for (var i = 0; i < reminderTasks.Count; i++)
+                    {
+                        if (i != 0 && i % 999 == 0)
+                        {
+                            await batchRequest.ExecuteAsync();
+                            batchRequest = new BatchRequest(calendarService);
+                        }
+
+                        var appointment = reminderTasks[i];
+                        var deleteRequest = calendarService.Tasks.Delete(TaskListId,
+                            appointment.TaskId);
+                        batchRequest.Queue<Task>(deleteRequest,
+                            (content, error, index, message) =>
+                                CallbackEventErrorMessage(content, error, index, message, reminderTasks,
+                                "Error in deleting events", errorList, deletedTasks));
+                    }
+                    await batchRequest.ExecuteAsync();
+                }
+            }
+            catch (Exception exception)
+            {
+                Logger.Error(exception);
+                deletedTasks.IsSuccess = false;
+                return deletedTasks;
+            }
+            deletedTasks.IsSuccess = true;
+            return deletedTasks;
         }
 
         public async Task<TasksWrapper> AddReminderTasks(List<ReminderTask> tasks, IDictionary<string, object> taskListSpecificData)
@@ -277,9 +331,18 @@ namespace CalendarSyncPlus.GoogleServices.Tasks
             throw new NotImplementedException();
         }
 
-        public Task<bool> ClearCalendar(IDictionary<string, object> taskListSpecificData)
+        public async Task<bool> ClearCalendar(IDictionary<string, object> taskListSpecificData)
         {
-            throw new NotImplementedException();
+            var startDate = DateTime.Today.AddDays(-(10 * 365));
+            var endDate = DateTime.Today.AddDays(10 * 365);
+            var appointments =
+                await GetReminderTasksInRangeAsync(startDate, endDate, taskListSpecificData);
+            if (appointments != null)
+            {
+                var success = await DeleteReminderTasks(appointments, taskListSpecificData);
+                return success.IsSuccess;
+            }
+            return false;
         }
     }
 }

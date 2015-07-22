@@ -30,6 +30,11 @@ namespace CalendarSyncPlus.OutlookServices.Task
             Logger = applicationLogger.GetLogger(GetType());
         }
 
+        public string TaskServiceName
+        {
+            get { return "Outlook"; }
+        }
+
         public ILog Logger { get; set; }
 
         private OutlookFolder OutlookTaskList { get; set; }
@@ -97,14 +102,14 @@ namespace CalendarSyncPlus.OutlookServices.Task
                     };
                     mailBoxes.Add(mailBox);
 
-                    GetCalendars(rootFolder, mailBox.Folders);
+                    GetTaskLists(rootFolder, mailBox.Folders);
 
                     Marshal.FinalReleaseComObject(rootFolder);
                 }
             }
             return mailBoxes;
         }
-        private void GetCalendars(MAPIFolder searchFolder, List<OutlookFolder> outlookCalendars)
+        private void GetTaskLists(MAPIFolder searchFolder, List<OutlookFolder> outlookCalendars)
         {
             try
             {
@@ -131,7 +136,7 @@ namespace CalendarSyncPlus.OutlookServices.Task
                     foreach (MAPIFolder subFolder in searchFolder.Folders)
                     {
                         //Get Calendar MAPIFolders
-                        GetCalendars(subFolder, outlookCalendars);
+                        GetTaskLists(subFolder, outlookCalendars);
                     }
                 }
             }
@@ -215,7 +220,7 @@ namespace CalendarSyncPlus.OutlookServices.Task
             NameSpace nameSpace = null;
             MAPIFolder defaultOutlookCalendar = null;
             Items outlookItems = null;
-            var outlookAppointments = new List<ReminderTask>();
+            var outlookTasks = new List<ReminderTask>();
 
             //Close  and Shutdown
             try
@@ -241,30 +246,30 @@ namespace CalendarSyncPlus.OutlookServices.Task
 
                 if (outlookItems != null)
                 {
-                    //Add Filter to outlookItems to limit and Avoid endless loop(appointments without end date)
-                    outlookItems.Sort("[Start]", Type.Missing);
-                    outlookItems.IncludeRecurrences = true;
+                    ////Add Filter to outlookItems to limit and Avoid endless loop(appointments without end date)
+                    //outlookItems.Sort("[Start]", Type.Missing);
+                    //outlookItems.IncludeRecurrences = true;
 
-                    var min = startDate;
-                    var max = endDate;
+                    //var min = startDate;
+                    //var max = endDate;
 
-                    // create Final filter as string
-                    var filter = "[Start] >= '" + min.ToString("g") + "' AND [End] <= '" + max.ToString("g") + "'";
-                    //Set filter on outlookItems and Loop through to create appointment List
-                    var outlookEntries = outlookItems.Restrict(filter);
-                    if (outlookEntries != null)
-                    {
-                        var appts = outlookEntries.Cast<TaskItem>();
-                        var appointmentItems = appts as TaskItem[] ?? appts.ToArray();
-                        if (appointmentItems.Any())
+                    //// create Final filter as string
+                    //var filter = "[Start] >= '" + min.ToString("g") + "' AND [End] <= '" + max.ToString("g") + "'";
+                    ////Set filter on outlookItems and Loop through to create appointment List
+                    //var outlookEntries = outlookItems.Restrict(filter);
+                    //if (outlookEntries != null)
+                    //{
+                        var items = outlookItems.Cast<TaskItem>();
+                        var taskItems = items as TaskItem[] ?? items.ToArray();
+                        if (taskItems.Any())
                         {
                             var id = defaultOutlookCalendar.EntryID;
-                            foreach (var appointmentItem in appointmentItems)
+                            foreach (var appointmentItem in taskItems)
                             {
                                 try
                                 {
                                     var app = GetTaskFromItem(id, appointmentItem);
-                                    outlookAppointments.Add(app);
+                                    outlookTasks.Add(app);
                                 }
                                 catch (Exception exception)
                                 {
@@ -276,7 +281,7 @@ namespace CalendarSyncPlus.OutlookServices.Task
                                 }
                             }
                         }
-                    }
+                    //}
                 }
             }
             catch (Exception exception)
@@ -330,14 +335,9 @@ namespace CalendarSyncPlus.OutlookServices.Task
 
             return new OutlookTasksWrapper
             {
-                Tasks = outlookAppointments,
+                Tasks = outlookTasks,
                 WaitForApplicationQuit = disposeOutlookInstances
             };
-        }
-
-        public string TaskServiceName
-        {
-            get { return "Outlook"; }
         }
 
         /// <exception cref="InvalidOperationException">
@@ -365,26 +365,7 @@ namespace CalendarSyncPlus.OutlookServices.Task
         }
 
 
-        public async Task<TasksWrapper> GetCalendarEventsInRangeAsync(DateTime startDate, DateTime endDate,
-            IDictionary<string, object> calendarSpecificData)
-        {
-            CheckTaskListSpecificData(calendarSpecificData);
-            var taskWrapper = new TasksWrapper();
-
-            var appointmentList =
-                await
-                    Task<List<ReminderTask>>.Factory.StartNew(
-                        () => GetTasks(startDate, endDate));
-
-            if (appointmentList == null)
-            {
-                return null;
-            }
-
-            taskWrapper.AddRange(appointmentList);
-
-            return taskWrapper;
-        }
+       
 
         public async Task<List<string>> GetOutLookProfieListAsync()
         {
@@ -397,7 +378,7 @@ namespace CalendarSyncPlus.OutlookServices.Task
             var startDate = DateTime.Today.AddDays(-(10 * 365));
             var endDate = DateTime.Today.AddDays(10 * 365);
             var appointments =
-                await GetCalendarEventsInRangeAsync(startDate, endDate, taskListSpecificData);
+                await GetReminderTasksInRangeAsync(startDate, endDate, taskListSpecificData);
             if (appointments != null)
             {
                 var success = await DeleteReminderTasks(appointments, taskListSpecificData);
@@ -471,9 +452,24 @@ namespace CalendarSyncPlus.OutlookServices.Task
             throw new NotImplementedException();
         }
 
-        public Task<TasksWrapper> GetReminderTasksInRangeAsync(DateTime startDate, DateTime endDate, IDictionary<string, object> taskListSpecificData)
+        public  async Task<TasksWrapper> GetReminderTasksInRangeAsync(DateTime startDate, DateTime endDate, IDictionary<string, object> taskListSpecificData)
         {
-            throw new NotImplementedException();
+            CheckTaskListSpecificData(taskListSpecificData);
+            var taskWrapper = new TasksWrapper();
+
+            var appointmentList =
+                await
+                    Task<List<ReminderTask>>.Factory.StartNew(
+                        () => GetTasks(startDate, endDate));
+
+            if (appointmentList == null)
+            {
+                return null;
+            }
+
+            taskWrapper.AddRange(appointmentList);
+
+            return taskWrapper;
         }
 
         public Task<TasksWrapper> AddReminderTasks(List<ReminderTask> tasks, IDictionary<string, object> taskListSpecificData)
