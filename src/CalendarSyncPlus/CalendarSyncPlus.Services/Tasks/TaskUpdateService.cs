@@ -168,8 +168,7 @@ namespace CalendarSyncPlus.Services.Tasks
         /// <param name="startDate"></param>
         /// <returns>
         /// </returns>
-        private bool LoadTasks(DateTime startDate, DateTime endDate,
-            IDictionary<string, object> sourceCalendarSpecificData,
+        private bool LoadTasks(IDictionary<string, object> sourceCalendarSpecificData,
             IDictionary<string, object> destinationCalendarSpecificData)
         {
             //Update status
@@ -179,7 +178,7 @@ namespace CalendarSyncPlus.Services.Tasks
 
             //Get source calendar
             SourceTasks =
-                SourceTaskService.GetReminderTasksInRangeAsync(startDate, endDate, sourceCalendarSpecificData)
+                SourceTaskService.GetReminderTasksInRangeAsync(sourceCalendarSpecificData)
                     .Result;
             if (SourceTasks == null)
             {
@@ -195,7 +194,7 @@ namespace CalendarSyncPlus.Services.Tasks
                 DestinationTaskService.TaskServiceName);
 
             //Get destination calendar
-            DestinationTasks = DestinationTaskService.GetReminderTasksInRangeAsync(startDate, endDate,
+            DestinationTasks = DestinationTaskService.GetReminderTasksInRangeAsync(
                 destinationCalendarSpecificData).Result;
             if (DestinationTasks == null)
             {
@@ -567,8 +566,7 @@ namespace CalendarSyncPlus.Services.Tasks
                     GetCalendarSpecificData(syncProfile.Destination, syncProfile);
 
                 //Get source and destination Tasks
-                isSuccess = LoadTasks(startDate, endDate,
-                    sourceCalendarSpecificData,
+                isSuccess = LoadTasks(sourceCalendarSpecificData,
                     destinationCalendarSpecificData);
 
                 if (isSuccess)

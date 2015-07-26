@@ -13,8 +13,7 @@ namespace CalendarSyncPlus.Services.Tasks.Interfaces
         Task<TasksWrapper> DeleteReminderTasks(List<ReminderTask> reminderTasks,
             IDictionary<string, object> taskListSpecificData);
 
-        Task<TasksWrapper> GetReminderTasksInRangeAsync(DateTime startDate, DateTime endDate,
-            IDictionary<string, object> taskListSpecificData);
+        Task<TasksWrapper> GetReminderTasksInRangeAsync(IDictionary<string, object> taskListSpecificData);
 
         Task<TasksWrapper> AddReminderTasks(List<ReminderTask> tasks,
             IDictionary<string, object> taskListSpecificData);

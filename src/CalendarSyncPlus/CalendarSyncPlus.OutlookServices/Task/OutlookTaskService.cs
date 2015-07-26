@@ -199,9 +199,9 @@ namespace CalendarSyncPlus.OutlookServices.Task
             return app;
         }
 
-        private List<ReminderTask> GetTasks(DateTime startDate, DateTime endDate)
+        private List<ReminderTask> GetTasks()
         {
-            var list = GetOutlookEntriesForSelectedTimeRange(startDate, endDate);
+            var list = GetOutlookEntriesForSelectedTimeRange();
             if (!list.WaitForApplicationQuit)
             {
                 return list.Tasks;
@@ -213,7 +213,7 @@ namespace CalendarSyncPlus.OutlookServices.Task
             return list.Tasks;
         }
 
-        private OutlookTasksWrapper GetOutlookEntriesForSelectedTimeRange(DateTime startDate, DateTime endDate)
+        private OutlookTasksWrapper GetOutlookEntriesForSelectedTimeRange()
         {
             var disposeOutlookInstances = false;
             Application application = null;
@@ -246,42 +246,28 @@ namespace CalendarSyncPlus.OutlookServices.Task
 
                 if (outlookItems != null)
                 {
-                    ////Add Filter to outlookItems to limit and Avoid endless loop(appointments without end date)
-                    //outlookItems.Sort("[Start]", Type.Missing);
-                    //outlookItems.IncludeRecurrences = true;
-
-                    //var min = startDate;
-                    //var max = endDate;
-
-                    //// create Final filter as string
-                    //var filter = "[Start] >= '" + min.ToString("g") + "' AND [End] <= '" + max.ToString("g") + "'";
-                    ////Set filter on outlookItems and Loop through to create appointment List
-                    //var outlookEntries = outlookItems.Restrict(filter);
-                    //if (outlookEntries != null)
-                    //{
-                        var items = outlookItems.Cast<TaskItem>();
-                        var taskItems = items as TaskItem[] ?? items.ToArray();
-                        if (taskItems.Any())
+                    var items = outlookItems.Cast<TaskItem>();
+                    var taskItems = items as TaskItem[] ?? items.ToArray();
+                    if (taskItems.Any())
+                    {
+                        var id = defaultOutlookCalendar.EntryID;
+                        foreach (var appointmentItem in taskItems)
                         {
-                            var id = defaultOutlookCalendar.EntryID;
-                            foreach (var appointmentItem in taskItems)
+                            try
                             {
-                                try
-                                {
-                                    var app = GetTaskFromItem(id, appointmentItem);
-                                    outlookTasks.Add(app);
-                                }
-                                catch (Exception exception)
-                                {
-                                    Logger.Error(exception);
-                                }
-                                finally
-                                {
-                                    Marshal.FinalReleaseComObject(appointmentItem);
-                                }
+                                var app = GetTaskFromItem(id, appointmentItem);
+                                outlookTasks.Add(app);
+                            }
+                            catch (Exception exception)
+                            {
+                                Logger.Error(exception);
+                            }
+                            finally
+                            {
+                                Marshal.FinalReleaseComObject(appointmentItem);
                             }
                         }
-                    //}
+                    }
                 }
             }
             catch (Exception exception)
@@ -378,7 +364,7 @@ namespace CalendarSyncPlus.OutlookServices.Task
             var startDate = DateTime.Today.AddDays(-(10 * 365));
             var endDate = DateTime.Today.AddDays(10 * 365);
             var appointments =
-                await GetReminderTasksInRangeAsync(startDate, endDate, taskListSpecificData);
+                await GetReminderTasksInRangeAsync(taskListSpecificData);
             if (appointments != null)
             {
                 var success = await DeleteReminderTasks(appointments, taskListSpecificData);
@@ -447,12 +433,110 @@ namespace CalendarSyncPlus.OutlookServices.Task
 
 
 
-        public Task<TasksWrapper> DeleteReminderTasks(List<ReminderTask> reminderTasks, IDictionary<string, object> taskListSpecificData)
+        public async Task<TasksWrapper> DeleteReminderTasks(List<ReminderTask> reminderTasks, IDictionary<string, object> taskListSpecificData)
         {
-            throw new NotImplementedException();
+            var tasksWrapper = new TasksWrapper();
+            if (!reminderTasks.Any())
+            {
+                tasksWrapper.IsSuccess = true;
+                return tasksWrapper;
+            }
+            CheckTaskListSpecificData(taskListSpecificData);
+            var result = await
+                Task<bool>.Factory.StartNew(() =>
+                    DeleteTasks(reminderTasks, tasksWrapper));
+
+            tasksWrapper.IsSuccess = result;
+            return tasksWrapper;
         }
 
-        public  async Task<TasksWrapper> GetReminderTasksInRangeAsync(DateTime startDate, DateTime endDate, IDictionary<string, object> taskListSpecificData)
+        private bool DeleteTasks(List<ReminderTask> reminderTasks, List<ReminderTask> deletedTasks)
+        {
+            OutlookTasksWrapper wrapper = DeleteTasksFromOutlook(reminderTasks, deletedTasks);
+
+            if (!wrapper.WaitForApplicationQuit)
+            {
+                return wrapper.Success;
+            }
+
+            while (Process.GetProcessesByName("OUTLOOK").Any())
+            {
+                ThreadingTask.Delay(5000);
+            }
+            return wrapper.Success;
+        }
+
+        private OutlookTasksWrapper DeleteTasksFromOutlook(List<ReminderTask> reminderTasks,
+            List<ReminderTask> deletedTasks)
+        {
+            var disposeOutlookInstances = false;
+            Application application = null;
+            NameSpace nameSpace = null;
+
+            try
+            {
+                // Get Application and Namespace
+                GetOutlookApplication(out disposeOutlookInstances, out application, out nameSpace, ProfileName);
+
+
+                foreach (var calendarAppointment in reminderTasks)
+                {
+                    try
+                    {
+                        TaskItem taskItem = null;
+                        taskItem = nameSpace.GetItemFromID(calendarAppointment.TaskId) as TaskItem;
+                       
+                        if (taskItem != null)
+                        {
+                            taskItem.Delete();
+                            Marshal.FinalReleaseComObject(taskItem);
+                            deletedTasks.Add(calendarAppointment);
+                        }
+                    }
+                    catch (Exception exception)
+                    {
+                        Logger.Error(exception);
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                Logger.Error(exception);
+                return new OutlookTasksWrapper
+                {
+                    WaitForApplicationQuit = disposeOutlookInstances,
+                    Success = false
+                };
+            }
+            finally
+            {
+                //Close  and Shutdown
+                if (disposeOutlookInstances)
+                {
+                    nameSpace.Logoff();
+                }
+
+                Marshal.FinalReleaseComObject(nameSpace);
+                nameSpace = null;
+
+                if (disposeOutlookInstances)
+                {
+                    // Casting Removes a warninig for Ambigous Call
+                    application.Quit();
+                    Marshal.FinalReleaseComObject(application);
+                }
+                application = null;
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+            }
+            return new OutlookTasksWrapper
+            {
+                WaitForApplicationQuit = disposeOutlookInstances,
+                Success = true
+            };
+        }
+
+        public  async Task<TasksWrapper> GetReminderTasksInRangeAsync(IDictionary<string, object> taskListSpecificData)
         {
             CheckTaskListSpecificData(taskListSpecificData);
             var taskWrapper = new TasksWrapper();
@@ -460,7 +544,7 @@ namespace CalendarSyncPlus.OutlookServices.Task
             var appointmentList =
                 await
                     Task<List<ReminderTask>>.Factory.StartNew(
-                        () => GetTasks(startDate, endDate));
+                        () => GetTasks());
 
             if (appointmentList == null)
             {
@@ -472,14 +556,271 @@ namespace CalendarSyncPlus.OutlookServices.Task
             return taskWrapper;
         }
 
-        public Task<TasksWrapper> AddReminderTasks(List<ReminderTask> tasks, IDictionary<string, object> taskListSpecificData)
+        public async Task<TasksWrapper> AddReminderTasks(List<ReminderTask> reminderTasks, IDictionary<string, object> taskListSpecificData)
         {
-            throw new NotImplementedException();
+            var tasksWrapper = new TasksWrapper();
+            if (!reminderTasks.Any())
+            {
+                tasksWrapper.IsSuccess = true;
+                return tasksWrapper;
+            }
+            CheckTaskListSpecificData(taskListSpecificData);
+
+            var result = await Task<bool>.Factory.StartNew(() =>
+                        AddTasks(reminderTasks,tasksWrapper));
+
+            tasksWrapper.IsSuccess = result;
+            return tasksWrapper;
         }
 
-        public Task<TasksWrapper> UpdateReminderTasks(List<ReminderTask> reminderTasks,  IDictionary<string, object> taskListSpecificData)
+        private bool AddTasks(List<ReminderTask> reminderTasks, TasksWrapper tasksWrapper)
         {
-            throw new NotImplementedException();
+            OutlookTasksWrapper wrapper = AddTasksToOutlook(reminderTasks, tasksWrapper);
+
+            if (!wrapper.WaitForApplicationQuit)
+            {
+                return wrapper.Success;
+            }
+
+            while (Process.GetProcessesByName("OUTLOOK").Any())
+            {
+                ThreadingTask.Delay(5000);
+            }
+            return wrapper.Success;
+        }
+
+        private OutlookTasksWrapper AddTasksToOutlook(List<ReminderTask> reminderTasks, TasksWrapper tasksWrapper)
+        {
+            var disposeOutlookInstances = false;
+            Application application = null;
+            NameSpace nameSpace = null;
+            MAPIFolder defaultOutlookCalendar = null;
+            Items outlookItems = null;
+
+            try
+            {
+                // Get Application and Namespace
+                GetOutlookApplication(out disposeOutlookInstances, out application, out nameSpace, ProfileName);
+
+                // Get Default Calendar
+                defaultOutlookCalendar = OutlookTaskList != null
+                    ? nameSpace.GetFolderFromID(OutlookTaskList.EntryId, OutlookTaskList.StoreId)
+                    : nameSpace.GetDefaultFolder(OlDefaultFolders.olFolderCalendar);
+                outlookItems = defaultOutlookCalendar.Items;
+
+                string id = defaultOutlookCalendar.EntryID;
+                foreach (var calendarAppointment in reminderTasks)
+                {
+                    var appItem = outlookItems.Add(OlItemType.olAppointmentItem) as TaskItem;
+                    if (appItem == null)
+                    {
+                        continue;
+                    }
+                    var newAppointment = AddTask(appItem,
+                        calendarAppointment, id);
+                    tasksWrapper.Add(newAppointment);
+                    Marshal.FinalReleaseComObject(appItem);
+                }
+            }
+            catch (Exception exception)
+            {
+                Logger.Error(exception);
+                return new OutlookTasksWrapper()
+                {
+                    WaitForApplicationQuit = disposeOutlookInstances,
+                    Success = false
+                };
+            }
+            finally
+            {
+                //Close  and Shutdown
+
+                if (disposeOutlookInstances)
+                {
+                    nameSpace.Logoff();
+                }
+
+                //Unassign all instances
+                if (outlookItems != null)
+                {
+                    Marshal.FinalReleaseComObject(outlookItems);
+                    outlookItems = null;
+                }
+
+                Marshal.FinalReleaseComObject(defaultOutlookCalendar);
+                defaultOutlookCalendar = null;
+
+                Marshal.FinalReleaseComObject(nameSpace);
+                nameSpace = null;
+
+                if (disposeOutlookInstances)
+                {
+                    // Casting Removes a warninig for Ambigous Call
+                    application.Quit();
+                    Marshal.FinalReleaseComObject(application);
+                }
+                application = null;
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+            }
+            return new OutlookTasksWrapper
+            {
+                WaitForApplicationQuit = disposeOutlookInstances,
+                Success = true
+            };
+        }
+
+        private ReminderTask AddTask(TaskItem appItem, ReminderTask reminderTask, string id)
+        {
+            try
+            {
+                reminderTask = new ReminderTask(appItem.EntryID,appItem.Subject, appItem.Body, appItem.DueDate);
+            }
+            catch (Exception exception)
+            {
+                Logger.Error(exception);
+            }
+            return reminderTask;
+        }
+
+        public async Task<TasksWrapper> UpdateReminderTasks(List<ReminderTask> reminderTasks,  IDictionary<string, object> taskListSpecificData)
+        {
+            var tasksWrapper = new TasksWrapper();
+            if (!reminderTasks.Any())
+            {
+                tasksWrapper.IsSuccess = true;
+                return tasksWrapper;
+            }
+            CheckTaskListSpecificData(taskListSpecificData);
+
+            var result = await
+                Task<bool>.Factory.StartNew(() =>
+                        UpdateTasks(reminderTasks, tasksWrapper));
+            tasksWrapper.IsSuccess = result;
+            return tasksWrapper;
+        }
+
+        private bool UpdateTasks(List<ReminderTask> reminderTasks, TasksWrapper tasksWrapper)
+        {
+            OutlookTasksWrapper wrapper = UpdateTasksToOutlook(reminderTasks, tasksWrapper);
+
+            if (!wrapper.WaitForApplicationQuit)
+            {
+                return wrapper.Success;
+            }
+
+            while (Process.GetProcessesByName("OUTLOOK").Any())
+            {
+                ThreadingTask.Delay(5000);
+            }
+            return wrapper.Success;
+        }
+
+        private OutlookTasksWrapper UpdateTasksToOutlook(List<ReminderTask> reminderTasks, TasksWrapper tasksWrapper)
+        {
+            var disposeOutlookInstances = false;
+            Application application = null;
+            NameSpace nameSpace = null;
+            MAPIFolder defaultOutlookCalendar = null;
+            Items outlookItems = null;
+
+            try
+            {
+                // Get Application and Namespace
+                GetOutlookApplication(out disposeOutlookInstances, out application, out nameSpace, ProfileName);
+
+                // Get Default Calendar
+                defaultOutlookCalendar = OutlookTaskList != null
+                    ? nameSpace.GetFolderFromID(OutlookTaskList.EntryId, OutlookTaskList.StoreId)
+                    : nameSpace.GetDefaultFolder(OlDefaultFolders.olFolderCalendar);
+                outlookItems = defaultOutlookCalendar.Items;
+
+
+                foreach (var reminderTask in reminderTasks)
+                {
+                    try
+                    {
+                        TaskItem appItem = null;
+                        
+                        appItem = nameSpace.GetItemFromID(reminderTask.TaskId) as TaskItem;
+                       
+                        var success = UpdateTask(appItem,
+                            reminderTask);
+                        if (success)
+                        {
+                            tasksWrapper.Add(reminderTask);
+                        }
+                    }
+                    catch (Exception exception)
+                    {
+                        Logger.Error(exception);
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                Logger.Error(exception);
+                return new OutlookTasksWrapper
+                {
+                    WaitForApplicationQuit = disposeOutlookInstances,
+                    Success = false
+                };
+            }
+            finally
+            {
+                //Close  and Shutdown
+
+                if (disposeOutlookInstances)
+                {
+                    nameSpace.Logoff();
+                }
+
+                //Unassign all instances
+                if (outlookItems != null)
+                {
+                    Marshal.FinalReleaseComObject(outlookItems);
+                    outlookItems = null;
+                }
+
+                Marshal.FinalReleaseComObject(defaultOutlookCalendar);
+                defaultOutlookCalendar = null;
+
+                Marshal.FinalReleaseComObject(nameSpace);
+                nameSpace = null;
+
+                if (disposeOutlookInstances)
+                {
+                    // Casting Removes a warninig for Ambigous Call
+                    application.Quit();
+                    Marshal.FinalReleaseComObject(application);
+                }
+                application = null;
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+            }
+            return new OutlookTasksWrapper()
+            {
+                WaitForApplicationQuit = disposeOutlookInstances,
+                Success = true
+            };
+        }
+
+        private bool UpdateTask(TaskItem taskItem, ReminderTask reminderTask)
+        {
+            try
+            {
+                taskItem.Subject = reminderTask.Title;
+                taskItem.Body = reminderTask.Notes;
+                taskItem.DueDate = reminderTask.Due.GetValueOrDefault();
+                taskItem.Save();
+                return true;
+            } 
+            catch (Exception exception)
+            {
+                Logger.Error(exception);
+                return false;
+            }
+            
         }
     }
 }

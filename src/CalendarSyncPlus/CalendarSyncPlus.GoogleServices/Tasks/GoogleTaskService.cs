@@ -40,8 +40,7 @@ namespace CalendarSyncPlus.GoogleServices.Tasks
         #endregion
 
         
-        public async Task<TasksWrapper> GetReminderTasksInRangeAsync(DateTime startDate, DateTime endDate,
-            IDictionary<string, object> taskListSpecificData)
+        public async Task<TasksWrapper> GetReminderTasksInRangeAsync(IDictionary<string, object> taskListSpecificData)
         {
             CheckTaskListSpecificData(taskListSpecificData);
 
@@ -326,9 +325,80 @@ namespace CalendarSyncPlus.GoogleServices.Tasks
         }
 
 
-        public Task<TasksWrapper> UpdateReminderTasks(List<ReminderTask> reminderTasks,  IDictionary<string, object> taskListSpecificData)
+        public async Task<TasksWrapper> UpdateReminderTasks(List<ReminderTask> reminderTasks,  IDictionary<string, object> taskListSpecificData)
         {
-            throw new NotImplementedException();
+            var updatedAppointments = new TasksWrapper();
+            if (!reminderTasks.Any())
+            {
+                updatedAppointments.IsSuccess = true;
+                return updatedAppointments;
+            }
+
+            CheckTaskListSpecificData(taskListSpecificData);
+
+            var errorList = new Dictionary<int, ReminderTask>();
+            //Get Calendar Service
+            var calendarService = GetTasksService(AccountName);
+
+            if (reminderTasks == null || string.IsNullOrEmpty(TaskListId))
+            {
+                updatedAppointments.IsSuccess = false;
+                return updatedAppointments;
+            }
+
+            try
+            {
+                if (reminderTasks.Any())
+                {
+                    //Create a Batch Request
+                    var batchRequest = new BatchRequest(calendarService);
+
+                    //Split the list of calendarAppointments by 1000 per list
+
+                    //Iterate over each appointment to create a event and batch it 
+                    for (var i = 0; i < reminderTasks.Count; i++)
+                    {
+                        if (i != 0 && i % 999 == 0)
+                        {
+                            await batchRequest.ExecuteAsync();
+                            batchRequest = new BatchRequest(calendarService);
+                        }
+
+                        var appointment = reminderTasks[i];
+                        var task = CreateUpdatedGoogleTask(appointment);
+                        var updateRequest = calendarService.Tasks.Update(task,
+                            TaskListId, task.Id);
+                        batchRequest.Queue<Task>(updateRequest,
+                            (content, error, index, message) =>
+                                CallbackEventErrorMessage(content, error, index, message, reminderTasks,
+                                "Error in updating event", errorList, updatedAppointments));
+                    }
+
+                    await batchRequest.ExecuteAsync();
+                }
+            }
+            catch (Exception exception)
+            {
+                Logger.Error(exception);
+                updatedAppointments.IsSuccess = false;
+                return updatedAppointments;
+            }
+            updatedAppointments.IsSuccess = true;
+            return updatedAppointments;
+        }
+
+        private Task CreateUpdatedGoogleTask(ReminderTask reminderTask)
+        {
+            var task = new Task
+            {
+                Id = reminderTask.TaskId,
+                Title = reminderTask.Title,
+                Notes = reminderTask.Notes,
+                Due = reminderTask.Due,
+                Completed = reminderTask.Completed,
+                Deleted = reminderTask.Deleted
+            };
+            return task;
         }
 
         public async Task<bool> ClearCalendar(IDictionary<string, object> taskListSpecificData)
@@ -336,7 +406,7 @@ namespace CalendarSyncPlus.GoogleServices.Tasks
             var startDate = DateTime.Today.AddDays(-(10 * 365));
             var endDate = DateTime.Today.AddDays(10 * 365);
             var appointments =
-                await GetReminderTasksInRangeAsync(startDate, endDate, taskListSpecificData);
+                await GetReminderTasksInRangeAsync(taskListSpecificData);
             if (appointments != null)
             {
                 var success = await DeleteReminderTasks(appointments, taskListSpecificData);
