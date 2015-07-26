@@ -812,6 +812,7 @@ namespace CalendarSyncPlus.OutlookServices.Task
                 taskItem.Subject = reminderTask.Title;
                 taskItem.Body = reminderTask.Notes;
                 taskItem.DueDate = reminderTask.Due.GetValueOrDefault();
+                
                 taskItem.Save();
                 return true;
             } 

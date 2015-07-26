@@ -101,6 +101,7 @@ namespace CalendarSyncPlus.GoogleServices.Tasks
         {
             var reminderTask = new ReminderTask(eventItem.Id, eventItem.Title, eventItem.Notes,
                 eventItem.Due);
+            reminderTask.Deleted = eventItem.Deleted;
             return reminderTask;
         }
         private Task CreaterGoogleTask(ReminderTask reminderTask)
@@ -403,8 +404,6 @@ namespace CalendarSyncPlus.GoogleServices.Tasks
 
         public async Task<bool> ClearCalendar(IDictionary<string, object> taskListSpecificData)
         {
-            var startDate = DateTime.Today.AddDays(-(10 * 365));
-            var endDate = DateTime.Today.AddDays(10 * 365);
             var appointments =
                 await GetReminderTasksInRangeAsync(taskListSpecificData);
             if (appointments != null)
