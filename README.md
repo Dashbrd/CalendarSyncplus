@@ -1,8 +1,11 @@
 [![Join the chat at https://gitter.im/ankeshdave/CalendarSyncplus](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/ankeshdave/CalendarSyncplus?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-
 ## Description
 This utility synchronizes Calendar entries between different calendar providers (Apps like Outlook,Services EWS/Google/Live). 
 The project tries to improve upon the bugs and well as provide new functionality. There will be more features added with every release. Its recommended to use the latest version. Please share your experience with us.
+
+Downloads : ![Download Image](https://img.shields.io/github/downloads/ankeshdave/CalendarSyncplus/latest/total.svg?style=flat-square)
+
+Latest Release : ![Release Image](https://img.shields.io/github/release/ankeshdave/CalendarSyncplus.svg?style=flat-square)
 
 ## Installer Details
 Different types of installers are available
@@ -13,7 +16,7 @@ Different types of installers are available
 .Net Framework 4.5 (setup will automatically install it)/Can be manually installed as required
 
 ### ScreenShot
-![Main Layout](http://download-codeplex.sec.s-msft.com/Download?ProjectName=calendarsyncplus&DownloadId=1446069)
+![Main Layout](http://download-codeplex.sec.s-msft.com/Download?ProjectName=calendarsyncplus&DownloadId=1464658)
 
 ## Features
 * Select outlook calendar from different profiles and mailboxes
