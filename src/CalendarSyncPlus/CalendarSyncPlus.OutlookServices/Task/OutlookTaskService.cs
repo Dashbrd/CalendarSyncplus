@@ -544,7 +544,7 @@ namespace CalendarSyncPlus.OutlookServices.Task
             var appointmentList =
                 await
                     Task<List<ReminderTask>>.Factory.StartNew(
-                        () => GetTasks());
+                        GetTasks);
 
             if (appointmentList == null)
             {

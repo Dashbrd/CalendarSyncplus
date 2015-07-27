@@ -34,7 +34,7 @@ namespace CalendarSyncPlus.Services.Calendars
             ISyncAnalyticsService analyticsService,
             ApplicationLogger applicationLogger)
         {
-            ApplicationLogger = applicationLogger.GetLogger(GetType());
+            Logger = applicationLogger.GetLogger(GetType());
             CalendarServiceFactory = calendarServiceFactory;
             CalendarSyncEngine = calendarSyncEngine;
             AnalyticsService = analyticsService;
@@ -256,7 +256,7 @@ namespace CalendarSyncPlus.Services.Calendars
                     var orphanEntries = Environment.NewLine +
                                         string.Join(Environment.NewLine, CalendarSyncEngine.DestOrphanEntries);
                     //Log Orphan Entries
-                    ApplicationLogger.Warn("Orphan entries to delete: " + orphanEntries);
+                    Logger.Warn("Orphan entries to delete: " + orphanEntries);
 
                     var message = string.Format("Are you sure you want to delete {0} orphan entries from {1}?{2}",
                         appointmentsToDelete.Count, DestinationCalendarService.CalendarServiceName,
@@ -269,9 +269,16 @@ namespace CalendarSyncPlus.Services.Calendars
                         appointmentsToDelete.AddRange(CalendarSyncEngine.DestOrphanEntries);
                     }
                 }
-                else if (!syncProfile.SyncSettings.DisableDelete)
+                else
                 {
-                    appointmentsToDelete.AddRange(CalendarSyncEngine.DestOrphanEntries);
+                    if (!syncProfile.SyncSettings.DisableDelete)
+                    {
+                        appointmentsToDelete.AddRange(CalendarSyncEngine.DestOrphanEntries);
+                    }
+                    else
+                    {
+                        CalendarSyncStatus = StatusHelper.GetMessage(SyncStateEnum.SkipDelete);
+                    }
                 }
             }
 
@@ -480,7 +487,7 @@ namespace CalendarSyncPlus.Services.Calendars
 
         public ICalendarService DestinationCalendarService { get; set; }
 
-        public ILog ApplicationLogger { get; set; }
+        public ILog Logger { get; set; }
 
         public bool SyncCalendar(CalendarSyncProfile syncProfile, SyncMetric syncMetric, SyncCallback syncCallback)
         {

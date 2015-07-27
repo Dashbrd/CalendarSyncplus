@@ -27,7 +27,6 @@ using System.Threading.Tasks;
 using System.Waf.Applications;
 using CalendarSyncPlus.Common.Log;
 using CalendarSyncPlus.Domain.File.Binary;
-using CalendarSyncPlus.Domain.File.Xml;
 using CalendarSyncPlus.Domain.Models;
 using CalendarSyncPlus.Domain.Models.Preferences;
 using CalendarSyncPlus.Services.Interfaces;
@@ -35,19 +34,19 @@ using log4net;
 
 #endregion
 
-namespace CalendarSyncPlus.Services
+namespace CalendarSyncPlus.Services.Sync
 {
     [Export(typeof (ISettingsSerializationService))]
     public class SettingsSerializationService : ISettingsSerializationService
     {
-        private readonly ILog _applicationLogger;
+        ILog Logger { get; set; }
 
         #region Constructors
 
         [ImportingConstructor]
         public SettingsSerializationService(ApplicationLogger applicationLogger)
         {
-            _applicationLogger = applicationLogger.GetLogger(GetType());
+            Logger = applicationLogger.GetLogger(GetType());
             applicationDataDirectory =
                 Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
                     "CalendarSyncPlus");
@@ -95,7 +94,7 @@ namespace CalendarSyncPlus.Services
         {
             if (!File.Exists(SettingsFilePath))
             {
-                _applicationLogger.Warn("Settings file does not exist");
+                Logger.Warn("Settings file does not exist");
                 return null;
             }
             try
@@ -106,7 +105,7 @@ namespace CalendarSyncPlus.Services
             }
             catch (Exception exception)
             {
-                _applicationLogger.Error(exception);
+                Logger.Error(exception);
                 return null;
             }
         }
@@ -197,7 +196,22 @@ namespace CalendarSyncPlus.Services
                     TaskSyncProfile.GetDefaultSyncProfile()
                 };
             }
+            else
+            {
+                foreach (var syncProfile in result.TaskSyncProfiles)
+                {
+                    syncProfile.SetSourceDestTypes();
+                    if (syncProfile.SyncSettings == null)
+                    {
+                        syncProfile.SyncSettings = TaskSyncSettings.GetDefault();
+                    }
 
+                    if (syncProfile.SyncFrequency == null)
+                    {
+                        syncProfile.SyncFrequency = new IntervalSyncFrequency();
+                    }
+                }
+            }
             if (result.ContactSyncProfiles == null || result.ContactSyncProfiles.Count == 0)
             {
                 result.ContactSyncProfiles = new ObservableCollection<ContactSyncProfile>()

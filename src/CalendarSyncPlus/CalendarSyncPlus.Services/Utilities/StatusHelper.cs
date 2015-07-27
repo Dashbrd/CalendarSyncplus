@@ -49,15 +49,15 @@ namespace CalendarSyncPlus.Services.Utilities
             StatusDictionary.Add(SyncStateEnum.Line, LineConstant);
             StatusDictionary.Add(SyncStateEnum.SyncStarted, "Sync started : {0}");
             StatusDictionary.Add(SyncStateEnum.Profile, "Profile : {0}");
-            StatusDictionary.Add(SyncStateEnum.SourceReading, "Reading {0} calendar...");
+            StatusDictionary.Add(SyncStateEnum.SourceReading, "Reading {0} entries...");
             StatusDictionary.Add(SyncStateEnum.SourceRead, "{0} entries read : {1}");
             StatusDictionary.Add(SyncStateEnum.SourceReadFailed, "Read failed.");
-            StatusDictionary.Add(SyncStateEnum.DestReading, "Reading {0} calendar...");
+            StatusDictionary.Add(SyncStateEnum.DestReading, "Reading {0} entries...");
             StatusDictionary.Add(SyncStateEnum.DestRead, "{0} entries read : {1}");
             StatusDictionary.Add(SyncStateEnum.DestReadFailed, "Read failed");
             StatusDictionary.Add(SyncStateEnum.ReadingEntriesToDelete, "Getting {0} entries to delete...");
             StatusDictionary.Add(SyncStateEnum.EntriesToDelete, "Found {0} entries to delete");
-            StatusDictionary.Add(SyncStateEnum.SkipDelete, "Skipping Delete");
+            StatusDictionary.Add(SyncStateEnum.SkipDelete, "Skipping Delete of Orphan Entries");
             StatusDictionary.Add(SyncStateEnum.DeletingEntries, "Deleting {0} entries...");
             StatusDictionary.Add(SyncStateEnum.DeletingEntriesComplete, "Delete Complete");
             StatusDictionary.Add(SyncStateEnum.DeletingEntriesFailed, "Delete Failed");

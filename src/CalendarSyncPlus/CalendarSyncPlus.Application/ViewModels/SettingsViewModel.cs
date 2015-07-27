@@ -191,6 +191,21 @@ namespace CalendarSyncPlus.Application.ViewModels
 
             try
             {
+                foreach (var calendarSyncProfile in Settings.CalendarSyncProfiles)
+                {
+                    calendarSyncProfile.SetSourceDestTypes();   
+                }
+
+                foreach (var calendarSyncProfile in Settings.TaskSyncProfiles)
+                {
+                    calendarSyncProfile.SetSourceDestTypes();
+                }
+
+                foreach (var calendarSyncProfile in Settings.ContactSyncProfiles)
+                {
+                    calendarSyncProfile.SetSourceDestTypes();
+                }
+
                 var result = await SettingsSerializationService.SerializeSettingsAsync(Settings);
                 
                 if (result)

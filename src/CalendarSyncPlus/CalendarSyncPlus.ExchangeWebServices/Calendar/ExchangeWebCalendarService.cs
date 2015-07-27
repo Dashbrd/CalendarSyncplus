@@ -29,10 +29,10 @@ namespace CalendarSyncPlus.ExchangeWebServices.Calendar
         [ImportingConstructor]
         public ExchangeWebCalendarService(ApplicationLogger applicationLogger)
         {
-            ApplicationLogger = applicationLogger.GetLogger(GetType());
+            Logger = applicationLogger.GetLogger(GetType());
         }
 
-        public ILog ApplicationLogger { get; set; }
+        public ILog Logger { get; set; }
 
         public Task<AppointmentsWrapper> UpdateCalendarEvents(List<Appointment> calendarAppointments, bool addDescription,
             bool addReminder, bool addAttendees, bool attendeesToDescription,
@@ -127,7 +127,7 @@ namespace CalendarSyncPlus.ExchangeWebServices.Calendar
                 }
                 catch (Exception exception)
                 {
-                    ApplicationLogger.Error(exception);
+                    Logger.Error(exception);
                 }
             }
             return exchangeServerSettings;

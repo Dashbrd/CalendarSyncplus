@@ -4,24 +4,23 @@ using System.IO;
 using System.Threading.Tasks;
 using CalendarSyncPlus.Common.Log;
 using CalendarSyncPlus.Domain.File.Xml;
-using CalendarSyncPlus.Domain.Models;
 using CalendarSyncPlus.Domain.Models.Metrics;
 using CalendarSyncPlus.Services.Interfaces;
 using log4net;
 
-namespace CalendarSyncPlus.Services
+namespace CalendarSyncPlus.Services.Sync
 {
     [Export(typeof (ISummarySerializationService))]
     public class SummarySerializationService : ISummarySerializationService
     {
         private readonly string _applicationDataDirectory;
-        private readonly ILog _applicationLogger;
+        private ILog Logger { get; set; }
         private readonly string _settingsFilePath;
 
         [ImportingConstructor]
         public SummarySerializationService(ApplicationLogger applicationLogger)
         {
-            _applicationLogger = applicationLogger.GetLogger(GetType());
+            Logger = applicationLogger.GetLogger(GetType());
             _applicationDataDirectory =
                 Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
                     "CalendarSyncPlus");
@@ -75,7 +74,7 @@ namespace CalendarSyncPlus.Services
         {
             if (!File.Exists(SettingsFilePath))
             {
-                _applicationLogger.Warn("Sync summary file does not exist");
+                Logger.Warn("Sync summary file does not exist");
                 return null;
             }
             try
@@ -85,7 +84,7 @@ namespace CalendarSyncPlus.Services
             }
             catch (Exception exception)
             {
-                _applicationLogger.Error(exception);
+                Logger.Error(exception);
                 return null;
             }
         }

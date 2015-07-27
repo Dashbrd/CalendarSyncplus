@@ -115,7 +115,7 @@ namespace CalendarSyncPlus.Services.Tasks
                 case ServiceType.Google:
                     calendarSpecificData = new Dictionary<string, object>
                     {
-                        {"CalendarId", syncProfile.GoogleSettings.GoogleCalendar.Id},
+                        {"TaskListId", syncProfile.GoogleSettings.GoogleCalendar.Id},
                         {"AccountName", syncProfile.GoogleSettings.GoogleAccount.Name}
                     };
                     break;
@@ -129,7 +129,7 @@ namespace CalendarSyncPlus.Services.Tasks
                                 : null
                         },
                         {
-                            "OutlookCalendar",
+                            "OutlookTaskList",
                             !syncProfile.OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.DefaultMailBoxCalendar)
                                 ? syncProfile.OutlookSettings.OutlookFolder
                                 : null

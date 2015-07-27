@@ -31,10 +31,10 @@ namespace CalendarSyncPlus.Services
         [ImportingConstructor]
         public ApplicationUpdateService(ApplicationLogger applicationLogger)
         {
-            ApplicationLogger = applicationLogger.GetLogger(GetType());
+            Logger = applicationLogger.GetLogger(GetType());
         }
 
-        public ILog ApplicationLogger { get; set; }
+        public ILog Logger { get; set; }
 
         #region IApplicationUpdateService Members
 
@@ -77,7 +77,7 @@ namespace CalendarSyncPlus.Services
             }
             catch (Exception exception)
             {
-                ApplicationLogger.Error(exception);
+                Logger.Error(exception);
                 return exception.Message;
             }
             return null;
@@ -170,7 +170,7 @@ namespace CalendarSyncPlus.Services
             }
             catch (Exception exception)
             {
-                ApplicationLogger.Error(exception);
+                Logger.Error(exception);
             }
             return false;
         }
@@ -188,7 +188,7 @@ namespace CalendarSyncPlus.Services
             }
             catch (Exception exception)
             {
-                ApplicationLogger.Error(exception);
+                Logger.Error(exception);
             }
             return _version;
         }

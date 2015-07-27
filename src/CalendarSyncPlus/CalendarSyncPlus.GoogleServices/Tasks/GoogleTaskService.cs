@@ -44,19 +44,16 @@ namespace CalendarSyncPlus.GoogleServices.Tasks
         {
             CheckTaskListSpecificData(taskListSpecificData);
 
-            var finalTaskList = new List<ReminderTask>();
+            var finalTaskList = new TasksWrapper();
 
             //Get Calendar Service
             var tasksService = GetTasksService(AccountName);
 
-            var taskList = tasksService.Tasklists.List().Execute();
-
-            var taskListRequest = tasksService.Tasks.List(taskList.Items.First().Id);
+            var taskListRequest = tasksService.Tasks.List(TaskListId);
             taskListRequest.MaxResults = 1000;
-
             try
             {
-                global::Google.Apis.Tasks.v1.Data.Tasks result =   taskListRequest.Execute();
+                var result =   taskListRequest.Execute();
                 if (result != null)
                 {
                     while (result.Items != null)
@@ -64,11 +61,6 @@ namespace CalendarSyncPlus.GoogleServices.Tasks
                         // Add events to list, Split recurring appointments
                         foreach (var eventItem in result.Items)
                         {
-                            if (eventItem.Status == "cancelled")
-                            {
-                                continue;
-                            }
-
                             var reminderTask = CreateReminderTask(eventItem);
                             finalTaskList.Add(reminderTask);
                         }
@@ -94,7 +86,7 @@ namespace CalendarSyncPlus.GoogleServices.Tasks
             {
                 Logger.Error(exception);
             }
-            return null;
+            return finalTaskList;
         }
 
         private ReminderTask CreateReminderTask(Task eventItem)
