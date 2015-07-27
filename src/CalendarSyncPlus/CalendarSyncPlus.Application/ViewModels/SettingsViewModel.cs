@@ -469,10 +469,6 @@ namespace CalendarSyncPlus.Application.ViewModels
         private async void AddGoogleAccountDetailsToApplication(string accountName)
         {
             var account = new GoogleAccount { Name = accountName };
-            if (Settings.GoogleAccounts == null)
-            {
-                Settings.GoogleAccounts = new ObservableCollection<GoogleAccount>();
-            }
             Settings.GoogleAccounts.Add(account.DeepClone());
             //SelectedCalendarProfile.GoogleAccount = account;
             //SelectedCalendar.GetGoogleCalendar();

@@ -159,6 +159,11 @@ namespace CalendarSyncPlus.Services.Sync
 
         private void ValidateSettings(Settings result)
         {
+            if (result.GoogleAccounts == null)
+            {
+                result.GoogleAccounts = new ObservableCollection<GoogleAccount>();
+            }
+
             if (result.CalendarSyncProfiles == null || result.CalendarSyncProfiles.Count == 0)
             {
                 result.CalendarSyncProfiles = new ObservableCollection<CalendarSyncProfile>()
