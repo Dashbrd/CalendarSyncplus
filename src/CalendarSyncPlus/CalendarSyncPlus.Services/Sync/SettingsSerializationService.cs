@@ -148,7 +148,7 @@ namespace CalendarSyncPlus.Services.Sync
                 result.IsFirstSave = true;
             }
             var settingsVersion = new Version(result.SettingsVersion);
-            if (settingsVersion < new Version("1.3.2.3"))
+            if (settingsVersion < new Version("1.4.1.1"))
             {
                 return Settings.GetDefaultSettings();
             }

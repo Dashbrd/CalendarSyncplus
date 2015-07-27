@@ -121,6 +121,7 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
                 {
                     ContactSyncProfile.GetDefaultSyncProfile()
                 },
+                GoogleAccounts =  new ObservableCollection<GoogleAccount>()
             };
             return settings;
         }
