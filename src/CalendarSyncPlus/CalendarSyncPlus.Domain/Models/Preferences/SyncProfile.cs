@@ -184,6 +184,7 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
             else
             {
                 SyncMode = SyncModeEnum.OneWay;
+                Master = ServiceType.OutlookDesktop;
             }
         }
     }

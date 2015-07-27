@@ -291,7 +291,7 @@
             </Grid>
         </GroupBox>
         <GroupBox Header="{localizeExtension:LocText Key=SyncSettingsView_GroupBox_SyncRange_Header}"
-                  Grid.Row="1">
+                  Grid.Row="1" Visibility="Collapsed">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />

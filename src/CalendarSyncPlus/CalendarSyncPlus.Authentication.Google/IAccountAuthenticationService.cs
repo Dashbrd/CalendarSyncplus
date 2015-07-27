@@ -5,7 +5,6 @@ using Google.Apis.Analytics.v3;
 using Google.Apis.Calendar.v3;
 using Google.Apis.Drive.v2;
 using Google.Apis.Tasks.v1;
-using Google.Apis.Tasks.v1.Data;
 using Google.Contacts;
 
 namespace CalendarSyncPlus.Authentication.Google

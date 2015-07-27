@@ -195,12 +195,12 @@ namespace CalendarSyncPlus.GoogleServices.Calendar
             //Need to make recurring appointment IDs unique - append the item's date   
             googleEvent.ExtendedProperties = new Event.ExtendedPropertiesData
             {
-                Private = new Dictionary<string, string>()
+                Private__ = new Dictionary<string, string>()
             };
 
             foreach (var extendedProperty in calendarAppointment.ExtendedProperties)
             {
-                googleEvent.ExtendedProperties.Private.Add(extendedProperty.Key, extendedProperty.Value);
+                googleEvent.ExtendedProperties.Private__.Add(extendedProperty.Key, extendedProperty.Value);
             }
 
             //Add Start/End Time
@@ -282,7 +282,7 @@ namespace CalendarSyncPlus.GoogleServices.Calendar
                 ExtendedProperties =
                     new Event.ExtendedPropertiesData
                     {
-                        Private =
+                        Private__ = 
                             new Dictionary<string, string>
                             {
                                 {calendarAppointment.GetSourceEntryKey(), calendarAppointment.AppointmentId}
@@ -435,9 +435,9 @@ namespace CalendarSyncPlus.GoogleServices.Calendar
 
 
             appointment.CalendarId = CalendarId;
-            if (googleEvent.ExtendedProperties != null && googleEvent.ExtendedProperties.Private != null)
+            if (googleEvent.ExtendedProperties != null && googleEvent.ExtendedProperties.Private__ != null)
             {
-                foreach (var property in googleEvent.ExtendedProperties.Private)
+                foreach (var property in googleEvent.ExtendedProperties.Private__)
                 {
                     appointment.ExtendedProperties.Add(property.Key, property.Value);
                 }
