@@ -199,6 +199,7 @@
                         Margin="2"
                         HorizontalAlignment="Right"
                         VerticalAlignment="Center"
+                        ToolTip="Deletes Outlook tasks for the selected task list"
                         Command="{Binding CleanOutlookCalendarCommand}"
                         Content="{localizeExtension:LocText Key=OutlookSettingsView_Button_OutlookProfileSettings_ResetOutlookTaskList_Text}" />
             </Grid>

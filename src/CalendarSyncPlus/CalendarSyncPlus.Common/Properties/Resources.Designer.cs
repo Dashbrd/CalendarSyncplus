@@ -639,7 +639,7 @@ namespace CalendarSyncPlus.Common.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Confirm delete for Orphan Source Entries (One way only).
+        ///   Looks up a localized string similar to Confirm delete (Entries synced from other calendar - One way).
         /// </summary>
         public static string OptionsSettingsView_CheckBox_OtherOptions_ConfirmDelete_Content {
             get {
@@ -648,7 +648,7 @@ namespace CalendarSyncPlus.Common.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Disable delete for Orphan Source Entries (One way only).
+        ///   Looks up a localized string similar to Disable delete (Entries synced from other calendar - One way).
         /// </summary>
         public static string OptionsSettingsView_CheckBox_OtherOptions_DisableDelete_Content {
             get {

@@ -18,10 +18,17 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
         private string _password;
         private string _emailId;
         private bool _usingCorporateNetwork;
+        private bool _autoDetectExchangeServer;
 
         #endregion
 
         #region Properties
+
+        public bool AutoDetectExchangeServer
+        {
+            get { return _autoDetectExchangeServer; }
+            set { SetProperty(ref _autoDetectExchangeServer, value); }
+        }
 
         public string ExchangeVersion
         {

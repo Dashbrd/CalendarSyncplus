@@ -292,10 +292,10 @@
     <value>Add Reminders</value>
   </data>
   <data name="OptionsSettingsView_CheckBox_OtherOptions_ConfirmDelete_Content" xml:space="preserve">
-    <value>Confirm delete for Orphan Source Entries (One way only)</value>
+    <value>Confirm delete (Entries synced from other calendar - One way)</value>
   </data>
   <data name="OptionsSettingsView_CheckBox_OtherOptions_DisableDelete_Content" xml:space="preserve">
-    <value>Disable delete for Orphan Source Entries (One way only)</value>
+    <value>Disable delete (Entries synced from other calendar - One way)</value>
   </data>
   <data name="OptionsSettingsView_CheckBox_OtherOptions_KeepLastModified_Content" xml:space="preserve">
     <value>Keep Last Modified Version (For Bidirectional only)</value>

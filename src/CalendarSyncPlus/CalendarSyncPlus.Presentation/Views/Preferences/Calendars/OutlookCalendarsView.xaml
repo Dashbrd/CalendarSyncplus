@@ -199,6 +199,7 @@
                         Margin="2"
                         HorizontalAlignment="Right"
                         VerticalAlignment="Center"
+                        ToolTip="Unlinks the Outlook appointments from Google events for the selected calendar for the past and future 10 years"
                         Command="{Binding ResetOutlookCalendarCommand}"
                         Content="{localizeExtension:LocText Key=OutlookSettingsView_Button_OutlookProfileSettings_ClearOutlookCalendar_Text}" />
                 <Button Grid.Row="8"
@@ -207,6 +208,7 @@
                         Margin="2"
                         HorizontalAlignment="Right"
                         VerticalAlignment="Center"
+                        ToolTip="Deletes Outlook appointments for the selected calendar for the past and future 10 years"
                         Command="{Binding CleanOutlookCalendarCommand}"
                         Content="{localizeExtension:LocText Key=OutlookSettingsView_Button_OutlookProfileSettings_ResetOutlookCalendar_Text}" />
             </Grid>
