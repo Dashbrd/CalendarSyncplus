@@ -7,6 +7,7 @@ namespace CalendarSyncPlus.Domain.Models
 {
     public class Appointment : Model, ICloneable
     {
+        #region Fields
         /// <summary>
         ///     Flag if the appointment is an all day event
         /// </summary>
@@ -20,7 +21,9 @@ namespace CalendarSyncPlus.Domain.Models
         /// <summary>
         /// </summary>
         private string _calendarId;
-
+        /// <summary>
+        /// 
+        /// </summary>
         private string _childId;
 
         /// <summary>
@@ -58,8 +61,10 @@ namespace CalendarSyncPlus.Domain.Models
         private List<Recipient> _requiredAttendees;
         private string _sourceId;
         private DateTime? _startTime;
-        private string _subject;
+        private string _subject; 
+        #endregion
 
+        #region Constructors
         public Appointment(string description, string location, string subject, DateTime? endTime, DateTime? startTime,
             string appointmentId)
             : this(description, location, subject, endTime, startTime)
@@ -77,8 +82,10 @@ namespace CalendarSyncPlus.Domain.Models
             ExtendedProperties = new Dictionary<string, string>();
             RequiredAttendees = new List<Recipient>();
             OptionalAttendees = new List<Recipient>();
-        }
+        } 
+        #endregion
 
+        #region Properties
         public DateTime? OldStartTime
         {
             get { return _oldStartTime; }
@@ -235,7 +242,8 @@ namespace CalendarSyncPlus.Domain.Models
         {
             get { return _created; }
             set { SetProperty(ref _created, value); }
-        }
+        } 
+        #endregion
 
         #region ICloneable Members
 

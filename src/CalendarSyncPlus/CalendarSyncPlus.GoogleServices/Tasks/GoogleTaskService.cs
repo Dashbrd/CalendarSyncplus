@@ -93,7 +93,7 @@ namespace CalendarSyncPlus.GoogleServices.Tasks
         {
             var reminderTask = new ReminderTask(eventItem.Id, eventItem.Title, eventItem.Notes,
                 eventItem.Due);
-            reminderTask.Deleted = eventItem.Deleted;
+            reminderTask.IsDeleted = eventItem.Deleted;
             return reminderTask;
         }
         private Task CreaterGoogleTask(ReminderTask reminderTask)
@@ -103,19 +103,17 @@ namespace CalendarSyncPlus.GoogleServices.Tasks
             {
                 Id = reminderTask.TaskId,
                 Title   = reminderTask.Title,
-                Completed = reminderTask.Completed,
-                Deleted = reminderTask.Deleted,
+                Completed = reminderTask.CompletedOn,
+                Deleted = reminderTask.IsDeleted,
                 Due =  reminderTask.Due
             };
-
-            
 
             return task;
         }
 
       
-        private const string dictionaryKey_AccountName = "AccountName";
-        private const string dictionaryKey_TasksId = "TaskListId";
+        private const string DictionaryKeyAccountName = "AccountName";
+        private const string DictionaryKeyTaskListId = "TaskListId";
 
         public void CheckTaskListSpecificData(IDictionary<string, object> taskListSpecificData)
         {
@@ -125,17 +123,17 @@ namespace CalendarSyncPlus.GoogleServices.Tasks
             }
 
             object tasksId;
-            if (!taskListSpecificData.TryGetValue(dictionaryKey_TasksId, out tasksId))
+            if (!taskListSpecificData.TryGetValue(DictionaryKeyTaskListId, out tasksId))
             {
-                throw new InvalidOperationException(string.Format("{0} is a required.", dictionaryKey_TasksId));
+                throw new InvalidOperationException(string.Format("{0} is a required.", DictionaryKeyTaskListId));
             }
 
             TaskListId = tasksId as string;
 
             object accountNameValue;
-            if (!taskListSpecificData.TryGetValue(dictionaryKey_AccountName, out accountNameValue))
+            if (!taskListSpecificData.TryGetValue(DictionaryKeyAccountName, out accountNameValue))
             {
-                throw new InvalidOperationException(string.Format("{0} is a required.", dictionaryKey_AccountName));
+                throw new InvalidOperationException(string.Format("{0} is a required.", DictionaryKeyAccountName));
             }
 
             AccountName = accountNameValue as string;
@@ -388,8 +386,8 @@ namespace CalendarSyncPlus.GoogleServices.Tasks
                 Title = reminderTask.Title,
                 Notes = reminderTask.Notes,
                 Due = reminderTask.Due,
-                Completed = reminderTask.Completed,
-                Deleted = reminderTask.Deleted
+                Completed = reminderTask.CompletedOn,
+                Deleted = reminderTask.IsDeleted
             };
             return task;
         }

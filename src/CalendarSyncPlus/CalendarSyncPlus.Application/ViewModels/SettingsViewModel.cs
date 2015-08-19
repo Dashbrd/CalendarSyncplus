@@ -470,8 +470,6 @@ namespace CalendarSyncPlus.Application.ViewModels
         {
             var account = new GoogleAccount { Name = accountName };
             Settings.GoogleAccounts.Add(account.DeepClone());
-            //SelectedCalendarProfile.GoogleAccount = account;
-            //SelectedCalendar.GetGoogleCalendar();
             _lastSavedSettings.GoogleAccounts.Add(account);
 
             await SettingsSerializationService.SerializeSettingsAsync(_lastSavedSettings);
@@ -479,9 +477,7 @@ namespace CalendarSyncPlus.Application.ViewModels
 
         private async Task<string> GetGoogleAuthCode()
         {
-            return
-                await
-                    MessageService.ShowInput("Enter Auth Code after authorization in browser window",
+            return await MessageService.ShowInput("Enter Auth Code after authorization in browser window",
                         "Manual Authentication");
         }
 

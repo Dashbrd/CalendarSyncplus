@@ -249,7 +249,7 @@ namespace CalendarSyncPlus.Services.Calendars
                 SourceAppointments, DestinationAppointments);
             var appointmentsToDelete = CalendarSyncEngine.DestAppointmentsToDelete;
 
-            if (syncProfile.SyncMode == SyncModeEnum.OneWay)
+            if (syncProfile.SyncMode == SyncModeEnum.OneWay && CalendarSyncEngine.DestOrphanEntries.Any())
             {
                 if (syncProfile.SyncSettings.ConfirmOnDelete && syncCallback != null)
                 {
