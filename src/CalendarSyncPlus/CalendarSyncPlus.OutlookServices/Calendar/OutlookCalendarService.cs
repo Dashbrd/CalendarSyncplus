@@ -725,6 +725,7 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
 
                     // create Final filter as string
                     var filter = "[Start] >= '" + min.ToString("g") + "' AND [End] <= '" + max.ToString("g") + "'";
+                    Logger.Info("Outlook filter string : "+filter);
                     //Set filter on outlookItems and Loop through to create appointment List
                     var outlookEntries = outlookItems.Restrict(filter);
                     if (outlookEntries != null)
