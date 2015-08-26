@@ -289,6 +289,8 @@ namespace CalendarSyncPlus.Application.ViewModels
                         profile.GoogleSettings.GoogleAccount.Name.Equals(googleAccount.Name))
                     {
                         profile.GoogleSettings.GoogleAccount = null;
+                        profile.GoogleSettings.GoogleCalendar = null;
+                        profile.GoogleSettings.GoogleCalendars = null;
                     }
                     profile.IsLoaded = false;
                 }
