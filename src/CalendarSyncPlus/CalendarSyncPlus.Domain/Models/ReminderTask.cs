@@ -47,7 +47,7 @@ namespace CalendarSyncPlus.Domain.Models
 
         public override string ToString()
         {
-            return Title + Notes + Due.GetValueOrDefault().ToString("g") + IsCompleted + IsDeleted;
+            return Title + Notes + IsCompleted + IsDeleted;
         }
 
         public override bool Equals(object obj)

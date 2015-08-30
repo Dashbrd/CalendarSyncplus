@@ -94,6 +94,7 @@ namespace CalendarSyncPlus.GoogleServices.Tasks
             var reminderTask = new ReminderTask(eventItem.Id, eventItem.Title, eventItem.Notes,
                 eventItem.Due);
             reminderTask.IsDeleted = eventItem.Deleted;
+            reminderTask.UpdatedOn = eventItem.Updated;
             return reminderTask;
         }
         private Task CreaterGoogleTask(ReminderTask reminderTask)
@@ -101,13 +102,17 @@ namespace CalendarSyncPlus.GoogleServices.Tasks
             //Create Event
             var task = new Task
             {
-                Id = reminderTask.TaskId,
                 Title   = reminderTask.Title,
-                Completed = reminderTask.CompletedOn,
+                Notes = reminderTask.Notes,
                 Deleted = reminderTask.IsDeleted,
                 Due =  reminderTask.Due
             };
 
+            if (reminderTask.IsCompleted)
+            {
+                task.Completed = reminderTask.CompletedOn;
+            }
+            
             return task;
         }
 
@@ -262,7 +267,7 @@ namespace CalendarSyncPlus.GoogleServices.Tasks
             return addedAppointments;
         }
 
-        private async Task<List<ReminderTask>> AddTasksInternal(List<ReminderTask> calendarAppointments,
+        private async Task<List<ReminderTask>> AddTasksInternal(List<ReminderTask> reminderTasks,
             TasksService taskService,
            Dictionary<int, ReminderTask> errorList)
         {
@@ -270,7 +275,7 @@ namespace CalendarSyncPlus.GoogleServices.Tasks
             //Create a Batch Request
             var batchRequest = new BatchRequest(taskService);
 
-            for (var i = 0; i < calendarAppointments.Count; i++)
+            for (var i = 0; i < reminderTasks.Count; i++)
             {
                 if (i != 0 && i % 999 == 0)
                 {
@@ -278,14 +283,14 @@ namespace CalendarSyncPlus.GoogleServices.Tasks
                     batchRequest = new BatchRequest(taskService);
                 }
 
-                var reminderTask = calendarAppointments[i];
-                var calendarEvent = CreaterGoogleTask(reminderTask);
-                var insertRequest = taskService.Tasks.Insert(calendarEvent,
+                var reminderTask = reminderTasks[i];
+                var googleTask = CreaterGoogleTask(reminderTask);
+                var insertRequest = taskService.Tasks.Insert(googleTask,
                     TaskListId);
                 batchRequest.Queue<Task>(insertRequest,
                     (content, error, index, message) =>
                         CallbackEventErrorMessage(content, error, index, message,
-                        calendarAppointments, "Error in adding events", errorList,
+                        reminderTasks, "Error in adding events", errorList,
                             addedEvents));
             }
 

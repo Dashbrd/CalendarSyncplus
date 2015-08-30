@@ -51,7 +51,8 @@
     </Compile>
     <Compile Include="CalendarSyncEngine.cs" />
     <Compile Include="ContactsSyncEngine.cs" />
-    <Compile Include="Helpers\ExtensionMethods.cs" />
+    <Compile Include="Helpers\AppointmentExtensions.cs" />
+    <Compile Include="Helpers\TaskExtensions.cs" />
     <Compile Include="Interfaces\ICalendarSyncEngine.cs" />
     <Compile Include="Interfaces\IContactsSyncEngine.cs" />
     <Compile Include="Interfaces\ITaskSyncEngine.cs" />
