@@ -43,8 +43,6 @@ namespace CalendarSyncPlus.SyncEngine.Helpers
                 appointment.ReminderSet = otherAppointment.ReminderSet;
                 appointment.ReminderMinutesBeforeStart = otherAppointment.ReminderMinutesBeforeStart;
             }
-
-            return true;
         }
 
         public static void AddCompareForUpdate(this List<Appointment> updateList, Appointment appointment)

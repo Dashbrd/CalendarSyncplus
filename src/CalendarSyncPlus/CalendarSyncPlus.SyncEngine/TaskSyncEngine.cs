@@ -4,6 +4,7 @@ using System.Linq;
 using CalendarSyncPlus.Domain.Models;
 using CalendarSyncPlus.Domain.Models.Preferences;
 using CalendarSyncPlus.Domain.Wrappers;
+using CalendarSyncPlus.SyncEngine.Helpers;
 using CalendarSyncPlus.SyncEngine.Interfaces;
 
 namespace CalendarSyncPlus.SyncEngine
@@ -102,7 +103,7 @@ namespace CalendarSyncPlus.SyncEngine
                             if (destTask.UpdatedOn.GetValueOrDefault()
                                     .CompareTo(sourceTask.UpdatedOn.GetValueOrDefault()) < 0)
                             {
-                                destTask.T
+                                destTask.CopyDetail(sourceTask);
                                 destTasksToUpdate.Add(destTask);
                             }
                             else

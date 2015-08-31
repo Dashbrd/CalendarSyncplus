@@ -19,6 +19,7 @@
 
 #region Imports
 
+using System;
 using System.ComponentModel.Composition;
 using System.Waf.Applications;
 using CalendarSyncPlus.Application.Views;
@@ -85,6 +86,7 @@ namespace CalendarSyncPlus.Application.ViewModels
         private DelegateCommand _exitApplicationCommand;
         private DelegateCommand _showApplicationCommand;
         private string _toolTipText;
+        private DelegateCommand _syncNowCommand;
 
         #endregion
 
@@ -117,6 +119,14 @@ namespace CalendarSyncPlus.Application.ViewModels
             set { SetProperty(ref _exitApplicationCommand, value); }
             get { return _exitApplicationCommand; }
         }
+
+        public DelegateCommand SyncNowCommand
+        {
+            get { return _syncNowCommand; }
+            set { SetProperty(ref _syncNowCommand, value); }
+        }
+
+        
 
         #endregion
 
