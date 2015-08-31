@@ -55,6 +55,40 @@ namespace CalendarSyncPlus.OutlookServices.Utilities
             }
             return MeetingResponseStatusEnum.None;
         }
+        public static OlTaskStatus GetOlTaskStatus(this ReminderTask taskItem)
+        {
+            switch (taskItem.StatusEnum)
+            {
+                case TaskStatusEnum.TaskComplete:
+                    return OlTaskStatus.olTaskComplete;
+                case TaskStatusEnum.TaskDeferred:
+                    return OlTaskStatus.olTaskDeferred;
+                case TaskStatusEnum.TaskInProgress: 
+                    return OlTaskStatus.olTaskInProgress;
+                case TaskStatusEnum.TaskNotStarted:
+                    return OlTaskStatus.olTaskNotStarted;
+                case TaskStatusEnum.TaskWaiting:
+                    return OlTaskStatus.olTaskWaiting;
+            }
+            return OlTaskStatus.olTaskNotStarted;
+        }
+        public static TaskStatusEnum GetTaskStatus(this TaskItem taskItem)
+        {
+            switch (taskItem.Status)
+            {
+                case OlTaskStatus.olTaskComplete:
+                    return TaskStatusEnum.TaskComplete;
+                case OlTaskStatus.olTaskDeferred:
+                    return TaskStatusEnum.TaskDeferred;
+                case OlTaskStatus.olTaskInProgress:
+                    return TaskStatusEnum.TaskInProgress;
+                case  OlTaskStatus.olTaskNotStarted:
+                    return TaskStatusEnum.TaskNotStarted;
+                case OlTaskStatus.olTaskWaiting:
+                    return TaskStatusEnum.TaskWaiting;
+            }
+            return TaskStatusEnum.TaskNotStarted;
+        }
 
         public static MeetingStatusEnum GetMeetingStatus(this AppointmentItem appointment)
         {

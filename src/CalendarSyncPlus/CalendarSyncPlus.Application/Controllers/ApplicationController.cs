@@ -159,6 +159,7 @@ namespace CalendarSyncPlus.Application.Controllers
         {
             _shellViewModel.ExitCommand = _exitCommand;
             _systemTrayNotifierViewModel.ExitCommand = _exitCommand;
+            _systemTrayNotifierViewModel.SyncNowCommand = _shellViewModel.SyncNowCommand;
             //Initialize Other Controllers if Any
             _shellController.Initialize();
             _logController.Initialize();

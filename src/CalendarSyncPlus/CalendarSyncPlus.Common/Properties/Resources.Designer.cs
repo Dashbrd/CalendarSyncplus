@@ -1618,6 +1618,15 @@ namespace CalendarSyncPlus.Common.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Sync Now.
+        /// </summary>
+        public static string SystemtrayNotifierView_MenuItem_TaskBarIcon_SyncNow_Header {
+            get {
+                return ResourceManager.GetString("SystemtrayNotifierView_MenuItem_TaskBarIcon_SyncNow_Header", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Double click to maximize the application..
         /// </summary>
         public static string SystemtrayNotifierView_TextBlock_TaskBarIcon_MaximizeMessage_ToolTip {

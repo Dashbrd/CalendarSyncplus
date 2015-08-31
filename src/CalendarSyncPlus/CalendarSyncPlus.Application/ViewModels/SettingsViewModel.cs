@@ -289,6 +289,8 @@ namespace CalendarSyncPlus.Application.ViewModels
                         profile.GoogleSettings.GoogleAccount.Name.Equals(googleAccount.Name))
                     {
                         profile.GoogleSettings.GoogleAccount = null;
+                        profile.GoogleSettings.GoogleCalendar = null;
+                        profile.GoogleSettings.GoogleCalendars = null;
                     }
                     profile.IsLoaded = false;
                 }
@@ -469,13 +471,7 @@ namespace CalendarSyncPlus.Application.ViewModels
         private async void AddGoogleAccountDetailsToApplication(string accountName)
         {
             var account = new GoogleAccount { Name = accountName };
-            if (Settings.GoogleAccounts == null)
-            {
-                Settings.GoogleAccounts = new ObservableCollection<GoogleAccount>();
-            }
             Settings.GoogleAccounts.Add(account.DeepClone());
-            //SelectedCalendarProfile.GoogleAccount = account;
-            //SelectedCalendar.GetGoogleCalendar();
             _lastSavedSettings.GoogleAccounts.Add(account);
 
             await SettingsSerializationService.SerializeSettingsAsync(_lastSavedSettings);
@@ -483,9 +479,7 @@ namespace CalendarSyncPlus.Application.ViewModels
 
         private async Task<string> GetGoogleAuthCode()
         {
-            return
-                await
-                    MessageService.ShowInput("Enter Auth Code after authorization in browser window",
+            return await MessageService.ShowInput("Enter Auth Code after authorization in browser window",
                         "Manual Authentication");
         }
 

@@ -27,13 +27,13 @@ namespace CalendarSyncPlus.Authentication.Google
     [Export(typeof (IAccountAuthenticationService))]
     public class AccountAuthenticationService : IAccountAuthenticationService
     {
-        private readonly ILog ApplicationLogger;
+        ILog Logger { get; set; }
 
         [ImportingConstructor]
         public AccountAuthenticationService(ApplicationLogger applicationLogger, IMessageService messageService)
         {
             MessageService = messageService;
-            ApplicationLogger = applicationLogger.GetLogger(GetType());
+            Logger = applicationLogger.GetLogger(GetType());
         }
 
         public IMessageService MessageService { get; set; }
@@ -88,12 +88,12 @@ namespace CalendarSyncPlus.Authentication.Google
             }
             catch (AggregateException exception)
             {
-                ApplicationLogger.Error(exception);
+                Logger.Error(exception);
                 return null;
             }
             catch (Exception exception)
             {
-                ApplicationLogger.Error(exception);
+                Logger.Error(exception);
                 return null;
             }
         }
@@ -147,12 +147,12 @@ namespace CalendarSyncPlus.Authentication.Google
             }
             catch (AggregateException exception)
             {
-                ApplicationLogger.Error(exception);
+                Logger.Error(exception);
                 return null;
             }
             catch (Exception exception)
             {
-                ApplicationLogger.Error(exception);
+                Logger.Error(exception);
                 return null;
             }
         }
@@ -205,12 +205,12 @@ namespace CalendarSyncPlus.Authentication.Google
             }
             catch (AggregateException exception)
             {
-                ApplicationLogger.Error(exception);
+                Logger.Error(exception);
                 return null;
             }
             catch (Exception exception)
             {
-                ApplicationLogger.Error(exception);
+                Logger.Error(exception);
                 return null;
             }
         }
@@ -263,12 +263,12 @@ namespace CalendarSyncPlus.Authentication.Google
             }
             catch (AggregateException exception)
             {
-                ApplicationLogger.Error(exception);
+                Logger.Error(exception);
                 return null;
             }
             catch (Exception exception)
             {
-                ApplicationLogger.Error(exception);
+                Logger.Error(exception);
                 return null;
             }
         }
@@ -318,12 +318,12 @@ namespace CalendarSyncPlus.Authentication.Google
             }
             catch (AggregateException exception)
             {
-                ApplicationLogger.Error(exception);
+                Logger.Error(exception);
                 return null;
             }
             catch (Exception exception)
             {
-                ApplicationLogger.Error(exception);
+                Logger.Error(exception);
                 return null;
             }
         }
@@ -395,15 +395,13 @@ namespace CalendarSyncPlus.Authentication.Google
 
             var scopes = GetScopes();
 
-            var auth =
-                await
-                    GoogleWebAuthorizationBroker.AuthorizeAsync(
+            var auth = await GoogleWebAuthorizationBroker.AuthorizeAsync(
                         new ClientSecrets {ClientId = Constants.ClientId, ClientSecret = Constants.ClientSecret}
                         , scopes
                         , String.Format("-{0}-googletoken", accountName)
                         , cancellationToken
                         , fileDataStore);
-            return true;
+            return auth != null;
         }
 
         public bool DisconnectGoogle(string name)
@@ -432,7 +430,7 @@ namespace CalendarSyncPlus.Authentication.Google
             }
             catch (Exception exception)
             {
-                ApplicationLogger.Error(exception);
+                Logger.Error(exception);
                 return false;
             }
         }
@@ -473,31 +471,32 @@ namespace CalendarSyncPlus.Authentication.Google
             }
             catch (AggregateException exception)
             {
-                ApplicationLogger.Error(exception);
+                Logger.Error(exception);
             }
             catch (Exception exception)
             {
-                ApplicationLogger.Error(exception);
+                Logger.Error(exception);
             }
             return false;
         }
 
         #endregion
 
-        private static string[] GetScopes()
+        private static IEnumerable<string> GetScopes()
         {
             var scopes = new[]
             {
                 CalendarService.Scope.Calendar, // Manage your calendars
                 CalendarService.Scope.CalendarReadonly, // View your Calendars
                 TasksService.Scope.Tasks, // Manage your tasks
-                TasksService.Scope.TasksReadonly // View your tasks
+                TasksService.Scope.TasksReadonly, // View your tasks
                 //AnalyticsService.Scope.Analytics, // view and manage your analytics data
                 //AnalyticsService.Scope.AnalyticsEdit, // edit management actives
                 //AnalyticsService.Scope.AnalyticsManageUsers, // manage users
                 //AnalyticsService.Scope.AnalyticsReadonly
-                //DriveService.Scope.DriveFile,
-                //DriveService.Scope.Drive
+                DriveService.Scope.DriveFile, //
+                DriveService.Scope.Drive, //
+                DriveService.Scope.DriveReadonly
             };
             return scopes;
         }

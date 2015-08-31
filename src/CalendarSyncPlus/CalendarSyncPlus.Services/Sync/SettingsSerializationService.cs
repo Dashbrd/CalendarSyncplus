@@ -148,7 +148,7 @@ namespace CalendarSyncPlus.Services.Sync
                 result.IsFirstSave = true;
             }
             var settingsVersion = new Version(result.SettingsVersion);
-            if (settingsVersion < new Version("1.3.2.3"))
+            if (settingsVersion < new Version("1.4.1.1"))
             {
                 return Settings.GetDefaultSettings();
             }
@@ -159,6 +159,11 @@ namespace CalendarSyncPlus.Services.Sync
 
         private void ValidateSettings(Settings result)
         {
+            if (result.GoogleAccounts == null)
+            {
+                result.GoogleAccounts = new ObservableCollection<GoogleAccount>();
+            }
+
             if (result.CalendarSyncProfiles == null || result.CalendarSyncProfiles.Count == 0)
             {
                 result.CalendarSyncProfiles = new ObservableCollection<CalendarSyncProfile>()
@@ -222,10 +227,9 @@ namespace CalendarSyncPlus.Services.Sync
 
             if (result.AppSettings == null)
             {
-                result.AppSettings = new AppSettings();
+                result.AppSettings = AppSettings.GetDefault();
             }
-
-            if (result.AppSettings.ProxySettings == null)
+            else if (result.AppSettings.ProxySettings == null)
             {
                 result.AppSettings.ProxySettings = new ProxySetting
                 {

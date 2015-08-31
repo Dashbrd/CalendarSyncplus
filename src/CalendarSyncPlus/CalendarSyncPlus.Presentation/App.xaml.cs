@@ -160,14 +160,12 @@ namespace CalendarSyncPlus.Presentation
             catalog = new AggregateCatalog();
             // Add the WpfApplicationFramework assembly to the catalog
             catalog.Catalogs.Add(new AssemblyCatalog(typeof (ViewModel).Assembly));
-            // Add the Waf.BookLibrary.Library.Presentation assembly to the catalog
-            catalog.Catalogs.Add(new AssemblyCatalog(Assembly.GetExecutingAssembly()));
-            // Add the Waf.BookLibrary.Library.Applications assembly to the catalog
-            catalog.Catalogs.Add(new AssemblyCatalog(typeof (ShellViewModel).Assembly));
             // Add the Common assembly to catalog
-            catalog.Catalogs.Add(new AssemblyCatalog(typeof (ApplicationLogger).Assembly));
+            catalog.Catalogs.Add(new AssemblyCatalog(typeof(ApplicationLogger).Assembly));
             //Add Services assembly to catalog
             catalog.Catalogs.Add(new AssemblyCatalog(typeof (ICalendarService).Assembly));
+            //Add Authentication.Google assembly to catalog
+            catalog.Catalogs.Add(new AssemblyCatalog(typeof(IAccountAuthenticationService).Assembly));
             //Add GoogleServices assembly to catalog
             catalog.Catalogs.Add(new AssemblyCatalog(typeof (IGoogleCalendarService).Assembly));
             //Add OutlookServices assembly to catalog
@@ -178,8 +176,11 @@ namespace CalendarSyncPlus.Presentation
             catalog.Catalogs.Add(new AssemblyCatalog(typeof (ICalendarSyncEngine).Assembly));
             //Add Analytics assembly to catalog
             catalog.Catalogs.Add(new AssemblyCatalog(typeof (SyncAnalyticsService).Assembly));
-            //Add Authentication.Google assembly to catalog
-            catalog.Catalogs.Add(new AssemblyCatalog(typeof (IAccountAuthenticationService).Assembly));
+            // Add the Application assembly to the catalog
+            catalog.Catalogs.Add(new AssemblyCatalog(typeof(ShellViewModel).Assembly));
+            // Add the Presentation assembly to the catalog
+            catalog.Catalogs.Add(new AssemblyCatalog(Assembly.GetExecutingAssembly()));
+
             //Composition Container
             container = new CompositionContainer(catalog, true);
             var batch = new CompositionBatch();

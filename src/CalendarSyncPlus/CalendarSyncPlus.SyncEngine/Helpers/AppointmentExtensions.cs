@@ -5,9 +5,9 @@ using CalendarSyncPlus.Domain.Models;
 
 namespace CalendarSyncPlus.SyncEngine.Helpers
 {
-    public static class ExtensionMethods
+    public static class AppointmentExtensions
     {
-        public static bool CopyDetail(this Appointment appointment, Appointment otherAppointment,
+        public static void CopyDetail(this Appointment appointment, Appointment otherAppointment,
             CalendarEntryOptionsEnum calendarEntryOptions)
         {
             //Copy basic information
@@ -43,8 +43,6 @@ namespace CalendarSyncPlus.SyncEngine.Helpers
                 appointment.ReminderSet = otherAppointment.ReminderSet;
                 appointment.ReminderMinutesBeforeStart = otherAppointment.ReminderMinutesBeforeStart;
             }
-
-            return true;
         }
 
         public static void AddCompareForUpdate(this List<Appointment> updateList, Appointment appointment)
