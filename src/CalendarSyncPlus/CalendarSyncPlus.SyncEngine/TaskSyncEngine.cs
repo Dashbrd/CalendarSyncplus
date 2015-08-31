@@ -4,6 +4,7 @@ using System.Linq;
 using CalendarSyncPlus.Domain.Models;
 using CalendarSyncPlus.Domain.Models.Preferences;
 using CalendarSyncPlus.Domain.Wrappers;
+using CalendarSyncPlus.SyncEngine.Helpers;
 using CalendarSyncPlus.SyncEngine.Interfaces;
 
 namespace CalendarSyncPlus.SyncEngine
@@ -68,7 +69,7 @@ namespace CalendarSyncPlus.SyncEngine
         /// <param name="sourceList"></param>
         /// <param name="destinationList"></param>
         /// <param name="destTasksToDelete"></param>
-        /// <param name="destAppointmentsToUpdate"></param>
+        /// <param name="destTasksToUpdate"></param>
         /// <param name="sourceTasksToUpdate"></param>
         /// <param name="destOrphanEntries"></param>
         /// <returns>
@@ -76,7 +77,7 @@ namespace CalendarSyncPlus.SyncEngine
         private void EvaluateTasksToDelete(TaskSyncProfile syncProfile,
             TasksWrapper sourceList, TasksWrapper destinationList,
             List<ReminderTask> destTasksToDelete,
-            List<ReminderTask> destAppointmentsToUpdate, 
+            List<ReminderTask> destTasksToUpdate, 
             List<ReminderTask> sourceTasksToUpdate,
             List<ReminderTask> destOrphanEntries)
         {
@@ -89,9 +90,28 @@ namespace CalendarSyncPlus.SyncEngine
             {
                 var sourceTask = sourceList.FirstOrDefault(t =>
                     t.Equals(destTask));
-                if (destTask == null)
+                if (sourceTask == null)
                 {
-                    destTasksToDelete.Add(sourceTask);
+                    destTasksToDelete.Add(destTask);
+                }
+                else
+                {
+                    if (destTask.Due.HasValue && sourceTask.Due.HasValue && !destTask.Due.Value.Equals(sourceTask.Due.Value))
+                    {
+                        if (destTask.Due.Value.Year < 4500 || destTask.Due.Value.Year < 4500)
+                        {
+                            if (destTask.UpdatedOn.GetValueOrDefault()
+                                    .CompareTo(sourceTask.UpdatedOn.GetValueOrDefault()) < 0)
+                            {
+                                destTask.CopyDetail(sourceTask);
+                                destTasksToUpdate.Add(destTask);
+                            }
+                            else
+                            {
+                                sourceTasksToUpdate.Add(sourceTask);
+                            }
+                        }
+                    }
                 }
             }
         }

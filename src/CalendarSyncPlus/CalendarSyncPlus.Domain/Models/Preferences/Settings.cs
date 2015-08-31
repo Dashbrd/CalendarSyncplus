@@ -98,17 +98,7 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
             {
                 IsFirstSave = true,
                 SettingsVersion = ApplicationInfo.Version,
-                AppSettings = new AppSettings
-                {
-                    MinimizeToSystemTray = true,
-                    CheckForUpdates = true,
-                    PeriodicSyncOn = true,
-                    RunApplicationAtSystemStartup = true,
-                    ProxySettings = new ProxySetting
-                    {
-                        ProxyType = ProxyType.Auto
-                    }
-                },
+                AppSettings = AppSettings.GetDefault(),
                 CalendarSyncProfiles = new ObservableCollection<CalendarSyncProfile>
                 {
                     CalendarSyncProfile.GetDefaultSyncProfile()

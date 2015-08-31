@@ -227,10 +227,9 @@ namespace CalendarSyncPlus.Services.Sync
 
             if (result.AppSettings == null)
             {
-                result.AppSettings = new AppSettings();
+                result.AppSettings = AppSettings.GetDefault();
             }
-
-            if (result.AppSettings.ProxySettings == null)
+            else if (result.AppSettings.ProxySettings == null)
             {
                 result.AppSettings.ProxySettings = new ProxySetting
                 {

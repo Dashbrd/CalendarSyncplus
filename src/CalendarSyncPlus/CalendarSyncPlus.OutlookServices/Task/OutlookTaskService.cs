@@ -10,6 +10,7 @@ using CalendarSyncPlus.Common.MetaData;
 using CalendarSyncPlus.Domain.Models;
 using CalendarSyncPlus.Domain.Models.Preferences;
 using CalendarSyncPlus.Domain.Wrappers;
+using CalendarSyncPlus.OutlookServices.Utilities;
 using CalendarSyncPlus.OutlookServices.Wrappers;
 using CalendarSyncPlus.Services.Tasks.Interfaces;
 using log4net;
@@ -195,8 +196,14 @@ namespace CalendarSyncPlus.OutlookServices.Task
         /// </returns>
         private ReminderTask GetTaskFromItem(string id, TaskItem taskItem)
         {
-            var app = new ReminderTask(taskItem.EntryID,taskItem.Subject,taskItem.Body, taskItem.DueDate);
-            return app;
+            var reminderTask = new ReminderTask(taskItem.EntryID,taskItem.Subject,taskItem.Body, taskItem.DueDate);
+            reminderTask.IsCompleted = taskItem.Complete;
+            reminderTask.CreatedOn = taskItem.CreationTime;
+            reminderTask.UpdatedOn = taskItem.LastModificationTime;
+            reminderTask.CompletedOn = taskItem.DateCompleted;
+            reminderTask.StartDate = taskItem.StartDate;
+            reminderTask.StatusEnum = taskItem.GetTaskStatus();
+            return reminderTask;
         }
 
         private List<ReminderTask> GetTasks()
@@ -594,7 +601,7 @@ namespace CalendarSyncPlus.OutlookServices.Task
             var disposeOutlookInstances = false;
             Application application = null;
             NameSpace nameSpace = null;
-            MAPIFolder defaultOutlookCalendar = null;
+            MAPIFolder defaultOutlookFolder = null;
             Items outlookItems = null;
 
             try
@@ -603,23 +610,24 @@ namespace CalendarSyncPlus.OutlookServices.Task
                 GetOutlookApplication(out disposeOutlookInstances, out application, out nameSpace, ProfileName);
 
                 // Get Default Calendar
-                defaultOutlookCalendar = OutlookTaskList != null
+                defaultOutlookFolder = OutlookTaskList != null
                     ? nameSpace.GetFolderFromID(OutlookTaskList.EntryId, OutlookTaskList.StoreId)
                     : nameSpace.GetDefaultFolder(OlDefaultFolders.olFolderCalendar);
-                outlookItems = defaultOutlookCalendar.Items;
+                outlookItems = defaultOutlookFolder.Items;
 
-                string id = defaultOutlookCalendar.EntryID;
-                foreach (var calendarAppointment in reminderTasks)
+                string id = defaultOutlookFolder.EntryID;
+                foreach (var reminderTask in reminderTasks)
                 {
-                    var appItem = outlookItems.Add(OlItemType.olAppointmentItem) as TaskItem;
-                    if (appItem == null)
+                    var taskItem = outlookItems.Add(OlItemType.olAppointmentItem) as TaskItem;
+                    if (taskItem == null)
                     {
                         continue;
                     }
-                    var newAppointment = AddTask(appItem,
-                        calendarAppointment, id);
-                    tasksWrapper.Add(newAppointment);
-                    Marshal.FinalReleaseComObject(appItem);
+                    UpdateTask(taskItem, reminderTask);
+
+                    var addedTask = GetTaskFromItem(id, taskItem);
+                    tasksWrapper.Add(addedTask);
+                    Marshal.FinalReleaseComObject(taskItem);
                 }
             }
             catch (Exception exception)
@@ -647,8 +655,8 @@ namespace CalendarSyncPlus.OutlookServices.Task
                     outlookItems = null;
                 }
 
-                Marshal.FinalReleaseComObject(defaultOutlookCalendar);
-                defaultOutlookCalendar = null;
+                Marshal.FinalReleaseComObject(defaultOutlookFolder);
+                defaultOutlookFolder = null;
 
                 Marshal.FinalReleaseComObject(nameSpace);
                 nameSpace = null;
@@ -669,20 +677,7 @@ namespace CalendarSyncPlus.OutlookServices.Task
                 Success = true
             };
         }
-
-        private ReminderTask AddTask(TaskItem appItem, ReminderTask reminderTask, string id)
-        {
-            try
-            {
-                reminderTask = new ReminderTask(appItem.EntryID,appItem.Subject, appItem.Body, appItem.DueDate);
-            }
-            catch (Exception exception)
-            {
-                Logger.Error(exception);
-            }
-            return reminderTask;
-        }
-
+        
         public async Task<TasksWrapper> UpdateReminderTasks(List<ReminderTask> reminderTasks,  IDictionary<string, object> taskListSpecificData)
         {
             var tasksWrapper = new TasksWrapper();
@@ -812,7 +807,14 @@ namespace CalendarSyncPlus.OutlookServices.Task
                 taskItem.Subject = reminderTask.Title;
                 taskItem.Body = reminderTask.Notes;
                 taskItem.DueDate = reminderTask.Due.GetValueOrDefault();
+                taskItem.StartDate = reminderTask.StartDate;
+                taskItem.Complete = reminderTask.IsCompleted;
+                if (reminderTask.IsCompleted)
+                {
+                    taskItem.DateCompleted = reminderTask.CompletedOn.GetValueOrDefault();
+                }
                 
+                taskItem.Status = reminderTask.GetOlTaskStatus();
                 taskItem.Save();
                 return true;
             } 

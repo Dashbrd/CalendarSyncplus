@@ -35,6 +35,8 @@
         <ContextMenu>
             <MenuItem Command="{Binding ShowApplicationCommand}"
                       Header="{localizeExtension:LocText Key=SystemtrayNotifierView_MenuItem_TaskBarIcon_ShowWindowMessage_Header}" />
+            <MenuItem Command="{Binding SyncNowCommand}"
+                      Header="{localizeExtension:LocText Key=SystemtrayNotifierView_MenuItem_TaskBarIcon_SyncNow_Header}" />
             <MenuItem Command="{Binding ExitCommand}"
                       Header="{localizeExtension:LocText Key=SystemtrayNotifierView_MenuItem_TaskBarIcon_ExitApplicaiton_Header}" />
         </ContextMenu>

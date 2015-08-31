@@ -73,5 +73,20 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
         }
 
         #endregion
+
+        public static AppSettings GetDefault()
+        {
+            return new AppSettings()
+            {
+                MinimizeToSystemTray = true,
+                CheckForUpdates = true,
+                PeriodicSyncOn = true,
+                RunApplicationAtSystemStartup = true,
+                ProxySettings = new ProxySetting
+                {
+                    ProxyType = ProxyType.Auto
+                }
+            };
+        }
     }
 }

@@ -148,9 +148,12 @@ namespace CalendarSyncPlus.Authentication.Google
         /// <returns></returns>
         DriveService AuthenticateDriveOauth(string accountName);
 
-
-
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="accountName"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         Task<bool> AuthorizeGoogleAccount(string accountName, CancellationToken cancellationToken);
 
         /// <summary>
