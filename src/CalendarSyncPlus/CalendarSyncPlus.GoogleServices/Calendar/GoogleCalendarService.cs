@@ -37,6 +37,7 @@ using CalendarSyncPlus.Services.Utilities;
 using Google;
 using Google.Apis.Calendar.v3;
 using Google.Apis.Calendar.v3.Data;
+using Google.Apis.Drive.v2.Data;
 using Google.Apis.Requests;
 using log4net;
 
@@ -184,7 +185,12 @@ namespace CalendarSyncPlus.GoogleServices.Calendar
                 Description = calendarAppointment.GetDescriptionData(addDescription, attendeesToDescription),
                 Location = calendarAppointment.Location,
                 Visibility = calendarAppointment.Privacy,
-                Transparency = (calendarAppointment.BusyStatus == BusyStatusEnum.Free) ? "transparent" : "opaque"
+                Transparency = (calendarAppointment.BusyStatus == BusyStatusEnum.Free) ? "transparent" : "opaque",
+                Creator = new Event.CreatorData()
+                {
+                    DisplayName = calendarAppointment.Organizer.Name,
+                    Email = calendarAppointment.Organizer.Email,
+                },
             };
 
             if (EventCategory != null && !string.IsNullOrEmpty(EventCategory.ColorNumber))
@@ -276,6 +282,11 @@ namespace CalendarSyncPlus.GoogleServices.Calendar
                 Summary = calendarAppointment.Subject,
                 Description = calendarAppointment.GetDescriptionData(addDescription, attendeesToDescription),
                 Location = calendarAppointment.Location,
+                Creator = new Event.CreatorData()
+                {
+                    DisplayName = calendarAppointment.Organizer.Name,
+                    Email = calendarAppointment.Organizer.Email,
+                },
                 Visibility = calendarAppointment.Privacy,
                 Transparency = (calendarAppointment.BusyStatus == BusyStatusEnum.Free) ? "transparent" : "opaque",
                 //Need to make recurring appointment IDs unique - append the item's date   
@@ -441,6 +452,15 @@ namespace CalendarSyncPlus.GoogleServices.Calendar
                 {
                     appointment.ExtendedProperties.Add(property.Key, property.Value);
                 }
+            }
+
+            if (googleEvent.Creator != null)
+            {
+                appointment.Organizer = new Recipient()
+                {
+                    Name = googleEvent.Creator.DisplayName,
+                    Email = googleEvent.Creator.Email
+                };
             }
 
             appointment.Created = googleEvent.Created;
