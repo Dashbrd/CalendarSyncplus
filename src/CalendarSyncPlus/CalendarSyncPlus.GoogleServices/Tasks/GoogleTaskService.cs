@@ -216,7 +216,7 @@ namespace CalendarSyncPlus.GoogleServices.Tasks
                         batchRequest.Queue<Task>(deleteRequest,
                             (content, error, index, message) =>
                                 CallbackEventErrorMessage(content, error, index, message, reminderTasks,
-                                "Error in deleting events", errorList, deletedTasks,null));
+                                "Error in deleting events", errorList, deletedTasks));
                     }
                     await batchRequest.ExecuteAsync();
                 }
