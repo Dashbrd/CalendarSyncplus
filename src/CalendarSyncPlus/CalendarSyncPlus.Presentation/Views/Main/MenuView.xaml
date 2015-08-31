@@ -244,7 +244,7 @@
                 Visibility="{Binding IsLatestVersionAvailable,
                                          Converter={StaticResource BooleanToVisibilityConverter}}">
             <StackPanel Orientation="Horizontal">
-                <Rectangle Style="{StaticResource MenuRectangleStyle}">
+                <Rectangle Style="{StaticResource MenuRectangleStyle}" Fill="LawnGreen">
                     <Rectangle.OpacityMask>
                         <VisualBrush Stretch="Fill"
                                      Visual="{StaticResource appbar_download}" />

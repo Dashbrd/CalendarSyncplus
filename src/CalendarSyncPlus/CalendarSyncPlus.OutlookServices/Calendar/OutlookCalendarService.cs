@@ -207,7 +207,9 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
                 }
                 else
                 {
-                    appItem.MeetingStatus = OlMeetingStatus.olMeeting;
+                    appItem.MeetingStatus = OlMeetingStatus.olMeetingReceived;
+                    
+                    //appItem.MeetingStatus = OlMeetingStatus.olMeeting;
                 }
 
                 appItem.Location = calendarAppointment.Location;
@@ -328,9 +330,13 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
         {
             try
             {
+                const String PR_SENT_REPRESENTING_ENTRYID = "http://schemas.microsoft.com/mapi/proptag/0x00410102";
                 const String PR_SENDER_ENTRYID = "http://schemas.microsoft.com/mapi/proptag/0x0C190102";
+                
                 PropertyAccessor pa = appItem.PropertyAccessor;
                 pa.SetProperty(PR_SENDER_ENTRYID, pa.StringToBinary(organizerEntryId));
+                pa.SetProperty(PR_SENT_REPRESENTING_ENTRYID, pa.StringToBinary(organizerEntryId));
+                
             }
             catch (Exception ex)
             {
