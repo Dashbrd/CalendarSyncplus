@@ -231,7 +231,7 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
 
                 appItem.Body = calendarAppointment.GetDescriptionData(addDescription, attendeesToDescription);
                 
-                string organizerEntryId = string.Empty;
+                Recipient organizer = null;
                 if (addAttendees && !attendeesToDescription)
                 {
                     if (calendarAppointment.RequiredAttendees != null)
@@ -245,7 +245,7 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
                             {
                                 recipient.Type = (int) OlMeetingRecipientType.olOrganizer;
                                 recipient.Resolve();
-                                organizerEntryId = recipient.EntryID;
+                                organizer = recipient;
                             }
                             else
                             {
@@ -266,7 +266,7 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
                             {
                                 recipient.Type = (int) OlMeetingRecipientType.olOrganizer;
                                 recipient.Resolve();
-                                organizerEntryId = recipient.EntryID;
+                                organizer = recipient;
                             }
                             else
                             {
@@ -282,10 +282,10 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
                                 appItem.Recipients.Add(string.Format("{0}<{1}>", calendarAppointment.Organizer.Name, calendarAppointment.Organizer.Email));
                     recipient.Type = (int)OlMeetingRecipientType.olOrganizer;
                     recipient.Resolve();
-                    organizerEntryId = recipient.EntryID;
+                    organizer = recipient;
                 }
 
-                SetOrganizer(appItem, organizerEntryId);
+                SetOrganizer(appItem, organizer);
 
                 if (addReminder)
                 {
@@ -326,16 +326,21 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
             return createdAppointment;
         }
 
-        private void SetOrganizer(AppointmentItem appItem, string organizerEntryId)
+        private void SetOrganizer(AppointmentItem appItem, Recipient organizer)
         {
             try
             {
-                const String PR_SENT_REPRESENTING_ENTRYID = "http://schemas.microsoft.com/mapi/proptag/0x00410102";
+                if (appItem == null || organizer == null)
+                    return;
+
+                const String PR_SENT_REPRESENTING_NAME = "http://schemas.microsoft.com/mapi/proptag/0x0042001F";
+                const String PR_SENT_REPRESENTING_ENTRY_ID = "http://schemas.microsoft.com/mapi/proptag/0x00410102";
                 const String PR_SENDER_ENTRYID = "http://schemas.microsoft.com/mapi/proptag/0x0C190102";
                 
                 PropertyAccessor pa = appItem.PropertyAccessor;
-                pa.SetProperty(PR_SENDER_ENTRYID, pa.StringToBinary(organizerEntryId));
-                pa.SetProperty(PR_SENT_REPRESENTING_ENTRYID, pa.StringToBinary(organizerEntryId));
+                pa.SetProperty(PR_SENDER_ENTRYID, pa.StringToBinary(organizer.EntryID));
+                pa.SetProperty(PR_SENT_REPRESENTING_NAME, organizer.Name);
+                pa.SetProperty(PR_SENT_REPRESENTING_ENTRY_ID, pa.StringToBinary(organizer.EntryID));
                 
             }
             catch (Exception ex)
@@ -617,7 +622,7 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
 
                 appItem.Start = calendarAppointment.StartTime.GetValueOrDefault();
                 appItem.End = calendarAppointment.EndTime.GetValueOrDefault();
-                if (addDescription || attendeesToDescription)
+                if (addDescription)
                 {
                     appItem.Body = calendarAppointment.Description;
                 }
@@ -629,15 +634,13 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
                     {
                         calendarAppointment.RequiredAttendees.ForEach(rcptName =>
                         {
-                            var recipient =
-                                appItem.Recipients.Add(string.Format("{0}<{1}>", rcptName.Name, rcptName.Email));
-                            recipient.Type = (int) OlMeetingRecipientType.olRequired;
-                            if (calendarAppointment.Organizer != null &&
-                                rcptName.Name.Equals(calendarAppointment.Organizer.Name))
+                            if (!CheckIfRecipientExists(recipients, rcptName))
                             {
-                                recipient.Type = (int) OlMeetingRecipientType.olOrganizer;
+                                var recipient =
+                                    appItem.Recipients.Add(string.Format("{0}<{1}>", rcptName.Name, rcptName.Email));
+                                recipient.Type = (int) OlMeetingRecipientType.olRequired;
+                                recipient.Resolve();
                             }
-                            recipient.Resolve();
                         });
                     }
 
@@ -645,25 +648,17 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
                     {
                         calendarAppointment.OptionalAttendees.ForEach(rcptName =>
                         {
-                            var recipient =
-                                appItem.Recipients.Add(string.Format("{0}<{1}>", rcptName.Name, rcptName.Email));
-                            recipient.Type = (int) OlMeetingRecipientType.olOptional;
-                            if (calendarAppointment.Organizer != null &&
-                                rcptName.Name.Equals(calendarAppointment.Organizer.Name))
+                            if (!CheckIfRecipientExists(recipients, rcptName))
                             {
-                                recipient.Type = (int) OlMeetingRecipientType.olOrganizer;
+                                var recipient =
+                                    appItem.Recipients.Add(string.Format("{0}<{1}>", rcptName.Name, rcptName.Email));
+                                recipient.Type = (int) OlMeetingRecipientType.olOptional;
+                                recipient.Resolve();
                             }
-                            recipient.Resolve();
                         });
                     }
                 }
-                else if(calendarAppointment.Organizer!= null)
-                {
-                    var recipient =
-                                appItem.Recipients.Add(string.Format("{0}<{1}>", calendarAppointment.Organizer.Name, calendarAppointment.Organizer.Email));
-                    recipient.Type = (int)OlMeetingRecipientType.olOrganizer;
-                    recipient.Resolve();
-                }
+                
 
                 if (addReminder)
                 {
@@ -717,6 +712,27 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
                 }
             }
             return true;
+        }
+
+        private bool CheckIfRecipientExists(Recipients recipients, Domain.Models.Recipient rcptName)
+        {
+            bool recipientFound = false;
+            foreach (Recipient attendee in recipients)
+            {
+                string name, email;
+                if (!attendee.GetEmailFromName(out name, out email))
+                {
+                    name = attendee.Name;
+                    email = GetSMTPAddressForRecipients(attendee);
+                }
+
+                if (rcptName.Email.Equals(email))
+                {
+                    recipientFound = true;
+                    break;
+                }
+            }
+            return recipientFound;
         }
 
         private void GetOutlookApplication(out bool disposeOutlookInstances,
