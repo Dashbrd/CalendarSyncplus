@@ -31,6 +31,10 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
     [ExportMetadata("ServiceType", ServiceType.OutlookDesktop)]
     public class OutlookCalendarService : IOutlookCalendarService
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="applicationLogger"></param>
         [ImportingConstructor]
         public OutlookCalendarService(ApplicationLogger applicationLogger)
         {
@@ -43,6 +47,8 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
         private OutlookFolder OutlookCalendar { get; set; }
 
         public bool AddAsAppointments { get; set; }
+
+        public bool SetOrganizer { get; set; }
 
         private string ProfileName { get; set; }
 
@@ -207,11 +213,9 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
                 }
                 else
                 {
-                    appItem.MeetingStatus = OlMeetingStatus.olMeetingReceived;
-                    
-                    //appItem.MeetingStatus = OlMeetingStatus.olMeeting;
+                    appItem.MeetingStatus = OlMeetingStatus.olMeeting;
                 }
-
+                
                 appItem.Location = calendarAppointment.Location;
                 appItem.BusyStatus = calendarAppointment.GetOutlookBusyStatus();
                 recipients = appItem.Recipients;
@@ -240,7 +244,7 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
                         {
                             var recipient =
                                 appItem.Recipients.Add(string.Format("{0}<{1}>", rcptName.Name, rcptName.Email));
-                            if (calendarAppointment.Organizer != null &&
+                            if (SetOrganizer && calendarAppointment.Organizer != null &&
                                 rcptName.Name.Equals(calendarAppointment.Organizer.Name))
                             {
                                 recipient.Type = (int) OlMeetingRecipientType.olOrganizer;
@@ -261,7 +265,7 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
                         {
                             var recipient =
                                 appItem.Recipients.Add(string.Format("{0}<{1}>", rcptName.Name, rcptName.Email));
-                            if (calendarAppointment.Organizer != null &&
+                            if (SetOrganizer && calendarAppointment.Organizer != null &&
                                 rcptName.Name.Equals(calendarAppointment.Organizer.Name))
                             {
                                 recipient.Type = (int) OlMeetingRecipientType.olOrganizer;
@@ -276,7 +280,7 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
                         });
                     }
                 }
-                else if(calendarAppointment.Organizer != null)
+                else if (SetOrganizer && calendarAppointment.Organizer != null)
                 {
                     var recipient =
                                 appItem.Recipients.Add(string.Format("{0}<{1}>", calendarAppointment.Organizer.Name, calendarAppointment.Organizer.Email));
@@ -285,7 +289,7 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
                     organizer = recipient;
                 }
 
-                SetOrganizer(appItem, organizer);
+                SetAppointmentOrganizer(appItem, organizer);
 
                 if (addReminder)
                 {
@@ -326,11 +330,11 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
             return createdAppointment;
         }
 
-        private void SetOrganizer(AppointmentItem appItem, Recipient organizer)
+        private void SetAppointmentOrganizer(AppointmentItem appItem, Recipient organizer)
         {
             try
             {
-                if (appItem == null || organizer == null)
+                if (appItem == null || organizer == null || !SetOrganizer)
                     return;
 
                 const String PR_SENT_REPRESENTING_NAME = "http://schemas.microsoft.com/mapi/proptag/0x0042001F";
@@ -596,16 +600,6 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
             try
             {
                 appItem.Subject = calendarAppointment.Subject;
-                if (!calendarAppointment.RequiredAttendees.Any() && !calendarAppointment.OptionalAttendees.Any()
-                    && AddAsAppointments)
-                {
-                    appItem.MeetingStatus = OlMeetingStatus.olNonMeeting;
-                }
-                else
-                {
-                    appItem.MeetingStatus = OlMeetingStatus.olMeeting;
-                }
-
                 appItem.Location = calendarAppointment.Location;
                 appItem.BusyStatus = calendarAppointment.GetOutlookBusyStatus();
                 
@@ -714,7 +708,7 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
             return true;
         }
 
-        private bool CheckIfRecipientExists(Recipients recipients, Domain.Models.Recipient rcptName)
+        private bool CheckIfRecipientExists(Recipients recipients, Domain.Models.Attendee rcptName)
         {
             bool recipientFound = false;
             foreach (Recipient attendee in recipients)
@@ -981,7 +975,7 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
         {
             foreach (Recipient attendee in appointmentItem.Recipients)
             {
-                var recipient = new Domain.Models.Recipient();
+                var recipient = new Domain.Models.Attendee();
                 string name, email;
                 if (attendee.GetEmailFromName(out name, out email))
                 {
@@ -1397,6 +1391,16 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
             {
                 EventCategory = null;
             }
+
+            object setOrganizer;
+            if (calendarSpecificData.TryGetValue("SetOrganizer", out setOrganizer))
+            {
+                SetOrganizer = (bool)setOrganizer;
+            }
+            else
+            {
+                SetOrganizer = false;
+            }
         }
 
 
@@ -1414,9 +1418,7 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
             CheckCalendarSpecificData(calendarSpecificData);
 
             var result = await
-                Task<bool>.Factory.StartNew(
-                    () =>
-                        AddEvents(calendarAppointments, addDescription, addReminder, addAttendees,
+                Task<bool>.Factory.StartNew(() => AddEvents(calendarAppointments, addDescription, addReminder, addAttendees,
                             attendeesToDescription, addedAppointments));
 
             addedAppointments.IsSuccess = result;
