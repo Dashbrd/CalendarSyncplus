@@ -149,6 +149,10 @@ namespace CalendarSyncPlus.Services.Calendars
                         {
                             "AddAsAppointments",
                             syncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.AsAppointments)
+                        },
+                        {
+                            "SetOrganizer",
+                            syncProfile.OutlookSettings.SetOrganizer
                         }
                     };
                     break;

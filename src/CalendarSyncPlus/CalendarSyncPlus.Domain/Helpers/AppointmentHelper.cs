@@ -10,9 +10,9 @@ namespace CalendarSyncPlus.Domain.Helpers
     {
         public const string LineBreak = "==============================================";
 
-        public static string GetDescription(this Recipient recipient)
+        public static string GetDescription(this Attendee attendee)
         {
-            return String.Format("{0} <{1}>", recipient.Name, recipient.Email);
+            return String.Format("{0} <{1}>", attendee.Name, attendee.Email);
         }
 
         public static string GetDescriptionData(this Appointment calendarAppointment, bool addDescription,

@@ -53,12 +53,12 @@ namespace CalendarSyncPlus.Domain.Models
         private string _location;
         private MeetingStatusEnum _meetingStatus;
         private DateTime? _oldStartTime;
-        private List<Recipient> _optionalAttendees;
-        private Recipient _organizer;
+        private List<Attendee> _optionalAttendees;
+        private Attendee _organizer;
         private string _privacy;
         private int _reminderMinutesBeforeStart;
         private bool _reminderSet;
-        private List<Recipient> _requiredAttendees;
+        private List<Attendee> _requiredAttendees;
         private string _sourceId;
         private DateTime? _startTime;
         private string _subject; 
@@ -80,8 +80,8 @@ namespace CalendarSyncPlus.Domain.Models
             _endTime = endTime;
             _startTime = startTime;
             ExtendedProperties = new Dictionary<string, string>();
-            RequiredAttendees = new List<Recipient>();
-            OptionalAttendees = new List<Recipient>();
+            RequiredAttendees = new List<Attendee>();
+            OptionalAttendees = new List<Attendee>();
         } 
         #endregion
 
@@ -196,19 +196,19 @@ namespace CalendarSyncPlus.Domain.Models
 
         public BusyStatusEnum BusyStatus { get; set; }
 
-        public Recipient Organizer
+        public Attendee Organizer
         {
             get { return _organizer; }
             set { SetProperty(ref _organizer, value); }
         }
 
-        public List<Recipient> RequiredAttendees
+        public List<Attendee> RequiredAttendees
         {
             get { return _requiredAttendees; }
             set { SetProperty(ref _requiredAttendees, value); }
         }
 
-        public List<Recipient> OptionalAttendees
+        public List<Attendee> OptionalAttendees
         {
             get { return _optionalAttendees; }
             set { SetProperty(ref _optionalAttendees, value); }

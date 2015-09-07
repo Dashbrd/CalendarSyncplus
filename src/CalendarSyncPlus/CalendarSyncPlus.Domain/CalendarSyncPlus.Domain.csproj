@@ -91,7 +91,7 @@
     <Compile Include="Models\Preferences\SyncProfile.cs" />
     <Compile Include="Models\Preferences\TaskSyncProfile.cs" />
     <Compile Include="Models\Preferences\TaskSyncSettings.cs" />
-    <Compile Include="Models\Recipient.cs" />
+    <Compile Include="Models\Attendee.cs" />
     <Compile Include="Models\Preferences\CalendarSyncProfile.cs" />
     <Compile Include="Models\ReminderTask.cs" />
     <Compile Include="Models\Preferences\SyncFrequency.cs" />

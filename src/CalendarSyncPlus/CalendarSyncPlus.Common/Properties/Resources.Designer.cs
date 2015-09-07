@@ -842,6 +842,15 @@ namespace CalendarSyncPlus.Common.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Set Organizer Field.
+        /// </summary>
+        public static string OutlookSettingsView_Button_OutlookProfileSettings_SetOrganizer_Text {
+            get {
+                return ResourceManager.GetString("OutlookSettingsView_Button_OutlookProfileSettings_SetOrganizer_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Exchange Web Services.
         /// </summary>
         public static string OutlookSettingsView_CheckBox_OutlookSettings_EWS_Content {

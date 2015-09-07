@@ -639,4 +639,7 @@
   <data name="SystemtrayNotifierView_MenuItem_TaskBarIcon_SyncNow_Header" xml:space="preserve">
     <value>Sync Now</value>
   </data>
+  <data name="OutlookSettingsView_Button_OutlookProfileSettings_SetOrganizer_Text" xml:space="preserve">
+    <value>Set Organizer Field</value>
+  </data>
 </root>

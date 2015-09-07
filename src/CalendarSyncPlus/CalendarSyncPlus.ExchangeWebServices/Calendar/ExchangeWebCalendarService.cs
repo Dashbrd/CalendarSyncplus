@@ -13,6 +13,7 @@ using CalendarSyncPlus.Services.Calendars.Interfaces;
 using log4net;
 using Microsoft.Exchange.WebServices.Data;
 using Appointment = CalendarSyncPlus.Domain.Models.Appointment;
+using Attendee = CalendarSyncPlus.Domain.Models.Attendee;
 
 namespace CalendarSyncPlus.ExchangeWebServices.Calendar
 {
@@ -46,9 +47,9 @@ namespace CalendarSyncPlus.ExchangeWebServices.Calendar
         /// <param name="attendeeCollection"></param>
         /// <returns>
         /// </returns>
-        private List<Recipient> GetAttendees(IEnumerable<Attendee> attendeeCollection)
+        private List<Attendee> GetAttendees(IEnumerable<Microsoft.Exchange.WebServices.Data.Attendee> attendeeCollection)
         {
-            return attendeeCollection.Select(attendee => new Recipient
+            return attendeeCollection.Select(attendee => new Attendee
             {
                 Name = attendee.Name,
                 Email = attendee.Address
@@ -246,7 +247,7 @@ namespace CalendarSyncPlus.ExchangeWebServices.Calendar
                         OptionalAttendees = GetAttendees(exchangeAppointment.OptionalAttendees),
                         ReminderMinutesBeforeStart = exchangeAppointment.ReminderMinutesBeforeStart,
                         Organizer =
-                            new Recipient
+                            new Attendee
                             {
                                 Name = exchangeAppointment.Organizer.Name,
                                 Email = exchangeAppointment.Organizer.Address
