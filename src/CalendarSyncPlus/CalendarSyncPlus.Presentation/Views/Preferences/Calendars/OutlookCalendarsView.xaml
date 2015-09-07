@@ -99,6 +99,7 @@
                     <RowDefinition />
                     <RowDefinition />
                     <RowDefinition />
+                    <RowDefinition />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="2*" />
@@ -200,7 +201,7 @@
                         HorizontalAlignment="Right"
                         VerticalAlignment="Center"
                         ToolTip="Unlinks the Outlook appointments from Google events for the selected calendar for the past and future 10 years"
-                        Command="{Binding ResetOutlookCalendarCommand}"
+                        Command="{Binding CleanOutlookCalendarCommand}"
                         Content="{localizeExtension:LocText Key=OutlookSettingsView_Button_OutlookProfileSettings_ClearOutlookCalendar_Text}" />
                 <Button Grid.Row="8"
                         Grid.Column="1"
@@ -209,8 +210,14 @@
                         HorizontalAlignment="Right"
                         VerticalAlignment="Center"
                         ToolTip="Deletes Outlook appointments for the selected calendar for the past and future 10 years"
-                        Command="{Binding CleanOutlookCalendarCommand}"
+                        Command="{Binding ResetOutlookCalendarCommand}"
                         Content="{localizeExtension:LocText Key=OutlookSettingsView_Button_OutlookProfileSettings_ResetOutlookCalendar_Text}" />
+                <CheckBox Grid.Row="9"
+                          Grid.ColumnSpan="2"
+                          Margin="2"
+                          ToolTip="Sets organizer of the appointment to the value retrieved from Google"
+                          IsChecked="{Binding SelectedProfile.OutlookSettings.SetOrganizer}"
+                          Content="{localizeExtension:LocText Key=OutlookSettingsView_Button_OutlookProfileSettings_SetOrganizer_Text}"/>
             </Grid>
         </GroupBox>
         <GroupBox Grid.Row="1"

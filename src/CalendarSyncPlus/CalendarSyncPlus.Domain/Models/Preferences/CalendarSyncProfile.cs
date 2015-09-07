@@ -71,7 +71,8 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
                 {
                     OutlookOptions =  OutlookOptionsEnum.OutlookDesktop |
                                         OutlookOptionsEnum.DefaultProfile |
-                                     OutlookOptionsEnum.DefaultMailBoxCalendar
+                                     OutlookOptionsEnum.DefaultMailBoxCalendar,
+                    SetOrganizer = true
                 },
                 CalendarEntryOptions =
                     CalendarEntryOptionsEnum.Description | CalendarEntryOptionsEnum.Attendees |
