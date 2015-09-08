@@ -799,18 +799,27 @@ namespace CalendarSyncPlus.Common.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Detect Settings.
         /// </summary>
-        public static string OutlookSettingsView_Button_ExchnageSettings_DetectSettings_Content {
+        public static string OutlookSettingsView_Button_ExchangeSettings_DetectSettings_Content {
             get {
-                return ResourceManager.GetString("OutlookSettingsView_Button_ExchnageSettings_DetectSettings_Content", resourceCulture);
+                return ResourceManager.GetString("OutlookSettingsView_Button_ExchangeSettings_DetectSettings_Content", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Reset Exchange Calendar.
         /// </summary>
-        public static string OutlookSettingsView_Button_ExchnageSettings_ResetExchangeCalendar_Content {
+        public static string OutlookSettingsView_Button_ExchangeSettings_ResetExchangeCalendar_Content {
             get {
-                return ResourceManager.GetString("OutlookSettingsView_Button_ExchnageSettings_ResetExchangeCalendar_Content", resourceCulture);
+                return ResourceManager.GetString("OutlookSettingsView_Button_ExchangeSettings_ResetExchangeCalendar_Content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Using Corporate Network.
+        /// </summary>
+        public static string OutlookSettingsView_Button_ExchangeSettings_UsingCorporateNetwork_Content {
+            get {
+                return ResourceManager.GetString("OutlookSettingsView_Button_ExchangeSettings_UsingCorporateNetwork_Content", resourceCulture);
             }
         }
         
@@ -871,9 +880,9 @@ namespace CalendarSyncPlus.Common.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Exchange Server Settings.
         /// </summary>
-        public static string OutlookSettingsView_GroupBox_ExchnageSettings_Header {
+        public static string OutlookSettingsView_GroupBox_ExchangeSettings_Header {
             get {
-                return ResourceManager.GetString("OutlookSettingsView_GroupBox_ExchnageSettings_Header", resourceCulture);
+                return ResourceManager.GetString("OutlookSettingsView_GroupBox_ExchangeSettings_Header", resourceCulture);
             }
         }
         
@@ -945,45 +954,45 @@ namespace CalendarSyncPlus.Common.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Domain.
         /// </summary>
-        public static string OutlookSettingsView_TextBlock_ExchnageSettings_Domain_Text {
+        public static string OutlookSettingsView_TextBlock_ExchangeSettings_Domain_Text {
             get {
-                return ResourceManager.GetString("OutlookSettingsView_TextBlock_ExchnageSettings_Domain_Text", resourceCulture);
+                return ResourceManager.GetString("OutlookSettingsView_TextBlock_ExchangeSettings_Domain_Text", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Password.
         /// </summary>
-        public static string OutlookSettingsView_TextBlock_ExchnageSettings_Password_Text {
+        public static string OutlookSettingsView_TextBlock_ExchangeSettings_Password_Text {
             get {
-                return ResourceManager.GetString("OutlookSettingsView_TextBlock_ExchnageSettings_Password_Text", resourceCulture);
+                return ResourceManager.GetString("OutlookSettingsView_TextBlock_ExchangeSettings_Password_Text", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Select Calendar.
         /// </summary>
-        public static string OutlookSettingsView_TextBlock_ExchnageSettings_SelectCalendar_Content {
+        public static string OutlookSettingsView_TextBlock_ExchangeSettings_SelectCalendar_Content {
             get {
-                return ResourceManager.GetString("OutlookSettingsView_TextBlock_ExchnageSettings_SelectCalendar_Content", resourceCulture);
+                return ResourceManager.GetString("OutlookSettingsView_TextBlock_ExchangeSettings_SelectCalendar_Content", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Exchange Server Url.
         /// </summary>
-        public static string OutlookSettingsView_TextBlock_ExchnageSettings_ServerUrl_Text {
+        public static string OutlookSettingsView_TextBlock_ExchangeSettings_ServerUrl_Text {
             get {
-                return ResourceManager.GetString("OutlookSettingsView_TextBlock_ExchnageSettings_ServerUrl_Text", resourceCulture);
+                return ResourceManager.GetString("OutlookSettingsView_TextBlock_ExchangeSettings_ServerUrl_Text", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Username.
         /// </summary>
-        public static string OutlookSettingsView_TextBlock_ExchnageSettings_UserName_Text {
+        public static string OutlookSettingsView_TextBlock_ExchangeSettings_UserName_Text {
             get {
-                return ResourceManager.GetString("OutlookSettingsView_TextBlock_ExchnageSettings_UserName_Text", resourceCulture);
+                return ResourceManager.GetString("OutlookSettingsView_TextBlock_ExchangeSettings_UserName_Text", resourceCulture);
             }
         }
         
