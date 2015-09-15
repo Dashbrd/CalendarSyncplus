@@ -7,10 +7,10 @@ using CalendarSyncPlus.Services.Calendars.Interfaces;
 
 namespace CalendarSyncPlus.Services.Calendars
 {
-    [Export(typeof (ICalendarServiceFactory))]
+    [Export(typeof (ICalendarServiceFactory))]    
     public class CalendarServiceFactory : ICalendarServiceFactory
     {
-        [ImportingConstructor]
+        
         public CalendarServiceFactory()
         {
         }
