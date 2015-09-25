@@ -168,7 +168,7 @@
       <Link>AssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Behaviors\EventToCommand.cs" />
-    <Compile Include="Behaviors\PasswordBoxHelper.cs" />
+    <Compile Include="Behaviors\PasswordHelper.cs" />
     <Compile Include="Behaviors\ScrollInToViewForDataGrid.cs" />
     <Compile Include="Behaviors\TextBoxScrollBehavior.cs" />
     <Compile Include="Controls\HtmlXamlConversion\htmlcssparser.cs" />

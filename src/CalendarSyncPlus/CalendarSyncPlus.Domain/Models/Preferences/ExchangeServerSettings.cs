@@ -19,6 +19,7 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
         private string _emailId;
         private bool _usingCorporateNetwork;
         private bool _autoDetectExchangeServer;
+        private EWSCalendar _exchangeCalendar;
 
         #endregion
 
@@ -64,6 +65,12 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
         {
             get { return _usingCorporateNetwork; }
             set { SetProperty(ref _usingCorporateNetwork, value); }
+        }
+
+        public EWSCalendar ExchangeCalendar
+        {
+            get { return _exchangeCalendar; }
+            set { SetProperty(ref _exchangeCalendar, value); }
         }
 
         #endregion

@@ -22,7 +22,7 @@ namespace CalendarSyncPlus.ExchangeWebServices.Calendar
     public class ExchangeWebCalendarService : IExchangeWebCalendarService
     {
         private const string EWSCALENDAR = "EWSCalendar";
-        private const string EXCHANGESERVERSETTINGS = "ExchangeServerSettings";
+        private const string EXCHANGE_SERVER_SETTINGS = "ExchangeServerSettings";
         private bool _addAsAppointments;
         private Category _eventCategory;
         private EWSCalendar _ewsCalendar;
@@ -90,7 +90,6 @@ namespace CalendarSyncPlus.ExchangeWebServices.Calendar
             ExchangeServerSettings exchangeServerSettings = null;
             var enumList =
                 Enum.GetValues(typeof (ExchangeVersion)).Cast<ExchangeVersion>().Reverse();
-
             var proxy = WebRequest.DefaultWebProxy;
             proxy.Credentials = CredentialCache.DefaultNetworkCredentials;
 
@@ -100,7 +99,7 @@ namespace CalendarSyncPlus.ExchangeWebServices.Calendar
             {
                 var service = new ExchangeService(exchangeVersion)
                 {
-                    UseDefaultCredentials = usingCorporateNetwork,
+                    UseDefaultCredentials = !usingCorporateNetwork,
                     WebProxy = proxy
                 };
 
@@ -125,6 +124,7 @@ namespace CalendarSyncPlus.ExchangeWebServices.Calendar
                         Domain = domain,
                         UsingCorporateNetwork = usingCorporateNetwork
                     };
+                    break;
                 }
                 catch (Exception exception)
                 {
@@ -169,9 +169,13 @@ namespace CalendarSyncPlus.ExchangeWebServices.Calendar
             return null;
         }
 
-        public List<EWSCalendar> GetCalendarsAsync(int maxFoldersToRetrive)
+        public List<EWSCalendar> GetCalendarsAsync(int maxFoldersToRetrive, Dictionary<string, object> calendarSpecificData)
         {
-            var service = GetExchangeService(null);
+            CheckCalendarSpecificData(calendarSpecificData);
+            var serverSettings = GetBestSuitedExchangeServerData(ExchangeServerSettings.Domain,
+                ExchangeServerSettings.EmailId, ExchangeServerSettings.Password,
+                ExchangeServerSettings.UsingCorporateNetwork);
+            var service = GetExchangeService(serverSettings);
 
             // Create a new folder view, and pass in the maximum number of folders to return.
             var view = new FolderView(1000);
@@ -279,18 +283,18 @@ namespace CalendarSyncPlus.ExchangeWebServices.Calendar
             object ewsCalendar;
             object serverSettings;
             object addAsAppointments;
-            if (!(calendarSpecificData.TryGetValue(EWSCALENDAR, out ewsCalendar) &&
-                  calendarSpecificData.TryGetValue(EXCHANGESERVERSETTINGS, out serverSettings) &&
-                  calendarSpecificData.TryGetValue("AddAsAppointments", out addAsAppointments)))
+            if (!//(calendarSpecificData.TryGetValue(EWSCALENDAR, out ewsCalendar) &&
+                  calendarSpecificData.TryGetValue(EXCHANGE_SERVER_SETTINGS, out serverSettings))// &&
+                  //calendarSpecificData.TryGetValue("AddAsAppointments", out addAsAppointments)))
             {
                 throw new InvalidOperationException(
                     string.Format(
                         "{0} {1} and {2}  keys should be present, both of them can be null in case Default Profile and Default Calendar will be used. {0} is of 'string' type, {1} is of 'OutlookCalendar' type and {2} is of bool type.",
-                        EWSCALENDAR, EXCHANGESERVERSETTINGS, "AddAsAppointments"));
+                        EWSCALENDAR, EXCHANGE_SERVER_SETTINGS, "AddAsAppointments"));
             }
-            _ewsCalendar = ewsCalendar as EWSCalendar;
+            //_ewsCalendar = ewsCalendar as EWSCalendar;
             ExchangeServerSettings = serverSettings as ExchangeServerSettings;
-            _addAsAppointments = (bool) addAsAppointments;
+            //_addAsAppointments = (bool) addAsAppointments;
             object eventCategory;
             if (calendarSpecificData.TryGetValue("EventCategory", out eventCategory))
             {
