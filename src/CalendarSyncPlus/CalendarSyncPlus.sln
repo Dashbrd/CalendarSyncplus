@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.40629.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{11857CAB-6668-43F6-B3BA-DBFF74169EC1}"
 	ProjectSection(SolutionItems) = preProject
@@ -48,6 +48,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CalendarSyncPlus.Bootstrapp
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{2F6B0B33-44F6-40B5-BF03-D9C4E16C7964}"
 	ProjectSection(SolutionItems) = preProject
+		Libraries\Microsoft.Office.Interop.Outlook.dll = Libraries\Microsoft.Office.Interop.Outlook.dll
+		Libraries\OFFICE.DLL = Libraries\OFFICE.DLL
 		Libraries\WixBalExtensionExt.dll = Libraries\WixBalExtensionExt.dll
 		Libraries\WpfApplicationFramework.dll = Libraries\WpfApplicationFramework.dll
 	EndProjectSection
