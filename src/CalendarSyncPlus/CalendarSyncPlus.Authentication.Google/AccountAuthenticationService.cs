@@ -328,7 +328,7 @@ namespace CalendarSyncPlus.Authentication.Google
             }
         }
 
-        private static Task<UserCredential> Authenticate(string clientId, string clientSecret, string userName,
+        private Task<UserCredential> Authenticate(string clientId, string clientSecret, string userName,
             string fileDataStorePath,
             bool isFullPath)
         {
@@ -482,7 +482,7 @@ namespace CalendarSyncPlus.Authentication.Google
 
         #endregion
 
-        private static IEnumerable<string> GetScopes()
+        private IEnumerable<string> GetScopes()
         {
             var scopes = new[]
             {

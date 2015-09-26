@@ -258,5 +258,49 @@ namespace CalendarSyncPlus.Domain.Helpers
                 return "CalendarSyncPlusCalendar";
             }
         }
+
+        public static string GetGoogleResponseStatus(MeetingResponseStatusEnum responseStatus)
+        {
+            //
+            // Summary:
+            //     The attendee's response status. Possible values are: - "needsAction" - The
+            //     attendee has not responded to the invitation. - "declined" - The attendee
+            //     has declined the invitation. - "tentative" - The attendee has tentatively
+            //     accepted the invitation. - "accepted" - The attendee has accepted the invitation.
+            switch (responseStatus)
+            {
+                    case MeetingResponseStatusEnum.Accepted:
+                    case MeetingResponseStatusEnum.Organizer:
+                    return "accepted";
+                    case MeetingResponseStatusEnum.None:
+                    return "";
+                    case MeetingResponseStatusEnum.Tentative:
+                    return "tentative";
+                    case MeetingResponseStatusEnum.Declined:
+                    return "declined";
+            }
+            return "needsAction";
+        }
+
+
+        public static MeetingResponseStatusEnum GetGoogleResponseStatus(string responseStatus)
+        {
+            //
+            // Summary:
+            //     The attendee's response status. Possible values are: - "needsAction" - The
+            //     attendee has not responded to the invitation. - "declined" - The attendee
+            //     has declined the invitation. - "tentative" - The attendee has tentatively
+            //     accepted the invitation. - "accepted" - The attendee has accepted the invitation.
+            switch (responseStatus)
+            {
+                case "accepted":
+                    return MeetingResponseStatusEnum.Accepted;
+                case "tentative":
+                    return MeetingResponseStatusEnum.Tentative;
+                case "declined":
+                    return MeetingResponseStatusEnum.Declined;
+            }
+            return MeetingResponseStatusEnum.NotResponded;
+        }
     }
 }
