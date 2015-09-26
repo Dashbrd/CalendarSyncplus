@@ -28,6 +28,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="ReferenceBinaries\Microsoft.Office.Interop.Outlook.dll" />
+    <Content Include="ReferenceBinaries\OFFICE.DLL" />
   </ItemGroup>
   <ItemGroup>
     <WixExtension Include="WixUtilExtension">

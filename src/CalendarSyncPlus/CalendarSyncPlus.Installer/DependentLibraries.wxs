@@ -299,7 +299,12 @@
               Source="ReferenceBinaries\Microsoft.Office.Interop.Outlook.dll"
               KeyPath="yes" />
       </Component>
-
+      <Component>
+        <File Id="OFFICE.DLL"
+              Name="OFFICE.DLL"
+              Source="ReferenceBinaries\OFFICE.DLL"
+              KeyPath="yes" />
+      </Component>
       <!--<Component>
         <File Id="ReachFramework"
           Name="ReachFramework.dll"
