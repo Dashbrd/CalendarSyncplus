@@ -7,7 +7,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using CalendarSyncPlus.Common.Log;
 using Microsoft.Experimental.IdentityModel.Clients.ActiveDirectory;
-using Microsoft.Office365.OutlookServices;
 using System.Waf.Applications;
 using log4net;
 

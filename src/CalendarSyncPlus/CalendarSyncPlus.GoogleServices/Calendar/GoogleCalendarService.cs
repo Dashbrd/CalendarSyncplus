@@ -37,7 +37,6 @@ using CalendarSyncPlus.Services.Utilities;
 using Google;
 using Google.Apis.Calendar.v3;
 using Google.Apis.Calendar.v3.Data;
-using Google.Apis.Drive.v2.Data;
 using Google.Apis.Requests;
 using log4net;
 
@@ -591,6 +590,7 @@ namespace CalendarSyncPlus.GoogleServices.Calendar
                 addedAppointments.IsSuccess = false;
                 return addedAppointments;
             }
+
             try
             {
                 if (calendarAppointments.Any())
