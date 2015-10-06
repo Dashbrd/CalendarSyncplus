@@ -115,7 +115,8 @@ namespace CalendarSyncPlus.GoogleServices.Calendar
                             addAttendees, attendeesToDescription);
                         var updateRequest = calendarService.Events.Update(calendarEvent,
                             CalendarId, calendarEvent.Id);
-                        
+                        updateRequest.MaxAttendees = 10000;
+
                         batchRequest.Queue<Event>(updateRequest,
                             (content, error, index, message) =>
                                 CallbackEventErrorMessage(content, error, index, message, calendarAppointments, "Error in updating event",errorList,updatedAppointments));
@@ -433,9 +434,12 @@ namespace CalendarSyncPlus.GoogleServices.Calendar
                         googleEvent.Reminders.Overrides.First().Minutes.GetValueOrDefault();
                 }
             }
-
-
+            
+            //Getting Additional Data
+            appointment.BusyStatus = googleEvent.Transparency.Equals("transparent") ? BusyStatusEnum.Free : BusyStatusEnum.Busy;
+            appointment.Privacy = googleEvent.Visibility;
             appointment.CalendarId = CalendarId;
+
             if (googleEvent.ExtendedProperties != null && googleEvent.ExtendedProperties.Private__ != null)
             {
                 foreach (var property in googleEvent.ExtendedProperties.Private__)
@@ -463,7 +467,6 @@ namespace CalendarSyncPlus.GoogleServices.Calendar
             //Add optional Attendee
             GetAttendees(googleEvent, appointment.OptionalAttendees, true);
 
-
             return appointment;
         }
 
@@ -476,7 +479,11 @@ namespace CalendarSyncPlus.GoogleServices.Calendar
 
                 foreach (var eventAttendee in attendees)
                 {
-                    recipients.Add(new Attendee { Name = eventAttendee.DisplayName, Email = eventAttendee.Email });
+                    recipients.Add(new Attendee
+                    {
+                        Name = eventAttendee.DisplayName, Email = eventAttendee.Email,
+                        MeetingResponseStatus = AppointmentHelper.GetGoogleResponseStatus(eventAttendee.ResponseStatus)
+                    });
                 }
             }
         }
@@ -602,10 +609,10 @@ namespace CalendarSyncPlus.GoogleServices.Calendar
                     addedAppointments.AddRange(appts);
                     if (errorList.Count > 0)
                     {
-                        var remaningList = errorList.Select(CreateAppointmentWithoutAttendees).ToList();
+                        var remainingList = errorList.Select(CreateAppointmentWithoutAttendees).ToList();
                         errorList.Clear();
 
-                        appts = await AddCalendarEventsInternal(remaningList, addDescription, addReminder, addAttendees,
+                        appts = await AddCalendarEventsInternal(remainingList, addDescription, addReminder, addAttendees,
                             attendeesToDescription, calendarService, errorList);
                         addedAppointments.AddRange(appts);
                     }
