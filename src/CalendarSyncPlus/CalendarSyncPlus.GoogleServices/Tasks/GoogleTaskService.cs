@@ -139,7 +139,7 @@ namespace CalendarSyncPlus.GoogleServices.Tasks
             object tasksId;
             if (!taskListSpecificData.TryGetValue(DictionaryKeyTaskListId, out tasksId))
             {
-                throw new InvalidOperationException(string.Format("{0} is a required.", DictionaryKeyTaskListId));
+                throw new InvalidOperationException($"{DictionaryKeyTaskListId} is a required.");
             }
 
             TaskListId = tasksId as string;
@@ -147,7 +147,7 @@ namespace CalendarSyncPlus.GoogleServices.Tasks
             object accountNameValue;
             if (!taskListSpecificData.TryGetValue(DictionaryKeyAccountName, out accountNameValue))
             {
-                throw new InvalidOperationException(string.Format("{0} is a required.", DictionaryKeyAccountName));
+                throw new InvalidOperationException($"{DictionaryKeyAccountName} is a required.");
             }
 
             AccountName = accountNameValue as string;

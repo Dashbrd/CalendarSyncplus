@@ -55,7 +55,7 @@ namespace CalendarSyncPlus.Domain.Models
         private DateTime? _oldStartTime;
         private List<Attendee> _optionalAttendees;
         private Attendee _organizer;
-        private string _privacy;
+        private SensitivityEnum _privacy;
         private int _reminderMinutesBeforeStart;
         private bool _reminderSet;
         private List<Attendee> _requiredAttendees;
@@ -220,7 +220,7 @@ namespace CalendarSyncPlus.Domain.Models
             set { SetProperty(ref _meetingStatus, value); }
         }
 
-        public string Privacy
+        public SensitivityEnum Privacy
         {
             get { return _privacy; }
             set { SetProperty(ref _privacy, value); }

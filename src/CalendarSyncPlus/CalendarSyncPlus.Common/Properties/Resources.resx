@@ -645,4 +645,10 @@
   <data name="OutlookSettingsView_Button_ExchangeSettings_UsingCorporateNetwork_Content" xml:space="preserve">
     <value>Using Corporate Network</value>
   </data>
+  <data name="OptionsSettingsView_CheckBox_OtherOptions_SkipPrivateEntries_Content" xml:space="preserve">
+    <value>Skip Private Entries</value>
+  </data>
+  <data name="OptionsSettingsView_ContentControl_OtherOptions_SkipPrivateEntries_Content" xml:space="preserve">
+    <value>Sync skips private entries read from Outlook and Google events</value>
+  </data>
 </root>

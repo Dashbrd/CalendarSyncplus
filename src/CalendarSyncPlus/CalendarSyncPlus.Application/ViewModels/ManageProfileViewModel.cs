@@ -107,7 +107,7 @@ namespace CalendarSyncPlus.Application.ViewModels
                 if (profileList.Any(t => !string.IsNullOrEmpty(t.Name) && t.Name.Equals(result)))
                 {
                     MessageService.ShowMessageAsync(
-                        string.Format("A Profile with name '{0}' already exists. Please try again.", result));
+                        $"A Profile with name '{result}' already exists. Please try again.");
                     return;
                 }
 

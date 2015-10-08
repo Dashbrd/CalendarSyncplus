@@ -12,7 +12,7 @@ namespace CalendarSyncPlus.Domain.Helpers
 
         public static string GetDescription(this Attendee attendee)
         {
-            return String.Format("{0} <{1}>", attendee.Name, attendee.Email);
+            return $"{attendee.Name} <{attendee.Email}>";
         }
 
         public static string GetDescriptionData(this Appointment calendarAppointment, bool addDescription,
@@ -234,7 +234,7 @@ namespace CalendarSyncPlus.Domain.Helpers
 
         public static string GetChildEntryKey(string sourceCalendarId)
         {
-            return string.Format("Child-{0}", GetMD5Hash(sourceCalendarId));
+            return $"Child-{GetMD5Hash(sourceCalendarId)}";
         }
 
         private static string GetMD5Hash(string stringToHash)
@@ -258,5 +258,83 @@ namespace CalendarSyncPlus.Domain.Helpers
                 return "CalendarSyncPlusCalendar";
             }
         }
+
+        public static string GetGoogleResponseStatus(MeetingResponseStatusEnum responseStatus)
+        {
+            //
+            // Summary:
+            //     The attendee's response status. Possible values are: - "needsAction" - The
+            //     attendee has not responded to the invitation. - "declined" - The attendee
+            //     has declined the invitation. - "tentative" - The attendee has tentatively
+            //     accepted the invitation. - "accepted" - The attendee has accepted the invitation.
+            switch (responseStatus)
+            {
+                    case MeetingResponseStatusEnum.Accepted:
+                    case MeetingResponseStatusEnum.Organizer:
+                    return "accepted";
+                    case MeetingResponseStatusEnum.None:
+                    return "";
+                    case MeetingResponseStatusEnum.Tentative:
+                    return "tentative";
+                    case MeetingResponseStatusEnum.Declined:
+                    return "declined";
+            }
+            return "needsAction";
+        }
+
+
+        public static MeetingResponseStatusEnum GetGoogleResponseStatus(string responseStatus)
+        {
+            //
+            // Summary:
+            //     The attendee's response status. Possible values are: - "needsAction" - The
+            //     attendee has not responded to the invitation. - "declined" - The attendee
+            //     has declined the invitation. - "tentative" - The attendee has tentatively
+            //     accepted the invitation. - "accepted" - The attendee has accepted the invitation.
+            switch (responseStatus)
+            {
+                case "accepted":
+                    return MeetingResponseStatusEnum.Accepted;
+                case "tentative":
+                    return MeetingResponseStatusEnum.Tentative;
+                case "declined":
+                    return MeetingResponseStatusEnum.Declined;
+            }
+            return MeetingResponseStatusEnum.NotResponded;
+        }
+
+        public static string GetSensitivity(SensitivityEnum sensitivity)
+        {
+            // Visibility of the event. Optional. Possible values are: - "default" - Uses the default visibility
+            //             for events on the calendar. This is the default value. - "public" - The event is public and event details
+            //             are visible to all readers of the calendar. - "private" - The event is private and only event attendees may
+            //             view event details. - "confidential" - The event is private. This value is provided for compatibility
+            //             reasons.
+            switch (sensitivity)
+            {
+                    case SensitivityEnum.Confidential:
+                        return "confidential";
+                    case SensitivityEnum.Public:
+                        return "public";
+                    case SensitivityEnum.Private:
+                        return "private";
+            }
+            return "default";
+        }
+
+        public static SensitivityEnum GetSensitivityEnum(string sensitivity)
+        {
+            switch (sensitivity)
+            {
+                case "confidential":
+                    return SensitivityEnum.Confidential;
+                case "public":
+                    return SensitivityEnum.Public;
+                case "private":
+                    return SensitivityEnum.Private;
+            }
+            return SensitivityEnum.Normal;
+        }
+        
     }
 }

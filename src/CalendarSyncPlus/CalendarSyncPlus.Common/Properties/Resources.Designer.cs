@@ -675,6 +675,15 @@ namespace CalendarSyncPlus.Common.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Skip Private Entries.
+        /// </summary>
+        public static string OptionsSettingsView_CheckBox_OtherOptions_SkipPrivateEntries_Content {
+            get {
+                return ResourceManager.GetString("OptionsSettingsView_CheckBox_OtherOptions_SkipPrivateEntries_Content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Select this option to add attendees to appointment.
         /// </summary>
         public static string OptionsSettingsView_ContentControl_DestinationCalendarOptions_AddAttendees_ToolTip {
@@ -757,6 +766,15 @@ namespace CalendarSyncPlus.Common.Properties {
         public static string OptionsSettingsView_ContentControl_OtherOptions_MergeExistingEntries_Content {
             get {
                 return ResourceManager.GetString("OptionsSettingsView_ContentControl_OtherOptions_MergeExistingEntries_Content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sync skips private entries read from Outlook and Google events.
+        /// </summary>
+        public static string OptionsSettingsView_ContentControl_OtherOptions_SkipPrivateEntries_Content {
+            get {
+                return ResourceManager.GetString("OptionsSettingsView_ContentControl_OtherOptions_SkipPrivateEntries_Content", resourceCulture);
             }
         }
         

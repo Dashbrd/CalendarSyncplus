@@ -219,7 +219,7 @@ namespace CalendarSyncPlus.ExchangeWebServices.Calendar
             throw new NotImplementedException();
         }
 
-        public async Task<AppointmentsWrapper> GetCalendarEventsInRangeAsync(DateTime startDate, DateTime endDate,
+        public async Task<AppointmentsWrapper> GetCalendarEventsInRangeAsync(DateTime startDate, DateTime endDate,bool skipPrivateEntries,
             IDictionary<string, object> calendarSpecificData)
         {
             CheckCalendarSpecificData(calendarSpecificData);
@@ -311,7 +311,7 @@ namespace CalendarSyncPlus.ExchangeWebServices.Calendar
             var startDate = DateTime.Today.AddDays(-(10 * 365));
             var endDate = DateTime.Today.AddDays(10 * 365);
             var appointments =
-                await GetCalendarEventsInRangeAsync(startDate, endDate, calendarSpecificData);
+                await GetCalendarEventsInRangeAsync(startDate, endDate,true, calendarSpecificData);
             if (appointments != null)
             {
                 var success = await DeleteCalendarEvents(appointments, calendarSpecificData);
@@ -325,7 +325,7 @@ namespace CalendarSyncPlus.ExchangeWebServices.Calendar
             var startDate = DateTime.Today.AddDays(-(10 * 365));
             var endDate = DateTime.Today.AddDays(10 * 365);
             var appointments =
-                await GetCalendarEventsInRangeAsync(startDate, endDate, calendarSpecificData);
+                await GetCalendarEventsInRangeAsync(startDate, endDate,true, calendarSpecificData);
             if (appointments != null)
             {
                 appointments.ForEach(t => t.ExtendedProperties = new Dictionary<string, string>());

@@ -555,9 +555,7 @@ namespace CalendarSyncPlus.Services.Tasks
                 DateTime startDate, endDate;
                 GetDateRange(syncProfile, out startDate, out endDate);
                 //Add log for date range
-                TaskSyncStatus = string.Format("Date Range : {0} - {1}",
-                    startDate.ToString("d"),
-                    endDate.ToString("d"));
+                TaskSyncStatus = $"Date Range : {startDate.ToString("d")} - {endDate.ToString("d")}";
 
                 //Load calendar specific data
                 var sourceCalendarSpecificData =
