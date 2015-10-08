@@ -1127,7 +1127,13 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
             var profileList = new List<string>();
             const string defaultProfilePath =
                 @"Software\Microsoft\Windows NT\CurrentVersion\Windows Messaging Subsystem\Profiles";
-            const string newProfilePath = @"Software\Microsoft\Office\15.0\Outlook\Profiles";
+            const string newProfilePath = @"Software\Microsoft\Office\{0}\Outlook\Profiles";
+
+            string office2016Path = string.Format(newProfilePath, "16.0");
+            string office2013Path = string.Format(newProfilePath, "15.0");
+
+            var pathList = new List<string>() {office2013Path, office2016Path};
+
 
             var defaultRegKey = Registry.CurrentUser.OpenSubKey(defaultProfilePath,
                 RegistryKeyPermissionCheck.Default);
@@ -1142,17 +1148,20 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
                 }
             }
 
-            var newregKey = Registry.CurrentUser.OpenSubKey(newProfilePath, RegistryKeyPermissionCheck.Default);
-
-            if (newregKey != null)
+            foreach (string profilePath in pathList)
             {
-                var list = newregKey.GetSubKeyNames();
+                var newregKey = Registry.CurrentUser.OpenSubKey(profilePath, RegistryKeyPermissionCheck.Default);
 
-                if (list.Any())
+                if (newregKey != null)
                 {
-                    foreach (var name in list.Where(name => !profileList.Contains(name)))
+                    var list = newregKey.GetSubKeyNames();
+
+                    if (list.Any())
                     {
-                        profileList.Add(name);
+                        foreach (var name in list.Where(name => !profileList.Contains(name)))
+                        {
+                            profileList.Add(name);
+                        }
                     }
                 }
             }
