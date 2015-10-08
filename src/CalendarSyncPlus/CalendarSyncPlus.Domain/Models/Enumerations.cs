@@ -35,6 +35,7 @@ namespace CalendarSyncPlus.Domain.Models
 
     public enum SensitivityEnum
     {
+        None,
         Normal,
         Personal,
         Public,

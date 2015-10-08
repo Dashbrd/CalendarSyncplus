@@ -303,7 +303,7 @@ namespace CalendarSyncPlus.Domain.Helpers
             return MeetingResponseStatusEnum.NotResponded;
         }
 
-        public static string GetSensitivity(SensitivityEnum sensitivity)
+        public static string GetVisibility(SensitivityEnum sensitivity)
         {
             // Visibility of the event. Optional. Possible values are: - "default" - Uses the default visibility
             //             for events on the calendar. This is the default value. - "public" - The event is public and event details
@@ -318,12 +318,16 @@ namespace CalendarSyncPlus.Domain.Helpers
                         return "public";
                     case SensitivityEnum.Private:
                         return "private";
+                    case SensitivityEnum.None:
+                        return null;
             }
             return "default";
         }
 
         public static SensitivityEnum GetSensitivityEnum(string sensitivity)
         {
+            if (string.IsNullOrEmpty(sensitivity))
+                return SensitivityEnum.None;
             switch (sensitivity)
             {
                 case "confidential":
