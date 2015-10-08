@@ -55,6 +55,27 @@ namespace CalendarSyncPlus.OutlookServices.Utilities
             }
             return MeetingResponseStatusEnum.None;
         }
+
+        public static OlResponseStatus GetRecipientResponseStatus(this Attendee attendee)
+        {
+            switch (attendee.MeetingResponseStatus)
+            {
+                case MeetingResponseStatusEnum.Accepted:
+                    return OlResponseStatus.olResponseAccepted;
+                case MeetingResponseStatusEnum.Declined:
+                    return OlResponseStatus.olResponseDeclined;
+                case MeetingResponseStatusEnum.None:
+                    return OlResponseStatus.olResponseNone;
+                case MeetingResponseStatusEnum.NotResponded:
+                    return OlResponseStatus.olResponseNotResponded;
+                case MeetingResponseStatusEnum.Organizer:
+                    return OlResponseStatus.olResponseOrganized;
+                case MeetingResponseStatusEnum.Tentative:
+                    return OlResponseStatus.olResponseTentative;
+            }
+            return OlResponseStatus.olResponseNone;
+        }
+
         public static OlTaskStatus GetOlTaskStatus(this ReminderTask taskItem)
         {
             switch (taskItem.StatusEnum)
@@ -165,6 +186,35 @@ namespace CalendarSyncPlus.OutlookServices.Utilities
             {
                 calendarAppointment.BusyStatus = BusyStatusEnum.Tentative;
             }
+        }
+
+
+        public static SensitivityEnum GetAppointmentSensitivity(this AppointmentItem appointmentItem)
+        {
+            switch (appointmentItem.Sensitivity)
+            {
+                case OlSensitivity.olConfidential:
+                    return SensitivityEnum.Confidential;
+                case OlSensitivity.olPersonal:
+                    return SensitivityEnum.Personal;
+                case OlSensitivity.olPrivate:
+                    return SensitivityEnum.Private;
+            }
+            return SensitivityEnum.Normal;
+        }
+
+        public static OlSensitivity GetAppointmentSensitivity(this Appointment appointment)
+        {
+            switch (appointment.Privacy)
+            {
+                case SensitivityEnum.Confidential:
+                    return OlSensitivity.olConfidential;
+                case SensitivityEnum.Personal:
+                    return OlSensitivity.olPersonal;
+                case SensitivityEnum.Private:
+                    return OlSensitivity.olPrivate;
+            }
+            return OlSensitivity.olNormal;
         }
     }
 }

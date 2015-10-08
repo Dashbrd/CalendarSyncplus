@@ -33,6 +33,15 @@ namespace CalendarSyncPlus.Domain.Models
         Tentative
     }
 
+    public enum SensitivityEnum
+    {
+        Normal,
+        Personal,
+        Public,
+        Private,
+        Confidential,
+    }
+
     public enum MeetingStatusEnum
     {
         Meeting,

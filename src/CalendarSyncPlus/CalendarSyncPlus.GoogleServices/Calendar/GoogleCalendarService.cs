@@ -184,7 +184,7 @@ namespace CalendarSyncPlus.GoogleServices.Calendar
                 Summary = calendarAppointment.Subject,
                 Description = calendarAppointment.GetDescriptionData(addDescription, attendeesToDescription),
                 Location = calendarAppointment.Location,
-                Visibility = calendarAppointment.Privacy,
+                Visibility = AppointmentHelper.GetSensitivity(calendarAppointment.Privacy),
                 Transparency = (calendarAppointment.BusyStatus == BusyStatusEnum.Free) ? "transparent" : "opaque"
             };
 
@@ -277,7 +277,7 @@ namespace CalendarSyncPlus.GoogleServices.Calendar
                 Summary = calendarAppointment.Subject,
                 Description = calendarAppointment.GetDescriptionData(addDescription, attendeesToDescription),
                 Location = calendarAppointment.Location,
-                Visibility = calendarAppointment.Privacy,
+                Visibility = AppointmentHelper.GetSensitivity(calendarAppointment.Privacy),
                 Transparency = (calendarAppointment.BusyStatus == BusyStatusEnum.Free) ? "transparent" : "opaque",
                 //Need to make recurring appointment IDs unique - append the item's date   
                 ExtendedProperties =
@@ -437,7 +437,7 @@ namespace CalendarSyncPlus.GoogleServices.Calendar
             
             //Getting Additional Data
             appointment.BusyStatus = googleEvent.Transparency.Equals("transparent") ? BusyStatusEnum.Free : BusyStatusEnum.Busy;
-            appointment.Privacy = googleEvent.Visibility;
+            appointment.Privacy = AppointmentHelper.GetSensitivityEnum(googleEvent.Visibility);
             appointment.CalendarId = CalendarId;
 
             if (googleEvent.ExtendedProperties != null && googleEvent.ExtendedProperties.Private__ != null)
@@ -523,29 +523,27 @@ namespace CalendarSyncPlus.GoogleServices.Calendar
             object calendarIdValue;
             if (!calendarSpecificData.TryGetValue(dictionaryKey_CalendarId, out calendarIdValue))
             {
-                throw new InvalidOperationException(string.Format("{0} is a required.", dictionaryKey_CalendarId));
+                throw new InvalidOperationException($"{dictionaryKey_CalendarId} is a required.");
             }
 
             CalendarId = calendarIdValue as string;
 
             if (string.IsNullOrEmpty(CalendarId))
             {
-                throw new InvalidOperationException(string.Format("{0} cannot be null or empty.",
-                    dictionaryKey_CalendarId));
+                throw new InvalidOperationException($"{dictionaryKey_CalendarId} cannot be null or empty.");
             }
 
             object accountNameValue;
             if (!calendarSpecificData.TryGetValue(dictionaryKey_AccountName, out accountNameValue))
             {
-                throw new InvalidOperationException(string.Format("{0} is a required.", dictionaryKey_AccountName));
+                throw new InvalidOperationException($"{dictionaryKey_AccountName} is a required.");
             }
 
             AccountName = accountNameValue as string;
 
             if (string.IsNullOrEmpty(AccountName))
             {
-                throw new InvalidOperationException(string.Format("{0} cannot be null or empty.",
-                    dictionaryKey_CalendarId));
+                throw new InvalidOperationException($"{dictionaryKey_CalendarId} cannot be null or empty.");
             }
 
             object eventCategory;
@@ -734,7 +732,7 @@ namespace CalendarSyncPlus.GoogleServices.Calendar
             return deletedAppointments;
         }
 
-        public async Task<AppointmentsWrapper> GetCalendarEventsInRangeAsync(DateTime startDate, DateTime endDate,
+        public async Task<AppointmentsWrapper> GetCalendarEventsInRangeAsync(DateTime startDate, DateTime endDate,bool skipPrivateEntries,
             IDictionary<string, object> calendarSpecificData)
         {
             CheckCalendarSpecificData(calendarSpecificData);
@@ -753,6 +751,7 @@ namespace CalendarSyncPlus.GoogleServices.Calendar
             eventListRequest.TimeMax = endDate;
             eventListRequest.MaxAttendees = 1000;
             eventListRequest.SingleEvents = true;
+            eventListRequest.ShowHiddenInvitations = !skipPrivateEntries;
             try
             {
                 result = eventListRequest.Execute();
@@ -811,7 +810,7 @@ namespace CalendarSyncPlus.GoogleServices.Calendar
             var endDate = DateTime.Today.AddDays(10 * 365);
 
             var appointments =
-                await GetCalendarEventsInRangeAsync(startDate, endDate, calendarSpecificData);
+                await GetCalendarEventsInRangeAsync(startDate, endDate,true, calendarSpecificData);
             if (appointments != null)
             {
                 var success = await DeleteCalendarEvents(appointments, calendarSpecificData);
@@ -825,7 +824,7 @@ namespace CalendarSyncPlus.GoogleServices.Calendar
             var startDate = DateTime.Today.AddDays(-(10 * 365));
             var endDate = DateTime.Today.AddDays(10 * 365);
             var appointments =
-                await GetCalendarEventsInRangeAsync(startDate, endDate, calendarSpecificData);
+                await GetCalendarEventsInRangeAsync(startDate, endDate,true, calendarSpecificData);
             if (appointments != null)
             {
                 appointments.ForEach(t => t.ExtendedProperties = new Dictionary<string, string>());

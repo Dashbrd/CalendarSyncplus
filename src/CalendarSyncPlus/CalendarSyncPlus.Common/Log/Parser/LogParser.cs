@@ -214,7 +214,7 @@ namespace CalendarSyncPlus.Common.Log.Parser
                 {
                     using (var reader = new StreamReader(stream))
                     {
-                        fileText = String.Format("<root>{0}</root>", reader.ReadToEnd());
+                        fileText = $"<root>{reader.ReadToEnd()}</root>";
                         reader.Close();
                     }
                     stream.Close();

@@ -8,6 +8,8 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
         private bool _disableDelete;
         private bool _confirmOnDelete;
         private bool _keepLastModifiedVersion;
+        private bool _skipPrivateEntries;
+
         /// <summary>
         /// </summary>
         public bool DisableDelete
@@ -26,6 +28,12 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
         {
             get { return _keepLastModifiedVersion; }
             set { SetProperty(ref _keepLastModifiedVersion, value); }
+        }
+
+        public bool SkipPrivateEntries
+        {
+            get { return _skipPrivateEntries; }
+            set { SetProperty(ref _skipPrivateEntries, value); }
         }
 
         public static CalendarSyncSettings GetDefault()
