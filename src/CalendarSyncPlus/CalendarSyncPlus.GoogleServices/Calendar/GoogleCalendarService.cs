@@ -184,7 +184,7 @@ namespace CalendarSyncPlus.GoogleServices.Calendar
                 Summary = calendarAppointment.Subject,
                 Description = calendarAppointment.GetDescriptionData(addDescription, attendeesToDescription),
                 Location = calendarAppointment.Location,
-                Visibility = AppointmentHelper.GetSensitivity(calendarAppointment.Privacy),
+                Visibility = AppointmentHelper.GetVisibility(calendarAppointment.Privacy),
                 Transparency = (calendarAppointment.BusyStatus == BusyStatusEnum.Free) ? "transparent" : "opaque"
             };
 
@@ -277,7 +277,7 @@ namespace CalendarSyncPlus.GoogleServices.Calendar
                 Summary = calendarAppointment.Subject,
                 Description = calendarAppointment.GetDescriptionData(addDescription, attendeesToDescription),
                 Location = calendarAppointment.Location,
-                Visibility = AppointmentHelper.GetSensitivity(calendarAppointment.Privacy),
+                Visibility = AppointmentHelper.GetVisibility(calendarAppointment.Privacy),
                 Transparency = (calendarAppointment.BusyStatus == BusyStatusEnum.Free) ? "transparent" : "opaque",
                 //Need to make recurring appointment IDs unique - append the item's date   
                 ExtendedProperties =
@@ -436,7 +436,8 @@ namespace CalendarSyncPlus.GoogleServices.Calendar
             }
             
             //Getting Additional Data
-            appointment.BusyStatus = googleEvent.Transparency.Equals("transparent") ? BusyStatusEnum.Free : BusyStatusEnum.Busy;
+            appointment.BusyStatus = googleEvent.Transparency !=null && googleEvent.Transparency.Equals("transparent") ? 
+                BusyStatusEnum.Free : BusyStatusEnum.Busy;
             appointment.Privacy = AppointmentHelper.GetSensitivityEnum(googleEvent.Visibility);
             appointment.CalendarId = CalendarId;
 
