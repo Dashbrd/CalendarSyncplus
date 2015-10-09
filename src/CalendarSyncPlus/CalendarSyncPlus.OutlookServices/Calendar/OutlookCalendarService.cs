@@ -1034,26 +1034,40 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
             {
                 foreach (Folder rootFolder in rootFolders)
                 {
-                    var mailBoxName = rootFolder.Name;
+                    try
+                    {
+                        if (rootFolder == null)
+                        {
+                            continue;
+                        }
+                        
+                        var mailBoxName = rootFolder.Name;
 
-                    //All mailBoxes Scanned Leave Public calendars and Folders
-                    if (mailBoxName.Contains("Public Folders"))
+                        //All mailBoxes Scanned Leave Public calendars and Folders
+                        if (mailBoxName.Contains("Public Folders"))
+                        {
+                            Marshal.FinalReleaseComObject(rootFolder);
+                            continue;
+                        }
+
+                        var mailBox = new OutlookMailBox
+                        {
+                            Name = mailBoxName,
+                            EntryId = rootFolder.EntryID,
+                            StoreId = rootFolder.StoreID
+                        };
+                        mailBoxes.Add(mailBox);
+
+                        GetCalendars(rootFolder, mailBox.Folders);
+                    }
+                    catch (Exception exception)
+                    {
+                        Logger.Error(exception);
+                    }
+                    finally
                     {
                         Marshal.FinalReleaseComObject(rootFolder);
-                        continue;
                     }
-
-                    var mailBox = new OutlookMailBox
-                    {
-                        Name = mailBoxName,
-                        EntryId = rootFolder.EntryID,
-                        StoreId = rootFolder.StoreID
-                    };
-                    mailBoxes.Add(mailBox);
-
-                    GetCalendars(rootFolder, mailBox.Folders);
-
-                    Marshal.FinalReleaseComObject(rootFolder);
                 }
             }
             return mailBoxes;
