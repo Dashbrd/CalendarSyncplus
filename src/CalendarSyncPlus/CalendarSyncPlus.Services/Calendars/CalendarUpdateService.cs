@@ -64,12 +64,13 @@ namespace CalendarSyncPlus.Services.Calendars
         /// <summary>
         /// </summary>
         /// <param name="endDate"></param>
+        /// <param name="skipPrivateEntries"></param>
         /// <param name="sourceCalendarSpecificData"></param>
         /// <param name="destinationCalendarSpecificData"></param>
         /// <param name="startDate"></param>
         /// <returns>
         /// </returns>
-        private bool LoadAppointments(DateTime startDate, DateTime endDate,
+        private bool LoadAppointments(DateTime startDate, DateTime endDate,bool skipPrivateEntries,
             IDictionary<string, object> sourceCalendarSpecificData,
             IDictionary<string, object> destinationCalendarSpecificData)
         {
@@ -80,7 +81,7 @@ namespace CalendarSyncPlus.Services.Calendars
 
             //Get source calendar
             SourceAppointments =
-                SourceCalendarService.GetCalendarEventsInRangeAsync(startDate, endDate, sourceCalendarSpecificData)
+                SourceCalendarService.GetCalendarEventsInRangeAsync(startDate, endDate, skipPrivateEntries,sourceCalendarSpecificData)
                     .Result;
             if (SourceAppointments == null)
             {
@@ -96,7 +97,7 @@ namespace CalendarSyncPlus.Services.Calendars
                 DestinationCalendarService.CalendarServiceName);
 
             //Get destination calendar
-            DestinationAppointments = DestinationCalendarService.GetCalendarEventsInRangeAsync(startDate, endDate,
+            DestinationAppointments = DestinationCalendarService.GetCalendarEventsInRangeAsync(startDate, endDate,skipPrivateEntries,
                 destinationCalendarSpecificData).Result;
             if (DestinationAppointments == null)
             {
@@ -149,6 +150,10 @@ namespace CalendarSyncPlus.Services.Calendars
                         {
                             "AddAsAppointments",
                             syncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.AsAppointments)
+                        },
+                        {
+                            "SetOrganizer",
+                            syncProfile.OutlookSettings.SetOrganizer
                         }
                     };
                     break;
@@ -258,9 +263,8 @@ namespace CalendarSyncPlus.Services.Calendars
                     //Log Orphan Entries
                     Logger.Warn("Orphan entries to delete: " + orphanEntries);
 
-                    var message = string.Format("Are you sure you want to delete {0} orphan entries from {1}?{2}",
-                        appointmentsToDelete.Count, DestinationCalendarService.CalendarServiceName,
-                        orphanEntries);
+                    var message =
+                        $"Are you sure you want to delete {appointmentsToDelete.Count} orphan entries from {DestinationCalendarService.CalendarServiceName}?{orphanEntries}";
                     var e = new SyncEventArgs(message, UserActionEnum.ConfirmDelete);
 
                     var task = syncCallback(e);
@@ -505,9 +509,7 @@ namespace CalendarSyncPlus.Services.Calendars
                 DateTime startDate, endDate;
                 GetDateRange(syncProfile, out startDate, out endDate);
                 //Add log for date range
-                CalendarSyncStatus = string.Format("Date Range : {0} - {1}",
-                    startDate.ToString("d"),
-                    endDate.ToString("d"));
+                CalendarSyncStatus = $"Date Range : {startDate.ToString("d")} - {endDate.ToString("d")}";
 
                 //Load calendar specific data
                 var sourceCalendarSpecificData =
@@ -516,7 +518,7 @@ namespace CalendarSyncPlus.Services.Calendars
                     GetCalendarSpecificData(syncProfile.Destination, syncProfile);
 
                 //Get source and destination appointments
-                isSuccess = LoadAppointments(startDate, endDate,
+                isSuccess = LoadAppointments(startDate, endDate, syncProfile.SyncSettings.SkipPrivateEntries,
                     sourceCalendarSpecificData,
                     destinationCalendarSpecificData);
 

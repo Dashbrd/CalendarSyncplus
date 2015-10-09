@@ -47,7 +47,8 @@ namespace CalendarSyncPlus.Application.ViewModels
         private CalendarSyncProfile _selectedProfile;
         private ObservableCollection<GoogleAccount> _googleAccounts;
         private bool _isLoading;
-       
+        private List<EWSCalendar> _exchangeCalendars;
+
 
         [ImportingConstructor]
         public CalendarViewModel(ICalendarView calendarView, 
@@ -88,6 +89,12 @@ namespace CalendarSyncPlus.Application.ViewModels
             set { SetProperty(ref _outlookMailBoxes, value); }
         }
         
+        public List<EWSCalendar> ExchangeCalendars
+        {
+            get { return _exchangeCalendars; }
+            set { SetProperty(ref _exchangeCalendars, value); }
+        }
+
         public List<SyncRangeTypeEnum> SyncRangeTypes
         {
             get { return _syncRangeTypes; }
@@ -192,7 +199,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             }
         }
 
-        public DelegateCommand AutoDetectExchangeServer
+        public DelegateCommand AutoDetectExchangeServerCommand
         {
             get
             {
@@ -306,10 +313,14 @@ namespace CalendarSyncPlus.Application.ViewModels
             return OutlookCalendarService.GetAllMailBoxes(SelectedProfile.OutlookSettings.OutlookProfileName ?? string.Empty);
         }
 
-        private void AutoDetectEWSSettings()
+        private async void AutoDetectEWSSettings()
         {
             IsLoading = true;
-
+            var calendarSpecificData = new Dictionary<string, object>()
+            {
+                {"ExchangeServerSettings", SelectedProfile.ExchangeServerSettings}
+            };
+            ExchangeCalendars = ExchangeWebCalendarService.GetCalendarsAsync(10,calendarSpecificData);
             IsLoading = false;
         }
 
@@ -337,8 +348,7 @@ namespace CalendarSyncPlus.Application.ViewModels
         internal async void GetGoogleCalendar()
         {
             if (IsLoading)
-                return;
-            //TODO : Move this method to main setitngs view
+                return;            
             IsLoading = true;
             try
             {

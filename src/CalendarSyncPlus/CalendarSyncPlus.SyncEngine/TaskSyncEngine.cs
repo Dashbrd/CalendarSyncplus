@@ -94,7 +94,7 @@ namespace CalendarSyncPlus.SyncEngine
                 {
                     destTasksToDelete.Add(destTask);
                 }
-                else
+                else if(destTask.IsCompleted != sourceTask.IsCompleted)
                 {
                     if (destTask.Due.HasValue && sourceTask.Due.HasValue && !destTask.Due.Value.Equals(sourceTask.Due.Value))
                     {

@@ -31,6 +31,10 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
     [ExportMetadata("ServiceType", ServiceType.OutlookDesktop)]
     public class OutlookCalendarService : IOutlookCalendarService
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="applicationLogger"></param>
         [ImportingConstructor]
         public OutlookCalendarService(ApplicationLogger applicationLogger)
         {
@@ -43,6 +47,8 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
         private OutlookFolder OutlookCalendar { get; set; }
 
         public bool AddAsAppointments { get; set; }
+
+        public bool SetOrganizer { get; set; }
 
         private string ProfileName { get; set; }
 
@@ -209,7 +215,7 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
                 {
                     appItem.MeetingStatus = OlMeetingStatus.olMeeting;
                 }
-
+                appItem.Sensitivity = calendarAppointment.GetAppointmentSensitivity();
                 appItem.Location = calendarAppointment.Location;
                 appItem.BusyStatus = calendarAppointment.GetOutlookBusyStatus();
                 recipients = appItem.Recipients;
@@ -228,31 +234,57 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
 
 
                 appItem.Body = calendarAppointment.GetDescriptionData(addDescription, attendeesToDescription);
-
+                
+                Recipient organizer = null;
                 if (addAttendees && !attendeesToDescription)
                 {
-                    if (calendarAppointment.RequiredAttendees != null)
+                    calendarAppointment.RequiredAttendees?.ForEach(rcptName =>
                     {
-                        calendarAppointment.RequiredAttendees.ForEach(rcptName =>
+                        var recipient =
+                            appItem.Recipients.Add($"{rcptName.Name}<{rcptName.Email}>");
+                        if (SetOrganizer && calendarAppointment.Organizer != null &&
+                            rcptName.Name.Equals(calendarAppointment.Organizer.Name))
                         {
-                            var recipient =
-                                appItem.Recipients.Add(string.Format("{0}<{1}>", rcptName.Name, rcptName.Email));
+                            recipient.Type = (int) OlMeetingRecipientType.olOrganizer;
+                            recipient.Resolve();
+                            organizer = recipient;
+                        }
+                        else
+                        {
                             recipient.Type = (int) OlMeetingRecipientType.olRequired;
                             recipient.Resolve();
-                        });
-                    }
+                        }
+                    });
 
-                    if (calendarAppointment.OptionalAttendees != null)
+                    calendarAppointment.OptionalAttendees?.ForEach(rcptName =>
                     {
-                        calendarAppointment.OptionalAttendees.ForEach(rcptName =>
+                        var recipient =
+                            appItem.Recipients.Add($"{rcptName.Name}<{rcptName.Email}>");
+                        if (SetOrganizer && calendarAppointment.Organizer != null &&
+                            rcptName.Name.Equals(calendarAppointment.Organizer.Name))
                         {
-                            var recipient =
-                                appItem.Recipients.Add(string.Format("{0}<{1}>", rcptName.Name, rcptName.Email));
-                            recipient.Type = (int) OlMeetingRecipientType.olOptional;
+                            recipient.Type = (int) OlMeetingRecipientType.olOrganizer;
                             recipient.Resolve();
-                        });
-                    }
+                            organizer = recipient;
+                        }
+                        else
+                        {
+                            recipient.Type = (int)OlMeetingRecipientType.olOptional;
+                            recipient.Resolve();
+                        }
+                    });
                 }
+                else if (SetOrganizer && calendarAppointment.Organizer != null)
+                {
+                    var recipient =
+                                appItem.Recipients.Add(
+                                    $"{calendarAppointment.Organizer.Name}<{calendarAppointment.Organizer.Email}>");
+                    recipient.Type = (int)OlMeetingRecipientType.olOrganizer;
+                    recipient.Resolve();
+                    organizer = recipient;
+                }
+
+                SetAppointmentOrganizer(appItem, organizer);
 
                 if (addReminder)
                 {
@@ -292,6 +324,30 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
             }
             return createdAppointment;
         }
+
+        private void SetAppointmentOrganizer(AppointmentItem appItem, Recipient organizer)
+        {
+            try
+            {
+                if (appItem == null || organizer == null || !SetOrganizer)
+                    return;
+
+                const string PR_SENT_REPRESENTING_NAME = "http://schemas.microsoft.com/mapi/proptag/0x0042001F";
+                const string PR_SENT_REPRESENTING_ENTRY_ID = "http://schemas.microsoft.com/mapi/proptag/0x00410102";
+                const string PR_SENDER_ENTRYID = "http://schemas.microsoft.com/mapi/proptag/0x0C190102";
+                
+                PropertyAccessor pa = appItem.PropertyAccessor;
+                pa.SetProperty(PR_SENDER_ENTRYID, pa.StringToBinary(organizer.EntryID));
+                pa.SetProperty(PR_SENT_REPRESENTING_NAME, organizer.Name);
+                pa.SetProperty(PR_SENT_REPRESENTING_ENTRY_ID, pa.StringToBinary(organizer.EntryID));
+                
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex);
+            }
+        }
+
 
         private bool DeleteEvents(List<Appointment> calendarAppointments, List<Appointment> deletedAppointments)
         {
@@ -539,16 +595,6 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
             try
             {
                 appItem.Subject = calendarAppointment.Subject;
-                if (!calendarAppointment.RequiredAttendees.Any() && !calendarAppointment.OptionalAttendees.Any()
-                    && AddAsAppointments)
-                {
-                    appItem.MeetingStatus = OlMeetingStatus.olNonMeeting;
-                }
-                else
-                {
-                    appItem.MeetingStatus = OlMeetingStatus.olMeeting;
-                }
-
                 appItem.Location = calendarAppointment.Location;
                 appItem.BusyStatus = calendarAppointment.GetOutlookBusyStatus();
                 
@@ -562,9 +608,10 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
                     appItem.AllDayEvent = calendarAppointment.AllDayEvent;
                 }
 
+                appItem.Sensitivity = calendarAppointment.GetAppointmentSensitivity();
                 appItem.Start = calendarAppointment.StartTime.GetValueOrDefault();
                 appItem.End = calendarAppointment.EndTime.GetValueOrDefault();
-                if (addDescription || attendeesToDescription)
+                if (addDescription)
                 {
                     appItem.Body = calendarAppointment.Description;
                 }
@@ -576,10 +623,13 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
                     {
                         calendarAppointment.RequiredAttendees.ForEach(rcptName =>
                         {
-                            var recipient =
-                                appItem.Recipients.Add(string.Format("{0}<{1}>", rcptName.Name, rcptName.Email));
-                            recipient.Type = (int) OlMeetingRecipientType.olRequired;
-                            recipient.Resolve();
+                            if (!CheckIfRecipientExists(recipients, rcptName))
+                            {
+                                var recipient =
+                                    appItem.Recipients.Add($"{rcptName.Name}<{rcptName.Email}>");
+                                recipient.Type = (int) OlMeetingRecipientType.olRequired;
+                                recipient.Resolve();
+                            }
                         });
                     }
 
@@ -587,13 +637,17 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
                     {
                         calendarAppointment.OptionalAttendees.ForEach(rcptName =>
                         {
-                            var recipient =
-                                appItem.Recipients.Add(string.Format("{0}<{1}>", rcptName.Name, rcptName.Email));
-                            recipient.Type = (int) OlMeetingRecipientType.olOptional;
-                            recipient.Resolve();
+                            if (!CheckIfRecipientExists(recipients, rcptName))
+                            {
+                                var recipient =
+                                    appItem.Recipients.Add($"{rcptName.Name}<{rcptName.Email}>");
+                                recipient.Type = (int) OlMeetingRecipientType.olOptional;
+                                recipient.Resolve();
+                            }
                         });
                     }
                 }
+                
 
                 if (addReminder)
                 {
@@ -649,6 +703,27 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
             return true;
         }
 
+        private bool CheckIfRecipientExists(Recipients recipients, Domain.Models.Attendee rcptName)
+        {
+            bool recipientFound = false;
+            foreach (Recipient attendee in recipients)
+            {
+                string name, email;
+                if (!attendee.GetEmailFromName(out name, out email))
+                {
+                    name = attendee.Name;
+                    email = GetSMTPAddressForRecipients(attendee);
+                }
+
+                if (rcptName.Email.Equals(email))
+                {
+                    recipientFound = true;
+                    break;
+                }
+            }
+            return recipientFound;
+        }
+
         private void GetOutlookApplication(out bool disposeOutlookInstances,
             out Application application,
             out NameSpace nameSpace, string profileName)
@@ -667,9 +742,7 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
                     if (!string.IsNullOrEmpty(profileName) && !nameSpace.CurrentProfileName.Equals(profileName))
                     {
                         throw new InvalidOperationException(
-                            string.Format(
-                                "Current Outlook instance is opened with a Different Profile Name ({0}).{1}Close Outlook and try again.",
-                                nameSpace.CurrentProfileName, Environment.NewLine));
+                            $"Current Outlook instance is opened with a Different Profile Name ({nameSpace.CurrentProfileName}).{Environment.NewLine}Close Outlook and try again.");
                     }
                 }
             }
@@ -683,7 +756,7 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
             }
         }
 
-        private OutlookAppointmentsWrapper GetOutlookEntriesForSelectedTimeRange(DateTime startDate, DateTime endDate)
+        private OutlookAppointmentsWrapper GetOutlookEntriesForSelectedTimeRange(DateTime startDate, DateTime endDate, bool skipPrivateEntries)
         {
             var disposeOutlookInstances = false;
             Application application = null;
@@ -739,6 +812,13 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
                             {
                                 try
                                 {
+                                    if (skipPrivateEntries && (appointmentItem.Sensitivity == OlSensitivity.olPrivate ||
+                                                               appointmentItem.Sensitivity ==
+                                                               OlSensitivity.olConfidential))
+                                    {
+                                        continue;
+                                    }
+
                                     var app = GetAppointmentFromItem(id, appointmentItem);
                                     outlookAppointments.Add(app);
                                 }
@@ -836,11 +916,9 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
                 ReminderSet = appointmentItem.ReminderSet,
                 IsRecurring = appointmentItem.IsRecurring,
                 AppointmentId = appointmentItem.IsRecurring
-                    ? string.Format("{0}_{1}", appointmentItem.EntryID,
-                        appointmentItem.Start.ToString("yy-MM-dd"))
+                    ? $"{appointmentItem.EntryID}_{appointmentItem.Start.ToString("yy-MM-dd")}"
                     : appointmentItem.EntryID,
-                Privacy =
-                    (appointmentItem.Sensitivity == OlSensitivity.olNormal) ? "default" : "private",
+                Privacy = appointmentItem.GetAppointmentSensitivity(),
                 MeetingStatus = appointmentItem.GetMeetingStatus()
             };
 
@@ -895,7 +973,7 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
         {
             foreach (Recipient attendee in appointmentItem.Recipients)
             {
-                var recipient = new Domain.Models.Recipient();
+                var recipient = new Attendee();
                 string name, email;
                 if (attendee.GetEmailFromName(out name, out email))
                 {
@@ -917,6 +995,7 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
                         app.RequiredAttendees.Add(recipient);
                     }
                 }
+
                 if (appointmentItem.OptionalAttendees != null &&
                     appointmentItem.OptionalAttendees.Contains(recipient.Name))
                 {
@@ -934,9 +1013,9 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
             }
         }
 
-        private List<Appointment> GetAppointments(DateTime startDate, DateTime endDate)
+        private List<Appointment> GetAppointments(DateTime startDate, DateTime endDate, bool skipPrivateEntries)
         {
-            var list = GetOutlookEntriesForSelectedTimeRange(startDate, endDate);
+            var list = GetOutlookEntriesForSelectedTimeRange(startDate, endDate, skipPrivateEntries);
             if (!list.WaitForApplicationQuit)
             {
                 return list.Appointments;
@@ -993,8 +1072,8 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
             }
             catch (Exception exception)
             {
-                Logger.Warn(string.Format("Unable to retrieve Email for the User : {0}{1}{2}", recip.Name,
-                    Environment.NewLine, exception.Message));
+                Logger.Warn(
+                    $"Unable to retrieve Email for the User : {recip.Name}{Environment.NewLine}{exception.Message}");
             }
             return smtpAddress;
         }
@@ -1048,7 +1127,13 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
             var profileList = new List<string>();
             const string defaultProfilePath =
                 @"Software\Microsoft\Windows NT\CurrentVersion\Windows Messaging Subsystem\Profiles";
-            const string newProfilePath = @"Software\Microsoft\Office\15.0\Outlook\Profiles";
+            const string newProfilePath = @"Software\Microsoft\Office\{0}\Outlook\Profiles";
+
+            string office2016Path = string.Format(newProfilePath, "16.0");
+            string office2013Path = string.Format(newProfilePath, "15.0");
+
+            var pathList = new List<string>() {office2013Path, office2016Path};
+
 
             var defaultRegKey = Registry.CurrentUser.OpenSubKey(defaultProfilePath,
                 RegistryKeyPermissionCheck.Default);
@@ -1063,17 +1148,20 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
                 }
             }
 
-            var newregKey = Registry.CurrentUser.OpenSubKey(newProfilePath, RegistryKeyPermissionCheck.Default);
-
-            if (newregKey != null)
+            foreach (string profilePath in pathList)
             {
-                var list = newregKey.GetSubKeyNames();
+                var newregKey = Registry.CurrentUser.OpenSubKey(profilePath, RegistryKeyPermissionCheck.Default);
 
-                if (list.Any())
+                if (newregKey != null)
                 {
-                    foreach (var name in list.Where(name => !profileList.Contains(name)))
+                    var list = newregKey.GetSubKeyNames();
+
+                    if (list.Any())
                     {
-                        profileList.Add(name);
+                        foreach (var name in list.Where(name => !profileList.Contains(name)))
+                        {
+                            profileList.Add(name);
+                        }
                     }
                 }
             }
@@ -1251,7 +1339,7 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
         }
 
 
-        public async Task<AppointmentsWrapper> GetCalendarEventsInRangeAsync(DateTime startDate, DateTime endDate,
+        public async Task<AppointmentsWrapper> GetCalendarEventsInRangeAsync(DateTime startDate, DateTime endDate,bool skipPrivateEntries,
             IDictionary<string, object> calendarSpecificData)
         {
             CheckCalendarSpecificData(calendarSpecificData);
@@ -1260,7 +1348,7 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
             var appointmentList =
                 await
                     Task<List<Appointment>>.Factory.StartNew(
-                        () => GetAppointments(startDate, endDate));
+                        () => GetAppointments(startDate, endDate, skipPrivateEntries));
 
             if (appointmentList == null)
             {
@@ -1311,6 +1399,16 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
             {
                 EventCategory = null;
             }
+
+            object setOrganizer;
+            if (calendarSpecificData.TryGetValue("SetOrganizer", out setOrganizer))
+            {
+                SetOrganizer = (bool)setOrganizer;
+            }
+            else
+            {
+                SetOrganizer = false;
+            }
         }
 
 
@@ -1328,9 +1426,7 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
             CheckCalendarSpecificData(calendarSpecificData);
 
             var result = await
-                Task<bool>.Factory.StartNew(
-                    () =>
-                        AddEvents(calendarAppointments, addDescription, addReminder, addAttendees,
+                Task<bool>.Factory.StartNew(() => AddEvents(calendarAppointments, addDescription, addReminder, addAttendees,
                             attendeesToDescription, addedAppointments));
 
             addedAppointments.IsSuccess = result;
@@ -1366,7 +1462,7 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
             var startDate = DateTime.Today.AddDays(-(10*365));
             var endDate = DateTime.Today.AddDays(10*365);
             var appointments =
-                await GetCalendarEventsInRangeAsync(startDate, endDate, calendarSpecificData);
+                await GetCalendarEventsInRangeAsync(startDate, endDate, true,calendarSpecificData);
             if (appointments != null)
             {
                 var success = await DeleteCalendarEvents(appointments, calendarSpecificData);
@@ -1380,7 +1476,7 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
             var startDate = DateTime.Today.AddDays(-(10 * 365));
             var endDate = DateTime.Today.AddDays(10 * 365);
             var appointments =
-                await GetCalendarEventsInRangeAsync(startDate, endDate, calendarSpecificData);
+                await GetCalendarEventsInRangeAsync(startDate, endDate,true, calendarSpecificData);
             if (appointments != null)
             {
                 appointments.ForEach(t => t.ExtendedProperties = new Dictionary<string, string>());

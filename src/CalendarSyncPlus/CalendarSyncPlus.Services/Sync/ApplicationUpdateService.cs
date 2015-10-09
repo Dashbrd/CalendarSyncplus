@@ -184,7 +184,7 @@ namespace CalendarSyncPlus.Services
             try
             {
                 if (_isAlpha && !_version.Contains("-"))
-                    return string.Format("{0}-alpha", _version);
+                    return $"{_version}-alpha";
             }
             catch (Exception exception)
             {

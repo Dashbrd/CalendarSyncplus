@@ -1,6 +1,6 @@
 ﻿namespace CalendarSyncPlus.Domain.Models
 {
-    public class Recipient
+    public class Attendee
     {
         public string Name { get; set; }
         public string Email { get; set; }

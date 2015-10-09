@@ -328,7 +328,7 @@ namespace CalendarSyncPlus.Authentication.Google
             }
         }
 
-        private static Task<UserCredential> Authenticate(string clientId, string clientSecret, string userName,
+        private Task<UserCredential> Authenticate(string clientId, string clientSecret, string userName,
             string fileDataStorePath,
             bool isFullPath)
         {
@@ -341,7 +341,7 @@ namespace CalendarSyncPlus.Authentication.Google
             return GoogleWebAuthorizationBroker.AuthorizeAsync(
                 new ClientSecrets {ClientId = clientId, ClientSecret = clientSecret}
                 , scopes
-                , String.Format("-{0}-googletoken", userName)
+                , $"-{userName}-googletoken"
                 , cancellationToken
                 , fileDataStore);
         }
@@ -398,7 +398,7 @@ namespace CalendarSyncPlus.Authentication.Google
             var auth = await GoogleWebAuthorizationBroker.AuthorizeAsync(
                         new ClientSecrets {ClientId = Constants.ClientId, ClientSecret = Constants.ClientSecret}
                         , scopes
-                        , String.Format("-{0}-googletoken", accountName)
+                        , $"-{accountName}-googletoken"
                         , cancellationToken
                         , fileDataStore);
             return auth != null;
@@ -460,7 +460,7 @@ namespace CalendarSyncPlus.Authentication.Google
                 var authTask = await new AuthorizationCodeInstalledApp(
                     new GoogleAuthorizationCodeFlow(initializer),
                     new CustomCodeReceiver(getCodeDeledateFunc))
-                    .AuthorizeAsync(String.Format("-{0}-googletoken", accountName), CancellationToken.None);
+                    .AuthorizeAsync($"-{accountName}-googletoken", CancellationToken.None);
 
                 var service = new CalendarService(new BaseClientService.Initializer
                 {
@@ -482,7 +482,7 @@ namespace CalendarSyncPlus.Authentication.Google
 
         #endregion
 
-        private static IEnumerable<string> GetScopes()
+        private IEnumerable<string> GetScopes()
         {
             var scopes = new[]
             {

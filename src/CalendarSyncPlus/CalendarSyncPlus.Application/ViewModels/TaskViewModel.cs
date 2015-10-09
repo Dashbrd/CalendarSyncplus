@@ -205,7 +205,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             {
                 SyncDirectionEnum.OutlookGoogleOneWay,
                 SyncDirectionEnum.OutlookGoogleOneWayToSource,
-                SyncDirectionEnum.OutlookGoogleTwoWay
+                //SyncDirectionEnum.OutlookGoogleTwoWay
             };
             SyncFrequencyTypes = new List<string>
             {

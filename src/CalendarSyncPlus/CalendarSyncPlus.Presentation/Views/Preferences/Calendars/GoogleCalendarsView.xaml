@@ -117,14 +117,14 @@
                             Margin="2"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Center"
-                            ToolTip="Deletes Google events for the selected calendar for the past and future 10 years"
+                            ToolTip="Unlinks the Google events from Outlook appointments for the selected calendar for the past and future 10 years"
                             Command="{Binding CleanGoogleCalendarCommand}"
                             Content="{localizeExtension:LocText Key=GoogleSettingsView_Button_ClearCalendar_Content}" />
                     <Button Width="150"
                             Margin="2"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Center"
-                            ToolTip="Unlinks the Google events from Outlook appointments for the selected calendar for the past and future 10 years"
+                            ToolTip="Deletes Google events for the selected calendar for the past and future 10 years"
                             Command="{Binding ResetGoogleCalendarCommand}"
                             Content="{localizeExtension:LocText Key=GoogleSettingsView_Button_ResetCalendar_Content}" />
 

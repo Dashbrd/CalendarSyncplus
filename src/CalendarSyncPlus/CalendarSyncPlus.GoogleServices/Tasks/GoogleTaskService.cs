@@ -14,6 +14,7 @@ using CalendarSyncPlus.Domain.Wrappers;
 using CalendarSyncPlus.Services.Tasks.Interfaces;
 using Google.Apis.Requests;
 using Google.Apis.Tasks.v1;
+using Google.GData.Extensions;
 using log4net;
 using Task = Google.Apis.Tasks.v1.Data.Task;
 
@@ -90,12 +91,16 @@ namespace CalendarSyncPlus.GoogleServices.Tasks
             return finalTaskList;
         }
 
-        private ReminderTask CreateReminderTask(Task eventItem)
+        private ReminderTask CreateReminderTask(Task taskItem)
         {
-            var reminderTask = new ReminderTask(eventItem.Id, eventItem.Title, eventItem.Notes,
-                eventItem.Due);
-            reminderTask.IsDeleted = eventItem.Deleted;
-            reminderTask.UpdatedOn = eventItem.Updated;
+            var reminderTask = new ReminderTask(taskItem.Id, taskItem.Title, taskItem.Notes,
+                taskItem.Due)
+            {
+                IsDeleted = taskItem.Deleted,
+                UpdatedOn = taskItem.Updated,
+                CompletedOn = taskItem.Completed,
+                IsCompleted = taskItem.Status.Equals("completed")
+            };
             return reminderTask;
         }
         private Task CreaterGoogleTask(ReminderTask reminderTask)
@@ -134,7 +139,7 @@ namespace CalendarSyncPlus.GoogleServices.Tasks
             object tasksId;
             if (!taskListSpecificData.TryGetValue(DictionaryKeyTaskListId, out tasksId))
             {
-                throw new InvalidOperationException(string.Format("{0} is a required.", DictionaryKeyTaskListId));
+                throw new InvalidOperationException($"{DictionaryKeyTaskListId} is a required.");
             }
 
             TaskListId = tasksId as string;
@@ -142,7 +147,7 @@ namespace CalendarSyncPlus.GoogleServices.Tasks
             object accountNameValue;
             if (!taskListSpecificData.TryGetValue(DictionaryKeyAccountName, out accountNameValue))
             {
-                throw new InvalidOperationException(string.Format("{0} is a required.", DictionaryKeyAccountName));
+                throw new InvalidOperationException($"{DictionaryKeyAccountName} is a required.");
             }
 
             AccountName = accountNameValue as string;

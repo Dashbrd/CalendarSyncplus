@@ -342,10 +342,10 @@
   <data name="OptionsSettingsView_HelpButton_Category_Tooltip" xml:space="preserve">
     <value>Set color to Outlook and Google Appointments</value>
   </data>
-  <data name="OutlookSettingsView_Button_ExchnageSettings_DetectSettings_Content" xml:space="preserve">
+  <data name="OutlookSettingsView_Button_ExchangeSettings_DetectSettings_Content" xml:space="preserve">
     <value>Detect Settings</value>
   </data>
-  <data name="OutlookSettingsView_Button_ExchnageSettings_ResetExchangeCalendar_Content" xml:space="preserve">
+  <data name="OutlookSettingsView_Button_ExchangeSettings_ResetExchangeCalendar_Content" xml:space="preserve">
     <value>Reset Exchange Calendar</value>
   </data>
   <data name="OutlookSettingsView_Button_OutlookProfileSettings_ResetOutlookCalendar_Text" xml:space="preserve">
@@ -357,7 +357,7 @@
   <data name="OutlookSettingsView_CheckBox_OutlookSettings_OutlookApplicaiton_Content" xml:space="preserve">
     <value>Outlook Application</value>
   </data>
-  <data name="OutlookSettingsView_GroupBox_ExchnageSettings_Header" xml:space="preserve">
+  <data name="OutlookSettingsView_GroupBox_ExchangeSettings_Header" xml:space="preserve">
     <value>Exchange Server Settings</value>
   </data>
   <data name="OutlookSettingsView_GroupBox_OutlookProfileSettings_Header" xml:space="preserve">
@@ -381,19 +381,19 @@
   <data name="OutlookSettingsView_RadioButton_OutlookProfileSettings_SelectProfile_Content" xml:space="preserve">
     <value>Select Profile</value>
   </data>
-  <data name="OutlookSettingsView_TextBlock_ExchnageSettings_Domain_Text" xml:space="preserve">
+  <data name="OutlookSettingsView_TextBlock_ExchangeSettings_Domain_Text" xml:space="preserve">
     <value>Domain</value>
   </data>
-  <data name="OutlookSettingsView_TextBlock_ExchnageSettings_Password_Text" xml:space="preserve">
+  <data name="OutlookSettingsView_TextBlock_ExchangeSettings_Password_Text" xml:space="preserve">
     <value>Password</value>
   </data>
-  <data name="OutlookSettingsView_TextBlock_ExchnageSettings_SelectCalendar_Content" xml:space="preserve">
+  <data name="OutlookSettingsView_TextBlock_ExchangeSettings_SelectCalendar_Content" xml:space="preserve">
     <value>Select Calendar</value>
   </data>
-  <data name="OutlookSettingsView_TextBlock_ExchnageSettings_ServerUrl_Text" xml:space="preserve">
+  <data name="OutlookSettingsView_TextBlock_ExchangeSettings_ServerUrl_Text" xml:space="preserve">
     <value>Exchange Server Url</value>
   </data>
-  <data name="OutlookSettingsView_TextBlock_ExchnageSettings_UserName_Text" xml:space="preserve">
+  <data name="OutlookSettingsView_TextBlock_ExchangeSettings_UserName_Text" xml:space="preserve">
     <value>Username</value>
   </data>
   <data name="OutlookSettingsView_TextBlock_OutlookProfileSettings_ChooseProfile_Text" xml:space="preserve">
@@ -638,5 +638,17 @@
   </data>
   <data name="SystemtrayNotifierView_MenuItem_TaskBarIcon_SyncNow_Header" xml:space="preserve">
     <value>Sync Now</value>
+  </data>
+  <data name="OutlookSettingsView_Button_OutlookProfileSettings_SetOrganizer_Text" xml:space="preserve">
+    <value>Set Organizer Field</value>
+  </data>
+  <data name="OutlookSettingsView_Button_ExchangeSettings_UsingCorporateNetwork_Content" xml:space="preserve">
+    <value>Using Corporate Network</value>
+  </data>
+  <data name="OptionsSettingsView_CheckBox_OtherOptions_SkipPrivateEntries_Content" xml:space="preserve">
+    <value>Skip Private Entries</value>
+  </data>
+  <data name="OptionsSettingsView_ContentControl_OtherOptions_SkipPrivateEntries_Content" xml:space="preserve">
+    <value>Sync skips private entries read from Outlook and Google events</value>
   </data>
 </root>

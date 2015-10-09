@@ -421,7 +421,7 @@ namespace CalendarSyncPlus.Application.ViewModels
                 SyncStartService.Stop(OnTimerElapsed);
                 IsPeriodicSyncStarted = false;
 
-                UpdateStatus(string.Format("Periodic Sync Stopped : {0}", DateTime.Now));
+                UpdateStatus($"Periodic Sync Stopped : {DateTime.Now}");
                 UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.LogSeparator));
             }
             else
@@ -438,7 +438,7 @@ namespace CalendarSyncPlus.Application.ViewModels
                     }
 
                     IsPeriodicSyncStarted = true;
-                    UpdateStatus(string.Format("Periodic Sync Started : {0}", DateTime.Now));
+                    UpdateStatus($"Periodic Sync Started : {DateTime.Now}");
                     UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.LogSeparator));
                 }
             }
@@ -458,7 +458,7 @@ namespace CalendarSyncPlus.Application.ViewModels
                             IsLatestVersionAvailable = true;
                             LatestVersion = version;
                             SystemTrayNotifierViewModel.ShowBalloon(
-                                string.Format("New Update {0} Available!", version), 5000);
+                                $"New Update {version} Available!", 5000);
                         }
                     }
                     _lastCheckDateTime = DateTime.Now;
@@ -725,7 +725,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             }
             int totalSeconds = (int)DateTime.Now.Subtract(syncProfile.LastSync.GetValueOrDefault()).TotalSeconds;
             UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.Line));
-            UpdateStatus(string.Format("Time Elapsed : {0} s", totalSeconds));
+            UpdateStatus($"Time Elapsed : {totalSeconds} s");
             UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.LogSeparator));
             syncMetric.ElapsedSeconds = totalSeconds;
             ShowNotification(false);
