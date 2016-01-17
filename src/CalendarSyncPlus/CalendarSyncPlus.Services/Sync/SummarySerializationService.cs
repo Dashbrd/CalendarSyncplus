@@ -15,7 +15,7 @@ namespace CalendarSyncPlus.Services.Sync
     {
         private readonly string _applicationDataDirectory;
         private ILog Logger { get; set; }
-        private readonly string _settingsFilePath;
+        private string _summaryFilePath;
 
         [ImportingConstructor]
         public SummarySerializationService(ApplicationLogger applicationLogger)
@@ -25,7 +25,7 @@ namespace CalendarSyncPlus.Services.Sync
                 Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
                     "CalendarSyncPlus");
             _applicationDataDirectory = Path.Combine(_applicationDataDirectory, "Stats");
-            _settingsFilePath = Path.Combine(_applicationDataDirectory, "Summary.xml");
+            _summaryFilePath = Path.Combine(_applicationDataDirectory, "Summary.xml");
         }
 
         public async Task<bool> SerializeSyncSummaryAsync(SyncSummary syncProfile)
@@ -36,7 +36,7 @@ namespace CalendarSyncPlus.Services.Sync
 
         public async Task<SyncSummary> DeserializeSyncSummaryAsync()
         {
-            if (!File.Exists(SettingsFilePath))
+            if (!File.Exists(SummaryFilePath))
             {
                 return null;
             }
@@ -65,14 +65,19 @@ namespace CalendarSyncPlus.Services.Sync
             {
                 Directory.CreateDirectory(ApplicationDataDirectory);
             }
+            int i = 0;
+            while (File.Exists(SummaryFilePath))
+            {
+                _summaryFilePath = Path.Combine(_applicationDataDirectory, "Summary"+ i++ + ".xml");
+            }
 
             var serializer = new XmlSerializer<SyncSummary>();
-            serializer.SerializeToFile(syncProfile, SettingsFilePath);
+            serializer.SerializeToFile(syncProfile, SummaryFilePath);
         }
         
         private SyncSummary DeserializeSyncSummaryBackgroundTask()
         {
-            if (!File.Exists(SettingsFilePath))
+            if (!File.Exists(SummaryFilePath))
             {
                 Logger.Warn("Sync summary file does not exist");
                 return null;
@@ -80,7 +85,7 @@ namespace CalendarSyncPlus.Services.Sync
             try
             {
                 var serializer = new XmlSerializer<SyncSummary>();
-                return serializer.DeserializeFromFile(SettingsFilePath);
+                return serializer.DeserializeFromFile(SummaryFilePath);
             }
             catch (Exception exception)
             {
@@ -91,9 +96,9 @@ namespace CalendarSyncPlus.Services.Sync
 
         #region Properties
 
-        public string SettingsFilePath
+        public string SummaryFilePath
         {
-            get { return _settingsFilePath; }
+            get { return _summaryFilePath; }
         }
 
         public string ApplicationDataDirectory

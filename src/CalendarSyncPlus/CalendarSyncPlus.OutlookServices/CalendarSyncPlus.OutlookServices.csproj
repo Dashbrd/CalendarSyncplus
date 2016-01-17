@@ -66,6 +66,7 @@
       <Link>AssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Calendar\IOutlookCalendarService.cs" />
+    <Compile Include="Helpers\OutlookItem.cs" />
     <Compile Include="Task\IOutlookTaskService.cs" />
     <Compile Include="Calendar\OutlookCalendarService.cs" />
     <Compile Include="Contact\IOutlookContactService.cs" />
