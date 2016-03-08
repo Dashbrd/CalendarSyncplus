@@ -1303,7 +1303,10 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
             {
                 GetOutlookApplication(out disposeOutlookInstances, out application, out nameSpace, ProfileName);
                 rootFolders = nameSpace.Folders;
-                mailBoxes = GetOutlookMailBoxes(rootFolders);
+                if (rootFolders != null)
+                {
+                    mailBoxes = GetOutlookMailBoxes(rootFolders);
+                }
             }
             catch (Exception exception)
             {
