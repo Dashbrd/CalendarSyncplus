@@ -23,9 +23,10 @@
             <Setter Property="HeaderTemplate">
                 <Setter.Value>
                     <DataTemplate>
-                        <TextBlock Text="{Binding Header,RelativeSource={RelativeSource AncestorType={x:Type TabItem}}}"
-                                   FontSize="16"
-                                   VerticalAlignment="Center" />
+                        <TextBlock
+                            Text="{Binding Header,RelativeSource={RelativeSource AncestorType={x:Type TabItem}}}"
+                            FontSize="16"
+                            VerticalAlignment="Center" />
                     </DataTemplate>
                 </Setter.Value>
             </Setter>
@@ -90,7 +91,7 @@
 
         <!--  Menu buttons  -->
         <main:MenuView Grid.Column="0"
-                        Grid.RowSpan="5" />
+                       Grid.RowSpan="5" />
 
         <!--  Sync Schedule  -->
         <Expander Grid.Row="1"
@@ -113,7 +114,7 @@
                 </ScrollViewer>
             </StackPanel>
         </Expander>
-     
+
         <!--  Sync Status & Log  -->
         <TabControl Grid.Row="3"
                     Grid.Column="1">
@@ -151,8 +152,9 @@
                                     <Setter Property="Content"
                                             Value="{localizeExtension:LocText Key=HomeView_Button_StartSync_Content_Start}" />
                                     <Style.Triggers>
-                                        <DataTrigger Binding="{Binding IsPeriodicSyncStarted, UpdateSourceTrigger=PropertyChanged}"
-                                                     Value="True">
+                                        <DataTrigger
+                                            Binding="{Binding IsPeriodicSyncStarted, UpdateSourceTrigger=PropertyChanged}"
+                                            Value="True">
                                             <Setter Property="Content"
                                                     Value="{localizeExtension:LocText Key=HomeView_Button_StartSync_Content_Stop}" />
                                         </DataTrigger>
@@ -199,7 +201,7 @@
                             <ColumnDefinition />
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto" />
                             <RowDefinition />
                         </Grid.RowDefinitions>
                         <TextBlock Text="{Binding SyncSummary.TotalSyncs,StringFormat='{}Total Syncs : {0}'}"
@@ -215,10 +217,11 @@
                                    HorizontalAlignment="Center"
                                    VerticalAlignment="Center"
                                    Grid.Column="2" />
-                        <TextBlock Text="{Binding SyncSummary.TotalSyncSeconds,StringFormat='{}Total Sync Seconds : {0}'}"
-                                   Grid.Column="3"
-                                   HorizontalAlignment="Center"
-                                   VerticalAlignment="Center" />
+                        <TextBlock
+                            Text="{Binding SyncSummary.TotalSyncSeconds,StringFormat='{}Total Sync Seconds : {0}'}"
+                            Grid.Column="3"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center" />
                     </Grid>
                 </GroupBox>
             </TabItem>

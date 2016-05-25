@@ -19,7 +19,6 @@
 
 #region Imports
 
-using System;
 using System.ComponentModel.Composition;
 using System.Waf.Applications;
 using CalendarSyncPlus.Application.Views;
@@ -125,8 +124,6 @@ namespace CalendarSyncPlus.Application.ViewModels
             get { return _syncNowCommand; }
             set { SetProperty(ref _syncNowCommand, value); }
         }
-
-        
 
         #endregion
 

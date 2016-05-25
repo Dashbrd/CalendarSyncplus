@@ -1,7 +1,6 @@
 ﻿using CalendarSyncPlus.Domain.Models;
 using CalendarSyncPlus.Services.Utilities;
 using Microsoft.Office.Interop.Outlook;
-using Recipient = Microsoft.Office.Interop.Outlook.Recipient;
 
 namespace CalendarSyncPlus.OutlookServices.Utilities
 {
@@ -84,7 +83,7 @@ namespace CalendarSyncPlus.OutlookServices.Utilities
                     return OlTaskStatus.olTaskComplete;
                 case TaskStatusEnum.TaskDeferred:
                     return OlTaskStatus.olTaskDeferred;
-                case TaskStatusEnum.TaskInProgress: 
+                case TaskStatusEnum.TaskInProgress:
                     return OlTaskStatus.olTaskInProgress;
                 case TaskStatusEnum.TaskNotStarted:
                     return OlTaskStatus.olTaskNotStarted;
@@ -93,6 +92,7 @@ namespace CalendarSyncPlus.OutlookServices.Utilities
             }
             return OlTaskStatus.olTaskNotStarted;
         }
+
         public static TaskStatusEnum GetTaskStatus(this TaskItem taskItem)
         {
             switch (taskItem.Status)
@@ -103,7 +103,7 @@ namespace CalendarSyncPlus.OutlookServices.Utilities
                     return TaskStatusEnum.TaskDeferred;
                 case OlTaskStatus.olTaskInProgress:
                     return TaskStatusEnum.TaskInProgress;
-                case  OlTaskStatus.olTaskNotStarted:
+                case OlTaskStatus.olTaskNotStarted:
                     return TaskStatusEnum.TaskNotStarted;
                 case OlTaskStatus.olTaskWaiting:
                     return TaskStatusEnum.TaskWaiting;

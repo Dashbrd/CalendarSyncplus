@@ -6,7 +6,6 @@ using System.Waf.Applications;
 using CalendarSyncPlus.Analytics.Interfaces;
 using CalendarSyncPlus.Authentication.Google;
 using CalendarSyncPlus.Common.Log;
-using CalendarSyncPlus.Domain.Models;
 using CalendarSyncPlus.Domain.Models.Metrics;
 using Google.Apis.Analytics.v3;
 using Google.Apis.Analytics.v3.Data;
@@ -18,7 +17,7 @@ namespace CalendarSyncPlus.Analytics
 {
     /// <summary>
     /// </summary>
-    [Export(typeof (ISyncAnalyticsService))]
+    [Export(typeof(ISyncAnalyticsService))]
     public class SyncAnalyticsService : ISyncAnalyticsService
     {
         /// <summary>
@@ -38,6 +37,8 @@ namespace CalendarSyncPlus.Analytics
         /// <summary>
         /// </summary>
         public ILog Logger { get; set; }
+
+        #region ISyncAnalyticsService Members
 
         /// <summary>
         /// </summary>
@@ -72,6 +73,8 @@ namespace CalendarSyncPlus.Analytics
             }
             return true;
         }
+
+        #endregion
 
         private void InsertMetricCallback(CustomMetric content, RequestError error, int index,
             HttpResponseMessage message)

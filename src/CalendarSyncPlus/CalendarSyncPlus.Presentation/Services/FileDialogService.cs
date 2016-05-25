@@ -26,7 +26,7 @@ using IFileDialogService = CalendarSyncPlus.Services.Interfaces.IFileDialogServi
 
 namespace CalendarSyncPlus.Presentation.Services
 {
-    [Export(typeof (IFileDialogService))]
+    [Export(typeof(IFileDialogService))]
     public class FileDialogService : IFileDialogService
     {
         private readonly IDefaultFileDialogService _defaultFileDialogService;
@@ -39,6 +39,8 @@ namespace CalendarSyncPlus.Presentation.Services
             _defaultFileDialogService = defaultFileDialogService;
         }
 
+        #region IFileDialogService Members
+
         public FileDialogResult ShowOpenFileDialog(IEnumerable<FileType> fileTypes, FileType defaultFileType,
             string defaultFileName)
         {
@@ -50,5 +52,7 @@ namespace CalendarSyncPlus.Presentation.Services
         {
             return _defaultFileDialogService.ShowSaveFileDialog(_shellView, fileTypes, defaultFileType, defaultFileName);
         }
+
+        #endregion
     }
 }

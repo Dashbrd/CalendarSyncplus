@@ -12,6 +12,8 @@ namespace CalendarSyncPlus.Presentation.Controls.RichTextBox.Formatters
     /// </summary>
     public class HtmlFormatter : ITextFormatter
     {
+        #region ITextFormatter Members
+
         public string GetText(FlowDocument document)
         {
             var tr = new TextRange(document.ContentStart, document.ContentEnd);
@@ -41,5 +43,7 @@ namespace CalendarSyncPlus.Presentation.Controls.RichTextBox.Formatters
                 throw new InvalidDataException("data provided is not in the correct Html format.", exception);
             }
         }
+
+        #endregion
     }
 }

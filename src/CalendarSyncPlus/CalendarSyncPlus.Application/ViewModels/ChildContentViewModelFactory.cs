@@ -13,7 +13,7 @@ namespace CalendarSyncPlus.Application.ViewModels
         {
         }
 
-        [ImportMany(typeof (IChildContentViewModel))]
+        [ImportMany(typeof(IChildContentViewModel))]
         private IEnumerable<Lazy<IChildContentViewModel, IChildContentViewModelMetaData>> ChildViewModelList { get; set;
         }
 

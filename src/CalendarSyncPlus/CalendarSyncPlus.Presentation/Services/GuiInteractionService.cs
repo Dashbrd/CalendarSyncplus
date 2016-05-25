@@ -20,13 +20,12 @@
 using System;
 using System.ComponentModel.Composition;
 using CalendarSyncPlus.Presentation.Helpers;
-using CalendarSyncPlus.Presentation.Views;
 using CalendarSyncPlus.Presentation.Views.Main;
 using CalendarSyncPlus.Services.Interfaces;
 
 namespace CalendarSyncPlus.Presentation.Services
 {
-    [Export(typeof (IGuiInteractionService))]
+    [Export(typeof(IGuiInteractionService))]
     public class GuiInteractionService : IGuiInteractionService
     {
         [ImportingConstructor]
@@ -41,12 +40,12 @@ namespace CalendarSyncPlus.Presentation.Services
 
         public void ShowApplication()
         {
-            ShellView.Dispatcher.BeginInvoke(((Action) (() => Utilities.BringToForeground(ShellView))));
+            ShellView.Dispatcher.BeginInvoke((Action) (() => Utilities.BringToForeground(ShellView)));
         }
 
         public void HideApplication()
         {
-            ShellView.Dispatcher.BeginInvoke(((Action) (() => Utilities.HideForeground(ShellView))));
+            ShellView.Dispatcher.BeginInvoke((Action) (() => Utilities.HideForeground(ShellView)));
         }
 
         #endregion

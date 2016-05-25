@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.Composition;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.Composition;
 using CalendarSyncPlus.Common.MetaData;
 using CalendarSyncPlus.Domain.Models;
 using CalendarSyncPlus.Services.Contacts.Interfaces;
-using Google.Apis.Drive.v2;
 using Google.GData.Contacts;
 using Google.GData.Extensions;
 
@@ -19,9 +13,8 @@ namespace CalendarSyncPlus.GoogleServices.Contacts
     {
         public void CreateContactEntry(Contact contact)
         {
-            ContactEntry contactEntry = new ContactEntry();
+            var contactEntry = new ContactEntry();
             contactEntry.Name = new Name();
         }
-
     }
 }

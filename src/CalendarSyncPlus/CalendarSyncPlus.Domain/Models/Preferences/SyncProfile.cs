@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Waf.Foundation;
-using System.Xml.Serialization;
 using CalendarSyncPlus.Common.MetaData;
 
 namespace CalendarSyncPlus.Domain.Models.Preferences
@@ -8,30 +7,80 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
     [Serializable]
     public class SyncProfile : Model
     {
+        private ServiceType _destination;
+        private ExchangeServerSettings _exchangeServerSettings;
+        private GoogleSettings _googleSettings;
         private bool _isDefault;
+
+        [NonSerialized] private bool _isLoaded;
+
         private bool _isSyncEnabled;
         private DateTime? _lastSync;
+        private ServiceType _master;
         private string _name;
         private DateTime? _nextSync;
-        private GoogleSettings _googleSettings;
         private OutlookSettings _outlookSettings;
-        private SyncDirectionEnum _syncDirection;
-        private ServiceType _master;
         private ServiceType _source;
-        private ServiceType _destination;
-        private SyncModeEnum _syncMode;
+        private SyncDirectionEnum _syncDirection;
         private SyncFrequency _syncFrequency;
-        private ExchangeServerSettings _exchangeServerSettings;
-        [NonSerialized]
-        private bool _isLoaded;
+        private SyncModeEnum _syncMode;
 
         public SyncProfile()
         {
             OutlookSettings = new OutlookSettings();
-            GoogleSettings  = new GoogleSettings();
+            GoogleSettings = new GoogleSettings();
+        }
+
+        /// <summary>
+        /// </summary>
+        public void SetSourceDestTypes()
+        {
+            if (SyncDirection == SyncDirectionEnum.OutlookGoogleOneWay)
+            {
+                Source =
+                    OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.ExchangeWebServices)
+                        ? ServiceType.EWS
+                        : ServiceType.OutlookDesktop;
+                Destination = ServiceType.Google;
+            }
+            else
+            {
+                Source = ServiceType.Google;
+                Destination =
+                    OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.ExchangeWebServices)
+                        ? ServiceType.EWS
+                        : ServiceType.OutlookDesktop;
+            }
+
+            if (SyncDirection == SyncDirectionEnum.OutlookGoogleTwoWay)
+            {
+                SyncMode = SyncModeEnum.TwoWay;
+                if (Master == ServiceType.OutlookDesktop)
+                {
+                    Source =
+                        OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.ExchangeWebServices)
+                            ? ServiceType.EWS
+                            : ServiceType.OutlookDesktop;
+                    Destination = ServiceType.Google;
+                }
+                else
+                {
+                    Source = ServiceType.Google;
+                    Destination =
+                        OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.ExchangeWebServices)
+                            ? ServiceType.EWS
+                            : ServiceType.OutlookDesktop;
+                }
+            }
+            else
+            {
+                SyncMode = SyncModeEnum.OneWay;
+                Master = ServiceType.OutlookDesktop;
+            }
         }
 
         #region Properties
+
         /// <summary>
         /// </summary>
         public string Name
@@ -132,7 +181,7 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
             set { SetProperty(ref _syncMode, value); }
         }
 
-        
+
         public bool IsLoaded
         {
             get { return _isLoaded; }
@@ -140,53 +189,5 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
         }
 
         #endregion
-
-        /// <summary>
-        /// </summary>
-        public void SetSourceDestTypes()
-        {
-            if (SyncDirection == SyncDirectionEnum.OutlookGoogleOneWay)
-            {
-                Source =
-                    OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.ExchangeWebServices)
-                        ? ServiceType.EWS
-                        : ServiceType.OutlookDesktop;
-                Destination = ServiceType.Google;
-            }
-            else
-            {
-                Source = ServiceType.Google;
-                Destination =
-                    OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.ExchangeWebServices)
-                        ? ServiceType.EWS
-                        : ServiceType.OutlookDesktop;
-            }
-
-            if (SyncDirection == SyncDirectionEnum.OutlookGoogleTwoWay)
-            {
-                SyncMode = SyncModeEnum.TwoWay;
-                if (Master == ServiceType.OutlookDesktop)
-                {
-                    Source =
-                        OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.ExchangeWebServices)
-                            ? ServiceType.EWS
-                            : ServiceType.OutlookDesktop;
-                    Destination = ServiceType.Google;
-                }
-                else
-                {
-                    Source = ServiceType.Google;
-                    Destination =
-                        OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.ExchangeWebServices)
-                            ? ServiceType.EWS
-                            : ServiceType.OutlookDesktop;
-                }
-            }
-            else
-            {
-                SyncMode = SyncModeEnum.OneWay;
-                Master = ServiceType.OutlookDesktop;
-            }
-        }
     }
 }

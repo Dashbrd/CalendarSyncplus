@@ -12,12 +12,12 @@ namespace CalendarSyncPlus.Domain.Helpers
         // Deep clone
         public static T DeepClone<T>(this T a)
         {
-            using (MemoryStream stream = new MemoryStream())
+            using (var stream = new MemoryStream())
             {
-                BinaryFormatter formatter = new BinaryFormatter();
+                var formatter = new BinaryFormatter();
                 formatter.Serialize(stream, a);
                 stream.Position = 0;
-                return (T)formatter.Deserialize(stream);
+                return (T) formatter.Deserialize(stream);
             }
         }
 
@@ -37,8 +37,8 @@ namespace CalendarSyncPlus.Domain.Helpers
         public static bool ValidateSettings(this Settings settings)
         {
             if (settings == null || !settings.CalendarSyncProfiles.Any() ||
-                settings.CalendarSyncProfiles.All(t => !t.ValidateOutlookSettings() || 
-                    t.GoogleSettings.GoogleAccount == null))
+                settings.CalendarSyncProfiles.All(t => !t.ValidateOutlookSettings() ||
+                                                       t.GoogleSettings.GoogleAccount == null))
             {
                 return false;
             }

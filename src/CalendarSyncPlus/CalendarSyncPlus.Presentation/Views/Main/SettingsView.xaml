@@ -102,7 +102,7 @@
             <TabItem Header="{localizeExtension:LocText Key=SettingsView_TabItem_Manage_Header}">
                 <ScrollViewer VerticalScrollBarVisibility="Auto"
                               HorizontalScrollBarVisibility="Hidden">
-                    <ContentPresenter Content="{Binding SettingsService.ManageProfilesView}"/>
+                    <ContentPresenter Content="{Binding SettingsService.ManageProfilesView}" />
                 </ScrollViewer>
             </TabItem>
             <TabItem Header="{localizeExtension:LocText Key=SettingsView_TabItem_Application_Header}">
@@ -115,14 +115,14 @@
         <StackPanel Orientation="Horizontal"
                     Grid.Column="0"
                     Grid.Row="3">
-        <Button Content="{localizeExtension:LocText Key=SettingsView_Button_Save_Content}"
-                HorizontalAlignment="Left"
-                Width="100"
-                Margin="5"
-                Height="30"
-                IsEnabled="{Binding Path=IsLoading,Converter={StaticResource ResourceKey=InvertBooleanConverter}}"
-                controls:ButtonHelper.PreserveTextCase="True"
-                Style="{DynamicResource AccentedSquareButtonStyle}"
+            <Button Content="{localizeExtension:LocText Key=SettingsView_Button_Save_Content}"
+                    HorizontalAlignment="Left"
+                    Width="100"
+                    Margin="5"
+                    Height="30"
+                    IsEnabled="{Binding Path=IsLoading,Converter={StaticResource ResourceKey=InvertBooleanConverter}}"
+                    controls:ButtonHelper.PreserveTextCase="True"
+                    Style="{DynamicResource AccentedSquareButtonStyle}"
                     Command="{Binding SaveCommand}" />
             <Button Content="{localizeExtension:LocText Key=SettingsView_Button_Cancel_Content}"
                     HorizontalAlignment="Left"

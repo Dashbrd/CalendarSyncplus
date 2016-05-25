@@ -32,7 +32,6 @@ using System.Waf.Applications;
 using CalendarSyncPlus.Application.Views;
 using CalendarSyncPlus.Common;
 using CalendarSyncPlus.Common.Log;
-using CalendarSyncPlus.Domain.Models;
 using CalendarSyncPlus.Domain.Models.Metrics;
 using CalendarSyncPlus.Domain.Models.Preferences;
 using CalendarSyncPlus.Services.Interfaces;
@@ -60,6 +59,7 @@ namespace CalendarSyncPlus.Application.ViewModels
         /// <param name="syncStartService"></param>
         /// <param name="guiInteractionService"></param>
         /// <param name="settings"></param>
+        /// <param name="syncSummary"></param>
         /// <param name="messageService"></param>
         /// <param name="applicationLogger"></param>
         /// <param name="applicationUpdateService"></param>
@@ -104,10 +104,7 @@ namespace CalendarSyncPlus.Application.ViewModels
 
         protected virtual void OnClosing(CancelEventArgs e)
         {
-            if (Closing != null)
-            {
-                Closing(this, e);
-            }
+            Closing?.Invoke(this, e);
         }
 
         #endregion
@@ -141,10 +138,10 @@ namespace CalendarSyncPlus.Application.ViewModels
         #region Properties
 
         public IGuiInteractionService GuiInteractionService { get; set; }
-        public ISyncService SyncStartService { get; private set; }
-        public ILog Logger { get; private set; }
+        public ISyncService SyncStartService { get; }
+        public ILog Logger { get; }
         public ApplicationLogger ApplicationLogger { get; set; }
-        public SystemTrayNotifierViewModel SystemTrayNotifierViewModel { get; private set; }
+        public SystemTrayNotifierViewModel SystemTrayNotifierViewModel { get; }
         public ChildContentViewFactory ChildContentViewFactory { get; set; }
         public IMessageService MessageService { get; set; }
         public IApplicationUpdateService ApplicationUpdateService { get; set; }
@@ -358,10 +355,10 @@ namespace CalendarSyncPlus.Application.ViewModels
             IsAboutVisible = false;
             IsHelpVisible = true;
         }
-        
+
         private List<SyncProfile> GetScheduledProfiles()
         {
-            List<SyncProfile> profiles = new List<SyncProfile>();
+            var profiles = new List<SyncProfile>();
             foreach (var syncProfile in Settings.CalendarSyncProfiles)
             {
                 if (syncProfile.IsSyncEnabled)
@@ -560,15 +557,15 @@ namespace CalendarSyncPlus.Application.ViewModels
                     MessageService.ShowMessageAsync("Unable to do the operation as sync is in progress.");
                     return;
                 }
-                
-                foreach (var syncProfile in Settings.CalendarSyncProfiles.Where(t=> t.IsSyncEnabled))
+
+                foreach (var syncProfile in Settings.CalendarSyncProfiles.Where(t => t.IsSyncEnabled))
                 {
                     var profile = syncProfile;
                     Task.Factory.StartNew(() => StartCalendarSyncTask(profile));
                     Task.Delay(1000);
                 }
 
-                foreach (var syncProfile in Settings.TaskSyncProfiles.Where(t=> t.IsSyncEnabled))
+                foreach (var syncProfile in Settings.TaskSyncProfiles.Where(t => t.IsSyncEnabled))
                 {
                     var profile = syncProfile;
                     Task.Factory.StartNew(() => StartTaskSyncTask(profile));
@@ -594,11 +591,11 @@ namespace CalendarSyncPlus.Application.ViewModels
         {
             try
             {
-                foreach (var syncProfile in Settings.CalendarSyncProfiles.Where(t=> t.IsSyncEnabled))
+                foreach (var syncProfile in Settings.CalendarSyncProfiles.Where(t => t.IsSyncEnabled))
                 {
                     var nextSyncTime = syncProfile.NextSync.GetValueOrDefault();
                     if (nextSyncTime.ToString(Constants.CompareStringFormat)
-                            .Equals(signalTime.ToString(Constants.CompareStringFormat)))
+                        .Equals(signalTime.ToString(Constants.CompareStringFormat)))
                     {
                         var profile = syncProfile;
                         Task.Factory.StartNew(() => StartCalendarSyncTask(profile), TaskCreationOptions.None);
@@ -617,7 +614,7 @@ namespace CalendarSyncPlus.Application.ViewModels
                 {
                     var nextSyncTime = syncProfile.NextSync.GetValueOrDefault();
                     if (nextSyncTime.ToString(Constants.CompareStringFormat)
-                            .Equals(signalTime.ToString(Constants.CompareStringFormat)))
+                        .Equals(signalTime.ToString(Constants.CompareStringFormat)))
                     {
                         var profile = syncProfile;
                         Task.Factory.StartNew(() => StartTaskSyncTask(profile), TaskCreationOptions.None);
@@ -661,7 +658,7 @@ namespace CalendarSyncPlus.Application.ViewModels
                 UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.Line));
                 UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.Profile, syncProfile.Name));
                 UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.Line));
-                var syncMetric = new SyncMetric()
+                var syncMetric = new SyncMetric
                 {
                     StartTime = syncProfile.LastSync.GetValueOrDefault(),
                     ProfileName = syncProfile.Name,
@@ -691,7 +688,7 @@ namespace CalendarSyncPlus.Application.ViewModels
                 UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.Line));
                 UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.Profile, syncProfile.Name));
                 UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.Line));
-                var syncMetric = new SyncMetric()
+                var syncMetric = new SyncMetric
                 {
                     StartTime = syncProfile.LastSync.GetValueOrDefault(),
                     ProfileName = syncProfile.Name,
@@ -723,7 +720,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             {
                 UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.SyncFailed, result));
             }
-            int totalSeconds = (int)DateTime.Now.Subtract(syncProfile.LastSync.GetValueOrDefault()).TotalSeconds;
+            var totalSeconds = (int) DateTime.Now.Subtract(syncProfile.LastSync.GetValueOrDefault()).TotalSeconds;
             UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.Line));
             UpdateStatus($"Time Elapsed : {totalSeconds} s");
             UpdateStatus(StatusHelper.GetMessage(SyncStateEnum.LogSeparator));
@@ -768,7 +765,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             {
                 if (key != null)
                 {
-                    var value = (int)key.GetValue("FirstLaunch", 0);
+                    var value = (int) key.GetValue("FirstLaunch", 0);
                     if (value == 1)
                     {
                         ShowWhatsNew();

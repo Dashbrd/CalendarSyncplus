@@ -10,7 +10,7 @@ using Microsoft.Win32;
 
 namespace CalendarSyncPlus.Presentation.Services
 {
-    [Export(typeof (IWindowsStartupService))]
+    [Export(typeof(IWindowsStartupService))]
     public class WindowsStartupService : IWindowsStartupService
     {
         [ImportingConstructor]
@@ -20,6 +20,34 @@ namespace CalendarSyncPlus.Presentation.Services
         }
 
         public ILog ApplicationLogger { get; set; }
+
+        #region IWindowsStartupService Members
+
+        public void RunAtWindowsStartup()
+        {
+            try
+            {
+                AddApplicationToCurrentUserStartup();
+            }
+            catch (Exception ex)
+            {
+                ApplicationLogger.Error(ex);
+            }
+        }
+
+        public void RemoveFromWindowsStartup()
+        {
+            try
+            {
+                RemoveApplicationFromCurrentUserStartup();
+            }
+            catch (Exception ex)
+            {
+                ApplicationLogger.Error(ex);
+            }
+        }
+
+        #endregion
 
         public void AddApplicationToCurrentUserStartup()
         {
@@ -86,33 +114,5 @@ namespace CalendarSyncPlus.Presentation.Services
             }
             return isAdmin;
         }
-
-        #region IWindowsStartupService Members
-
-        public void RunAtWindowsStartup()
-        {
-            try
-            {
-                AddApplicationToCurrentUserStartup();
-            }
-            catch (Exception ex)
-            {
-                ApplicationLogger.Error(ex);
-            }
-        }
-
-        public void RemoveFromWindowsStartup()
-        {
-            try
-            {
-                RemoveApplicationFromCurrentUserStartup();
-            }
-            catch (Exception ex)
-            {
-                ApplicationLogger.Error(ex);
-            }
-        }
-
-        #endregion
     }
 }

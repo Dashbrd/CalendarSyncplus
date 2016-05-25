@@ -18,6 +18,7 @@ namespace CalendarSyncPlus.Application.ViewModels
     public class LogViewModel : ViewModel<ILogView>
     {
         private ObservableCollection<LogFilter> _appliedFilterList = new ObservableCollection<LogFilter>();
+        private string _currentFileName = @"%APPDATA%\CalendarSyncPlus\Log\CalSyncPlusLog.xml";
         private ObservableCollection<LogItem> _filteredLogItemsView = new ObservableCollection<LogItem>();
         private bool _isCurrentFileNew;
         private bool _isLoading;
@@ -27,7 +28,6 @@ namespace CalendarSyncPlus.Application.ViewModels
         private DelegateCommand _modifyFitlerCommand;
         private LogItem _selectedLogItem;
         private DelegateCommand _selectLogFileCommand;
-        private string _currentFileName = @"%APPDATA%\CalendarSyncPlus\Log\CalSyncPlusLog.xml";
 
         [ImportingConstructor]
         public LogViewModel(ILogView view, IFileDialogService fileDialogService)
@@ -134,7 +134,7 @@ namespace CalendarSyncPlus.Application.ViewModels
 
         private void SelectLogFile()
         {
-            var result = FileDialogService.ShowOpenFileDialog(new[] { new FileType("Log4j Xml Schema File", ".xml") },
+            var result = FileDialogService.ShowOpenFileDialog(new[] {new FileType("Log4j Xml Schema File", ".xml")},
                 new FileType("Log4j Xml Schema File", ".xml"), CurrentFileName);
             if (result.IsValid)
             {

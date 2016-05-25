@@ -31,7 +31,7 @@ using CalendarSyncPlus.Services.Interfaces;
 
 namespace CalendarSyncPlus.Application.Controllers
 {
-    [Export(typeof (IApplicationController))]
+    [Export(typeof(IApplicationController))]
     public class ApplicationController : IApplicationController
     {
         private readonly AboutViewModel _aboutViewModel;
@@ -40,9 +40,9 @@ namespace CalendarSyncPlus.Application.Controllers
         private readonly HelpViewModel _helpViewModel;
         private readonly ILogController _logController;
         private readonly LogViewModel _logViewModel;
+        private readonly ISettingsController _settingsController;
         private readonly SettingsViewModel _settingsViewModel;
         private readonly IShellController _shellController;
-        private readonly ISettingsController _settingsController;
         private readonly ShellService _shellService;
         private readonly ShellViewModel _shellViewModel;
         private readonly SystemTrayNotifierViewModel _systemTrayNotifierViewModel;
@@ -88,6 +88,44 @@ namespace CalendarSyncPlus.Application.Controllers
 
         public ILocalizationService LocalizationService { get; set; }
         public IAccountAuthenticationService AccountAuthenticationService { get; set; }
+
+        #region IApplicationController Members
+
+        public void Initialize()
+        {
+            _shellViewModel.ExitCommand = _exitCommand;
+            _systemTrayNotifierViewModel.ExitCommand = _exitCommand;
+            _systemTrayNotifierViewModel.SyncNowCommand = _shellViewModel.SyncNowCommand;
+            //Initialize Other Controllers if Any
+            _shellController.Initialize();
+            _logController.Initialize();
+            _settingsController.Initialize();
+            PropertyChangedEventManager.AddHandler(_settingsViewModel, SettingsChangedHandler, "");
+            PropertyChangedEventManager.AddHandler(_shellViewModel, ShellViewUpdatedHandler, "");
+        }
+
+        public void Run(bool startMinimized)
+        {
+            _logController.Run(startMinimized);
+            _settingsController.Run(startMinimized);
+            //Perform Other assignments if required
+            _shellViewModel.Show(startMinimized);
+            _settingsViewModel.ApplyProxySettings();
+        }
+
+        public void Shutdown()
+        {
+            //Close All controllers if required
+            _logController.Shutdown();
+            _shellController.Shutdown();
+            _settingsController.Shutdown();
+            PropertyChangedEventManager.RemoveHandler(_settingsViewModel, SettingsChangedHandler, "");
+            PropertyChangedEventManager.RemoveHandler(_shellViewModel, ShellViewUpdatedHandler, "");
+
+            //Save Settings if any
+        }
+
+        #endregion
 
         private void ShellViewUpdatedHandler(object sender, PropertyChangedEventArgs e)
         {
@@ -152,43 +190,5 @@ namespace CalendarSyncPlus.Application.Controllers
             _guiInteractionService.HideApplication();
             e.Cancel = true;
         }
-
-        #region IApplicationController Members
-
-        public void Initialize()
-        {
-            _shellViewModel.ExitCommand = _exitCommand;
-            _systemTrayNotifierViewModel.ExitCommand = _exitCommand;
-            _systemTrayNotifierViewModel.SyncNowCommand = _shellViewModel.SyncNowCommand;
-            //Initialize Other Controllers if Any
-            _shellController.Initialize();
-            _logController.Initialize();
-            _settingsController.Initialize();
-            PropertyChangedEventManager.AddHandler(_settingsViewModel, SettingsChangedHandler, "");
-            PropertyChangedEventManager.AddHandler(_shellViewModel, ShellViewUpdatedHandler, "");
-        }
-
-        public void Run(bool startMinimized)
-        {
-            _logController.Run(startMinimized);
-            _settingsController.Run(startMinimized);
-            //Perform Other assignments if required
-            _shellViewModel.Show(startMinimized);
-            _settingsViewModel.ApplyProxySettings();
-        }
-
-        public void Shutdown()
-        {
-            //Close All controllers if required
-            _logController.Shutdown();
-            _shellController.Shutdown();
-            _settingsController.Shutdown();
-            PropertyChangedEventManager.RemoveHandler(_settingsViewModel, SettingsChangedHandler, "");
-            PropertyChangedEventManager.RemoveHandler(_shellViewModel, ShellViewUpdatedHandler, "");
-
-            //Save Settings if any
-        }
-
-        #endregion
     }
 }

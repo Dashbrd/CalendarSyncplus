@@ -44,7 +44,7 @@ namespace CalendarSyncPlus.Domain.File.Binary
         ///     A XML string that represents the object to be serialized
         /// </returns>
         string Serialize(T source);
-        
+
         /// <summary>
         ///     <see cref="Serialize" /> an object to a XML file
         /// </summary>

@@ -14,7 +14,6 @@ using CalendarSyncPlus.Domain.Wrappers;
 using CalendarSyncPlus.Services.Tasks.Interfaces;
 using Google.Apis.Requests;
 using Google.Apis.Tasks.v1;
-using Google.GData.Extensions;
 using log4net;
 using Task = Google.Apis.Tasks.v1.Data.Task;
 
@@ -24,11 +23,9 @@ namespace CalendarSyncPlus.GoogleServices.Tasks
     [ExportMetadata("ServiceType", ServiceType.Google)]
     public class GoogleTaskService : IGoogleTaskService
     {
-        public IAccountAuthenticationService AccountAuthenticationService { get; set; }
-        public string TaskServiceName { get { return "Google"; } }
-        private ILog Logger { get; set; }
-        public string AccountName { get; set; }
-        public string TaskListId { get; set; }
+        private const string DictionaryKeyAccountName = "AccountName";
+        private const string DictionaryKeyTaskListId = "TaskListId";
+
         #region Constructors
 
         [ImportingConstructor]
@@ -41,7 +38,19 @@ namespace CalendarSyncPlus.GoogleServices.Tasks
 
         #endregion
 
-        
+        public IAccountAuthenticationService AccountAuthenticationService { get; set; }
+        private ILog Logger { get; }
+        public string AccountName { get; set; }
+        public string TaskListId { get; set; }
+
+        #region IGoogleTaskService Members
+
+        public string TaskServiceName
+        {
+            get { return "Google"; }
+        }
+
+
         public async Task<TasksWrapper> GetReminderTasksInRangeAsync(IDictionary<string, object> taskListSpecificData)
         {
             CheckTaskListSpecificData(taskListSpecificData);
@@ -55,7 +64,7 @@ namespace CalendarSyncPlus.GoogleServices.Tasks
             taskListRequest.MaxResults = 1000;
             try
             {
-                var result =   taskListRequest.Execute();
+                var result = taskListRequest.Execute();
                 if (result != null)
                 {
                     while (result.Items != null)
@@ -91,44 +100,6 @@ namespace CalendarSyncPlus.GoogleServices.Tasks
             return finalTaskList;
         }
 
-        private ReminderTask CreateReminderTask(Task taskItem)
-        {
-            var reminderTask = new ReminderTask(taskItem.Id, taskItem.Title, taskItem.Notes,
-                taskItem.Due)
-            {
-                IsDeleted = taskItem.Deleted,
-                UpdatedOn = taskItem.Updated,
-                CompletedOn = taskItem.Completed,
-                IsCompleted = taskItem.Status.Equals("completed")
-            };
-            return reminderTask;
-        }
-        private Task CreaterGoogleTask(ReminderTask reminderTask)
-        {
-            //Create Event
-            var task = new Task
-            {
-                Title   = reminderTask.Title,
-                Notes = reminderTask.Notes,
-                Deleted = reminderTask.IsDeleted,
-                Due =  reminderTask.Due,
-                Status = "needsAction",
-                Completed = null,
-            };
-
-            if (reminderTask.IsCompleted && reminderTask.CompletedOn != null)
-            {                
-                task.CompletedRaw = reminderTask.CompletedOn.Value.Rfc339FFormat();
-                task.Status = "completed";
-            }
-
-            return task;
-        }
-
-      
-        private const string DictionaryKeyAccountName = "AccountName";
-        private const string DictionaryKeyTaskListId = "TaskListId";
-
         public void CheckTaskListSpecificData(IDictionary<string, object> taskListSpecificData)
         {
             if (taskListSpecificData == null)
@@ -151,13 +122,6 @@ namespace CalendarSyncPlus.GoogleServices.Tasks
             }
 
             AccountName = accountNameValue as string;
-
-           
-        }
-
-        private TasksService GetTasksService(string accountName)
-        {
-            return AccountAuthenticationService.AuthenticateTasksOauth(accountName);
         }
 
 
@@ -171,13 +135,14 @@ namespace CalendarSyncPlus.GoogleServices.Tasks
             var localTasksList =
                 taskList.Items.Select(
                     taskListEntry =>
-                        new GoogleCalendar { Id = taskListEntry.Id, Name = taskListEntry.Title })
+                        new GoogleCalendar {Id = taskListEntry.Id, Name = taskListEntry.Title})
                     .ToList();
             return localTasksList;
         }
 
 
-        public async Task<TasksWrapper> DeleteReminderTasks(List<ReminderTask> reminderTasks, IDictionary<string, object> taskListSpecificData)
+        public async Task<TasksWrapper> DeleteReminderTasks(List<ReminderTask> reminderTasks,
+            IDictionary<string, object> taskListSpecificData)
         {
             var deletedTasks = new TasksWrapper();
             if (!reminderTasks.Any())
@@ -209,7 +174,7 @@ namespace CalendarSyncPlus.GoogleServices.Tasks
                     //Iterate over each appointment to create a event and batch it 
                     for (var i = 0; i < reminderTasks.Count; i++)
                     {
-                        if (i != 0 && i % 999 == 0)
+                        if (i != 0 && i%999 == 0)
                         {
                             await batchRequest.ExecuteAsync();
                             batchRequest = new BatchRequest(calendarService);
@@ -221,7 +186,7 @@ namespace CalendarSyncPlus.GoogleServices.Tasks
                         batchRequest.Queue<Task>(deleteRequest,
                             (content, error, index, message) =>
                                 CallbackEventErrorMessage(content, error, index, message, reminderTasks,
-                                "Error in deleting events", errorList, deletedTasks));
+                                    "Error in deleting events", errorList, deletedTasks));
                     }
                     await batchRequest.ExecuteAsync();
                 }
@@ -236,7 +201,8 @@ namespace CalendarSyncPlus.GoogleServices.Tasks
             return deletedTasks;
         }
 
-        public async Task<TasksWrapper> AddReminderTasks(List<ReminderTask> tasks, IDictionary<string, object> taskListSpecificData)
+        public async Task<TasksWrapper> AddReminderTasks(List<ReminderTask> tasks,
+            IDictionary<string, object> taskListSpecificData)
         {
             var addedTasks = new TasksWrapper();
             if (!tasks.Any())
@@ -260,7 +226,6 @@ namespace CalendarSyncPlus.GoogleServices.Tasks
             {
                 if (tasks.Any())
                 {
-                    
                     //Split the list of calendarAppointments by 1000 per list
                     var appts = await AddTasksInternal(tasks, calendarService, errorList);
                     addedTasks.AddRange(appts);
@@ -276,56 +241,9 @@ namespace CalendarSyncPlus.GoogleServices.Tasks
             return addedTasks;
         }
 
-        private async Task<List<ReminderTask>> AddTasksInternal(List<ReminderTask> reminderTasks,
-            TasksService taskService, Dictionary<int, ReminderTask> errorList)
-        {
-            var addedEvents = new List<ReminderTask>();
-            //Create a Batch Request
-            var batchRequest = new BatchRequest(taskService);
-            
-            for (var i = 0; i < reminderTasks.Count; i++)
-            {
-                if (i != 0 && i % 999 == 0)
-                {
-                    await batchRequest.ExecuteAsync();
-                    batchRequest = new BatchRequest(taskService);
-                }
 
-                var reminderTask = reminderTasks[i];
-                var googleTask = CreaterGoogleTask(reminderTask);
-                var insertRequest = taskService.Tasks.Insert(googleTask,
-                    TaskListId);
-                batchRequest.Queue<Task>(insertRequest,
-                    (content, error, index, message) =>
-                        CallbackEventErrorMessage(content, error, index, message,
-                        reminderTasks, "Error in adding events", errorList,
-                            addedEvents));
-            }
-
-            await batchRequest.ExecuteAsync();
-            return addedEvents;
-        }
-
-        private void CallbackEventErrorMessage(Task content, RequestError error, int index, 
-            HttpResponseMessage message, List<ReminderTask> reminderTasks,
-            string errorMessage, Dictionary<int, ReminderTask> errorAppointments, 
-            List<ReminderTask> addedTasks)
-        {
-            var phrase = message.ReasonPhrase;
-            var googleEvent = reminderTasks[index];
-            if (!message.IsSuccessStatusCode)
-            {
-                errorAppointments.Add(index, googleEvent);
-                Logger.ErrorFormat("{0} : {1}{2} - {3}", errorMessage, Environment.NewLine, phrase, googleEvent);
-            }
-            else if (content != null)
-            {
-                addedTasks.Add(CreateReminderTask(content));
-            }
-        }
-
-
-        public async Task<TasksWrapper> UpdateReminderTasks(List<ReminderTask> reminderTasks,  IDictionary<string, object> taskListSpecificData)
+        public async Task<TasksWrapper> UpdateReminderTasks(List<ReminderTask> reminderTasks,
+            IDictionary<string, object> taskListSpecificData)
         {
             var updatedAppointments = new TasksWrapper();
             if (!reminderTasks.Any())
@@ -358,7 +276,7 @@ namespace CalendarSyncPlus.GoogleServices.Tasks
                     //Iterate over each appointment to create a event and batch it 
                     for (var i = 0; i < reminderTasks.Count; i++)
                     {
-                        if (i != 0 && i % 999 == 0)
+                        if (i != 0 && i%999 == 0)
                         {
                             await batchRequest.ExecuteAsync();
                             batchRequest = new BatchRequest(calendarService);
@@ -371,7 +289,7 @@ namespace CalendarSyncPlus.GoogleServices.Tasks
                         batchRequest.Queue<Task>(updateRequest,
                             (content, error, index, message) =>
                                 CallbackEventErrorMessage(content, error, index, message, reminderTasks,
-                                "Error in updating event", errorList, updatedAppointments));
+                                    "Error in updating event", errorList, updatedAppointments));
                     }
 
                     await batchRequest.ExecuteAsync();
@@ -387,27 +305,6 @@ namespace CalendarSyncPlus.GoogleServices.Tasks
             return updatedAppointments;
         }
 
-        private Task CreateUpdatedGoogleTask(ReminderTask reminderTask)
-        {
-            var task = new Task
-            {
-                Id = reminderTask.TaskId,
-                Title = reminderTask.Title,
-                Notes = reminderTask.Notes,
-                Due = reminderTask.Due,
-                Deleted = reminderTask.IsDeleted,
-                Status = "needsAction",
-                Completed = null,
-            };
-
-            if (reminderTask.IsCompleted && reminderTask.CompletedOn != null)
-            {                
-                task.CompletedRaw = reminderTask.CompletedOn.Value.Rfc339FFormat();
-                task.Status = "completed";
-            }
-            return task;
-        }
-
         public async Task<bool> ClearCalendar(IDictionary<string, object> taskListSpecificData)
         {
             var appointments =
@@ -418,6 +315,117 @@ namespace CalendarSyncPlus.GoogleServices.Tasks
                 return success.IsSuccess;
             }
             return false;
+        }
+
+        #endregion
+
+        private ReminderTask CreateReminderTask(Task taskItem)
+        {
+            var reminderTask = new ReminderTask(taskItem.Id, taskItem.Title, taskItem.Notes,
+                taskItem.Due)
+            {
+                IsDeleted = taskItem.Deleted,
+                UpdatedOn = taskItem.Updated,
+                CompletedOn = taskItem.Completed,
+                IsCompleted = taskItem.Status.Equals("completed")
+            };
+            return reminderTask;
+        }
+
+        private Task CreaterGoogleTask(ReminderTask reminderTask)
+        {
+            //Create Event
+            var task = new Task
+            {
+                Title = reminderTask.Title,
+                Notes = reminderTask.Notes,
+                Deleted = reminderTask.IsDeleted,
+                Due = reminderTask.Due,
+                Status = "needsAction",
+                Completed = null
+            };
+
+            if (reminderTask.IsCompleted && reminderTask.CompletedOn != null)
+            {
+                task.CompletedRaw = reminderTask.CompletedOn.Value.Rfc339FFormat();
+                task.Status = "completed";
+            }
+
+            return task;
+        }
+
+        private TasksService GetTasksService(string accountName)
+        {
+            return AccountAuthenticationService.AuthenticateTasksOauth(accountName);
+        }
+
+        private async Task<List<ReminderTask>> AddTasksInternal(List<ReminderTask> reminderTasks,
+            TasksService taskService, Dictionary<int, ReminderTask> errorList)
+        {
+            var addedEvents = new List<ReminderTask>();
+            //Create a Batch Request
+            var batchRequest = new BatchRequest(taskService);
+
+            for (var i = 0; i < reminderTasks.Count; i++)
+            {
+                if (i != 0 && i%999 == 0)
+                {
+                    await batchRequest.ExecuteAsync();
+                    batchRequest = new BatchRequest(taskService);
+                }
+
+                var reminderTask = reminderTasks[i];
+                var googleTask = CreaterGoogleTask(reminderTask);
+                var insertRequest = taskService.Tasks.Insert(googleTask,
+                    TaskListId);
+                batchRequest.Queue<Task>(insertRequest,
+                    (content, error, index, message) =>
+                        CallbackEventErrorMessage(content, error, index, message,
+                            reminderTasks, "Error in adding events", errorList,
+                            addedEvents));
+            }
+
+            await batchRequest.ExecuteAsync();
+            return addedEvents;
+        }
+
+        private void CallbackEventErrorMessage(Task content, RequestError error, int index,
+            HttpResponseMessage message, List<ReminderTask> reminderTasks,
+            string errorMessage, Dictionary<int, ReminderTask> errorAppointments,
+            List<ReminderTask> addedTasks)
+        {
+            var phrase = message.ReasonPhrase;
+            var googleEvent = reminderTasks[index];
+            if (!message.IsSuccessStatusCode)
+            {
+                errorAppointments.Add(index, googleEvent);
+                Logger.ErrorFormat("{0} : {1}{2} - {3}", errorMessage, Environment.NewLine, phrase, googleEvent);
+            }
+            else if (content != null)
+            {
+                addedTasks.Add(CreateReminderTask(content));
+            }
+        }
+
+        private Task CreateUpdatedGoogleTask(ReminderTask reminderTask)
+        {
+            var task = new Task
+            {
+                Id = reminderTask.TaskId,
+                Title = reminderTask.Title,
+                Notes = reminderTask.Notes,
+                Due = reminderTask.Due,
+                Deleted = reminderTask.IsDeleted,
+                Status = "needsAction",
+                Completed = null
+            };
+
+            if (reminderTask.IsCompleted && reminderTask.CompletedOn != null)
+            {
+                task.CompletedRaw = reminderTask.CompletedOn.Value.Rfc339FFormat();
+                task.Status = "completed";
+            }
+            return task;
         }
     }
 }

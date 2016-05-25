@@ -10,23 +10,13 @@ namespace CalendarSyncPlus.Presentation.Views.Main
     /// <summary>
     ///     Interaction logic for ShellView.xaml
     /// </summary>
-    [Export, Export(typeof (IShellView))]
+    [Export, Export(typeof(IShellView))]
     public partial class ShellView : IShellView
     {
         public ShellView()
         {
             InitializeComponent();
             StateChanged += OnShellViewWindowStateChanged;
-        }
-
-        private void OnShellViewWindowStateChanged(object sender, EventArgs e)
-        {
-            switch (WindowState)
-            {
-                case WindowState.Minimized:
-                    Utilities.HideForeground(this);
-                    break;
-            }
         }
 
         #region IShellView Members
@@ -55,5 +45,15 @@ namespace CalendarSyncPlus.Presentation.Views.Main
         }
 
         #endregion
+
+        private void OnShellViewWindowStateChanged(object sender, EventArgs e)
+        {
+            switch (WindowState)
+            {
+                case WindowState.Minimized:
+                    Utilities.HideForeground(this);
+                    break;
+            }
+        }
     }
 }

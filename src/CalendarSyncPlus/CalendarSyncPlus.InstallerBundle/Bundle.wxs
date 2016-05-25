@@ -28,7 +28,7 @@
               Value="[ProgramFilesFolder]Calendar Sync +\CalendarSyncPlus.exe" />
     <Variable Name="InstallFolder" bal:Overridable="yes" Type="string" Value="[ProgramFilesFolder]Calendar Sync +" />
     <Chain>
-      <PackageGroupRef Id="NetFx45Web"/>
+      <PackageGroupRef Id="NetFx45Web" />
       <MsiPackage Id="CalendarSyncPlusMsi"
                   Compressed="yes"
                   EnableFeatureSelection="yes"

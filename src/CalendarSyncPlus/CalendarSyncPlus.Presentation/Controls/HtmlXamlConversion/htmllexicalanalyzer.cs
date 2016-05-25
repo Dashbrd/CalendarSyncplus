@@ -280,7 +280,7 @@ namespace HTMLConverter
             }
             else
             {
-                while (!IsAtEndOfStream && !Char.IsWhiteSpace(NextCharacter) && NextCharacter != '>')
+                while (!IsAtEndOfStream && !char.IsWhiteSpace(NextCharacter) && NextCharacter != '>')
                 {
                     _nextToken.Append(NextCharacter);
                     GetNextCharacter();
@@ -350,7 +350,7 @@ namespace HTMLConverter
                     ReadLookAheadCharacter();
 
                     // largest numeric entity is 7 characters
-                    for (var i = 0; i < 7 && Char.IsDigit(_lookAheadCharacter); i++)
+                    for (var i = 0; i < 7 && char.IsDigit(_lookAheadCharacter); i++)
                     {
                         entityCode = 10*entityCode + (_lookAheadCharacterCode - '0');
                         ReadLookAheadCharacter();
@@ -377,14 +377,14 @@ namespace HTMLConverter
                         IsNextCharacterEntity = false;
                     }
                 }
-                else if (Char.IsLetter(_lookAheadCharacter))
+                else if (char.IsLetter(_lookAheadCharacter))
                 {
                     // entity is written as a string
                     var entity = "";
 
                     // maximum length of string entities is 10 characters
                     for (var i = 0;
-                        i < 10 && (Char.IsLetter(_lookAheadCharacter) || Char.IsDigit(_lookAheadCharacter));
+                        i < 10 && (char.IsLetter(_lookAheadCharacter) || char.IsDigit(_lookAheadCharacter));
                         i++)
                     {
                         entity += _lookAheadCharacter;
@@ -477,7 +477,7 @@ namespace HTMLConverter
                 }
 
 
-                if (!Char.IsWhiteSpace(NextCharacter))
+                if (!char.IsWhiteSpace(NextCharacter))
                 {
                     break;
                 }
@@ -501,7 +501,7 @@ namespace HTMLConverter
         /// </returns>
         private bool IsGoodForNameStart(char character)
         {
-            return character == '_' || Char.IsLetter(character);
+            return character == '_' || char.IsLetter(character);
         }
 
         /// <summary>
@@ -527,7 +527,7 @@ namespace HTMLConverter
                 character == '.' ||
                 character == '-' ||
                 character == ':' ||
-                Char.IsDigit(character) ||
+                char.IsDigit(character) ||
                 IsCombiningCharacter(character) ||
                 IsExtender(character);
         }
@@ -766,7 +766,7 @@ namespace HTMLConverter
 
         private bool IsAtDirectiveStart
         {
-            get { return (NextCharacter == '<' && _lookAheadCharacter == '!' && !IsNextCharacterEntity); }
+            get { return NextCharacter == '<' && _lookAheadCharacter == '!' && !IsNextCharacterEntity; }
         }
 
         private bool IsNextCharacterEntity { // check if next character is an entity

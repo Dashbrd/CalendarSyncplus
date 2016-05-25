@@ -12,6 +12,8 @@ namespace CalendarSyncPlus.SyncEngine
     [Export(typeof(ITaskSyncEngine))]
     public class TaskSyncEngine : ITaskSyncEngine
     {
+        #region ITaskSyncEngine Members
+
         public List<ReminderTask> SourceTasksToUpdate { get; set; }
         public List<ReminderTask> SourceOrphanEntries { get; set; }
         public List<ReminderTask> SourceTasksToDelete { get; set; }
@@ -21,27 +23,31 @@ namespace CalendarSyncPlus.SyncEngine
         public List<ReminderTask> DestTasksToAdd { get; set; }
         public List<ReminderTask> DestOrphanEntries { get; set; }
 
-        public bool GetSourceEntriesToDelete(TaskSyncProfile syncProfile, TasksWrapper sourceList, TasksWrapper destinationList)
+        public bool GetSourceEntriesToDelete(TaskSyncProfile syncProfile, TasksWrapper sourceList,
+            TasksWrapper destinationList)
         {
             EvaluateTasksToDelete(syncProfile, destinationList, sourceList, SourceTasksToDelete,
-               SourceTasksToUpdate, DestTasksToUpdate, SourceOrphanEntries);
+                SourceTasksToUpdate, DestTasksToUpdate, SourceOrphanEntries);
             return true;
         }
 
-        public bool GetSourceEntriesToAdd(TaskSyncProfile syncProfile, TasksWrapper sourceList, TasksWrapper destinationList)
+        public bool GetSourceEntriesToAdd(TaskSyncProfile syncProfile, TasksWrapper sourceList,
+            TasksWrapper destinationList)
         {
             EvaluateTasksToAdd(syncProfile, destinationList, sourceList, SourceTasksToAdd);
             return true;
         }
 
-        public bool GetDestEntriesToDelete(TaskSyncProfile syncProfile, TasksWrapper sourceList, TasksWrapper destinationList)
+        public bool GetDestEntriesToDelete(TaskSyncProfile syncProfile, TasksWrapper sourceList,
+            TasksWrapper destinationList)
         {
             EvaluateTasksToDelete(syncProfile, sourceList, destinationList, DestTasksToDelete,
-               DestTasksToUpdate, SourceTasksToUpdate, DestOrphanEntries);
+                DestTasksToUpdate, SourceTasksToUpdate, DestOrphanEntries);
             return true;
         }
 
-        public bool GetDestEntriesToAdd(TaskSyncProfile syncProfile, TasksWrapper sourceList, TasksWrapper destinationList)
+        public bool GetDestEntriesToAdd(TaskSyncProfile syncProfile, TasksWrapper sourceList,
+            TasksWrapper destinationList)
         {
             EvaluateTasksToAdd(syncProfile, sourceList, destinationList, DestTasksToAdd);
             return true;
@@ -52,7 +58,7 @@ namespace CalendarSyncPlus.SyncEngine
             SourceOrphanEntries = new List<ReminderTask>();
             SourceTasksToAdd = new List<ReminderTask>();
             SourceTasksToDelete = new List<ReminderTask>();
-            SourceTasksToUpdate  = new List<ReminderTask>();
+            SourceTasksToUpdate = new List<ReminderTask>();
 
             DestOrphanEntries = new List<ReminderTask>();
             DestTasksToAdd = new List<ReminderTask>();
@@ -60,6 +66,7 @@ namespace CalendarSyncPlus.SyncEngine
             DestTasksToUpdate = new List<ReminderTask>();
         }
 
+        #endregion
 
         #region Private Methods
 
@@ -77,11 +84,11 @@ namespace CalendarSyncPlus.SyncEngine
         private void EvaluateTasksToDelete(TaskSyncProfile syncProfile,
             TasksWrapper sourceList, TasksWrapper destinationList,
             List<ReminderTask> destTasksToDelete,
-            List<ReminderTask> destTasksToUpdate, 
+            List<ReminderTask> destTasksToUpdate,
             List<ReminderTask> sourceTasksToUpdate,
             List<ReminderTask> destOrphanEntries)
         {
-           if (!destinationList.Any())
+            if (!destinationList.Any())
             {
                 return;
             }
@@ -94,14 +101,15 @@ namespace CalendarSyncPlus.SyncEngine
                 {
                     destTasksToDelete.Add(destTask);
                 }
-                else if(destTask.IsCompleted != sourceTask.IsCompleted)
+                else if (destTask.IsCompleted != sourceTask.IsCompleted)
                 {
-                    if (destTask.Due.HasValue && sourceTask.Due.HasValue && !destTask.Due.Value.Equals(sourceTask.Due.Value))
+                    if (destTask.Due.HasValue && sourceTask.Due.HasValue &&
+                        !destTask.Due.Value.Equals(sourceTask.Due.Value))
                     {
                         if (destTask.Due.Value.Year < 4500 || destTask.Due.Value.Year < 4500)
                         {
                             if (destTask.UpdatedOn.GetValueOrDefault()
-                                    .CompareTo(sourceTask.UpdatedOn.GetValueOrDefault()) < 0)
+                                .CompareTo(sourceTask.UpdatedOn.GetValueOrDefault()) < 0)
                             {
                                 destTask.CopyDetail(sourceTask);
                                 destTasksToUpdate.Add(destTask);
@@ -134,7 +142,7 @@ namespace CalendarSyncPlus.SyncEngine
                 //All entries need to be added
                 return;
             }
-           
+
             foreach (var sourceTask in sourceList)
             {
                 var destTask = destinationList.FirstOrDefault(t =>
@@ -144,7 +152,6 @@ namespace CalendarSyncPlus.SyncEngine
                     tasksToAdd.Add(sourceTask);
                 }
             }
-
         }
 
         /// <summary>

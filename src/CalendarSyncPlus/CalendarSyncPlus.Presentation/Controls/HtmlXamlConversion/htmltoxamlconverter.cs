@@ -706,7 +706,7 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
             // Remove control characters
             for (var i = 0; i < textData.Length; i++)
             {
-                if (Char.IsControl(textData[i]))
+                if (char.IsControl(textData[i]))
                 {
                     textData = textData.Remove(i--, 1); // decrement i to compensate for character removal
                 }
@@ -1516,7 +1516,7 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
                             spannedColumnIndex++)
                         {
                             Debug.Assert(spannedColumnIndex < activeRowSpans.Count);
-                            activeRowSpans[spannedColumnIndex] = (rowSpan - 1);
+                            activeRowSpans[spannedColumnIndex] = rowSpan - 1;
                             Debug.Assert((int) activeRowSpans[spannedColumnIndex] >= 0);
                         }
 
@@ -1943,7 +1943,7 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
             rowSpanAsString = GetAttribute(htmlTDElement, "rowspan");
             if (rowSpanAsString != null)
             {
-                if (!Int32.TryParse(rowSpanAsString, out rowSpan))
+                if (!int.TryParse(rowSpanAsString, out rowSpan))
                 {
                     // Ignore invalid value of rowspan; treat it as 1
                     rowSpan = 1;
@@ -2707,7 +2707,7 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
         /// </returns>
         private static bool TryGetLengthValue(string lengthAsString, out double length)
         {
-            length = Double.NaN;
+            length = double.NaN;
 
             if (lengthAsString != null)
             {
@@ -2717,33 +2717,33 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
                 if (lengthAsString.EndsWith("pt"))
                 {
                     lengthAsString = lengthAsString.Substring(0, lengthAsString.Length - 2);
-                    if (Double.TryParse(lengthAsString, out length))
+                    if (double.TryParse(lengthAsString, out length))
                     {
-                        length = (length*96.0)/72.0; // convert from points to pixels
+                        length = length*96.0/72.0; // convert from points to pixels
                     }
                     else
                     {
-                        length = Double.NaN;
+                        length = double.NaN;
                     }
                 }
                 else if (lengthAsString.EndsWith("px"))
                 {
                     lengthAsString = lengthAsString.Substring(0, lengthAsString.Length - 2);
-                    if (!Double.TryParse(lengthAsString, out length))
+                    if (!double.TryParse(lengthAsString, out length))
                     {
-                        length = Double.NaN;
+                        length = double.NaN;
                     }
                 }
                 else
                 {
-                    if (!Double.TryParse(lengthAsString, out length)) // Assuming pixels
+                    if (!double.TryParse(lengthAsString, out length)) // Assuming pixels
                     {
-                        length = Double.NaN;
+                        length = double.NaN;
                     }
                 }
             }
 
-            return !Double.IsNaN(length);
+            return !double.IsNaN(length);
         }
 
         // .................................................................

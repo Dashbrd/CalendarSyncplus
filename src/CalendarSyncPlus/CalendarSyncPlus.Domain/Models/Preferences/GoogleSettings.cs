@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Waf.Foundation;
 
 namespace CalendarSyncPlus.Domain.Models.Preferences
@@ -10,21 +7,21 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
     [Serializable]
     public class GoogleSettings : Model
     {
-        private GoogleCalendar _googleCalendar;
         private GoogleAccount _googleAccount;
+        private GoogleCalendar _googleCalendar;
         private List<GoogleCalendar> _googleCalendars;
-        
+
         public GoogleSettings()
         {
             GoogleCalendars = new List<GoogleCalendar>();
         }
-        
+
         public GoogleCalendar GoogleCalendar
         {
             get { return _googleCalendar; }
             set { SetProperty(ref _googleCalendar, value); }
         }
-        
+
         public List<GoogleCalendar> GoogleCalendars
         {
             get { return _googleCalendars; }

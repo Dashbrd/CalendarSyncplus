@@ -1,18 +1,17 @@
 ﻿using System;
 using System.Waf.Foundation;
-using CalendarSyncPlus.Common.MetaData;
 
 namespace CalendarSyncPlus.Domain.Models.Preferences
 {
     [Serializable]
     public class SyncSettings : Model
     {
-        private SyncRangeTypeEnum _syncRangeType;
-        private DateTime _startDate;
-        private DateTime _endDate;
-        private int _daysInPast;
         private int _daysInFuture;
-       
+        private int _daysInPast;
+        private DateTime _endDate;
+        private DateTime _startDate;
+        private SyncRangeTypeEnum _syncRangeType;
+
 
         /// <summary>
         /// </summary>
@@ -53,7 +52,5 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
             get { return _daysInFuture; }
             set { SetProperty(ref _daysInFuture, value); }
         }
-
-        
     }
 }

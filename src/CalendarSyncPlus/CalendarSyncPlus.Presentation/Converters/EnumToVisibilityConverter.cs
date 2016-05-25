@@ -32,7 +32,7 @@ namespace CalendarSyncPlus.Presentation.Converters
                 {
                     return false;
                 }
-                var isValid = (bool)value;
+                var isValid = (bool) value;
                 var parameterServiceType =
                     Enum.Parse(value.GetType(), parameter.ToString());
                 if (isValid)

@@ -7,7 +7,56 @@ namespace CalendarSyncPlus.Domain.Models
 {
     public class Appointment : Model, ICloneable
     {
+        #region ICloneable Members
+
+        public object Clone()
+        {
+            var appointment = new Appointment(Description, Location, Subject, EndTime, StartTime, AppointmentId);
+            appointment.Organizer = Organizer;
+            appointment.RequiredAttendees = RequiredAttendees;
+            appointment.OptionalAttendees = OptionalAttendees;
+            appointment.Created = Created;
+            appointment.LastModified = LastModified;
+            appointment.CalendarId = CalendarId;
+            appointment.ExtendedProperties = ExtendedProperties;
+            appointment.AllDayEvent = AllDayEvent;
+            return appointment;
+        }
+
+        #endregion
+
+        public override bool Equals(object obj)
+        {
+            // Check if the object is a Appointment.
+            // The initial null check is unnecessary as the cast will result in null
+            // if obj is null to start with.
+            var appointment = obj as Appointment;
+
+            if (appointment == null)
+            {
+                // If it is null then it is not equal to this instance.
+                return false;
+            }
+            // Instances are considered equal if the ToString matches.
+            return ToString().Equals(appointment.ToString());
+        }
+
+        public override int GetHashCode()
+        {
+            // Returning the hashcode of the Guid used for the ToString() will be 
+            // sufficient and would only cause a problem if Appointments objects
+            // were stored in a non-generic hash set along side other guid instances
+            // which is very unlikely!
+            return ToString().GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            return Rfc339FormatStartTime + ";" + Rfc339FormatEndTime + ";" + Subject + ";" + Location;
+        }
+
         #region Fields
+
         /// <summary>
         ///     Flag if the appointment is an all day event
         /// </summary>
@@ -21,8 +70,8 @@ namespace CalendarSyncPlus.Domain.Models
         /// <summary>
         /// </summary>
         private string _calendarId;
+
         /// <summary>
-        /// 
         /// </summary>
         private string _childId;
 
@@ -61,10 +110,12 @@ namespace CalendarSyncPlus.Domain.Models
         private List<Attendee> _requiredAttendees;
         private string _sourceId;
         private DateTime? _startTime;
-        private string _subject; 
+        private string _subject;
+
         #endregion
 
         #region Constructors
+
         public Appointment(string description, string location, string subject, DateTime? endTime, DateTime? startTime,
             string appointmentId)
             : this(description, location, subject, endTime, startTime)
@@ -82,10 +133,12 @@ namespace CalendarSyncPlus.Domain.Models
             ExtendedProperties = new Dictionary<string, string>();
             RequiredAttendees = new List<Attendee>();
             OptionalAttendees = new List<Attendee>();
-        } 
+        }
+
         #endregion
 
         #region Properties
+
         public DateTime? OldStartTime
         {
             get { return _oldStartTime; }
@@ -242,55 +295,8 @@ namespace CalendarSyncPlus.Domain.Models
         {
             get { return _created; }
             set { SetProperty(ref _created, value); }
-        } 
-        #endregion
-
-        #region ICloneable Members
-
-        public object Clone()
-        {
-            var appointment = new Appointment(Description, Location, Subject, EndTime, StartTime, AppointmentId);
-            appointment.Organizer = Organizer;
-            appointment.RequiredAttendees = RequiredAttendees;
-            appointment.OptionalAttendees = OptionalAttendees;
-            appointment.Created = Created;
-            appointment.LastModified = LastModified;
-            appointment.CalendarId = CalendarId;
-            appointment.ExtendedProperties = ExtendedProperties;
-            appointment.AllDayEvent = AllDayEvent;
-            return appointment;
         }
 
         #endregion
-
-        public override bool Equals(Object obj)
-        {
-            // Check if the object is a Appointment.
-            // The initial null check is unnecessary as the cast will result in null
-            // if obj is null to start with.
-            var appointment = obj as Appointment;
-
-            if (appointment == null)
-            {
-                // If it is null then it is not equal to this instance.
-                return false;
-            }
-            // Instances are considered equal if the ToString matches.
-            return ToString().Equals(appointment.ToString());
-        }
-
-        public override int GetHashCode()
-        {
-            // Returning the hashcode of the Guid used for the ToString() will be 
-            // sufficient and would only cause a problem if Appointments objects
-            // were stored in a non-generic hash set along side other guid instances
-            // which is very unlikely!
-            return ToString().GetHashCode();
-        }
-
-        public override string ToString()
-        {
-            return Rfc339FormatStartTime + ";" + Rfc339FormatEndTime + ";" + Subject + ";" + Location;
-        }
     }
 }

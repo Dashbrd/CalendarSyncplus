@@ -4,6 +4,5 @@ namespace CalendarSyncPlus.ExchangeWebServices.Contact
 {
     public interface IExchangeWebContactService : IContactService
     {
-         
     }
 }

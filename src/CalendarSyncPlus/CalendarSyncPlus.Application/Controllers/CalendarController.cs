@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.ComponentModel.Composition;
 using CalendarSyncPlus.Application.ViewModels;
 
@@ -8,9 +7,6 @@ namespace CalendarSyncPlus.Application.Controllers
     [Export(typeof(ICalendarController))]
     public class CalendarController : ICalendarController
     {
-        public SettingsViewModel SettingsViewModel { get; private set; }
-        public CalendarViewModel CalendarViewModel { get; private set; }
-
         [ImportingConstructor]
         public CalendarController(SettingsViewModel settingsViewModel, CalendarViewModel calendarViewModel)
         {
@@ -18,10 +14,26 @@ namespace CalendarSyncPlus.Application.Controllers
             CalendarViewModel = calendarViewModel;
         }
 
+        public SettingsViewModel SettingsViewModel { get; }
+        public CalendarViewModel CalendarViewModel { get; }
+
+        #region ICalendarController Members
+
         public void Initialize()
         {
-            PropertyChangedEventManager.AddHandler(CalendarViewModel,CalendarPropertyChangedHandler, "");
+            PropertyChangedEventManager.AddHandler(CalendarViewModel, CalendarPropertyChangedHandler, "");
         }
+
+        public void Run(bool startMinimized)
+        {
+        }
+
+        public void Shutdown()
+        {
+            PropertyChangedEventManager.RemoveHandler(CalendarViewModel, CalendarPropertyChangedHandler, "");
+        }
+
+        #endregion
 
         private void CalendarPropertyChangedHandler(object sender, PropertyChangedEventArgs e)
         {
@@ -31,16 +43,6 @@ namespace CalendarSyncPlus.Application.Controllers
                     SettingsViewModel.IsLoading = CalendarViewModel.IsLoading;
                     break;
             }
-        }
-
-        public void Run(bool startMinimized)
-        {
-
-        }
-
-        public void Shutdown()
-        {
-            PropertyChangedEventManager.RemoveHandler(CalendarViewModel, CalendarPropertyChangedHandler, "");
         }
     }
 }

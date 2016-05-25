@@ -10,10 +10,8 @@ using CalendarSyncPlus.Domain.Models;
 using CalendarSyncPlus.Domain.Models.Metrics;
 using CalendarSyncPlus.Domain.Models.Preferences;
 using CalendarSyncPlus.Domain.Wrappers;
-using CalendarSyncPlus.Services.Calendars;
 using CalendarSyncPlus.Services.Tasks.Interfaces;
 using CalendarSyncPlus.Services.Utilities;
-using CalendarSyncPlus.SyncEngine;
 using CalendarSyncPlus.SyncEngine.Interfaces;
 using log4net;
 
@@ -22,14 +20,14 @@ namespace CalendarSyncPlus.Services.Tasks
     [Export(typeof(ITaskUpdateService))]
     public class TaskUpdateService : Model, ITaskUpdateService
     {
-        private ITaskSyncEngine _taskSyncEngine;
-        private ITaskServiceFactory _taskServiceFactory;
         private ISyncAnalyticsService _analyticsService;
         private TasksWrapper _destinationTasks;
-        private TasksWrapper _sourceTasks;
-        private string _taskSyncStatus;
-        private ITaskService _sourceTaskService;
         private ITaskService _destinationTaskService;
+        private TasksWrapper _sourceTasks;
+        private ITaskService _sourceTaskService;
+        private ITaskServiceFactory _taskServiceFactory;
+        private ITaskSyncEngine _taskSyncEngine;
+        private string _taskSyncStatus;
 
         #region Constructors
 
@@ -44,6 +42,88 @@ namespace CalendarSyncPlus.Services.Tasks
             TaskSyncEngine = taskSyncEngine;
             AnalyticsService = analyticsService;
         }
+
+        #endregion
+
+        #region ITaskUpdateService Members
+
+        #region Public Methods
+
+        public bool SyncTask(TaskSyncProfile syncProfile, SyncMetric syncMetric, SyncCallback syncCallback)
+        {
+            InitiatePreSyncSetup(syncProfile);
+
+            var isSuccess = false;
+            if (syncProfile != null)
+            {
+                TaskSyncEngine.Clear();
+                //Add log for sync mode
+                TaskSyncStatus = string.Format("Calendar Sync : {0} {2} {1}", SourceTaskService.TaskServiceName,
+                    DestinationTaskService.TaskServiceName,
+                    syncProfile.SyncMode == SyncModeEnum.TwoWay ? "<===>" : "===>");
+                TaskSyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
+                DateTime startDate, endDate;
+                GetDateRange(syncProfile, out startDate, out endDate);
+                //Add log for date range
+                TaskSyncStatus = $"Date Range : {startDate.ToString("d")} - {endDate.ToString("d")}";
+
+                //Load calendar specific data
+                var sourceCalendarSpecificData =
+                    GetCalendarSpecificData(syncProfile.Source, syncProfile);
+                var destinationCalendarSpecificData =
+                    GetCalendarSpecificData(syncProfile.Destination, syncProfile);
+
+                //Get source and destination Tasks
+                isSuccess = LoadTasks(sourceCalendarSpecificData,
+                    destinationCalendarSpecificData);
+
+                if (isSuccess)
+                {
+                    syncMetric.SourceMetric.OriginalCount = SourceTasks.Count;
+                    syncMetric.DestMetric.OriginalCount = DestinationTasks.Count;
+                    //LoadSourceId(DestinationTasks, SourceTasks.TaskListId);
+                    //LoadSourceId(SourceTasks, DestinationTasks.TaskListId);
+                }
+
+                if (isSuccess)
+                {
+                    //Delete destination Tasks
+                    isSuccess = DeleteDestinationTasks(syncProfile, syncMetric, destinationCalendarSpecificData,
+                        syncCallback);
+                }
+
+                if (isSuccess)
+                {
+                    //Add Tasks to destination
+                    isSuccess = AddDestinationTasks(syncProfile, syncMetric, destinationCalendarSpecificData);
+                }
+
+                if (isSuccess && syncProfile.SyncMode == SyncModeEnum.TwoWay)
+                {
+                    //Delete destination appointments
+                    isSuccess = DeleteSourceTasks(syncProfile, syncMetric, sourceCalendarSpecificData, syncCallback);
+                    if (isSuccess)
+                    {
+                        //If sync mode is two way... add events to source
+                        isSuccess = AddSourceTasks(syncProfile, syncMetric, sourceCalendarSpecificData);
+                    }
+                }
+
+                if (isSuccess)
+                {
+                    isSuccess = UpdateEntries(syncProfile, syncMetric, sourceCalendarSpecificData,
+                        destinationCalendarSpecificData);
+                }
+            }
+            syncMetric.IsSuccess = isSuccess;
+            SourceTasks = null;
+            DestinationTasks = null;
+            SourceTaskService = null;
+            DestinationTaskService = null;
+            return isSuccess;
+        }
+
+        #endregion
 
         #endregion
 
@@ -97,17 +177,20 @@ namespace CalendarSyncPlus.Services.Tasks
         {
             get { return _destinationTaskService; }
             set { SetProperty(ref _destinationTaskService, value); }
-        } 
+        }
+
         #endregion
 
         #region Private Methods
-        void InitiatePreSyncSetup(TaskSyncProfile syncProfile)
+
+        private void InitiatePreSyncSetup(TaskSyncProfile syncProfile)
         {
             SourceTaskService = TaskServiceFactory.GetTaskService(syncProfile.Source);
             DestinationTaskService = TaskServiceFactory.GetTaskService(syncProfile.Destination);
         }
+
         private IDictionary<string, object> GetCalendarSpecificData(ServiceType serviceType,
-          TaskSyncProfile syncProfile)
+            TaskSyncProfile syncProfile)
         {
             IDictionary<string, object> calendarSpecificData = null;
             switch (serviceType)
@@ -130,7 +213,8 @@ namespace CalendarSyncPlus.Services.Tasks
                         },
                         {
                             "OutlookTaskList",
-                            !syncProfile.OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.DefaultMailBoxCalendar)
+                            !syncProfile.OutlookSettings.OutlookOptions.HasFlag(
+                                OutlookOptionsEnum.DefaultMailBoxCalendar)
                                 ? syncProfile.OutlookSettings.OutlookFolder
                                 : null
                         }
@@ -150,8 +234,8 @@ namespace CalendarSyncPlus.Services.Tasks
             endDate = syncProfile.SyncSettings.EndDate.Date;
             if (syncProfile.SyncSettings.SyncRangeType == SyncRangeTypeEnum.SyncRangeInDays)
             {
-                startDate = DateTime.Today.AddDays((-syncProfile.SyncSettings.DaysInPast));
-                endDate = DateTime.Today.AddDays((syncProfile.SyncSettings.DaysInFuture + 1));
+                startDate = DateTime.Today.AddDays(-syncProfile.SyncSettings.DaysInPast);
+                endDate = DateTime.Today.AddDays(syncProfile.SyncSettings.DaysInFuture + 1);
             }
             else if (syncProfile.SyncSettings.SyncRangeType == SyncRangeTypeEnum.SyncEntireCalendar)
             {
@@ -208,6 +292,7 @@ namespace CalendarSyncPlus.Services.Tasks
 
             return true;
         }
+
         /// <summary>
         ///     Add appointments to destination
         /// </summary>
@@ -324,7 +409,8 @@ namespace CalendarSyncPlus.Services.Tasks
 
             //Deleting entries
 
-            var deletedTasks = DestinationTaskService.DeleteReminderTasks(appointmentsToDelete, destinationCalendarSpecificData)
+            var deletedTasks =
+                DestinationTaskService.DeleteReminderTasks(appointmentsToDelete, destinationCalendarSpecificData)
                     .Result;
             var isSuccess = deletedTasks.IsSuccess;
             //Update status if entries were successfully deleted
@@ -395,8 +481,8 @@ namespace CalendarSyncPlus.Services.Tasks
 
             return isSuccess;
         }
+
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="addedTasks"></param>
         /// <param name="existingTasks"></param>
@@ -481,8 +567,8 @@ namespace CalendarSyncPlus.Services.Tasks
             }
             return isSuccess;
         }
+
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="syncProfile"></param>
         /// <param name="syncMetric"></param>
@@ -536,81 +622,7 @@ namespace CalendarSyncPlus.Services.Tasks
 
             return isSuccess;
         }
+
         #endregion
-
-        #region Public Methods
-        public bool SyncTask(TaskSyncProfile syncProfile, SyncMetric syncMetric, SyncCallback syncCallback)
-        {
-            InitiatePreSyncSetup(syncProfile);
-
-            var isSuccess = false;
-            if (syncProfile != null)
-            {
-                TaskSyncEngine.Clear();
-                //Add log for sync mode
-                TaskSyncStatus = string.Format("Calendar Sync : {0} {2} {1}", SourceTaskService.TaskServiceName,
-                    DestinationTaskService.TaskServiceName,
-                    syncProfile.SyncMode == SyncModeEnum.TwoWay ? "<===>" : "===>");
-                TaskSyncStatus = StatusHelper.GetMessage(SyncStateEnum.Line);
-                DateTime startDate, endDate;
-                GetDateRange(syncProfile, out startDate, out endDate);
-                //Add log for date range
-                TaskSyncStatus = $"Date Range : {startDate.ToString("d")} - {endDate.ToString("d")}";
-
-                //Load calendar specific data
-                var sourceCalendarSpecificData =
-                    GetCalendarSpecificData(syncProfile.Source, syncProfile);
-                var destinationCalendarSpecificData =
-                    GetCalendarSpecificData(syncProfile.Destination, syncProfile);
-
-                //Get source and destination Tasks
-                isSuccess = LoadTasks(sourceCalendarSpecificData,
-                    destinationCalendarSpecificData);
-
-                if (isSuccess)
-                {
-                    syncMetric.SourceMetric.OriginalCount = SourceTasks.Count;
-                    syncMetric.DestMetric.OriginalCount = DestinationTasks.Count;
-                    //LoadSourceId(DestinationTasks, SourceTasks.TaskListId);
-                    //LoadSourceId(SourceTasks, DestinationTasks.TaskListId);
-                }
-
-                if (isSuccess)
-                {
-                    //Delete destination Tasks
-                    isSuccess = DeleteDestinationTasks(syncProfile, syncMetric, destinationCalendarSpecificData, syncCallback);
-                }
-
-                if (isSuccess)
-                {
-                    //Add Tasks to destination
-                    isSuccess = AddDestinationTasks(syncProfile, syncMetric, destinationCalendarSpecificData);
-                }
-
-                if (isSuccess && syncProfile.SyncMode == SyncModeEnum.TwoWay)
-                {
-                    //Delete destination appointments
-                    isSuccess = DeleteSourceTasks(syncProfile, syncMetric, sourceCalendarSpecificData, syncCallback);
-                    if (isSuccess)
-                    {
-                        //If sync mode is two way... add events to source
-                        isSuccess = AddSourceTasks(syncProfile, syncMetric, sourceCalendarSpecificData);
-                    }
-                }
-
-                if (isSuccess)
-                {
-                    isSuccess = UpdateEntries(syncProfile, syncMetric, sourceCalendarSpecificData, destinationCalendarSpecificData);
-                }
-            }
-            syncMetric.IsSuccess = isSuccess;
-            SourceTasks = null;
-            DestinationTasks = null;
-            SourceTaskService = null;
-            DestinationTaskService = null;
-            return isSuccess;
-        } 
-        #endregion
-
     }
 }

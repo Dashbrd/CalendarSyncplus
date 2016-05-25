@@ -4,7 +4,7 @@ using CalendarSyncPlus.Services;
 
 namespace CalendarSyncPlus.Presentation.Services
 {
-    [Export(typeof (IChildViewService))]
+    [Export(typeof(IChildViewService))]
     public class ChildViewService : IChildViewService
     {
         private readonly IShellView _shellView;
@@ -15,9 +15,13 @@ namespace CalendarSyncPlus.Presentation.Services
             _shellView = shellView;
         }
 
+        #region IChildViewService Members
+
         public void ShowChildView(object childViewContentView)
         {
             _shellView.ShowChildWindow(childViewContentView);
         }
+
+        #endregion
     }
 }

@@ -7,7 +7,7 @@ namespace CalendarSyncPlus.Presentation.Views.Main
     /// <summary>
     ///     Interaction logic for SettingsView.xaml
     /// </summary>
-    [Export(typeof (ISettingsView))]
+    [Export(typeof(ISettingsView))]
     public partial class SettingsView : UserControl, ISettingsView
     {
         public SettingsView()

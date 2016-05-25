@@ -15,10 +15,10 @@ namespace CalendarSyncPlus.Presentation.Converters
             if (parameter == null)
                 return Visibility.Collapsed;
             var parameterString = parameter.ToString();
-            
-            var parameterValue = (OutlookOptionsEnum)Enum.Parse(value.GetType(), parameterString);
 
-            return ((OutlookOptionsEnum)value).HasFlag(parameterValue) ? Visibility.Visible : Visibility.Collapsed;
+            var parameterValue = (OutlookOptionsEnum) Enum.Parse(value.GetType(), parameterString);
+
+            return ((OutlookOptionsEnum) value).HasFlag(parameterValue) ? Visibility.Visible : Visibility.Collapsed;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -31,7 +31,7 @@ namespace CalendarSyncPlus.Presentation.Converters
                 }
                 var isValid = (bool) value;
                 var parameterServiceType =
-                    (OutlookOptionsEnum)Enum.Parse(typeof(OutlookOptionsEnum), parameter.ToString());
+                    (OutlookOptionsEnum) Enum.Parse(typeof(OutlookOptionsEnum), parameter.ToString());
                 if (isValid)
                 {
                     return parameterServiceType;

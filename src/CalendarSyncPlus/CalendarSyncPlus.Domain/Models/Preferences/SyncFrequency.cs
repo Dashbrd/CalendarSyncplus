@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Waf.Foundation;
-using System.Xml.Serialization;
 
 namespace CalendarSyncPlus.Domain.Models.Preferences
 {

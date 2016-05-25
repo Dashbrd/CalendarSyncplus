@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CalendarSyncPlus.Domain.Models.Preferences
 {
     /// <summary>
-    /// Contact sync profile
+    ///     Contact sync profile
     /// </summary>
     [Serializable]
     public class ContactSyncProfile : SyncProfile
@@ -15,7 +11,7 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
         private ContactSyncSettings _syncSettings;
 
         /// <summary>
-        /// Constructor
+        ///     Constructor
         /// </summary>
         public ContactSyncProfile()
         {
@@ -35,17 +31,17 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
 
         public static ContactSyncProfile GetDefaultSyncProfile()
         {
-            var syncProfile = new ContactSyncProfile()
+            var syncProfile = new ContactSyncProfile
             {
                 SyncSettings = ContactSyncSettings.GetDefault(),
                 OutlookSettings =
                 {
                     OutlookOptions = OutlookOptionsEnum.OutlookDesktop |
-                                        OutlookOptionsEnum.DefaultProfile |
+                                     OutlookOptionsEnum.DefaultProfile |
                                      OutlookOptionsEnum.DefaultMailBoxCalendar
                 },
                 SyncDirection = SyncDirectionEnum.OutlookGoogleOneWay,
-                SyncFrequency = new IntervalSyncFrequency { Hours = 1, Minutes = 0, StartTime = DateTime.Now }
+                SyncFrequency = new IntervalSyncFrequency {Hours = 1, Minutes = 0, StartTime = DateTime.Now}
             };
             syncProfile.SetSourceDestTypes();
             return syncProfile;

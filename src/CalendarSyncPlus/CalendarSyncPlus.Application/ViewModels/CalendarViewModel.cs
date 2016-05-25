@@ -8,8 +8,6 @@ using System.Waf.Applications;
 using CalendarSyncPlus.Application.Views;
 using CalendarSyncPlus.Authentication.Google;
 using CalendarSyncPlus.Common.Log;
-using CalendarSyncPlus.Common.MetaData;
-using CalendarSyncPlus.Domain.Helpers;
 using CalendarSyncPlus.Domain.Models;
 using CalendarSyncPlus.Domain.Models.Preferences;
 using CalendarSyncPlus.ExchangeWebServices.Calendar;
@@ -25,40 +23,40 @@ namespace CalendarSyncPlus.Application.ViewModels
     [Export]
     public class CalendarViewModel : ViewModel<ICalendarView>
     {
+        private DelegateCommand _addGoogleAccountCommand;
         private DelegateCommand _autoDetectExchangeServer;
+
+        private List<SyncDirectionEnum> _calendarSyncModes;
+        private ObservableCollection<CalendarSyncProfile> _calendarSyncProfiles;
+        private List<Category> _categories;
+        private DelegateCommand _cleanGoogleCalendar;
+        private DelegateCommand _cleanOutlookCalendarCommand;
+        private DelegateCommand _disconnectAccountCommand;
+        private List<EWSCalendar> _exchangeCalendars;
         private DelegateCommand _getGoogleCalendarCommand;
         private DelegateCommand _getOutlookMailboxCommand;
         private DelegateCommand _getOutlookProfileLIstCommand;
-        private DelegateCommand _cleanGoogleCalendar;
-        private DelegateCommand _cleanOutlookCalendarCommand;
-        private DelegateCommand _addGoogleAccountCommand;
-        private DelegateCommand _disconnectAccountCommand;
-        private DelegateCommand _resetOutlookCalendarCommand;
-        private DelegateCommand _resetGoogleCalendarCommand;
-
-        private List<SyncDirectionEnum> _calendarSyncModes;
-        private List<Category> _categories;
-        private List<OutlookMailBox> _outlookMailBoxes;
-        private List<string> _outlookProfileList;
-        private List<string> _syncFrequencyTypes;
-        private string _selectedFrequency;
-        private List<SyncRangeTypeEnum> _syncRangeTypes;
-        private ObservableCollection<CalendarSyncProfile> _calendarSyncProfiles;
-        private CalendarSyncProfile _selectedProfile;
         private ObservableCollection<GoogleAccount> _googleAccounts;
         private bool _isLoading;
-        private List<EWSCalendar> _exchangeCalendars;
+        private List<OutlookMailBox> _outlookMailBoxes;
+        private List<string> _outlookProfileList;
+        private DelegateCommand _resetGoogleCalendarCommand;
+        private DelegateCommand _resetOutlookCalendarCommand;
+        private string _selectedFrequency;
+        private CalendarSyncProfile _selectedProfile;
+        private List<string> _syncFrequencyTypes;
+        private List<SyncRangeTypeEnum> _syncRangeTypes;
 
 
         [ImportingConstructor]
-        public CalendarViewModel(ICalendarView calendarView, 
+        public CalendarViewModel(ICalendarView calendarView,
             IGoogleCalendarService googleCalendarService,
             IOutlookCalendarService outlookCalendarService,
-            IMessageService messageService, 
+            IMessageService messageService,
             IExchangeWebCalendarService exchangeWebCalendarService,
-            ApplicationLogger applicationLogger, 
+            ApplicationLogger applicationLogger,
             IAccountAuthenticationService accountAuthenticationService)
-            :base(calendarView)
+            : base(calendarView)
         {
             ExchangeWebCalendarService = exchangeWebCalendarService;
             Logger = applicationLogger.GetLogger(GetType());
@@ -71,8 +69,8 @@ namespace CalendarSyncPlus.Application.ViewModels
         public IGoogleCalendarService GoogleCalendarService { get; set; }
         public IOutlookCalendarService OutlookCalendarService { get; set; }
         public IMessageService MessageService { get; set; }
-        public IExchangeWebCalendarService ExchangeWebCalendarService { get; private set; }
-        public ILog Logger { get; private set; }
+        public IExchangeWebCalendarService ExchangeWebCalendarService { get; }
+        public ILog Logger { get; }
         public IAccountAuthenticationService AccountAuthenticationService { get; set; }
 
         #region Properties
@@ -88,7 +86,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             get { return _outlookMailBoxes; }
             set { SetProperty(ref _outlookMailBoxes, value); }
         }
-        
+
         public List<EWSCalendar> ExchangeCalendars
         {
             get { return _exchangeCalendars; }
@@ -116,7 +114,7 @@ namespace CalendarSyncPlus.Application.ViewModels
                 OnSyncFrequencyChanged();
             }
         }
-        
+
         public List<SyncDirectionEnum> CalendarSyncModes
         {
             get { return _calendarSyncModes; }
@@ -128,13 +126,13 @@ namespace CalendarSyncPlus.Application.ViewModels
             get { return _isLoading; }
             set { SetProperty(ref _isLoading, value); }
         }
-        
+
         public List<Category> Categories
         {
             get { return _categories; }
             set { SetProperty(ref _categories, value); }
         }
-        
+
         public ObservableCollection<CalendarSyncProfile> CalendarSyncProfiles
         {
             get { return _calendarSyncProfiles; }
@@ -156,7 +154,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             get { return _googleAccounts; }
             set { SetProperty(ref _googleAccounts, value); }
         }
-        
+
         #endregion
 
         #region Commands
@@ -172,6 +170,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             get { return _disconnectAccountCommand; }
             set { SetProperty(ref _disconnectAccountCommand, value); }
         }
+
         public DelegateCommand GetOutlookProfileListCommand
         {
             get
@@ -210,14 +209,22 @@ namespace CalendarSyncPlus.Application.ViewModels
 
         public DelegateCommand ResetOutlookCalendarCommand
         {
-            get { return _resetOutlookCalendarCommand ?? (_resetOutlookCalendarCommand = new DelegateCommand(ResetOutlookCalendar)); }
+            get
+            {
+                return _resetOutlookCalendarCommand ??
+                       (_resetOutlookCalendarCommand = new DelegateCommand(ResetOutlookCalendar));
+            }
         }
-        
+
         public DelegateCommand ResetGoogleCalendarCommand
         {
-            get { return _resetGoogleCalendarCommand ?? (_resetGoogleCalendarCommand = new DelegateCommand(ResetGoogleCalendar)); }
+            get
+            {
+                return _resetGoogleCalendarCommand ??
+                       (_resetGoogleCalendarCommand = new DelegateCommand(ResetGoogleCalendar));
+            }
         }
-        
+
         public DelegateCommand CleanOutlookCalendarCommand
         {
             get
@@ -234,7 +241,7 @@ namespace CalendarSyncPlus.Application.ViewModels
                 return _cleanGoogleCalendar = _cleanGoogleCalendar ?? new DelegateCommand(CleanGoogleCalendarHandler);
             }
         }
-        
+
         #endregion
 
         #region Private Methods
@@ -262,12 +269,12 @@ namespace CalendarSyncPlus.Application.ViewModels
 
             SelectedFrequency = "Interval";
             Categories = CategoryHelper.GetCategories();
-            
         }
 
         private async void GetOutlookMailBoxes()
         {
-            if (SelectedProfile.OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.DefaultMailBoxCalendar) || IsLoading)
+            if (SelectedProfile.OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.DefaultMailBoxCalendar) ||
+                IsLoading)
                 return;
             IsLoading = true;
             await GetOutlookMailBoxesInternal();
@@ -281,15 +288,17 @@ namespace CalendarSyncPlus.Application.ViewModels
                 var mailBoxes = await Task<List<OutlookMailBox>>.Factory.StartNew(GetOutlookMailBox);
                 if (mailBoxes == null)
                 {
-                    MessageService.ShowMessageAsync("Failed to fetch outlook mailboxes. Please try again."+
-                        Environment.NewLine+"If the problem persists, Please restart Outlook application.");
+                    MessageService.ShowMessageAsync("Failed to fetch outlook mailboxes. Please try again." +
+                                                    Environment.NewLine +
+                                                    "If the problem persists, Please restart Outlook application.");
                     return;
                 }
 
                 if (SelectedProfile.OutlookSettings.OutlookMailBox != null && mailBoxes.Any())
                 {
                     var mailbox = mailBoxes.FirstOrDefault(
-                        t => t.EntryId.Equals(SelectedProfile.OutlookSettings.OutlookMailBox.EntryId)) ?? mailBoxes.First();
+                        t => t.EntryId.Equals(SelectedProfile.OutlookSettings.OutlookMailBox.EntryId)) ??
+                                  mailBoxes.First();
 
                     if (SelectedProfile.OutlookSettings.OutlookFolder != null)
                     {
@@ -310,17 +319,19 @@ namespace CalendarSyncPlus.Application.ViewModels
 
         private List<OutlookMailBox> GetOutlookMailBox()
         {
-            return OutlookCalendarService.GetAllMailBoxes(SelectedProfile.OutlookSettings.OutlookProfileName ?? string.Empty);
+            return
+                OutlookCalendarService.GetAllMailBoxes(SelectedProfile.OutlookSettings.OutlookProfileName ??
+                                                       string.Empty);
         }
 
         private async void AutoDetectEWSSettings()
         {
             IsLoading = true;
-            var calendarSpecificData = new Dictionary<string, object>()
+            var calendarSpecificData = new Dictionary<string, object>
             {
                 {"ExchangeServerSettings", SelectedProfile.ExchangeServerSettings}
             };
-            ExchangeCalendars = ExchangeWebCalendarService.GetCalendarsAsync(10,calendarSpecificData);
+            ExchangeCalendars = ExchangeWebCalendarService.GetCalendarsAsync(10, calendarSpecificData);
             IsLoading = false;
         }
 
@@ -348,7 +359,7 @@ namespace CalendarSyncPlus.Application.ViewModels
         internal async void GetGoogleCalendar()
         {
             if (IsLoading)
-                return;            
+                return;
             IsLoading = true;
             try
             {
@@ -387,7 +398,7 @@ namespace CalendarSyncPlus.Application.ViewModels
                 {
                     return;
                 }
-                var calendars =  await GoogleCalendarService.GetAvailableCalendars(
+                var calendars = await GoogleCalendarService.GetAvailableCalendars(
                     SelectedProfile.GoogleSettings.GoogleAccount.Name);
 
                 if (calendars.Any())
@@ -411,12 +422,14 @@ namespace CalendarSyncPlus.Application.ViewModels
                 Logger.Error(exception);
             }
         }
+
         private async void ResetGoogleCalendar()
         {
             IsLoading = true;
             await ResetGoogleCalendarInternal();
             IsLoading = false;
         }
+
         private async Task ResetGoogleCalendarInternal()
         {
             if (SelectedProfile.GoogleSettings.GoogleAccount == null ||
@@ -446,6 +459,7 @@ namespace CalendarSyncPlus.Application.ViewModels
                 MessageService.ShowMessageAsync("Reset calendar failed.");
             }
         }
+
         private async void CleanGoogleCalendarHandler()
         {
             IsLoading = true;
@@ -482,6 +496,7 @@ namespace CalendarSyncPlus.Application.ViewModels
                 MessageService.ShowMessageAsync("Reset calendar failed.");
             }
         }
+
         private async void ResetOutlookCalendar(object o)
         {
             IsLoading = true;
@@ -492,7 +507,8 @@ namespace CalendarSyncPlus.Application.ViewModels
         private async Task ResetOutlookCalendarInternal()
         {
             if ((SelectedProfile.OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.AlternateMailBoxCalendar) &&
-                 (SelectedProfile.OutlookSettings.OutlookMailBox == null || SelectedProfile.OutlookSettings.OutlookFolder == null)) ||
+                 (SelectedProfile.OutlookSettings.OutlookMailBox == null ||
+                  SelectedProfile.OutlookSettings.OutlookFolder == null)) ||
                 (SelectedProfile.OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.AlternateProfile) &&
                  string.IsNullOrEmpty(SelectedProfile.OutlookSettings.OutlookProfileName)))
             {
@@ -512,16 +528,21 @@ namespace CalendarSyncPlus.Application.ViewModels
             var calendarSpecificData = new Dictionary<string, object>
             {
                 {
-                    "ProfileName", SelectedProfile.OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.AlternateProfile)
+                    "ProfileName",
+                    SelectedProfile.OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.AlternateProfile)
                         ? SelectedProfile.OutlookSettings.OutlookProfileName
                         : null
                 },
                 {
-                    "OutlookCalendar", SelectedProfile.OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.AlternateMailBoxCalendar)
+                    "OutlookCalendar",
+                    SelectedProfile.OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.AlternateMailBoxCalendar)
                         ? SelectedProfile.OutlookSettings.OutlookFolder
                         : null
                 },
-                {"AddAsAppointments", SelectedProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.AsAppointments)}
+                {
+                    "AddAsAppointments",
+                    SelectedProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.AsAppointments)
+                }
             };
 
             var result = await OutlookCalendarService.ResetCalendarEntries(calendarSpecificData);
@@ -541,7 +562,8 @@ namespace CalendarSyncPlus.Application.ViewModels
         private async Task CleanOutlookCalendarInternal()
         {
             if ((SelectedProfile.OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.AlternateMailBoxCalendar) &&
-                 (SelectedProfile.OutlookSettings.OutlookMailBox == null || SelectedProfile.OutlookSettings.OutlookFolder == null)) ||
+                 (SelectedProfile.OutlookSettings.OutlookMailBox == null ||
+                  SelectedProfile.OutlookSettings.OutlookFolder == null)) ||
                 (SelectedProfile.OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.AlternateProfile) &&
                  string.IsNullOrEmpty(SelectedProfile.OutlookSettings.OutlookProfileName)))
             {
@@ -561,16 +583,21 @@ namespace CalendarSyncPlus.Application.ViewModels
             var calendarSpecificData = new Dictionary<string, object>
             {
                 {
-                    "ProfileName", SelectedProfile.OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.AlternateProfile)
+                    "ProfileName",
+                    SelectedProfile.OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.AlternateProfile)
                         ? SelectedProfile.OutlookSettings.OutlookProfileName
                         : null
                 },
                 {
-                    "OutlookCalendar", SelectedProfile.OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.AlternateMailBoxCalendar)
+                    "OutlookCalendar",
+                    SelectedProfile.OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.AlternateMailBoxCalendar)
                         ? SelectedProfile.OutlookSettings.OutlookFolder
                         : null
                 },
-                {"AddAsAppointments", SelectedProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.AsAppointments)}
+                {
+                    "AddAsAppointments",
+                    SelectedProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.AsAppointments)
+                }
             };
 
             var result = await OutlookCalendarService.ClearCalendar(calendarSpecificData);
@@ -584,7 +611,7 @@ namespace CalendarSyncPlus.Application.ViewModels
         /// </summary>
         private void OnSyncFrequencyChanged()
         {
-            if ((SelectedProfile == null))
+            if (SelectedProfile == null)
             {
                 return;
             }
@@ -606,7 +633,7 @@ namespace CalendarSyncPlus.Application.ViewModels
                 }
             }
         }
-        
+
         public async void LoadSyncProfile()
         {
             if (SelectedProfile == null)
@@ -650,10 +677,9 @@ namespace CalendarSyncPlus.Application.ViewModels
                 SelectedProfile.EventCategory =
                     Categories.First(t => t.CategoryName.Equals(SelectedProfile.EventCategory.CategoryName));
             }
-            
+
             IsLoading = false;
         }
-
 
         #endregion
     }

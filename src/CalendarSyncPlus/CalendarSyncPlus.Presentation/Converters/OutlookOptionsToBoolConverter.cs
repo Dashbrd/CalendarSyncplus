@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 using CalendarSyncPlus.Domain.Models;
@@ -35,9 +31,9 @@ namespace CalendarSyncPlus.Presentation.Converters
                 return Visibility.Collapsed;
             var parameterString = parameter.ToString();
 
-            var parameterValue = (OutlookOptionsEnum)Enum.Parse(value.GetType(), parameterString);
+            var parameterValue = (OutlookOptionsEnum) Enum.Parse(value.GetType(), parameterString);
 
-            return ((OutlookOptionsEnum)value).HasFlag(parameterValue);
+            return ((OutlookOptionsEnum) value).HasFlag(parameterValue);
         }
 
         /// <summary>
@@ -61,9 +57,9 @@ namespace CalendarSyncPlus.Presentation.Converters
                 {
                     return false;
                 }
-                var isValid = (bool)value;
+                var isValid = (bool) value;
                 var parameterServiceType =
-                    (OutlookOptionsEnum)Enum.Parse(typeof(OutlookOptionsEnum), parameter.ToString());
+                    (OutlookOptionsEnum) Enum.Parse(typeof(OutlookOptionsEnum), parameter.ToString());
                 if (isValid)
                 {
                     return parameterServiceType;

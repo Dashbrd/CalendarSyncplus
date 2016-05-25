@@ -5,8 +5,8 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
     [Serializable]
     public class CalendarSyncSettings : SyncSettings
     {
-        private bool _disableDelete;
         private bool _confirmOnDelete;
+        private bool _disableDelete;
         private bool _keepLastModifiedVersion;
         private bool _skipPrivateEntries;
 
@@ -43,8 +43,8 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
                 SyncRangeType = SyncRangeTypeEnum.SyncRangeInDays,
                 DaysInFuture = 120,
                 DaysInPast = 120,
-                StartDate = DateTime.Today.AddDays(-(120)),
-                EndDate = DateTime.Today.AddDays(120),
+                StartDate = DateTime.Today.AddDays(-120),
+                EndDate = DateTime.Today.AddDays(120)
             };
         }
     }

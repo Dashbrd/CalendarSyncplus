@@ -21,41 +21,42 @@ namespace CalendarSyncPlus.Services.Sync.Interfaces
         #endregion
 
         #region Public Methods
+
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="timerCallback"></param>
         /// <returns></returns>
         Task<bool> Start(ElapsedEventHandler timerCallback);
+
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="elapsedEventHandler"></param>
         void Stop(ElapsedEventHandler elapsedEventHandler);
+
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="syncProfile"></param>
         /// <param name="syncMetric"></param>
         /// <param name="syncCallback"></param>
         /// <returns></returns>
         string SyncNow(CalendarSyncProfile syncProfile, SyncMetric syncMetric, SyncCallback syncCallback);
+
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="syncProfile"></param>
         /// <param name="syncMetric"></param>
         /// <param name="syncCallback"></param>
         /// <returns></returns>
         string SyncNow(ContactSyncProfile syncProfile, SyncMetric syncMetric, SyncCallback syncCallback);
+
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="syncProfile"></param>
         /// <param name="syncMetric"></param>
         /// <param name="syncCallback"></param>
         /// <returns></returns>
         string SyncNow(TaskSyncProfile syncProfile, SyncMetric syncMetric, SyncCallback syncCallback);
+
         #endregion
     }
 }

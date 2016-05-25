@@ -18,8 +18,6 @@ namespace CalendarSyncPlus.Presentation.MarkupExtensions
             Path = new PropertyPath(path);
         }
 
-        #region BindingBase Members
-
         /// <summary>
         ///     Value to use when source cannot provide a value
         /// </summary>
@@ -31,12 +29,72 @@ namespace CalendarSyncPlus.Presentation.MarkupExtensions
         /// </remarks>
         public object FallbackValue { get; set; }
 
-        #endregion
+        /// <summary>
+        ///     The source path (for CLR bindings).
+        /// </summary>
+        public object Source { get; set; }
+
+        /// <summary>
+        ///     The source path (for CLR bindings).
+        /// </summary>
+        public PropertyPath Path { get; set; }
+
+        /// <summary>
+        ///     The <see cref="XPath" /> path (for XML bindings).
+        /// </summary>
+        [DefaultValue(null)]
+        public string XPath { get; set; }
+
+        /// <summary>
+        ///     Binding mode
+        /// </summary>
+        [DefaultValue(BindingMode.Default)]
+        public BindingMode Mode { get; set; }
+
+        /// <summary>
+        ///     Update type
+        /// </summary>
+        [DefaultValue(UpdateSourceTrigger.Default)]
+        public UpdateSourceTrigger UpdateSourceTrigger { get; set; }
+
+        /// <summary>
+        ///     The Converter to apply
+        /// </summary>
+        [DefaultValue(null)]
+        public IValueConverter Converter { get; set; }
+
+        /// <summary>
+        ///     The parameter to pass to converter.
+        /// </summary>
+        /// <value>
+        /// </value>
+        [DefaultValue(null)]
+        public object ConverterParameter { get; set; }
+
+        /// <summary>
+        ///     Culture in which to evaluate the converter
+        /// </summary>
+        [DefaultValue(null)]
+        [TypeConverter(typeof(CultureInfoIetfLanguageTagConverter))]
+        public CultureInfo ConverterCulture { get; set; }
+
+        /// <summary>
+        ///     Description of the object to use as the source, relative to the
+        ///     target element.
+        /// </summary>
+        [DefaultValue(null)]
+        public RelativeSource RelativeSource { get; set; }
+
+        /// <summary>
+        ///     Name of the element to use as the source
+        /// </summary>
+        [DefaultValue(null)]
+        public string ElementName { get; set; }
 
         public override object ProvideValue(IServiceProvider serviceProvider)
         {
             var provideValueTargetService =
-                (IProvideValueTarget) serviceProvider.GetService(typeof (IProvideValueTarget));
+                (IProvideValueTarget) serviceProvider.GetService(typeof(IProvideValueTarget));
             if (provideValueTargetService == null)
                 return null;
 
@@ -89,11 +147,15 @@ namespace CalendarSyncPlus.Presentation.MarkupExtensions
             return null;
         }
 
+        #region Nested type: HelperConverter
+
         #region Nested types
 
         private class HelperConverter : IMultiValueConverter
         {
             public static readonly HelperConverter Current = new HelperConverter();
+
+            #region IMultiValueConverter Members
 
             public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
             {
@@ -104,7 +166,11 @@ namespace CalendarSyncPlus.Presentation.MarkupExtensions
             {
                 throw new NotImplementedException();
             }
+
+            #endregion
         }
+
+        #endregion
 
         #endregion
 
@@ -122,7 +188,7 @@ namespace CalendarSyncPlus.Presentation.MarkupExtensions
 
         // Using a DependencyProperty as the backing store for ResourceBindingKeyHelper.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty ResourceBindingKeyHelperProperty =
-            DependencyProperty.RegisterAttached("ResourceBindingKeyHelper", typeof (object), typeof (ResourceBinding),
+            DependencyProperty.RegisterAttached("ResourceBindingKeyHelper", typeof(object), typeof(ResourceBinding),
                 new PropertyMetadata(null, ResourceKeyChanged));
 
         private static void ResourceKeyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -143,72 +209,6 @@ namespace CalendarSyncPlus.Presentation.MarkupExtensions
 
             target.SetResourceReference(dp, newVal.Item1);
         }
-
-        #endregion
-
-        #region Binding Members
-
-        /// <summary>
-        ///     The source path (for CLR bindings).
-        /// </summary>
-        public object Source { get; set; }
-
-        /// <summary>
-        ///     The source path (for CLR bindings).
-        /// </summary>
-        public PropertyPath Path { get; set; }
-
-        /// <summary>
-        ///     The <see cref="XPath" /> path (for XML bindings).
-        /// </summary>
-        [DefaultValue(null)]
-        public string XPath { get; set; }
-
-        /// <summary>
-        ///     Binding mode
-        /// </summary>
-        [DefaultValue(BindingMode.Default)]
-        public BindingMode Mode { get; set; }
-
-        /// <summary>
-        ///     Update type
-        /// </summary>
-        [DefaultValue(UpdateSourceTrigger.Default)]
-        public UpdateSourceTrigger UpdateSourceTrigger { get; set; }
-
-        /// <summary>
-        ///     The Converter to apply
-        /// </summary>
-        [DefaultValue(null)]
-        public IValueConverter Converter { get; set; }
-
-        /// <summary>
-        ///     The parameter to pass to converter.
-        /// </summary>
-        /// <value>
-        /// </value>
-        [DefaultValue(null)]
-        public object ConverterParameter { get; set; }
-
-        /// <summary>
-        ///     Culture in which to evaluate the converter
-        /// </summary>
-        [DefaultValue(null)]
-        [TypeConverter(typeof (CultureInfoIetfLanguageTagConverter))]
-        public CultureInfo ConverterCulture { get; set; }
-
-        /// <summary>
-        ///     Description of the object to use as the source, relative to the
-        ///     target element.
-        /// </summary>
-        [DefaultValue(null)]
-        public RelativeSource RelativeSource { get; set; }
-
-        /// <summary>
-        ///     Name of the element to use as the source
-        /// </summary>
-        [DefaultValue(null)]
-        public string ElementName { get; set; }
 
         #endregion
     }

@@ -44,7 +44,7 @@
                     <RowDefinition />
                     <RowDefinition />
                     <RowDefinition />
-                    <RowDefinition/>
+                    <RowDefinition />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="1*" />
@@ -85,7 +85,7 @@
                           HorizontalAlignment="Right"
                           IsChecked="{Binding Path=DataContext.Settings.AllowManualAuthentication,RelativeSource={RelativeSource Mode=FindAncestor,
                                                                              AncestorType={x:Type calendars:CalendarsView}}}"
-                          
+
                           Content="{localizeExtension:LocText Key=GoogleSettingsView_CheckBox_ManualAuth_Content}" />
 
                 <TextBlock Grid.Row="3"

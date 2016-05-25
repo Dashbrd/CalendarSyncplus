@@ -1,18 +1,16 @@
 ﻿using System;
-using System.Waf.Foundation;
 using System.Xml.Serialization;
-using CalendarSyncPlus.Common.MetaData;
 
 namespace CalendarSyncPlus.Domain.Models.Preferences
 {
     [Serializable]
-    [XmlInclude(typeof (SyncFrequency))]
+    [XmlInclude(typeof(SyncFrequency))]
     public class CalendarSyncProfile : SyncProfile
     {
-        private CalendarSyncSettings _syncSettings;
         private CalendarEntryOptionsEnum _calendarEntryOptions;
-        private bool _setCalendarCategory;
         private Category _eventCategory;
+        private bool _setCalendarCategory;
+        private CalendarSyncSettings _syncSettings;
 
         public CalendarSyncProfile()
         {
@@ -56,7 +54,7 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
             get { return _eventCategory; }
             set { SetProperty(ref _eventCategory, value); }
         }
-        
+
         /// <summary>
         ///     Gets default calendar profile for the user
         /// </summary>
@@ -69,8 +67,8 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
                 SyncSettings = CalendarSyncSettings.GetDefault(),
                 OutlookSettings =
                 {
-                    OutlookOptions =  OutlookOptionsEnum.OutlookDesktop |
-                                        OutlookOptionsEnum.DefaultProfile |
+                    OutlookOptions = OutlookOptionsEnum.OutlookDesktop |
+                                     OutlookOptionsEnum.DefaultProfile |
                                      OutlookOptionsEnum.DefaultMailBoxCalendar,
                     SetOrganizer = true
                 },
@@ -78,7 +76,7 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
                     CalendarEntryOptionsEnum.Description | CalendarEntryOptionsEnum.Attendees |
                     CalendarEntryOptionsEnum.AttendeesToDescription |
                     CalendarEntryOptionsEnum.Reminders | CalendarEntryOptionsEnum.AsAppointments,
-                    SyncDirection = SyncDirectionEnum.OutlookGoogleOneWay,
+                SyncDirection = SyncDirectionEnum.OutlookGoogleOneWay,
                 SyncFrequency = new IntervalSyncFrequency {Hours = 1, Minutes = 0, StartTime = DateTime.Now}
             };
             syncProfile.SetSourceDestTypes();

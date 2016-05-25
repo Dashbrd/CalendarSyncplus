@@ -4,6 +4,5 @@ namespace CalendarSyncPlus.ExchangeWebServices.Task
 {
     public interface IExchangeWebTaskService : ITaskService
     {
-         
     }
 }

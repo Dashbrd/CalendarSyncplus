@@ -9,7 +9,7 @@ namespace CalendarSyncPlus.Presentation.Views.Notifications
     /// <summary>
     ///     Interaction logic for SystemTrayNotifierView.xaml
     /// </summary>
-    [Export, Export(typeof (ISystemTrayNotifierView))]
+    [Export, Export(typeof(ISystemTrayNotifierView))]
     public partial class SystemTrayNotifierView : TaskbarIcon, ISystemTrayNotifierView
     {
         public SystemTrayNotifierView()

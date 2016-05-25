@@ -45,4 +45,4 @@ using Microsoft.Tools.WindowsInstallerXml.Bootstrapper;
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
 
-[assembly: BootstrapperApplication(typeof (ManagedBootstrapperApplication))]
+[assembly: BootstrapperApplication(typeof(ManagedBootstrapperApplication))]

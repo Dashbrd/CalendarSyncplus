@@ -1,7 +1,7 @@
 ﻿<UserControl x:Class="CalendarSyncPlus.Presentation.Views.Main.MenuView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
              xmlns:lex="http://wpflocalizeextension.codeplex.com"
@@ -32,7 +32,7 @@
                                         Value="1" />
                                 <Setter Property="BorderThickness"
                                         TargetName="ButtonBorder"
-                                        Value="4,0,0,0"/>
+                                        Value="4,0,0,0" />
                                 <Setter Property="Background"
                                         Value="{DynamicResource AccentColorBrush3}" />
                             </Trigger>
@@ -147,13 +147,15 @@
         <StackPanel.Resources>
             <Style TargetType="StackPanel">
                 <Style.Triggers>
-                    <DataTrigger Binding="{Binding IsActive,RelativeSource={RelativeSource AncestorType={x:Type controls:MetroWindow},Mode=FindAncestor}}"
-                                 Value="True">
+                    <DataTrigger
+                        Binding="{Binding IsActive,RelativeSource={RelativeSource AncestorType={x:Type controls:MetroWindow},Mode=FindAncestor}}"
+                        Value="True">
                         <Setter Property="Background"
                                 Value="{Binding WindowTitleBrush,RelativeSource={RelativeSource AncestorType={x:Type controls:MetroWindow},Mode=FindAncestor}}" />
                     </DataTrigger>
-                    <DataTrigger Binding="{Binding IsActive,RelativeSource={RelativeSource AncestorType={x:Type controls:MetroWindow},Mode=FindAncestor}}"
-                                 Value="False">
+                    <DataTrigger
+                        Binding="{Binding IsActive,RelativeSource={RelativeSource AncestorType={x:Type controls:MetroWindow},Mode=FindAncestor}}"
+                        Value="False">
                         <Setter Property="Background"
                                 Value="{Binding NonActiveWindowTitleBrush,RelativeSource={RelativeSource AncestorType={x:Type controls:MetroWindow},Mode=FindAncestor}}" />
                     </DataTrigger>

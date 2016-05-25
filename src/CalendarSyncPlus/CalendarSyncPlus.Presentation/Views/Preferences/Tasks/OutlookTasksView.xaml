@@ -17,8 +17,8 @@
     <UserControl.Resources>
         <metroConverters:ToUpperConverter x:Key="ToUpperConverter" />
         <converters:BoolToEnumConverter x:Key="BoolToEnumConverter" />
-        <converters:OutlookOptionsToBoolConverter x:Key="OutlookOptionsToBoolConverter"/>
-        <converters:OutlookOptionsToVisibilityConverter x:Key="OutlookOptionsToVisibilityConverter"/>
+        <converters:OutlookOptionsToBoolConverter x:Key="OutlookOptionsToBoolConverter" />
+        <converters:OutlookOptionsToVisibilityConverter x:Key="OutlookOptionsToVisibilityConverter" />
         <DataTemplate x:Key="ExchangeHeaderTemplate">
             <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
                 <Rectangle Width="18" Fill="{DynamicResource AccentSelectedColorBrush}">
@@ -164,7 +164,7 @@
                                                 Converter={StaticResource OutlookOptionsToBoolConverter},
                                                 ConverterParameter={x:Static models:OutlookOptionsEnum.AlternateMailBoxCalendar},
                                                  Mode=TwoWay,
-                                                 UpdateSourceTrigger=PropertyChanged}"/>
+                                                 UpdateSourceTrigger=PropertyChanged}" />
                 <TextBlock Grid.Row="5"
                            Grid.Column="0"
                            Margin="2"
@@ -193,7 +193,7 @@
                                               ElementName=MailBoxRadioButton}"
                           ItemsSource="{Binding SelectedProfile.OutlookSettings.OutlookMailBox.Folders}"
                           SelectedItem="{Binding SelectedProfile.OutlookSettings.OutlookFolder}" />
-                 <Button Grid.Row="7"
+                <Button Grid.Row="7"
                         Grid.Column="1"
                         Width="150"
                         Margin="2"
@@ -282,6 +282,6 @@
             </Grid>
         </GroupBox>
 
-       
+
     </Grid>
 </UserControl>

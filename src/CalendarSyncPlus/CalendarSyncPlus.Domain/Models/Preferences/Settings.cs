@@ -6,23 +6,22 @@ using System.Waf.Foundation;
 namespace CalendarSyncPlus.Domain.Models.Preferences
 {
     /// <summary>
-    /// 
     /// </summary>
     [Serializable]
     public class Settings : Model
     {
-        [NonSerialized]
-        private bool _isFirstSave;
-
-        private ObservableCollection<GoogleAccount> _googleAccounts;
+        private AppSettings _appSettings;
         private ObservableCollection<CalendarSyncProfile> _calendarSyncProfiles;
         private ObservableCollection<ContactSyncProfile> _contactSyncProfiles;
-        private ObservableCollection<TaskSyncProfile> _taskSyncProfiles;
-        private AppSettings _appSettings;
+
+        private ObservableCollection<GoogleAccount> _googleAccounts;
+
+        [NonSerialized] private bool _isFirstSave;
+
         private LogSettings _logSettings;
+        private ObservableCollection<TaskSyncProfile> _taskSyncProfiles;
 
         /// <summary>
-        /// 
         /// </summary>
         public string SettingsVersion { get; set; }
 
@@ -55,7 +54,6 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
         }
 
         /// <summary>
-        /// 
         /// </summary>
         public ObservableCollection<ContactSyncProfile> ContactSyncProfiles
         {
@@ -64,7 +62,6 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
         }
 
         /// <summary>
-        /// 
         /// </summary>
         public ObservableCollection<TaskSyncProfile> TaskSyncProfiles
         {
@@ -111,10 +108,9 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
                 {
                     ContactSyncProfile.GetDefaultSyncProfile()
                 },
-                GoogleAccounts =  new ObservableCollection<GoogleAccount>()
+                GoogleAccounts = new ObservableCollection<GoogleAccount>()
             };
             return settings;
         }
-       
     }
 }

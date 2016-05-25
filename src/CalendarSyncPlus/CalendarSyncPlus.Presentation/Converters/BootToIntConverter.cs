@@ -6,6 +6,8 @@ namespace CalendarSyncPlus.Presentation.Converters
 {
     public class BootToIntConverter : IValueConverter
     {
+        #region IValueConverter Members
+
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             try
@@ -24,7 +26,7 @@ namespace CalendarSyncPlus.Presentation.Converters
         {
             try
             {
-                if (((int) value) == 0)
+                if ((int) value == 0)
                     return true;
             }
             catch (Exception)
@@ -33,5 +35,7 @@ namespace CalendarSyncPlus.Presentation.Converters
             }
             return false;
         }
+
+        #endregion
     }
 }

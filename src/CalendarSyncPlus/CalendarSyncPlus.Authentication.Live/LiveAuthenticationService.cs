@@ -1,13 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.Composition;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.Composition;
 using CalendarSyncPlus.Common.Log;
-using Microsoft.Experimental.IdentityModel.Clients.ActiveDirectory;
-using System.Waf.Applications;
 using log4net;
 
 namespace CalendarSyncPlus.Authentication.Live
@@ -15,16 +7,16 @@ namespace CalendarSyncPlus.Authentication.Live
     [Export(typeof(ILiveAuthenticationService))]
     public class LiveAuthenticationService : ILiveAuthenticationService
     {
-        public ILog Logger { get; set; }
-
         [ImportingConstructor]
         public LiveAuthenticationService(ApplicationLogger applicationLogger)
         {
-            Logger = applicationLogger.GetLogger(this.GetType());
+            Logger = applicationLogger.GetLogger(GetType());
         }
 
-        //// Properties of the native client app. Get the ClientId from the resources section of the App.xaml file.
+        public ILog Logger { get; set; }
         //public const string ClientID = "";
+
+        //// Properties of the native client app. Get the ClientId from the resources section of the App.xaml file.
         //// Get the _returnUri from app settings.
         //public Uri _returnUri = WebAuthenticationBroker.GetCurrentApplicationCallbackUri();
 

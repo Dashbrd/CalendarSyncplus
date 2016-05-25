@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
@@ -17,17 +16,6 @@ namespace CalendarSyncPlus.Domain.File.Xml
     /// </typeparam>
     public class XmlSerializer<T> : IXmlSerializer<T> where T : class, new()
     {
-        #region Private methods
-
-        private XmlWriterSettings GetIndentedSettings()
-        {
-            var xmlWriterSettings = new XmlWriterSettings {Indent = true, IndentChars = "\t"};
-
-            return xmlWriterSettings;
-        }
-
-        #endregion
-
         #region IXmlSerializer<T> Members
 
         /// <summary>
@@ -90,7 +78,7 @@ namespace CalendarSyncPlus.Domain.File.Xml
                 throw new ArgumentException("XML cannot be null or empty", "xml");
             }
 
-            var xmlSerializer = new XmlSerializer(typeof (T));
+            var xmlSerializer = new XmlSerializer(typeof(T));
 
             using (var memoryStream = new MemoryStream(encoding.GetBytes(xml)))
             {
@@ -142,7 +130,7 @@ namespace CalendarSyncPlus.Domain.File.Xml
             // Create the stream writer with the specified encoding
             using (var reader = XmlReader.Create(filename, settings))
             {
-                var xmlSerializer = new XmlSerializer(typeof (T));
+                var xmlSerializer = new XmlSerializer(typeof(T));
                 return (T) xmlSerializer.Deserialize(reader);
             }
         }
@@ -218,7 +206,7 @@ namespace CalendarSyncPlus.Domain.File.Xml
             {
                 using (var xmlWriter = XmlWriter.Create(memoryStream, settings))
                 {
-                    var x = new XmlSerializer(typeof (T));
+                    var x = new XmlSerializer(typeof(T));
                     x.Serialize(xmlWriter, source, namespaces);
 
                     memoryStream.Position = 0; // rewind the stream before reading back.
@@ -288,7 +276,7 @@ namespace CalendarSyncPlus.Domain.File.Xml
             {
                 throw new ArgumentNullException("source", "Object to serialize cannot be null");
             }
-            
+
             var serializer = new XmlSerializer(source.GetType());
 
             using (var xmlWriter = XmlWriter.Create(filename, settings))
@@ -296,6 +284,17 @@ namespace CalendarSyncPlus.Domain.File.Xml
                 var x = new XmlSerializer(typeof(T));
                 x.Serialize(xmlWriter, source, namespaces);
             }
+        }
+
+        #endregion
+
+        #region Private methods
+
+        private XmlWriterSettings GetIndentedSettings()
+        {
+            var xmlWriterSettings = new XmlWriterSettings {Indent = true, IndentChars = "\t"};
+
+            return xmlWriterSettings;
         }
 
         #endregion

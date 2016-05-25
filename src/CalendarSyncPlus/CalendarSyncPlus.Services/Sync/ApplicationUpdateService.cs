@@ -13,7 +13,7 @@ namespace CalendarSyncPlus.Services
 {
     /// <summary>
     /// </summary>
-    [Export(typeof (IApplicationUpdateService))]
+    [Export(typeof(IApplicationUpdateService))]
     public class ApplicationUpdateService : IApplicationUpdateService
     {
         /// <summary>
@@ -83,6 +83,64 @@ namespace CalendarSyncPlus.Services
             return null;
         }
 
+        /// <summary>
+        /// </summary>
+        /// <returns>
+        /// </returns>
+        public bool IsNewVersionAvailable()
+        {
+            try
+            {
+                var versionString = _version.Contains("-")
+                    ? _version.Remove(_version.IndexOf("-", StringComparison.InvariantCultureIgnoreCase))
+                    : _version;
+                var version = new Version(versionString.Substring(1));
+                if (version > new Version(ApplicationInfo.Version))
+                {
+                    return true;
+                }
+            }
+            catch (Exception exception)
+            {
+                Logger.Error(exception);
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <returns>
+        /// </returns>
+        public string GetNewAvailableVersion()
+        {
+            try
+            {
+                if (_isAlpha && !_version.Contains("-"))
+                    return $"{_version}-alpha";
+            }
+            catch (Exception exception)
+            {
+                Logger.Error(exception);
+            }
+            return _version;
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <returns>
+        /// </returns>
+        public Uri GetDownloadUri()
+        {
+            //Avoid for a while
+            if (_downloadLink == null)
+            {
+                return null;
+            }
+            return new Uri(_downloadLink);
+        }
+
+        #endregion
+
         private bool IsAlpha(string version1, string version2)
         {
             version1 = version1.Contains("-")
@@ -150,63 +208,5 @@ namespace CalendarSyncPlus.Services
             dynamic obj = JsonConvert.DeserializeObject(result);
             return obj[0];
         }
-
-        /// <summary>
-        /// </summary>
-        /// <returns>
-        /// </returns>
-        public bool IsNewVersionAvailable()
-        {
-            try
-            {
-                var versionString = _version.Contains("-")
-                    ? _version.Remove(_version.IndexOf("-", StringComparison.InvariantCultureIgnoreCase))
-                    : _version;
-                var version = new Version(versionString.Substring(1));
-                if (version > new Version(ApplicationInfo.Version))
-                {
-                    return true;
-                }
-            }
-            catch (Exception exception)
-            {
-                Logger.Error(exception);
-            }
-            return false;
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <returns>
-        /// </returns>
-        public string GetNewAvailableVersion()
-        {
-            try
-            {
-                if (_isAlpha && !_version.Contains("-"))
-                    return $"{_version}-alpha";
-            }
-            catch (Exception exception)
-            {
-                Logger.Error(exception);
-            }
-            return _version;
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <returns>
-        /// </returns>
-        public Uri GetDownloadUri()
-        {
-            //Avoid for a while
-            if (_downloadLink == null)
-            {
-                return null;
-            }
-            return new Uri(_downloadLink);
-        }
-
-        #endregion
     }
 }

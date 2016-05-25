@@ -12,8 +12,8 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
                 SyncRangeType = SyncRangeTypeEnum.SyncRangeInDays,
                 DaysInFuture = 120,
                 DaysInPast = 120,
-                StartDate = DateTime.Today.AddDays(-(120)),
-                EndDate = DateTime.Today.AddDays(120),
+                StartDate = DateTime.Today.AddDays(-120),
+                EndDate = DateTime.Today.AddDays(120)
             };
         }
     }

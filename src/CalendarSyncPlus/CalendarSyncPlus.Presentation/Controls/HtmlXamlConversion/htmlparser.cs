@@ -179,7 +179,7 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
             // TODO: We assume that indices represented by strictly 10 zeros ("0123456789".Length),
             // which could be wrong assumption. We need to implement more flrxible parsing here
             startHtmlIndex =
-                Int32.Parse(htmlDataString.Substring(startHtmlIndex + "StartHTML:".Length, "0123456789".Length));
+                int.Parse(htmlDataString.Substring(startHtmlIndex + "StartHTML:".Length, "0123456789".Length));
             if (startHtmlIndex < 0 || startHtmlIndex > htmlDataString.Length)
             {
                 return "ERROR: Urecognized html header";
@@ -192,7 +192,7 @@ namespace CalendarSyncPlus.Presentation.Controls.HtmlXamlConversion
             }
             // TODO: We assume that indices represented by strictly 10 zeros ("0123456789".Length),
             // which could be wrong assumption. We need to implement more flrxible parsing here
-            endHtmlIndex = Int32.Parse(htmlDataString.Substring(endHtmlIndex + "EndHTML:".Length, "0123456789".Length));
+            endHtmlIndex = int.Parse(htmlDataString.Substring(endHtmlIndex + "EndHTML:".Length, "0123456789".Length));
             if (endHtmlIndex > htmlDataString.Length)
             {
                 endHtmlIndex = htmlDataString.Length;

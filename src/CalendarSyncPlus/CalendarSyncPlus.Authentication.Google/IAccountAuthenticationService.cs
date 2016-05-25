@@ -66,6 +66,7 @@ namespace CalendarSyncPlus.Authentication.Google
         /// </returns>
         AnalyticsService AuthenticateAnalyticsOauth(string clientId, string clientSecret, string userName,
             string fileDataStorePath, string applicationName, bool isFullPath);
+
         /// <summary>
         ///     Authenticate to Google Using Oauth2 Documentation
         ///     https://developers.google.com/accounts/docs/OAuth2
@@ -92,6 +93,7 @@ namespace CalendarSyncPlus.Authentication.Google
         /// </returns>
         TasksService AuthenticateTasksOauth(string clientId, string clientSecret, string userName,
             string fileDataStorePath, string applicationName, bool isFullPath);
+
         /// <summary>
         ///     Authenticate to Google Using Oauth2 Documentation
         ///     https://developers.google.com/accounts/docs/OAuth2
@@ -118,9 +120,11 @@ namespace CalendarSyncPlus.Authentication.Google
         /// </returns>
         DriveService AuthenticateDriveOauth(string clientId, string clientSecret, string userName,
             string fileDataStorePath, string applicationName, bool isFullPath);
+
         //Temp TODO
         ContactsRequest AuthenticateContactOauth(string clientId, string clientSecret, string userName,
             string fileDataStorePath, string applicationName, bool isFullPath = false);
+
         /// <summary>
         ///     Default Authentication Method
         /// </summary>
@@ -135,21 +139,20 @@ namespace CalendarSyncPlus.Authentication.Google
         /// <returns>
         /// </returns>
         AnalyticsService AuthenticateAnalyticsOauth(string accountName);
+
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="accountName"></param>
         /// <returns></returns>
         TasksService AuthenticateTasksOauth(string accountName);
+
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="accountName"></param>
         /// <returns></returns>
         DriveService AuthenticateDriveOauth(string accountName);
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="accountName"></param>
         /// <param name="cancellationToken"></param>

@@ -7,15 +7,10 @@ using CalendarSyncPlus.Services.Calendars.Interfaces;
 
 namespace CalendarSyncPlus.Services.Calendars
 {
-    [Export(typeof (ICalendarServiceFactory))]    
+    [Export(typeof(ICalendarServiceFactory))]
     public class CalendarServiceFactory : ICalendarServiceFactory
     {
-        
-        public CalendarServiceFactory()
-        {
-        }
-
-        [ImportMany(typeof (ICalendarService))]
+        [ImportMany(typeof(ICalendarService))]
         public IEnumerable<Lazy<ICalendarService, IServiceMetaData>> CalendarServicesFactoryLazy { get; set; }
 
         #region ICalendarServiceFactory Members

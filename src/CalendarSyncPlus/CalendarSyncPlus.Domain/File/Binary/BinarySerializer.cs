@@ -8,6 +8,8 @@ namespace CalendarSyncPlus.Domain.File.Binary
 {
     public class BinarySerializer<T> : IBinarySerializer<T> where T : class, new()
     {
+        #region IBinarySerializer<T> Members
+
         public T Deserialize(string xml)
         {
             return Deserialize(xml, Encoding.UTF8);
@@ -24,7 +26,7 @@ namespace CalendarSyncPlus.Domain.File.Binary
 
             using (var memoryStream = new MemoryStream(encoding.GetBytes(xml)))
             {
-                return (T)formatter.Deserialize(memoryStream);
+                return (T) formatter.Deserialize(memoryStream);
             }
         }
 
@@ -42,14 +44,14 @@ namespace CalendarSyncPlus.Domain.File.Binary
 
             T obj;
             // Open the file containing the data that you want to deserialize.
-            FileStream fs = new FileStream(filename, FileMode.Open);
+            var fs = new FileStream(filename, FileMode.Open);
             try
             {
-                BinaryFormatter formatter = new BinaryFormatter();
+                var formatter = new BinaryFormatter();
 
                 // Deserialize the hashtable from the file and  
                 // assign the reference to the local variable.
-                obj = (T)formatter.Deserialize(fs);
+                obj = (T) formatter.Deserialize(fs);
             }
             catch (SerializationException e)
             {
@@ -64,7 +66,7 @@ namespace CalendarSyncPlus.Domain.File.Binary
 
         public string Serialize(T source)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public void SerializeToFile(T source, string filename)
@@ -72,10 +74,10 @@ namespace CalendarSyncPlus.Domain.File.Binary
             // To serialize the hashtable and its key/value pairs,   
             // you must first open a stream for writing.  
             // In this case, use a file stream.
-            FileStream fs = new FileStream(filename, FileMode.Create);
+            var fs = new FileStream(filename, FileMode.Create);
 
             // Construct a BinaryFormatter and use it to serialize the data to the stream.
-            BinaryFormatter formatter = new BinaryFormatter();
+            var formatter = new BinaryFormatter();
             try
             {
                 formatter.Serialize(fs, source);
@@ -90,5 +92,7 @@ namespace CalendarSyncPlus.Domain.File.Binary
                 fs.Close();
             }
         }
+
+        #endregion
     }
 }

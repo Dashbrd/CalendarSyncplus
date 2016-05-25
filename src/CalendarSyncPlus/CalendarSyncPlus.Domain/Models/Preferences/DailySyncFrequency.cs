@@ -7,9 +7,9 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
     public class DailySyncFrequency : SyncFrequency
     {
         private bool _customDay;
-        private DateTime _startDate;
-        private bool _everyWeekday;
         private int _dayGap;
+        private bool _everyWeekday;
+        private DateTime _startDate;
         private DateTime _timeOfDay;
 
         public DailySyncFrequency()

@@ -77,41 +77,41 @@ namespace CalendarSyncPlus.Common.Log.Parser
                                     default:
                                         switch (xmlReader.Name)
                                         {
-                                            case ("log4j:message"):
+                                            case "log4j:message":
                                             {
                                                 logItem.Message = xmlReader.ReadString();
                                                 break;
                                             }
-                                            case ("log4j:data"):
+                                            case "log4j:data":
                                             {
                                                 switch (xmlReader.GetAttribute("name"))
                                                 {
-                                                    case ("log4jmachinename"):
+                                                    case "log4jmachinename":
                                                     {
                                                         logItem.MachineName = xmlReader.GetAttribute("value");
                                                         break;
                                                     }
-                                                    case ("log4net:HostName"):
+                                                    case "log4net:HostName":
                                                     {
                                                         logItem.HostName = xmlReader.GetAttribute("value");
                                                         break;
                                                     }
-                                                    case ("log4net:UserName"):
+                                                    case "log4net:UserName":
                                                     {
                                                         logItem.UserName = xmlReader.GetAttribute("value");
                                                         break;
                                                     }
-                                                    case ("log4net:Identity"):
+                                                    case "log4net:Identity":
                                                     {
                                                         logItem.Identity = xmlReader.GetAttribute("value");
                                                         break;
                                                     }
-                                                    case ("NDC"):
+                                                    case "NDC":
                                                     {
                                                         logItem.NDC = xmlReader.GetAttribute("value");
                                                         break;
                                                     }
-                                                    case ("log4japp"):
+                                                    case "log4japp":
                                                     {
                                                         logItem.App = xmlReader.GetAttribute("value");
                                                         break;
@@ -120,13 +120,13 @@ namespace CalendarSyncPlus.Common.Log.Parser
                                                 break;
                                             }
                                             // ReSharper disable StringLiteralsWordIsNotInDictionary
-                                            case ("log4j:throwable"):
+                                            case "log4j:throwable":
                                                 // ReSharper restore StringLiteralsWordIsNotInDictionary
                                             {
                                                 logItem.Throwable = xmlReader.ReadString();
                                                 break;
                                             }
-                                            case ("log4j:locationInfo"):
+                                            case "log4j:locationInfo":
                                             {
                                                 logItem.Class = ParseClassName(xmlReader.GetAttribute("class"));
                                                 logItem.Method = xmlReader.GetAttribute("method");
@@ -206,7 +206,7 @@ namespace CalendarSyncPlus.Common.Log.Parser
         /// </returns>
         private string ReadFile(string filePath)
         {
-            var fileText = String.Empty;
+            var fileText = string.Empty;
             try
             {
                 using (

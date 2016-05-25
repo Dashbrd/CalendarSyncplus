@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel;
-using CalendarSyncPlus.Domain.Models;
 using CalendarSyncPlus.Domain.Models.Metrics;
 using CalendarSyncPlus.Domain.Models.Preferences;
 using CalendarSyncPlus.Domain.Wrappers;
@@ -26,12 +25,11 @@ namespace CalendarSyncPlus.Services.Tasks.Interfaces
 
         TasksWrapper DestinationTasks { get; set; }
         TasksWrapper SourceTasks { get; set; }
-        
+
         string TaskSyncStatus { get; set; }
         ITaskService SourceTaskService { get; set; }
         ITaskService DestinationTaskService { get; set; }
 
         #endregion
-        
     }
 }

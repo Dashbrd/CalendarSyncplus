@@ -7,14 +7,14 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
     [Serializable]
     public class WeeklySyncFrequency : SyncFrequency
     {
-        private int _weekRecurrence;
-        private DateTime _timeOfDay;
         private List<DayOfWeek> _daysOfWeek;
+        private DateTime _timeOfDay;
+        private int _weekRecurrence;
 
         public WeeklySyncFrequency()
         {
             Name = "Weekly";
-            DaysOfWeek = new List<DayOfWeek>() {DateTime.Today.DayOfWeek};
+            DaysOfWeek = new List<DayOfWeek> {DateTime.Today.DayOfWeek};
             WeekRecurrence = 1;
             TimeOfDay = DateTime.Now;
         }

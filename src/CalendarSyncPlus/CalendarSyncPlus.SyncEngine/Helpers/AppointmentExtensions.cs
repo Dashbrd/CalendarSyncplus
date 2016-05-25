@@ -74,7 +74,8 @@ namespace CalendarSyncPlus.SyncEngine.Helpers
         }
 
 
-        public static void AddRangeCompareForUpdate(this List<ReminderTask> updateList, List<ReminderTask> appointmentList)
+        public static void AddRangeCompareForUpdate(this List<ReminderTask> updateList,
+            List<ReminderTask> appointmentList)
         {
             foreach (var appointment in appointmentList)
             {

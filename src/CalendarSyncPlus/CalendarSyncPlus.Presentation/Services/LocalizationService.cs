@@ -24,9 +24,11 @@ using WPFLocalizeExtension.Engine;
 
 namespace CalendarSyncPlus.Presentation.Services
 {
-    [Export(typeof (ILocalizationService))]
+    [Export(typeof(ILocalizationService))]
     public class LocalizationService : ILocalizationService
     {
+        #region ILocalizationService Members
+
         public string GetLocalizedString(string key)
         {
             if (string.IsNullOrEmpty(key) || string.IsNullOrEmpty(key.Trim()))
@@ -43,5 +45,7 @@ namespace CalendarSyncPlus.Presentation.Services
         {
             get { return LocalizeDictionary.Instance.Culture; }
         }
+
+        #endregion
     }
 }

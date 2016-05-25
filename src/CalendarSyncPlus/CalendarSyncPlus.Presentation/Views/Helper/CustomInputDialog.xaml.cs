@@ -13,21 +13,21 @@ namespace CalendarSyncPlus.Presentation.Views.Helper
     public partial class CustomInputDialog : BaseMetroDialog
     {
         public static readonly DependencyProperty MessageProperty = DependencyProperty.Register("Message",
-            typeof (string), typeof (CustomInputDialog), new PropertyMetadata(default(string)));
+            typeof(string), typeof(CustomInputDialog), new PropertyMetadata(default(string)));
 
-        public static readonly DependencyProperty InputProperty = DependencyProperty.Register("Input", typeof (string),
-            typeof (CustomInputDialog), new PropertyMetadata(default(string)));
+        public static readonly DependencyProperty InputProperty = DependencyProperty.Register("Input", typeof(string),
+            typeof(CustomInputDialog), new PropertyMetadata(default(string)));
 
         public static readonly DependencyProperty AffirmativeButtonTextProperty =
-            DependencyProperty.Register("AffirmativeButtonText", typeof (string), typeof (CustomInputDialog),
+            DependencyProperty.Register("AffirmativeButtonText", typeof(string), typeof(CustomInputDialog),
                 new PropertyMetadata("OK"));
 
         public static readonly DependencyProperty NegativeButtonTextProperty =
-            DependencyProperty.Register("NegativeButtonText", typeof (string), typeof (CustomInputDialog),
+            DependencyProperty.Register("NegativeButtonText", typeof(string), typeof(CustomInputDialog),
                 new PropertyMetadata("Cancel"));
 
         public static readonly DependencyProperty MaxInputLengthProperty = DependencyProperty.Register(
-            "MaxInputLength", typeof (int), typeof (CustomInputDialog), new PropertyMetadata(15));
+            "MaxInputLength", typeof(int), typeof(CustomInputDialog), new PropertyMetadata(15));
 
         internal CustomInputDialog(MetroWindow parentWindow)
             : this(parentWindow, null)

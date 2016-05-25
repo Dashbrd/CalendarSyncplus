@@ -40,7 +40,7 @@ namespace CalendarSyncPlus.Domain.Models
         Personal,
         Public,
         Private,
-        Confidential,
+        Confidential
     }
 
     public enum MeetingStatusEnum
@@ -61,7 +61,7 @@ namespace CalendarSyncPlus.Domain.Models
         DefaultProfile = 4,
         AlternateProfile = 8,
         DefaultMailBoxCalendar = 16,
-        AlternateMailBoxCalendar = 32,
+        AlternateMailBoxCalendar = 32
     }
 
     [Flags]

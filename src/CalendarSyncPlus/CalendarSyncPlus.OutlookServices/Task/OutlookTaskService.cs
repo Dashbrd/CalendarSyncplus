@@ -18,29 +18,211 @@ using Microsoft.Office.Interop.Outlook;
 using Microsoft.Win32;
 using Exception = System.Exception;
 using ThreadingTask = System.Threading.Tasks.Task;
+
 namespace CalendarSyncPlus.OutlookServices.Task
 {
     [Export(typeof(ITaskService)), Export(typeof(IOutlookTaskService))]
     [ExportMetadata("ServiceType", ServiceType.OutlookDesktop)]
     public class OutlookTaskService : IOutlookTaskService
     {
-
         [ImportingConstructor]
         public OutlookTaskService(ApplicationLogger applicationLogger)
         {
             Logger = applicationLogger.GetLogger(GetType());
         }
 
+        public ILog Logger { get; set; }
+
+        private OutlookFolder OutlookTaskList { get; set; }
+
+        private string ProfileName { get; set; }
+
+        #region IOutlookTaskService Members
+
         public string TaskServiceName
         {
             get { return "Outlook"; }
         }
 
-        public ILog Logger { get; set; }
+        /// <exception cref="InvalidOperationException">
+        ///     Essential parameters are not present.
+        /// </exception>
+        public void CheckTaskListSpecificData(IDictionary<string, object> taskListSpecificData)
+        {
+            if (taskListSpecificData == null)
+            {
+                throw new ArgumentNullException("taskListSpecificData", "Calendar Specific Data cannot be null");
+            }
 
-        private OutlookFolder OutlookTaskList { get; set; }
-        
-        private string ProfileName { get; set; }
+            object profileValue;
+            object outlookCalendarValue;
+            if (!(taskListSpecificData.TryGetValue("ProfileName", out profileValue) &&
+                  taskListSpecificData.TryGetValue("OutlookTaskList", out outlookCalendarValue)))
+            {
+                throw new InvalidOperationException(
+                    string.Format(
+                        "{0} and {1} keys should be present, both of them can be null in case Default Profile and Default Calendar will be used. {0} is of 'string' type, {1} is of 'OutlookCalendar' type and {2} is of bool type.",
+                        "ProfileName", "OutlookCalendar"));
+            }
+            ProfileName = profileValue as string;
+            OutlookTaskList = outlookCalendarValue as OutlookFolder;
+        }
+
+
+        public async Task<List<string>> GetOutLookProfieListAsync()
+        {
+            return await Task<List<string>>.Factory.StartNew(GetOutlookProfileList);
+        }
+
+
+        public async Task<bool> ClearCalendar(IDictionary<string, object> taskListSpecificData)
+        {
+            var startDate = DateTime.Today.AddDays(-(10*365));
+            var endDate = DateTime.Today.AddDays(10*365);
+            var appointments =
+                await GetReminderTasksInRangeAsync(taskListSpecificData);
+            if (appointments != null)
+            {
+                var success = await DeleteReminderTasks(appointments, taskListSpecificData);
+                return success.IsSuccess;
+            }
+            return false;
+        }
+
+        public List<OutlookMailBox> GetAllMailBoxes(string profileName = "")
+        {
+            ProfileName = profileName;
+            var disposeOutlookInstances = false;
+            Application application = null;
+            NameSpace nameSpace = null;
+            Folders rootFolders = null;
+            var mailBoxes = new List<OutlookMailBox>();
+
+
+            try
+            {
+                GetOutlookApplication(out disposeOutlookInstances, out application, out nameSpace, ProfileName);
+                rootFolders = nameSpace.Folders;
+                mailBoxes = GetOutlookMailBoxes(rootFolders);
+            }
+            catch (Exception exception)
+            {
+                Logger.Error(exception);
+            }
+            finally
+            {
+                //Close  and Shutdown
+                //Unassign all instances
+                if (rootFolders != null)
+                {
+                    Marshal.FinalReleaseComObject(rootFolders);
+                }
+
+                if (disposeOutlookInstances)
+                {
+                    nameSpace.Logoff();
+                }
+
+                if (nameSpace != null)
+                {
+                    Marshal.FinalReleaseComObject(nameSpace);
+                }
+
+                if (disposeOutlookInstances)
+                {
+                    // Casting Removes a warninig for Ambigous Call
+                    application.Quit();
+                    Marshal.FinalReleaseComObject(application);
+                }
+
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+
+                while (disposeOutlookInstances && Process.GetProcessesByName("OUTLOOK").Any())
+                {
+                    ThreadingTask.Delay(5000);
+                }
+            }
+
+            return mailBoxes;
+        }
+
+
+        public async Task<TasksWrapper> DeleteReminderTasks(List<ReminderTask> reminderTasks,
+            IDictionary<string, object> taskListSpecificData)
+        {
+            var tasksWrapper = new TasksWrapper();
+            if (!reminderTasks.Any())
+            {
+                tasksWrapper.IsSuccess = true;
+                return tasksWrapper;
+            }
+            CheckTaskListSpecificData(taskListSpecificData);
+            var result = await
+                Task<bool>.Factory.StartNew(() =>
+                    DeleteTasks(reminderTasks, tasksWrapper));
+
+            tasksWrapper.IsSuccess = result;
+            return tasksWrapper;
+        }
+
+        public async Task<TasksWrapper> GetReminderTasksInRangeAsync(IDictionary<string, object> taskListSpecificData)
+        {
+            CheckTaskListSpecificData(taskListSpecificData);
+            var taskWrapper = new TasksWrapper();
+
+            var appointmentList =
+                await
+                    Task<List<ReminderTask>>.Factory.StartNew(
+                        GetTasks);
+
+            if (appointmentList == null)
+            {
+                return null;
+            }
+
+            taskWrapper.AddRange(appointmentList);
+
+            return taskWrapper;
+        }
+
+        public async Task<TasksWrapper> AddReminderTasks(List<ReminderTask> reminderTasks,
+            IDictionary<string, object> taskListSpecificData)
+        {
+            var tasksWrapper = new TasksWrapper();
+            if (!reminderTasks.Any())
+            {
+                tasksWrapper.IsSuccess = true;
+                return tasksWrapper;
+            }
+            CheckTaskListSpecificData(taskListSpecificData);
+
+            var result = await Task<bool>.Factory.StartNew(() =>
+                AddTasks(reminderTasks, tasksWrapper));
+
+            tasksWrapper.IsSuccess = result;
+            return tasksWrapper;
+        }
+
+        public async Task<TasksWrapper> UpdateReminderTasks(List<ReminderTask> reminderTasks,
+            IDictionary<string, object> taskListSpecificData)
+        {
+            var tasksWrapper = new TasksWrapper();
+            if (!reminderTasks.Any())
+            {
+                tasksWrapper.IsSuccess = true;
+                return tasksWrapper;
+            }
+            CheckTaskListSpecificData(taskListSpecificData);
+
+            var result = await
+                Task<bool>.Factory.StartNew(() =>
+                    UpdateTasks(reminderTasks, tasksWrapper));
+            tasksWrapper.IsSuccess = result;
+            return tasksWrapper;
+        }
+
+        #endregion
 
         private List<string> GetOutlookProfileList()
         {
@@ -79,6 +261,7 @@ namespace CalendarSyncPlus.OutlookServices.Task
 
             return profileList;
         }
+
         private List<OutlookMailBox> GetOutlookMailBoxes(Folders rootFolders)
         {
             var mailBoxes = new List<OutlookMailBox>();
@@ -110,6 +293,7 @@ namespace CalendarSyncPlus.OutlookServices.Task
             }
             return mailBoxes;
         }
+
         private void GetTaskLists(MAPIFolder searchFolder, List<OutlookFolder> outlookCalendars)
         {
             try
@@ -155,8 +339,8 @@ namespace CalendarSyncPlus.OutlookServices.Task
         }
 
         private void GetOutlookApplication(out bool disposeOutlookInstances,
-          out Application application,
-          out NameSpace nameSpace, string profileName)
+            out Application application,
+            out NameSpace nameSpace, string profileName)
         {
             // Check whether there is an Outlook process running.
             if (Process.GetProcessesByName("OUTLOOK").Any())
@@ -194,7 +378,7 @@ namespace CalendarSyncPlus.OutlookServices.Task
         /// </returns>
         private ReminderTask GetTaskFromItem(string id, TaskItem taskItem)
         {
-            var reminderTask = new ReminderTask(taskItem.EntryID,taskItem.Subject,taskItem.Body, taskItem.DueDate);
+            var reminderTask = new ReminderTask(taskItem.EntryID, taskItem.Subject, taskItem.Body, taskItem.DueDate);
             reminderTask.IsCompleted = taskItem.Complete;
             reminderTask.CreatedOn = taskItem.CreationTime;
             reminderTask.UpdatedOn = taskItem.LastModificationTime;
@@ -331,133 +515,9 @@ namespace CalendarSyncPlus.OutlookServices.Task
             };
         }
 
-        /// <exception cref="InvalidOperationException">
-        ///     Essential parameters are not present.
-        /// </exception>
-        public void CheckTaskListSpecificData(IDictionary<string, object> taskListSpecificData)
-        {
-            if (taskListSpecificData == null)
-            {
-                throw new ArgumentNullException("taskListSpecificData", "Calendar Specific Data cannot be null");
-            }
-
-            object profileValue;
-            object outlookCalendarValue;
-            if (!(taskListSpecificData.TryGetValue("ProfileName", out profileValue) &&
-                  taskListSpecificData.TryGetValue("OutlookTaskList", out outlookCalendarValue)))
-            {
-                throw new InvalidOperationException(
-                    string.Format(
-                        "{0} and {1} keys should be present, both of them can be null in case Default Profile and Default Calendar will be used. {0} is of 'string' type, {1} is of 'OutlookCalendar' type and {2} is of bool type.",
-                        "ProfileName", "OutlookCalendar"));
-            }
-            ProfileName = profileValue as String;
-            OutlookTaskList = outlookCalendarValue as OutlookFolder;
-        }
-
-
-       
-
-        public async Task<List<string>> GetOutLookProfieListAsync()
-        {
-            return await Task<List<string>>.Factory.StartNew(GetOutlookProfileList);
-        }
-
-
-        public async Task<bool> ClearCalendar(IDictionary<string, object> taskListSpecificData)
-        {
-            var startDate = DateTime.Today.AddDays(-(10 * 365));
-            var endDate = DateTime.Today.AddDays(10 * 365);
-            var appointments =
-                await GetReminderTasksInRangeAsync(taskListSpecificData);
-            if (appointments != null)
-            {
-                var success = await DeleteReminderTasks(appointments, taskListSpecificData);
-                return success.IsSuccess;
-            }
-            return false;
-        }
-
-        public List<OutlookMailBox> GetAllMailBoxes(string profileName = "")
-        {
-            ProfileName = profileName;
-            var disposeOutlookInstances = false;
-            Application application = null;
-            NameSpace nameSpace = null;
-            Folders rootFolders = null;
-            var mailBoxes = new List<OutlookMailBox>();
-
-
-            try
-            {
-                GetOutlookApplication(out disposeOutlookInstances, out application, out nameSpace, ProfileName);
-                rootFolders = nameSpace.Folders;
-                mailBoxes = GetOutlookMailBoxes(rootFolders);
-            }
-            catch (Exception exception)
-            {
-                Logger.Error(exception);
-            }
-            finally
-            {
-                //Close  and Shutdown
-                //Unassign all instances
-                if (rootFolders != null)
-                {
-                    Marshal.FinalReleaseComObject(rootFolders);
-                }
-
-                if (disposeOutlookInstances)
-                {
-                    nameSpace.Logoff();
-                }
-
-                if (nameSpace != null)
-                {
-                    Marshal.FinalReleaseComObject(nameSpace);
-                }
-
-                if (disposeOutlookInstances)
-                {
-                    // Casting Removes a warninig for Ambigous Call
-                    application.Quit();
-                    Marshal.FinalReleaseComObject(application);
-                }
-
-                GC.Collect();
-                GC.WaitForPendingFinalizers();
-
-                while (disposeOutlookInstances && Process.GetProcessesByName("OUTLOOK").Any())
-                {
-                    ThreadingTask.Delay(5000);
-                }
-            }
-
-            return mailBoxes;
-        }
-
-
-
-        public async Task<TasksWrapper> DeleteReminderTasks(List<ReminderTask> reminderTasks, IDictionary<string, object> taskListSpecificData)
-        {
-            var tasksWrapper = new TasksWrapper();
-            if (!reminderTasks.Any())
-            {
-                tasksWrapper.IsSuccess = true;
-                return tasksWrapper;
-            }
-            CheckTaskListSpecificData(taskListSpecificData);
-            var result = await
-                Task<bool>.Factory.StartNew(() =>
-                    DeleteTasks(reminderTasks, tasksWrapper));
-
-            tasksWrapper.IsSuccess = result;
-            return tasksWrapper;
-        }
-
         private bool DeleteTasks(List<ReminderTask> reminderTasks, List<ReminderTask> deletedTasks)
         {
-            OutlookTasksWrapper wrapper = DeleteTasksFromOutlook(reminderTasks, deletedTasks);
+            var wrapper = DeleteTasksFromOutlook(reminderTasks, deletedTasks);
 
             if (!wrapper.WaitForApplicationQuit)
             {
@@ -490,7 +550,7 @@ namespace CalendarSyncPlus.OutlookServices.Task
                     {
                         TaskItem taskItem = null;
                         taskItem = nameSpace.GetItemFromID(calendarAppointment.TaskId) as TaskItem;
-                       
+
                         if (taskItem != null)
                         {
                             taskItem.Delete();
@@ -541,46 +601,9 @@ namespace CalendarSyncPlus.OutlookServices.Task
             };
         }
 
-        public  async Task<TasksWrapper> GetReminderTasksInRangeAsync(IDictionary<string, object> taskListSpecificData)
-        {
-            CheckTaskListSpecificData(taskListSpecificData);
-            var taskWrapper = new TasksWrapper();
-
-            var appointmentList =
-                await
-                    Task<List<ReminderTask>>.Factory.StartNew(
-                        GetTasks);
-
-            if (appointmentList == null)
-            {
-                return null;
-            }
-
-            taskWrapper.AddRange(appointmentList);
-
-            return taskWrapper;
-        }
-
-        public async Task<TasksWrapper> AddReminderTasks(List<ReminderTask> reminderTasks, IDictionary<string, object> taskListSpecificData)
-        {
-            var tasksWrapper = new TasksWrapper();
-            if (!reminderTasks.Any())
-            {
-                tasksWrapper.IsSuccess = true;
-                return tasksWrapper;
-            }
-            CheckTaskListSpecificData(taskListSpecificData);
-
-            var result = await Task<bool>.Factory.StartNew(() =>
-                        AddTasks(reminderTasks,tasksWrapper));
-
-            tasksWrapper.IsSuccess = result;
-            return tasksWrapper;
-        }
-
         private bool AddTasks(List<ReminderTask> reminderTasks, TasksWrapper tasksWrapper)
         {
-            OutlookTasksWrapper wrapper = AddTasksToOutlook(reminderTasks, tasksWrapper);
+            var wrapper = AddTasksToOutlook(reminderTasks, tasksWrapper);
 
             if (!wrapper.WaitForApplicationQuit)
             {
@@ -613,7 +636,7 @@ namespace CalendarSyncPlus.OutlookServices.Task
                     : nameSpace.GetDefaultFolder(OlDefaultFolders.olFolderCalendar);
                 outlookItems = defaultOutlookFolder.Items;
 
-                string id = defaultOutlookFolder.EntryID;
+                var id = defaultOutlookFolder.EntryID;
                 foreach (var reminderTask in reminderTasks)
                 {
                     var taskItem = outlookItems.Add(OlItemType.olAppointmentItem) as TaskItem;
@@ -631,7 +654,7 @@ namespace CalendarSyncPlus.OutlookServices.Task
             catch (Exception exception)
             {
                 Logger.Error(exception);
-                return new OutlookTasksWrapper()
+                return new OutlookTasksWrapper
                 {
                     WaitForApplicationQuit = disposeOutlookInstances,
                     Success = false
@@ -675,27 +698,10 @@ namespace CalendarSyncPlus.OutlookServices.Task
                 Success = true
             };
         }
-        
-        public async Task<TasksWrapper> UpdateReminderTasks(List<ReminderTask> reminderTasks,  IDictionary<string, object> taskListSpecificData)
-        {
-            var tasksWrapper = new TasksWrapper();
-            if (!reminderTasks.Any())
-            {
-                tasksWrapper.IsSuccess = true;
-                return tasksWrapper;
-            }
-            CheckTaskListSpecificData(taskListSpecificData);
-
-            var result = await
-                Task<bool>.Factory.StartNew(() =>
-                        UpdateTasks(reminderTasks, tasksWrapper));
-            tasksWrapper.IsSuccess = result;
-            return tasksWrapper;
-        }
 
         private bool UpdateTasks(List<ReminderTask> reminderTasks, TasksWrapper tasksWrapper)
         {
-            OutlookTasksWrapper wrapper = UpdateTasksToOutlook(reminderTasks, tasksWrapper);
+            var wrapper = UpdateTasksToOutlook(reminderTasks, tasksWrapper);
 
             if (!wrapper.WaitForApplicationQuit)
             {
@@ -734,9 +740,9 @@ namespace CalendarSyncPlus.OutlookServices.Task
                     try
                     {
                         TaskItem appItem = null;
-                        
+
                         appItem = nameSpace.GetItemFromID(reminderTask.TaskId) as TaskItem;
-                       
+
                         var success = UpdateTask(appItem,
                             reminderTask);
                         if (success)
@@ -791,7 +797,7 @@ namespace CalendarSyncPlus.OutlookServices.Task
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
             }
-            return new OutlookTasksWrapper()
+            return new OutlookTasksWrapper
             {
                 WaitForApplicationQuit = disposeOutlookInstances,
                 Success = true
@@ -811,17 +817,16 @@ namespace CalendarSyncPlus.OutlookServices.Task
                 {
                     taskItem.DateCompleted = reminderTask.CompletedOn.GetValueOrDefault();
                 }
-                
+
                 taskItem.Status = reminderTask.GetOlTaskStatus();
                 taskItem.Save();
                 return true;
-            } 
+            }
             catch (Exception exception)
             {
                 Logger.Error(exception);
                 return false;
             }
-            
         }
     }
 }

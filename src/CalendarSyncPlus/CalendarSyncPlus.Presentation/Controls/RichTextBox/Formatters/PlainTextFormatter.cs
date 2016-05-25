@@ -7,6 +7,8 @@ namespace CalendarSyncPlus.Presentation.Controls.RichTextBox.Formatters
     /// </summary>
     public class PlainTextFormatter : ITextFormatter
     {
+        #region ITextFormatter Members
+
         public string GetText(FlowDocument document)
         {
             return new TextRange(document.ContentStart, document.ContentEnd).Text;
@@ -16,5 +18,7 @@ namespace CalendarSyncPlus.Presentation.Controls.RichTextBox.Formatters
         {
             new TextRange(document.ContentStart, document.ContentEnd).Text = text;
         }
+
+        #endregion
     }
 }

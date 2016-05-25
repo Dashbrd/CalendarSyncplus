@@ -1,5 +1,4 @@
-﻿
-#region Imports
+﻿#region Imports
 
 using System;
 using System.ComponentModel.DataAnnotations;
@@ -26,7 +25,8 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
         #endregion
 
         #region Properties
-          [RegularExpression(
+
+        [RegularExpression(
             @"^http(s?)\:\/\/[0-9a-zA-Z]([-.\w]*[0-9a-zA-Z])*(:(0-9)*)*(\/?)([a-zA-Z0-9\-\.\?\,\'\/\\\+&amp;%\$#_]*)?$",
             ErrorMessage = "Invalid URL")]
         public string ProxyAddress

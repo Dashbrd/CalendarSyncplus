@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Configuration;
 using System.Waf.Foundation;
 
 namespace CalendarSyncPlus.Domain.Models.Preferences
@@ -7,10 +6,10 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
     [Serializable]
     public class OutlookSettings : Model
     {
+        private OutlookFolder _outlookFolder;
+        private OutlookMailBox _outlookMailBox;
         private OutlookOptionsEnum _outlookOptions;
         private string _outlookProfileName;
-        private OutlookMailBox _outlookMailBox;
-        private OutlookFolder _outlookFolder;
         private bool _setOrganizer;
 
         public OutlookOptionsEnum OutlookOptions
@@ -22,7 +21,7 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
                 SetProperty(ref _outlookOptions, value);
             }
         }
-        
+
         public string OutlookProfileName
         {
             get { return _outlookProfileName; }

@@ -18,7 +18,7 @@ namespace CalendarSyncPlus.Application.ViewModels
         [ImportingConstructor]
         public AppSettingsViewModel(IAppSettingsView view, ApplicationLogger applicationLogger) : base(view)
         {
-            Logger = applicationLogger.GetLogger(this.GetType());
+            Logger = applicationLogger.GetLogger(GetType());
         }
 
         public ILog Logger { get; set; }
@@ -46,5 +46,4 @@ namespace CalendarSyncPlus.Application.ViewModels
             }
         }
     }
-
 }

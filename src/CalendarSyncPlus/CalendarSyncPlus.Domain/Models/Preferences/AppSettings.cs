@@ -6,15 +6,30 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
     [Serializable]
     public class AppSettings : Model
     {
+        private bool _checkForAlphaReleases;
+        private bool _checkForUpdates;
+        private bool _hideSystemTrayTooltip;
         private bool _isManualSynchronization;
         private bool _minimizeToSystemTray;
-        private bool _hideSystemTrayTooltip;
-        private bool _checkForUpdates;
-        private bool _checkForAlphaReleases;
-        private bool _startMinimized;
         private bool _periodicSyncOn;
-        private bool _runApplicationAtSystemStartup;
         private ProxySetting _proxySettings;
+        private bool _runApplicationAtSystemStartup;
+        private bool _startMinimized;
+
+        public static AppSettings GetDefault()
+        {
+            return new AppSettings
+            {
+                MinimizeToSystemTray = true,
+                CheckForUpdates = true,
+                PeriodicSyncOn = true,
+                RunApplicationAtSystemStartup = true,
+                ProxySettings = new ProxySetting
+                {
+                    ProxyType = ProxyType.Auto
+                }
+            };
+        }
 
         #region Properties
 
@@ -73,20 +88,5 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
         }
 
         #endregion
-
-        public static AppSettings GetDefault()
-        {
-            return new AppSettings()
-            {
-                MinimizeToSystemTray = true,
-                CheckForUpdates = true,
-                PeriodicSyncOn = true,
-                RunApplicationAtSystemStartup = true,
-                ProxySettings = new ProxySetting
-                {
-                    ProxyType = ProxyType.Auto
-                }
-            };
-        }
     }
 }

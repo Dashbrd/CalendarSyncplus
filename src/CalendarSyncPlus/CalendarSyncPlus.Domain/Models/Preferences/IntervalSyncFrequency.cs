@@ -5,9 +5,9 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
     [Serializable]
     public class IntervalSyncFrequency : SyncFrequency
     {
-        private DateTime _startTime;
         private int _hours;
         private int _minutes;
+        private DateTime _startTime;
 
         public IntervalSyncFrequency()
         {

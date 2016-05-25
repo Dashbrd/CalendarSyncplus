@@ -38,7 +38,6 @@ using CalendarSyncPlus.Common;
 using CalendarSyncPlus.Common.Log;
 using CalendarSyncPlus.ExchangeWebServices.Calendar;
 using CalendarSyncPlus.GoogleServices.Calendar;
-using CalendarSyncPlus.GoogleServices.Google;
 using CalendarSyncPlus.OutlookServices.Calendar;
 using CalendarSyncPlus.Presentation.Helpers;
 using CalendarSyncPlus.Presentation.Services.SingleInstance;
@@ -60,7 +59,7 @@ namespace CalendarSyncPlus.Presentation
         {
             DispatcherHelper.Initialize();
             ToolTipService.ShowDurationProperty.OverrideMetadata(
-                typeof (DependencyObject), new FrameworkPropertyMetadata(Int32.MaxValue));
+                typeof(DependencyObject), new FrameworkPropertyMetadata(int.MaxValue));
             LocalizationInit();
         }
 
@@ -74,7 +73,7 @@ namespace CalendarSyncPlus.Presentation
         public bool SignalExternalCommandLineArgs(IList<string> args)
         {
             //Activate Hidden,Background Application
-            Current.Dispatcher.BeginInvoke(((Action) (() => Utilities.BringToForeground(MainWindow))));
+            Current.Dispatcher.BeginInvoke((Action) (() => Utilities.BringToForeground(MainWindow)));
             return true;
         }
 
@@ -126,7 +125,7 @@ namespace CalendarSyncPlus.Presentation
                 MessageBox.Show(string.Format(CultureInfo.CurrentCulture,
                     "Unknown Error Occurred:{1}{0}", exception, Environment.NewLine)
                     , ApplicationInfo.ProductName, MessageBoxButton.OK, MessageBoxImage.Error);
-                _applicationLogger.GetLogger(typeof (App)).Info(exception);
+                _applicationLogger.GetLogger(typeof(App)).Info(exception);
             }
         }
 
@@ -159,23 +158,23 @@ namespace CalendarSyncPlus.Presentation
 
             catalog = new AggregateCatalog();
             // Add the WpfApplicationFramework assembly to the catalog
-            catalog.Catalogs.Add(new AssemblyCatalog(typeof (ViewModel).Assembly));
+            catalog.Catalogs.Add(new AssemblyCatalog(typeof(ViewModel).Assembly));
             // Add the Common assembly to catalog
             catalog.Catalogs.Add(new AssemblyCatalog(typeof(ApplicationLogger).Assembly));
             //Add Services assembly to catalog
-            catalog.Catalogs.Add(new AssemblyCatalog(typeof (ICalendarService).Assembly));
+            catalog.Catalogs.Add(new AssemblyCatalog(typeof(ICalendarService).Assembly));
             //Add Authentication.Google assembly to catalog
             catalog.Catalogs.Add(new AssemblyCatalog(typeof(IAccountAuthenticationService).Assembly));
             //Add GoogleServices assembly to catalog
-            catalog.Catalogs.Add(new AssemblyCatalog(typeof (IGoogleCalendarService).Assembly));
+            catalog.Catalogs.Add(new AssemblyCatalog(typeof(IGoogleCalendarService).Assembly));
             //Add OutlookServices assembly to catalog
-            catalog.Catalogs.Add(new AssemblyCatalog(typeof (IOutlookCalendarService).Assembly));
+            catalog.Catalogs.Add(new AssemblyCatalog(typeof(IOutlookCalendarService).Assembly));
             //Add ExchangeWebServices assembly to catalog
-            catalog.Catalogs.Add(new AssemblyCatalog(typeof (IExchangeWebCalendarService).Assembly));
+            catalog.Catalogs.Add(new AssemblyCatalog(typeof(IExchangeWebCalendarService).Assembly));
             //Add SyncEngine assembly to catalog
-            catalog.Catalogs.Add(new AssemblyCatalog(typeof (ICalendarSyncEngine).Assembly));
+            catalog.Catalogs.Add(new AssemblyCatalog(typeof(ICalendarSyncEngine).Assembly));
             //Add Analytics assembly to catalog
-            catalog.Catalogs.Add(new AssemblyCatalog(typeof (SyncAnalyticsService).Assembly));
+            catalog.Catalogs.Add(new AssemblyCatalog(typeof(SyncAnalyticsService).Assembly));
             // Add the Application assembly to the catalog
             catalog.Catalogs.Add(new AssemblyCatalog(typeof(ShellViewModel).Assembly));
             // Add the Presentation assembly to the catalog

@@ -10,23 +10,23 @@ using log4net;
 
 namespace CalendarSyncPlus.Services.Sync
 {
-    [Export(typeof (ISummarySerializationService))]
+    [Export(typeof(ISummarySerializationService))]
     public class SummarySerializationService : ISummarySerializationService
     {
-        private readonly string _applicationDataDirectory;
-        private ILog Logger { get; set; }
-        private readonly string _settingsFilePath;
-
         [ImportingConstructor]
         public SummarySerializationService(ApplicationLogger applicationLogger)
         {
             Logger = applicationLogger.GetLogger(GetType());
-            _applicationDataDirectory =
+            ApplicationDataDirectory =
                 Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
                     "CalendarSyncPlus");
-            _applicationDataDirectory = Path.Combine(_applicationDataDirectory, "Stats");
-            _settingsFilePath = Path.Combine(_applicationDataDirectory, "Summary.xml");
+            ApplicationDataDirectory = Path.Combine(ApplicationDataDirectory, "Stats");
+            SettingsFilePath = Path.Combine(ApplicationDataDirectory, "Summary.xml");
         }
+
+        private ILog Logger { get; }
+
+        #region ISummarySerializationService Members
 
         public async Task<bool> SerializeSyncSummaryAsync(SyncSummary syncProfile)
         {
@@ -59,6 +59,8 @@ namespace CalendarSyncPlus.Services.Sync
             return result;
         }
 
+        #endregion
+
         private void SerializeSyncSummaryBackgroundTask(SyncSummary syncProfile)
         {
             if (!Directory.Exists(ApplicationDataDirectory))
@@ -69,7 +71,7 @@ namespace CalendarSyncPlus.Services.Sync
             var serializer = new XmlSerializer<SyncSummary>();
             serializer.SerializeToFile(syncProfile, SettingsFilePath);
         }
-        
+
         private SyncSummary DeserializeSyncSummaryBackgroundTask()
         {
             if (!File.Exists(SettingsFilePath))
@@ -91,15 +93,9 @@ namespace CalendarSyncPlus.Services.Sync
 
         #region Properties
 
-        public string SettingsFilePath
-        {
-            get { return _settingsFilePath; }
-        }
+        public string SettingsFilePath { get; }
 
-        public string ApplicationDataDirectory
-        {
-            get { return _applicationDataDirectory; }
-        }
+        public string ApplicationDataDirectory { get; }
 
         #endregion
     }

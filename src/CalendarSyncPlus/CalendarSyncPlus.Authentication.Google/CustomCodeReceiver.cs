@@ -21,6 +21,8 @@ namespace CalendarSyncPlus.GoogleServices.Google
 
         public Func<Task<string>> GetCodeDeledateFunc { get; set; }
 
+        #region ICodeReceiver Members
+
         /// <summary>
         /// </summary>
         /// <param name="url"></param>
@@ -45,6 +47,8 @@ namespace CalendarSyncPlus.GoogleServices.Google
             return completionSource.Task.Result;
         }
 
-        public string RedirectUri { get; private set; }
+        public string RedirectUri { get; }
+
+        #endregion
     }
 }

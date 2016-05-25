@@ -13,24 +13,25 @@ namespace CalendarSyncPlus.Domain.Models.Metrics
         {
             SyncMetrics = new List<SyncMetric>();
         }
+
         [XmlIgnore]
         public int TotalSyncs
         {
             get { return SyncMetrics == null ? 0 : SyncMetrics.Count; }
-
         }
+
         [XmlIgnore]
         public int SuccessSyncs
         {
             get { return SyncMetrics == null ? 0 : SyncMetrics.Count(t => t.IsSuccess); }
-
         }
+
         [XmlIgnore]
         public int FailedSyncs
         {
             get { return SyncMetrics == null ? 0 : SyncMetrics.Count(t => !t.IsSuccess); }
-
         }
+
         [XmlIgnore]
         public long TotalSyncSeconds
         {

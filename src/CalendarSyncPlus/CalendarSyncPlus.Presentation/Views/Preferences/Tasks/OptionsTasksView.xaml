@@ -15,8 +15,8 @@
     <UserControl.Resources>
         <wafConverters:InvertBooleanConverter x:Key="InvertBooleanConverter" />
         <converters:StringToBrushConverter x:Key="StringToBrushConverter" />
-        <converters:BoolToEnumConverter x:Key="BoolToEnumConverter"/>
-        <converters:BoolToCalendarOptionsConverter x:Key="CalendarOptionsToBoolConverter"/>
+        <converters:BoolToEnumConverter x:Key="BoolToEnumConverter" />
+        <converters:BoolToCalendarOptionsConverter x:Key="CalendarOptionsToBoolConverter" />
         <DataTemplate x:Key="CategoryDataTemplate" DataType="{x:Type models:Category}">
             <Rectangle Width="20"
                        Height="20"
@@ -219,7 +219,7 @@
                           Margin="2"
                           Content="{localizeExtension:LocText Key=OptionsSettingsView_CheckBox_OtherOptions_KeepLastModified_Content}"
                           IsChecked="{Binding SelectedProfile.SyncSettings.KeepLastModifiedVersion,
-                                              Mode=TwoWay}"/>
+                                              Mode=TwoWay}" />
                 <ContentControl Margin="2"
                                 Grid.Row="2"
                                 Grid.Column="1"

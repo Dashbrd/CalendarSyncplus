@@ -22,7 +22,6 @@ using System.ComponentModel.Composition;
 using System.Threading.Tasks;
 using System.Waf.Applications;
 using CalendarSyncPlus.Common;
-using CalendarSyncPlus.Presentation.Views;
 using CalendarSyncPlus.Presentation.Views.Helper;
 using CalendarSyncPlus.Presentation.Views.Main;
 using CalendarSyncPlus.Services.Interfaces;
@@ -30,7 +29,7 @@ using MahApps.Metro.Controls.Dialogs;
 
 namespace CalendarSyncPlus.Presentation.Services
 {
-    [Export(typeof (IMessageService))]
+    [Export(typeof(IMessageService))]
     public class MessageService : IMessageService
     {
         [ImportingConstructor]
@@ -40,11 +39,6 @@ namespace CalendarSyncPlus.Presentation.Services
         }
 
         public ShellView View { get; set; }
-
-        private T InvokeOnCurrentDispatcher<T>(Func<T> action)
-        {
-            return DispatcherHelper.CheckInvokeOnUI(action);
-        }
 
         #region IMessageService Members
 
@@ -221,6 +215,13 @@ namespace CalendarSyncPlus.Presentation.Services
             return ShowProgress(message, ApplicationInfo.ProductName);
         }
 
+        #endregion
+
+        private T InvokeOnCurrentDispatcher<T>(Func<T> action)
+        {
+            return DispatcherHelper.CheckInvokeOnUI(action);
+        }
+
         public Task<string> ShowCustomInput(string message, string title, int maxLength = 15)
         {
             var metroDialogSettings = new MetroDialogSettings
@@ -256,7 +257,5 @@ namespace CalendarSyncPlus.Presentation.Services
         {
             return ShowCustomInput(message, ApplicationInfo.ProductName);
         }
-
-        #endregion
     }
 }

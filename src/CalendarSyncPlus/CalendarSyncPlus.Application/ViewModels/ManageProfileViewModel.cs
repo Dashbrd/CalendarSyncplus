@@ -13,20 +13,21 @@ namespace CalendarSyncPlus.Application.ViewModels
     [Export]
     public class ManageProfileViewModel : ViewModel<IManageProfileView>
     {
-        public IMessageService MessageService { get; set; }
+        private ObservableCollection<CalendarSyncProfile> _calendarSyncProfiles;
+        private ObservableCollection<ContactSyncProfile> _contactsSyncProfiles;
         private DelegateCommand _createProfileCommand;
         private DelegateCommand _deleteProfileCommand;
         private DelegateCommand _moveDownCommand;
         private DelegateCommand _moveUpCommand;
-        private ObservableCollection<CalendarSyncProfile> _calendarSyncProfiles;
         private ObservableCollection<TaskSyncProfile> _taskSyncProfiles;
-        private ObservableCollection<ContactSyncProfile> _contactsSyncProfiles;
 
         [ImportingConstructor]
         public ManageProfileViewModel(IManageProfileView view, IMessageService messageService) : base(view)
         {
             MessageService = messageService;
         }
+
+        public IMessageService MessageService { get; set; }
 
         public DelegateCommand CreateProfileCommand
         {
@@ -69,7 +70,6 @@ namespace CalendarSyncPlus.Application.ViewModels
 
 
         /// <summary>
-        /// 
         /// </summary>
         private async void CreateProfile(object parameter)
         {
@@ -92,7 +92,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             }
         }
 
-        private async Task AddNewProfile<T>(ObservableCollection<T> profileList, T profile) where T :SyncProfile
+        private async Task AddNewProfile<T>(ObservableCollection<T> profileList, T profile) where T : SyncProfile
         {
             if (profileList.Count > 4)
             {
@@ -118,19 +118,18 @@ namespace CalendarSyncPlus.Application.ViewModels
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="parameter"></param>
         private async void DeleteProfile(object parameter)
         {
             await RemoveProfile(CalendarSyncProfiles, parameter as CalendarSyncProfile);
-            
+
             await RemoveProfile(TaskSyncProfiles, parameter as TaskSyncProfile);
 
             await RemoveProfile(ContactsSyncProfiles, parameter as ContactSyncProfile);
         }
 
-        async Task RemoveProfile<T>(ObservableCollection<T> profileList, T profile) where T: SyncProfile
+        private async Task RemoveProfile<T>(ObservableCollection<T> profileList, T profile) where T : SyncProfile
         {
             if (profile != null)
             {
@@ -142,13 +141,13 @@ namespace CalendarSyncPlus.Application.ViewModels
                 }
             }
         }
+
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="parameter"></param>
         private void MoveProfileUp(object parameter)
         {
-            MoveUp(CalendarSyncProfiles,parameter as CalendarSyncProfile);
+            MoveUp(CalendarSyncProfiles, parameter as CalendarSyncProfile);
             MoveUp(TaskSyncProfiles, parameter as TaskSyncProfile);
             MoveUp(ContactsSyncProfiles, parameter as ContactSyncProfile);
         }
@@ -166,7 +165,6 @@ namespace CalendarSyncPlus.Application.ViewModels
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="parameter"></param>
         private void MoveProfileDown(object parameter)
@@ -196,7 +194,5 @@ namespace CalendarSyncPlus.Application.ViewModels
             TaskSyncProfiles = taskSyncProfiles;
             ContactsSyncProfiles = contactsSyncProfiles;
         }
-
-
     }
 }

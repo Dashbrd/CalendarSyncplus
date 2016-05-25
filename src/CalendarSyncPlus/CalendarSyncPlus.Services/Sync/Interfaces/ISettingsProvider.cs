@@ -1,5 +1,4 @@
-﻿using CalendarSyncPlus.Domain.Models;
-using CalendarSyncPlus.Domain.Models.Preferences;
+﻿using CalendarSyncPlus.Domain.Models.Preferences;
 
 namespace CalendarSyncPlus.Services.Interfaces
 {

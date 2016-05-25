@@ -13,18 +13,19 @@ namespace CalendarSyncPlus.Application.ViewModels
     [Export]
     public class HelpViewModel : ViewModel<IHelpView>
     {
-        public ILog Logger { get; set; }
         [ImportingConstructor]
         public HelpViewModel(IHelpView helpView, ApplicationLogger applicationLogger)
             : base(helpView)
         {
-            Logger = applicationLogger.GetLogger(this.GetType());
+            Logger = applicationLogger.GetLogger(GetType());
             LoadHelpFile();
         }
 
+        public ILog Logger { get; set; }
+
         public FixedDocumentSequence FixedDocument { get; set; }
 
-        void LoadHelpFile()
+        private void LoadHelpFile()
         {
             try
             {
@@ -43,6 +44,5 @@ namespace CalendarSyncPlus.Application.ViewModels
                 Logger.Error(exception);
             }
         }
-
     }
 }

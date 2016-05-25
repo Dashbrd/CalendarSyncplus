@@ -7,7 +7,7 @@ namespace CalendarSyncPlus.Presentation.Views
     /// <summary>
     ///     Interaction logic for WhatsNewView.xaml
     /// </summary>
-    [Export(typeof (IWhatsNewView))]
+    [Export(typeof(IWhatsNewView))]
     public partial class WhatsNewView : UserControl, IWhatsNewView
     {
         public WhatsNewView()

@@ -8,7 +8,7 @@ using log4net;
 
 namespace CalendarSyncPlus.Application.ViewModels
 {
-    [Export, Export(typeof (IChildContentViewModel))]
+    [Export, Export(typeof(IChildContentViewModel))]
     [ExportMetadata("ChildViewContentType", ChildViewContentType.WhatsNew)]
     public class WhatsNewViewModel : ViewModel<IWhatsNewView>, IChildContentViewModel
     {

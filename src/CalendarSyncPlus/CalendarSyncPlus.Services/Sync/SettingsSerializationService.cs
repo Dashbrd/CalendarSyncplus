@@ -36,43 +36,34 @@ using log4net;
 
 namespace CalendarSyncPlus.Services.Sync
 {
-    [Export(typeof (ISettingsSerializationService))]
+    [Export(typeof(ISettingsSerializationService))]
     public class SettingsSerializationService : ISettingsSerializationService
     {
-        ILog Logger { get; set; }
-
         #region Constructors
 
         [ImportingConstructor]
         public SettingsSerializationService(ApplicationLogger applicationLogger)
         {
             Logger = applicationLogger.GetLogger(GetType());
-            applicationDataDirectory =
+            ApplicationDataDirectory =
                 Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
                     "CalendarSyncPlus");
-            settingsFilePath = Path.Combine(applicationDataDirectory, "Settings.xml");
+            SettingsFilePath = Path.Combine(ApplicationDataDirectory, "Settings.xml");
         }
 
         #endregion
 
-        #region Fields
+        private ILog Logger { get; }
 
-        private readonly string applicationDataDirectory;
-        private readonly string settingsFilePath;
+        #region Fields
 
         #endregion
 
         #region Properties
 
-        public string SettingsFilePath
-        {
-            get { return settingsFilePath; }
-        }
+        public string SettingsFilePath { get; }
 
-        public string ApplicationDataDirectory
-        {
-            get { return applicationDataDirectory; }
-        }
+        public string ApplicationDataDirectory { get; }
 
         #endregion
 
@@ -166,7 +157,7 @@ namespace CalendarSyncPlus.Services.Sync
 
             if (result.CalendarSyncProfiles == null || result.CalendarSyncProfiles.Count == 0)
             {
-                result.CalendarSyncProfiles = new ObservableCollection<CalendarSyncProfile>()
+                result.CalendarSyncProfiles = new ObservableCollection<CalendarSyncProfile>
                 {
                     CalendarSyncProfile.GetDefaultSyncProfile()
                 };
@@ -196,7 +187,7 @@ namespace CalendarSyncPlus.Services.Sync
 
             if (result.TaskSyncProfiles == null || result.TaskSyncProfiles.Count == 0)
             {
-                result.TaskSyncProfiles = new ObservableCollection<TaskSyncProfile>()
+                result.TaskSyncProfiles = new ObservableCollection<TaskSyncProfile>
                 {
                     TaskSyncProfile.GetDefaultSyncProfile()
                 };
@@ -219,7 +210,7 @@ namespace CalendarSyncPlus.Services.Sync
             }
             if (result.ContactSyncProfiles == null || result.ContactSyncProfiles.Count == 0)
             {
-                result.ContactSyncProfiles = new ObservableCollection<ContactSyncProfile>()
+                result.ContactSyncProfiles = new ObservableCollection<ContactSyncProfile>
                 {
                     ContactSyncProfile.GetDefaultSyncProfile()
                 };

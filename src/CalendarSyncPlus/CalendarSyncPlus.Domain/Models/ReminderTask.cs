@@ -3,14 +3,13 @@ using System.Waf.Foundation;
 
 namespace CalendarSyncPlus.Domain.Models
 {
-
     public enum TaskStatusEnum
     {
         TaskNotStarted,
         TaskInProgress,
         TaskComplete,
         TaskWaiting,
-        TaskDeferred,
+        TaskDeferred
     }
 
     public class ReminderTask : Model
@@ -52,11 +51,11 @@ namespace CalendarSyncPlus.Domain.Models
 
         public override bool Equals(object obj)
         {
-            return this.ToString().Equals(obj.ToString());
+            return ToString().Equals(obj.ToString());
         }
 
         public override int GetHashCode()
-        { 
+        {
             // Returning the hashcode of the Guid used for the ToString() will be 
             // sufficient and would only cause a problem if Appointments objects
             // were stored in a non-generic hash set along side other guid instances

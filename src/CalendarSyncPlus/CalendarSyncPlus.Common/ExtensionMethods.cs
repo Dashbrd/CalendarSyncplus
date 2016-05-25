@@ -23,16 +23,16 @@ namespace CalendarSyncPlus.Common
 {
     public static class ExtensionMethods
     {
-        public static String convertToString(this Enum eff)
+        public static string convertToString(this Enum eff)
         {
             return Enum.GetName(eff.GetType(), eff);
         }
 
-        public static EnumType converToEnum<EnumType>(this String enumValue) where EnumType : new()
+        public static EnumType converToEnum<EnumType>(this string enumValue) where EnumType : new()
         {
             try
             {
-                return (EnumType) Enum.Parse(typeof (EnumType), enumValue);
+                return (EnumType) Enum.Parse(typeof(EnumType), enumValue);
             }
             catch (Exception exception)
             {

@@ -10,15 +10,15 @@ namespace CalendarSyncPlus.Services.Tasks
     [Export(typeof(ITaskServiceFactory))]
     public class TaskServiceFactory : ITaskServiceFactory
     {
-         [ImportingConstructor]
+        [ImportingConstructor]
         public TaskServiceFactory()
         {
         }
 
-        [ImportMany(typeof (ITaskService))]
+        [ImportMany(typeof(ITaskService))]
         public IEnumerable<Lazy<ITaskService, IServiceMetaData>> TaskServicesFactoryLazy { get; set; }
 
-        #region ICalendarServiceFactory Members
+        #region ITaskServiceFactory Members
 
         public ITaskService GetTaskService(ServiceType serviceType)
         {

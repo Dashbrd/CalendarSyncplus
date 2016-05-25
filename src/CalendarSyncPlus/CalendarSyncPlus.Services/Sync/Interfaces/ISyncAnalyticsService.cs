@@ -1,5 +1,4 @@
 using System.Threading.Tasks;
-using CalendarSyncPlus.Domain.Models;
 using CalendarSyncPlus.Domain.Models.Metrics;
 
 namespace CalendarSyncPlus.Analytics.Interfaces

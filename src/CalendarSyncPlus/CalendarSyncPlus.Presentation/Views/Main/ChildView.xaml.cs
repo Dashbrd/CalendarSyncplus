@@ -8,6 +8,16 @@ namespace CalendarSyncPlus.Presentation.Views.Main
     /// </summary>
     public partial class ChildView : ChildWindow
     {
+        // Using a DependencyProperty as the backing store for ChildContentView.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty ChildContentViewProperty =
+            DependencyProperty.Register("ChildContentView", typeof(object), typeof(ChildView),
+                new PropertyMetadata(null, OnChildViewContentChanged));
+
+        // Using a DependencyProperty as the backing store for ChildContentTitle.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty ChildContentTitleProperty =
+            DependencyProperty.Register("ChildContentTitle", typeof(string), typeof(ChildView),
+                new PropertyMetadata(string.Empty, OnChildContentChanged));
+
         public ChildView()
         {
             InitializeComponent();
@@ -38,15 +48,5 @@ namespace CalendarSyncPlus.Presentation.Views.Main
             var childView = (ChildView) dependencyObject;
             childView.Title = (string) eventArgs.NewValue;
         }
-
-        // Using a DependencyProperty as the backing store for ChildContentView.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty ChildContentViewProperty =
-            DependencyProperty.Register("ChildContentView", typeof (object), typeof (ChildView),
-                new PropertyMetadata(null, OnChildViewContentChanged));
-
-        // Using a DependencyProperty as the backing store for ChildContentTitle.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty ChildContentTitleProperty =
-            DependencyProperty.Register("ChildContentTitle", typeof (string), typeof (ChildView),
-                new PropertyMetadata(string.Empty, OnChildContentChanged));
     }
 }

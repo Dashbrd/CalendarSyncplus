@@ -44,7 +44,7 @@ namespace CalendarSyncPlus.Presentation.Services.SingleInstance
 
                 for (var i = 0; i < numArgs; i++)
                 {
-                    var currArg = Marshal.ReadIntPtr(argv, i*Marshal.SizeOf(typeof (IntPtr)));
+                    var currArg = Marshal.ReadIntPtr(argv, i*Marshal.SizeOf(typeof(IntPtr)));
                     result[i] = Marshal.PtrToStringUni(currArg);
                 }
 

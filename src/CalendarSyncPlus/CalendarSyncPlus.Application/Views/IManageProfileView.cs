@@ -4,6 +4,5 @@ namespace CalendarSyncPlus.Application.Views
 {
     public interface IManageProfileView : IView
     {
-         
     }
 }

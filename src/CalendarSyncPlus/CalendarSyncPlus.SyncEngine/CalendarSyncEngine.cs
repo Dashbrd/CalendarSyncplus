@@ -11,11 +11,12 @@ using CalendarSyncPlus.SyncEngine.Interfaces;
 namespace CalendarSyncPlus.SyncEngine
 {
     /// <summary>
-    /// 
     /// </summary>
     [Export(typeof(ICalendarSyncEngine))]
     public class CalendarSyncEngine : ICalendarSyncEngine
     {
+        #region ICalendarSyncEngine Members
+
         public List<Appointment> SourceAppointmentsToUpdate { get; set; }
         public List<Appointment> SourceOrphanEntries { get; set; }
         public List<Appointment> SourceAppointmentsToDelete { get; set; }
@@ -71,6 +72,8 @@ namespace CalendarSyncPlus.SyncEngine
             SourceOrphanEntries = new List<Appointment>();
             DestOrphanEntries = new List<Appointment>();
         }
+
+        #endregion
 
         #region Private Methods
 
@@ -239,8 +242,8 @@ namespace CalendarSyncPlus.SyncEngine
                 //All entries need to be added
                 return;
             }
-            bool checkChild = syncProfile.SyncMode == SyncModeEnum.TwoWay &&
-                              syncProfile.SyncSettings.KeepLastModifiedVersion;
+            var checkChild = syncProfile.SyncMode == SyncModeEnum.TwoWay &&
+                             syncProfile.SyncSettings.KeepLastModifiedVersion;
             foreach (var sourceAppointment in sourceList)
             {
                 if (sourceAppointment.SourceId == null)
@@ -256,7 +259,6 @@ namespace CalendarSyncPlus.SyncEngine
                     }
                 }
             }
-            
         }
 
         /// <summary>

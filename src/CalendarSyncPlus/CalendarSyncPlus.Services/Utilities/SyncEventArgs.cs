@@ -36,6 +36,6 @@
     public enum UserActionEnum
     {
         ConfirmDelete,
-        StatsUpdate,
+        StatsUpdate
     }
 }

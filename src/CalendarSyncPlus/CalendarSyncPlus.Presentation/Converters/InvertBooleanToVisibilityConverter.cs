@@ -21,7 +21,7 @@ namespace CalendarSyncPlus.Presentation.Converters
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value != null && ((Visibility) value) == Visibility.Collapsed)
+            if (value != null && (Visibility) value == Visibility.Collapsed)
             {
                 return true;
             }

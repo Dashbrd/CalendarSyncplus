@@ -4,7 +4,7 @@ using CalendarSyncPlus.Application.ViewModels;
 
 namespace CalendarSyncPlus.Application.Controllers
 {
-    [Export(typeof (ILogController))]
+    [Export(typeof(ILogController))]
     public class LogController : ILogController
     {
         [ImportingConstructor]
@@ -14,6 +14,8 @@ namespace CalendarSyncPlus.Application.Controllers
         }
 
         public LogViewModel LogViewModel { get; set; }
+
+        #region ILogController Members
 
         public void Initialize()
         {
@@ -28,6 +30,8 @@ namespace CalendarSyncPlus.Application.Controllers
         {
             CollectionChangedEventManager.RemoveHandler(LogViewModel.AppliedFilterList, OnFilterChanged);
         }
+
+        #endregion
 
         private void OnFilterChanged(object sender, NotifyCollectionChangedEventArgs notifyCollectionChangedEventArgs)
         {

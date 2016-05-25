@@ -1,21 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Waf.Foundation;
+﻿using System.Waf.Foundation;
 
 namespace CalendarSyncPlus.Domain.Models.Metrics
 {
     public class CalendarMetric : Model
     {
-        private int _originalCount;
         private int _addCount;
+        private int _addFailedCount;
         private int _deleteCount;
+        private int _deleteFailedCount;
+        private int _originalCount;
         private int _updateCount;
         private int _updateFailedCount;
-        private int _deleteFailedCount;
-        private int _addFailedCount;
 
         public int OriginalCount
         {

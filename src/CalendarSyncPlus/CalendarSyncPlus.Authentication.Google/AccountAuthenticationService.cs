@@ -24,17 +24,17 @@ using log4net;
 
 namespace CalendarSyncPlus.Authentication.Google
 {
-    [Export(typeof (IAccountAuthenticationService))]
+    [Export(typeof(IAccountAuthenticationService))]
     public class AccountAuthenticationService : IAccountAuthenticationService
     {
-        ILog Logger { get; set; }
-
         [ImportingConstructor]
         public AccountAuthenticationService(ApplicationLogger applicationLogger, IMessageService messageService)
         {
             MessageService = messageService;
             Logger = applicationLogger.GetLogger(GetType());
         }
+
+        private ILog Logger { get; }
 
         public IMessageService MessageService { get; set; }
 
@@ -328,24 +328,6 @@ namespace CalendarSyncPlus.Authentication.Google
             }
         }
 
-        private Task<UserCredential> Authenticate(string clientId, string clientSecret, string userName,
-            string fileDataStorePath,
-            bool isFullPath)
-        {
-            var scopes = GetScopes();
-
-            var fileDataStore = new FileDataStore(fileDataStorePath, isFullPath);
-
-            var cancellationToken = new CancellationTokenSource().Token;
-            // here is where we Request the user to give us access, or use the Refresh Token that was previously stored in %AppData%
-            return GoogleWebAuthorizationBroker.AuthorizeAsync(
-                new ClientSecrets {ClientId = clientId, ClientSecret = clientSecret}
-                , scopes
-                , $"-{userName}-googletoken"
-                , cancellationToken
-                , fileDataStore);
-        }
-
         public AnalyticsService AuthenticateAnalyticsOauth(string accountName)
         {
             var applicationDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData,
@@ -396,11 +378,11 @@ namespace CalendarSyncPlus.Authentication.Google
             var scopes = GetScopes();
 
             var auth = await GoogleWebAuthorizationBroker.AuthorizeAsync(
-                        new ClientSecrets {ClientId = Constants.ClientId, ClientSecret = Constants.ClientSecret}
-                        , scopes
-                        , $"-{accountName}-googletoken"
-                        , cancellationToken
-                        , fileDataStore);
+                new ClientSecrets {ClientId = Constants.ClientId, ClientSecret = Constants.ClientSecret}
+                , scopes
+                , $"-{accountName}-googletoken"
+                , cancellationToken
+                , fileDataStore);
             return auth != null;
         }
 
@@ -481,6 +463,24 @@ namespace CalendarSyncPlus.Authentication.Google
         }
 
         #endregion
+
+        private Task<UserCredential> Authenticate(string clientId, string clientSecret, string userName,
+            string fileDataStorePath,
+            bool isFullPath)
+        {
+            var scopes = GetScopes();
+
+            var fileDataStore = new FileDataStore(fileDataStorePath, isFullPath);
+
+            var cancellationToken = new CancellationTokenSource().Token;
+            // here is where we Request the user to give us access, or use the Refresh Token that was previously stored in %AppData%
+            return GoogleWebAuthorizationBroker.AuthorizeAsync(
+                new ClientSecrets {ClientId = clientId, ClientSecret = clientSecret}
+                , scopes
+                , $"-{userName}-googletoken"
+                , cancellationToken
+                , fileDataStore);
+        }
 
         private IEnumerable<string> GetScopes()
         {

@@ -9,11 +9,7 @@ namespace CalendarSyncPlus.Presentation.Controls.RichTextBox
 {
     public class BindableHtmlRichTextBox : System.Windows.Controls.RichTextBox
     {
-        #region Private Members
-
         private bool isInvokePending;
-
-        #endregion //Private Members
 
         #region Event Hanlders
 
@@ -74,10 +70,10 @@ namespace CalendarSyncPlus.Presentation.Controls.RichTextBox
 
         public static readonly DependencyProperty TextProperty = DependencyProperty.Register(
             "Text",
-            typeof (string),
-            typeof (BindableHtmlRichTextBox),
+            typeof(string),
+            typeof(BindableHtmlRichTextBox),
             new FrameworkPropertyMetadata(
-                String.Empty,
+                string.Empty,
                 FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
                 OnTextPropertyChanged,
                 CoerceTextProperty,
@@ -112,8 +108,8 @@ namespace CalendarSyncPlus.Presentation.Controls.RichTextBox
 
         // Using a DependencyProperty as the backing store for TextFormatterType.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty TextFormatterTypeProperty =
-            DependencyProperty.Register("TextFormatterType", typeof (TextFormatterType),
-                typeof (BindableHtmlRichTextBox),
+            DependencyProperty.Register("TextFormatterType", typeof(TextFormatterType),
+                typeof(BindableHtmlRichTextBox),
                 new FrameworkPropertyMetadata(TextFormatterType.Default,
                     FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnTextFormatterTypeChanged));
 

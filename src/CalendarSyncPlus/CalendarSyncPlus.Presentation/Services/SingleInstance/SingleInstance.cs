@@ -52,6 +52,8 @@ namespace CalendarSyncPlus.Presentation.Services.SingleInstance
 
         #endregion
 
+        #region Nested type: IPCRemoteService
+
         #region Private Classes
 
         /// <summary>
@@ -85,6 +87,8 @@ namespace CalendarSyncPlus.Presentation.Services.SingleInstance
                 return null;
             }
         }
+
+        #endregion
 
         #endregion
 
@@ -141,7 +145,7 @@ namespace CalendarSyncPlus.Presentation.Services.SingleInstance
             // Build unique application Id and the IPC channel name.
             var applicationIdentifier = uniqueName + Environment.UserName;
 
-            var channelName = String.Concat(applicationIdentifier, Delimiter, ChannelNameSuffix);
+            var channelName = string.Concat(applicationIdentifier, Delimiter, ChannelNameSuffix);
 
             // Create mutex based on unique application Id to check if this is the first instance of the application. 
             bool firstInstance;
@@ -272,7 +276,7 @@ namespace CalendarSyncPlus.Presentation.Services.SingleInstance
 
             // Obtain a reference to the remoting service exposed by the server i.e the first instance of the application
             var firstInstanceRemoteServiceReference =
-                (IPCRemoteService) RemotingServices.Connect(typeof (IPCRemoteService), remotingServiceUrl);
+                (IPCRemoteService) RemotingServices.Connect(typeof(IPCRemoteService), remotingServiceUrl);
 
             // Check that the remote service exists, in some cases the first instance may not yet have created one, in which case
             // the second instance should just exit

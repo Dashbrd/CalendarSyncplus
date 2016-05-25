@@ -57,6 +57,76 @@ namespace CalendarSyncPlus.Presentation.Behaviors
         /// </summary>
         public const string EventArgsConverterParameterPropertyName = "EventArgsConverterParameter";
 
+        /// <summary>
+        ///     Identifies the <see cref="CommandParameter" /> dependency property
+        /// </summary>
+        public static readonly DependencyProperty CommandParameterProperty = DependencyProperty.Register(
+            "CommandParameter",
+            typeof(object),
+            typeof(EventToCommand),
+            new PropertyMetadata(
+                null,
+                (s, e) =>
+                {
+                    var sender = s as EventToCommand;
+                    if (sender == null)
+                    {
+                        return;
+                    }
+
+                    if (sender.AssociatedObject == null)
+                    {
+                        return;
+                    }
+
+                    sender.EnableDisableElement();
+                }));
+
+        /// <summary>
+        ///     Identifies the <see cref="Command" /> dependency property
+        /// </summary>
+        public static readonly DependencyProperty CommandProperty = DependencyProperty.Register(
+            "Command",
+            typeof(ICommand),
+            typeof(EventToCommand),
+            new PropertyMetadata(
+                null,
+                (s, e) => OnCommandChanged(s as EventToCommand, e)));
+
+        /// <summary>
+        ///     Identifies the <see cref="MustToggleIsEnabled" /> dependency property
+        /// </summary>
+        public static readonly DependencyProperty MustToggleIsEnabledProperty = DependencyProperty.Register(
+            "MustToggleIsEnabled",
+            typeof(bool),
+            typeof(EventToCommand),
+            new PropertyMetadata(
+                false,
+                (s, e) =>
+                {
+                    var sender = s as EventToCommand;
+                    if (sender == null)
+                    {
+                        return;
+                    }
+
+                    if (sender.AssociatedObject == null)
+                    {
+                        return;
+                    }
+
+                    sender.EnableDisableElement();
+                }));
+
+        /// <summary>
+        ///     Identifies the <see cref="EventArgsConverterParameter" /> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty EventArgsConverterParameterProperty = DependencyProperty.Register(
+            EventArgsConverterParameterPropertyName,
+            typeof(object),
+            typeof(EventToCommand),
+            new PropertyMetadata(null));
+
         private object _commandParameterValue;
         private bool? _mustToggleValue;
 
@@ -296,76 +366,6 @@ namespace CalendarSyncPlus.Presentation.Behaviors
         {
             EnableDisableElement();
         }
-
-        /// <summary>
-        ///     Identifies the <see cref="CommandParameter" /> dependency property
-        /// </summary>
-        public static readonly DependencyProperty CommandParameterProperty = DependencyProperty.Register(
-            "CommandParameter",
-            typeof (object),
-            typeof (EventToCommand),
-            new PropertyMetadata(
-                null,
-                (s, e) =>
-                {
-                    var sender = s as EventToCommand;
-                    if (sender == null)
-                    {
-                        return;
-                    }
-
-                    if (sender.AssociatedObject == null)
-                    {
-                        return;
-                    }
-
-                    sender.EnableDisableElement();
-                }));
-
-        /// <summary>
-        ///     Identifies the <see cref="Command" /> dependency property
-        /// </summary>
-        public static readonly DependencyProperty CommandProperty = DependencyProperty.Register(
-            "Command",
-            typeof (ICommand),
-            typeof (EventToCommand),
-            new PropertyMetadata(
-                null,
-                (s, e) => OnCommandChanged(s as EventToCommand, e)));
-
-        /// <summary>
-        ///     Identifies the <see cref="MustToggleIsEnabled" /> dependency property
-        /// </summary>
-        public static readonly DependencyProperty MustToggleIsEnabledProperty = DependencyProperty.Register(
-            "MustToggleIsEnabled",
-            typeof (bool),
-            typeof (EventToCommand),
-            new PropertyMetadata(
-                false,
-                (s, e) =>
-                {
-                    var sender = s as EventToCommand;
-                    if (sender == null)
-                    {
-                        return;
-                    }
-
-                    if (sender.AssociatedObject == null)
-                    {
-                        return;
-                    }
-
-                    sender.EnableDisableElement();
-                }));
-
-        /// <summary>
-        ///     Identifies the <see cref="EventArgsConverterParameter" /> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty EventArgsConverterParameterProperty = DependencyProperty.Register(
-            EventArgsConverterParameterPropertyName,
-            typeof (object),
-            typeof (EventToCommand),
-            new PropertyMetadata(null));
     }
 
     public interface IEventArgsConverter

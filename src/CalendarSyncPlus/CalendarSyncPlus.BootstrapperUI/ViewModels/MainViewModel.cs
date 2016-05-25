@@ -54,7 +54,7 @@ namespace CalendarSyncPlus.BootstrapperUI
             }
         }
 
-        public BootstrapperApplication Bootstrapper { get; private set; }
+        public BootstrapperApplication Bootstrapper { get; }
 
         #endregion //Properties
 

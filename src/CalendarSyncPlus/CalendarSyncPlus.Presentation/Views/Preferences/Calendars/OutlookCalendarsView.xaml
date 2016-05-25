@@ -18,8 +18,8 @@
     <UserControl.Resources>
         <metroConverters:ToUpperConverter x:Key="ToUpperConverter" />
         <converters:BoolToEnumConverter x:Key="BoolToEnumConverter" />
-        <converters:OutlookOptionsToBoolConverter x:Key="OutlookOptionsToBoolConverter"/>
-        <converters:OutlookOptionsToVisibilityConverter x:Key="OutlookOptionsToVisibilityConverter"/>
+        <converters:OutlookOptionsToBoolConverter x:Key="OutlookOptionsToBoolConverter" />
+        <converters:OutlookOptionsToVisibilityConverter x:Key="OutlookOptionsToVisibilityConverter" />
         <DataTemplate x:Key="ExchangeHeaderTemplate">
             <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
                 <Rectangle Width="18" Fill="{DynamicResource AccentSelectedColorBrush}">
@@ -79,7 +79,7 @@
                                                 Converter={StaticResource OutlookOptionsToBoolConverter},
                                                 ConverterParameter={x:Static models:OutlookOptionsEnum.ExchangeWebServices},
                                                  Mode=TwoWay,
-                                                 UpdateSourceTrigger=PropertyChanged}"/>
+                                                 UpdateSourceTrigger=PropertyChanged}" />
             </Grid>
         </GroupBox>
         <GroupBox Grid.Row="1"
@@ -165,7 +165,7 @@
                                                 Converter={StaticResource OutlookOptionsToBoolConverter},
                                                 ConverterParameter={x:Static models:OutlookOptionsEnum.AlternateMailBoxCalendar},
                                                  Mode=TwoWay,
-                                                 UpdateSourceTrigger=PropertyChanged}"/>
+                                                 UpdateSourceTrigger=PropertyChanged}" />
                 <TextBlock Grid.Row="5"
                            Grid.Column="0"
                            Margin="2"
@@ -217,7 +217,7 @@
                           Margin="2"
                           ToolTip="Sets organizer of the appointment to the value retrieved from Google"
                           IsChecked="{Binding SelectedProfile.OutlookSettings.SetOrganizer}"
-                          Content="{localizeExtension:LocText Key=OutlookSettingsView_Button_OutlookProfileSettings_SetOrganizer_Text}"/>
+                          Content="{localizeExtension:LocText Key=OutlookSettingsView_Button_OutlookProfileSettings_SetOrganizer_Text}" />
             </Grid>
         </GroupBox>
         <GroupBox Grid.Row="1"
@@ -277,9 +277,9 @@
                          Text="{Binding SelectedProfile.ExchangeServerSettings.ExchangeServerUrl,
                                         Mode=TwoWay}" />
                 <CheckBox Grid.Row="4"
-                          Grid.ColumnSpan="2" 
+                          Grid.ColumnSpan="2"
                           Content="{localizeExtension:LocText Key=OutlookSettingsView_Button_ExchangeSettings_UsingCorporateNetwork_Content}"
-                          IsChecked="{Binding SelectedProfile.ExchangeServerSettings.UsingCorporateNetwork}"/>
+                          IsChecked="{Binding SelectedProfile.ExchangeServerSettings.UsingCorporateNetwork}" />
                 <Button Grid.Row="5"
                         Grid.ColumnSpan="2"
                         Height="30"
@@ -296,7 +296,7 @@
                           Height="30"
                           Margin="2"
                           ItemsSource="{Binding ExchangeCalendars}"
-                          SelectedItem="{Binding SelectedProfile.ExchangeServerSettings.ExchangeCalendar}"/>
+                          SelectedItem="{Binding SelectedProfile.ExchangeServerSettings.ExchangeCalendar}" />
                 <Button Grid.Row="7"
                         Grid.Column="1"
                         Width="150"
@@ -306,6 +306,6 @@
             </Grid>
         </GroupBox>
 
-       
+
     </Grid>
 </UserControl>

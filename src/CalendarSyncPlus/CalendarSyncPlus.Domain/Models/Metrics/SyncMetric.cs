@@ -5,14 +5,14 @@ namespace CalendarSyncPlus.Domain.Models.Metrics
 {
     public class SyncMetric : Model
     {
-        private DateTime _startTime;
+        private string _calendarSyncDirection;
+        private CalendarMetric _destMetric;
         private int _elapsedSeconds;
-        private string _syncError;
         private bool _isSuccess;
         private string _profileName;
         private CalendarMetric _sourceMetric;
-        private CalendarMetric _destMetric;
-        private string _calendarSyncDirection;
+        private DateTime _startTime;
+        private string _syncError;
 
         public SyncMetric()
         {

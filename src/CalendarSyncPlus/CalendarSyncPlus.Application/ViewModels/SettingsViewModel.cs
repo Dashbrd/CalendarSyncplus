@@ -20,8 +20,6 @@
 #region Imports
 
 using System;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.ComponentModel.Composition;
 using System.Linq;
 using System.Net;
@@ -36,7 +34,6 @@ using CalendarSyncPlus.Domain.Models;
 using CalendarSyncPlus.Domain.Models.Preferences;
 using CalendarSyncPlus.ExchangeWebServices.Calendar;
 using CalendarSyncPlus.GoogleServices.Calendar;
-using CalendarSyncPlus.GoogleServices.Google;
 using CalendarSyncPlus.OutlookServices.Calendar;
 using CalendarSyncPlus.Services.Interfaces;
 using CalendarSyncPlus.Services.Sync.Interfaces;
@@ -50,8 +47,8 @@ namespace CalendarSyncPlus.Application.ViewModels
     [Export]
     public class SettingsViewModel : ViewModel<ISettingsView>
     {
-        
         #region Constructors
+
         [ImportingConstructor]
         public SettingsViewModel(ISettingsView view,
             IGoogleCalendarService googleCalendarService,
@@ -63,7 +60,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             IAccountAuthenticationService accountAuthenticationService)
             : base(view)
         {
-            _lastSavedSettings = settings;
+            LastSavedSettings = settings;
             Settings = settings.DeepClone();
             ExchangeWebCalendarService = exchangeWebCalendarService;
             ApplicationLogger = applicationLogger;
@@ -76,11 +73,11 @@ namespace CalendarSyncPlus.Application.ViewModels
             OutlookCalendarService = outlookCalendarService;
             MessageService = messageService;
         }
-        
+
         #endregion
 
         #region Fields
-        private Settings _lastSavedSettings;
+
         private bool _isLoading;
         private DelegateCommand _saveCommand;
         private Settings _settings;
@@ -101,7 +98,7 @@ namespace CalendarSyncPlus.Application.ViewModels
         public IOutlookCalendarService OutlookCalendarService { get; set; }
         public IMessageService MessageService { get; set; }
         public IExchangeWebCalendarService ExchangeWebCalendarService { get; private set; }
-        public ILog Logger { get; private set; }
+        public ILog Logger { get; }
         public ApplicationLogger ApplicationLogger { get; set; }
         public IWindowsStartupService WindowsStartupService { get; set; }
         public IAccountAuthenticationService AccountAuthenticationService { get; set; }
@@ -133,10 +130,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             }
         }
 
-        public Settings LastSavedSettings
-        {
-            get { return _lastSavedSettings; }
-        }
+        public Settings LastSavedSettings { get; private set; }
 
         public Settings Settings
         {
@@ -155,7 +149,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             get { return _settingsSaved; }
             set { SetProperty(ref _settingsSaved, value); }
         }
-        
+
         public bool IsValid
         {
             get { return _isValid; }
@@ -169,7 +163,7 @@ namespace CalendarSyncPlus.Application.ViewModels
         }
 
         #endregion
-        
+
         #region Private Methods
 
         private async void SaveSettings()
@@ -193,7 +187,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             {
                 foreach (var calendarSyncProfile in Settings.CalendarSyncProfiles)
                 {
-                    calendarSyncProfile.SetSourceDestTypes();   
+                    calendarSyncProfile.SetSourceDestTypes();
                 }
 
                 foreach (var calendarSyncProfile in Settings.TaskSyncProfiles)
@@ -207,16 +201,16 @@ namespace CalendarSyncPlus.Application.ViewModels
                 }
 
                 var result = await SettingsSerializationService.SerializeSettingsAsync(Settings);
-                
+
                 if (result)
                 {
-                    _lastSavedSettings = Settings;
-                    Settings = _lastSavedSettings.DeepClone();
+                    LastSavedSettings = Settings;
+                    Settings = LastSavedSettings.DeepClone();
                 }
 
                 await MessageService.ShowMessage(result ? "Settings Saved Successfully" : "Error Saving Settings",
-                        "Settings");
-                
+                    "Settings");
+
                 SettingsSaved = true;
             }
             catch (AggregateException exception)
@@ -238,7 +232,7 @@ namespace CalendarSyncPlus.Application.ViewModels
 
         private void CancelSettingsHandler(object o)
         {
-            Settings = _lastSavedSettings.DeepClone();
+            Settings = LastSavedSettings.DeepClone();
 
             foreach (var syncProfile in Settings.CalendarSyncProfiles)
             {
@@ -257,18 +251,18 @@ namespace CalendarSyncPlus.Application.ViewModels
 
             Init = true;
             MessageService.ShowMessage("Settings cancelled.",
-                        "Settings");
+                "Settings");
         }
-        
+
         private async void DisconnectGoogleHandler(object parameter)
         {
-            GoogleAccount googleAccount = parameter as GoogleAccount;
+            var googleAccount = parameter as GoogleAccount;
             if (googleAccount == null)
             {
                 MessageService.ShowMessageAsync("No account selected");
                 return;
             }
-            string accountName = googleAccount.Name;
+            var accountName = googleAccount.Name;
 
             var dialogResult =
                 await
@@ -282,7 +276,6 @@ namespace CalendarSyncPlus.Application.ViewModels
             var result = AccountAuthenticationService.DisconnectGoogle(googleAccount.Name);
             if (result)
             {
-
                 foreach (var profile in Settings.CalendarSyncProfiles)
                 {
                     if (profile.GoogleSettings.GoogleAccount != null &&
@@ -296,33 +289,33 @@ namespace CalendarSyncPlus.Application.ViewModels
                 }
 
                 //Remove google account
-                 googleAccount = Settings.GoogleAccounts.FirstOrDefault(account =>
+                googleAccount = Settings.GoogleAccounts.FirstOrDefault(account =>
                     account.Name == accountName);
-                
+
                 if (googleAccount != null)
                 {
                     Settings.GoogleAccounts.Remove(googleAccount);
                 }
 
-                googleAccount = _lastSavedSettings.GoogleAccounts.FirstOrDefault(account =>
+                googleAccount = LastSavedSettings.GoogleAccounts.FirstOrDefault(account =>
                     account.Name == accountName);
 
                 if (googleAccount != null)
                 {
-                    _lastSavedSettings.GoogleAccounts.Remove(googleAccount);
+                    LastSavedSettings.GoogleAccounts.Remove(googleAccount);
                 }
 
                 await MessageService.ShowMessage("Google account successfully disconnected");
 
-                await SettingsSerializationService.SerializeSettingsAsync(_lastSavedSettings);
+                await SettingsSerializationService.SerializeSettingsAsync(LastSavedSettings);
             }
             else
             {
                 MessageService.ShowMessageAsync("Account wasn't authenticated earlier or disconnection failed.");
             }
         }
+
         /// <summary>
-        /// 
         /// </summary>
         internal void ApplyProxySettings()
         {
@@ -365,10 +358,9 @@ namespace CalendarSyncPlus.Application.ViewModels
                 MessageService.ShowMessageAsync("Invalid Proxy Settings. Proxy settings cannot be applied");
             }
         }
-        
+
 
         /// <summary>
-        /// 
         /// </summary>
         private async void AddNewGoogleAccountHandler()
         {
@@ -469,23 +461,24 @@ namespace CalendarSyncPlus.Application.ViewModels
 
         private async void AddGoogleAccountDetailsToApplication(string accountName)
         {
-            var account = new GoogleAccount { Name = accountName };
+            var account = new GoogleAccount {Name = accountName};
             Settings.GoogleAccounts.Add(account.DeepClone());
-            _lastSavedSettings.GoogleAccounts.Add(account);
+            LastSavedSettings.GoogleAccounts.Add(account);
 
-            await SettingsSerializationService.SerializeSettingsAsync(_lastSavedSettings);
+            await SettingsSerializationService.SerializeSettingsAsync(LastSavedSettings);
         }
 
         private async Task<string> GetGoogleAuthCode()
         {
             return await MessageService.ShowInput("Enter Auth Code after authorization in browser window",
-                        "Manual Authentication");
+                "Manual Authentication");
         }
 
         public void Load()
         {
             Init = true;
         }
+
         #endregion
     }
 }

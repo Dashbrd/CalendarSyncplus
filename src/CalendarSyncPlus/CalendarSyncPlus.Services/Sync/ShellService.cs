@@ -27,19 +27,9 @@ using CalendarSyncPlus.Services.Interfaces;
 
 namespace CalendarSyncPlus.Services
 {
-    [Export, Export(typeof (IShellService))]
+    [Export, Export(typeof(IShellService))]
     public class ShellService : Model, IShellService
     {
-        #region Fields
-
-        private object _aboutView;
-        private object _helpView;
-        private object _settingsView;
-        private object _shellView;
-        private object _logView;
-
-        #endregion
-
         #region IShellService Members
 
         public object ShellView
@@ -71,6 +61,16 @@ namespace CalendarSyncPlus.Services
             get { return _logView; }
             set { SetProperty(ref _logView, value); }
         }
+
+        #endregion
+
+        #region Fields
+
+        private object _aboutView;
+        private object _helpView;
+        private object _settingsView;
+        private object _shellView;
+        private object _logView;
 
         #endregion
     }

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-
 using System.ComponentModel.Composition;
 using System.Linq;
 using System.Threading.Tasks;
@@ -22,189 +21,52 @@ namespace CalendarSyncPlus.Application.ViewModels
     [Export]
     public class TaskViewModel : ViewModel<ITaskView>
     {
-        public IMessageService MessageService { get; set; }
-        public IOutlookTaskService OutlookTaskService { get; set; }
-        public IGoogleTaskService GoogleTaskService { get; set; }
-        public IExchangeWebTaskService ExchangeWebTaskService { get; set; }
+        private DelegateCommand _addGoogleAccountCommand;
         private DelegateCommand _autoDetectExchangeServer;
+        private List<SyncDirectionEnum> _calendarSyncModes;
+        private DelegateCommand _cleanGoogleCalendar;
+        private DelegateCommand _cleanOutlookCalendarCommand;
+        private DelegateCommand _disconnectAccountCommand;
         private DelegateCommand _getGoogleCalendarCommand;
         private DelegateCommand _getOutlookMailboxCommand;
         private DelegateCommand _getOutlookProfileLIstCommand;
-        private DelegateCommand _cleanGoogleCalendar;
-        private DelegateCommand _cleanOutlookCalendarCommand;
-        private DelegateCommand _addGoogleAccountCommand;
-        private DelegateCommand _disconnectAccountCommand;
-      
-
-        private ObservableCollection<TaskSyncProfile> _taskSyncProfiles;
-        private TaskSyncProfile _selectedProfile;
         private ObservableCollection<GoogleAccount> _googleAccounts;
-        
-        private string _selectedFrequency;
-        private List<string> _syncFrequencyTypes;
-        private List<SyncDirectionEnum> _calendarSyncModes;
         private bool _isLoading;
         private List<OutlookMailBox> _outlookMailBoxes;
         private List<string> _outlookProfileList;
 
+        private string _selectedFrequency;
+        private TaskSyncProfile _selectedProfile;
+        private List<string> _syncFrequencyTypes;
+
+
+        private ObservableCollection<TaskSyncProfile> _taskSyncProfiles;
+
         [ImportingConstructor]
-        public TaskViewModel(ITaskView view, ApplicationLogger applicationLogger, 
-            IMessageService  messageService, IOutlookTaskService outlookTaskService,
+        public TaskViewModel(ITaskView view, ApplicationLogger applicationLogger,
+            IMessageService messageService, IOutlookTaskService outlookTaskService,
             IGoogleTaskService googleTaskService, IExchangeWebTaskService exchangeWebTaskService) : base(view)
         {
             MessageService = messageService;
             OutlookTaskService = outlookTaskService;
             GoogleTaskService = googleTaskService;
             ExchangeWebTaskService = exchangeWebTaskService;
-            Logger = applicationLogger.GetLogger(this.GetType());
+            Logger = applicationLogger.GetLogger(GetType());
         }
 
-        #region Commands
-        public DelegateCommand AddGoogleAccountCommand
-        {
-            get { return _addGoogleAccountCommand; }
-            set { SetProperty(ref _addGoogleAccountCommand, value); }
-        }
-
-        public DelegateCommand DisconnectAccountCommand
-        {
-            get { return _disconnectAccountCommand; }
-            set { SetProperty(ref _disconnectAccountCommand, value); }
-        }
-        public DelegateCommand GetOutlookProfileListCommand
-        {
-            get
-            {
-                return _getOutlookProfileLIstCommand ??
-                       (_getOutlookProfileLIstCommand = new DelegateCommand(GetOutlookProfileList));
-            }
-        }
-
-        public DelegateCommand GetOutlookMailBoxesCommand
-        {
-            get
-            {
-                return _getOutlookMailboxCommand ??
-                       (_getOutlookMailboxCommand = new DelegateCommand(GetOutlookMailBoxes));
-            }
-        }
-
-
-        public DelegateCommand GetGoogleCalendarCommand
-        {
-            get
-            {
-                return _getGoogleCalendarCommand ?? (_getGoogleCalendarCommand = new DelegateCommand(GetGoogleTaskLists));
-            }
-        }
-
-        public DelegateCommand AutoDetectExchangeServer
-        {
-            get
-            {
-                return
-                    _autoDetectExchangeServer = _autoDetectExchangeServer ?? new DelegateCommand(AutoDetectEWSSettings);
-            }
-        }
-        
-        public DelegateCommand CleanOutlookCalendarCommand
-        {
-            get
-            {
-                return _cleanOutlookCalendarCommand = _cleanOutlookCalendarCommand ??
-                                                      new DelegateCommand(CleanOutlookCalendarHandler);
-            }
-        }
-
-        public DelegateCommand CleanGoogleCalendarCommand
-        {
-            get
-            {
-                return _cleanGoogleCalendar = _cleanGoogleCalendar ?? new DelegateCommand(CleanGoogleCalendarHandler);
-            }
-        }
-        #endregion
-
-        #region Properties
-
-        public List<string> OutlookProfileList
-        {
-            get { return _outlookProfileList; }
-            set { SetProperty(ref _outlookProfileList, value); }
-        }
-
-        public List<OutlookMailBox> OutlookMailBoxes
-        {
-            get { return _outlookMailBoxes; }
-            set { SetProperty(ref _outlookMailBoxes, value); }
-        }
-
-        public bool IsLoading
-        {
-            get { return _isLoading; }
-            set { SetProperty(ref _isLoading, value); }
-        }
-
-        public ILog Logger { get; set; }
-
-        public ObservableCollection<GoogleAccount> GoogleAccounts
-        {
-            get { return _googleAccounts; }
-            set { SetProperty(ref _googleAccounts, value); }
-        }
-
-        public ObservableCollection<TaskSyncProfile> TaskSyncProfiles
-        {
-            get { return _taskSyncProfiles; }
-            set { SetProperty(ref _taskSyncProfiles, value); }
-        }
-
-
-        public TaskSyncProfile SelectedProfile
-        {
-            get { return _selectedProfile; }
-            set { SetProperty(ref _selectedProfile, value); }
-        }
+        public IMessageService MessageService { get; set; }
+        public IOutlookTaskService OutlookTaskService { get; set; }
+        public IGoogleTaskService GoogleTaskService { get; set; }
+        public IExchangeWebTaskService ExchangeWebTaskService { get; set; }
 
         /// <summary>
-        /// 
-        /// </summary>
-        public string SelectedFrequency
-        {
-            get { return _selectedFrequency; }
-            set
-            {
-                SetProperty(ref _selectedFrequency, value); 
-                OnSyncFrequencyChanged();
-            }
-        }
-        /// <summary>
-        /// 
-        /// </summary>
-        public List<string> SyncFrequencyTypes
-        {
-            get { return _syncFrequencyTypes; }
-            set { SetProperty(ref _syncFrequencyTypes, value); }
-        }
-        /// <summary>
-        /// 
-        /// </summary>
-        public List<SyncDirectionEnum> CalendarSyncModes
-        {
-            get { return _calendarSyncModes; }
-            set { SetProperty(ref _calendarSyncModes, value); }
-        } 
-        #endregion
-        
-        /// <summary>
-        /// 
         /// </summary>
         public void Initialize()
         {
             CalendarSyncModes = new List<SyncDirectionEnum>
             {
                 SyncDirectionEnum.OutlookGoogleOneWay,
-                SyncDirectionEnum.OutlookGoogleOneWayToSource,
+                SyncDirectionEnum.OutlookGoogleOneWayToSource
                 //SyncDirectionEnum.OutlookGoogleTwoWay
             };
             SyncFrequencyTypes = new List<string>
@@ -219,7 +81,8 @@ namespace CalendarSyncPlus.Application.ViewModels
 
         private async void GetOutlookMailBoxes()
         {
-            if (SelectedProfile.OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.DefaultMailBoxCalendar) || IsLoading)
+            if (SelectedProfile.OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.DefaultMailBoxCalendar) ||
+                IsLoading)
                 return;
             IsLoading = true;
             await GetOutlookMailBoxesInternal();
@@ -234,14 +97,16 @@ namespace CalendarSyncPlus.Application.ViewModels
                 if (mailBoxes == null)
                 {
                     MessageService.ShowMessageAsync("Failed to fetch outlook mailboxes. Please try again." +
-                        Environment.NewLine + "If the problem persists, Please restart Outlook application.");
+                                                    Environment.NewLine +
+                                                    "If the problem persists, Please restart Outlook application.");
                     return;
                 }
 
                 if (SelectedProfile.OutlookSettings.OutlookMailBox != null && mailBoxes.Any())
                 {
                     var mailbox = mailBoxes.FirstOrDefault(
-                        t => t.EntryId.Equals(SelectedProfile.OutlookSettings.OutlookMailBox.EntryId)) ?? mailBoxes.First();
+                        t => t.EntryId.Equals(SelectedProfile.OutlookSettings.OutlookMailBox.EntryId)) ??
+                                  mailBoxes.First();
 
                     if (SelectedProfile.OutlookSettings.OutlookFolder != null)
                     {
@@ -360,7 +225,7 @@ namespace CalendarSyncPlus.Application.ViewModels
                 Logger.Error(exception);
             }
         }
-      
+
         private async void CleanGoogleCalendarHandler()
         {
             IsLoading = true;
@@ -397,7 +262,7 @@ namespace CalendarSyncPlus.Application.ViewModels
                 MessageService.ShowMessageAsync("Reset calendar failed.");
             }
         }
-        
+
         private async void CleanOutlookCalendarHandler()
         {
             IsLoading = true;
@@ -408,7 +273,8 @@ namespace CalendarSyncPlus.Application.ViewModels
         private async Task CleanOutlookCalendarInternal()
         {
             if ((SelectedProfile.OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.AlternateMailBoxCalendar) &&
-                 (SelectedProfile.OutlookSettings.OutlookMailBox == null || SelectedProfile.OutlookSettings.OutlookFolder == null)) ||
+                 (SelectedProfile.OutlookSettings.OutlookMailBox == null ||
+                  SelectedProfile.OutlookSettings.OutlookFolder == null)) ||
                 (SelectedProfile.OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.AlternateProfile) &&
                  string.IsNullOrEmpty(SelectedProfile.OutlookSettings.OutlookProfileName)))
             {
@@ -428,15 +294,17 @@ namespace CalendarSyncPlus.Application.ViewModels
             var calendarSpecificData = new Dictionary<string, object>
             {
                 {
-                    "ProfileName", SelectedProfile.OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.AlternateProfile)
+                    "ProfileName",
+                    SelectedProfile.OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.AlternateProfile)
                         ? SelectedProfile.OutlookSettings.OutlookProfileName
                         : null
                 },
                 {
-                    "OutlookTaskList", SelectedProfile.OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.AlternateMailBoxCalendar)
+                    "OutlookTaskList",
+                    SelectedProfile.OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.AlternateMailBoxCalendar)
                         ? SelectedProfile.OutlookSettings.OutlookFolder
                         : null
-                },
+                }
             };
 
             var result = await OutlookTaskService.ClearCalendar(calendarSpecificData);
@@ -450,7 +318,7 @@ namespace CalendarSyncPlus.Application.ViewModels
         /// </summary>
         private void OnSyncFrequencyChanged()
         {
-            if ((SelectedProfile == null))
+            if (SelectedProfile == null)
             {
                 return;
             }
@@ -514,5 +382,144 @@ namespace CalendarSyncPlus.Application.ViewModels
             IsLoading = false;
         }
 
+        #region Commands
+
+        public DelegateCommand AddGoogleAccountCommand
+        {
+            get { return _addGoogleAccountCommand; }
+            set { SetProperty(ref _addGoogleAccountCommand, value); }
+        }
+
+        public DelegateCommand DisconnectAccountCommand
+        {
+            get { return _disconnectAccountCommand; }
+            set { SetProperty(ref _disconnectAccountCommand, value); }
+        }
+
+        public DelegateCommand GetOutlookProfileListCommand
+        {
+            get
+            {
+                return _getOutlookProfileLIstCommand ??
+                       (_getOutlookProfileLIstCommand = new DelegateCommand(GetOutlookProfileList));
+            }
+        }
+
+        public DelegateCommand GetOutlookMailBoxesCommand
+        {
+            get
+            {
+                return _getOutlookMailboxCommand ??
+                       (_getOutlookMailboxCommand = new DelegateCommand(GetOutlookMailBoxes));
+            }
+        }
+
+
+        public DelegateCommand GetGoogleCalendarCommand
+        {
+            get
+            {
+                return _getGoogleCalendarCommand ?? (_getGoogleCalendarCommand = new DelegateCommand(GetGoogleTaskLists));
+            }
+        }
+
+        public DelegateCommand AutoDetectExchangeServer
+        {
+            get
+            {
+                return
+                    _autoDetectExchangeServer = _autoDetectExchangeServer ?? new DelegateCommand(AutoDetectEWSSettings);
+            }
+        }
+
+        public DelegateCommand CleanOutlookCalendarCommand
+        {
+            get
+            {
+                return _cleanOutlookCalendarCommand = _cleanOutlookCalendarCommand ??
+                                                      new DelegateCommand(CleanOutlookCalendarHandler);
+            }
+        }
+
+        public DelegateCommand CleanGoogleCalendarCommand
+        {
+            get
+            {
+                return _cleanGoogleCalendar = _cleanGoogleCalendar ?? new DelegateCommand(CleanGoogleCalendarHandler);
+            }
+        }
+
+        #endregion
+
+        #region Properties
+
+        public List<string> OutlookProfileList
+        {
+            get { return _outlookProfileList; }
+            set { SetProperty(ref _outlookProfileList, value); }
+        }
+
+        public List<OutlookMailBox> OutlookMailBoxes
+        {
+            get { return _outlookMailBoxes; }
+            set { SetProperty(ref _outlookMailBoxes, value); }
+        }
+
+        public bool IsLoading
+        {
+            get { return _isLoading; }
+            set { SetProperty(ref _isLoading, value); }
+        }
+
+        public ILog Logger { get; set; }
+
+        public ObservableCollection<GoogleAccount> GoogleAccounts
+        {
+            get { return _googleAccounts; }
+            set { SetProperty(ref _googleAccounts, value); }
+        }
+
+        public ObservableCollection<TaskSyncProfile> TaskSyncProfiles
+        {
+            get { return _taskSyncProfiles; }
+            set { SetProperty(ref _taskSyncProfiles, value); }
+        }
+
+
+        public TaskSyncProfile SelectedProfile
+        {
+            get { return _selectedProfile; }
+            set { SetProperty(ref _selectedProfile, value); }
+        }
+
+        /// <summary>
+        /// </summary>
+        public string SelectedFrequency
+        {
+            get { return _selectedFrequency; }
+            set
+            {
+                SetProperty(ref _selectedFrequency, value);
+                OnSyncFrequencyChanged();
+            }
+        }
+
+        /// <summary>
+        /// </summary>
+        public List<string> SyncFrequencyTypes
+        {
+            get { return _syncFrequencyTypes; }
+            set { SetProperty(ref _syncFrequencyTypes, value); }
+        }
+
+        /// <summary>
+        /// </summary>
+        public List<SyncDirectionEnum> CalendarSyncModes
+        {
+            get { return _calendarSyncModes; }
+            set { SetProperty(ref _calendarSyncModes, value); }
+        }
+
+        #endregion
     }
 }

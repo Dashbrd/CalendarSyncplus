@@ -1,11 +1,10 @@
 ﻿using System.ComponentModel.Composition;
-using CalendarSyncPlus.Domain.Models;
 using CalendarSyncPlus.Domain.Models.Metrics;
 using CalendarSyncPlus.Services.Interfaces;
 
 namespace CalendarSyncPlus.Services
 {
-    [Export(typeof (ISyncSummaryProvider))]
+    [Export(typeof(ISyncSummaryProvider))]
     public class SyncSummaryProvider : ISyncSummaryProvider
     {
         #region Constructors

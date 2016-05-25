@@ -16,122 +16,122 @@
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-    <GroupBox Header="{localizeExtension:LocText Key=ManageProfileView_Calendars_GroupBox_Header}">
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition />
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-            <DataGrid x:Name="ProfilesDataGrid"
-                      Grid.Row="1"
-                      AlternatingRowBackground="{StaticResource GrayBrush8}"
-                      AutoGenerateColumns="False"
-                      CanUserAddRows="False"
-                      CanUserDeleteRows="False"
-                      CanUserReorderColumns="False"
-                      CanUserResizeColumns="True"
-                      CanUserResizeRows="False"
-                      CanUserSortColumns="False"
-                      GridLinesVisibility="Horizontal"
-                      ItemsSource="{Binding Path=CalendarSyncProfiles}"
-                      RenderOptions.ClearTypeHint="Enabled"
-                      SelectionMode="Single"
-                      TextOptions.TextFormattingMode="Display">
-                <DataGrid.Columns>
-                    <DataGridTextColumn Width="150"
-                                        Binding="{Binding Name}"
-                                        Header="{localizeExtension:LocText Key=ManageProfileView_DataGrid_Column_NameColumn_Header}" />
-                    <DataGridCheckBoxColumn Width="100"
-                                            Binding="{Binding IsSyncEnabled,
+        <GroupBox Header="{localizeExtension:LocText Key=ManageProfileView_Calendars_GroupBox_Header}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <DataGrid x:Name="ProfilesDataGrid"
+                          Grid.Row="1"
+                          AlternatingRowBackground="{StaticResource GrayBrush8}"
+                          AutoGenerateColumns="False"
+                          CanUserAddRows="False"
+                          CanUserDeleteRows="False"
+                          CanUserReorderColumns="False"
+                          CanUserResizeColumns="True"
+                          CanUserResizeRows="False"
+                          CanUserSortColumns="False"
+                          GridLinesVisibility="Horizontal"
+                          ItemsSource="{Binding Path=CalendarSyncProfiles}"
+                          RenderOptions.ClearTypeHint="Enabled"
+                          SelectionMode="Single"
+                          TextOptions.TextFormattingMode="Display">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Width="150"
+                                            Binding="{Binding Name}"
+                                            Header="{localizeExtension:LocText Key=ManageProfileView_DataGrid_Column_NameColumn_Header}" />
+                        <DataGridCheckBoxColumn Width="100"
+                                                Binding="{Binding IsSyncEnabled,
                                                               Mode=TwoWay,
                                                               UpdateSourceTrigger=PropertyChanged}"
-                                            EditingElementStyle="{DynamicResource MetroDataGridCheckBox}"
-                                            ElementStyle="{DynamicResource MetroDataGridCheckBox}"
-                                            Header="{localizeExtension:LocText Key=ManageProfileView_DataGrid_Column_SyncColumn_Header}" />
-                    <DataGridTemplateColumn Width="80"
-                                            Header="{localizeExtension:LocText Key=ManageProfileView_DataGrid_Column_DeleteColumn_Header}">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <Button Width="20"
-                                        Height="20"
-                                        Margin="2"
-                                        BorderThickness="0"
-                                        Command="{Binding DataContext.DeleteProfileCommand,
+                                                EditingElementStyle="{DynamicResource MetroDataGridCheckBox}"
+                                                ElementStyle="{DynamicResource MetroDataGridCheckBox}"
+                                                Header="{localizeExtension:LocText Key=ManageProfileView_DataGrid_Column_SyncColumn_Header}" />
+                        <DataGridTemplateColumn Width="80"
+                                                Header="{localizeExtension:LocText Key=ManageProfileView_DataGrid_Column_DeleteColumn_Header}">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Width="20"
+                                            Height="20"
+                                            Margin="2"
+                                            BorderThickness="0"
+                                            Command="{Binding DataContext.DeleteProfileCommand,
                                                           ElementName=ProfilesDataGrid}"
-                                        CommandParameter="{Binding}"
-                                        IsEnabled="{Binding IsDefault,
+                                            CommandParameter="{Binding}"
+                                            IsEnabled="{Binding IsDefault,
                                                             Converter={StaticResource InvertBooleanConverter},
                                                             UpdateSourceTrigger=PropertyChanged}"
-                                        Style="{DynamicResource MetroCircleButtonStyle}">
-                                    <Rectangle Width="12"
-                                               Height="12"
-                                               Fill="{Binding Path=Foreground,
+                                            Style="{DynamicResource MetroCircleButtonStyle}">
+                                        <Rectangle Width="12"
+                                                   Height="12"
+                                                   Fill="{Binding Path=Foreground,
                                                               RelativeSource={RelativeSource FindAncestor,
                                                                                              AncestorType={x:Type Button}}}">
-                                        <Rectangle.OpacityMask>
-                                            <VisualBrush Visual="{StaticResource appbar_delete}" />
-                                        </Rectangle.OpacityMask>
-                                    </Rectangle>
-                                </Button>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                </DataGrid.Columns>
-            </DataGrid>
-            <StackPanel Grid.Row="1"
-                        Grid.Column="1"
-                        Margin="2"
-                        Orientation="Vertical">
-                <Button Width="40"
-                        Margin="2"
-                        HorizontalAlignment="Right"
-                        Command="{Binding CreateProfileCommand}"
+                                            <Rectangle.OpacityMask>
+                                                <VisualBrush Visual="{StaticResource appbar_delete}" />
+                                            </Rectangle.OpacityMask>
+                                        </Rectangle>
+                                    </Button>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+                <StackPanel Grid.Row="1"
+                            Grid.Column="1"
+                            Margin="2"
+                            Orientation="Vertical">
+                    <Button Width="40"
+                            Margin="2"
+                            HorizontalAlignment="Right"
+                            Command="{Binding CreateProfileCommand}"
                             CommandParameter="Calendars"
                             Content="{localizeExtension:LocText Key=ManageProfileView_Button_New_Content}" />
-                <Button Width="40"
-                        Margin="2"
-                        HorizontalAlignment="Right"
-                        Command="{Binding MoveUpCommand}"
-                        CommandParameter="{Binding SelectedItem,
+                    <Button Width="40"
+                            Margin="2"
+                            HorizontalAlignment="Right"
+                            Command="{Binding MoveUpCommand}"
+                            CommandParameter="{Binding SelectedItem,
                                                    ElementName=ProfilesDataGrid}">
-                    <Rectangle Width="12"
-                               Height="12"
-                               Fill="{Binding Path=Foreground,
+                        <Rectangle Width="12"
+                                   Height="12"
+                                   Fill="{Binding Path=Foreground,
                                               RelativeSource={RelativeSource FindAncestor,
                                                                              AncestorType={x:Type Button}}}">
-                        <Rectangle.OpacityMask>
-                            <VisualBrush Visual="{StaticResource appbar_arrow_up}" />
-                        </Rectangle.OpacityMask>
-                    </Rectangle>
-                </Button>
-                <Button Width="40"
-                        Margin="2"
-                        HorizontalAlignment="Right"
-                        Command="{Binding MoveDownCommand}"
-                        CommandParameter="{Binding SelectedItem,
+                            <Rectangle.OpacityMask>
+                                <VisualBrush Visual="{StaticResource appbar_arrow_up}" />
+                            </Rectangle.OpacityMask>
+                        </Rectangle>
+                    </Button>
+                    <Button Width="40"
+                            Margin="2"
+                            HorizontalAlignment="Right"
+                            Command="{Binding MoveDownCommand}"
+                            CommandParameter="{Binding SelectedItem,
                                                    ElementName=ProfilesDataGrid}">
-                    <Rectangle Width="12"
-                               Height="12"
-                               Fill="{Binding Path=Foreground,
+                        <Rectangle Width="12"
+                                   Height="12"
+                                   Fill="{Binding Path=Foreground,
                                               RelativeSource={RelativeSource FindAncestor,
                                                                              AncestorType={x:Type Button}}}">
-                        <Rectangle.OpacityMask>
-                            <VisualBrush Visual="{StaticResource appbar_arrow_down}" />
-                        </Rectangle.OpacityMask>
-                    </Rectangle>
-                </Button>
-            </StackPanel>
-        </Grid>
+                            <Rectangle.OpacityMask>
+                                <VisualBrush Visual="{StaticResource appbar_arrow_down}" />
+                            </Rectangle.OpacityMask>
+                        </Rectangle>
+                    </Button>
+                </StackPanel>
+            </Grid>
 
-    </GroupBox>
+        </GroupBox>
         <GroupBox Header="{localizeExtension:LocText Key=ManageProfileView_Tasks_GroupBox_Header}" Grid.Row="1">
             <Grid>
                 <Grid.RowDefinitions>

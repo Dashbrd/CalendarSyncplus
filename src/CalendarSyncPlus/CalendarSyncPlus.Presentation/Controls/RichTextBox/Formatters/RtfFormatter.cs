@@ -10,6 +10,8 @@ namespace CalendarSyncPlus.Presentation.Controls.RichTextBox.Formatters
     /// </summary>
     public class RtfFormatter : ITextFormatter
     {
+        #region ITextFormatter Members
+
         public string GetText(FlowDocument document)
         {
             var tr = new TextRange(document.ContentStart, document.ContentEnd);
@@ -28,5 +30,7 @@ namespace CalendarSyncPlus.Presentation.Controls.RichTextBox.Formatters
                 tr.Load(ms, DataFormats.Rtf);
             }
         }
+
+        #endregion
     }
 }

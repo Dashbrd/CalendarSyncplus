@@ -29,10 +29,10 @@ namespace CalendarSyncPlus.Domain.Helpers
                 var description = TrimDescription(calendarAppointment.Description);
                 additionDescription.Append(description);
             }
-            
+
             //Start Header
             var attendeesDescription = calendarAppointment.GetAttendeesData();
-            if (!String.IsNullOrEmpty(attendeesDescription))
+            if (!string.IsNullOrEmpty(attendeesDescription))
             {
                 additionDescription.AppendLine(attendeesDescription);
             }
@@ -45,7 +45,9 @@ namespace CalendarSyncPlus.Domain.Helpers
             {
                 if (!string.IsNullOrEmpty(description) && description.Contains(LineBreak))
                 {
-                    return description.Remove(description.IndexOf(LineBreak, StringComparison.InvariantCultureIgnoreCase)).Trim();
+                    return
+                        description.Remove(description.IndexOf(LineBreak, StringComparison.InvariantCultureIgnoreCase))
+                            .Trim();
                 }
             }
             catch
@@ -111,7 +113,7 @@ namespace CalendarSyncPlus.Domain.Helpers
         public static bool CompareDescription(this Appointment appointment, Appointment otherAppointment,
             bool addAttendeesToDescription)
         {
-            if (String.IsNullOrEmpty(appointment.Description) && String.IsNullOrEmpty(otherAppointment.Description))
+            if (string.IsNullOrEmpty(appointment.Description) && string.IsNullOrEmpty(otherAppointment.Description))
             {
                 return true;
             }
@@ -169,7 +171,7 @@ namespace CalendarSyncPlus.Domain.Helpers
         {
             if (appointment.Description == null)
             {
-                return String.Empty;
+                return string.Empty;
             }
 
             var description = appointment.Description;
@@ -182,7 +184,7 @@ namespace CalendarSyncPlus.Domain.Helpers
                 }
                 else
                 {
-                    description = String.Empty;
+                    description = string.Empty;
                 }
             }
             return description.Trim();
@@ -269,14 +271,14 @@ namespace CalendarSyncPlus.Domain.Helpers
             //     accepted the invitation. - "accepted" - The attendee has accepted the invitation.
             switch (responseStatus)
             {
-                    case MeetingResponseStatusEnum.Accepted:
-                    case MeetingResponseStatusEnum.Organizer:
+                case MeetingResponseStatusEnum.Accepted:
+                case MeetingResponseStatusEnum.Organizer:
                     return "accepted";
-                    case MeetingResponseStatusEnum.None:
+                case MeetingResponseStatusEnum.None:
                     return "";
-                    case MeetingResponseStatusEnum.Tentative:
+                case MeetingResponseStatusEnum.Tentative:
                     return "tentative";
-                    case MeetingResponseStatusEnum.Declined:
+                case MeetingResponseStatusEnum.Declined:
                     return "declined";
             }
             return "needsAction";
@@ -312,14 +314,14 @@ namespace CalendarSyncPlus.Domain.Helpers
             //             reasons.
             switch (sensitivity)
             {
-                    case SensitivityEnum.Confidential:
-                        return "confidential";
-                    case SensitivityEnum.Public:
-                        return "public";
-                    case SensitivityEnum.Private:
-                        return "private";
-                    case SensitivityEnum.None:
-                        return null;
+                case SensitivityEnum.Confidential:
+                    return "confidential";
+                case SensitivityEnum.Public:
+                    return "public";
+                case SensitivityEnum.Private:
+                    return "private";
+                case SensitivityEnum.None:
+                    return null;
             }
             return "default";
         }
@@ -339,6 +341,5 @@ namespace CalendarSyncPlus.Domain.Helpers
             }
             return SensitivityEnum.Normal;
         }
-        
     }
 }

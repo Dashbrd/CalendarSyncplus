@@ -12,8 +12,7 @@
              Description="A utility to synchronize Outlook to Google calendars, vice versa and bidirectional." />
     <!--Upgrade Message-->
     <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed."
-                  AllowSameVersionUpgrades="yes" MigrateFeatures="yes" Schedule="afterInstallFinalize"
-                  />
+                  AllowSameVersionUpgrades="yes" MigrateFeatures="yes" Schedule="afterInstallFinalize" />
     <!--Do not create cab file separately-->
     <MediaTemplate EmbedCab="yes" />
 
