@@ -45,6 +45,7 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
                 DaysInPast = 120,
                 StartDate = DateTime.Today.AddDays(-(120)),
                 EndDate = DateTime.Today.AddDays(120),
+                DisableDelete = true
             };
         }
     }

@@ -8,6 +8,6 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
     public interface IOutlookCalendarService : ICalendarService
     {
         List<OutlookMailBox> GetAllMailBoxes(string profileName);
-        Task<List<string>> GetOutLookProfieListAsync();
+        Task<List<string>> GetOutLookProfileListAsync();
     }
 }

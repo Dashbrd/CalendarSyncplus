@@ -1350,7 +1350,7 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
             return mailBoxes;
         }
 
-        public async Task<List<string>> GetOutLookProfieListAsync()
+        public async Task<List<string>> GetOutLookProfileListAsync()
         {
             return await Task<List<string>>.Factory.StartNew(GetOutlookProfileList);
         }

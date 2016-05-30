@@ -337,7 +337,7 @@ namespace CalendarSyncPlus.Application.ViewModels
 
         private async Task GetOutlookProfileListInternal()
         {
-            OutlookProfileList = await OutlookCalendarService.GetOutLookProfieListAsync();
+            OutlookProfileList = await OutlookCalendarService.GetOutLookProfileListAsync();
             if (OutlookProfileList == null)
             {
                 MessageService.ShowMessageAsync("Failed to fetch outlook profiles. Please try again.");

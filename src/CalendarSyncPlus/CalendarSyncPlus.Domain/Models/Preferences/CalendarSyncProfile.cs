@@ -79,6 +79,7 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
                     CalendarEntryOptionsEnum.AttendeesToDescription |
                     CalendarEntryOptionsEnum.Reminders | CalendarEntryOptionsEnum.AsAppointments,
                     SyncDirection = SyncDirectionEnum.OutlookGoogleOneWay,
+                    
                 SyncFrequency = new IntervalSyncFrequency {Hours = 1, Minutes = 0, StartTime = DateTime.Now}
             };
             syncProfile.SetSourceDestTypes();
