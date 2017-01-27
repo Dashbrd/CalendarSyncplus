@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace CalendarSyncPlus.GoogleServices.Utilities
+namespace CalendarSyncPlus.Common.Utilities
 {
-    public static class ExtensionMethods
+    public static class DateTimeExtensions
     {
         public static DateTime LastOfMonth(this DateTime date)
         {
