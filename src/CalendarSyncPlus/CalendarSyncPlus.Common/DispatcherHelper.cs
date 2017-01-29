@@ -46,13 +46,11 @@ namespace CalendarSyncPlus.Common
 
         private static void CheckDispatcher()
         {
-            if (UIDispatcher == null)
-            {
-                var error = new StringBuilder("The DispatcherHelper is not initialized.");
-                error.AppendLine();
-                error.Append("Call DispatcherHelper.Initialize() in the static App constructor.");
-                throw new InvalidOperationException(error.ToString());
-            }
+            if (UIDispatcher != null) return;
+            var error = new StringBuilder("The DispatcherHelper is not initialized.");
+            error.AppendLine();
+            error.Append("Call DispatcherHelper.Initialize() in the static App constructor.");
+            throw new InvalidOperationException(error.ToString());
         }
 
         #endregion
@@ -115,12 +113,7 @@ namespace CalendarSyncPlus.Common
                 return default(T);
             }
             CheckDispatcher();
-            if (UIDispatcher.CheckAccess())
-            {
-                return action();
-            }
-
-            return UIDispatcher.Invoke(action);
+            return UIDispatcher.CheckAccess() ? action() : UIDispatcher.Invoke(action);
         }
 
         /// <summary>
