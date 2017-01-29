@@ -27,11 +27,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             var viewModelInstance =
                 ChildViewModelList
                     .FirstOrDefault(list => list.Metadata.ChildViewContentType == childViewContentType);
-            if (viewModelInstance != null)
-            {
-                return viewModelInstance.Value;
-            }
-            return null;
+            return viewModelInstance?.Value;
         }
     }
 }
