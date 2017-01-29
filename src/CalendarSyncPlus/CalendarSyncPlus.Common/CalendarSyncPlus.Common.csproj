@@ -62,9 +62,10 @@
     <Compile Include="..\Shared\AssemblyInfo.cs">
       <Link>AssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="AsyncDelegateCommand.cs" />
     <Compile Include="Attributes\UrlAttribute.cs" />
     <Compile Include="DispatcherHelper.cs" />
-    <Compile Include="ExtensionMethods.cs" />
+    <Compile Include="Utilities\EnumExtensions.cs" />
     <Compile Include="ILocalizationService.cs" />
     <Compile Include="Log\ApplicationLogger.cs" />
     <Compile Include="Log\Parser\LogItem.cs" />
@@ -78,7 +79,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Utilities\ExtensionMethods.cs" />
+    <Compile Include="Utilities\StringExtensions.cs" />
+    <Compile Include="Utilities\DateTimeExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
