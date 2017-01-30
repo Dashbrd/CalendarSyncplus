@@ -104,12 +104,15 @@ namespace CalendarSyncPlus.Services.Sync
 
         public async Task<bool> Start(ElapsedEventHandler timerCallback)
         {
-            if (_syncTimer == null)
+            await Task.Run(() =>
             {
-                _syncTimer = new Timer(1000) { AutoReset = true };
-                _syncTimer.Elapsed += timerCallback;
-            }
-            _syncTimer.Start();
+                if (_syncTimer == null)
+                {
+                    _syncTimer = new Timer(1000) {AutoReset = true};
+                    _syncTimer.Elapsed += timerCallback;
+                }
+                _syncTimer.Start();
+            });
 
             return true;
         }
@@ -228,12 +231,10 @@ namespace CalendarSyncPlus.Services.Sync
 
         public void Shutdown()
         {
-            if (CalendarUpdateService != null)
-            {
-                PropertyChangedEventManager.RemoveHandler(CalendarUpdateService, UpdateServiceNotificationChanged, "");
-                PropertyChangedEventManager.RemoveHandler(TaskUpdateService, UpdateServiceNotificationChanged, "");
-                PropertyChangedEventManager.RemoveHandler(ContactUpdateService, UpdateServiceNotificationChanged, "");
-            }
+            if (CalendarUpdateService == null) return;
+            PropertyChangedEventManager.RemoveHandler(CalendarUpdateService, UpdateServiceNotificationChanged, "");
+            PropertyChangedEventManager.RemoveHandler(TaskUpdateService, UpdateServiceNotificationChanged, "");
+            PropertyChangedEventManager.RemoveHandler(ContactUpdateService, UpdateServiceNotificationChanged, "");
         }
 
         #endregion
