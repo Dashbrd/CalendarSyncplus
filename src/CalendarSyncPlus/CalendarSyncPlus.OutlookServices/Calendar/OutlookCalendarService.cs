@@ -54,10 +54,7 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
 
         private Category EventCategory { get; set; }
 
-        public string CalendarServiceName
-        {
-            get { return "Outlook"; }
-        }
+        public string CalendarServiceName => "Outlook";
 
         #endregion
 
@@ -400,12 +397,10 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
                                 nameSpace.GetItemFromID(calendarAppointment.AppointmentId) as AppointmentItem;
                         }
 
-                        if (appointmentItem != null)
-                        {
-                            appointmentItem.Delete();
-                            Marshal.FinalReleaseComObject(appointmentItem);
-                            deletedAppointments.Add(calendarAppointment);
-                        }
+                        if (appointmentItem == null) continue;
+                        appointmentItem.Delete();
+                        Marshal.FinalReleaseComObject(appointmentItem);
+                        deletedAppointments.Add(calendarAppointment);
                     }
                     catch (Exception exception)
                     {
@@ -633,19 +628,14 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
                         });
                     }
 
-                    if (calendarAppointment.OptionalAttendees != null)
+                    calendarAppointment.OptionalAttendees?.ForEach(rcptName =>
                     {
-                        calendarAppointment.OptionalAttendees.ForEach(rcptName =>
-                        {
-                            if (!CheckIfRecipientExists(recipients, rcptName))
-                            {
-                                var recipient =
-                                    appItem.Recipients.Add($"{rcptName.Name}<{rcptName.Email}>");
-                                recipient.Type = (int) OlMeetingRecipientType.olOptional;
-                                recipient.Resolve();
-                            }
-                        });
-                    }
+                        if (CheckIfRecipientExists(recipients, rcptName)) return;
+                        var recipient =
+                            appItem.Recipients.Add($"{rcptName.Name}<{rcptName.Email}>");
+                        recipient.Type = (int) OlMeetingRecipientType.olOptional;
+                        recipient.Resolve();
+                    });
                 }
                 
 
@@ -857,10 +847,7 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
             {
                 if (disposeOutlookInstances)
                 {
-                    if (nameSpace != null)
-                    {
-                        nameSpace.Logoff();
-                    }
+                    nameSpace?.Logoff();
                 }
 
                 //Unassign all instances
@@ -1113,14 +1100,12 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
                     });
                 }
 
-                if (searchFolder.Folders != null && searchFolder.Folders.Count > 0)
+                if (searchFolder.Folders == null || searchFolder.Folders.Count <= 0) return;
+                //Walk through all subFolders in MAPIFolder
+                foreach (MAPIFolder subFolder in searchFolder.Folders)
                 {
-                    //Walk through all subFolders in MAPIFolder
-                    foreach (MAPIFolder subFolder in searchFolder.Folders)
-                    {
-                        //Get Calendar MAPIFolders
-                        GetCalendars(subFolder, outlookCalendars);
-                    }
+                    //Get Calendar MAPIFolders
+                    GetCalendars(subFolder, outlookCalendars);
                 }
             }
             catch (Exception exception)
@@ -1136,49 +1121,49 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
             }
         }
 
-        private List<string> GetOutlookProfileList()
+        private async  Task<List<string>> GetOutlookProfileList()
         {
             var profileList = new List<string>();
-            const string defaultProfilePath =
-                @"Software\Microsoft\Windows NT\CurrentVersion\Windows Messaging Subsystem\Profiles";
-            const string newProfilePath = @"Software\Microsoft\Office\{0}\Outlook\Profiles";
 
-            string office2016Path = string.Format(newProfilePath, "16.0");
-            string office2013Path = string.Format(newProfilePath, "15.0");
-
-            var pathList = new List<string>() {office2013Path, office2016Path};
-
-
-            var defaultRegKey = Registry.CurrentUser.OpenSubKey(defaultProfilePath,
-                RegistryKeyPermissionCheck.Default);
-
-            if (defaultRegKey != null)
+            await ThreadingTask.Run(() =>
             {
-                var list = defaultRegKey.GetSubKeyNames();
+                const string defaultProfilePath =
+                    @"Software\Microsoft\Windows NT\CurrentVersion\Windows Messaging Subsystem\Profiles";
+                const string newProfilePath = @"Software\Microsoft\Office\{0}\Outlook\Profiles";
 
-                if (list.Any())
+                string office2016Path = string.Format(newProfilePath, "16.0");
+                string office2013Path = string.Format(newProfilePath, "15.0");
+
+                var pathList = new List<string>() {office2013Path, office2016Path};
+
+
+                var defaultRegKey = Registry.CurrentUser.OpenSubKey(defaultProfilePath,
+                    RegistryKeyPermissionCheck.Default);
+
+                if (defaultRegKey != null)
                 {
-                    profileList.AddRange(list);
-                }
-            }
-
-            foreach (string profilePath in pathList)
-            {
-                var newregKey = Registry.CurrentUser.OpenSubKey(profilePath, RegistryKeyPermissionCheck.Default);
-
-                if (newregKey != null)
-                {
-                    var list = newregKey.GetSubKeyNames();
+                    var list = defaultRegKey.GetSubKeyNames();
 
                     if (list.Any())
                     {
-                        foreach (var name in list.Where(name => !profileList.Contains(name)))
-                        {
-                            profileList.Add(name);
-                        }
+                        profileList.AddRange(list);
                     }
                 }
-            }
+
+                foreach (string profilePath in pathList)
+                {
+                    var newregKey = Registry.CurrentUser.OpenSubKey(profilePath, RegistryKeyPermissionCheck.Default);
+
+                    if (newregKey == null) continue;
+                    var list = newregKey.GetSubKeyNames();
+
+                    if (!list.Any()) continue;
+                    foreach (var name in list.Where(name => !profileList.Contains(name)))
+                    {
+                        profileList.Add(name);
+                    }
+                }
+            });
 
             return profileList;
         }
@@ -1352,7 +1337,7 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
 
         public async Task<List<string>> GetOutLookProfileListAsync()
         {
-            return await Task<List<string>>.Factory.StartNew(GetOutlookProfileList);
+            return await GetOutlookProfileList();
         }
 
 

@@ -50,7 +50,7 @@ namespace CalendarSyncPlus.Services.Sync
             applicationDataDirectory =
                 Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
                     "CalendarSyncPlus");
-            settingsFilePath = Path.Combine(applicationDataDirectory, "Settings.xml");
+            SettingsFilePath = Path.Combine(applicationDataDirectory, "Settings.xml");
         }
 
         #endregion
@@ -58,21 +58,14 @@ namespace CalendarSyncPlus.Services.Sync
         #region Fields
 
         private readonly string applicationDataDirectory;
-        private readonly string settingsFilePath;
 
         #endregion
 
         #region Properties
 
-        public string SettingsFilePath
-        {
-            get { return settingsFilePath; }
-        }
+        public string SettingsFilePath { get; }
 
-        public string ApplicationDataDirectory
-        {
-            get { return applicationDataDirectory; }
-        }
+        public string ApplicationDataDirectory => applicationDataDirectory;
 
         #endregion
 
@@ -116,7 +109,7 @@ namespace CalendarSyncPlus.Services.Sync
 
         public async Task<bool> SerializeSettingsAsync(Settings syncProfile)
         {
-            await TaskEx.Run(() => SerializeSettingsBackgroundTask(syncProfile));
+            await Task.Run(() => SerializeSettingsBackgroundTask(syncProfile));
             return true;
         }
 
@@ -126,7 +119,7 @@ namespace CalendarSyncPlus.Services.Sync
             {
                 return null;
             }
-            return await TaskEx.Run(() => DeserializeSettingsBackgroundTask());
+            return await Task.Run(() => DeserializeSettingsBackgroundTask());
         }
 
         public bool SerializeSettings(Settings syncProfile)

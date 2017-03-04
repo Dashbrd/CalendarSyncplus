@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Waf.Applications;
 using CalendarSyncPlus.Application.Views;
 using CalendarSyncPlus.Authentication.Google;
+using CalendarSyncPlus.Common;
 using CalendarSyncPlus.Common.Log;
 using CalendarSyncPlus.Common.MetaData;
 using CalendarSyncPlus.Domain.Helpers;
@@ -25,16 +26,16 @@ namespace CalendarSyncPlus.Application.ViewModels
     [Export]
     public class CalendarViewModel : ViewModel<ICalendarView>
     {
-        private DelegateCommand _autoDetectExchangeServer;
-        private DelegateCommand _getGoogleCalendarCommand;
+        private AsyncDelegateCommand _autoDetectExchangeServer;
+        private AsyncDelegateCommand _getGoogleCalendarCommand;
         private DelegateCommand _getOutlookMailboxCommand;
-        private DelegateCommand _getOutlookProfileLIstCommand;
-        private DelegateCommand _cleanGoogleCalendar;
-        private DelegateCommand _cleanOutlookCalendarCommand;
+        private AsyncDelegateCommand _getOutlookProfileLIstCommand;
+        private AsyncDelegateCommand _cleanGoogleCalendar;
+        private AsyncDelegateCommand _cleanOutlookCalendarCommand;
         private DelegateCommand _addGoogleAccountCommand;
         private DelegateCommand _disconnectAccountCommand;
         private DelegateCommand _resetOutlookCalendarCommand;
-        private DelegateCommand _resetGoogleCalendarCommand;
+        private AsyncDelegateCommand _resetGoogleCalendarCommand;
 
         private List<SyncDirectionEnum> _calendarSyncModes;
         private List<Category> _categories;
@@ -172,69 +173,26 @@ namespace CalendarSyncPlus.Application.ViewModels
             get { return _disconnectAccountCommand; }
             set { SetProperty(ref _disconnectAccountCommand, value); }
         }
-        public DelegateCommand GetOutlookProfileListCommand
-        {
-            get
-            {
-                return _getOutlookProfileLIstCommand ??
-                       (_getOutlookProfileLIstCommand = new DelegateCommand(GetOutlookProfileList));
-            }
-        }
+        public AsyncDelegateCommand GetOutlookProfileListCommand => _getOutlookProfileLIstCommand ??
+                                                               (_getOutlookProfileLIstCommand = new AsyncDelegateCommand(GetOutlookProfileList));
 
-        public DelegateCommand GetOutlookMailBoxesCommand
-        {
-            get
-            {
-                return _getOutlookMailboxCommand ??
-                       (_getOutlookMailboxCommand = new DelegateCommand(GetOutlookMailBoxes));
-            }
-        }
+        public DelegateCommand GetOutlookMailBoxesCommand => _getOutlookMailboxCommand ??
+                                                             (_getOutlookMailboxCommand = new DelegateCommand(GetOutlookMailBoxes));
 
 
-        public DelegateCommand GetGoogleCalendarCommand
-        {
-            get
-            {
-                return _getGoogleCalendarCommand ?? (_getGoogleCalendarCommand = new DelegateCommand(GetGoogleCalendar));
-            }
-        }
+        public AsyncDelegateCommand GetGoogleCalendarCommand => _getGoogleCalendarCommand ?? (_getGoogleCalendarCommand = new AsyncDelegateCommand(GetGoogleCalendar));
 
-        public DelegateCommand AutoDetectExchangeServerCommand
-        {
-            get
-            {
-                return
-                    _autoDetectExchangeServer = _autoDetectExchangeServer ?? new DelegateCommand(AutoDetectEWSSettings);
-            }
-        }
+        public AsyncDelegateCommand AutoDetectExchangeServerCommand => _autoDetectExchangeServer = _autoDetectExchangeServer ?? new AsyncDelegateCommand(AutoDetectExchangeServerSettings);
 
-        public DelegateCommand ResetOutlookCalendarCommand
-        {
-            get { return _resetOutlookCalendarCommand ?? (_resetOutlookCalendarCommand = new DelegateCommand(ResetOutlookCalendar)); }
-        }
-        
-        public DelegateCommand ResetGoogleCalendarCommand
-        {
-            get { return _resetGoogleCalendarCommand ?? (_resetGoogleCalendarCommand = new DelegateCommand(ResetGoogleCalendar)); }
-        }
-        
-        public DelegateCommand CleanOutlookCalendarCommand
-        {
-            get
-            {
-                return _cleanOutlookCalendarCommand = _cleanOutlookCalendarCommand ??
-                                                      new DelegateCommand(CleanOutlookCalendarHandler);
-            }
-        }
+        public DelegateCommand ResetOutlookCalendarCommand => _resetOutlookCalendarCommand ?? (_resetOutlookCalendarCommand = new DelegateCommand(ResetOutlookCalendar));
 
-        public DelegateCommand CleanGoogleCalendarCommand
-        {
-            get
-            {
-                return _cleanGoogleCalendar = _cleanGoogleCalendar ?? new DelegateCommand(CleanGoogleCalendarHandler);
-            }
-        }
-        
+        public AsyncDelegateCommand ResetGoogleCalendarCommand => _resetGoogleCalendarCommand ?? (_resetGoogleCalendarCommand = new AsyncDelegateCommand(ResetGoogleCalendar));
+
+        public AsyncDelegateCommand CleanOutlookCalendarCommand => _cleanOutlookCalendarCommand = _cleanOutlookCalendarCommand ??
+                                                                                                  new AsyncDelegateCommand(CleanOutlookCalendarHandler);
+
+        public AsyncDelegateCommand CleanGoogleCalendarCommand => _cleanGoogleCalendar = _cleanGoogleCalendar ?? new AsyncDelegateCommand(CleanGoogleCalendarHandler);
+
         #endregion
 
         #region Private Methods
@@ -278,11 +236,12 @@ namespace CalendarSyncPlus.Application.ViewModels
         {
             try
             {
-                var mailBoxes = await Task<List<OutlookMailBox>>.Factory.StartNew(GetOutlookMailBox);
+                var mailBoxes = await Task.Run((Func<List<OutlookMailBox>>)GetOutlookMailBox);
                 if (mailBoxes == null)
                 {
-                    MessageService.ShowMessageAsync("Failed to fetch outlook mailboxes. Please try again."+
-                        Environment.NewLine+"If the problem persists, Please restart Outlook application.");
+                    await MessageService.ShowMessage("Failed to fetch outlook mailboxes. Please try again." +
+                                                     Environment.NewLine +
+                                                     "If the problem persists, Please restart Outlook application.");
                     return;
                 }
 
@@ -313,18 +272,21 @@ namespace CalendarSyncPlus.Application.ViewModels
             return OutlookCalendarService.GetAllMailBoxes(SelectedProfile.OutlookSettings.OutlookProfileName ?? string.Empty);
         }
 
-        private async void AutoDetectEWSSettings()
+        private async Task AutoDetectExchangeServerSettings()
         {
             IsLoading = true;
-            var calendarSpecificData = new Dictionary<string, object>()
+            await Task.Run(() =>
             {
-                {"ExchangeServerSettings", SelectedProfile.ExchangeServerSettings}
-            };
-            ExchangeCalendars = ExchangeWebCalendarService.GetCalendarsAsync(10,calendarSpecificData);
+                var calendarSpecificData = new Dictionary<string, object>()
+                {
+                    {"ExchangeServerSettings", SelectedProfile.ExchangeServerSettings}
+                };
+                ExchangeCalendars = ExchangeWebCalendarService.GetCalendarsAsync(10, calendarSpecificData);
+            });
             IsLoading = false;
         }
 
-        private async void GetOutlookProfileList()
+        private async Task GetOutlookProfileList()
         {
             if (SelectedProfile.OutlookSettings.OutlookOptions.HasFlag(OutlookOptionsEnum.DefaultProfile) || IsLoading)
                 return;
@@ -340,12 +302,12 @@ namespace CalendarSyncPlus.Application.ViewModels
             OutlookProfileList = await OutlookCalendarService.GetOutLookProfileListAsync();
             if (OutlookProfileList == null)
             {
-                MessageService.ShowMessageAsync("Failed to fetch outlook profiles. Please try again.");
+                await MessageService.ShowMessage("Failed to fetch outlook profiles. Please try again.");
             }
         }
 
 
-        internal async void GetGoogleCalendar()
+        internal async Task GetGoogleCalendar()
         {
             if (IsLoading)
                 return;            
@@ -354,7 +316,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             {
                 if (SelectedProfile.GoogleSettings.GoogleAccount == null)
                 {
-                    MessageService.ShowMessageAsync("Please select a Google account to get calendars");
+                    await MessageService.ShowMessage("Please select a Google account to get calendars");
                     return;
                 }
                 Logger.Info("Loading Google calendars...");
@@ -364,12 +326,12 @@ namespace CalendarSyncPlus.Application.ViewModels
             catch (AggregateException exception)
             {
                 var flattenException = exception.Flatten();
-                MessageService.ShowMessageAsync(flattenException.Message);
+                await MessageService.ShowMessage(flattenException.Message);
                 Logger.Error(flattenException);
             }
             catch (Exception exception)
             {
-                MessageService.ShowMessageAsync(exception.Message);
+                await MessageService.ShowMessage(exception.Message);
                 Logger.Error(exception);
             }
             finally
@@ -382,8 +344,7 @@ namespace CalendarSyncPlus.Application.ViewModels
         {
             try
             {
-                if (SelectedProfile.GoogleSettings.GoogleAccount == null ||
-                    SelectedProfile.GoogleSettings.GoogleAccount.Name == null)
+                if (SelectedProfile.GoogleSettings.GoogleAccount?.Name == null)
                 {
                     return;
                 }
@@ -407,11 +368,11 @@ namespace CalendarSyncPlus.Application.ViewModels
             }
             catch (Exception exception)
             {
-                MessageService.ShowMessageAsync("Unable to get Google calendars.");
+                await MessageService.ShowMessage("Unable to get Google calendars.");
                 Logger.Error(exception);
             }
         }
-        private async void ResetGoogleCalendar()
+        private async Task ResetGoogleCalendar()
         {
             IsLoading = true;
             await ResetGoogleCalendarInternal();
@@ -422,15 +383,15 @@ namespace CalendarSyncPlus.Application.ViewModels
             if (SelectedProfile.GoogleSettings.GoogleAccount == null ||
                 SelectedProfile.GoogleSettings.GoogleCalendar == null)
             {
-                MessageService.ShowMessageAsync("Please select a Google calendar to wipe");
+                await MessageService.ShowMessage("Please select a Google calendar to wipe");
                 return;
             }
 
-            var task =
+            var messageDialogResult =
                 await
                     MessageService.ShowConfirmMessage(
                         "Are you sure you want to reset events from 10 year past and 10 year future?");
-            if (task != MessageDialogResult.Affirmative)
+            if (messageDialogResult != MessageDialogResult.Affirmative)
             {
                 return;
             }
@@ -446,7 +407,7 @@ namespace CalendarSyncPlus.Application.ViewModels
                 MessageService.ShowMessageAsync("Reset calendar failed.");
             }
         }
-        private async void CleanGoogleCalendarHandler()
+        private async Task CleanGoogleCalendarHandler()
         {
             IsLoading = true;
             await CleanGoogleCalendarInternal();
@@ -531,7 +492,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             }
         }
 
-        private async void CleanOutlookCalendarHandler()
+        private async Task CleanOutlookCalendarHandler()
         {
             IsLoading = true;
             await CleanOutlookCalendarInternal();
@@ -589,21 +550,19 @@ namespace CalendarSyncPlus.Application.ViewModels
                 return;
             }
 
-            if (SelectedProfile.SyncFrequency == null ||
-                !SelectedFrequency.Equals(SelectedProfile.SyncFrequency.Name))
+            if (SelectedProfile.SyncFrequency != null && SelectedFrequency.Equals(SelectedProfile.SyncFrequency.Name))
+                return;
+            switch (SelectedFrequency)
             {
-                switch (SelectedFrequency)
-                {
-                    case "Interval":
-                        SelectedProfile.SyncFrequency = new IntervalSyncFrequency();
-                        break;
-                    case "Daily":
-                        SelectedProfile.SyncFrequency = new DailySyncFrequency();
-                        break;
-                    case "Weekly":
-                        SelectedProfile.SyncFrequency = new WeeklySyncFrequency();
-                        break;
-                }
+                case "Interval":
+                    SelectedProfile.SyncFrequency = new IntervalSyncFrequency();
+                    break;
+                case "Daily":
+                    SelectedProfile.SyncFrequency = new DailySyncFrequency();
+                    break;
+                case "Weekly":
+                    SelectedProfile.SyncFrequency = new WeeklySyncFrequency();
+                    break;
             }
         }
         
