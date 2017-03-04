@@ -8,6 +8,8 @@ using CalendarSyncPlus.Domain.Models.Metrics;
 using CalendarSyncPlus.Services.Interfaces;
 using log4net;
 
+using static System.Threading.Tasks.Task;
+
 namespace CalendarSyncPlus.Services.Sync
 {
     [Export(typeof (ISummarySerializationService))]
@@ -30,7 +32,7 @@ namespace CalendarSyncPlus.Services.Sync
 
         public async Task<bool> SerializeSyncSummaryAsync(SyncSummary syncProfile)
         {
-            await TaskEx.Run(() => SerializeSyncSummaryBackgroundTask(syncProfile));
+            await Run(() => SerializeSyncSummaryBackgroundTask(syncProfile));
             return true;
         }
 
@@ -40,7 +42,7 @@ namespace CalendarSyncPlus.Services.Sync
             {
                 return null;
             }
-            return await TaskEx.Run(() => DeserializeSyncSummaryBackgroundTask());
+            return await Run(() => DeserializeSyncSummaryBackgroundTask());
         }
 
         public bool SerializeSyncSummary(SyncSummary syncProfile)
@@ -52,11 +54,7 @@ namespace CalendarSyncPlus.Services.Sync
         public SyncSummary DeserializeSyncSummary()
         {
             var result = DeserializeSyncSummaryBackgroundTask();
-            if (result == null)
-            {
-                return SyncSummary.GetDefault();
-            }
-            return result;
+            return result ?? SyncSummary.GetDefault();
         }
 
         private void SerializeSyncSummaryBackgroundTask(SyncSummary syncProfile)
@@ -96,15 +94,9 @@ namespace CalendarSyncPlus.Services.Sync
 
         #region Properties
 
-        public string SummaryFilePath
-        {
-            get { return _summaryFilePath; }
-        }
+        public string SummaryFilePath => _summaryFilePath;
 
-        public string ApplicationDataDirectory
-        {
-            get { return _applicationDataDirectory; }
-        }
+        public string ApplicationDataDirectory => _applicationDataDirectory;
 
         #endregion
     }

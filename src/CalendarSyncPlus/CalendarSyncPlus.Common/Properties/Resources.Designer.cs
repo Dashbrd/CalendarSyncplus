@@ -286,7 +286,7 @@ namespace CalendarSyncPlus.Common.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to More advanced features are yet to come ;).
+        ///   Looks up a localized string similar to More advanced features are yet to come 😉.
         /// </summary>
         public static string AdvancedSettingsView_TextBlock_MoreFeaturesNote_Content {
             get {
