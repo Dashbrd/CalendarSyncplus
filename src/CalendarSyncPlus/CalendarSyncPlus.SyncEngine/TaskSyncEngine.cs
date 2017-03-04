@@ -63,7 +63,6 @@ namespace CalendarSyncPlus.SyncEngine
 
         #region Private Methods
 
-
         /// <summary>
         /// </summary>
         /// <param name="syncProfile"></param>
