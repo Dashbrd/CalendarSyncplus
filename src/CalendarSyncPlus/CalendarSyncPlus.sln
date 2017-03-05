@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{11857CAB-6668-43F6-B3BA-DBFF74169EC1}"
 	ProjectSection(SolutionItems) = preProject
@@ -61,6 +61,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CalendarSyncPlus.LiveServices", "CalendarSyncPlus.LiveServices\CalendarSyncPlus.LiveServices.csproj", "{81A52300-E783-4640-B6C1-F530B06799CE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CalendarSyncPlus.Authentication.Live", "CalendarSyncPlus.Authentication.Live\CalendarSyncPlus.Authentication.Live.csproj", "{9AC15605-8CCB-42F9-A876-10E54D2E902E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CalendarSyncPlus.SyncEngineTest", "CalendarSyncPlus.SyncEngineTest\CalendarSyncPlus.SyncEngineTest.csproj", "{D798B78F-C0E1-4661-9ABB-A7E9BF5A0B09}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -254,6 +256,18 @@ Global
 		{9AC15605-8CCB-42F9-A876-10E54D2E902E}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{9AC15605-8CCB-42F9-A876-10E54D2E902E}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{9AC15605-8CCB-42F9-A876-10E54D2E902E}.Release|x86.ActiveCfg = Release|Any CPU
+		{D798B78F-C0E1-4661-9ABB-A7E9BF5A0B09}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D798B78F-C0E1-4661-9ABB-A7E9BF5A0B09}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D798B78F-C0E1-4661-9ABB-A7E9BF5A0B09}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{D798B78F-C0E1-4661-9ABB-A7E9BF5A0B09}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{D798B78F-C0E1-4661-9ABB-A7E9BF5A0B09}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{D798B78F-C0E1-4661-9ABB-A7E9BF5A0B09}.Debug|x86.Build.0 = Debug|Any CPU
+		{D798B78F-C0E1-4661-9ABB-A7E9BF5A0B09}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D798B78F-C0E1-4661-9ABB-A7E9BF5A0B09}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D798B78F-C0E1-4661-9ABB-A7E9BF5A0B09}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{D798B78F-C0E1-4661-9ABB-A7E9BF5A0B09}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{D798B78F-C0E1-4661-9ABB-A7E9BF5A0B09}.Release|x86.ActiveCfg = Release|Any CPU
+		{D798B78F-C0E1-4661-9ABB-A7E9BF5A0B09}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
