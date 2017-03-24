@@ -1386,10 +1386,12 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
             {
                 throw new ArgumentNullException("calendarSpecificData", "Calendar Specific Data cannot be null");
             }
-
-            if (!(calendarSpecificData.TryGetValue("ProfileName", out object profileValue) &&
-                  calendarSpecificData.TryGetValue("OutlookCalendar", out object outlookCalendarValue) &&
-                  calendarSpecificData.TryGetValue("AddAsAppointments", out object addAsAppointments)))
+            object profileValue;
+            object outlookCalendarValue;
+            object addAsAppointments;
+            if (!(calendarSpecificData.TryGetValue("ProfileName", out profileValue) &&
+                  calendarSpecificData.TryGetValue("OutlookCalendar", out outlookCalendarValue) &&
+                  calendarSpecificData.TryGetValue("AddAsAppointments", out addAsAppointments)))
             {
                 throw new InvalidOperationException(
                     string.Format(
@@ -1399,7 +1401,8 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
             ProfileName = profileValue as string;
             OutlookCalendar = outlookCalendarValue as OutlookFolder;
             AddAsAppointments = (bool) addAsAppointments;
-            if (calendarSpecificData.TryGetValue("EventCategory", out object eventCategory))
+            object eventCategory;
+            if (calendarSpecificData.TryGetValue("EventCategory", out eventCategory))
             {
                 EventCategory = eventCategory as Category;
             }
@@ -1407,8 +1410,8 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
             {
                 EventCategory = null;
             }
-
-            if (calendarSpecificData.TryGetValue("SetOrganizer", out object setOrganizer))
+            object setOrganizer;
+            if (calendarSpecificData.TryGetValue("SetOrganizer", out setOrganizer))
             {
                 SetOrganizer = (bool) setOrganizer;
             }
