@@ -36,26 +36,28 @@ using log4net;
 
 namespace CalendarSyncPlus.Services.Sync
 {
-    [Export(typeof(ISettingsSerializationService))]
+    [Export(typeof (ISettingsSerializationService))]
     public class SettingsSerializationService : ISettingsSerializationService
     {
+        ILog Logger { get; set; }
+
         #region Constructors
 
         [ImportingConstructor]
         public SettingsSerializationService(ApplicationLogger applicationLogger)
         {
             Logger = applicationLogger.GetLogger(GetType());
-            ApplicationDataDirectory =
+            applicationDataDirectory =
                 Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
                     "CalendarSyncPlus");
-            SettingsFilePath = Path.Combine(ApplicationDataDirectory, "Settings.xml");
+            SettingsFilePath = Path.Combine(applicationDataDirectory, "Settings.xml");
         }
 
         #endregion
 
-        private ILog Logger { get; }
-
         #region Fields
+
+        private readonly string applicationDataDirectory;
 
         #endregion
 
@@ -63,7 +65,7 @@ namespace CalendarSyncPlus.Services.Sync
 
         public string SettingsFilePath { get; }
 
-        public string ApplicationDataDirectory { get; }
+        public string ApplicationDataDirectory => applicationDataDirectory;
 
         #endregion
 
@@ -107,7 +109,7 @@ namespace CalendarSyncPlus.Services.Sync
 
         public async Task<bool> SerializeSettingsAsync(Settings syncProfile)
         {
-            await TaskEx.Run(() => SerializeSettingsBackgroundTask(syncProfile));
+            await Task.Run(() => SerializeSettingsBackgroundTask(syncProfile));
             return true;
         }
 
@@ -117,7 +119,7 @@ namespace CalendarSyncPlus.Services.Sync
             {
                 return null;
             }
-            return await TaskEx.Run(() => DeserializeSettingsBackgroundTask());
+            return await Task.Run(() => DeserializeSettingsBackgroundTask());
         }
 
         public bool SerializeSettings(Settings syncProfile)
@@ -157,7 +159,7 @@ namespace CalendarSyncPlus.Services.Sync
 
             if (result.CalendarSyncProfiles == null || result.CalendarSyncProfiles.Count == 0)
             {
-                result.CalendarSyncProfiles = new ObservableCollection<CalendarSyncProfile>
+                result.CalendarSyncProfiles = new ObservableCollection<CalendarSyncProfile>()
                 {
                     CalendarSyncProfile.GetDefaultSyncProfile()
                 };
@@ -187,7 +189,7 @@ namespace CalendarSyncPlus.Services.Sync
 
             if (result.TaskSyncProfiles == null || result.TaskSyncProfiles.Count == 0)
             {
-                result.TaskSyncProfiles = new ObservableCollection<TaskSyncProfile>
+                result.TaskSyncProfiles = new ObservableCollection<TaskSyncProfile>()
                 {
                     TaskSyncProfile.GetDefaultSyncProfile()
                 };
@@ -210,7 +212,7 @@ namespace CalendarSyncPlus.Services.Sync
             }
             if (result.ContactSyncProfiles == null || result.ContactSyncProfiles.Count == 0)
             {
-                result.ContactSyncProfiles = new ObservableCollection<ContactSyncProfile>
+                result.ContactSyncProfiles = new ObservableCollection<ContactSyncProfile>()
                 {
                     ContactSyncProfile.GetDefaultSyncProfile()
                 };

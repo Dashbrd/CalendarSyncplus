@@ -8,39 +8,41 @@ using CalendarSyncPlus.Domain.Models.Metrics;
 using CalendarSyncPlus.Services.Interfaces;
 using log4net;
 
+using static System.Threading.Tasks.Task;
+
 namespace CalendarSyncPlus.Services.Sync
 {
-    [Export(typeof(ISummarySerializationService))]
+    [Export(typeof (ISummarySerializationService))]
     public class SummarySerializationService : ISummarySerializationService
     {
+        private readonly string _applicationDataDirectory;
+        private ILog Logger { get; set; }
+        private string _summaryFilePath;
+
         [ImportingConstructor]
         public SummarySerializationService(ApplicationLogger applicationLogger)
         {
             Logger = applicationLogger.GetLogger(GetType());
-            ApplicationDataDirectory =
+            _applicationDataDirectory =
                 Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
                     "CalendarSyncPlus");
-            ApplicationDataDirectory = Path.Combine(ApplicationDataDirectory, "Stats");
-            SettingsFilePath = Path.Combine(ApplicationDataDirectory, "Summary.xml");
+            _applicationDataDirectory = Path.Combine(_applicationDataDirectory, "Stats");
+            _summaryFilePath = Path.Combine(_applicationDataDirectory, "Summary.xml");
         }
-
-        private ILog Logger { get; }
-
-        #region ISummarySerializationService Members
 
         public async Task<bool> SerializeSyncSummaryAsync(SyncSummary syncProfile)
         {
-            await TaskEx.Run(() => SerializeSyncSummaryBackgroundTask(syncProfile));
+            await Run(() => SerializeSyncSummaryBackgroundTask(syncProfile));
             return true;
         }
 
         public async Task<SyncSummary> DeserializeSyncSummaryAsync()
         {
-            if (!File.Exists(SettingsFilePath))
+            if (!File.Exists(SummaryFilePath))
             {
                 return null;
             }
-            return await TaskEx.Run(() => DeserializeSyncSummaryBackgroundTask());
+            return await Run(() => DeserializeSyncSummaryBackgroundTask());
         }
 
         public bool SerializeSyncSummary(SyncSummary syncProfile)
@@ -52,14 +54,8 @@ namespace CalendarSyncPlus.Services.Sync
         public SyncSummary DeserializeSyncSummary()
         {
             var result = DeserializeSyncSummaryBackgroundTask();
-            if (result == null)
-            {
-                return SyncSummary.GetDefault();
-            }
-            return result;
+            return result ?? SyncSummary.GetDefault();
         }
-
-        #endregion
 
         private void SerializeSyncSummaryBackgroundTask(SyncSummary syncProfile)
         {
@@ -67,14 +63,19 @@ namespace CalendarSyncPlus.Services.Sync
             {
                 Directory.CreateDirectory(ApplicationDataDirectory);
             }
+            int i = 0;
+            while (File.Exists(SummaryFilePath))
+            {
+                _summaryFilePath = Path.Combine(_applicationDataDirectory, "Summary"+ i++ + ".xml");
+            }
 
             var serializer = new XmlSerializer<SyncSummary>();
-            serializer.SerializeToFile(syncProfile, SettingsFilePath);
+            serializer.SerializeToFile(syncProfile, SummaryFilePath);
         }
-
+        
         private SyncSummary DeserializeSyncSummaryBackgroundTask()
         {
-            if (!File.Exists(SettingsFilePath))
+            if (!File.Exists(SummaryFilePath))
             {
                 Logger.Warn("Sync summary file does not exist");
                 return null;
@@ -82,7 +83,7 @@ namespace CalendarSyncPlus.Services.Sync
             try
             {
                 var serializer = new XmlSerializer<SyncSummary>();
-                return serializer.DeserializeFromFile(SettingsFilePath);
+                return serializer.DeserializeFromFile(SummaryFilePath);
             }
             catch (Exception exception)
             {
@@ -93,9 +94,9 @@ namespace CalendarSyncPlus.Services.Sync
 
         #region Properties
 
-        public string SettingsFilePath { get; }
+        public string SummaryFilePath => _summaryFilePath;
 
-        public string ApplicationDataDirectory { get; }
+        public string ApplicationDataDirectory => _applicationDataDirectory;
 
         #endregion
     }

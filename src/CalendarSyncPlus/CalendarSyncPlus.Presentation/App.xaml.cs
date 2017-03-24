@@ -36,6 +36,7 @@ using CalendarSyncPlus.Application.ViewModels;
 using CalendarSyncPlus.Authentication.Google;
 using CalendarSyncPlus.Common;
 using CalendarSyncPlus.Common.Log;
+using CalendarSyncPlus.Domain.Models.Metrics;
 using CalendarSyncPlus.ExchangeWebServices.Calendar;
 using CalendarSyncPlus.GoogleServices.Calendar;
 using CalendarSyncPlus.OutlookServices.Calendar;
@@ -191,7 +192,7 @@ namespace CalendarSyncPlus.Presentation
             container.ComposeExportedValue(settings);
 
             //Load sync summary
-            var syncSummary = container.GetExportedValue<ISyncSummaryProvider>().GetSyncSummary();
+            var syncSummary = new SyncSummary();
             container.ComposeExportedValue(syncSummary);
 
             //Get Application logger

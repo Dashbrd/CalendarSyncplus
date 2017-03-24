@@ -85,7 +85,7 @@ namespace CalendarSyncPlus.Application.ViewModels
         private DelegateCommand _exitApplicationCommand;
         private DelegateCommand _showApplicationCommand;
         private string _toolTipText;
-        private DelegateCommand _syncNowCommand;
+        private AsyncDelegateCommand _syncNowCommand;
 
         #endregion
 
@@ -99,19 +99,10 @@ namespace CalendarSyncPlus.Application.ViewModels
 
         public IGuiInteractionService GuiInteractionService { get; set; }
 
-        public DelegateCommand DoubleClickCommand
-        {
-            get { return _doubleClickCommand ?? (_doubleClickCommand = new DelegateCommand(ShowApplication)); }
-        }
+        public DelegateCommand DoubleClickCommand => _doubleClickCommand ?? (_doubleClickCommand = new DelegateCommand(ShowApplication));
 
-        public DelegateCommand ShowApplicationCommand
-        {
-            get
-            {
-                return _showApplicationCommand ??
-                       (_showApplicationCommand = new DelegateCommand(ShowApplication, CanShowApplication));
-            }
-        }
+        public DelegateCommand ShowApplicationCommand => _showApplicationCommand ??
+                                                         (_showApplicationCommand = new DelegateCommand(ShowApplication, CanShowApplication));
 
         public DelegateCommand ExitCommand
         {
@@ -119,7 +110,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             get { return _exitApplicationCommand; }
         }
 
-        public DelegateCommand SyncNowCommand
+        public AsyncDelegateCommand SyncNowCommand
         {
             get { return _syncNowCommand; }
             set { SetProperty(ref _syncNowCommand, value); }

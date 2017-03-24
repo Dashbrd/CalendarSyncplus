@@ -1,8 +1,10 @@
 ﻿using System;
 using System.ComponentModel.Composition;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using System.Waf.Applications;
 using CalendarSyncPlus.Application.Views;
+using CalendarSyncPlus.Common;
 using CalendarSyncPlus.Common.Log;
 using CalendarSyncPlus.Domain.Models.Preferences;
 using log4net;
@@ -13,7 +15,7 @@ namespace CalendarSyncPlus.Application.ViewModels
     public class AppSettingsViewModel : ViewModel<IAppSettingsView>
     {
         private AppSettings _appSettings;
-        private DelegateCommand _uriCommand;
+        private AsyncDelegateCommand _uriCommand;
 
         [ImportingConstructor]
         public AppSettingsViewModel(IAppSettingsView view, ApplicationLogger applicationLogger) : base(view)
@@ -29,16 +31,13 @@ namespace CalendarSyncPlus.Application.ViewModels
             set { SetProperty(ref _appSettings, value); }
         }
 
-        public DelegateCommand UriCommand
-        {
-            get { return _uriCommand ?? (_uriCommand = new DelegateCommand(UriHandler)); }
-        }
+        public AsyncDelegateCommand UriCommand => _uriCommand ?? (_uriCommand = new AsyncDelegateCommand(UriHandler));
 
-        private void UriHandler(object parameter)
+        private async Task UriHandler(object parameter)
         {
             try
             {
-                Process.Start(parameter.ToString());
+                await Task.Run(() => { Process.Start(parameter.ToString()); });
             }
             catch (Exception ex)
             {

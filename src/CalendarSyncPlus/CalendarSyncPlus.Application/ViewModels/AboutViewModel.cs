@@ -113,9 +113,8 @@ namespace CalendarSyncPlus.Application.ViewModels
             IsCheckInProgress = true;
             IsLatestVersionAvailable = false;
             UpdateText = string.Empty;
-            var scheduler = TaskScheduler.FromCurrentSynchronizationContext();
-            Task<string>.Factory.StartNew(() => _applicationUpdateService.GetLatestReleaseFromServer(true))
-                .ContinueWith(CheckForUpdatesComplete, scheduler);
+            Task.Run(() => _applicationUpdateService.GetLatestReleaseFromServer(includeAlpha: true))
+                .ContinueWith(CheckForUpdatesComplete);
         }
 
         private void CheckForUpdatesComplete(Task<string> task)

@@ -160,7 +160,7 @@ namespace CalendarSyncPlus.Services
         private dynamic GetLatestReleaseTag()
         {
             var request =
-                WebRequest.Create(new Uri("https://api.github.com/repos/ankeshdave/calendarsyncplus/releases/latest"))
+                WebRequest.Create(new Uri("https://api.github.com/repos/dashbrd/calendarsyncplus/releases/latest"))
                     as HttpWebRequest;
             request.Method = "GET";
             request.ProtocolVersion = HttpVersion.Version11;
@@ -186,7 +186,7 @@ namespace CalendarSyncPlus.Services
         private dynamic GetLatestTag()
         {
             var request =
-                WebRequest.Create(new Uri("https://api.github.com/repos/ankeshdave/calendarsyncplus/releases"))
+                WebRequest.Create(new Uri("https://api.github.com/repos/dashbrd/calendarsyncplus/releases"))
                     as HttpWebRequest;
             request.Method = "GET";
             request.ProtocolVersion = HttpVersion.Version11;

@@ -21,6 +21,7 @@ using Microsoft.Office.Interop.Outlook;
 using Microsoft.Win32;
 using Category = CalendarSyncPlus.Domain.Models.Category;
 using Exception = System.Exception;
+using Recipient = Microsoft.Office.Interop.Outlook.Recipient;
 using ThreadingTask = System.Threading.Tasks.Task;
 
 #endregion
@@ -32,259 +33,13 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
     public class OutlookCalendarService : IOutlookCalendarService
     {
         /// <summary>
+        /// 
         /// </summary>
         /// <param name="applicationLogger"></param>
         [ImportingConstructor]
         public OutlookCalendarService(ApplicationLogger applicationLogger)
         {
             Logger = applicationLogger.GetLogger(GetType());
-        }
-
-        #region IOutlookCalendarService Members
-
-        public async Task<AppointmentsWrapper> UpdateCalendarEvents(List<Appointment> calendarAppointments,
-            bool addDescription,
-            bool addReminder, bool addAttendees, bool attendeesToDescription,
-            IDictionary<string, object> calendarSpecificData)
-        {
-            var updateAppointments = new AppointmentsWrapper();
-            if (!calendarAppointments.Any())
-            {
-                updateAppointments.IsSuccess = true;
-                return updateAppointments;
-            }
-            CheckCalendarSpecificData(calendarSpecificData);
-
-            var result = await
-                Task<bool>.Factory.StartNew(
-                    () =>
-                        UpdateEvents(calendarAppointments, addDescription, addReminder, addAttendees,
-                            attendeesToDescription, updateAppointments));
-            updateAppointments.IsSuccess = result;
-            return updateAppointments;
-        }
-
-        public List<OutlookMailBox> GetAllMailBoxes(string profileName = "")
-        {
-            ProfileName = profileName;
-            var disposeOutlookInstances = false;
-            Application application = null;
-            NameSpace nameSpace = null;
-            Folders rootFolders = null;
-            var mailBoxes = new List<OutlookMailBox>();
-
-
-            try
-            {
-                GetOutlookApplication(out disposeOutlookInstances, out application, out nameSpace, ProfileName);
-                rootFolders = nameSpace.Folders;
-                mailBoxes = GetOutlookMailBoxes(rootFolders);
-            }
-            catch (Exception exception)
-            {
-                Logger.Error(exception);
-            }
-            finally
-            {
-                //Close  and Shutdown
-                //Unassign all instances
-                if (rootFolders != null)
-                {
-                    Marshal.FinalReleaseComObject(rootFolders);
-                }
-
-                if (disposeOutlookInstances)
-                {
-                    nameSpace.Logoff();
-                }
-
-                if (nameSpace != null)
-                {
-                    Marshal.FinalReleaseComObject(nameSpace);
-                }
-
-                if (disposeOutlookInstances)
-                {
-                    // Casting Removes a warninig for Ambigous Call
-                    application.Quit();
-                    Marshal.FinalReleaseComObject(application);
-                }
-
-                GC.Collect();
-                GC.WaitForPendingFinalizers();
-
-                while (disposeOutlookInstances && Process.GetProcessesByName("OUTLOOK").Any())
-                {
-                    ThreadingTask.Delay(5000);
-                }
-            }
-
-            return mailBoxes;
-        }
-
-        public async Task<List<string>> GetOutLookProfieListAsync()
-        {
-            return await Task<List<string>>.Factory.StartNew(GetOutlookProfileList);
-        }
-
-
-        public async Task<AppointmentsWrapper> GetCalendarEventsInRangeAsync(DateTime startDate, DateTime endDate,
-            bool skipPrivateEntries,
-            IDictionary<string, object> calendarSpecificData)
-        {
-            CheckCalendarSpecificData(calendarSpecificData);
-            var calendarAppointments = new AppointmentsWrapper();
-
-            var appointmentList =
-                await
-                    Task<List<Appointment>>.Factory.StartNew(
-                        () => GetAppointments(startDate, endDate, skipPrivateEntries));
-
-            if (appointmentList == null)
-            {
-                return null;
-            }
-
-            if (OutlookCalendar != null)
-            {
-                calendarAppointments.CalendarId = OutlookCalendar.EntryId;
-            }
-
-            calendarAppointments.AddRange(appointmentList);
-
-            return calendarAppointments;
-        }
-
-        /// <exception cref="InvalidOperationException">
-        ///     Essential parameters are not present.
-        /// </exception>
-        public void CheckCalendarSpecificData(IDictionary<string, object> calendarSpecificData)
-        {
-            if (calendarSpecificData == null)
-            {
-                throw new ArgumentNullException("calendarSpecificData", "Calendar Specific Data cannot be null");
-            }
-
-            object profileValue;
-            object outlookCalendarValue;
-            object addAsAppointments;
-            if (!(calendarSpecificData.TryGetValue("ProfileName", out profileValue) &&
-                  calendarSpecificData.TryGetValue("OutlookCalendar", out outlookCalendarValue) &&
-                  calendarSpecificData.TryGetValue("AddAsAppointments", out addAsAppointments)))
-            {
-                throw new InvalidOperationException(
-                    string.Format(
-                        "{0} {1} and {2}  keys should be present, both of them can be null in case Default Profile and Default Calendar will be used. {0} is of 'string' type, {1} is of 'OutlookCalendar' type and {2} is of bool type.",
-                        "ProfileName", "OutlookCalendar", "AddAsAppointments"));
-            }
-            ProfileName = profileValue as string;
-            OutlookCalendar = outlookCalendarValue as OutlookFolder;
-            AddAsAppointments = (bool) addAsAppointments;
-            object eventCategory;
-            if (calendarSpecificData.TryGetValue("EventCategory", out eventCategory))
-            {
-                EventCategory = eventCategory as Category;
-            }
-            else
-            {
-                EventCategory = null;
-            }
-
-            object setOrganizer;
-            if (calendarSpecificData.TryGetValue("SetOrganizer", out setOrganizer))
-            {
-                SetOrganizer = (bool) setOrganizer;
-            }
-            else
-            {
-                SetOrganizer = false;
-            }
-        }
-
-
-        public async Task<AppointmentsWrapper> AddCalendarEvents(List<Appointment> calendarAppointments,
-            bool addDescription,
-            bool addReminder, bool addAttendees, bool attendeesToDescription,
-            IDictionary<string, object> calendarSpecificData)
-        {
-            var addedAppointments = new AppointmentsWrapper();
-            if (!calendarAppointments.Any())
-            {
-                addedAppointments.IsSuccess = true;
-                return addedAppointments;
-            }
-            CheckCalendarSpecificData(calendarSpecificData);
-
-            var result = await
-                Task<bool>.Factory.StartNew(
-                    () => AddEvents(calendarAppointments, addDescription, addReminder, addAttendees,
-                        attendeesToDescription, addedAppointments));
-
-            addedAppointments.IsSuccess = result;
-            return addedAppointments;
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <param name="calendarAppointments"></param>
-        /// <param name="calendarSpecificData"></param>
-        /// <returns>
-        /// </returns>
-        public async Task<AppointmentsWrapper> DeleteCalendarEvents(List<Appointment> calendarAppointments,
-            IDictionary<string, object> calendarSpecificData)
-        {
-            var deleteAppointments = new AppointmentsWrapper();
-            if (!calendarAppointments.Any())
-            {
-                deleteAppointments.IsSuccess = true;
-                return deleteAppointments;
-            }
-            CheckCalendarSpecificData(calendarSpecificData);
-            var result = await
-                Task<bool>.Factory.StartNew(() =>
-                    DeleteEvents(calendarAppointments, deleteAppointments));
-
-            deleteAppointments.IsSuccess = result;
-            return deleteAppointments;
-        }
-
-        public async Task<bool> ClearCalendar(IDictionary<string, object> calendarSpecificData)
-        {
-            var startDate = DateTime.Today.AddDays(-(10*365));
-            var endDate = DateTime.Today.AddDays(10*365);
-            var appointments =
-                await GetCalendarEventsInRangeAsync(startDate, endDate, true, calendarSpecificData);
-            if (appointments != null)
-            {
-                var success = await DeleteCalendarEvents(appointments, calendarSpecificData);
-                return success.IsSuccess;
-            }
-            return false;
-        }
-
-        public async Task<bool> ResetCalendarEntries(IDictionary<string, object> calendarSpecificData)
-        {
-            var startDate = DateTime.Today.AddDays(-(10*365));
-            var endDate = DateTime.Today.AddDays(10*365);
-            var appointments =
-                await GetCalendarEventsInRangeAsync(startDate, endDate, true, calendarSpecificData);
-            if (appointments != null)
-            {
-                appointments.ForEach(t => t.ExtendedProperties = new Dictionary<string, string>());
-                var success = await UpdateCalendarEvents(appointments, false, false, false, false, calendarSpecificData);
-                return success.IsSuccess;
-            }
-            return false;
-        }
-
-        #endregion
-
-        public async void SetCalendarColor(Category background, IDictionary<string, object> calendarSpecificData)
-        {
-            CheckCalendarSpecificData(calendarSpecificData);
-
-            await ThreadingTask.Factory.StartNew(
-                () => SetColor(background));
         }
 
         #region Properties
@@ -301,21 +56,19 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
 
         private Category EventCategory { get; set; }
 
-        public string CalendarServiceName
-        {
-            get { return "Outlook"; }
-        }
+        public string CalendarServiceName => "Outlook";
 
         #endregion
 
         #region Private Methods
 
-        private bool AddEvents(List<Appointment> calendarAppointments, bool addDescription,
+        private async Task<bool> AddEvents(List<Appointment> calendarAppointments, bool addDescription,
             bool addReminder,
             bool addAttendees, bool attendeesToDescription, List<Appointment> addedAppointment)
         {
-            var wrapper = AddEventsToOutlook(calendarAppointments, addDescription, addReminder,
-                addAttendees, attendeesToDescription, addedAppointment);
+            var wrapper =
+                await ThreadingTask.Run(() => AddEventsToOutlook(calendarAppointments, addDescription, addReminder,
+                    addAttendees, attendeesToDescription, addedAppointment));
 
             if (!wrapper.WaitForApplicationQuit)
             {
@@ -324,7 +77,7 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
 
             while (Process.GetProcessesByName("OUTLOOK").Any())
             {
-                ThreadingTask.Delay(5000);
+                await ThreadingTask.Delay(5000);
             }
             return wrapper.Success;
         }
@@ -374,7 +127,7 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
                             CategoryHelper.GetOutlookColor(EventCategory.HexValue);
                     }
                 }
-                var id = defaultOutlookCalendar.EntryID;
+                string id = defaultOutlookCalendar.EntryID;
                 foreach (var calendarAppointment in calendarAppointments)
                 {
                     var appItem = outlookItems.Add(OlItemType.olAppointmentItem) as AppointmentItem;
@@ -585,7 +338,7 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
                 const string PR_SENT_REPRESENTING_ENTRY_ID = "http://schemas.microsoft.com/mapi/proptag/0x00410102";
                 const string PR_SENDER_ENTRYID = "http://schemas.microsoft.com/mapi/proptag/0x0C190102";
 
-                var pa = appItem.PropertyAccessor;
+                PropertyAccessor pa = appItem.PropertyAccessor;
                 pa.SetProperty(PR_SENDER_ENTRYID, pa.StringToBinary(organizer.EntryID));
                 pa.SetProperty(PR_SENT_REPRESENTING_NAME, organizer.Name);
                 pa.SetProperty(PR_SENT_REPRESENTING_ENTRY_ID, pa.StringToBinary(organizer.EntryID));
@@ -597,9 +350,9 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
         }
 
 
-        private bool DeleteEvents(List<Appointment> calendarAppointments, List<Appointment> deletedAppointments)
+        private async Task<bool> DeleteEvents(List<Appointment> calendarAppointments, List<Appointment> deletedAppointments)
         {
-            var wrapper = DeleteEventsFromOutlook(calendarAppointments, deletedAppointments);
+            var wrapper = await ThreadingTask.Run(() => DeleteEventsFromOutlook(calendarAppointments, deletedAppointments));
 
             if (!wrapper.WaitForApplicationQuit)
             {
@@ -608,7 +361,7 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
 
             while (Process.GetProcessesByName("OUTLOOK").Any())
             {
-                ThreadingTask.Delay(5000);
+                await ThreadingTask.Delay(5000);
             }
             return wrapper.Success;
         }
@@ -649,12 +402,10 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
                                 nameSpace.GetItemFromID(calendarAppointment.AppointmentId) as AppointmentItem;
                         }
 
-                        if (appointmentItem != null)
-                        {
-                            appointmentItem.Delete();
-                            Marshal.FinalReleaseComObject(appointmentItem);
-                            deletedAppointments.Add(calendarAppointment);
-                        }
+                        if (appointmentItem == null) continue;
+                        appointmentItem.Delete();
+                        Marshal.FinalReleaseComObject(appointmentItem);
+                        deletedAppointments.Add(calendarAppointment);
                     }
                     catch (Exception exception)
                     {
@@ -699,12 +450,13 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
             };
         }
 
-        private bool UpdateEvents(List<Appointment> calendarAppointments, bool addDescription,
+        private async Task<bool> UpdateEvents(List<Appointment> calendarAppointments, bool addDescription,
             bool addReminder,
             bool addAttendees, bool attendeesToDescription, List<Appointment> updatedAppointments)
         {
-            var wrapper = UpdateEventsToOutlook(calendarAppointments, addDescription, addReminder,
-                addAttendees, attendeesToDescription, updatedAppointments);
+            var wrapper =
+                await ThreadingTask.Run(() => UpdateEventsToOutlook(calendarAppointments, addDescription, addReminder,
+                    addAttendees, attendeesToDescription, updatedAppointments));
 
             if (!wrapper.WaitForApplicationQuit)
             {
@@ -713,7 +465,7 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
 
             while (Process.GetProcessesByName("OUTLOOK").Any())
             {
-                ThreadingTask.Delay(5000);
+                await ThreadingTask.Delay(5000);
             }
             return wrapper.Success;
         }
@@ -884,19 +636,14 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
                         });
                     }
 
-                    if (calendarAppointment.OptionalAttendees != null)
+                    calendarAppointment.OptionalAttendees?.ForEach(rcptName =>
                     {
-                        calendarAppointment.OptionalAttendees.ForEach(rcptName =>
-                        {
-                            if (!CheckIfRecipientExists(recipients, rcptName))
-                            {
-                                var recipient =
-                                    appItem.Recipients.Add($"{rcptName.Name}<{rcptName.Email}>");
-                                recipient.Type = (int) OlMeetingRecipientType.olOptional;
-                                recipient.Resolve();
-                            }
-                        });
-                    }
+                        if (CheckIfRecipientExists(recipients, rcptName)) return;
+                        var recipient =
+                            appItem.Recipients.Add($"{rcptName.Name}<{rcptName.Email}>");
+                        recipient.Type = (int) OlMeetingRecipientType.olOptional;
+                        recipient.Resolve();
+                    });
                 }
 
 
@@ -954,9 +701,9 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
             return true;
         }
 
-        private bool CheckIfRecipientExists(Recipients recipients, Attendee rcptName)
+        private bool CheckIfRecipientExists(Recipients recipients, Domain.Models.Attendee rcptName)
         {
-            var recipientFound = false;
+            bool recipientFound = false;
             foreach (Recipient attendee in recipients)
             {
                 string name, email;
@@ -1110,10 +857,7 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
             {
                 if (disposeOutlookInstances)
                 {
-                    if (nameSpace != null)
-                    {
-                        nameSpace.Logoff();
-                    }
+                    nameSpace?.Logoff();
                 }
 
                 //Unassign all instances
@@ -1266,16 +1010,18 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
             }
         }
 
-        private List<Appointment> GetAppointments(DateTime startDate, DateTime endDate, bool skipPrivateEntries)
+        private async Task<List<Appointment>> GetAppointments(DateTime startDate, DateTime endDate, bool skipPrivateEntries)
         {
-            var list = GetOutlookEntriesForSelectedTimeRange(startDate, endDate, skipPrivateEntries);
+            var list =
+                await ThreadingTask.Run(
+                    () => GetOutlookEntriesForSelectedTimeRange(startDate, endDate, skipPrivateEntries));
             if (!list.WaitForApplicationQuit)
             {
                 return list.Appointments;
             }
             while (Process.GetProcessesByName("OUTLOOK").Any())
             {
-                ThreadingTask.Delay(5000);
+                await ThreadingTask.Delay(5000);
             }
             return list.Appointments;
         }
@@ -1366,14 +1112,12 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
                     });
                 }
 
-                if (searchFolder.Folders != null && searchFolder.Folders.Count > 0)
+                if (searchFolder.Folders == null || searchFolder.Folders.Count <= 0) return;
+                //Walk through all subFolders in MAPIFolder
+                foreach (MAPIFolder subFolder in searchFolder.Folders)
                 {
-                    //Walk through all subFolders in MAPIFolder
-                    foreach (MAPIFolder subFolder in searchFolder.Folders)
-                    {
-                        //Get Calendar MAPIFolders
-                        GetCalendars(subFolder, outlookCalendars);
-                    }
+                    //Get Calendar MAPIFolders
+                    GetCalendars(subFolder, outlookCalendars);
                 }
             }
             catch (Exception exception)
@@ -1389,49 +1133,49 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
             }
         }
 
-        private List<string> GetOutlookProfileList()
+        private async Task<List<string>> GetOutlookProfileList()
         {
             var profileList = new List<string>();
-            const string defaultProfilePath =
-                @"Software\Microsoft\Windows NT\CurrentVersion\Windows Messaging Subsystem\Profiles";
-            const string newProfilePath = @"Software\Microsoft\Office\{0}\Outlook\Profiles";
 
-            var office2016Path = string.Format(newProfilePath, "16.0");
-            var office2013Path = string.Format(newProfilePath, "15.0");
-
-            var pathList = new List<string> {office2013Path, office2016Path};
-
-
-            var defaultRegKey = Registry.CurrentUser.OpenSubKey(defaultProfilePath,
-                RegistryKeyPermissionCheck.Default);
-
-            if (defaultRegKey != null)
+            await ThreadingTask.Run(() =>
             {
-                var list = defaultRegKey.GetSubKeyNames();
+                const string defaultProfilePath =
+                    @"Software\Microsoft\Windows NT\CurrentVersion\Windows Messaging Subsystem\Profiles";
+                const string newProfilePath = @"Software\Microsoft\Office\{0}\Outlook\Profiles";
 
-                if (list.Any())
+                string office2016Path = string.Format(newProfilePath, "16.0");
+                string office2013Path = string.Format(newProfilePath, "15.0");
+
+                var pathList = new List<string>() {office2013Path, office2016Path};
+
+
+                var defaultRegKey = Registry.CurrentUser.OpenSubKey(defaultProfilePath,
+                    RegistryKeyPermissionCheck.Default);
+
+                if (defaultRegKey != null)
                 {
-                    profileList.AddRange(list);
-                }
-            }
-
-            foreach (var profilePath in pathList)
-            {
-                var newregKey = Registry.CurrentUser.OpenSubKey(profilePath, RegistryKeyPermissionCheck.Default);
-
-                if (newregKey != null)
-                {
-                    var list = newregKey.GetSubKeyNames();
+                    var list = defaultRegKey.GetSubKeyNames();
 
                     if (list.Any())
                     {
-                        foreach (var name in list.Where(name => !profileList.Contains(name)))
-                        {
-                            profileList.Add(name);
-                        }
+                        profileList.AddRange(list);
                     }
                 }
-            }
+
+                foreach (string profilePath in pathList)
+                {
+                    var newregKey = Registry.CurrentUser.OpenSubKey(profilePath, RegistryKeyPermissionCheck.Default);
+
+                    if (newregKey == null) continue;
+                    var list = newregKey.GetSubKeyNames();
+
+                    if (!list.Any()) continue;
+                    foreach (var name in list.Where(name => !profileList.Contains(name)))
+                    {
+                        profileList.Add(name);
+                    }
+                }
+            });
 
             return profileList;
         }
@@ -1508,6 +1252,243 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
                 Appointments = null,
                 WaitForApplicationQuit = disposeOutlookInstances
             };
+        }
+
+        #endregion
+
+        #region IOutlookCalendarService Members
+
+        public async Task<AppointmentsWrapper> UpdateCalendarEvents(List<Appointment> calendarAppointments,
+            bool addDescription,
+            bool addReminder, bool addAttendees, bool attendeesToDescription,
+            IDictionary<string, object> calendarSpecificData)
+        {
+            var updateAppointments = new AppointmentsWrapper();
+            if (!calendarAppointments.Any())
+            {
+                updateAppointments.IsSuccess = true;
+                return updateAppointments;
+            }
+            CheckCalendarSpecificData(calendarSpecificData);
+
+            var result = await UpdateEvents(calendarAppointments, addDescription, addReminder, addAttendees,
+                            attendeesToDescription, updateAppointments);
+            updateAppointments.IsSuccess = result;
+            return updateAppointments;
+        }
+
+        public async void SetCalendarColor(Category background, IDictionary<string, object> calendarSpecificData)
+        {
+            CheckCalendarSpecificData(calendarSpecificData);
+
+            await ThreadingTask.Factory.StartNew(
+                () => SetColor(background));
+        }
+
+        public List<OutlookMailBox> GetAllMailBoxes(string profileName = "")
+        {
+            ProfileName = profileName;
+            var disposeOutlookInstances = false;
+            Application application = null;
+            NameSpace nameSpace = null;
+            Folders rootFolders = null;
+            var mailBoxes = new List<OutlookMailBox>();
+
+
+            try
+            {
+                GetOutlookApplication(out disposeOutlookInstances, out application, out nameSpace, ProfileName);
+                rootFolders = nameSpace.Folders;
+                if (rootFolders != null)
+                {
+                    mailBoxes = GetOutlookMailBoxes(rootFolders);
+                }
+            }
+            catch (Exception exception)
+            {
+                Logger.Error(exception);
+            }
+            finally
+            {
+                //Close  and Shutdown
+                //Unassign all instances
+                if (rootFolders != null)
+                {
+                    Marshal.FinalReleaseComObject(rootFolders);
+                }
+
+                if (disposeOutlookInstances)
+                {
+                    nameSpace.Logoff();
+                }
+
+                if (nameSpace != null)
+                {
+                    Marshal.FinalReleaseComObject(nameSpace);
+                }
+
+                if (disposeOutlookInstances)
+                {
+                    // Casting Removes a warninig for Ambigous Call
+                    application.Quit();
+                    Marshal.FinalReleaseComObject(application);
+                }
+
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+
+                while (disposeOutlookInstances && Process.GetProcessesByName("OUTLOOK").Any())
+                {
+                    ThreadingTask.Delay(5000);
+                }
+            }
+
+            return mailBoxes;
+        }
+
+        public async Task<List<string>> GetOutLookProfileListAsync()
+        {
+            return await GetOutlookProfileList();
+        }
+
+        
+        public async Task<AppointmentsWrapper> GetCalendarEventsInRangeAsync(DateTime startDate, DateTime endDate,
+            bool skipPrivateEntries,
+            IDictionary<string, object> calendarSpecificData)
+        {
+            CheckCalendarSpecificData(calendarSpecificData);
+            var calendarAppointments = new AppointmentsWrapper();
+
+            var appointmentList =
+                await GetAppointments(startDate, endDate, skipPrivateEntries);
+
+            if (appointmentList == null)
+            {
+                return null;
+            }
+
+            if (OutlookCalendar != null)
+            {
+                calendarAppointments.CalendarId = OutlookCalendar.EntryId;
+            }
+
+            calendarAppointments.AddRange(appointmentList);
+
+            return calendarAppointments;
+        }
+
+        /// <exception cref="InvalidOperationException">
+        ///     Essential parameters are not present.
+        /// </exception>
+        public void CheckCalendarSpecificData(IDictionary<string, object> calendarSpecificData)
+        {
+            if (calendarSpecificData == null)
+            {
+                throw new ArgumentNullException("calendarSpecificData", "Calendar Specific Data cannot be null");
+            }
+
+            if (!(calendarSpecificData.TryGetValue("ProfileName", out object profileValue) &&
+                  calendarSpecificData.TryGetValue("OutlookCalendar", out object outlookCalendarValue) &&
+                  calendarSpecificData.TryGetValue("AddAsAppointments", out object addAsAppointments)))
+            {
+                throw new InvalidOperationException(
+                    string.Format(
+                        "{0} {1} and {2}  keys should be present, both of them can be null in case Default Profile and Default Calendar will be used. {0} is of 'string' type, {1} is of 'OutlookCalendar' type and {2} is of bool type.",
+                        "ProfileName", "OutlookCalendar", "AddAsAppointments"));
+            }
+            ProfileName = profileValue as string;
+            OutlookCalendar = outlookCalendarValue as OutlookFolder;
+            AddAsAppointments = (bool) addAsAppointments;
+            if (calendarSpecificData.TryGetValue("EventCategory", out object eventCategory))
+            {
+                EventCategory = eventCategory as Category;
+            }
+            else
+            {
+                EventCategory = null;
+            }
+
+            if (calendarSpecificData.TryGetValue("SetOrganizer", out object setOrganizer))
+            {
+                SetOrganizer = (bool) setOrganizer;
+            }
+            else
+            {
+                SetOrganizer = false;
+            }
+        }
+
+
+        public async Task<AppointmentsWrapper> AddCalendarEvents(List<Appointment> calendarAppointments,
+            bool addDescription,
+            bool addReminder, bool addAttendees, bool attendeesToDescription,
+            IDictionary<string, object> calendarSpecificData)
+        {
+            var addedAppointments = new AppointmentsWrapper();
+            if (!calendarAppointments.Any())
+            {
+                addedAppointments.IsSuccess = true;
+                return addedAppointments;
+            }
+
+            await ThreadingTask.Run(() => CheckCalendarSpecificData(calendarSpecificData));
+
+            var result = await AddEvents(calendarAppointments, addDescription, addReminder, addAttendees,
+                attendeesToDescription, addedAppointments);
+
+            addedAppointments.IsSuccess = result;
+            return addedAppointments;
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="calendarAppointments"></param>
+        /// <param name="calendarSpecificData"></param>
+        /// <returns>
+        /// </returns>
+        public async Task<AppointmentsWrapper> DeleteCalendarEvents(List<Appointment> calendarAppointments,
+            IDictionary<string, object> calendarSpecificData)
+        {
+            var deleteAppointments = new AppointmentsWrapper();
+            if (!calendarAppointments.Any())
+            {
+                deleteAppointments.IsSuccess = true;
+                return deleteAppointments;
+            }
+            CheckCalendarSpecificData(calendarSpecificData);
+            var result = await DeleteEvents(calendarAppointments, deleteAppointments);
+
+            deleteAppointments.IsSuccess = result;
+            return deleteAppointments;
+        }
+
+        public async Task<bool> ClearCalendar(IDictionary<string, object> calendarSpecificData)
+        {
+            var startDate = DateTime.Today.AddDays(-(10 * 365));
+            var endDate = DateTime.Today.AddDays(10 * 365);
+            var appointments =
+                await GetCalendarEventsInRangeAsync(startDate, endDate, true, calendarSpecificData);
+            if (appointments != null)
+            {
+                var success = await DeleteCalendarEvents(appointments, calendarSpecificData);
+                return success.IsSuccess;
+            }
+            return false;
+        }
+
+        public async Task<bool> ResetCalendarEntries(IDictionary<string, object> calendarSpecificData)
+        {
+            var startDate = DateTime.Today.AddDays(-(10 * 365));
+            var endDate = DateTime.Today.AddDays(10 * 365);
+            var appointments =
+                await GetCalendarEventsInRangeAsync(startDate, endDate, true, calendarSpecificData);
+            if (appointments != null)
+            {
+                appointments.ForEach(t => t.ExtendedProperties = new Dictionary<string, string>());
+                var success = await UpdateCalendarEvents(appointments, false, false, false, false, calendarSpecificData);
+                return success.IsSuccess;
+            }
+            return false;
         }
 
         #endregion

@@ -193,7 +193,7 @@
     <value>Manual Synchronization</value>
   </data>
   <data name="AdvancedSettingsView_TextBlock_MoreFeaturesNote_Content" xml:space="preserve">
-    <value>More advanced features are yet to come ;)</value>
+    <value>More advanced features are yet to come 😉</value>
   </data>
   <data name="AdvancedSettingsView_TextBlock_ProxySettings_Domain_Content" xml:space="preserve">
     <value>Domain</value>
