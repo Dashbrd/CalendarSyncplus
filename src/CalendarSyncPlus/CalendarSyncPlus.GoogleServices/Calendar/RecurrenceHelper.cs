@@ -14,8 +14,11 @@ namespace CalendarSyncPlus.GoogleServices.Calendar
         {
             if(!googleEvent.Recurrence.Any())
                 return;
-            RecurrencePattern pattern = new RecurrencePattern();
-            pattern.FrequencyType = Enum.Parse(typeof(FrequencyType), googleEvent.Recurrence[0].Split(new [] {"FREQ="}, StringSplitOptions.RemoveEmptyEntries).Last())};
+            RecurrencePattern pattern = new RecurrencePattern
+            {
+                FrequencyType = (FrequencyType) Enum.Parse(typeof(FrequencyType),
+                    googleEvent.Recurrence[0].Split(new[] {"FREQ="}, StringSplitOptions.RemoveEmptyEntries).Last())
+            };
 
         }
     }
