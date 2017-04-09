@@ -232,6 +232,7 @@ namespace CalendarSyncPlus.Domain.Models
             set { SetProperty(ref _isRecurring, value); }
         }
 
+        public RecurrencePattern RecurrencePattern { get; set; }
         public DateTime? LastModified
         {
             get { return _lastModified; }

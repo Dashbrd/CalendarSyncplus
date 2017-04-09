@@ -86,7 +86,7 @@ namespace CalendarSyncPlus.GoogleServices.Calendar
             //Get Calendar Service
             var calendarService = GetCalendarService(AccountName);
 
-            if (calendarAppointments == null || string.IsNullOrEmpty(CalendarId))
+            if (string.IsNullOrEmpty(CalendarId))
             {
                 updatedAppointments.IsSuccess = false;
                 return updatedAppointments;
@@ -425,6 +425,11 @@ namespace CalendarSyncPlus.GoogleServices.Calendar
                     googleEvent.Start.DateTime, googleEvent.Id);
             }
 
+            if (googleEvent.Recurrence != null)
+            {
+                
+            }
+
             if (googleEvent.Reminders != null)
             {
                 if (!googleEvent.Reminders.UseDefault.GetValueOrDefault() && googleEvent.Reminders.Overrides != null)
@@ -751,7 +756,7 @@ namespace CalendarSyncPlus.GoogleServices.Calendar
             eventListRequest.TimeMin = startDate;
             eventListRequest.TimeMax = endDate;
             eventListRequest.MaxAttendees = 1000;
-            eventListRequest.SingleEvents = true;
+            eventListRequest.SingleEvents = false;
             eventListRequest.ShowHiddenInvitations = !skipPrivateEntries;
             try
             {
@@ -769,6 +774,7 @@ namespace CalendarSyncPlus.GoogleServices.Calendar
                             }
 
                             var appointment = CreateAppointment(eventItem);
+                            Console.WriteLine(eventItem.Recurrence);
                             finalEventList.Add(appointment);
                         }
 
