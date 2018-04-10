@@ -292,7 +292,6 @@
               Source="$(var.ProjectDirectory)Google.Apis.PlatformServices.dll"
               KeyPath="yes" />
       </Component>
-
       <Component>
         <File Id="Microsoft.Office.Interop.Outlook"
               Name="Microsoft.Office.Interop.Outlook.dll"
