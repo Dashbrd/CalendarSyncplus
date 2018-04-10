@@ -280,7 +280,7 @@
               Source="$(var.ProjectDirectory)Google.Apis.Auth.dll"
               KeyPath="yes" />
       </Component>
-      <Component>
+      <!--<Component>
         <File Id="Google.Apis.Auth.PlatformServices"
               Name="Google.Apis.Auth.PlatformServices.dll"
               Source="$(var.ProjectDirectory)Google.Apis.Auth.PlatformServices.dll"
@@ -291,7 +291,7 @@
               Name="Google.Apis.PlatformServices.dll"
               Source="$(var.ProjectDirectory)Google.Apis.PlatformServices.dll"
               KeyPath="yes" />
-      </Component>
+      </Component>-->
       <Component>
         <File Id="Microsoft.Office.Interop.Outlook"
               Name="Microsoft.Office.Interop.Outlook.dll"
