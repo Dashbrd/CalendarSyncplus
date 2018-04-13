@@ -172,6 +172,13 @@
       </Component>
 
       <Component>
+        <File Id="ControlzEx"
+              Name="ControlzEx.dll"
+              Source="$(var.ProjectDirectory)ControlzEx.dll"
+              KeyPath="yes" />
+      </Component>
+      
+      <Component>
         <File Id="Newtonsoft.Json"
               Name="Newtonsoft.Json.dll"
               Source="$(var.ProjectDirectory)Newtonsoft.Json.dll"
