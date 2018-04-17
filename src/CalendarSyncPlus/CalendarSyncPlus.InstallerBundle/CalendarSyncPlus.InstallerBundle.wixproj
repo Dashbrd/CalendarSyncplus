@@ -57,9 +57,11 @@
     </Content>
     <Content Include="license.rtf" />
     <Content Include="Net45Installer\dotNetFx45_Full_setup.exe" />
+    <Content Include="Net461Installer\dotNetFx461_Full_setup.exe" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Net45Installer" />
+    <Folder Include="Net461Installer" />
   </ItemGroup>
   <Import Project="$(WixTargetsPath)" />
   <!--

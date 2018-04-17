@@ -16,10 +16,10 @@
     <!--Do not create cab file separately-->
     <MediaTemplate EmbedCab="yes" />
 
-    <!--Check for .Net framework 4.5-->
-    <PropertyRef Id="NETFRAMEWORK45" />
+    <!--Check for .Net framework 4.6.1-->
+    <PropertyRef Id="WIX_IS_NETFRAMEWORK_461_OR_LATER_INSTALLED" />
     <Condition
-      Message="This application requires .NET Framework 4.5. Please install the .NET Framework then run this installer again. You can download it from https://www.microsoft.com/en-in/download/details.aspx?id=30653">
+      Message="This application requires .NET Framework 4.6.1. Please install the .NET Framework then run this installer again. You can download it from https://www.microsoft.com/en-in/download/details.aspx?id=30653">
       <![CDATA[Installed OR NETFRAMEWORK45]]>
     </Condition>
     <!--Packaging features-->

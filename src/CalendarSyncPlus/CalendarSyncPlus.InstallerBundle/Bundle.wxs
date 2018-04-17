@@ -8,19 +8,19 @@
           Version="$(var.VERSION)"
           Manufacturer="Ankesh Dave &amp; Akanksha Gaur"
           IconSourceFile="icon.ico"
-          AboutUrl="http://www.calendarsyncplus.codeplex.com">
+          AboutUrl="http://dashbrd.github.io/CalendarSyncplus/">
     <BootstrapperApplicationRef Id="WixStandardBootstrapperApplication.RtfLicense">
       <bal:WixStandardBootstrapperApplication
-        LicenseUrl="http://calendarsyncplus.codeplex.com/license"
+        LicenseUrl="https://github.com/Dashbrd/CalendarSyncplus/blob/master/license.md"
         LicenseFile="license.rtf"
         LogoFile="Logo.png"
         ShowVersion="yes"
         SuppressOptionsUI="yes" />
     </BootstrapperApplicationRef>
 
-    <PayloadGroup Id="NetFx45RedistPayload">
-      <Payload Name="redist\dotNetFx45_Full_setup.exe"
-               SourceFile="Net45Installer\dotNetFx45_Full_setup.exe"
+    <PayloadGroup Id="NetFx461RedistPayload">
+      <Payload Name="redist\dotNetFx461_Full_setup.exe"
+               SourceFile="Net461Installer\dotNetFx461_Full_setup.exe"
                Compressed="yes" />
     </PayloadGroup>
 
@@ -28,7 +28,7 @@
               Value="[ProgramFilesFolder]Calendar Sync +\CalendarSyncPlus.exe" />
     <Variable Name="InstallFolder" bal:Overridable="yes" Type="string" Value="[ProgramFilesFolder]Calendar Sync +" />
     <Chain>
-      <PackageGroupRef Id="NetFx45Web" />
+      <PackageGroupRef Id="NetFx461Web" />
       <MsiPackage Id="CalendarSyncPlusMsi"
                   Compressed="yes"
                   EnableFeatureSelection="yes"

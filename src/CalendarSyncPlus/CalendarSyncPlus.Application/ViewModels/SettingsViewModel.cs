@@ -37,6 +37,7 @@ using CalendarSyncPlus.GoogleServices.Calendar;
 using CalendarSyncPlus.OutlookServices.Calendar;
 using CalendarSyncPlus.Services.Interfaces;
 using CalendarSyncPlus.Services.Sync.Interfaces;
+using Force.DeepCloner;
 using log4net;
 using MahApps.Metro.Controls.Dialogs;
 

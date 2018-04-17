@@ -183,3 +183,4 @@ UpgradeLog*.htm
 
 # Microsoft Fakes
 FakesAssemblies/
+/src/CalendarSyncPlus/.vs/CalendarSyncPlus

@@ -30,7 +30,6 @@ using System.Threading.Tasks;
 using System.Timers;
 using System.Waf.Applications;
 using CalendarSyncPlus.Application.Views;
-using CalendarSyncPlus.Common;
 using CalendarSyncPlus.Common.Log;
 using CalendarSyncPlus.Domain.Models.Metrics;
 using CalendarSyncPlus.Domain.Models.Preferences;
@@ -275,7 +274,7 @@ namespace CalendarSyncPlus.Application.ViewModels
         {
             await Task.Run(() =>
             {
-                DispatcherHelper.CheckBeginInvokeOnUI(() =>
+                Common.DispatcherHelper.CheckBeginInvokeOnUI(() =>
                 {
                     var contentView = ChildContentViewFactory.GetChildContentViewModel(ChildViewContentType.WhatsNew);
                     ViewCore.ShowChildWindow(contentView.View);
@@ -475,7 +474,7 @@ namespace CalendarSyncPlus.Application.ViewModels
 
         private void BeginInvokeOnCurrentDispatcher(Action action)
         {
-            DispatcherHelper.CheckBeginInvokeOnUI(action);
+            Common.DispatcherHelper.CheckBeginInvokeOnUI(action);
         }
 
         private static readonly object LockerObject = new object();
