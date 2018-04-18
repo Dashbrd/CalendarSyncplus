@@ -111,6 +111,12 @@
               KeyPath="yes" />
       </Component>
       <Component>
+        <File Id="DeepCloner"
+              Name="DeepCloner.dll"
+              Source="$(var.ProjectDirectory)DeepCloner.dll"
+              KeyPath="yes" />
+      </Component>
+      <Component>
         <File Id="Google.Apis.Core"
               Name="Google.Apis.Core.dll"
               Source="$(var.ProjectDirectory)Google.Apis.Core.dll"
