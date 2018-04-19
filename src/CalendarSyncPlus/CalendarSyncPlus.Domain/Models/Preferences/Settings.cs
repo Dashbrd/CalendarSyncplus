@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.ObjectModel;
 using System.Waf.Applications;
 using System.Waf.Foundation;
@@ -7,27 +8,35 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
 {
     /// <summary>
     /// </summary>
-    [Serializable]
     public class Settings : Model
     {
+        [JsonProperty("version")]
+        private string _settingsVersion;        
+        [JsonProperty("appSettings")]
         private AppSettings _appSettings;
+        [JsonProperty("calendarProfiles")]
         private ObservableCollection<CalendarSyncProfile> _calendarSyncProfiles;
+        [JsonProperty("contactProfiles")]
         private ObservableCollection<ContactSyncProfile> _contactSyncProfiles;
-
+        [JsonProperty("allowManualAuthentication")]
+        private bool _allowManualAuthentication;
+        [JsonProperty("googleAccounts")]
         private ObservableCollection<GoogleAccount> _googleAccounts;
 
-        [NonSerialized] private bool _isFirstSave;
-
+        private bool _isFirstSave;
+        [JsonProperty("logSettings")]
         private LogSettings _logSettings;
+        [JsonProperty("taskProfiles")]
         private ObservableCollection<TaskSyncProfile> _taskSyncProfiles;
+        
 
         /// <summary>
         /// </summary>
-        public string SettingsVersion { get; set; }
+        public string SettingsVersion { get => _settingsVersion; set => _settingsVersion = value; }
 
         /// <summary>
         /// </summary>
-        public bool AllowManualAuthentication { get; set; }
+        public bool AllowManualAuthentication { get => _allowManualAuthentication; set => _allowManualAuthentication = value; }
 
         /// <summary>
         /// </summary>

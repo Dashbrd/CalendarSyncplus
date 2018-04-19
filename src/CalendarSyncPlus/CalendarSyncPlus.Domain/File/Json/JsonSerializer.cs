@@ -64,7 +64,7 @@ namespace CalendarSyncPlus.Domain.File.Json
             {
                 JsonSerializer serializer = new JsonSerializer();
                 serializer.NullValueHandling = NullValueHandling.Ignore;
-                serializer.Converters.Add(new JavaScriptDateTimeConverter());
+                serializer.Formatting = Formatting.Indented;
                 using (JsonWriter writer = new JsonTextWriter(file))
                 {
                     serializer.Serialize(writer, source);

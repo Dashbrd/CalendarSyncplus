@@ -79,7 +79,6 @@ namespace CalendarSyncPlus.Services.Sync
                 Directory.CreateDirectory(ApplicationDataDirectory);
             }
 
-            //var serializer = new XmlSerializer<Settings>();
             var serializer = new JsonSerializer<Settings>();
             serializer.SerializeToFile(syncProfile, SettingsFilePath);
         }
@@ -93,7 +92,6 @@ namespace CalendarSyncPlus.Services.Sync
             }
             try
             {
-                //var serializer = new XmlSerializer<Settings>();
                 var serializer = new JsonSerializer<Settings>();
                 return serializer.DeserializeFromFile(SettingsFilePath);
             }

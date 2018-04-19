@@ -1,15 +1,21 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Waf.Foundation;
 
 namespace CalendarSyncPlus.Domain.Models.Preferences
 {
-    [Serializable]
+    
     public class SyncSettings : Model
     {
+        [JsonProperty("daysInFuture")]
         private int _daysInFuture;
+        [JsonProperty("daysInPast")]
         private int _daysInPast;
+        [JsonProperty("endDate")]
         private DateTime _endDate;
+        [JsonProperty("startDate")]
         private DateTime _startDate;
+        [JsonProperty("syncRangeType")]
         private SyncRangeTypeEnum _syncRangeType;
 
 

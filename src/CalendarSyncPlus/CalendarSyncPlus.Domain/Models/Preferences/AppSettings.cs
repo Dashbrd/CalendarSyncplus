@@ -1,19 +1,29 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Waf.Foundation;
 
 namespace CalendarSyncPlus.Domain.Models.Preferences
 {
-    [Serializable]
+    
     public class AppSettings : Model
     {
+        [JsonProperty("checkForAlphaReleases")]
         private bool _checkForAlphaReleases;
+        [JsonProperty("checkForUpdates")]
         private bool _checkForUpdates;
+        [JsonProperty("hideSystemTrayToolTip")]
         private bool _hideSystemTrayTooltip;
+        [JsonProperty("manualSynchronization")]
         private bool _isManualSynchronization;
+        [JsonProperty("minimizeToTray")]
         private bool _minimizeToSystemTray;
+        [JsonProperty("periodicSync")]
         private bool _periodicSyncOn;
+        [JsonProperty("proxy")]
         private ProxySetting _proxySettings;
+        [JsonProperty("runAtStartup")]
         private bool _runApplicationAtSystemStartup;
+        [JsonProperty("startMinimized")]
         private bool _startMinimized;
 
         public static AppSettings GetDefault()

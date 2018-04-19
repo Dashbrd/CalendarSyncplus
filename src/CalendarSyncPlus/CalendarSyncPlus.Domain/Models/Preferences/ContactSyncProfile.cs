@@ -1,13 +1,15 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 
 namespace CalendarSyncPlus.Domain.Models.Preferences
 {
     /// <summary>
     ///     Contact sync profile
     /// </summary>
-    [Serializable]
+    
     public class ContactSyncProfile : SyncProfile
     {
+        [JsonProperty("syncSettings")]
         private ContactSyncSettings _syncSettings;
 
         /// <summary>

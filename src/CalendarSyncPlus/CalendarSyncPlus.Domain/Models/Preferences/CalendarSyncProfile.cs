@@ -1,17 +1,17 @@
 ﻿using System;
-using System.Waf.Foundation;
-using System.Xml.Serialization;
-using CalendarSyncPlus.Common.MetaData;
+using Newtonsoft.Json;
 
 namespace CalendarSyncPlus.Domain.Models.Preferences
-{
-    [Serializable]
-    [XmlInclude(typeof (SyncFrequency))]
+{   
     public class CalendarSyncProfile : SyncProfile
     {
+        [JsonProperty("syncSettings")]
         private CalendarSyncSettings _syncSettings;
+        [JsonProperty("calendarEntry")]
         private CalendarEntryOptionsEnum _calendarEntryOptions;
+        [JsonProperty("setCalendarCategory")]
         private bool _setCalendarCategory;
+        [JsonProperty("category")]
         private Category _eventCategory;
 
         public CalendarSyncProfile()

@@ -5,7 +5,6 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
     /// <summary>
     ///     Task Sync Profile
     /// </summary>
-    [Serializable]
     public class TaskSyncProfile : SyncProfile
     {
         private TaskSyncSettings _syncSettings;

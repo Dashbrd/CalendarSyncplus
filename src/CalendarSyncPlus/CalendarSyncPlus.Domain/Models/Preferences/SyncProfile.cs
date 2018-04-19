@@ -1,28 +1,40 @@
 ﻿using System;
 using System.Waf.Foundation;
 using CalendarSyncPlus.Common.MetaData;
+using Newtonsoft.Json;
 
 namespace CalendarSyncPlus.Domain.Models.Preferences
-{
-    [Serializable]
+{   
     public class SyncProfile : Model
     {
+        [JsonProperty("destination")]
         private ServiceType _destination;
+        [JsonProperty("exchangeSettings")]
         private ExchangeServerSettings _exchangeServerSettings;
+        [JsonProperty("googleSettings")]
         private GoogleSettings _googleSettings;
+        [JsonProperty("isDefault")]
         private bool _isDefault;
 
-        [NonSerialized] private bool _isLoaded;
-
+        private bool _isLoaded;
+        [JsonProperty("isSyncEnabled")]
         private bool _isSyncEnabled;
+        [JsonProperty("lastSync")]
         private DateTime? _lastSync;
+        [JsonProperty("master")]
         private ServiceType _master;
+        [JsonProperty("name")]
         private string _name;
         private DateTime? _nextSync;
+        [JsonProperty("outlookSettings")]
         private OutlookSettings _outlookSettings;
+        [JsonProperty("source")]
         private ServiceType _source;
+        [JsonProperty("syncDirection")]
         private SyncDirectionEnum _syncDirection;
+        [JsonProperty("syncFrequency")]
         private SyncFrequency _syncFrequency;
+        [JsonProperty("syncMode")]
         private SyncModeEnum _syncMode;
 
         public SyncProfile()
