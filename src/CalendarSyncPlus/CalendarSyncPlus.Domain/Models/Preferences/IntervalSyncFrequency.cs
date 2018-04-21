@@ -1,8 +1,10 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
+using System.Runtime.Serialization;
 
 namespace CalendarSyncPlus.Domain.Models.Preferences
-{
-    [Serializable]
+{    
+    [DataContract]
     public class IntervalSyncFrequency : SyncFrequency
     {
         private int _hours;
@@ -17,13 +19,13 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
             StartTime = DateTime.Now;
             StartTime = StartTime.AddSeconds(-StartTime.Second);
         }
-
+        [DataMember]
         public DateTime StartTime
         {
             get { return _startTime; }
             set { SetProperty(ref _startTime, value); }
         }
-
+        [DataMember]
         public int Hours
         {
             get { return _hours; }
@@ -33,7 +35,7 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
                 ValidateHours();
             }
         }
-
+        [DataMember]
         public int Minutes
         {
             get { return _minutes; }
@@ -43,7 +45,6 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
                 ValidateMinutes();
             }
         }
-
         private void ValidateMinutes()
         {
             if (Minutes < 15 && Hours == 0)
@@ -51,7 +52,6 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
                 Hours = 1;
             }
         }
-
         private void ValidateHours()
         {
             if (Hours == 0 && Minutes < 15)

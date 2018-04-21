@@ -206,8 +206,9 @@ namespace CalendarSyncPlus.Application.ViewModels
                 {
                     LastSavedSettings = Settings;
                     Settings = LastSavedSettings.DeepClone();
-                }
 
+                }
+                Init = true;
                 await MessageService.ShowMessage(result ? "Settings Saved Successfully" : "Error Saving Settings",
                     "Settings");
 

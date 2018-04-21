@@ -1,9 +1,14 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
+using System.Runtime.Serialization;
 using System.Waf.Foundation;
 
 namespace CalendarSyncPlus.Domain.Models.Preferences
 {
-    [Serializable]
+    [DataContract]
+    [KnownType(typeof(CalendarSyncSettings))]
+    [KnownType(typeof(TaskSyncSettings))]
+    [KnownType(typeof(ContactSyncSettings))]
     public class SyncSettings : Model
     {
         private int _daysInFuture;
@@ -12,7 +17,7 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
         private DateTime _startDate;
         private SyncRangeTypeEnum _syncRangeType;
 
-
+        [DataMember]
         /// <summary>
         /// </summary>
         public SyncRangeTypeEnum SyncRangeType
@@ -20,7 +25,7 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
             get { return _syncRangeType; }
             set { SetProperty(ref _syncRangeType, value); }
         }
-
+        [DataMember]
         /// <summary>
         /// </summary>
         public DateTime StartDate
@@ -28,7 +33,7 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
             get { return _startDate; }
             set { SetProperty(ref _startDate, value); }
         }
-
+        [DataMember]
         /// <summary>
         /// </summary>
         public DateTime EndDate
@@ -36,7 +41,7 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
             get { return _endDate; }
             set { SetProperty(ref _endDate, value); }
         }
-
+        [DataMember]
         /// <summary>
         /// </summary>
         public int DaysInPast
@@ -44,7 +49,7 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
             get { return _daysInPast; }
             set { SetProperty(ref _daysInPast, value); }
         }
-
+        [DataMember]
         /// <summary>
         /// </summary>
         public int DaysInFuture

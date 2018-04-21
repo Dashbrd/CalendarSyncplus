@@ -1,24 +1,39 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Formatters;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Xml.Serialization;
+using CalendarSyncPlus.Domain.File.Json;
 using CalendarSyncPlus.Domain.Models;
 using CalendarSyncPlus.Domain.Models.Preferences;
+using Newtonsoft.Json;
 
 namespace CalendarSyncPlus.Domain.Helpers
 {
     public static class ExtensionMethods
     {
-        // Deep clone
-        public static T DeepClone<T>(this T a)
+        //Deep clone
+        public static T DeepClone<T>(this T source)
         {
-            using (var stream = new MemoryStream())
+            if (source == null)
             {
-                var formatter = new BinaryFormatter();
-                formatter.Serialize(stream, a);
-                stream.Position = 0;
-                return (T) formatter.Deserialize(stream);
+                return default(T);
             }
+
+            // initialize inner objects individually
+            // for example in default constructor some list property initialized with some values,
+            // but in 'source' these items are cleaned -
+            // without ObjectCreationHandling.Replace default constructor values will be added to result
+            var deserializeSettings = new JsonSerializerSettings {
+                ObjectCreationHandling = ObjectCreationHandling.Replace,
+                TypeNameHandling = TypeNameHandling.Auto,
+                TypeNameAssemblyFormatHandling = TypeNameAssemblyFormatHandling.Simple,
+                NullValueHandling = NullValueHandling.Ignore
+            };
+            deserializeSettings.Converters.Add(new FrequencyConverter());
+            return JsonConvert.DeserializeObject<T>(JsonConvert.SerializeObject(source), deserializeSettings);
         }
 
         public static string Rfc339FFormat(this DateTime dateTime)

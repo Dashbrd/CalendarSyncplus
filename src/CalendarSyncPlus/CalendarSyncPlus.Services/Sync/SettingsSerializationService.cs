@@ -27,6 +27,7 @@ using System.Threading.Tasks;
 using System.Waf.Applications;
 using CalendarSyncPlus.Common.Log;
 using CalendarSyncPlus.Domain.File.Binary;
+using CalendarSyncPlus.Domain.File.Json;
 using CalendarSyncPlus.Domain.Models;
 using CalendarSyncPlus.Domain.Models.Preferences;
 using CalendarSyncPlus.Services.Interfaces;
@@ -50,7 +51,7 @@ namespace CalendarSyncPlus.Services.Sync
             applicationDataDirectory =
                 Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
                     "CalendarSyncPlus");
-            SettingsFilePath = Path.Combine(applicationDataDirectory, "Settings.xml");
+            SettingsFilePath = Path.Combine(applicationDataDirectory, "Settings.json");
         }
 
         #endregion
@@ -78,8 +79,7 @@ namespace CalendarSyncPlus.Services.Sync
                 Directory.CreateDirectory(ApplicationDataDirectory);
             }
 
-            //var serializer = new XmlSerializer<Settings>();
-            var serializer = new BinarySerializer<Settings>();
+            var serializer = new JsonSerializer<Settings>();
             serializer.SerializeToFile(syncProfile, SettingsFilePath);
         }
 
@@ -92,8 +92,7 @@ namespace CalendarSyncPlus.Services.Sync
             }
             try
             {
-                //var serializer = new XmlSerializer<Settings>();
-                var serializer = new BinarySerializer<Settings>();
+                var serializer = new JsonSerializer<Settings>();
                 return serializer.DeserializeFromFile(SettingsFilePath);
             }
             catch (Exception exception)
@@ -131,7 +130,7 @@ namespace CalendarSyncPlus.Services.Sync
         public Settings DeserializeSettings()
         {
             var result = DeserializeSettingsBackgroundTask();
-            if (result == null)
+            if (result == null || result.SettingsVersion == null)
             {
                 return Settings.GetDefaultSettings();
             }
@@ -141,7 +140,7 @@ namespace CalendarSyncPlus.Services.Sync
                 result.IsFirstSave = true;
             }
             var settingsVersion = new Version(result.SettingsVersion);
-            if (settingsVersion < new Version("1.4.1.1"))
+            if (settingsVersion < new Version("1.5.0.0"))
             {
                 return Settings.GetDefaultSettings();
             }

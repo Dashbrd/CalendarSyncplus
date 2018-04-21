@@ -19,15 +19,17 @@
 
 #region Imports
 
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using System.Waf.Foundation;
 
 #endregion
 
 namespace CalendarSyncPlus.Domain.Models.Preferences
 {
-    [Serializable]
+    [DataContract]
     public class OutlookMailBox : Model
     {
         public OutlookMailBox()
@@ -36,7 +38,6 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
         }
 
         #region Fields
-
         private List<OutlookFolder> _folders;
         private string _entryId;
         private string _storeId;
@@ -45,25 +46,25 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
         #endregion
 
         #region Properties
-
+        [DataMember]
         public string Name
         {
             get { return name; }
             set { SetProperty(ref name, value); }
         }
-
+        [DataMember]
         public List<OutlookFolder> Folders
         {
             get { return _folders; }
             set { SetProperty(ref _folders, value); }
         }
-
+        [DataMember]
         public string EntryId
         {
             get { return _entryId; }
             set { SetProperty(ref _entryId, value); }
         }
-
+        [DataMember]
         public string StoreId
         {
             get { return _storeId; }

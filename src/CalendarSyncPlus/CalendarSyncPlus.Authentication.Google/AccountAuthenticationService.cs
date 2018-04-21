@@ -494,9 +494,9 @@ namespace CalendarSyncPlus.Authentication.Google
                 //AnalyticsService.Scope.AnalyticsEdit, // edit management actives
                 //AnalyticsService.Scope.AnalyticsManageUsers, // manage users
                 //AnalyticsService.Scope.AnalyticsReadonly
-                DriveService.Scope.DriveFile, //
-                DriveService.Scope.Drive, //
-                DriveService.Scope.DriveReadonly
+                //DriveService.Scope.DriveFile, //
+                //DriveService.Scope.Drive, //
+                //DriveService.Scope.DriveReadonly
             };
             return scopes;
         }

@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>CalendarSyncPlus.Application</RootNamespace>
     <AssemblyName>CalendarSyncPlus.Application</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SccProjectName />
     <SccLocalPath />
@@ -42,6 +42,9 @@
   <ItemGroup>
     <Reference Include="ControlzEx, Version=3.0.2.4, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\ControlzEx.3.0.2.4\lib\net45\ControlzEx.dll</HintPath>
+    </Reference>
+    <Reference Include="DeepCloner, Version=0.10.0.0, Culture=neutral, PublicKeyToken=dc0b95cf99bf4e99, processorArchitecture=MSIL">
+      <HintPath>..\packages\DeepCloner.0.10.2\lib\net40\DeepCloner.dll</HintPath>
     </Reference>
     <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
@@ -86,6 +89,12 @@
       <HintPath>..\packages\Microsoft.Net.Http.2.2.29\lib\net45\System.Net.Http.Primitives.dll</HintPath>
     </Reference>
     <Reference Include="System.Net.Http.WebRequest" />
+    <Reference Include="System.Waf.Core, Version=4.2.0.100, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Waf.Core.4.2.0\lib\portable45-net45+win8\System.Waf.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Waf.Wpf, Version=4.2.0.100, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Waf.Wpf.4.2.0\lib\net461\System.Waf.Wpf.dll</HintPath>
+    </Reference>
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\ControlzEx.3.0.2.4\lib\net45\System.Windows.Interactivity.dll</HintPath>
       <Private>True</Private>
@@ -97,10 +106,6 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="WindowsBase" />
-    <Reference Include="WpfApplicationFramework, Version=3.2.0.450, Culture=neutral, PublicKeyToken=1d6a5af5fe952afb, processorArchitecture=MSIL">
-      <HintPath>..\packages\waf.3.2.0\lib\net45\WpfApplicationFramework.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\Shared\AssemblyInfo.cs">

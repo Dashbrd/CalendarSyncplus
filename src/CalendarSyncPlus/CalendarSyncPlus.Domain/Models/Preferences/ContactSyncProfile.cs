@@ -1,11 +1,13 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
+using System.Runtime.Serialization;
 
 namespace CalendarSyncPlus.Domain.Models.Preferences
 {
+    [DataContract]
     /// <summary>
     ///     Contact sync profile
-    /// </summary>
-    [Serializable]
+    /// </summary>    
     public class ContactSyncProfile : SyncProfile
     {
         private ContactSyncSettings _syncSettings;
@@ -22,7 +24,7 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
             IsSyncEnabled = true;
             IsDefault = true;
         }
-
+        [DataMember]
         public ContactSyncSettings SyncSettings
         {
             get { return _syncSettings; }

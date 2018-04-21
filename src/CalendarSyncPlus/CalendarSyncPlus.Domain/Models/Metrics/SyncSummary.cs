@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Waf.Foundation;
 using System.Xml.Serialization;
 
 namespace CalendarSyncPlus.Domain.Models.Metrics
 {
+    [DataContract]
     public class SyncSummary : Model
     {
         private List<SyncMetric> _syncMetrics;
@@ -14,30 +16,26 @@ namespace CalendarSyncPlus.Domain.Models.Metrics
             SyncMetrics = new List<SyncMetric>();
         }
 
-        [XmlIgnore]
         public int TotalSyncs
         {
             get { return SyncMetrics == null ? 0 : SyncMetrics.Count; }
         }
 
-        [XmlIgnore]
         public int SuccessSyncs
         {
             get { return SyncMetrics == null ? 0 : SyncMetrics.Count(t => t.IsSuccess); }
         }
 
-        [XmlIgnore]
         public int FailedSyncs
         {
             get { return SyncMetrics == null ? 0 : SyncMetrics.Count(t => !t.IsSuccess); }
         }
 
-        [XmlIgnore]
         public long TotalSyncSeconds
         {
             get { return SyncMetrics == null ? 0 : SyncMetrics.Sum(t => t.ElapsedSeconds); }
         }
-
+        [DataMember]
         public List<SyncMetric> SyncMetrics
         {
             get { return _syncMetrics; }

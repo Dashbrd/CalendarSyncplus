@@ -1,34 +1,35 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.ObjectModel;
+using System.Runtime.Serialization;
 using System.Waf.Applications;
 using System.Waf.Foundation;
 
 namespace CalendarSyncPlus.Domain.Models.Preferences
 {
+    [DataContract]
     /// <summary>
     /// </summary>
-    [Serializable]
     public class Settings : Model
     {
+        private string _settingsVersion;        
         private AppSettings _appSettings;
         private ObservableCollection<CalendarSyncProfile> _calendarSyncProfiles;
         private ObservableCollection<ContactSyncProfile> _contactSyncProfiles;
-
+        private bool _allowManualAuthentication;
         private ObservableCollection<GoogleAccount> _googleAccounts;
-
-        [NonSerialized] private bool _isFirstSave;
-
+        private bool _isFirstSave;
         private LogSettings _logSettings;
         private ObservableCollection<TaskSyncProfile> _taskSyncProfiles;
 
+        [DataMember]
         /// <summary>
         /// </summary>
-        public string SettingsVersion { get; set; }
-
+        public string SettingsVersion { get => _settingsVersion; set => _settingsVersion = value; }
+        [DataMember]
         /// <summary>
         /// </summary>
-        public bool AllowManualAuthentication { get; set; }
-
+        public bool AllowManualAuthentication { get => _allowManualAuthentication; set => _allowManualAuthentication = value; }
         /// <summary>
         /// </summary>
         public bool IsFirstSave
@@ -36,7 +37,7 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
             get { return _isFirstSave; }
             set { SetProperty(ref _isFirstSave, value); }
         }
-
+        [DataMember]
         /// <summary>
         /// </summary>
         public ObservableCollection<GoogleAccount> GoogleAccounts
@@ -44,7 +45,7 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
             get { return _googleAccounts; }
             set { SetProperty(ref _googleAccounts, value); }
         }
-
+        [DataMember]
         /// <summary>
         /// </summary>
         public ObservableCollection<CalendarSyncProfile> CalendarSyncProfiles
@@ -52,7 +53,7 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
             get { return _calendarSyncProfiles; }
             set { SetProperty(ref _calendarSyncProfiles, value); }
         }
-
+        [DataMember]
         /// <summary>
         /// </summary>
         public ObservableCollection<ContactSyncProfile> ContactSyncProfiles
@@ -60,7 +61,7 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
             get { return _contactSyncProfiles; }
             set { SetProperty(ref _contactSyncProfiles, value); }
         }
-
+        [DataMember]
         /// <summary>
         /// </summary>
         public ObservableCollection<TaskSyncProfile> TaskSyncProfiles
@@ -68,7 +69,7 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
             get { return _taskSyncProfiles; }
             set { SetProperty(ref _taskSyncProfiles, value); }
         }
-
+        [DataMember]
         /// <summary>
         /// </summary>
         public AppSettings AppSettings
@@ -76,7 +77,7 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
             get { return _appSettings; }
             set { SetProperty(ref _appSettings, value); }
         }
-
+        [DataMember]
         /// <summary>
         /// </summary>
         public LogSettings LogSettings

@@ -22,7 +22,6 @@
 using System.ComponentModel.Composition;
 using System.Waf.Applications;
 using CalendarSyncPlus.Application.Views;
-using CalendarSyncPlus.Common;
 using CalendarSyncPlus.Services.Interfaces;
 
 #endregion
@@ -51,7 +50,7 @@ namespace CalendarSyncPlus.Application.ViewModels
         public void ShowBalloon(string tooltipText)
         {
             ToolTipText = tooltipText;
-            DispatcherHelper.CheckBeginInvokeOnUI(() => ViewCore.ShowCustomBalloon());
+            Common.DispatcherHelper.CheckBeginInvokeOnUI(() => ViewCore.ShowCustomBalloon());
         }
 
         public void UpdateBalloonText(string tooltipText)
@@ -66,12 +65,12 @@ namespace CalendarSyncPlus.Application.ViewModels
         public void ShowBalloon(string tooltipText, int timeoutInMilliseconds)
         {
             ToolTipText = tooltipText;
-            DispatcherHelper.CheckBeginInvokeOnUI(() => ViewCore.ShowCustomBalloon(timeoutInMilliseconds));
+            Common.DispatcherHelper.CheckBeginInvokeOnUI(() => ViewCore.ShowCustomBalloon(timeoutInMilliseconds));
         }
 
         public void HideBalloon()
         {
-            DispatcherHelper.CheckBeginInvokeOnUI(() => ViewCore.CloseBalloon());
+            Common.DispatcherHelper.CheckBeginInvokeOnUI(() => ViewCore.CloseBalloon());
         }
 
         public void Quit()

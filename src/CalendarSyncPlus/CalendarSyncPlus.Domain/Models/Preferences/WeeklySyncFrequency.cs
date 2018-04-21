@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using CalendarSyncPlus.Domain.Helpers;
+using Newtonsoft.Json;
 
 namespace CalendarSyncPlus.Domain.Models.Preferences
-{
-    [Serializable]
+{    
+    [DataContract]
     public class WeeklySyncFrequency : SyncFrequency
     {
         private List<DayOfWeek> _daysOfWeek;
@@ -18,21 +20,21 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
             WeekRecurrence = 1;
             TimeOfDay = DateTime.Now;
         }
-
+        [DataMember]
         public DateTime StartDate { get; set; }
-
+        [DataMember]
         public int WeekRecurrence
         {
             get { return _weekRecurrence; }
             set { SetProperty(ref _weekRecurrence, value); }
         }
-
+        [DataMember]
         public DateTime TimeOfDay
         {
             get { return _timeOfDay; }
             set { SetProperty(ref _timeOfDay, value); }
         }
-
+        [DataMember]
         public List<DayOfWeek> DaysOfWeek
         {
             get { return _daysOfWeek; }

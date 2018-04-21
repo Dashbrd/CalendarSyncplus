@@ -9,10 +9,11 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>CalendarSyncPlus.OutlookServices</RootNamespace>
     <AssemblyName>CalendarSyncPlus.OutlookServices</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -48,6 +49,12 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Waf.Core, Version=4.2.0.100, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Waf.Core.4.2.0\lib\portable45-net45+win8\System.Waf.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Waf.Wpf, Version=4.2.0.100, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Waf.Wpf.4.2.0\lib\net461\System.Waf.Wpf.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp">
@@ -55,10 +62,6 @@
     </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="WpfApplicationFramework, Version=3.2.0.450, Culture=neutral, PublicKeyToken=1d6a5af5fe952afb, processorArchitecture=MSIL">
-      <HintPath>..\packages\waf.3.2.0\lib\net45\WpfApplicationFramework.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\Shared\AssemblyInfo.cs">

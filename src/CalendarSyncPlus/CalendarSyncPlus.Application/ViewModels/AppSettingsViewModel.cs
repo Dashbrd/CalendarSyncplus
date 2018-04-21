@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Waf.Applications;
 using CalendarSyncPlus.Application.Views;
-using CalendarSyncPlus.Common;
 using CalendarSyncPlus.Common.Log;
 using CalendarSyncPlus.Domain.Models.Preferences;
 using log4net;
