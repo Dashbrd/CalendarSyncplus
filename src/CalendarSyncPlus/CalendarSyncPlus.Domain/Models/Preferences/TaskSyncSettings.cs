@@ -1,8 +1,9 @@
 ﻿using System;
+using System.Runtime.Serialization;
 
 namespace CalendarSyncPlus.Domain.Models.Preferences
-{
-    [Serializable]
+{   
+    [DataContract]
     public class TaskSyncSettings : SyncSettings
     {
         public static TaskSyncSettings GetDefault()

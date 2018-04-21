@@ -1,11 +1,17 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
+using System.Runtime.Serialization;
 using System.Waf.Foundation;
 
 namespace CalendarSyncPlus.Domain.Models.Preferences
-{
-    [Serializable]
+{    
+    [DataContract]
+    [KnownType(typeof(IntervalSyncFrequency))]
+    [KnownType(typeof(DailySyncFrequency))]
+    [KnownType(typeof(WeeklySyncFrequency))]
     public class SyncFrequency : ValidatableModel
     {
+        [DataMember]
         public string Name { get; protected set; }
 
         public virtual bool ValidateTimer(DateTime dateTimeNow)

@@ -1,40 +1,29 @@
 ﻿using System;
+using System.Runtime.Serialization;
 using System.Waf.Foundation;
 using CalendarSyncPlus.Common.MetaData;
 using Newtonsoft.Json;
 
 namespace CalendarSyncPlus.Domain.Models.Preferences
-{   
+{  
+    [DataContract]
     public class SyncProfile : Model
     {
-        [JsonProperty("destination")]
         private ServiceType _destination;
-        [JsonProperty("exchangeSettings")]
         private ExchangeServerSettings _exchangeServerSettings;
-        [JsonProperty("googleSettings")]
         private GoogleSettings _googleSettings;
-        [JsonProperty("isDefault")]
         private bool _isDefault;
 
         private bool _isLoaded;
-        [JsonProperty("isSyncEnabled")]
         private bool _isSyncEnabled;
-        [JsonProperty("lastSync")]
         private DateTime? _lastSync;
-        [JsonProperty("master")]
         private ServiceType _master;
-        [JsonProperty("name")]
         private string _name;
         private DateTime? _nextSync;
-        [JsonProperty("outlookSettings")]
         private OutlookSettings _outlookSettings;
-        [JsonProperty("source")]
         private ServiceType _source;
-        [JsonProperty("syncDirection")]
         private SyncDirectionEnum _syncDirection;
-        [JsonProperty("syncFrequency")]
         private SyncFrequency _syncFrequency;
-        [JsonProperty("syncMode")]
         private SyncModeEnum _syncMode;
 
         public SyncProfile()
@@ -92,7 +81,7 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
         }
 
         #region Properties
-
+        [DataMember]
         /// <summary>
         /// </summary>
         public string Name
@@ -100,7 +89,7 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
             get { return _name; }
             set { SetProperty(ref _name, value); }
         }
-
+        [DataMember]
         /// <summary>
         /// </summary>
         public bool IsSyncEnabled
@@ -108,7 +97,7 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
             get { return _isSyncEnabled; }
             set { SetProperty(ref _isSyncEnabled, value); }
         }
-
+        [DataMember]
         /// <summary>
         /// </summary>
         public bool IsDefault
@@ -116,7 +105,7 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
             get { return _isDefault; }
             set { SetProperty(ref _isDefault, value); }
         }
-
+        [DataMember]
         /// <summary>
         /// </summary>
         public DateTime? LastSync
@@ -124,7 +113,7 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
             get { return _lastSync; }
             set { SetProperty(ref _lastSync, value); }
         }
-
+        [DataMember]
         /// <summary>
         /// </summary>
         public DateTime? NextSync
@@ -132,13 +121,13 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
             get { return _nextSync; }
             set { SetProperty(ref _nextSync, value); }
         }
-
+        [DataMember]
         public GoogleSettings GoogleSettings
         {
             get { return _googleSettings; }
             set { SetProperty(ref _googleSettings, value); }
         }
-
+        [DataMember]
         /// <summary>
         /// </summary>
         public OutlookSettings OutlookSettings
@@ -146,7 +135,7 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
             get { return _outlookSettings; }
             set { SetProperty(ref _outlookSettings, value); }
         }
-
+        [DataMember]
         /// <summary>
         ///     To be implemented in future
         /// </summary>
@@ -156,44 +145,44 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
             set { SetProperty(ref _exchangeServerSettings, value); }
         }
 
-
+        [DataMember]
         public SyncFrequency SyncFrequency
         {
             get { return _syncFrequency; }
             set { SetProperty(ref _syncFrequency, value); }
         }
-
+        [DataMember]
         public SyncDirectionEnum SyncDirection
         {
             get { return _syncDirection; }
             set { SetProperty(ref _syncDirection, value); }
         }
-
+        [DataMember]
         public ServiceType Master
         {
             get { return _master; }
             set { SetProperty(ref _master, value); }
         }
-
+        [DataMember]
         public ServiceType Source
         {
             get { return _source; }
             set { SetProperty(ref _source, value); }
         }
-
+        [DataMember]
         public ServiceType Destination
         {
             get { return _destination; }
             set { SetProperty(ref _destination, value); }
         }
-
+        [DataMember]
         public SyncModeEnum SyncMode
         {
             get { return _syncMode; }
             set { SetProperty(ref _syncMode, value); }
         }
 
-
+        [DataMember]
         public bool IsLoaded
         {
             get { return _isLoaded; }

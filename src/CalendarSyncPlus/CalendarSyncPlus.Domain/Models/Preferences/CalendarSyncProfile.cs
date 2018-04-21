@@ -1,17 +1,14 @@
 ﻿using System;
-using Newtonsoft.Json;
+using System.Runtime.Serialization;
 
 namespace CalendarSyncPlus.Domain.Models.Preferences
 {   
+    [DataContract]
     public class CalendarSyncProfile : SyncProfile
     {
-        [JsonProperty("syncSettings")]
         private CalendarSyncSettings _syncSettings;
-        [JsonProperty("calendarEntry")]
         private CalendarEntryOptionsEnum _calendarEntryOptions;
-        [JsonProperty("setCalendarCategory")]
         private bool _setCalendarCategory;
-        [JsonProperty("category")]
         private Category _eventCategory;
 
         public CalendarSyncProfile()
@@ -25,6 +22,7 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
             IsDefault = true;
         }
 
+        [DataMember]
         /// <summary>
         /// </summary>
         public CalendarSyncSettings SyncSettings
@@ -32,7 +30,7 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
             get { return _syncSettings; }
             set { SetProperty(ref _syncSettings, value); }
         }
-
+        [DataMember]
         /// <summary>
         /// </summary>
         public CalendarEntryOptionsEnum CalendarEntryOptions
@@ -40,7 +38,7 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
             get { return _calendarEntryOptions; }
             set { SetProperty(ref _calendarEntryOptions, value); }
         }
-
+        [DataMember]
         /// <summary>
         /// </summary>
         public bool SetCalendarCategory
@@ -48,7 +46,7 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
             get { return _setCalendarCategory; }
             set { SetProperty(ref _setCalendarCategory, value); }
         }
-
+        [DataMember]
         /// <summary>
         /// </summary>
         public Category EventCategory

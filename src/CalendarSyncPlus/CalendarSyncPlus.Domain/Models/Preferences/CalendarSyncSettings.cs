@@ -1,19 +1,16 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
+using System.Runtime.Serialization;
 
 namespace CalendarSyncPlus.Domain.Models.Preferences
 {    
+    [DataContract]
     public class CalendarSyncSettings : SyncSettings
     {
-        [JsonProperty("disableDelete")]
         private bool _disableDelete;
-        [JsonProperty("confirmOnDelete")]
         private bool _confirmOnDelete;
-        [JsonProperty("keepLastModifiedVersion")]
         private bool _keepLastModifiedVersion;
-        [JsonProperty("skipPrivateEntries")]
         private bool _skipPrivateEntries;
-
+        [DataMember]
         /// <summary>
         /// </summary>
         public bool DisableDelete
@@ -21,19 +18,19 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
             get { return _disableDelete; }
             set { SetProperty(ref _disableDelete, value); }
         }
-
+        [DataMember]
         public bool ConfirmOnDelete
         {
             get { return _confirmOnDelete; }
             set { SetProperty(ref _confirmOnDelete, value); }
         }
-
+        [DataMember]
         public bool KeepLastModifiedVersion
         {
             get { return _keepLastModifiedVersion; }
             set { SetProperty(ref _keepLastModifiedVersion, value); }
         }
-
+        [DataMember]
         public bool SkipPrivateEntries
         {
             get { return _skipPrivateEntries; }

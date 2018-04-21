@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
@@ -17,10 +18,17 @@ namespace CalendarSyncPlus.Domain.File.Json
         {
             if (string.IsNullOrEmpty(json))
             {
-                throw new ArgumentException("XML cannot be null or empty", "xml");
+                throw new ArgumentException("Json cannot be null or empty", "json");
             }
-                        
-            return JsonConvert.DeserializeObject<T>(json);
+            JsonSerializerSettings serializerSettings = new JsonSerializerSettings
+            {
+                ObjectCreationHandling = ObjectCreationHandling.Replace,
+                TypeNameHandling = TypeNameHandling.Auto,
+                TypeNameAssemblyFormatHandling = TypeNameAssemblyFormatHandling.Simple,
+                NullValueHandling = NullValueHandling.Ignore
+            };
+            serializerSettings.Converters.Add(new FrequencyConverter());
+            return JsonConvert.DeserializeObject<T>(json, serializerSettings);
         }
 
         public T DeserializeFromFile(string filename)
@@ -42,7 +50,14 @@ namespace CalendarSyncPlus.Domain.File.Json
                 // Open the file containing the data that you want to deserialize.
                 using (TextReader reader = System.IO.File.OpenText(filename))
                 {
-                    JsonSerializer serializer = new JsonSerializer();
+                    JsonSerializer serializer = new JsonSerializer
+                    {
+                        ObjectCreationHandling = ObjectCreationHandling.Replace,
+                        TypeNameHandling = TypeNameHandling.Auto,
+                        TypeNameAssemblyFormatHandling = TypeNameAssemblyFormatHandling.Simple,
+                        NullValueHandling = NullValueHandling.Ignore,
+                    };
+                    serializer.Converters.Add(new FrequencyConverter());
                     obj = serializer.Deserialize(reader, typeof(T)) as T;
                 }
             }
@@ -62,8 +77,13 @@ namespace CalendarSyncPlus.Domain.File.Json
         {
             using (StreamWriter file = new StreamWriter(filename))
             {
-                JsonSerializer serializer = new JsonSerializer();
-                serializer.NullValueHandling = NullValueHandling.Ignore;
+                JsonSerializer serializer = new JsonSerializer
+                {
+                    ObjectCreationHandling = ObjectCreationHandling.Replace,
+                    TypeNameHandling = TypeNameHandling.Auto,
+                    TypeNameAssemblyFormatHandling = TypeNameAssemblyFormatHandling.Simple,
+                    NullValueHandling = NullValueHandling.Ignore
+                };
                 serializer.Formatting = Formatting.Indented;
                 using (JsonWriter writer = new JsonTextWriter(file))
                 {

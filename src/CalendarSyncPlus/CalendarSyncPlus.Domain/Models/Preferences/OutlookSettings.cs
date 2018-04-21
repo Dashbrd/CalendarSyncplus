@@ -1,9 +1,11 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
+using System.Runtime.Serialization;
 using System.Waf.Foundation;
 
 namespace CalendarSyncPlus.Domain.Models.Preferences
-{
-    [Serializable]
+{   
+    [DataContract]
     public class OutlookSettings : Model
     {
         private OutlookFolder _outlookFolder;
@@ -11,7 +13,7 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
         private OutlookOptionsEnum _outlookOptions;
         private string _outlookProfileName;
         private bool _setOrganizer;
-
+        [DataMember]
         public OutlookOptionsEnum OutlookOptions
         {
             get { return _outlookOptions; }
@@ -21,25 +23,26 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
                 SetProperty(ref _outlookOptions, value);
             }
         }
+        [DataMember]
 
         public string OutlookProfileName
         {
             get { return _outlookProfileName; }
             set { SetProperty(ref _outlookProfileName, value); }
         }
-
+        [DataMember]
         public OutlookMailBox OutlookMailBox
         {
             get { return _outlookMailBox; }
             set { SetProperty(ref _outlookMailBox, value); }
         }
-
+        [DataMember]
         public OutlookFolder OutlookFolder
         {
             get { return _outlookFolder; }
             set { SetProperty(ref _outlookFolder, value); }
         }
-
+        [DataMember]
         public bool SetOrganizer
         {
             get { return _setOrganizer; }

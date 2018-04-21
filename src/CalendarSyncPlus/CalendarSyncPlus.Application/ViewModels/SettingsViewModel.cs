@@ -37,7 +37,6 @@ using CalendarSyncPlus.GoogleServices.Calendar;
 using CalendarSyncPlus.OutlookServices.Calendar;
 using CalendarSyncPlus.Services.Interfaces;
 using CalendarSyncPlus.Services.Sync.Interfaces;
-using Force.DeepCloner;
 using log4net;
 using MahApps.Metro.Controls.Dialogs;
 
@@ -207,8 +206,9 @@ namespace CalendarSyncPlus.Application.ViewModels
                 {
                     LastSavedSettings = Settings;
                     Settings = LastSavedSettings.DeepClone();
-                }
 
+                }
+                Init = true;
                 await MessageService.ShowMessage(result ? "Settings Saved Successfully" : "Error Saving Settings",
                     "Settings");
 
