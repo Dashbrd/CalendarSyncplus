@@ -51,6 +51,7 @@
     <Compile Include="..\Shared\AssemblyInfo.cs">
       <Link>AssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="CalendarSyncEngine-v2.cs" />
     <Compile Include="CalendarSyncEngine.cs" />
     <Compile Include="ContactsSyncEngine.cs" />
     <Compile Include="Helpers\AppointmentExtensions.cs" />

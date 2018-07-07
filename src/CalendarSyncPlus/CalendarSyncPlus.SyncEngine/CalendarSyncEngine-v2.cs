@@ -1,18 +1,20 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.Composition;
-using System.Linq;
-using CalendarSyncPlus.Domain.Helpers;
+﻿using CalendarSyncPlus.Domain.Helpers;
 using CalendarSyncPlus.Domain.Models;
 using CalendarSyncPlus.Domain.Models.Preferences;
 using CalendarSyncPlus.Domain.Wrappers;
 using CalendarSyncPlus.SyncEngine.Helpers;
 using CalendarSyncPlus.SyncEngine.Interfaces;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.Composition;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace CalendarSyncPlus.SyncEngine
 {
-    /// <summary>
-    /// </summary>
-    public class CalendarSyncEngine : ICalendarSyncEngine
+    [Export(typeof(ICalendarSyncEngine))]
+    public class CalendarSyncEngine_v2 : ICalendarSyncEngine
     {
         #region ICalendarSyncEngine Members
 

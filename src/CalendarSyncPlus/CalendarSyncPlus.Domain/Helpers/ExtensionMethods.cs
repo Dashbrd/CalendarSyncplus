@@ -33,7 +33,8 @@ namespace CalendarSyncPlus.Domain.Helpers
                 NullValueHandling = NullValueHandling.Ignore
             };
             deserializeSettings.Converters.Add(new FrequencyConverter());
-            return JsonConvert.DeserializeObject<T>(JsonConvert.SerializeObject(source), deserializeSettings);
+            T result = JsonConvert.DeserializeObject<T>(JsonConvert.SerializeObject(source), deserializeSettings);
+            return result;
         }
 
         public static string Rfc339FFormat(this DateTime dateTime)
