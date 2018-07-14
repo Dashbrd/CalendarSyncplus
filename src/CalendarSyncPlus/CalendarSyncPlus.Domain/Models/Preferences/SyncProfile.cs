@@ -2,7 +2,6 @@
 using System.Runtime.Serialization;
 using System.Waf.Foundation;
 using CalendarSyncPlus.Common.MetaData;
-using Newtonsoft.Json;
 
 namespace CalendarSyncPlus.Domain.Models.Preferences
 {  
