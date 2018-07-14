@@ -50,7 +50,7 @@ namespace CalendarSyncPlus.ExchangeWebServices.Calendar
         public ExchangeService GetExchangeService(ExchangeServerSettings exchangeServerSettings)
         {
             ExchangeVersion exchangeVersion;
-            var isValidVersion = Enum.TryParse(exchangeServerSettings.ExchangeVersion, true, out exchangeVersion);
+            var isValidVersion = Enum.TryParse(exchangeServerSettings?.ExchangeVersion, true, out exchangeVersion);
             if (isValidVersion)
             {
                 var service = new ExchangeService(exchangeVersion)
@@ -108,12 +108,15 @@ namespace CalendarSyncPlus.ExchangeWebServices.Calendar
 
             // Call FindFolders to retrieve the folder hierarchy, starting with the MsgFolderRoot folder.
             // This method call results in a FindFolder call to EWS.
-            var findFolderResults = service.FindFolders(WellKnownFolderName.MsgFolderRoot, view);
+            var findFolderResults = service?.FindFolders(WellKnownFolderName.MsgFolderRoot, view);
 
             var ewsCalendars = new List<EWSCalendar>();
-            foreach (var searchFolder in findFolderResults.Folders)
+            if (findFolderResults != null)
             {
-                GetCalendars(searchFolder, ewsCalendars, view);
+                foreach (var searchFolder in findFolderResults.Folders)
+                {
+                    GetCalendars(searchFolder, ewsCalendars, view);
+                }
             }
             return ewsCalendars;
         }
