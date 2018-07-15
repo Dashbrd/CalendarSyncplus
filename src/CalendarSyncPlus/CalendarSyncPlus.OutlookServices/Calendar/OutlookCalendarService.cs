@@ -805,7 +805,7 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
                         var appointmentItems = appts as AppointmentItem[] ?? appts.ToArray();
                         if (appointmentItems.Any())
                         {
-                            var id = defaultOutlookCalendar.EntryID;
+                            var calendarId = defaultOutlookCalendar.EntryID;
                             foreach (var appointmentItem in appointmentItems)
                             {
                                 try
@@ -817,7 +817,9 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
                                         continue;
                                     }
 
-                                    var app = getAppointmentFromItem(id, appointmentItem);
+                                    var app = getAppointmentFromItem(calendarId, appointmentItem);
+                                    setRecurrence(appointmentItem, app);
+
                                     outlookAppointments.Add(app);
                                 }
                                 catch (Exception exception)
@@ -898,11 +900,11 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
 
         /// <summary>
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="calendarId"></param>
         /// <param name="appointmentItem"></param>
         /// <returns>
         /// </returns>
-        private Appointment getAppointmentFromItem(string id, AppointmentItem appointmentItem)
+        private Appointment getAppointmentFromItem(string calendarId, AppointmentItem appointmentItem)
         {
             var app = new Appointment(appointmentItem.Body, appointmentItem.Location,
                 appointmentItem.Subject, appointmentItem.End, appointmentItem.Start)
@@ -910,23 +912,22 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
                 AllDayEvent = appointmentItem.AllDayEvent,
                 ReminderMinutesBeforeStart = appointmentItem.ReminderMinutesBeforeStart,
                 ReminderSet = appointmentItem.ReminderSet,
-                IsRecurring = appointmentItem.IsRecurring,
                 AppointmentId = appointmentItem.EntryID,
                 Privacy = appointmentItem.GetAppointmentSensitivity(),
                 MeetingStatus = appointmentItem.GetMeetingStatus(),
                 Created = appointmentItem.CreationTime,
                 LastModified = appointmentItem.LastModificationTime,
-                CalendarId = id
+                CalendarId = calendarId
             };
             app.SetBusyStatus(appointmentItem.BusyStatus);
             setRecipients(appointmentItem, app);
-            setRecurrence(appointmentItem, app);
             setExtendedProperties(appointmentItem, app);
             return app;
         }
 
         private void setRecurrence(AppointmentItem appointmentItem, Appointment app)
         {
+            app.IsRecurring = appointmentItem.IsRecurring;
             RecurrencePattern recurrencePattern = appointmentItem.GetRecurrencePattern();
             if(recurrencePattern != null)
             {
@@ -940,11 +941,12 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
                 if (recurrencePattern.Exceptions != null && recurrencePattern.Exceptions.Count > 0)
                 {
                     foreach (Microsoft.Office.Interop.Outlook.Exception exception in recurrencePattern.Exceptions)
-                    {
+                    {   
                         if (exception != null)
                         {
-                            ItemProperties items = exception.ItemProperties;
-                        }
+                            var relatedApp = getAppointmentFromItem(app.CalendarId, exception.AppointmentItem);
+                            app.RecurringInstances.Add(relatedApp);
+                        }                        
                     }
                 }
             }
