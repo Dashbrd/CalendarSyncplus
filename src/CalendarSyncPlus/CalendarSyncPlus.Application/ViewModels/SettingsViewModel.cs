@@ -209,7 +209,7 @@ namespace CalendarSyncPlus.Application.ViewModels
 
                 }
                 Init = true;
-                await MessageService.ShowMessage(result ? "Settings Saved Successfully" : "Error Saving Settings",
+                MessageService.ShowMessage(result ? "Settings Saved Successfully" : "Error Saving Settings",
                     "Settings");
 
                 SettingsSaved = true;
@@ -306,7 +306,7 @@ namespace CalendarSyncPlus.Application.ViewModels
                     LastSavedSettings.GoogleAccounts.Remove(googleAccount);
                 }
 
-                await MessageService.ShowMessage("Google account successfully disconnected");
+                MessageService.ShowMessage("Google account successfully disconnected");
 
                 await SettingsSerializationService.SerializeSettingsAsync(LastSavedSettings);
             }

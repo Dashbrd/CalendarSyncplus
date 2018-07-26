@@ -218,6 +218,9 @@
     <Compile Include="Services\SingleInstance\WM.cs" />
     <Compile Include="Services\GuiInteractionService.cs" />
     <Compile Include="Services\WindowsStartupService.cs" />
+    <Compile Include="Views\Helper\AutoCloseMessageDialog.xaml.cs">
+      <DependentUpon>AutoCloseMessageDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Main\AboutView.xaml.cs">
       <DependentUpon>AboutView.xaml</DependentUpon>
     </Compile>
@@ -303,6 +306,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Resources\OtherResources.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Helper\AutoCloseMessageDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
