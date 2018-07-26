@@ -22,7 +22,6 @@ using System.ComponentModel.Composition;
 using System.Threading.Tasks;
 using System.Waf.Applications;
 using CalendarSyncPlus.Common;
-using CalendarSyncPlus.Presentation.Views;
 using CalendarSyncPlus.Presentation.Views.Helper;
 using CalendarSyncPlus.Presentation.Views.Main;
 using CalendarSyncPlus.Services.Interfaces;
@@ -64,20 +63,6 @@ namespace CalendarSyncPlus.Presentation.Services
 
         public async void ShowMessage(string message, string title)
         {
-            //var metroDialogSettings = new MetroDialogSettings
-            //{
-            //    AffirmativeButtonText = "OK",
-            //    AnimateHide = true,
-            //    AnimateShow = true,
-            //    ColorScheme = MetroDialogColorScheme.Accented
-            //};
-            // await InvokeOnCurrentDispatcher(async () =>
-            //{
-            //    var taskResult =
-            //        await View.ShowMessageAsync(title, message, MessageDialogStyle.Affirmative, metroDialogSettings);
-            //    return taskResult;
-            //});
-
             var metroDialogSettings = new MetroDialogSettings
             {
                 AffirmativeButtonText = "OK",
@@ -96,7 +81,7 @@ namespace CalendarSyncPlus.Presentation.Services
             {
                 View.ShowMetroDialogAsync(dialog, metroDialogSettings);
 
-                return Task.WhenAny(dialog.WaitForButtonPressAsync(), Task.Delay(5000)).ContinueWith(m =>
+                return Task.WhenAny(dialog.WaitForButtonPressAsync(), Task.Delay(3000)).ContinueWith(m =>
                 {
                     InvokeOnCurrentDispatcher(() => View.HideMetroDialogAsync(dialog));
                     return m.Result;
@@ -194,7 +179,6 @@ namespace CalendarSyncPlus.Presentation.Services
             return InvokeOnCurrentDispatcher(() =>
             {
                 return View.ShowInputAsync(title, message, metroDialogSettings);
-                //return result;
             });
         }
 

@@ -19,10 +19,10 @@ namespace CalendarSyncPlus.Presentation.Views.Helper
             DependencyProperty.Register("AffirmativeButtonText", typeof(string), typeof(AutoCloseMessageDialog),
                 new PropertyMetadata("OK"));
 
-        public static readonly DependencyProperty NegativeButtonTextProperty =
-            DependencyProperty.Register("NegativeButtonText", typeof(string), typeof(AutoCloseMessageDialog),
-                new PropertyMetadata("Cancel"));
-
+        internal AutoCloseMessageDialog()
+            : this(null, null)
+        {
+        }
         internal AutoCloseMessageDialog(MetroWindow parentWindow)
             : this(parentWindow, null)
         {
@@ -32,6 +32,13 @@ namespace CalendarSyncPlus.Presentation.Views.Helper
             : base(parentWindow, settings)
         {
             InitializeComponent();
+            HandleVisibility(settings);
+        }
+
+        private void HandleVisibility(MetroDialogSettings settings)
+        {
+            this.Loaded += this.Dialog_Loaded;
+            this.Unloaded += this.Dialog_Loaded;
         }
 
         public string Message
@@ -44,12 +51,6 @@ namespace CalendarSyncPlus.Presentation.Views.Helper
         {
             get { return (string)GetValue(AffirmativeButtonTextProperty); }
             set { SetValue(AffirmativeButtonTextProperty, value); }
-        }
-
-        public string NegativeButtonText
-        {
-            get { return (string)GetValue(NegativeButtonTextProperty); }
-            set { SetValue(NegativeButtonTextProperty, value); }
         }
 
         internal Task<string> WaitForButtonPressAsync()
@@ -73,10 +74,8 @@ namespace CalendarSyncPlus.Presentation.Views.Helper
             {
                 KeyDown -= escapeKeyHandler;
 
-                PART_NegativeButton.Click -= negativeHandler;
                 PART_AffirmativeButton.Click -= affirmativeHandler;
 
-                PART_NegativeButton.KeyDown -= negativeKeyHandler;
                 PART_AffirmativeButton.KeyDown -= affirmativeKeyHandler;
             };
 
@@ -90,7 +89,7 @@ namespace CalendarSyncPlus.Presentation.Views.Helper
                 }
             };
 
-            negativeKeyHandler = (sender, e) =>
+            affirmativeKeyHandler = (sender, e) =>
             {
                 if (e.Key == Key.Enter)
                 {
@@ -100,7 +99,7 @@ namespace CalendarSyncPlus.Presentation.Views.Helper
                 }
             };
 
-            negativeHandler = (sender, e) =>
+            affirmativeHandler = (sender, e) =>
             {
                 cleanUpHandlers();
 
@@ -109,12 +108,10 @@ namespace CalendarSyncPlus.Presentation.Views.Helper
                 e.Handled = true;
             };
 
-            PART_NegativeButton.KeyDown += negativeKeyHandler;
             PART_AffirmativeButton.KeyDown += affirmativeKeyHandler;
 
             KeyDown += escapeKeyHandler;
 
-            PART_NegativeButton.Click += negativeHandler;
             PART_AffirmativeButton.Click += affirmativeHandler;
 
             return tcs.Task;
@@ -123,14 +120,6 @@ namespace CalendarSyncPlus.Presentation.Views.Helper
         private void Dialog_Loaded(object sender, RoutedEventArgs e)
         {
             AffirmativeButtonText = DialogSettings.AffirmativeButtonText;
-            NegativeButtonText = DialogSettings.NegativeButtonText;
-
-            switch (DialogSettings.ColorScheme)
-            {
-                case MetroDialogColorScheme.Accented:
-                    PART_NegativeButton.Style = FindResource("HighlightedSquareButtonStyle") as Style;
-                    break;
-            }
         }
     }
 }
