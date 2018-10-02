@@ -2,7 +2,6 @@
 using System.Runtime.Serialization;
 using System.Waf.Foundation;
 using CalendarSyncPlus.Common.MetaData;
-using Newtonsoft.Json;
 
 namespace CalendarSyncPlus.Domain.Models.Preferences
 {  
@@ -182,7 +181,7 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
             set { SetProperty(ref _syncMode, value); }
         }
 
-        [DataMember]
+        // Do not save this value, it is to check change
         public bool IsLoaded
         {
             get { return _isLoaded; }

@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Runtime.Serialization.Formatters;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Xml.Serialization;
 using CalendarSyncPlus.Domain.File.Json;
 using CalendarSyncPlus.Domain.Models;
 using CalendarSyncPlus.Domain.Models.Preferences;
@@ -33,7 +28,8 @@ namespace CalendarSyncPlus.Domain.Helpers
                 NullValueHandling = NullValueHandling.Ignore
             };
             deserializeSettings.Converters.Add(new FrequencyConverter());
-            return JsonConvert.DeserializeObject<T>(JsonConvert.SerializeObject(source), deserializeSettings);
+            T result = JsonConvert.DeserializeObject<T>(JsonConvert.SerializeObject(source), deserializeSettings);
+            return result;
         }
 
         public static string Rfc339FFormat(this DateTime dateTime)

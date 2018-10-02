@@ -106,7 +106,7 @@ namespace CalendarSyncPlus.GoogleServices.Calendar
                     //Iterate over each appointment to create a event and batch it 
                     for (var i = 0; i < calendarAppointments.Count; i++)
                     {
-                        if (i != 0 && i%999 == 0)
+                        if (i != 0 && i % 999 == 0)
                         {
                             await batchRequest.ExecuteAsync();
                             batchRequest = new BatchRequest(calendarService);
@@ -200,7 +200,7 @@ namespace CalendarSyncPlus.GoogleServices.Calendar
             var localCalendarList =
                 calendarList.Items.Select(
                     calendarListEntry =>
-                        new GoogleCalendar {Id = calendarListEntry.Id, Name = calendarListEntry.Summary})
+                        new GoogleCalendar { Id = calendarListEntry.Id, Name = calendarListEntry.Summary })
                     .ToList();
             return localCalendarList;
         }
@@ -293,7 +293,7 @@ namespace CalendarSyncPlus.GoogleServices.Calendar
                     //Iterate over each appointment to create a event and batch it 
                     for (var i = 0; i < calendarAppointments.Count; i++)
                     {
-                        if (i != 0 && i%999 == 0)
+                        if (i != 0 && i % 999 == 0)
                         {
                             await batchRequest.ExecuteAsync();
                             batchRequest = new BatchRequest(calendarService);
@@ -389,15 +389,15 @@ namespace CalendarSyncPlus.GoogleServices.Calendar
                 return null;
             }
 
-            var calendarAppointments = new AppointmentsWrapper {CalendarId = CalendarId};
+            var calendarAppointments = new AppointmentsWrapper { CalendarId = CalendarId };
             calendarAppointments.AddRange(finalEventList);
             return calendarAppointments;
         }
 
         public async Task<bool> ClearCalendar(IDictionary<string, object> calendarSpecificData)
         {
-            var startDate = DateTime.Today.AddDays(-(10*365));
-            var endDate = DateTime.Today.AddDays(10*365);
+            var startDate = DateTime.Today.AddDays(-(10 * 365));
+            var endDate = DateTime.Today.AddDays(10 * 365);
 
             var appointments =
                 await GetCalendarEventsInRangeAsync(startDate, endDate, true, calendarSpecificData);
@@ -411,8 +411,8 @@ namespace CalendarSyncPlus.GoogleServices.Calendar
 
         public async Task<bool> ResetCalendarEntries(IDictionary<string, object> calendarSpecificData)
         {
-            var startDate = DateTime.Today.AddDays(-(10*365));
-            var endDate = DateTime.Today.AddDays(10*365);
+            var startDate = DateTime.Today.AddDays(-(10 * 365));
+            var endDate = DateTime.Today.AddDays(10 * 365);
             var appointments =
                 await GetCalendarEventsInRangeAsync(startDate, endDate, true, calendarSpecificData);
             if (appointments != null)
@@ -459,7 +459,7 @@ namespace CalendarSyncPlus.GoogleServices.Calendar
 
             for (var i = 0; i < calendarAppointments.Count; i++)
             {
-                if (i != 0 && i%999 == 0)
+                if (i != 0 && i % 999 == 0)
                 {
                     await batchRequest.ExecuteAsync();
                     batchRequest = new BatchRequest(calendarService);
@@ -765,7 +765,8 @@ namespace CalendarSyncPlus.GoogleServices.Calendar
             {
                 appointment = new Appointment(googleEvent.Description, googleEvent.Location, googleEvent.Summary,
                     DateTime.Parse(googleEvent.End.Date),
-                    DateTime.Parse(googleEvent.Start.Date), googleEvent.Id) {AllDayEvent = true};
+                    DateTime.Parse(googleEvent.Start.Date), googleEvent.Id)
+                { AllDayEvent = true };
             }
             else
             {

@@ -61,7 +61,7 @@ namespace CalendarSyncPlus.Presentation.Services
             ShowMessageAsync(message, ApplicationInfo.ProductName);
         }
 
-        public async Task<MessageDialogResult> ShowMessage(string message, string title)
+        public async void ShowMessage(string message, string title)
         {
             var metroDialogSettings = new MetroDialogSettings
             {
@@ -70,17 +70,28 @@ namespace CalendarSyncPlus.Presentation.Services
                 AnimateShow = true,
                 ColorScheme = MetroDialogColorScheme.Accented
             };
-            return await InvokeOnCurrentDispatcher(async () =>
+
+            var dialog = new AutoCloseMessageDialog(View, metroDialogSettings)
             {
-                var taskResult =
-                    await View.ShowMessageAsync(title, message, MessageDialogStyle.Affirmative, metroDialogSettings);
-                return taskResult;
+                Message = message,
+                Title = title
+            };
+
+            await InvokeOnCurrentDispatcher(() =>
+            {
+                View.ShowMetroDialogAsync(dialog, metroDialogSettings);
+
+                return Task.WhenAny(dialog.WaitForButtonPressAsync(), Task.Delay(3000)).ContinueWith(m =>
+                {
+                    InvokeOnCurrentDispatcher(() => View.HideMetroDialogAsync(dialog));
+                    return m.Result;
+                }); 
             });
         }
 
-        public Task<MessageDialogResult> ShowMessage(string message)
+        public void ShowMessage(string message)
         {
-            return ShowMessage(message, ApplicationInfo.ProductName);
+            ShowMessage(message, ApplicationInfo.ProductName);           
         }
 
         public void ShowConfirmMessageAsync(string message, string title)
@@ -168,7 +179,6 @@ namespace CalendarSyncPlus.Presentation.Services
             return InvokeOnCurrentDispatcher(() =>
             {
                 return View.ShowInputAsync(title, message, metroDialogSettings);
-                //return result;
             });
         }
 

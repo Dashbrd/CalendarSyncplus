@@ -247,13 +247,13 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
                         if (SetOrganizer && calendarAppointment.Organizer != null &&
                             rcptName.Name.Equals(calendarAppointment.Organizer.Name))
                         {
-                            recipient.Type = (int) OlMeetingRecipientType.olOrganizer;
+                            recipient.Type = (int)OlMeetingRecipientType.olOrganizer;
                             recipient.Resolve();
                             organizer = recipient;
                         }
                         else
                         {
-                            recipient.Type = (int) OlMeetingRecipientType.olRequired;
+                            recipient.Type = (int)OlMeetingRecipientType.olRequired;
                             recipient.Resolve();
                         }
                     });
@@ -265,13 +265,13 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
                         if (SetOrganizer && calendarAppointment.Organizer != null &&
                             rcptName.Name.Equals(calendarAppointment.Organizer.Name))
                         {
-                            recipient.Type = (int) OlMeetingRecipientType.olOrganizer;
+                            recipient.Type = (int)OlMeetingRecipientType.olOrganizer;
                             recipient.Resolve();
                             organizer = recipient;
                         }
                         else
                         {
-                            recipient.Type = (int) OlMeetingRecipientType.olOptional;
+                            recipient.Type = (int)OlMeetingRecipientType.olOptional;
                             recipient.Resolve();
                         }
                     });
@@ -281,7 +281,7 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
                     var recipient =
                         appItem.Recipients.Add(
                             $"{calendarAppointment.Organizer.Name}<{calendarAppointment.Organizer.Email}>");
-                    recipient.Type = (int) OlMeetingRecipientType.olOrganizer;
+                    recipient.Type = (int)OlMeetingRecipientType.olOrganizer;
                     recipient.Resolve();
                     organizer = recipient;
                 }
@@ -386,7 +386,7 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
                         AppointmentItem appointmentItem = null;
                         if (calendarAppointment.IsRecurring)
                         {
-                            var idArray = calendarAppointment.AppointmentId.Split(new[] {"_"},
+                            var idArray = calendarAppointment.AppointmentId.Split(new[] { "_" },
                                 StringSplitOptions.RemoveEmptyEntries);
                             var parentAppointment = nameSpace.GetItemFromID(idArray.FirstOrDefault()) as AppointmentItem;
                             if (parentAppointment != null)
@@ -509,7 +509,7 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
                         AppointmentItem appItem = null;
                         if (calendarAppointment.IsRecurring)
                         {
-                            var idArray = calendarAppointment.AppointmentId.Split(new[] {"_"},
+                            var idArray = calendarAppointment.AppointmentId.Split(new[] { "_" },
                                 StringSplitOptions.RemoveEmptyEntries);
                             var parentAppointment = nameSpace.GetItemFromID(idArray.FirstOrDefault()) as AppointmentItem;
                             var pattern = parentAppointment.GetRecurrencePattern();
@@ -630,7 +630,7 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
                             {
                                 var recipient =
                                     appItem.Recipients.Add($"{rcptName.Name}<{rcptName.Email}>");
-                                recipient.Type = (int) OlMeetingRecipientType.olRequired;
+                                recipient.Type = (int)OlMeetingRecipientType.olRequired;
                                 recipient.Resolve();
                             }
                         });
@@ -641,7 +641,7 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
                         if (CheckIfRecipientExists(recipients, rcptName)) return;
                         var recipient =
                             appItem.Recipients.Add($"{rcptName.Name}<{rcptName.Email}>");
-                        recipient.Type = (int) OlMeetingRecipientType.olOptional;
+                        recipient.Type = (int)OlMeetingRecipientType.olOptional;
                         recipient.Resolve();
                     });
                 }
@@ -1146,7 +1146,7 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
                 string office2016Path = string.Format(newProfilePath, "16.0");
                 string office2013Path = string.Format(newProfilePath, "15.0");
 
-                var pathList = new List<string>() {office2013Path, office2016Path};
+                var pathList = new List<string>() { office2013Path, office2016Path };
 
 
                 var defaultRegKey = Registry.CurrentUser.OpenSubKey(defaultProfilePath,
@@ -1351,7 +1351,7 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
             return await GetOutlookProfileList();
         }
 
-        
+
         public async Task<AppointmentsWrapper> GetCalendarEventsInRangeAsync(DateTime startDate, DateTime endDate,
             bool skipPrivateEntries,
             IDictionary<string, object> calendarSpecificData)
@@ -1400,7 +1400,7 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
             }
             ProfileName = profileValue as string;
             OutlookCalendar = outlookCalendarValue as OutlookFolder;
-            AddAsAppointments = (bool) addAsAppointments;
+            AddAsAppointments = (bool)addAsAppointments;
             object eventCategory;
             if (calendarSpecificData.TryGetValue("EventCategory", out eventCategory))
             {
@@ -1413,7 +1413,7 @@ namespace CalendarSyncPlus.OutlookServices.Calendar
             object setOrganizer;
             if (calendarSpecificData.TryGetValue("SetOrganizer", out setOrganizer))
             {
-                SetOrganizer = (bool) setOrganizer;
+                SetOrganizer = (bool)setOrganizer;
             }
             else
             {

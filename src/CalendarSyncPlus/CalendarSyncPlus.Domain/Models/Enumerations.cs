@@ -5,6 +5,25 @@ using System.Runtime.Serialization;
 
 namespace CalendarSyncPlus.Domain.Models
 {
+    public enum DayOfWeekMask
+    {
+        Sunday = 1,
+        Monday = 2,
+        Tuesday = 4,
+        Wednesday = 8,
+        Thursday = 16,
+        Friday = 32,
+        Saturday = 64
+    }
+    public enum RecurrencePatternType
+    {
+        Daily = 0,
+        Weekly = 1,
+        Monthly = 2,
+        MonthNth = 3,
+        Yearly = 5,
+        YearNth = 6
+    }
     public enum AnnouncementStateEnum
     {
         New,

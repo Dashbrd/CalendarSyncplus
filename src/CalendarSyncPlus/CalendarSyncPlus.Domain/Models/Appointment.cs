@@ -60,58 +60,65 @@ namespace CalendarSyncPlus.Domain.Models
         /// <summary>
         ///     Flag if the appointment is an all day event
         /// </summary>
-        private bool _allDayEvent;
+        protected bool _allDayEvent;
 
         /// <summary>
         ///     Id to identify the appointment
         /// </summary>
-        private string _appointmentId;
+        protected string _appointmentId;
 
         /// <summary>
         /// </summary>
-        private string _calendarId;
+        protected string _calendarId;
 
         /// <summary>
         /// </summary>
-        private string _childId;
+        protected string _childId;
 
         /// <summary>
         /// </summary>
-        private DateTime? _created;
+        protected DateTime? _created;
 
         /// <summary>
         /// </summary>
-        private string _description;
+        protected string _description;
 
         /// <summary>
         /// </summary>
-        private DateTime? _endTime;
+        protected DateTime? _endTime;
 
         /// <summary>
         /// </summary>
-        private Dictionary<string, string> _extendedProperties;
+        protected Dictionary<string, string> _extendedProperties;
 
         /// <summary>
         /// </summary>
-        private bool _isRecurring;
+        protected bool _isRecurring;
 
         /// <summary>
         /// </summary>
-        private DateTime? _lastModified;
+        protected DateTime? _lastModified;
 
-        private string _location;
-        private MeetingStatusEnum _meetingStatus;
-        private DateTime? _oldStartTime;
-        private List<Attendee> _optionalAttendees;
-        private Attendee _organizer;
-        private SensitivityEnum _privacy;
-        private int _reminderMinutesBeforeStart;
-        private bool _reminderSet;
-        private List<Attendee> _requiredAttendees;
-        private string _sourceId;
-        private DateTime? _startTime;
-        private string _subject;
-
+        protected string _location;
+        protected MeetingStatusEnum _meetingStatus;
+        protected DateTime? _oldStartTime;
+        protected List<Attendee> _optionalAttendees;
+        protected Attendee _organizer;
+        protected SensitivityEnum _privacy;
+        protected int _reminderMinutesBeforeStart;
+        protected bool _reminderSet;
+        protected List<Attendee> _requiredAttendees;
+        protected string _sourceId;
+        protected DateTime? _startTime;
+        protected string _subject;
+        private DayOfWeekMask _daysOfWeek;
+        private int recurEveryWeek;
+        private RecurrencePatternType recurrencePattern;
+        private DateTime _recurrenceStartDate;
+        private DateTime _recurrenceEndDate;
+        private int noOfOccurrences;
+        bool _noEndDate;
+       
         #endregion
 
         #region Constructors
@@ -133,6 +140,7 @@ namespace CalendarSyncPlus.Domain.Models
             ExtendedProperties = new Dictionary<string, string>();
             RequiredAttendees = new List<Attendee>();
             OptionalAttendees = new List<Attendee>();
+            RecurringInstances = new List<Appointment>();
         }
 
         #endregion
@@ -285,6 +293,16 @@ namespace CalendarSyncPlus.Domain.Models
             set { SetProperty(ref _isRecurring, value); }
         }
 
+        public List<Appointment> RecurringInstances
+        {
+            get; set;
+        }
+
+        public string Status
+        {
+            get; set;
+        }
+
         public DateTime? LastModified
         {
             get { return _lastModified; }
@@ -293,10 +311,16 @@ namespace CalendarSyncPlus.Domain.Models
 
         public DateTime? Created
         {
-            get { return _created; }
+            get => _created;
             set { SetProperty(ref _created, value); }
         }
-
+        public DayOfWeekMask DaysOfWeek { get => _daysOfWeek; set => _daysOfWeek = value; }
+        public int Interval { get => recurEveryWeek; set => recurEveryWeek = value; }
+        public RecurrencePatternType RecurrenceType { get => recurrencePattern; set => recurrencePattern = value; }
+        public DateTime PatternStartDate { get => _recurrenceStartDate; set => _recurrenceStartDate = value; }
+        public DateTime PatternEndDate { get => _recurrenceEndDate; set => _recurrenceEndDate = value; }
+        public int NoOfOccurrences { get => noOfOccurrences; set => noOfOccurrences = value; }
+        public bool NoEndDate { get => _noEndDate; set => _noEndDate = value; }
         #endregion
     }
 }

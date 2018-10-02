@@ -30,6 +30,7 @@ namespace CalendarSyncPlus.Domain.Models.Preferences
         /// <summary>
         /// </summary>
         public bool AllowManualAuthentication { get => _allowManualAuthentication; set => _allowManualAuthentication = value; }
+        // do not serialize this
         /// <summary>
         /// </summary>
         public bool IsFirstSave

@@ -338,11 +338,11 @@ namespace CalendarSyncPlus.Application.ViewModels
         {
             try
             {
-                await MessageService.ShowMessage("Application log file deleted.");
+                MessageService.ShowMessage("Application log file deleted.");
             }
             catch (Exception ex)
             {
-                await MessageService.ShowMessage("Error occurred in deleting application log file.");
+                MessageService.ShowMessage("Error occurred in deleting application log file.");
                 Logger.Error(ex);
             }
         }
@@ -351,13 +351,13 @@ namespace CalendarSyncPlus.Application.ViewModels
         {
             if (IsSettingsLoading)
             {
-                await MessageService.ShowMessage("Unable to do the operation as settings are loading.");
+                MessageService.ShowMessage("Unable to do the operation as settings are loading.");
                 return;
             }
 
             if (IsSyncInProgress)
             {
-                await MessageService.ShowMessage("Unable to do the operation as sync is in progress.");
+                MessageService.ShowMessage("Unable to do the operation as sync is in progress.");
                 return;
             }
             await StartPeriodicSync();
@@ -436,8 +436,18 @@ namespace CalendarSyncPlus.Application.ViewModels
             BeginInvokeOnCurrentDispatcher(() =>
             {
                 if (IsSyncInProgress && !text.Equals(StatusHelper.LineConstant))
+                {
                     UpdateNotification(text);
+                }
+
+                if (_statusBuilder.Length >= 1000)
+                {
+                    _statusBuilder.Clear();
+                    _statusBuilder.AppendLine("Flushed old logs");
+                    _statusBuilder.AppendLine(StatusHelper.LineConstant);
+                }
                 _statusBuilder.AppendLine(text);
+                
                 RaisePropertyChanged("SyncLog");
             });
             Logger.Info(text);
@@ -498,7 +508,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             {
                 if (IsSyncInProgress)
                 {
-                    await MessageService.ShowMessage("Unable to do the operation as sync is in progress.");
+                    MessageService.ShowMessage("Unable to do the operation as sync is in progress.");
                     return;
                 }
 
@@ -517,11 +527,11 @@ namespace CalendarSyncPlus.Application.ViewModels
             catch (AggregateException exception)
             {
                 var flattenException = exception.Flatten();
-                await MessageService.ShowMessage(flattenException.Message);
+                MessageService.ShowMessage(flattenException.Message);
             }
             catch (Exception exception)
             {
-                await MessageService.ShowMessage(exception.Message);
+                MessageService.ShowMessage(exception.Message);
             }
         }
 
@@ -570,11 +580,11 @@ namespace CalendarSyncPlus.Application.ViewModels
             catch (AggregateException exception)
             {
                 var flattenException = exception.Flatten();
-                await MessageService.ShowMessage(flattenException.Message);
+                MessageService.ShowMessage(flattenException.Message);
             }
             catch (Exception exception)
             {
-                await MessageService.ShowMessage(exception.Message);
+                MessageService.ShowMessage(exception.Message);
             }
         }
 

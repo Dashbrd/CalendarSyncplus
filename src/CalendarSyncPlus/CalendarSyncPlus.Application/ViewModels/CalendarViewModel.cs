@@ -236,7 +236,7 @@ namespace CalendarSyncPlus.Application.ViewModels
                 var mailBoxes = await Task.Run((Func<List<OutlookMailBox>>)GetOutlookMailBox);
                 if (mailBoxes == null)
                 {
-                    await MessageService.ShowMessage("Failed to fetch outlook mailboxes. Please try again." +
+                    MessageService.ShowMessage("Failed to fetch outlook mailboxes. Please try again." +
                                                      Environment.NewLine +
                                                      "If the problem persists, Please restart Outlook application.");
                     return;
@@ -299,7 +299,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             OutlookProfileList = await OutlookCalendarService.GetOutLookProfileListAsync();
             if (OutlookProfileList == null)
             {
-                await MessageService.ShowMessage("Failed to fetch outlook profiles. Please try again.");
+                MessageService.ShowMessage("Failed to fetch outlook profiles. Please try again.");
             }
         }
 
@@ -313,7 +313,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             {
                 if (SelectedProfile.GoogleSettings.GoogleAccount == null)
                 {
-                    await MessageService.ShowMessage("Please select a Google account to get calendars");
+                    MessageService.ShowMessage("Please select a Google account to get calendars");
                     return;
                 }
                 Logger.Info("Loading Google calendars...");
@@ -323,12 +323,12 @@ namespace CalendarSyncPlus.Application.ViewModels
             catch (AggregateException exception)
             {
                 var flattenException = exception.Flatten();
-                await MessageService.ShowMessage(flattenException.Message);
+                MessageService.ShowMessage(flattenException.Message);
                 Logger.Error(flattenException);
             }
             catch (Exception exception)
             {
-                await MessageService.ShowMessage(exception.Message);
+                MessageService.ShowMessage(exception.Message);
                 Logger.Error(exception);
             }
             finally
@@ -365,7 +365,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             }
             catch (Exception exception)
             {
-                await MessageService.ShowMessage("Unable to get Google calendars.");
+                MessageService.ShowMessage("Unable to get Google calendars.");
                 Logger.Error(exception);
             }
         }
@@ -380,7 +380,7 @@ namespace CalendarSyncPlus.Application.ViewModels
             if (SelectedProfile.GoogleSettings.GoogleAccount == null ||
                 SelectedProfile.GoogleSettings.GoogleCalendar == null)
             {
-                await MessageService.ShowMessage("Please select a Google calendar to wipe");
+                MessageService.ShowMessage("Please select a Google calendar to wipe");
                 return;
             }
 
