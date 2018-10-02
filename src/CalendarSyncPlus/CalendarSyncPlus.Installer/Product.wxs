@@ -20,7 +20,7 @@
     <PropertyRef Id="WIX_IS_NETFRAMEWORK_461_OR_LATER_INSTALLED" />
     <Condition
       Message="This application requires .NET Framework 4.6.1. Please install the .NET Framework then run this installer again. You can download it from https://www.microsoft.com/en-in/download/details.aspx?id=30653">
-      <![CDATA[Installed OR NETFRAMEWORK45]]>
+      <![CDATA[Installed OR WIX_IS_NETFRAMEWORK_461_OR_LATER_INSTALLED]]>
     </Condition>
     <!--Packaging features-->
     <Feature Id="ProductFeature" Title="Calendar Sync +" Level="1">
