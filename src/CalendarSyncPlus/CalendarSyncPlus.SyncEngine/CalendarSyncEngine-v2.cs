@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace CalendarSyncPlus.SyncEngine
 {
-    [Export(typeof(ICalendarSyncEngine))]
+    //[Export(typeof(ICalendarSyncEngine))]
     public class CalendarSyncEngine_v2 : ICalendarSyncEngine
     {
         #region ICalendarSyncEngine Members
