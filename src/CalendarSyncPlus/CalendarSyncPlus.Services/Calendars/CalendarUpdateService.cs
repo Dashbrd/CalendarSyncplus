@@ -199,7 +199,7 @@ namespace CalendarSyncPlus.Services.Calendars
                     CalendarSyncEngine.SourceAppointmentsToUpdate.Count,
                     SourceCalendarService.CalendarServiceName);
                 var updatedAppointments =
-                    SourceCalendarService.updateCalendarEvents(CalendarSyncEngine.SourceAppointmentsToUpdate,
+                    SourceCalendarService.UpdateCalendarEvents(CalendarSyncEngine.SourceAppointmentsToUpdate,
                         syncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Description),
                         syncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Reminders),
                         syncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Attendees),
@@ -224,7 +224,7 @@ namespace CalendarSyncPlus.Services.Calendars
                     CalendarSyncEngine.DestAppointmentsToUpdate.Count,
                     DestinationCalendarService.CalendarServiceName);
                 var updatedAppointments =
-                    DestinationCalendarService.updateCalendarEvents(CalendarSyncEngine.DestAppointmentsToUpdate,
+                    DestinationCalendarService.UpdateCalendarEvents(CalendarSyncEngine.DestAppointmentsToUpdate,
                         syncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Description),
                         syncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Reminders),
                         syncProfile.CalendarEntryOptions.HasFlag(CalendarEntryOptionsEnum.Attendees),

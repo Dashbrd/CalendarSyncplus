@@ -70,7 +70,7 @@ namespace CalendarSyncPlus.GoogleServices.Calendar
 
         #region IGoogleCalendarService Members
 
-        public async Task<AppointmentsWrapper> updateCalendarEvents(List<Appointment> calendarAppointments,
+        public async Task<AppointmentsWrapper> UpdateCalendarEvents(List<Appointment> calendarAppointments,
             bool addDescription,
             bool addReminder, bool addAttendees, bool attendeesToDescription,
             IDictionary<string, object> calendarSpecificData)
@@ -106,14 +106,14 @@ namespace CalendarSyncPlus.GoogleServices.Calendar
                     //Iterate over each appointment to create a event and batch it 
                     for (var i = 0; i < calendarAppointments.Count; i++)
                     {
-                        if (i != 0 && i%999 == 0)
+                        if (i != 0 && i % 999 == 0)
                         {
                             await batchRequest.ExecuteAsync();
                             batchRequest = new BatchRequest(calendarService);
                         }
 
                         var appointment = calendarAppointments[i];
-                        var calendarEvent = createUpdatedGoogleCalendarEvent(appointment, addDescription, addReminder,
+                        var calendarEvent = CreateUpdatedGoogleCalendarEvent(appointment, addDescription, addReminder,
                             addAttendees, attendeesToDescription);
                         var updateRequest = calendarService.Events.Update(calendarEvent,
                             CalendarId, calendarEvent.Id);
@@ -121,7 +121,7 @@ namespace CalendarSyncPlus.GoogleServices.Calendar
 
                         batchRequest.Queue<Event>(updateRequest,
                             (content, error, index, message) =>
-                                callbackEventErrorMessage(content, error, index, message, calendarAppointments,
+                                CallbackEventErrorMessage(content, error, index, message, calendarAppointments,
                                     "Error in updating event", errorList, updatedAppointments));
                     }
 
@@ -200,7 +200,7 @@ namespace CalendarSyncPlus.GoogleServices.Calendar
             var localCalendarList =
                 calendarList.Items.Select(
                     calendarListEntry =>
-                        new GoogleCalendar {Id = calendarListEntry.Id, Name = calendarListEntry.Summary})
+                        new GoogleCalendar { Id = calendarListEntry.Id, Name = calendarListEntry.Summary })
                     .ToList();
             return localCalendarList;
         }
@@ -235,16 +235,16 @@ namespace CalendarSyncPlus.GoogleServices.Calendar
                 {
                     //Split the list of calendarAppointments by 1000 per list
                     var appts =
-                        await addCalendarEventsInternal(calendarAppointments, addDescription, addReminder, addAttendees,
+                        await AddCalendarEventsInternal(calendarAppointments, addDescription, addReminder, addAttendees,
                             attendeesToDescription, calendarService, errorList);
                     addedAppointments.AddRange(appts);
                     if (errorList.Count > 0)
                     {
-                        var remainingList = errorList.Select(createAppointmentWithoutAttendees).ToList();
+                        var remainingList = errorList.Select(CreateAppointmentWithoutAttendees).ToList();
                         errorList.Clear();
 
                         appts =
-                            await addCalendarEventsInternal(remainingList, addDescription, addReminder, addAttendees,
+                            await AddCalendarEventsInternal(remainingList, addDescription, addReminder, addAttendees,
                                 attendeesToDescription, calendarService, errorList);
                         addedAppointments.AddRange(appts);
                     }
@@ -293,7 +293,7 @@ namespace CalendarSyncPlus.GoogleServices.Calendar
                     //Iterate over each appointment to create a event and batch it 
                     for (var i = 0; i < calendarAppointments.Count; i++)
                     {
-                        if (i != 0 && i%999 == 0)
+                        if (i != 0 && i % 999 == 0)
                         {
                             await batchRequest.ExecuteAsync();
                             batchRequest = new BatchRequest(calendarService);
@@ -305,7 +305,7 @@ namespace CalendarSyncPlus.GoogleServices.Calendar
 
                         batchRequest.Queue<Event>(deleteRequest,
                             (content, error, index, message) =>
-                                callbackEventErrorMessage(content, error, index, message, calendarAppointments,
+                                CallbackEventErrorMessage(content, error, index, message, calendarAppointments,
                                     "Error in deleting events", errorList, deletedAppointments));
                     }
                     await batchRequest.ExecuteAsync();
@@ -340,6 +340,7 @@ namespace CalendarSyncPlus.GoogleServices.Calendar
             eventListRequest.TimeMin = startDate;
             eventListRequest.TimeMax = endDate;
             eventListRequest.MaxAttendees = 1000;
+            eventListRequest.SingleEvents = true;
             eventListRequest.ShowHiddenInvitations = !skipPrivateEntries;
             try
             {
@@ -348,23 +349,15 @@ namespace CalendarSyncPlus.GoogleServices.Calendar
                 {
                     while (result.Items != null)
                     {
-                        // Add events to list, Non-recurring, Non-related events
-                        foreach (var eventItem in result.Items.Where(t=> t.Recurrence == null && t.RecurringEventId == null))
+                        // Add events to list, Split recurring appointments
+                        foreach (var eventItem in result.Items)
                         {
                             if (eventItem.Status == "cancelled")
                             {
                                 continue;
                             }
 
-                            var appointment = createAppointment(eventItem);
-                            finalEventList.Add(appointment);
-                        }
-                        // Add recurring events to list 
-                        foreach (var eventItem in result.Items.Where(t => t.Recurrence != null && t.RecurringEventId == null))
-                        {
-                            var appointment = createRecurringAppointment(eventItem,
-                                result.Items.Where(t => t.RecurringEventId != null &&
-                                                        t.RecurringEventId.Equals(eventItem.Id)).ToList());
+                            var appointment = CreateAppointment(eventItem);
                             finalEventList.Add(appointment);
                         }
 
@@ -390,21 +383,21 @@ namespace CalendarSyncPlus.GoogleServices.Calendar
                 Logger.Error(exception);
                 return null;
             }
-            catch (AggregateException exception)
+            catch (Exception exception)
             {
                 Logger.Error(exception);
                 return null;
             }
 
-            var calendarAppointments = new AppointmentsWrapper {CalendarId = CalendarId};
+            var calendarAppointments = new AppointmentsWrapper { CalendarId = CalendarId };
             calendarAppointments.AddRange(finalEventList);
             return calendarAppointments;
         }
 
         public async Task<bool> ClearCalendar(IDictionary<string, object> calendarSpecificData)
         {
-            var startDate = DateTime.Today.AddDays(-(10*365));
-            var endDate = DateTime.Today.AddDays(10*365);
+            var startDate = DateTime.Today.AddDays(-(10 * 365));
+            var endDate = DateTime.Today.AddDays(10 * 365);
 
             var appointments =
                 await GetCalendarEventsInRangeAsync(startDate, endDate, true, calendarSpecificData);
@@ -418,14 +411,14 @@ namespace CalendarSyncPlus.GoogleServices.Calendar
 
         public async Task<bool> ResetCalendarEntries(IDictionary<string, object> calendarSpecificData)
         {
-            var startDate = DateTime.Today.AddDays(-(10*365));
-            var endDate = DateTime.Today.AddDays(10*365);
+            var startDate = DateTime.Today.AddDays(-(10 * 365));
+            var endDate = DateTime.Today.AddDays(10 * 365);
             var appointments =
                 await GetCalendarEventsInRangeAsync(startDate, endDate, true, calendarSpecificData);
             if (appointments != null)
             {
                 appointments.ForEach(t => t.ExtendedProperties = new Dictionary<string, string>());
-                var success = await updateCalendarEvents(appointments, true, true, true, false, calendarSpecificData);
+                var success = await UpdateCalendarEvents(appointments, true, true, true, false, calendarSpecificData);
                 return success.IsSuccess;
             }
             return false;
@@ -444,6 +437,51 @@ namespace CalendarSyncPlus.GoogleServices.Calendar
             calendarListEntry.BackgroundColor = background.HexValue;
 
             await calendarService.CalendarList.Update(calendarListEntry, CalendarId).ExecuteAsync();
+        }
+
+        private Appointment CreateAppointmentWithoutAttendees(KeyValuePair<int, Appointment> arg)
+        {
+            var appointment = arg.Value;
+            appointment.RequiredAttendees.Clear();
+            appointment.OptionalAttendees.Clear();
+            return appointment;
+        }
+
+        private async Task<List<Appointment>> AddCalendarEventsInternal(List<Appointment> calendarAppointments,
+            bool addDescription, bool addReminder,
+            bool addAttendees,
+            bool attendeesToDescription, CalendarService calendarService,
+            Dictionary<int, Appointment> errorList)
+        {
+            var addedEvents = new List<Appointment>();
+            //Create a Batch Request
+            var batchRequest = new BatchRequest(calendarService);
+
+            for (var i = 0; i < calendarAppointments.Count; i++)
+            {
+                if (i != 0 && i % 999 == 0)
+                {
+                    await batchRequest.ExecuteAsync();
+                    batchRequest = new BatchRequest(calendarService);
+                }
+
+                var appointment = calendarAppointments[i];
+                var calendarEvent = CreateGoogleCalendarEvent(appointment, addDescription, addReminder,
+                    addAttendees,
+                    attendeesToDescription);
+                var insertRequest = calendarService.Events.Insert(calendarEvent,
+                    CalendarId);
+                insertRequest.MaxAttendees = 10000;
+                batchRequest.Queue<Event>(insertRequest,
+                    (content, error, index, message) =>
+                        CallbackEventErrorMessage(content, error, index, message,
+                            calendarAppointments, "Error in adding events", errorList,
+                            addedEvents));
+            }
+
+            await batchRequest.ExecuteAsync();
+
+            return addedEvents;
         }
 
         #region Static and Constants
@@ -473,90 +511,6 @@ namespace CalendarSyncPlus.GoogleServices.Calendar
 
         #region Private Methods
 
-        private Appointment createAppointmentWithoutAttendees(KeyValuePair<int, Appointment> arg)
-        {
-            var appointment = arg.Value;
-            appointment.RequiredAttendees.Clear();
-            appointment.OptionalAttendees.Clear();
-            return appointment;
-        }
-
-        private async Task<List<Appointment>> addCalendarEventsInternal(List<Appointment> calendarAppointments,
-            bool addDescription, bool addReminder,
-            bool addAttendees,
-            bool attendeesToDescription, CalendarService calendarService,
-            Dictionary<int, Appointment> errorList)
-        {
-            var addedEvents = new List<Appointment>();
-            //Create a Batch Request
-            var batchRequest = new BatchRequest(calendarService);
-            var singleAppointments = calendarAppointments.Where(t => !t.IsRecurring).ToList();
-            for (var i = 0; i < singleAppointments.Count; i++)
-            {
-                if (i != 0 && i % 999 == 0)
-                {
-                    await batchRequest.ExecuteAsync();
-                    batchRequest = new BatchRequest(calendarService);
-                }
-
-                var appointment = singleAppointments[i];
-                var calendarEvent = createGoogleCalendarEvent(appointment, addDescription, addReminder,
-                    addAttendees,
-                    attendeesToDescription);
-                var insertRequest = calendarService.Events.Insert(calendarEvent,
-                    CalendarId);
-                insertRequest.MaxAttendees = 10000;
-                batchRequest.Queue<Event>(insertRequest,
-                    (content, error, index, message) =>
-                        callbackEventErrorMessage(content, error, index, message,
-                            singleAppointments, "Error in adding events", errorList,
-                            addedEvents));
-            }
-
-            await batchRequest.ExecuteAsync();
-
-            var recurringAppointments = calendarAppointments.Where(t => t.IsRecurring).ToList();
-            for (var i = 0; i < recurringAppointments.Count; i++)
-            {
-                if (i != 0 && i % 999 == 0)
-                {
-                    await batchRequest.ExecuteAsync();
-                    batchRequest = new BatchRequest(calendarService);
-                }
-
-                var appointment = recurringAppointments[i];
-                var calendarEvent = createGoogleCalendarEvent(appointment, addDescription, addReminder,
-                    addAttendees,
-                    attendeesToDescription);
-                var insertRequest = calendarService.Events.Insert(calendarEvent,
-                    CalendarId);
-                insertRequest.MaxAttendees = 10000;
-                batchRequest.Queue<Event>(insertRequest,
-                    (content, error, index, message) =>
-                        callbackEventErrorMessage(content, error, index, message,
-                            recurringAppointments, "Error in adding events", errorList,
-                            addedEvents));
-                foreach (var relatedAppointment in appointment.RecurringInstances)
-                {
-                    var relatedCalendarEvent
-                        = createGoogleCalendarEvent(relatedAppointment, addDescription, addReminder,
-                       addAttendees,
-                       attendeesToDescription);
-                    var insertRelatedEventRequest = calendarService.Events.Insert(calendarEvent,
-                        CalendarId);
-                    insertRelatedEventRequest.MaxAttendees = 10000;
-                    batchRequest.Queue<Event>(insertRelatedEventRequest,
-                        (content, error, index, message) =>
-                            callbackEventErrorMessage(content, error, index, message,
-                                appointment.RecurringInstances, "Error in adding events", errorList,
-                                addedEvents));
-                }
-            }
-
-            await batchRequest.ExecuteAsync();
-
-            return addedEvents;
-        }
         /// <summary>
         /// </summary>
         /// <param name="calendarAppointment"></param>
@@ -566,7 +520,7 @@ namespace CalendarSyncPlus.GoogleServices.Calendar
         /// <param name="attendeesToDescription"></param>
         /// <returns>
         /// </returns>
-        private Event createUpdatedGoogleCalendarEvent(Appointment calendarAppointment, bool addDescription,
+        private Event CreateUpdatedGoogleCalendarEvent(Appointment calendarAppointment, bool addDescription,
             bool addReminder,
             bool addAttendees, bool attendeesToDescription)
         {
@@ -642,10 +596,10 @@ namespace CalendarSyncPlus.GoogleServices.Calendar
             if (addAttendees && !attendeesToDescription)
             {
                 //Add Required Attendees
-                addEventAttendees(calendarAppointment.RequiredAttendees, googleEvent, false);
+                AddEventAttendees(calendarAppointment.RequiredAttendees, googleEvent, false);
 
                 //Add optional Attendees
-                addEventAttendees(calendarAppointment.OptionalAttendees, googleEvent, true);
+                AddEventAttendees(calendarAppointment.OptionalAttendees, googleEvent, true);
             }
             //Add Organizer
             if (calendarAppointment.Organizer != null && calendarAppointment.Organizer.Email.IsValidEmailAddress())
@@ -661,7 +615,7 @@ namespace CalendarSyncPlus.GoogleServices.Calendar
         }
 
 
-        private Event createGoogleCalendarEvent(Appointment calendarAppointment, bool addDescription, bool addReminder,
+        private Event CreateGoogleCalendarEvent(Appointment calendarAppointment, bool addDescription, bool addReminder,
             bool addAttendees, bool attendeesToDescription)
         {
             //Create Event
@@ -670,7 +624,6 @@ namespace CalendarSyncPlus.GoogleServices.Calendar
                 Start = new EventDateTime(),
                 End = new EventDateTime(),
                 Summary = calendarAppointment.Subject,
-                Status = calendarAppointment.Status,
                 Description = calendarAppointment.GetDescriptionData(addDescription, attendeesToDescription),
                 Location = calendarAppointment.Location,
                 Visibility = AppointmentHelper.GetVisibility(calendarAppointment.Privacy),
@@ -734,10 +687,10 @@ namespace CalendarSyncPlus.GoogleServices.Calendar
             if (addAttendees && !attendeesToDescription)
             {
                 //Add Required Attendees
-                addEventAttendees(calendarAppointment.RequiredAttendees, googleEvent, false);
+                AddEventAttendees(calendarAppointment.RequiredAttendees, googleEvent, false);
 
                 //Add optional Attendees
-                addEventAttendees(calendarAppointment.OptionalAttendees, googleEvent, true);
+                AddEventAttendees(calendarAppointment.OptionalAttendees, googleEvent, true);
             }
             //Add Organizer
             if (calendarAppointment.Organizer != null && calendarAppointment.Organizer.Email.IsValidEmailAddress())
@@ -752,7 +705,7 @@ namespace CalendarSyncPlus.GoogleServices.Calendar
             return googleEvent;
         }
 
-        private void addEventAttendees(IEnumerable<Attendee> recipients, Event googleEvent, bool optional)
+        private void AddEventAttendees(IEnumerable<Attendee> recipients, Event googleEvent, bool optional)
         {
             IEnumerable<Attendee> recipeintList = recipients as IList<Attendee> ??
                                                   recipients.Take(maxAttendees).ToList();
@@ -784,7 +737,7 @@ namespace CalendarSyncPlus.GoogleServices.Calendar
             return AccountAuthenticationService.AuthenticateCalendarOauth(accountName);
         }
 
-        private void callbackEventErrorMessage(Event content, RequestError error, int index, HttpResponseMessage message,
+        private void CallbackEventErrorMessage(Event content, RequestError error, int index, HttpResponseMessage message,
             List<Appointment> eventList, string errorMessage,
             Dictionary<int, Appointment> errorAppointments, List<Appointment> modifiedEvents)
         {
@@ -799,60 +752,21 @@ namespace CalendarSyncPlus.GoogleServices.Calendar
             {
                 if (content != null)
                 {
-                    modifiedEvents.Add(createAppointment(content));
+                    modifiedEvents.Add(CreateAppointment(content));
                 }
             }
         }
-        private Appointment createRecurringAppointment(Event googleEvent, List<Event> related)
+
+        private Appointment CreateAppointment(Event googleEvent)
         {
-            Appointment appointment = createAppointment(googleEvent);
-            if (googleEvent.Recurrence != null && googleEvent.Recurrence.Count > 0)
-            {
-                appointment.IsRecurring = true;
-                string[] tokens = googleEvent.Recurrence[0].Split(';');
-                foreach (var token in tokens)
-                {
-                    if (token.Contains("FREQ"))
-                    {
-                        appointment.RecurrenceType = ConversionMethods.ConvertStringToPattern(token.Split('=').Last());
-                    }
-                    else if (token.Contains("BYDAY"))
-                    {
-                        appointment.DaysOfWeek = ConversionMethods.ConvertStringToDays(token.Split('=').Last());
-                    }
-                    else if (token.Contains("INTERVAL"))
-                    {
-                        appointment.Interval = int.Parse(token.Split('=').Last());
-                    }
-                }
-
-                if (related != null)
-                {
-                    foreach (var item in related)
-                    {
-                        appointment.RecurringInstances.Add(createAppointment(item));
-                    }
-                }
-            }
-            return appointment;
-        }
-        private Appointment createAppointment(Event googleEvent)
-        {   
             Appointment appointment;
-
-            if (googleEvent.Status == "cancelled")
-            {
-                appointment = new Appointment(googleEvent.Description,googleEvent.Location, googleEvent.Summary, googleEvent.OriginalStartTime.DateTime, null);
-                appointment.Status = googleEvent.Status;
-                
-                return appointment;
-            }
 
             if (googleEvent.Start.DateTime == null && googleEvent.End.DateTime == null)
             {
                 appointment = new Appointment(googleEvent.Description, googleEvent.Location, googleEvent.Summary,
                     DateTime.Parse(googleEvent.End.Date),
-                    DateTime.Parse(googleEvent.Start.Date), googleEvent.Id) { AllDayEvent = true};
+                    DateTime.Parse(googleEvent.Start.Date), googleEvent.Id)
+                { AllDayEvent = true };
             }
             else
             {
@@ -870,14 +784,22 @@ namespace CalendarSyncPlus.GoogleServices.Calendar
                         googleEvent.Reminders.Overrides.First().Minutes.GetValueOrDefault();
                 }
             }
-            
+
             //Getting Additional Data
             appointment.BusyStatus = googleEvent.Transparency != null && googleEvent.Transparency.Equals("transparent")
                 ? BusyStatusEnum.Free
                 : BusyStatusEnum.Busy;
             appointment.Privacy = AppointmentHelper.GetSensitivityEnum(googleEvent.Visibility);
             appointment.CalendarId = CalendarId;
-            appointment.Status = googleEvent.Status;
+
+            if (googleEvent.ExtendedProperties != null && googleEvent.ExtendedProperties.Private__ != null)
+            {
+                foreach (var property in googleEvent.ExtendedProperties.Private__)
+                {
+                    appointment.ExtendedProperties.Add(property.Key, property.Value);
+                }
+            }
+
             appointment.Created = googleEvent.Created;
             appointment.LastModified = googleEvent.Updated;
 
@@ -892,23 +814,15 @@ namespace CalendarSyncPlus.GoogleServices.Calendar
             }
 
             //Add Required Attendee
-            setAttendees(googleEvent, appointment.RequiredAttendees, false);
+            GetAttendees(googleEvent, appointment.RequiredAttendees, false);
 
             //Add optional Attendee
-            setAttendees(googleEvent, appointment.OptionalAttendees, true);
-
-            if (googleEvent.ExtendedProperties != null && googleEvent.ExtendedProperties.Private__ != null)
-            {
-                foreach (var property in googleEvent.ExtendedProperties.Private__)
-                {
-                    appointment.ExtendedProperties.Add(property.Key, property.Value);
-                }
-            }
+            GetAttendees(googleEvent, appointment.OptionalAttendees, true);
 
             return appointment;
-        }               
+        }
 
-        private void setAttendees(Event googleEvent, List<Attendee> recipients, bool isOptional)
+        private void GetAttendees(Event googleEvent, List<Attendee> recipients, bool isOptional)
         {
             if (googleEvent != null && googleEvent.Attendees != null)
             {

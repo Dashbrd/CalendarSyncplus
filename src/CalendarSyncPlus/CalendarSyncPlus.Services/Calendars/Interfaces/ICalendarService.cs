@@ -58,7 +58,7 @@ namespace CalendarSyncPlus.Services.Calendars.Interfaces
         /// <param name="attendeesToDescription"></param>
         /// <param name="calendarSpecificData"></param>
         /// <returns></returns>
-        Task<AppointmentsWrapper> updateCalendarEvents(List<Appointment> calendarAppointments,
+        Task<AppointmentsWrapper> UpdateCalendarEvents(List<Appointment> calendarAppointments,
             bool addDescription, bool addReminder, bool addAttendees, bool attendeesToDescription,
             IDictionary<string, object> calendarSpecificData);
 

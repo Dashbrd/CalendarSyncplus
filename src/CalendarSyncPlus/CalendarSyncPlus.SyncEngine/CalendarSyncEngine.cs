@@ -12,6 +12,7 @@ namespace CalendarSyncPlus.SyncEngine
 {
     /// <summary>
     /// </summary>
+    [Export(typeof(ICalendarSyncEngine))]
     public class CalendarSyncEngine : ICalendarSyncEngine
     {
         #region ICalendarSyncEngine Members
