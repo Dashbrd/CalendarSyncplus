@@ -360,7 +360,7 @@ namespace CalendarSyncPlus.GoogleServices.Calendar
                             finalEventList.Add(appointment);
                         }
                         // Add recurring events to list 
-                        foreach (var eventItem in result.Items.Where(t => t.Recurrence != null))
+                        foreach (var eventItem in result.Items.Where(t => t.Recurrence != null && t.RecurringEventId == null))
                         {
                             var appointment = createRecurringAppointment(eventItem,
                                 result.Items.Where(t => t.RecurringEventId != null &&
@@ -839,6 +839,14 @@ namespace CalendarSyncPlus.GoogleServices.Calendar
         private Appointment createAppointment(Event googleEvent)
         {   
             Appointment appointment;
+
+            if (googleEvent.Status == "cancelled")
+            {
+                appointment = new Appointment(googleEvent.Description,googleEvent.Location, googleEvent.Summary, googleEvent.OriginalStartTime.DateTime, null);
+                appointment.Status = googleEvent.Status;
+                
+                return appointment;
+            }
 
             if (googleEvent.Start.DateTime == null && googleEvent.End.DateTime == null)
             {

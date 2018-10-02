@@ -247,19 +247,32 @@ namespace CalendarSyncPlus.SyncEngine
                              syncProfile.SyncSettings.KeepLastModifiedVersion;
             foreach (var sourceAppointment in sourceList)
             {
-                if (sourceAppointment.SourceId == null)
+                if (sourceAppointment.SourceId != null)
                 {
-                    if (!checkChild || sourceAppointment.ChildId == null)
+                   continue;
+                }
+
+                if (sourceAppointment.IsRecurring)
+                {
+                    EvaluateRecurringAppointments(sourceAppointment);
+                    continue;
+                }
+
+                if (!checkChild || sourceAppointment.ChildId == null)
+                {
+                    var destinationAppointment = destinationList.FirstOrDefault(t =>
+                        t.Equals(sourceAppointment));
+                    if (destinationAppointment == null)
                     {
-                        var destinationAppointment = destinationList.FirstOrDefault(t =>
-                            t.Equals(sourceAppointment));
-                        if (destinationAppointment == null)
-                        {
-                            appointmentsToAdd.Add(sourceAppointment);
-                        }
+                        appointmentsToAdd.Add(sourceAppointment);
                     }
                 }
             }
+        }
+
+        void EvaluateRecurringAppointments(Appointment appointment)
+        {
+
         }
 
         /// <summary>
