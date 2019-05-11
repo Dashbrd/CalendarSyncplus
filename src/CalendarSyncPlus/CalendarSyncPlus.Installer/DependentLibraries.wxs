@@ -4,8 +4,8 @@
   <Fragment>
     <!--Defined Directory Variables-->
     <?define ProjectDirectory = "$(var.CalendarSyncPlus.Presentation.TargetDir)"?>
-    <?define Net461Directory = "C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.6.1\"?>
-    <?define Net461FacadeDirectory = "$(var.Net461Directory)Facades\"?>
+    <?define Net472Directory = "C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.7.2\"?>
+    <?define Net472FacadeDirectory = "$(var.Net472Directory)Facades\"?>
 
 
     <!--Dependent libraries-->

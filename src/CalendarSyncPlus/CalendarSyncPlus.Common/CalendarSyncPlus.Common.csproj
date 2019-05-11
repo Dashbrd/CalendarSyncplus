@@ -42,16 +42,19 @@
     <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Waf.Core, Version=4.2.0.100, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Waf.Core.4.2.0\lib\portable45-net45+win8\System.Waf.Core.dll</HintPath>
+    <Reference Include="System.Waf.Core, Version=5.0.0.100, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Waf.Core.5.0.0\lib\net461\System.Waf.Core.dll</HintPath>
     </Reference>
-    <Reference Include="System.Waf.Wpf, Version=4.2.0.100, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Waf.Wpf.4.2.0\lib\net461\System.Waf.Wpf.dll</HintPath>
+    <Reference Include="System.Waf.Wpf, Version=5.0.0.100, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Waf.Wpf.5.0.0\lib\net461\System.Waf.Wpf.dll</HintPath>
     </Reference>
+    <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
