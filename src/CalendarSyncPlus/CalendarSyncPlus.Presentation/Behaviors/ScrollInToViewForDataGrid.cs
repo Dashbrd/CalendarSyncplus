@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Microsoft.Xaml.Behaviors;
+using System;
 using System.Windows.Controls;
-using System.Windows.Interactivity;
 
 namespace CalendarSyncPlus.Presentation.Behaviors
 {

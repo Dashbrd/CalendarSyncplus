@@ -4,7 +4,7 @@
              xmlns:behaviors="clr-namespace:CalendarSyncPlus.Presentation.Behaviors"
              xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:localizeExtension="http://wpflocalizeextension.codeplex.com"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:models="clr-namespace:CalendarSyncPlus.Domain.Models;assembly=CalendarSyncPlus.Domain"
@@ -56,7 +56,7 @@
                            Fill="{StaticResource AccentColorBrush}" />
                 <TextBlock Grid.Column="2"
                            Margin="2"
-                           FontWeight="600"
+                           FontWeight="Bold"
                            Text="{Binding Name}" />
                 <TextBlock Grid.Row="1"
                            Grid.Column="2"

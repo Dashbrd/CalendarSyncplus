@@ -21,7 +21,7 @@
                       ShowIconOnTitleBar="True"
                       ShowTitleBar="True"
                       SnapsToDevicePixels="True"
-                      TitleCaps="False"
+                      TitleCharacterCasing ="Normal"
                       WindowStartupLocation="CenterScreen"
                       Title="{lex:LocText Key=ShellView_Window_Title}"
                       d:DataContext="{d:DesignInstance viewModels:ShellViewModel}"

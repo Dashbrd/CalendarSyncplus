@@ -121,7 +121,7 @@
                     Margin="5"
                     Height="30"
                     IsEnabled="{Binding Path=IsLoading,Converter={StaticResource ResourceKey=InvertBooleanConverter}}"
-                    controls:ButtonHelper.PreserveTextCase="True"
+                    controls:ControlsHelper.ContentCharacterCasing="Normal"
                     Style="{DynamicResource AccentedSquareButtonStyle}"
                     Command="{Binding SaveCommand}" />
             <Button Content="{localizeExtension:LocText Key=SettingsView_Button_Cancel_Content}"
@@ -130,7 +130,7 @@
                     Margin="5"
                     Height="30"
                     IsEnabled="{Binding Path=IsLoading,Converter={StaticResource ResourceKey=InvertBooleanConverter}}"
-                    controls:ButtonHelper.PreserveTextCase="True"
+                    controls:ControlsHelper.ContentCharacterCasing="Normal"
                     Style="{DynamicResource AccentedSquareButtonStyle}"
                     Command="{Binding CancelCommand}" />
         </StackPanel>
