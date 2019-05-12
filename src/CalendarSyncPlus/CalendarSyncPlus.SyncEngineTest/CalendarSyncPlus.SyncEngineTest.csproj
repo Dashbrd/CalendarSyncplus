@@ -109,6 +109,12 @@
   <ItemGroup>
     <Analyzer Include="..\packages\xunit.analyzers.0.10.0\analyzers\dotnet\cs\xunit.analyzers.dll" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CalendarSyncPlus.SyncEngine\CalendarSyncPlus.SyncEngine.csproj">
+      <Project>{88d95940-3181-4026-9ecf-560d54201d86}</Project>
+      <Name>CalendarSyncPlus.SyncEngine</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

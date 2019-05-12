@@ -17,7 +17,7 @@
     <MediaTemplate EmbedCab="yes" />
 
     <!--Check for .Net framework 4.6.1-->
-    <PropertyRef Id="WIX_IS_NETFRAMEWORK_472_OR_LATER_INSTALLED" />
+    <PropertyRef Id="WIX_IS_NETFRAMEWORK_461_OR_LATER_INSTALLED" />
     <Condition
       Message="This application requires .NET Framework 4.7.2. Please install the .NET Framework then run this installer again. You can download it from https://www.microsoft.com/en-in/download/details.aspx?id=30653">
       <![CDATA[Installed OR NETFRAMEWORK45]]>
